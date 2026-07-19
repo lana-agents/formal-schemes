@@ -24,6 +24,9 @@ complete rings that makes it a locally ringed space is future work.
 
 * `FormalSpectrum I`: the topological space `Spf R`, defined as `Spec (R ⧸ I)`.
 * `FormalSpectrum.toPrimeSpectrum`: the induced inclusion `Spf R → Spec R`.
+* `FormalSpectrum.map`: a ring homomorphism `φ : R →+* S` mapping the ideal of definition `I`
+  into the ideal of definition `J` induces a map `Spf S → Spf R`, making `Spf` a contravariant
+  functor.
 
 ## Main results
 
@@ -32,6 +35,10 @@ complete rings that makes it a locally ringed space is future work.
   exactly the primes of `R` containing the ideal of definition `I`.
 * `FormalSpectrum.instSpectralSpace`: `Spf R` is a spectral space, i.e. it is quasi-compact,
   T0, sober, quasi-separated, and its quasi-compact opens form a basis, just like `Spec R`.
+* `FormalSpectrum.continuous_map`, `FormalSpectrum.map_id`, `FormalSpectrum.map_comp`:
+  `FormalSpectrum.map` is continuous and functorial.
+* `FormalSpectrum.toPrimeSpectrum_map`: `FormalSpectrum.map` commutes with the inclusions
+  into the prime spectra, i.e. the square relating `Spf` and `Spec` commutes.
 
 ## References
 
@@ -76,5 +83,71 @@ definition `I`. -/
 theorem isClosedEmbedding_toPrimeSpectrum : IsClosedEmbedding (toPrimeSpectrum I) :=
   PrimeSpectrum.isClosedEmbedding_comap_of_surjective _ (Ideal.Quotient.mk I)
     Ideal.Quotient.mk_surjective
+
+/-!
+### Functoriality
+
+A ring homomorphism `φ : R →+* S` between adic rings that maps the ideal of definition `I`
+of `R` into the ideal of definition `J` of `S` induces a map `Spf S → Spf R`, sending an open
+prime `q` of `S` to the open prime `φ ⁻¹' q` of `R`. Note that such a `φ` is automatically
+continuous for the adic topologies, since `φ '' (I ^ n) ⊆ J ^ n` for all `n`. This makes
+`Spf` a contravariant functor, compatible with `Spec` under the closed embeddings
+`toPrimeSpectrum`; see EGA I, 10.2.
+-/
+
+section Functoriality
+
+omit [TopologicalSpace R] [IsAdicRing I]
+
+variable {S : Type*} [CommRing S] (J : Ideal S) {T : Type*} [CommRing T] (K : Ideal T)
+
+/-- The map `Spf S → Spf R` induced by a ring homomorphism `φ : R →+* S` mapping the ideal
+of definition `I` of `R` into the ideal of definition `J` of `S`. It sends an open prime of
+`S` to its preimage under `φ`, which is open since `φ` is continuous for the adic
+topologies. -/
+def map (φ : R →+* S) (h : I ≤ J.comap φ) : FormalSpectrum J → FormalSpectrum I :=
+  PrimeSpectrum.comap (Ideal.quotientMap J φ h)
+
+theorem continuous_map (φ : R →+* S) (h : I ≤ J.comap φ) : Continuous (map I J φ h) :=
+  PrimeSpectrum.continuous_comap (Ideal.quotientMap J φ h)
+
+@[simp]
+theorem map_id : map I I (RingHom.id R) (Ideal.comap_id I).ge = id := by
+  have hq : Ideal.quotientMap I (RingHom.id R) (Ideal.comap_id I).ge = RingHom.id (R ⧸ I) :=
+    Ideal.Quotient.ringHom_ext (RingHom.ext fun x => by simp [Ideal.quotientMap_mk])
+  funext x
+  change PrimeSpectrum.comap (Ideal.quotientMap I (RingHom.id R) (Ideal.comap_id I).ge) x = x
+  rw [hq, PrimeSpectrum.comap_id]
+
+theorem map_comp (φ : R →+* S) (ψ : S →+* T) (hIJ : I ≤ J.comap φ) (hJK : J ≤ K.comap ψ)
+    (hIK : I ≤ K.comap (ψ.comp φ)) :
+    map I K (ψ.comp φ) hIK = map I J φ hIJ ∘ map J K ψ hJK := by
+  have hq : Ideal.quotientMap K (ψ.comp φ) hIK =
+      (Ideal.quotientMap K ψ hJK).comp (Ideal.quotientMap J φ hIJ) :=
+    Ideal.Quotient.ringHom_ext (RingHom.ext fun x => by simp [Ideal.quotientMap_mk])
+  funext x
+  change PrimeSpectrum.comap (Ideal.quotientMap K (ψ.comp φ) hIK) x = _
+  rw [hq, PrimeSpectrum.comap_comp_apply]
+  rfl
+
+/-- The inclusions `Spf → Spec` intertwine `FormalSpectrum.map φ` with the usual induced map
+`Spec S → Spec R`: the square
+
+```
+Spf S  →  Spf R
+  ↓          ↓
+Spec S →  Spec R
+```
+
+commutes. -/
+theorem toPrimeSpectrum_map (φ : R →+* S) (h : I ≤ J.comap φ) (x : FormalSpectrum J) :
+    toPrimeSpectrum I (map I J φ h x) = PrimeSpectrum.comap φ (toPrimeSpectrum J x) := by
+  change PrimeSpectrum.comap (Ideal.Quotient.mk I)
+      (PrimeSpectrum.comap (Ideal.quotientMap J φ h) x)
+      = PrimeSpectrum.comap φ (PrimeSpectrum.comap (Ideal.Quotient.mk J) x)
+  rw [← PrimeSpectrum.comap_comp_apply, ← PrimeSpectrum.comap_comp_apply,
+    Ideal.quotientMap_comp_mk]
+
+end Functoriality
 
 end FormalSpectrum
