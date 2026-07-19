@@ -1,1 +1,1 @@
-import FormalSchemes.Basic
+import FormalSchemes.AdicRing
