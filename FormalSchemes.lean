@@ -1,1 +1,2 @@
 import FormalSchemes.AdicRing
+import FormalSchemes.FormalSpectrum
