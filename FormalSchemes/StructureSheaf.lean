@@ -89,9 +89,10 @@ theorem topMap_stepRingHom_comp_inv (n : ℕ) :
     Iso.inv_hom_id_assoc]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
+set_option linter.style.setOption false in
+set_option maxHeartbeats 4000000 in
 -- Checking that `hom` has the stated type requires unfolding `SheafedSpace.sheaf` and the
 -- `TopCat.Sheaf`/`TopCat.Presheaf` pushforward functors against each other, which is slow.
-set_option maxHeartbeats 4000000 in
 /-- The transition map `thickeningSheaf I (n + 1) ⟶ thickeningSheaf I n` of the inverse system,
 induced by the closed immersion of thickenings classified by `stepRingHom`. -/
 def stepSheafHom (n : ℕ) : thickeningSheaf I (n + 1) ⟶ thickeningSheaf I n :=
