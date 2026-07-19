@@ -1,3 +1,4 @@
 import FormalSchemes.AdicRing
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.StructureSheaf
+import FormalSchemes.StructureSheafSections
