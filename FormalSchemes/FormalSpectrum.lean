@@ -1,5 +1,6 @@
 import FormalSchemes.AdicRing
 import Mathlib.RingTheory.Spectrum.Prime.Topology
+import Mathlib.Topology.Spectral.Basic
 
 set_option linter.style.header false
 
@@ -29,6 +30,8 @@ complete rings that makes it a locally ringed space is future work.
 * `FormalSpectrum.isClosedEmbedding_toPrimeSpectrum`: `toPrimeSpectrum` is a closed embedding.
 * `FormalSpectrum.range_toPrimeSpectrum`: the range of `toPrimeSpectrum` is `zeroLocus I`, i.e.
   exactly the primes of `R` containing the ideal of definition `I`.
+* `FormalSpectrum.instSpectralSpace`: `Spf R` is a spectral space, i.e. it is quasi-compact,
+  T0, sober, quasi-separated, and its quasi-compact opens form a basis, just like `Spec R`.
 
 ## References
 
@@ -49,6 +52,12 @@ namespace FormalSpectrum
 
 noncomputable instance : TopologicalSpace (FormalSpectrum I) :=
   inferInstanceAs (TopologicalSpace (PrimeSpectrum (R ⧸ I)))
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- `Spf R` is a spectral space, being homeomorphic to `Spec (R ⧸ I)`. In particular it is
+quasi-compact, `T0`, sober, and quasi-separated. -/
+instance instSpectralSpace : SpectralSpace (FormalSpectrum I) :=
+  inferInstanceAs (SpectralSpace (PrimeSpectrum (R ⧸ I)))
 
 /-- The inclusion of the formal spectrum `Spf R` into `Spec R`, sending an open prime of `R ⧸ I`
 to its preimage under `R → R ⧸ I`. -/
