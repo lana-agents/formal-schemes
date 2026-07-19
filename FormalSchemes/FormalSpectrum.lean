@@ -1,4 +1,5 @@
 import FormalSchemes.AdicRing
+import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
 import Mathlib.RingTheory.Spectrum.Prime.Topology
 import Mathlib.Topology.Spectral.Basic
 
@@ -39,6 +40,10 @@ complete rings that makes it a locally ringed space is future work.
   `FormalSpectrum.map` is continuous and functorial.
 * `FormalSpectrum.toPrimeSpectrum_map`: `FormalSpectrum.map` commutes with the inclusions
   into the prime spectra, i.e. the square relating `Spf` and `Spec` commutes.
+* `FormalSpectrum.thickeningHomeomorph`: `Spf R` is homeomorphic to each of its infinitesimal
+  thickenings `Spec (R ⧸ I ^ n)`, `n ≠ 0`, compatibly with the transition maps of the tower
+  (`FormalSpectrum.comap_factor_comp_toThickening`) and with the closed embeddings into
+  `Spec R` (`FormalSpectrum.comap_mk_toThickening`).
 
 ## References
 
@@ -149,5 +154,83 @@ theorem toPrimeSpectrum_map (φ : R →+* S) (h : I ≤ J.comap φ) (x : FormalS
     Ideal.quotientMap_comp_mk]
 
 end Functoriality
+
+/-!
+### Infinitesimal thickenings
+
+For `n ≠ 0` the canonical surjection `R ⧸ I ^ n →+* R ⧸ I` has nilpotent kernel `I ⧸ I ^ n`,
+so the induced map `Spf R = Spec (R ⧸ I) → Spec (R ⧸ I ^ n)` is a homeomorphism: all the
+infinitesimal thickenings `Spec (R ⧸ I ^ n)` share the same underlying topological space,
+namely `Spf R`. This is the topological content of EGA I, 10.6.3: the formal spectrum is the
+colimit of the tower `Spec (R ⧸ I) ↪ Spec (R ⧸ I ^ 2) ↪ ⋯`, and topologically the tower is
+constant. The structure sheaf of `Spf R` (future work) will be the inverse limit of the
+structure sheaves of the thickenings, transported along these homeomorphisms.
+-/
+
+section Thickenings
+
+omit [TopologicalSpace R] [IsAdicRing I]
+
+/-- The canonical map from `Spf R` to its `n`-th infinitesimal thickening `Spec (R ⧸ I ^ n)`,
+induced by the surjection `R ⧸ I ^ n →+* R ⧸ I`. It is a homeomorphism; see
+`FormalSpectrum.isHomeomorph_toThickening` and `FormalSpectrum.thickeningHomeomorph`. -/
+def toThickening (n : ℕ) (hn : n ≠ 0) : FormalSpectrum I → PrimeSpectrum (R ⧸ I ^ n) :=
+  PrimeSpectrum.comap (Ideal.Quotient.factor (Ideal.pow_le_self hn))
+
+/-- The kernel of `R ⧸ I ^ n →+* R ⧸ I` consists of nilpotent elements, since any lift of an
+element of the kernel lies in `I` and hence its `n`-th power lies in `I ^ n`. -/
+theorem ker_factor_le_nilradical (n : ℕ) (hn : n ≠ 0) :
+    RingHom.ker (Ideal.Quotient.factor (Ideal.pow_le_self hn : I ^ n ≤ I)) ≤
+      nilradical (R ⧸ I ^ n) := by
+  intro x hx
+  obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
+  rw [RingHom.mem_ker, Ideal.Quotient.factor_mk, Ideal.Quotient.eq_zero_iff_mem] at hx
+  refine mem_nilradical.mpr ⟨n, ?_⟩
+  rw [← map_pow]
+  exact Ideal.Quotient.eq_zero_iff_mem.mpr (Ideal.pow_mem_pow hx n)
+
+/-- The map from `Spf R` to its `n`-th infinitesimal thickening `Spec (R ⧸ I ^ n)` is a
+homeomorphism: nilpotents do not affect the prime spectrum. -/
+theorem isHomeomorph_toThickening (n : ℕ) (hn : n ≠ 0) :
+    IsHomeomorph (toThickening I n hn) :=
+  PrimeSpectrum.isHomeomorph_comap _
+    (fun x => ⟨1, one_pos, by
+      rw [pow_one]
+      exact RingHom.mem_range.mpr (Ideal.Quotient.factor_surjective _ x)⟩)
+    (ker_factor_le_nilradical I n hn)
+
+/-- `Spf R` is homeomorphic to each of its infinitesimal thickenings `Spec (R ⧸ I ^ n)`,
+`n ≠ 0`, via `FormalSpectrum.toThickening`. -/
+noncomputable def thickeningHomeomorph (n : ℕ) (hn : n ≠ 0) :
+    FormalSpectrum I ≃ₜ PrimeSpectrum (R ⧸ I ^ n) :=
+  IsHomeomorph.homeomorph _ (isHomeomorph_toThickening I n hn)
+
+@[simp]
+theorem thickeningHomeomorph_apply (n : ℕ) (hn : n ≠ 0) (x : FormalSpectrum I) :
+    thickeningHomeomorph I n hn x = toThickening I n hn x :=
+  rfl
+
+/-- The maps to the thickenings are compatible with the transition maps
+`Spec (R ⧸ I ^ m) → Spec (R ⧸ I ^ n)` of the tower, `m ≤ n`: the triangle over
+`Spf R` commutes. -/
+theorem comap_factor_comp_toThickening {m n : ℕ} (hm : m ≠ 0) (hn : n ≠ 0) (hmn : m ≤ n) :
+    PrimeSpectrum.comap (Ideal.Quotient.factor (Ideal.pow_le_pow_right hmn)) ∘
+      toThickening I m hm = toThickening I n hn := by
+  funext x
+  change PrimeSpectrum.comap (Ideal.Quotient.factor (Ideal.pow_le_pow_right hmn))
+      (PrimeSpectrum.comap (Ideal.Quotient.factor (Ideal.pow_le_self hm)) x) = _
+  rw [← PrimeSpectrum.comap_comp_apply, Ideal.Quotient.factor_comp]
+  rfl
+
+/-- The closed embedding `Spec (R ⧸ I ^ n) → Spec R` restricted along `toThickening`
+recovers the inclusion `Spf R → Spec R`: the thickenings all sit inside `Spec R`
+compatibly. -/
+theorem comap_mk_toThickening (n : ℕ) (hn : n ≠ 0) (x : FormalSpectrum I) :
+    PrimeSpectrum.comap (Ideal.Quotient.mk (I ^ n)) (toThickening I n hn x) =
+      toPrimeSpectrum I x := by
+  rw [toThickening, toPrimeSpectrum, ← PrimeSpectrum.comap_comp_apply,
+    Ideal.Quotient.factor_comp_mk]
+
+end Thickenings
 
 end FormalSpectrum
