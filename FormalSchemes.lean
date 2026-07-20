@@ -27,6 +27,7 @@ import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateOverlap
+import FormalSchemes.TateTransition
 import FormalSchemes.Thickenings
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
