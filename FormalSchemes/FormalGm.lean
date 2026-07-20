@@ -804,6 +804,244 @@ theorem comul_coassoc :
   refine RingHom.ext fun z => ?_
   exact DFunLike.congr_fun key z
 
+/-!
+### The antipode axiom of `Ĝm`
+
+The final Hopf-algebra axiom: the antipode `S = antipode` is a *convolution inverse* of the
+identity. Folding the completed tensor square by the multiplication `∇` after applying the
+antipode to one factor of the comultiplication `Δ` recovers the trivial endomorphism
+`η ∘ ε` (the "multiply by `1`" section): `∇ ∘ (S ⊗̂ id) ∘ Δ = η ∘ ε`, and the mirror with the
+antipode on the second factor. Both composites send the coordinate `X ↦ X⁻¹ · X = 1`.
+-/
+
+/-- The antipode of `Ĝm`, bundled as an `R`-algebra homomorphism `R{X,X⁻¹} →ₐ[R] R{X,X⁻¹}`
+sending `X ↦ X⁻¹` (the `AlgHom` form of `antipode`); needed to feed it into
+`CompletedTensorProduct.map`. -/
+def antipodeAlgHom :
+    letI := isAdicRing R I hI
+    RestrictedLaurentSeries R I →ₐ[R] RestrictedLaurentSeries R I :=
+  letI hR := isAdicRing R I hI
+  haveI : IsAdicComplete (idealOfDefinition R I) (RestrictedLaurentSeries R I) :=
+    hR.toIsAdicComplete
+  unitEvalAlgHom R I (idealOfDefinition R I)
+    (le_of_eq (idealOfDefinition_eq_map R I).symm) (isUnit_X R I 1).unit⁻¹
+
+/-- The bundled antipode inverts the coordinate: `antipode X = X⁻¹ = X R I (-1)`. -/
+theorem antipodeAlgHom_X :
+    letI := isAdicRing R I hI
+    antipodeAlgHom R I hI (X R I 1) = X R I (-1) := by
+  letI := isAdicRing R I hI
+  set w : (RestrictedLaurentSeries R I)ˣ := (isUnit_X R I 1).unit with hw
+  have hval : (w : RestrictedLaurentSeries R I) = X R I 1 := (isUnit_X R I 1).unit_spec
+  have hAnti : antipodeAlgHom R I hI (X R I 1) = Units.val w⁻¹ := by
+    have h := unitEvalAlgHom_X R I (idealOfDefinition R I)
+      (le_of_eq (idealOfDefinition_eq_map R I).symm) w⁻¹ 1
+    rw [zpow_one] at h
+    exact h
+  rw [hAnti]
+  have hinv : Units.val w⁻¹ * X R I 1 = 1 := by
+    have h := w.inv_mul
+    rwa [hval] at h
+  calc Units.val w⁻¹
+      = Units.val w⁻¹ * (X R I 1 * X R I (-1)) := by rw [X_one_mul_X_neg_one, mul_one]
+    _ = (Units.val w⁻¹ * X R I 1) * X R I (-1) := by rw [mul_assoc]
+    _ = X R I (-1) := by rw [hinv, one_mul]
+
+/-- **The multiplication of `R{X,X⁻¹}` as a completed-tensor fold** `∇ : R{X,X⁻¹} ⊗̂_R R{X,X⁻¹}
+→ₐ[R] R{X,X⁻¹}`, folding both factors by the identity (`inl a ↦ a`, `inr b ↦ b`, hence
+`a ⊗ b ↦ a · b`); the target of the convolution product in the antipode axiom. -/
+def mulAlgHom : tensorSquare R I →ₐ[R] RestrictedLaurentSeries R I :=
+  haveI : IsAdicComplete (idealOfDefinition R I) (RestrictedLaurentSeries R I) :=
+    (isAdicRing R I hI).toIsAdicComplete
+  CompletedTensorProduct.liftAlgHom (idealOfDefinition R I)
+    (le_of_eq (idealOfDefinition_eq_map R I).symm)
+    (AlgHom.id R (RestrictedLaurentSeries R I))
+    (AlgHom.id R (RestrictedLaurentSeries R I))
+
+@[simp]
+theorem mulAlgHom_inl (a : RestrictedLaurentSeries R I) :
+    mulAlgHom R I hI (CompletedTensorProduct.inl R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) a) = a := by
+  haveI : IsAdicComplete (idealOfDefinition R I) (RestrictedLaurentSeries R I) :=
+    (isAdicRing R I hI).toIsAdicComplete
+  exact CompletedTensorProduct.liftAlgHom_inl (idealOfDefinition R I)
+    (le_of_eq (idealOfDefinition_eq_map R I).symm)
+    (AlgHom.id R (RestrictedLaurentSeries R I))
+    (AlgHom.id R (RestrictedLaurentSeries R I)) a
+
+@[simp]
+theorem mulAlgHom_inr (b : RestrictedLaurentSeries R I) :
+    mulAlgHom R I hI (CompletedTensorProduct.inr R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) b) = b := by
+  haveI : IsAdicComplete (idealOfDefinition R I) (RestrictedLaurentSeries R I) :=
+    (isAdicRing R I hI).toIsAdicComplete
+  exact CompletedTensorProduct.liftAlgHom_inr (idealOfDefinition R I)
+    (le_of_eq (idealOfDefinition_eq_map R I).symm)
+    (AlgHom.id R (RestrictedLaurentSeries R I))
+    (AlgHom.id R (RestrictedLaurentSeries R I)) b
+
+/-- The multiplication `∇` maps the powers of the ideal of definition of the tensor square into
+those of `R{X,X⁻¹}` — continuity of `∇`. -/
+theorem mulAlgHom_mem_pow (m : ℕ) {x : tensorSquare R I}
+    (hx : x ∈ (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I)) ^ m) :
+    mulAlgHom R I hI x ∈ (idealOfDefinition R I) ^ m := by
+  haveI : IsAdicComplete (idealOfDefinition R I) (RestrictedLaurentSeries R I) :=
+    (isAdicRing R I hI).toIsAdicComplete
+  exact CompletedTensorProduct.liftAlgHom_mem_pow (idealOfDefinition R I)
+    (le_of_eq (idealOfDefinition_eq_map R I).symm)
+    (AlgHom.id R (RestrictedLaurentSeries R I))
+    (AlgHom.id R (RestrictedLaurentSeries R I)) hI m hx
+
+/-- The antipode applied to the first tensor factor, `S ⊗̂ id`, bundled as an `R`-algebra
+homomorphism (the `AlgHom` form of `CompletedTensorProduct.map hI antipodeAlgHom id`). -/
+def antipodeMapAlgHom : tensorSquare R I →ₐ[R] tensorSquare R I where
+  toRingHom := CompletedTensorProduct.map hI (antipodeAlgHom R I hI)
+    (AlgHom.id R (RestrictedLaurentSeries R I))
+  commutes' r := by
+    change CompletedTensorProduct.map hI (antipodeAlgHom R I hI)
+        (AlgHom.id R (RestrictedLaurentSeries R I))
+        (algebraMap R (tensorSquare R I) r) = algebraMap R (tensorSquare R I) r
+    rw [← (CompletedTensorProduct.inl R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)).commutes r, CompletedTensorProduct.map_inl,
+      (antipodeAlgHom R I hI).commutes]
+
+theorem antipodeMapAlgHom_apply (x : tensorSquare R I) :
+    antipodeMapAlgHom R I hI x =
+      CompletedTensorProduct.map hI (antipodeAlgHom R I hI)
+        (AlgHom.id R (RestrictedLaurentSeries R I)) x :=
+  rfl
+
+/-- The antipode applied to the second tensor factor, `id ⊗̂ S`, bundled as an `R`-algebra
+homomorphism (the `AlgHom` form of `CompletedTensorProduct.map hI id antipodeAlgHom`). -/
+def antipodeMapAlgHomRight : tensorSquare R I →ₐ[R] tensorSquare R I where
+  toRingHom := CompletedTensorProduct.map hI
+    (AlgHom.id R (RestrictedLaurentSeries R I)) (antipodeAlgHom R I hI)
+  commutes' r := by
+    change CompletedTensorProduct.map hI (AlgHom.id R (RestrictedLaurentSeries R I))
+        (antipodeAlgHom R I hI)
+        (algebraMap R (tensorSquare R I) r) = algebraMap R (tensorSquare R I) r
+    rw [← (CompletedTensorProduct.inl R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)).commutes r, CompletedTensorProduct.map_inl,
+      (AlgHom.id R (RestrictedLaurentSeries R I)).commutes]
+
+theorem antipodeMapAlgHomRight_apply (x : tensorSquare R I) :
+    antipodeMapAlgHomRight R I hI x =
+      CompletedTensorProduct.map hI (AlgHom.id R (RestrictedLaurentSeries R I))
+        (antipodeAlgHom R I hI) x :=
+  rfl
+
+/-- Continuity of the antipode-on-the-first-factor / comultiplication composite: the trivial
+endomorphism `η ∘ ε` and the convolution `∇ ∘ (S ⊗̂ id) ∘ Δ` are continuous points, so it
+suffices to compare their action on the coordinate `X`. This lemma packages the continuity of
+the trivial endomorphism `η ∘ ε` used in both antipode laws. -/
+theorem isContinuousPoint_algebraMap_comp_counit (hI : I.FG) [TopologicalSpace R] [IsAdicRing I] :
+    IsContinuousPoint R I (idealOfDefinition R I)
+      ((Algebra.ofId R (RestrictedLaurentSeries R I)).comp (counitAlgHom R I)) := by
+  haveI : IsAdicComplete I R := ‹IsAdicRing I›.toIsAdicComplete
+  intro m x hx
+  rw [AlgHom.comp_apply]
+  have hc : counitAlgHom R I x ∈ I ^ m :=
+    isContinuousPoint_unitEvalAlgHom R I I (le_of_eq (Ideal.map_id I)) hI 1 m x hx
+  rw [idealOfDefinition_eq_map]
+  have hmem : (algebraMap R (RestrictedLaurentSeries R I)) (counitAlgHom R I x) ∈
+      (I ^ m).map (algebraMap R (RestrictedLaurentSeries R I)) :=
+    Ideal.mem_map_of_mem _ hc
+  rwa [Ideal.map_pow] at hmem
+
+set_option maxHeartbeats 800000 in
+-- The `point_ext` comparison unfolds the convolution through the nested completed tensor square
+-- `R{X,X⁻¹} ⊗̂ R{X,X⁻¹}`, whose `whnf`/`isDefEq` exceeds the default heartbeat budget.
+/-- **The (left) antipode axiom of the formal multiplicative group `Ĝm`.** Applying the antipode
+`S` to the first tensor factor of the comultiplication `Δ` and folding by the multiplication `∇`
+recovers the trivial endomorphism `η ∘ ε` (the identity section composed with the counit):
+`∇ ∘ (S ⊗̂ id) ∘ Δ = η ∘ ε`. This is the tensor-level (Hopf-algebra) antipode/inversion axiom,
+expressing `X⁻¹ · X = 1`. -/
+theorem antipode_law_left [TopologicalSpace R] [IsAdicRing I] :
+    (mulAlgHom R I hI).toRingHom.comp
+        ((CompletedTensorProduct.map hI (antipodeAlgHom R I hI)
+          (AlgHom.id R (RestrictedLaurentSeries R I))).comp (comul R I hI)) =
+      (algebraMap R (RestrictedLaurentSeries R I)).comp (counit R I) := by
+  haveI : IsAdicComplete I R := ‹IsAdicRing I›.toIsAdicComplete
+  haveI : IsAdicComplete (idealOfDefinition R I) (RestrictedLaurentSeries R I) :=
+    (isAdicRing R I hI).toIsAdicComplete
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)) (tensorSquare R I) :=
+    (CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) hI).toIsAdicComplete
+  have hF : IsContinuousPoint R I (idealOfDefinition R I)
+      ((mulAlgHom R I hI).comp
+        ((antipodeMapAlgHom R I hI).comp (comulAlgHom R I hI))) := by
+    intro m x hx
+    rw [AlgHom.comp_apply, AlgHom.comp_apply]
+    refine mulAlgHom_mem_pow R I hI m ?_
+    rw [antipodeMapAlgHom_apply]
+    exact CompletedTensorProduct.map_mem_pow hI (antipodeAlgHom R I hI)
+      (AlgHom.id R (RestrictedLaurentSeries R I)) m
+      (isContinuousPoint_unitEvalAlgHom R I
+        (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+          (RestrictedLaurentSeries R I))
+        (by rw [CompletedTensorProduct.idealOfDefinition, Ideal.map_map]; exact le_of_eq rfl)
+        hI (tensorX R I) m x hx)
+  have hG := isContinuousPoint_algebraMap_comp_counit R I hI
+  have hX : (mulAlgHom R I hI).comp
+        ((antipodeMapAlgHom R I hI).comp (comulAlgHom R I hI)) (X R I 1) =
+      (Algebra.ofId R (RestrictedLaurentSeries R I)).comp (counitAlgHom R I) (X R I 1) := by
+    simp only [AlgHom.comp_apply, comulAlgHom_X, antipodeMapAlgHom_apply, map_mul,
+      CompletedTensorProduct.map_inl, CompletedTensorProduct.map_inr, antipodeAlgHom_X,
+      AlgHom.id_apply, mulAlgHom_inl, mulAlgHom_inr, counitAlgHom_X, map_one]
+    rw [mul_comm (X R I (-1)) (X R I 1), X_one_mul_X_neg_one]
+  have key := point_ext R I (idealOfDefinition R I) hI hF hG hX
+  refine RingHom.ext fun z => ?_
+  exact DFunLike.congr_fun key z
+
+set_option maxHeartbeats 800000 in
+-- The `point_ext` comparison unfolds the convolution through the nested completed tensor square
+-- `R{X,X⁻¹} ⊗̂ R{X,X⁻¹}`, whose `whnf`/`isDefEq` exceeds the default heartbeat budget.
+/-- **The (right) antipode axiom of the formal multiplicative group `Ĝm`**, mirroring
+`antipode_law_left`: applying the antipode `S` to the *second* tensor factor of the
+comultiplication `Δ` and folding by `∇` also recovers the trivial endomorphism `η ∘ ε`:
+`∇ ∘ (id ⊗̂ S) ∘ Δ = η ∘ ε`. -/
+theorem antipode_law_right [TopologicalSpace R] [IsAdicRing I] :
+    (mulAlgHom R I hI).toRingHom.comp
+        ((CompletedTensorProduct.map hI (AlgHom.id R (RestrictedLaurentSeries R I))
+          (antipodeAlgHom R I hI)).comp (comul R I hI)) =
+      (algebraMap R (RestrictedLaurentSeries R I)).comp (counit R I) := by
+  haveI : IsAdicComplete I R := ‹IsAdicRing I›.toIsAdicComplete
+  haveI : IsAdicComplete (idealOfDefinition R I) (RestrictedLaurentSeries R I) :=
+    (isAdicRing R I hI).toIsAdicComplete
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)) (tensorSquare R I) :=
+    (CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) hI).toIsAdicComplete
+  have hF : IsContinuousPoint R I (idealOfDefinition R I)
+      ((mulAlgHom R I hI).comp
+        ((antipodeMapAlgHomRight R I hI).comp (comulAlgHom R I hI))) := by
+    intro m x hx
+    rw [AlgHom.comp_apply, AlgHom.comp_apply]
+    refine mulAlgHom_mem_pow R I hI m ?_
+    rw [antipodeMapAlgHomRight_apply]
+    exact CompletedTensorProduct.map_mem_pow hI (AlgHom.id R (RestrictedLaurentSeries R I))
+      (antipodeAlgHom R I hI) m
+      (isContinuousPoint_unitEvalAlgHom R I
+        (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+          (RestrictedLaurentSeries R I))
+        (by rw [CompletedTensorProduct.idealOfDefinition, Ideal.map_map]; exact le_of_eq rfl)
+        hI (tensorX R I) m x hx)
+  have hG := isContinuousPoint_algebraMap_comp_counit R I hI
+  have hX : (mulAlgHom R I hI).comp
+        ((antipodeMapAlgHomRight R I hI).comp (comulAlgHom R I hI)) (X R I 1) =
+      (Algebra.ofId R (RestrictedLaurentSeries R I)).comp (counitAlgHom R I) (X R I 1) := by
+    simp only [AlgHom.comp_apply, comulAlgHom_X, antipodeMapAlgHomRight_apply, map_mul,
+      CompletedTensorProduct.map_inl, CompletedTensorProduct.map_inr, antipodeAlgHom_X,
+      AlgHom.id_apply, mulAlgHom_inl, mulAlgHom_inr, counitAlgHom_X, map_one]
+    rw [X_one_mul_X_neg_one]
+  have key := point_ext R I (idealOfDefinition R I) hI hF hG hX
+  refine RingHom.ext fun z => ?_
+  exact DFunLike.congr_fun key z
+
 end Group
 
 /-!
