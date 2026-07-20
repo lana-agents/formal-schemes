@@ -144,6 +144,45 @@ theorem thickeningOpen_le_comap :
   rw [← map_topMap_thickeningOpen I n U]
   exact fun x hx => hx
 
+/-- Under the thickening homeomorphism, the basic open `D(f) ⊆ Spf R` corresponds to the basic
+open `D(f mod I ^ (n + 1))` of the `n`-th thickening `Spec (R ⧸ I ^ (n + 1))`. -/
+theorem thickeningOpen_basicOpen (f : R) :
+    thickeningOpen I n (basicOpen I f) =
+      PrimeSpectrum.basicOpen (Ideal.Quotient.mk (I ^ (n + 1)) f) := by
+  apply TopologicalSpace.Opens.ext
+  change ⇑(thickeningTopIso I n).inv ⁻¹' (basicOpen I f : Set (FormalSpectrum I)) = _
+  rw [← toThickening_preimage_basicOpen I (n + 1) n.succ_ne_zero f, ← Set.preimage_comp]
+  have h : toThickening I (n + 1) n.succ_ne_zero ∘ ⇑(thickeningTopIso I n).inv = id := by
+    funext y
+    exact (thickeningHomeomorph I (n + 1) n.succ_ne_zero).apply_symm_apply y
+  rw [h]
+  rfl
+
+/-- The ring of sections of the `n`-th thickening sheaf over an open of `Spf R` is an algebra
+over the ring `R ⧸ I ^ (n + 1)` of the thickening. -/
+instance thickeningSectionsAlgebra :
+    Algebra (R ⧸ I ^ (n + 1)) ((thickeningSheaf I n).presheaf.obj (op U)) :=
+  inferInstanceAs (Algebra (R ⧸ I ^ (n + 1))
+    ((Spec.structureSheaf (R ⧸ I ^ (n + 1))).presheaf.obj (op (thickeningOpen I n U))))
+
+/-- The sections of the `n`-th thickening sheaf over the basic open `D(f) ⊆ Spf R` are the
+localization of `R ⧸ I ^ (n + 1)` away from `f mod I ^ (n + 1)` (EGA I, 10.1.4). -/
+instance isLocalization_away_basicOpen_sections (f : R) :
+    IsLocalization.Away (Ideal.Quotient.mk (I ^ (n + 1)) f)
+      ((thickeningSheaf I n).presheaf.obj (op (basicOpen I f))) := by
+  change IsLocalization.Away (Ideal.Quotient.mk (I ^ (n + 1)) f)
+    ((Spec.structureSheaf (R ⧸ I ^ (n + 1))).presheaf.obj
+      (op (thickeningOpen I n (basicOpen I f))))
+  rw [thickeningOpen_basicOpen]
+  exact StructureSheaf.IsLocalization.to_basicOpen _ _
+
+/-- The identification of the sections of the `n`-th thickening sheaf over `D(f) ⊆ Spf R` with
+the localization `(R ⧸ I ^ (n + 1))_f`, as a ring isomorphism. -/
+noncomputable def basicOpenSectionsEquiv (f : R) :
+    ((thickeningSheaf I n).presheaf.obj (op (basicOpen I f))) ≃+*
+      Localization.Away (Ideal.Quotient.mk (I ^ (n + 1)) f) :=
+  (IsLocalization.algEquiv (Submonoid.powers (Ideal.Quotient.mk (I ^ (n + 1)) f)) _ _).toRingEquiv
+
 /-- `StructureSheaf.comap` is compatible with the restriction maps of the structure sheaves:
 the square
 
