@@ -2,6 +2,7 @@ import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicRing
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
+import FormalSchemes.GermValue
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.Sections
