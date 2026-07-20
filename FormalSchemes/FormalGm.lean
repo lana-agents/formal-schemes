@@ -418,4 +418,68 @@ end Points3
 
 end Group
 
+/-!
+### Naturality of the functor of points
+
+The bijection `pointsEquivUnits : Hom_cont(Spf S, Ĝm) ≃ Sˣ` is **natural in `S`**: a morphism
+`φ : S ⟶ S'` of complete adic `R`-algebras carrying the filtration compatibly
+(`L.map φ ≤ L'`) intertwines the two point sets — via post-composition of points on one side and
+the induced map on units `Sˣ → S'ˣ` on the other. This upgrades the pointwise group structure of
+the previous section to a *functorial* group structure `S ↦ Sˣ` on the functor of points, which
+is the content of `Ĝm` being a group object (Bosch, §8).
+-/
+
+section Naturality
+
+variable {S : Type u} [CommRing S] (L : Ideal S) [Algebra R S] [IsAdicComplete L S]
+variable {S' : Type u} [CommRing S'] (L' : Ideal S') [Algebra R S'] [IsAdicComplete L' S']
+variable (hIL : I.map (algebraMap R S) ≤ L) (hIL' : I.map (algebraMap R S') ≤ L')
+
+omit [IsAdicComplete L S] [IsAdicComplete L' S'] in
+/-- A morphism `φ : S →ₐ[R] S'` of complete adic `R`-algebras carrying the filtration
+compatibly (`L.map φ ≤ L'`) sends continuous points of `Ĝm` to continuous points: `φ.comp F` is
+again continuous. -/
+theorem isContinuousPoint_comp (φ : S →ₐ[R] S') (hφ : L.map φ.toRingHom ≤ L')
+    {F : RestrictedLaurentSeries R I →ₐ[R] S} (hF : IsContinuousPoint R I L F) :
+    IsContinuousPoint R I L' (φ.comp F) := by
+  intro m x hx
+  have hmem : φ.toRingHom (F x) ∈ (L ^ m).map φ.toRingHom :=
+    Ideal.mem_map_of_mem _ (hF m x hx)
+  rw [Ideal.map_pow] at hmem
+  rw [AlgHom.comp_apply]
+  exact Ideal.pow_right_mono hφ m hmem
+
+/-- **Naturality of the unit-evaluation point in `S`.** Evaluation at a unit is natural:
+post-composing the point attached to `u : Sˣ` with `φ` gives the point attached to the image
+unit `φ(u) : S'ˣ`. -/
+theorem unitEvalAlgHom_comp (hI : I.FG) (φ : S →ₐ[R] S') (hφ : L.map φ.toRingHom ≤ L') (u : Sˣ) :
+    φ.comp (unitEvalAlgHom R I L hIL u) =
+      unitEvalAlgHom R I L' hIL' (Units.map φ.toRingHom.toMonoidHom u) := by
+  refine point_ext R I L' hI ?_ (isContinuousPoint_unitEvalAlgHom R I L' hIL' hI _) ?_
+  · exact isContinuousPoint_comp R I L L' φ hφ (isContinuousPoint_unitEvalAlgHom R I L hIL hI u)
+  · rw [AlgHom.comp_apply, unitEvalAlgHom_X, unitEvalAlgHom_X, zpow_one, zpow_one, Units.coe_map]
+    rfl
+
+/-- **Naturality of the unit attached to a point in `S`.** The unit of a post-composed point
+`φ.comp F` is the image under `φ` of the unit of `F`. -/
+theorem pointUnit_comp (φ : S →ₐ[R] S') (F : RestrictedLaurentSeries R I →ₐ[R] S) :
+    pointUnit R I (φ.comp F) = Units.map φ.toRingHom.toMonoidHom (pointUnit R I F) := by
+  refine Units.ext ?_
+  rw [pointUnit_coe, AlgHom.comp_apply, Units.coe_map, pointUnit_coe]
+  rfl
+
+/-- **The functor of points of `Ĝm` is natural in `S`.** For a morphism `φ : S →ₐ[R] S'` of
+complete adic `R`-algebras carrying the filtration compatibly, the square relating
+`pointsEquivUnits` over `S` and over `S'` to post-composition of points and the induced map on
+units commutes. Together with `pointsEquivUnits` and the group-object identities of the previous
+section, this exhibits `Ĝm` as a group object via the functorial group structure `S ↦ Sˣ`. -/
+theorem pointsEquivUnits_naturality (hI : I.FG) (φ : S →ₐ[R] S') (hφ : L.map φ.toRingHom ≤ L')
+    (F : { F : RestrictedLaurentSeries R I →ₐ[R] S // IsContinuousPoint R I L F }) :
+    pointsEquivUnits R I L' hIL' hI
+        ⟨φ.comp F.1, isContinuousPoint_comp R I L L' φ hφ F.2⟩ =
+      Units.map φ.toRingHom.toMonoidHom (pointsEquivUnits R I L hIL hI F) :=
+  pointUnit_comp R I φ F.1
+
+end Naturality
+
 end RestrictedLaurentSeries
