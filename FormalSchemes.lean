@@ -7,6 +7,7 @@ import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.GermValue
 import FormalSchemes.IdealsOfDefinition
+import FormalSchemes.InfinitesimalColimit
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.RestrictedPowerSeries
