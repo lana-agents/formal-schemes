@@ -78,6 +78,17 @@ theorem isAdicRing (hI : I.FG) {n : ℕ} {ψ : RestrictedPowerSeries R I n →�
   exact IsAdicRing.of_surjective_of_kerClosed
     (RestrictedPowerSeries.idealOfDefinition R I n) hs hker
 
+/-- Topologically-of-finite-type algebras are closed under further quotients: a surjective
+`R`-algebra image of a tf-type algebra, with the image filtration, is tf-type. -/
+theorem of_surjective {A' : Type u} [CommRing A'] [Algebra R A'] {L' : Ideal A'}
+    (h : IsTopologicallyFiniteType R I A L) (π : A →ₐ[R] A')
+    (hπ : Function.Surjective π) (hL' : L.map π.toRingHom = L') :
+    IsTopologicallyFiniteType R I A' L' := by
+  obtain ⟨n, ψ, hs, hL⟩ := h
+  refine ⟨n, π.comp ψ, hπ.comp hs, ?_⟩
+  have hcomp : (π.comp ψ).toRingHom = π.toRingHom.comp ψ.toRingHom := rfl
+  rw [hcomp, ← Ideal.map_map, hL, hL']
+
 /-- The structural morphism `Spf A ⟶ Spf R` of a tf-type adic `R`-algebra, as a morphism of
 locally ringed spaces. -/
 def structMap [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A] [IsAdicRing L]
