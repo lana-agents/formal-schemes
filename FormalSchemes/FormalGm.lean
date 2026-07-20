@@ -121,6 +121,119 @@ theorem unitEval_X (u : Sˣ) (n : ℤ) :
   rw [unitEval, X, AdicCompletion.extendRingHom_of]
   exact laurentEval_T R u n
 
+/-- The canonical `R`-algebra homomorphism from Laurent polynomials into the restricted
+Laurent series. -/
+def ofAlgHom : LaurentPolynomial R →ₐ[R] RestrictedLaurentSeries R I where
+  toRingHom := algebraMap (LaurentPolynomial R) (RestrictedLaurentSeries R I)
+  commutes' r := by
+    change algebraMap (LaurentPolynomial R) (RestrictedLaurentSeries R I)
+      (algebraMap R (LaurentPolynomial R) r) = algebraMap R (RestrictedLaurentSeries R I) r
+    rw [AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply,
+      AdicCompletion.algebraMap_apply]
+
+theorem ofAlgHom_apply (b : LaurentPolynomial R) :
+    ofAlgHom R I b =
+      AdicCompletion.of (I.map (algebraMap R (LaurentPolynomial R))) (LaurentPolynomial R) b := by
+  change algebraMap (LaurentPolynomial R) (RestrictedLaurentSeries R I) b = _
+  rw [AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
+
+/-- `R`-algebra homomorphisms out of the Laurent polynomial ring are determined by the image
+of the variable `T`. -/
+theorem laurentAlgHom_ext {S : Type u} [CommRing S] [Algebra R S]
+    {G₁ G₂ : LaurentPolynomial R →ₐ[R] S} (h : G₁ (T 1) = G₂ (T 1)) : G₁ = G₂ := by
+  have h1 : (AddMonoidAlgebra.lift R S ℤ).symm G₁ = (AddMonoidAlgebra.lift R S ℤ).symm G₂ := by
+    refine MonoidHom.ext_mint ?_
+    rw [AddMonoidAlgebra.lift_symm_apply, AddMonoidAlgebra.lift_symm_apply]
+    exact h
+  calc G₁ = AddMonoidAlgebra.lift R S ℤ ((AddMonoidAlgebra.lift R S ℤ).symm G₁) :=
+        ((AddMonoidAlgebra.lift R S ℤ).apply_symm_apply G₁).symm
+    _ = AddMonoidAlgebra.lift R S ℤ ((AddMonoidAlgebra.lift R S ℤ).symm G₂) := by rw [h1]
+    _ = G₂ := (AddMonoidAlgebra.lift R S ℤ).apply_symm_apply G₂
+
+section Points2
+
+variable {S : Type u} [CommRing S] (L : Ideal S) [Algebra R S] [IsAdicComplete L S]
+variable (hIL : I.map (algebraMap R S) ≤ L)
+
+/-- A **continuous point** of `Ĝm` in a complete adic `R`-algebra `S`: an `R`-algebra
+homomorphism from `R{X, X⁻¹}` mapping the filtration into the powers of `L`. -/
+def IsContinuousPoint (F : RestrictedLaurentSeries R I →ₐ[R] S) : Prop :=
+  ∀ (m : ℕ) (x : RestrictedLaurentSeries R I),
+    x ∈ ((I.map (algebraMap R (LaurentPolynomial R))) ^ m • ⊤ :
+      Submodule (LaurentPolynomial R) (RestrictedLaurentSeries R I)) → F x ∈ L ^ m
+
+/-- The evaluation at a unit, bundled as an `R`-algebra homomorphism. -/
+def unitEvalAlgHom (u : Sˣ) : RestrictedLaurentSeries R I →ₐ[R] S where
+  toRingHom := unitEval R I L hIL u
+  commutes' r := by
+    change unitEval R I L hIL u (algebraMap R (RestrictedLaurentSeries R I) r) =
+      algebraMap R S r
+    have h : algebraMap R (RestrictedLaurentSeries R I) r =
+        AdicCompletion.of (I.map (algebraMap R (LaurentPolynomial R)))
+          (LaurentPolynomial R) (algebraMap R (LaurentPolynomial R) r) :=
+      AdicCompletion.algebraMap_apply _ r
+    rw [h, unitEval, AdicCompletion.extendRingHom_of]
+    exact (laurentEval R (u := u)).commutes r
+
+theorem unitEvalAlgHom_X (u : Sˣ) (n : ℤ) :
+    unitEvalAlgHom R I L hIL u (X R I n) = ((u ^ n : Sˣ) : S) :=
+  unitEval_X R I L hIL u n
+
+/-- Evaluation at a unit is a continuous point. -/
+theorem isContinuousPoint_unitEvalAlgHom (hI : I.FG) (u : Sˣ) :
+    IsContinuousPoint R I L (unitEvalAlgHom R I L hIL u) := fun m x hx =>
+  AdicCompletion.extendRingHom_continuous _ L _ _ (hI.map _) m x hx
+
+/-- The unit attached to a continuous point: the image of the variable, invertible with
+inverse the image of `X⁻¹`. -/
+def pointUnit (F : RestrictedLaurentSeries R I →ₐ[R] S) : Sˣ :=
+  Units.mkOfMulEqOne (F (X R I 1)) (F (X R I (-1))) (by
+    rw [← map_mul]
+    have hX : X R I 1 * X R I (-1) = 1 := by
+      change algebraMap (LaurentPolynomial R) (RestrictedLaurentSeries R I) (T 1) *
+        algebraMap (LaurentPolynomial R) (RestrictedLaurentSeries R I) (T (-1)) = 1
+      rw [← map_mul, ← T_add]
+      norm_num [T_zero]
+    rw [hX, map_one])
+
+@[simp]
+theorem pointUnit_coe (F : RestrictedLaurentSeries R I →ₐ[R] S) :
+    (pointUnit R I F : S) = F (X R I 1) :=
+  rfl
+
+/-- **Continuous points are determined by the image of the variable** — the uniqueness half of
+the functor-of-points description of `Ĝm`. -/
+theorem point_ext (hI : I.FG) {F G : RestrictedLaurentSeries R I →ₐ[R] S}
+    (hF : IsContinuousPoint R I L F) (hG : IsContinuousPoint R I L G)
+    (h : F (X R I 1) = G (X R I 1)) : F = G := by
+  have hlaurent : F.comp (ofAlgHom R I) = G.comp (ofAlgHom R I) := by
+    refine laurentAlgHom_ext R ?_
+    simp only [AlgHom.comp_apply, ofAlgHom_apply]
+    exact h
+  have hring : F.toRingHom = G.toRingHom := by
+    refine AdicCompletion.hom_ext_of_continuous _ L (hI.map _) hF hG fun b => ?_
+    have hb := congrArg (fun (φ : LaurentPolynomial R →ₐ[R] S) => φ b) hlaurent
+    simpa [ofAlgHom_apply] using hb
+  exact AlgHom.ext fun x => DFunLike.congr_fun hring x
+
+/-- **The functor of points of the formal multiplicative group** (Bosch, §8): continuous
+points of `Ĝm` in a complete adic `R`-algebra `S` correspond to units of `S`. -/
+def pointsEquivUnits (hI : I.FG) :
+    { F : RestrictedLaurentSeries R I →ₐ[R] S // IsContinuousPoint R I L F } ≃ Sˣ where
+  toFun F := pointUnit R I F.1
+  invFun u := ⟨unitEvalAlgHom R I L hIL u, isContinuousPoint_unitEvalAlgHom R I L hIL hI u⟩
+  left_inv F := by
+    refine Subtype.ext ?_
+    refine (point_ext R I L hI (isContinuousPoint_unitEvalAlgHom R I L hIL hI _) F.2 ?_)
+    rw [unitEvalAlgHom_X]
+    simp
+  right_inv u := by
+    refine Units.ext ?_
+    rw [pointUnit_coe, unitEvalAlgHom_X]
+    simp
+
+end Points2
+
 end Points
 
 end RestrictedLaurentSeries

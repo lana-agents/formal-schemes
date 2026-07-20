@@ -1,4 +1,5 @@
 import FormalSchemes.AdicCompletionLimit
+import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.RingTheory.AdicCompletion.RingHom
 
 set_option linter.style.header false
@@ -91,6 +92,57 @@ theorem extendRingHom_of (b : B) :
   refine (IsHausdorff.eq_iff_smodEq (I := L)).mpr fun m => ?_
   rw [SModEq.sub_mem]
   exact (hmem m _).mpr (Ideal.Quotient.eq.mp (h m))
+
+/-- The continuous extension maps the powers of the filtration into the powers of `L`
+(continuity of `extendRingHom`), for `K` finitely generated. -/
+theorem extendRingHom_continuous (hK : K.FG) (m : ℕ) (x : AdicCompletion K B)
+    (hx : x ∈ (K ^ m • ⊤ : Submodule B (AdicCompletion K B))) :
+    extendRingHom K L ψ hψ x ∈ L ^ m := by
+  rw [← Ideal.Quotient.eq_zero_iff_mem, mk_extendRingHom]
+  have hev : eval K B m x = 0 := by
+    have := (AdicCompletion.pow_smul_top_eq_ker_eval (M := B) hK (n := m)).le hx
+    simpa using this
+  have hevₐ : evalₐ K m x = 0 := by
+    rw [← AdicCompletion.factor_eval_eq_evalₐ K x
+      (by simp : (K ^ m • ⊤ : Ideal B) ≤ K ^ m), hev]
+    exact _root_.map_zero _
+  simp only [extendLevel, RingHom.coe_comp, Function.comp_apply, AlgHom.toRingHom_eq_coe,
+    RingHom.coe_coe, hevₐ]
+  exact _root_.map_zero _
+
+/-- **Uniqueness of continuous extensions**: two ring homomorphisms out of the completion
+which are continuous (map the filtration into the powers of `L`) and agree on the dense
+subring `B` agree, for `K` finitely generated and `L`-adically Hausdorff target. -/
+theorem hom_ext_of_continuous (hK : K.FG) {F G : AdicCompletion K B →+* S}
+    (hF : ∀ (m : ℕ) (x : AdicCompletion K B),
+      x ∈ (K ^ m • ⊤ : Submodule B (AdicCompletion K B)) → F x ∈ L ^ m)
+    (hG : ∀ (m : ℕ) (x : AdicCompletion K B),
+      x ∈ (K ^ m • ⊤ : Submodule B (AdicCompletion K B)) → G x ∈ L ^ m)
+    (h : ∀ b : B, F (AdicCompletion.of K B b) = G (AdicCompletion.of K B b)) :
+    F = G := by
+  refine RingHom.ext fun x => ?_
+  have key : ∀ m : ℕ, F x - G x ∈ L ^ m := by
+    intro m
+    obtain ⟨b, hb⟩ := Submodule.mkQ_surjective (K ^ m • ⊤ : Submodule B B) (eval K B m x)
+    have hker : x - AdicCompletion.of K B b ∈ (K ^ m • ⊤ : Submodule B (AdicCompletion K B)) := by
+      rw [AdicCompletion.pow_smul_top_eq_ker_eval (M := B) hK, LinearMap.mem_ker, map_sub,
+        eval_of, hb, sub_self]
+    have hFx := hF m _ hker
+    have hGx := hG m _ hker
+    rw [map_sub] at hFx hGx
+    have hdecomp : F x - G x =
+        (F x - F (AdicCompletion.of K B b)) - (G x - G (AdicCompletion.of K B b)) := by
+      rw [h b]
+      ring
+    rw [hdecomp]
+    exact sub_mem hFx hGx
+  have hmem : ∀ (m : ℕ) (z : S), z ∈ (L ^ m • ⊤ : Submodule S S) ↔ z ∈ L ^ m := by
+    intro m z
+    rw [Ideal.smul_top_eq_map (L ^ m), Submodule.restrictScalars_mem, Algebra.algebraMap_self,
+      Ideal.map_id]
+  refine (IsHausdorff.eq_iff_smodEq (I := L)).mpr fun m => ?_
+  rw [SModEq.sub_mem]
+  exact (hmem m _).mpr (key m)
 
 end AdicCompletion
 
