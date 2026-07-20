@@ -276,6 +276,88 @@ theorem levelSheafHom_step (n : ℕ) :
       (stepSheafHom_hom_app J n ((Opens.map (mapTop I J φ hφ)).obj V))
     exact e1.trans ((ofHom_comap_levelRingHom_square I J φ hφ n V).trans e2.symm)
 
+/-- The natural transformation between the two towers of thickening sheaves induced by `φ`. -/
+def levelNatTrans : structureSheafFunctor I ⟶
+    structureSheafFunctor J ⋙ TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ) :=
+  NatTrans.ofOpSequence (fun n => levelSheafHom I J φ hφ n) (fun n => by
+    rw [structureSheafFunctor_map_succ]
+    have h : (structureSheafFunctor J ⋙
+          TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).map
+        (homOfLE (Nat.le_add_right n 1)).op =
+        (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).map (stepSheafHom J n) := by
+      change (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).map
+        ((structureSheafFunctor J).map (homOfLE (Nat.le_add_right n 1)).op) = _
+      rw [structureSheafFunctor_map_succ]
+      rfl
+    rw [h]
+    exact levelSheafHom_step I J φ hφ n)
+
+@[simp]
+theorem levelNatTrans_app (n : ℕ) :
+    (levelNatTrans I J φ hφ).app ⟨n⟩ = levelSheafHom I J φ hφ n :=
+  rfl
+
+/-- The induced morphism of structure sheaves `O_{Spf R} ⟶ (mapTop)_* O_{Spf S}`: since the
+pushforward of sheaves is a right adjoint, it preserves the limit defining `O_{Spf S}`, and the
+level maps induce a morphism of the limits. -/
+def mapSheafHom : structureSheaf I ⟶
+    (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).obj (structureSheaf J) :=
+  limMap (levelNatTrans I J φ hφ) ≫
+    (preservesLimitIso (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ))
+      (structureSheafFunctor J)).inv
+
+/-- The induced morphism of structure sheaves is compatible with the limit projections to the
+levels of the towers. -/
+theorem mapSheafHom_π (n : ℕ) :
+    mapSheafHom I J φ hφ ≫
+        (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).map
+          (limit.π (structureSheafFunctor J) ⟨n⟩) =
+      limit.π (structureSheafFunctor I) ⟨n⟩ ≫ levelSheafHom I J φ hφ n := by
+  have h2 : (preservesLimitIso (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ))
+      (structureSheafFunctor J)).inv ≫
+      (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).map
+        (limit.π (structureSheafFunctor J) ⟨n⟩) =
+      limit.π (structureSheafFunctor J ⋙
+        TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)) ⟨n⟩ :=
+    preservesLimitIso_inv_π _ _ _
+  have h1 : mapSheafHom I J φ hφ ≫
+      (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).map
+        (limit.π (structureSheafFunctor J) ⟨n⟩) =
+      (limMap (levelNatTrans I J φ hφ) ≫
+        ((preservesLimitIso (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ))
+          (structureSheafFunctor J)).inv ≫
+          (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).map
+            (limit.π (structureSheafFunctor J) ⟨n⟩)) :
+        structureSheaf I ⟶
+          (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).obj
+            (thickeningSheaf J n)) := by
+    simp only [mapSheafHom, Category.assoc]
+    rfl
+  have h2' : (limMap (levelNatTrans I J φ hφ) ≫
+        ((preservesLimitIso (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ))
+          (structureSheafFunctor J)).inv ≫
+          (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).map
+            (limit.π (structureSheafFunctor J) ⟨n⟩)) :
+        structureSheaf I ⟶
+          (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).obj
+            (thickeningSheaf J n)) =
+      (limMap (levelNatTrans I J φ hφ) ≫
+        limit.π (structureSheafFunctor J ⋙
+          TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)) ⟨n⟩ :
+        structureSheaf I ⟶
+          (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).obj
+            (thickeningSheaf J n)) :=
+    congrArg (fun t => limMap (levelNatTrans I J φ hφ) ≫ t) h2
+  have h3 : (limMap (levelNatTrans I J φ hφ) ≫
+        limit.π (structureSheafFunctor J ⋙
+          TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)) ⟨n⟩ :
+        structureSheaf I ⟶
+          (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).obj
+            (thickeningSheaf J n)) =
+      limit.π (structureSheafFunctor I) ⟨n⟩ ≫ levelSheafHom I J φ hφ n :=
+    (limMap_π (levelNatTrans I J φ hφ) ⟨n⟩).trans (by rw [levelNatTrans_app]; rfl)
+  exact h1.trans (h2'.trans h3)
+
 end SheafMap
 
 end FormalSpectrum
