@@ -1,5 +1,6 @@
 import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.AdicExtend
+import FormalSchemes.CompletedTensor
 import Mathlib.Algebra.Polynomial.Laurent
 
 set_option linter.style.header false
@@ -235,5 +236,108 @@ def pointsEquivUnits (hI : I.FG) :
 end Points2
 
 end Points
+
+
+/-!
+### The group structure: comultiplication, counit, antipode
+
+The formal multiplicative group is a group object: the comultiplication sends the coordinate
+`X` to `X ⊗ X` in the completed tensor product, the counit sends `X` to `1`, and the antipode
+sends `X` to `X⁻¹`. Each is constructed by evaluating at an appropriate *unit* of a complete
+adic `R`-algebra, using `unitEval`: the target of the comultiplication is the completed tensor
+product `R{X,X⁻¹} ⊗̂_R R{X,X⁻¹}` (an adic ring by `CompletedTensorProduct.isAdicRing`), in which
+the element `X ⊗ X` is a unit, being a product of images of the unit `X`.
+-/
+
+section Group
+
+variable (hI : I.FG)
+
+/-- The completed tensor square `R{X,X⁻¹} ⊗̂_R R{X,X⁻¹}`, the target of the comultiplication of
+the formal multiplicative group. -/
+abbrev tensorSquare : Type u :=
+  CompletedTensorProduct R I (RestrictedLaurentSeries R I) (RestrictedLaurentSeries R I)
+
+/-- The element `X ⊗ X` of the completed tensor square, as a unit: the product of the images of
+the coordinate under the two canonical maps. -/
+def tensorX : (tensorSquare R I)ˣ :=
+  ((isUnit_X R I 1).map
+    (CompletedTensorProduct.inl R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I))).unit *
+  ((isUnit_X R I 1).map
+    (CompletedTensorProduct.inr R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I))).unit
+
+theorem tensorX_coe :
+    (tensorX R I : tensorSquare R I) =
+      CompletedTensorProduct.inl R I _ _ (X R I 1) *
+        CompletedTensorProduct.inr R I _ _ (X R I 1) :=
+  rfl
+
+/-- **The comultiplication of the formal multiplicative group**: the continuous `R`-algebra map
+`R{X,X⁻¹} → R{X,X⁻¹} ⊗̂_R R{X,X⁻¹}` sending the coordinate `X` to `X ⊗ X` (Bosch, §8). -/
+def comul :
+    letI := CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) hI
+    RestrictedLaurentSeries R I →+* tensorSquare R I :=
+  letI hR := CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+    (RestrictedLaurentSeries R I) hI
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)) (tensorSquare R I) := hR.toIsAdicComplete
+  unitEval R I
+    (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I))
+    (by
+      rw [CompletedTensorProduct.idealOfDefinition, Ideal.map_map]
+      exact le_of_eq rfl)
+    (tensorX R I)
+
+/-- The comultiplication sends the coordinate to `X ⊗ X`. -/
+theorem comul_X :
+    letI := CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) hI
+    comul R I hI (X R I 1) =
+      CompletedTensorProduct.inl R I _ _ (X R I 1) *
+        CompletedTensorProduct.inr R I _ _ (X R I 1) := by
+  letI hR := CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+    (RestrictedLaurentSeries R I) hI
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)) (tensorSquare R I) := hR.toIsAdicComplete
+  have h := unitEval_X R I
+    (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I))
+    (by
+      rw [CompletedTensorProduct.idealOfDefinition, Ideal.map_map]
+      exact le_of_eq rfl)
+    (tensorX R I) 1
+  rw [zpow_one] at h
+  exact h.trans (tensorX_coe R I)
+
+/-- **The counit**: the continuous `R`-algebra map `R{X,X⁻¹} → R` sending `X` to `1` — the
+identity section of the formal multiplicative group. -/
+def counit [TopologicalSpace R] [IsAdicRing I] : RestrictedLaurentSeries R I →+* R :=
+  haveI : IsAdicComplete I R := ‹IsAdicRing I›.toIsAdicComplete
+  unitEval R I I (le_of_eq (Ideal.map_id I)) 1
+
+theorem counit_X [TopologicalSpace R] [IsAdicRing I] (n : ℤ) : counit R I (X R I n) = 1 := by
+  haveI : IsAdicComplete I R := ‹IsAdicRing I›.toIsAdicComplete
+  have h := unitEval_X R I I (le_of_eq (Ideal.map_id I)) 1 n
+  rw [one_zpow] at h
+  exact h
+
+/-- **The antipode**: the continuous `R`-algebra map `R{X,X⁻¹} → R{X,X⁻¹}` sending `X` to
+`X⁻¹` — the inversion of the formal multiplicative group. -/
+def antipode (hI : I.FG) :
+    letI := isAdicRing R I hI
+    RestrictedLaurentSeries R I →+* RestrictedLaurentSeries R I :=
+  letI hR := isAdicRing R I hI
+  haveI : IsAdicComplete (idealOfDefinition R I) (RestrictedLaurentSeries R I) :=
+    hR.toIsAdicComplete
+  unitEval R I (idealOfDefinition R I)
+    (le_of_eq (idealOfDefinition_eq_map R I).symm) (isUnit_X R I 1).unit⁻¹
+
+end Group
 
 end RestrictedLaurentSeries
