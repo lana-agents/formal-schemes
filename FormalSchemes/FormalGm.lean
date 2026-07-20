@@ -66,6 +66,16 @@ theorem idealOfDefinition_eq_map :
 theorem isAdicRing (hI : I.FG) : IsAdicRing (idealOfDefinition R I) :=
   AdicCompletion.isAdicRing_map _ (hI.map _)
 
+/-- Membership in the powers of the ideal of definition, expressed through the module filtration
+`(I·R[T,T⁻¹]) ^ m • ⊤` used by the completion API. -/
+theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : RestrictedLaurentSeries R I) :
+    x ∈ (idealOfDefinition R I) ^ m ↔
+      x ∈ ((I.map (algebraMap R (LaurentPolynomial R))) ^ m • ⊤ :
+        Submodule (LaurentPolynomial R) (RestrictedLaurentSeries R I)) := by
+  rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (LaurentPolynomial R))) m x,
+    idealOfDefinition, Ideal.smul_top_eq_map, Submodule.restrictScalars_mem,
+    Algebra.algebraMap_self, Ideal.map_id]
+
 /-- The image of the Laurent variable `T ^ n` in the restricted Laurent series ring. -/
 def X (n : ℤ) : RestrictedLaurentSeries R I :=
   AdicCompletion.of (I.map (algebraMap R (LaurentPolynomial R))) (LaurentPolynomial R) (T n)
@@ -415,6 +425,153 @@ theorem algebraMap_comp_counit_X [TopologicalSpace R] [IsAdicRing I] (n : ℤ) :
   rw [RingHom.comp_apply, counit_X, map_one]
 
 end Points3
+
+/-!
+### The left counit axiom of `Ĝm`
+
+At the level of the completed tensor product the counit `ε = counit` satisfies the *left counit
+axiom* of a Hopf algebra: applying `ε` to the first tensor factor of the comultiplication
+`Δ = comul` and then the left unitor `R ⊗̂_R R{X,X⁻¹} ≃+* R{X,X⁻¹}` recovers the identity. This
+is the tensor-level (as opposed to functor-of-points) form of the identity-section law.
+-/
+
+/-- The counit, bundled as an `R`-algebra homomorphism `R{X,X⁻¹} →ₐ[R] R` (the `AlgHom` form of
+`counit`, sending `X ↦ 1`); needed to feed it into `CompletedTensorProduct.map`. -/
+def counitAlgHom [TopologicalSpace R] [IsAdicRing I] : RestrictedLaurentSeries R I →ₐ[R] R :=
+  haveI : IsAdicComplete I R := ‹IsAdicRing I›.toIsAdicComplete
+  unitEvalAlgHom R I I (le_of_eq (Ideal.map_id I)) 1
+
+theorem counitAlgHom_X [TopologicalSpace R] [IsAdicRing I] (n : ℤ) :
+    counitAlgHom R I (X R I n) = 1 := by
+  haveI : IsAdicComplete I R := ‹IsAdicRing I›.toIsAdicComplete
+  have h := unitEvalAlgHom_X R I I (le_of_eq (Ideal.map_id I)) 1 n
+  rw [one_zpow] at h
+  exact h
+
+/-- The comultiplication, bundled as an `R`-algebra homomorphism (the `AlgHom` form of `comul`,
+sending `X ↦ X ⊗ X`). -/
+def comulAlgHom :
+    letI := CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) hI
+    RestrictedLaurentSeries R I →ₐ[R] tensorSquare R I :=
+  letI hR := CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+    (RestrictedLaurentSeries R I) hI
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)) (tensorSquare R I) := hR.toIsAdicComplete
+  unitEvalAlgHom R I
+    (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I))
+    (by
+      rw [CompletedTensorProduct.idealOfDefinition, Ideal.map_map]
+      exact le_of_eq rfl)
+    (tensorX R I)
+
+/-- The bundled comultiplication sends the coordinate to `X ⊗ X`. -/
+theorem comulAlgHom_X :
+    letI := CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) hI
+    comulAlgHom R I hI (X R I 1) =
+      CompletedTensorProduct.inl R I _ _ (X R I 1) *
+        CompletedTensorProduct.inr R I _ _ (X R I 1) := by
+  letI hR := CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+    (RestrictedLaurentSeries R I) hI
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)) (tensorSquare R I) := hR.toIsAdicComplete
+  exact comul_X R I hI
+
+/-- The composite `ε ⊗̂ id` applying the counit to the first tensor factor, bundled as an
+`R`-algebra homomorphism `R{X,X⁻¹} ⊗̂_R R{X,X⁻¹} →ₐ[R] R ⊗̂_R R{X,X⁻¹}` (the `AlgHom` form of
+`CompletedTensorProduct.map hI counitAlgHom id`). -/
+def counitMapAlgHom [TopologicalSpace R] [IsAdicRing I] :
+    tensorSquare R I →ₐ[R]
+      CompletedTensorProduct R I R (RestrictedLaurentSeries R I) where
+  toRingHom := CompletedTensorProduct.map hI (counitAlgHom R I)
+    (AlgHom.id R (RestrictedLaurentSeries R I))
+  commutes' r := by
+    have h : CompletedTensorProduct.map hI (counitAlgHom R I)
+        (AlgHom.id R (RestrictedLaurentSeries R I))
+        (algebraMap R (tensorSquare R I) r) =
+          algebraMap R (CompletedTensorProduct R I R (RestrictedLaurentSeries R I)) r := by
+      rw [← (CompletedTensorProduct.inl R I (RestrictedLaurentSeries R I)
+          (RestrictedLaurentSeries R I)).commutes r, CompletedTensorProduct.map_inl,
+        (counitAlgHom R I).commutes]
+      exact (CompletedTensorProduct.inl R I R (RestrictedLaurentSeries R I)).commutes r
+    exact h
+
+theorem counitMapAlgHom_apply [TopologicalSpace R] [IsAdicRing I] (x : tensorSquare R I) :
+    counitMapAlgHom R I hI x =
+      CompletedTensorProduct.map hI (counitAlgHom R I)
+        (AlgHom.id R (RestrictedLaurentSeries R I)) x :=
+  rfl
+
+/-- **The crux of the left counit axiom**: applying the counit to the first tensor factor of the
+comultiplication is the canonical inclusion `inr` of the second factor, i.e.
+`(ε ⊗̂ id) ∘ Δ = inr`. Both send `X ↦ inr X`. -/
+theorem counitMap_comp_comul [TopologicalSpace R] [IsAdicRing I] :
+    (CompletedTensorProduct.map hI (counitAlgHom R I)
+        (AlgHom.id R (RestrictedLaurentSeries R I))).comp (comul R I hI) =
+      (CompletedTensorProduct.inr R I R (RestrictedLaurentSeries R I)).toRingHom := by
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I R (RestrictedLaurentSeries R I))
+      (CompletedTensorProduct R I R (RestrictedLaurentSeries R I)) :=
+    (CompletedTensorProduct.isAdicRing R I R (RestrictedLaurentSeries R I) hI).toIsAdicComplete
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I))
+      (CompletedTensorProduct R I (RestrictedLaurentSeries R I) (RestrictedLaurentSeries R I)) :=
+    (CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) hI).toIsAdicComplete
+  have hF : IsContinuousPoint R I
+      (CompletedTensorProduct.idealOfDefinition R I R (RestrictedLaurentSeries R I))
+      ((counitMapAlgHom R I hI).comp (comulAlgHom R I hI)) := by
+    intro m x hx
+    rw [AlgHom.comp_apply]
+    exact CompletedTensorProduct.map_mem_pow hI (counitAlgHom R I)
+      (AlgHom.id R (RestrictedLaurentSeries R I)) m
+      (isContinuousPoint_unitEvalAlgHom R I
+        (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+          (RestrictedLaurentSeries R I))
+        (by
+          rw [CompletedTensorProduct.idealOfDefinition, Ideal.map_map]
+          exact le_of_eq rfl)
+        hI (tensorX R I) m x hx)
+  have hG : IsContinuousPoint R I
+      (CompletedTensorProduct.idealOfDefinition R I R (RestrictedLaurentSeries R I))
+      (CompletedTensorProduct.inr R I R (RestrictedLaurentSeries R I)) := by
+    intro m x hx
+    rw [← RestrictedLaurentSeries.mem_idealOfDefinition_pow_iff, idealOfDefinition_eq_map] at hx
+    exact CompletedTensorProduct.inr_mem_pow m hx
+  have hX : (counitMapAlgHom R I hI).comp (comulAlgHom R I hI) (X R I 1) =
+      CompletedTensorProduct.inr R I R (RestrictedLaurentSeries R I) (X R I 1) := by
+    rw [AlgHom.comp_apply, comulAlgHom_X, counitMapAlgHom_apply, map_mul,
+      CompletedTensorProduct.map_inl, CompletedTensorProduct.map_inr, counitAlgHom_X,
+      map_one, AlgHom.id_apply, one_mul]
+  have key := point_ext R I
+    (CompletedTensorProduct.idealOfDefinition R I R (RestrictedLaurentSeries R I)) hI hF hG hX
+  refine RingHom.ext fun z => ?_
+  exact DFunLike.congr_fun key z
+
+/-- **The left counit axiom of the formal multiplicative group `Ĝm`.** Applying the counit `ε`
+to the first tensor factor of the comultiplication `Δ` and then the left unitor
+`R ⊗̂_R R{X,X⁻¹} ≃+* R{X,X⁻¹}` recovers the identity: `unitEquiv ∘ (ε ⊗̂ id) ∘ Δ = id`. This
+is the tensor-level (Hopf-algebra) form of the identity-section law. -/
+theorem counit_law_left [TopologicalSpace R] [IsAdicRing I] :
+    letI : IsAdicComplete (I.map (algebraMap R (RestrictedLaurentSeries R I)))
+        (RestrictedLaurentSeries R I) := by
+      rw [← idealOfDefinition_eq_map]
+      exact (isAdicRing R I hI).toIsAdicComplete
+    (CompletedTensorProduct.unitEquiv hI).toRingHom.comp
+        ((CompletedTensorProduct.map hI (counitAlgHom R I)
+          (AlgHom.id R (RestrictedLaurentSeries R I))).comp (comul R I hI)) =
+      RingHom.id (RestrictedLaurentSeries R I) := by
+  letI : IsAdicComplete (I.map (algebraMap R (RestrictedLaurentSeries R I)))
+      (RestrictedLaurentSeries R I) := by
+    rw [← idealOfDefinition_eq_map]
+    exact (isAdicRing R I hI).toIsAdicComplete
+  rw [counitMap_comp_comul R I hI]
+  exact RingHom.ext fun a => CompletedTensorProduct.unitEquiv_inr hI a
 
 end Group
 

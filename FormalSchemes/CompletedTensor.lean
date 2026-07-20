@@ -259,6 +259,15 @@ theorem map_inr (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') (b : B) :
     (isAdicRing R I A' B' hI).toIsAdicComplete
   exact lift_inr _ _ _ _ b
 
+/-- The functorial map maps the powers of the ideal of definition into the powers of the ideal
+of definition of the target (for `I` finitely generated) — continuity of `map`. -/
+theorem map_mem_pow (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') (m : ℕ)
+    {x : CompletedTensorProduct R I A B} (hx : x ∈ (idealOfDefinition R I A B) ^ m) :
+    map hI f g x ∈ (idealOfDefinition R I A' B') ^ m := by
+  haveI : IsAdicComplete (idealOfDefinition R I A' B') (CompletedTensorProduct R I A' B') :=
+    (isAdicRing R I A' B' hI).toIsAdicComplete
+  exact lift_mem_pow _ _ _ _ hI m hx
+
 /-- The swap homomorphism `A ⊗̂_R B →+* B ⊗̂_R A` sending `inl a ↦ inr a` and `inr b ↦ inl b`
 (for `I` finitely generated). -/
 def commHom (hI : I.FG) :
