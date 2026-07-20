@@ -70,15 +70,125 @@ variable (K : Ideal B)
 instance : CommRing (AssociatedGraded K) :=
   inferInstanceAs (CommRing (reesAlgebra K ⧸ shiftIdeal K))
 
+instance : Algebra B (AssociatedGraded K) :=
+  inferInstanceAs (Algebra B (reesAlgebra K ⧸ shiftIdeal K))
+
+/-- The canonical projection `reesAlgebra K → gr_K(B)` as a `B`-algebra homomorphism. -/
+def mkₐ : reesAlgebra K →ₐ[B] AssociatedGraded K :=
+  Ideal.Quotient.mkₐ B (shiftIdeal K)
+
 /-- The canonical projection `reesAlgebra K → gr_K(B)`. -/
 def mk : reesAlgebra K →+* AssociatedGraded K :=
   Ideal.Quotient.mk (shiftIdeal K)
 
+@[simp] theorem mkₐ_toRingHom : (mkₐ K).toRingHom = mk K := rfl
+
+@[simp] theorem mkₐ_apply (p : reesAlgebra K) : mkₐ K p = mk K p := rfl
+
 theorem mk_surjective : Function.Surjective (mk K) :=
   Ideal.Quotient.mk_surjective
+
+theorem mk_eq_zero_iff (p : reesAlgebra K) : mk K p = 0 ↔ p ∈ shiftIdeal K :=
+  Ideal.Quotient.eq_zero_iff_mem
 
 /-- **Atiyah–Macdonald 10.24.** The associated graded ring of a Noetherian ring is Noetherian. -/
 instance instIsNoetherianRing [IsNoetherianRing B] : IsNoetherianRing (AssociatedGraded K) :=
   inferInstanceAs (IsNoetherianRing (reesAlgebra K ⧸ shiftIdeal K))
+
+/-! ### Leading forms and the graded pieces
+
+The degree-`n` piece of `gr_K(B)` is `K^n/K^{n+1}`. We realise the projection `K^n → K^n/K^{n+1}`
+concretely as the **leading-form map** `deg n : K^n → gr_K(B)` sending `k ∈ K^n` to the class of the
+monomial `k·X^n ∈ reesAlgebra K`. These maps are additive, `B`-linear, kill `K^{n+1} ⊆ K^n`, are
+multiplicative across degrees, and their images generate `gr_K(B)`. This is the interface the
+successive-approximation argument of Atiyah–Macdonald 10.25 (issue 144) consumes. -/
+
+/-- The monomial `k · X^n` as an element of the Rees algebra, for `k ∈ K^n`. -/
+def monomialRees (n : ℕ) : (K ^ n : Ideal B) →ₗ[B] reesAlgebra K where
+  toFun k := ⟨monomial n (k : B), by
+    intro i
+    rw [coeff_monomial]
+    split_ifs with h
+    · exact h ▸ k.2
+    · exact zero_mem _⟩
+  map_add' k₁ k₂ := by
+    ext1
+    simp only [map_add, AddMemClass.coe_add]
+  map_smul' b k := by
+    ext1
+    simp only [SetLike.val_smul, map_smul, RingHom.id_apply]
+
+@[simp] theorem monomialRees_coe (n : ℕ) (k : (K ^ n : Ideal B)) :
+    ((monomialRees K n k : reesAlgebra K) : B[X]) = monomial n (k : B) := rfl
+
+/-- The **leading-form map** `deg n : K^n → gr_K(B)`, `k ↦ [k·X^n]`, landing in the degree-`n` piece
+`K^n/K^{n+1}` of the associated graded ring. -/
+def deg (n : ℕ) : (K ^ n : Ideal B) →ₗ[B] AssociatedGraded K :=
+  (mkₐ K).toLinearMap ∘ₗ monomialRees K n
+
+theorem deg_apply (n : ℕ) (k : (K ^ n : Ideal B)) :
+    deg K n k = mk K (monomialRees K n k) := rfl
+
+/-- Leading forms are multiplicative across degrees, at the level of the Rees algebra. -/
+theorem monomialRees_mul (m n : ℕ) (a : (K ^ m : Ideal B)) (b : (K ^ n : Ideal B)) :
+    monomialRees K m a * monomialRees K n b =
+      monomialRees K (m + n) ⟨(a : B) * b, by
+        rw [pow_add]; exact Ideal.mul_mem_mul a.2 b.2⟩ := by
+  ext1
+  simp only [MulMemClass.coe_mul, monomialRees_coe, monomial_mul_monomial]
+
+/-- The unit: `1 = [1·X^0] ∈ K^0/K^1`. -/
+theorem monomialRees_zero_one :
+    monomialRees K 0 ⟨1, by simp⟩ = 1 := by
+  ext1
+  simp only [monomialRees_coe, OneMemClass.coe_one, monomial_zero_left, map_one]
+
+/-- **Leading forms are multiplicative across degrees.** `deg m a · deg n b = deg (m+n) (a·b)`. -/
+theorem deg_mul (m n : ℕ) (a : (K ^ m : Ideal B)) (b : (K ^ n : Ideal B)) :
+    deg K m a * deg K n b =
+      deg K (m + n) ⟨(a : B) * b, by
+        rw [pow_add]; exact Ideal.mul_mem_mul a.2 b.2⟩ := by
+  rw [deg_apply, deg_apply, deg_apply, ← map_mul, monomialRees_mul]
+
+/-- The unit lands in degree zero. -/
+theorem deg_zero_one : deg K 0 ⟨1, by simp⟩ = 1 := by
+  rw [deg_apply, monomialRees_zero_one, map_one]
+
+/-- The **degree-shifting ideal** of the Rees algebra absorbs any monomial whose coefficient lies
+one filtration step deeper: if `x ∈ K^{n+1}`, then `x·X^n ∈ shiftIdeal K`. -/
+theorem monomial_mem_shiftIdeal (n : ℕ) {x : B} (hx : x ∈ K ^ (n + 1))
+    (p : reesAlgebra K) (hp : (p : B[X]) = monomial n x) : p ∈ shiftIdeal K := by
+  rw [pow_succ] at hx
+  induction hx using Submodule.mul_induction_on' generalizing p with
+  | mem_mul_mem a ha c hc =>
+    -- `a ∈ K^n`, `c ∈ K`, and `p` has coefficient monomial `n (a·c)`.
+    have hqa : ∀ i, (monomial n a).coeff i ∈ K ^ i := fun i => by
+      rw [coeff_monomial]; split_ifs with h
+      · exact h ▸ ha
+      · exact zero_mem _
+    have h1 : (↑(algebraMap B (reesAlgebra K) c) : B[X]) = C c := by
+      simp [Polynomial.algebraMap_eq]
+    have hne : p = algebraMap B (reesAlgebra K) c * ⟨monomial n a, hqa⟩ := by
+      apply Subtype.ext
+      rw [hp, MulMemClass.coe_mul, h1]
+      rw [(rfl : (↑(⟨monomial n a, hqa⟩ : reesAlgebra K) : B[X]) = monomial n a)]
+      rw [C_mul_monomial, mul_comm a c]
+    rw [hne]
+    exact Ideal.mul_mem_right _ _ (Ideal.mem_map_of_mem _ hc)
+  | add x hx y hy ihx ihy =>
+    -- `p` has coefficient `monomial n (x+y)`; split as a sum.
+    have hxn : x ∈ K ^ n := Ideal.mul_le_right hx
+    have hyn : y ∈ K ^ n := Ideal.mul_le_right hy
+    rw [show p = monomialRees K n ⟨x, hxn⟩ + monomialRees K n ⟨y, hyn⟩ by
+      apply Subtype.ext
+      rw [hp, AddMemClass.coe_add, monomialRees_coe, monomialRees_coe, ← map_add]]
+    exact Ideal.add_mem _ (ihx _ rfl) (ihy _ rfl)
+
+/-- **Leading forms kill the next filtration step.** If `k ∈ K^n` in fact lies in `K^{n+1}`, its
+degree-`n` leading form vanishes. This is what makes `deg n` factor through `K^n/K^{n+1}`. -/
+theorem deg_eq_zero_of_mem_succ (n : ℕ) (k : (K ^ n : Ideal B)) (hk : (k : B) ∈ K ^ (n + 1)) :
+    deg K n k = 0 := by
+  rw [deg_apply, mk_eq_zero_iff]
+  exact monomial_mem_shiftIdeal K n hk _ (monomialRees_coe K n k)
 
 end AssociatedGraded
