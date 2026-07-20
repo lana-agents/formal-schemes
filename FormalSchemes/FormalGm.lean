@@ -338,6 +338,84 @@ def antipode (hI : I.FG) :
   unitEval R I (idealOfDefinition R I)
     (le_of_eq (idealOfDefinition_eq_map R I).symm) (isUnit_X R I 1).unit⁻¹
 
+/-- The coordinate `X` and its inverse `X⁻¹` multiply to `1` in `R{X, X⁻¹}`. -/
+theorem X_one_mul_X_neg_one : X R I 1 * X R I (-1) = 1 := by
+  change algebraMap (LaurentPolynomial R) (RestrictedLaurentSeries R I) (T 1) *
+    algebraMap (LaurentPolynomial R) (RestrictedLaurentSeries R I) (T (-1)) = 1
+  rw [← map_mul, ← T_add]
+  norm_num [T_zero]
+
+/-- **The antipode inverts the coordinate**: `antipode X = X⁻¹ = X R I (-1)`. Together with the
+counit and comultiplication computations this exhibits the inversion of `Ĝm` on the functor of
+points. -/
+theorem antipode_X_one :
+    letI := isAdicRing R I hI
+    antipode R I hI (X R I 1) = X R I (-1) := by
+  letI := isAdicRing R I hI
+  set w : (RestrictedLaurentSeries R I)ˣ := (isUnit_X R I 1).unit with hw
+  have hval : (w : RestrictedLaurentSeries R I) = X R I 1 := (isUnit_X R I 1).unit_spec
+  have hAnti : antipode R I hI (X R I 1) = Units.val w⁻¹ := by
+    have h := unitEval_X R I (idealOfDefinition R I)
+      (le_of_eq (idealOfDefinition_eq_map R I).symm) w⁻¹ 1
+    rw [zpow_one] at h
+    exact h
+  rw [hAnti]
+  have hinv : Units.val w⁻¹ * X R I 1 = 1 := by
+    have h := w.inv_mul
+    rwa [hval] at h
+  calc Units.val w⁻¹
+      = Units.val w⁻¹ * (X R I 1 * X R I (-1)) := by rw [X_one_mul_X_neg_one, mul_one]
+    _ = (Units.val w⁻¹ * X R I 1) * X R I (-1) := by rw [mul_assoc]
+    _ = X R I (-1) := by rw [hinv, one_mul]
+
+/-!
+### The group-object axioms on the functor of points
+
+The comultiplication, counit and antipode induce, on the functor of points
+`Hom_cont(Spf S, Ĝm) ≃ Sˣ` (`pointsEquivUnits`), exactly the multiplication, unit and inversion
+of the unit group `Sˣ`. Concretely, for continuous points `F, G` of `Ĝm` in a complete adic
+`R`-algebra `S`:
+
+* the *convolution product* `(F ⊗̂ G) ∘ comul` — obtained by composing the comultiplication with
+  the lift `CompletedTensorProduct.lift F G` of the pair — sends the coordinate `X` to the
+  product `F X · G X` (`lift_comp_comul_X`), i.e. to `↑(pointUnit F · pointUnit G)`;
+* the counit followed by the structural map `R → S` is the trivial point `X ↦ 1`
+  (`algebraMap_comp_counit_X`);
+* precomposition with the antipode inverts the coordinate (`antipode_X_one`).
+
+Since a continuous point is determined by the image of `X` (`point_ext`), these identities pin
+the group structure down to the multiplication of `Sˣ`.
+-/
+
+section Points3
+
+variable {S : Type u} [CommRing S] (L : Ideal S) [Algebra R S] [IsAdicComplete L S]
+variable (hIL : I.map (algebraMap R S) ≤ L)
+variable (F G : RestrictedLaurentSeries R I →ₐ[R] S)
+
+/-- **The comultiplication implements the group law on points**: the convolution product
+`(F ⊗̂ G) ∘ comul` of two points sends the coordinate `X` to `F X · G X`. -/
+theorem lift_comp_comul_X :
+    (CompletedTensorProduct.lift L hIL F G).comp (comul R I hI) (X R I 1)
+      = F (X R I 1) * G (X R I 1) := by
+  rw [RingHom.comp_apply, comul_X, map_mul, CompletedTensorProduct.lift_inl,
+    CompletedTensorProduct.lift_inr]
+
+/-- The convolution product of two points corresponds to the product of the associated units:
+the group law of `Ĝm` matches the multiplication of `Sˣ` under `pointsEquivUnits`. -/
+theorem lift_comp_comul_X_eq_unit :
+    (CompletedTensorProduct.lift L hIL F G).comp (comul R I hI) (X R I 1)
+      = ((pointUnit R I F * pointUnit R I G : Sˣ) : S) := by
+  rw [lift_comp_comul_X, Units.val_mul, pointUnit_coe, pointUnit_coe]
+
+/-- **The counit is the identity section**: the counit followed by the structural map `R → S`
+is the trivial point `X ↦ 1` (the unit of `Sˣ`). -/
+theorem algebraMap_comp_counit_X [TopologicalSpace R] [IsAdicRing I] (n : ℤ) :
+    (algebraMap R S).comp (counit R I) (X R I n) = 1 := by
+  rw [RingHom.comp_apply, counit_X, map_one]
+
+end Points3
+
 end Group
 
 end RestrictedLaurentSeries
