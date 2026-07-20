@@ -1,5 +1,6 @@
 import FormalSchemes.Sections
 import FormalSchemes.LimitUnits
+import FormalSchemes.GermValue
 import Mathlib.Geometry.RingedSpace.LocallyRingedSpace
 
 set_option linter.style.header false
@@ -88,6 +89,68 @@ instance isLocalRing_thickeningSheaf_stalk :
     (Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1)))).isLocalRing
       ((thickeningTopIso I n).hom x)
   (thickeningStalkIso I n x).symm.commRingCatIsoToRingEquiv.isLocalRing
+
+theorem hom_mem_thickeningOpen {U : Opens (FormalSpectrum I)} (hx : x ∈ U) :
+    (thickeningTopIso I n).hom x ∈ thickeningOpen I n U := by
+  change (thickeningTopIso I n).inv ((thickeningTopIso I n).hom x) ∈ U
+  rw [inv_hom_apply]
+  exact hx
+
+/-- The isomorphism `thickeningStalkIso` matches up germs of the thickening sheaf at `x` with
+germs of the structure sheaf of the thickening at the corresponding point. -/
+theorem thickeningStalkIso_hom_germ (U : Opens (FormalSpectrum I)) (hx : x ∈ U)
+    (t : (thickeningSheaf I n).presheaf.obj (op U)) :
+    (thickeningStalkIso I n x).hom.hom
+        (((thickeningSheaf I n).presheaf.germ U x hx).hom t) =
+      ((Spec.structureSheaf (R ⧸ I ^ (n + 1))).presheaf.germ (thickeningOpen I n U)
+        ((thickeningTopIso I n).hom x) (hom_mem_thickeningOpen I n x hx)).hom t := by
+  have e : Inseparable x ((thickeningTopIso I n).inv ((thickeningTopIso I n).hom x)) :=
+    Inseparable.of_eq (inv_hom_apply I n x).symm
+  have h1 : ((thickeningSheaf I n).presheaf.stalkCongr e).hom.hom
+      (((thickeningSheaf I n).presheaf.germ U x hx).hom t) =
+      ((thickeningSheaf I n).presheaf.germ U
+        ((thickeningTopIso I n).inv ((thickeningTopIso I n).hom x))
+        (by rw [inv_hom_apply]; exact hx)).hom t := by
+    rw [TopCat.Presheaf.stalkCongr_hom]
+    exact TopCat.Presheaf.germ_stalkSpecializes_apply _ _ _ t
+  change (TopCat.Presheaf.stalkPushforward CommRingCat (thickeningTopIso I n).inv
+      (Spec.structureSheaf (R ⧸ I ^ (n + 1))).presheaf ((thickeningTopIso I n).hom x)).hom
+      (((thickeningSheaf I n).presheaf.stalkCongr e).hom.hom
+        (((thickeningSheaf I n).presheaf.germ U x hx).hom t)) = _
+  rw [h1]
+  exact TopCat.Presheaf.stalkPushforward_germ_apply CommRingCat
+    (thickeningTopIso I n).inv (Spec.structureSheaf (R ⧸ I ^ (n + 1))).presheaf U
+    ((thickeningTopIso I n).hom x) _ t
+
+/-- Over an open `W ⊆ Spf R` whose ring of level-`n` sections is a localization (e.g. a basic
+open), a germ of the `n`-th thickening sheaf at `x ∈ W` is a unit if and only if the *value* of
+the section at the corresponding point of the thickening `Spec (R ⧸ I ^ (n + 1))` is a unit. -/
+theorem isUnit_thickeningGerm_iff_isUnit_value (W : Opens (FormalSpectrum I)) (hx : x ∈ W)
+    (g' : R ⧸ I ^ (n + 1))
+    [IsLocalization.Away g' (((Spec.structureSheaf (R ⧸ I ^ (n + 1))).presheaf.obj
+      (op (thickeningOpen I n W)) : Type u))]
+    (t : (thickeningSheaf I n).presheaf.obj (op W)) :
+    IsUnit (((thickeningSheaf I n).presheaf.germ W x hx).hom t) ↔
+      IsUnit (StructureSheaf.sectionValue (thickeningOpen I n W)
+        ((thickeningTopIso I n).hom x) (hom_mem_thickeningOpen I n x hx) t) := by
+  constructor
+  · intro h
+    have h2 := h.map (thickeningStalkIso I n x).hom.hom
+    rw [thickeningStalkIso_hom_germ] at h2
+    exact (StructureSheaf.isUnit_germ_iff_isUnit_value
+      g' (thickeningOpen I n W)
+      ((thickeningTopIso I n).hom x) (hom_mem_thickeningOpen I n x hx) t).mp h2
+  · intro h
+    have h2 := (StructureSheaf.isUnit_germ_iff_isUnit_value
+      g' (thickeningOpen I n W)
+      ((thickeningTopIso I n).hom x) (hom_mem_thickeningOpen I n x hx) t).mpr h
+    rw [← thickeningStalkIso_hom_germ I n x W hx t] at h2
+    have h3 := h2.map (thickeningStalkIso I n x).commRingCatIsoToRingEquiv.symm
+    rwa [show (thickeningStalkIso I n x).commRingCatIsoToRingEquiv.symm
+        ((thickeningStalkIso I n x).hom.hom
+          (((thickeningSheaf I n).presheaf.germ W x hx).hom t)) =
+        ((thickeningSheaf I n).presheaf.germ W x hx).hom t from
+      (thickeningStalkIso I n x).commRingCatIsoToRingEquiv.symm_apply_apply _] at h3
 
 end ThickeningStalks
 

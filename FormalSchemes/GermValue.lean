@@ -62,40 +62,44 @@ theorem sectionValue_res (W W' : Opens (PrimeSpectrum.Top A)) (i : W' ⟶ W)
       sectionValue W p (leOfHom i hp) t :=
   rfl
 
-/-- Over a basic open `D(g)`, the composite of the germ map at `p ∈ D(g)` with the canonical
-identification of the stalk with `Localization.AtPrime p` is evaluation at `p`: both are
-`A`-algebra maps out of a localization of `A`, so they agree because they agree on `A`. -/
-theorem algEquiv_germ_eq_sectionValue (g : A) (p : PrimeSpectrum.Top A)
-    (hp : p ∈ PrimeSpectrum.basicOpen g) :
+/-- Over an open `W` whose section ring is a localization of `A` (e.g. a basic open), the
+composite of the germ map at `p ∈ W` with the canonical identification of the stalk with
+`Localization.AtPrime p` is evaluation at `p`: both are `A`-algebra maps out of a localization
+of `A`, so they agree because they agree on `A`. -/
+theorem algEquiv_germ_eq_sectionValue (g : A) (W : Opens (PrimeSpectrum.Top A))
+    [IsLocalization.Away g
+      (((Spec.structureSheaf A).presheaf.obj (op W) : Type u))]
+    (p : PrimeSpectrum.Top A) (hp : p ∈ W) :
     ((IsLocalization.algEquiv p.asIdeal.primeCompl
         ((Spec.structureSheaf A).presheaf.stalk p)
         (Localization.AtPrime p.asIdeal)).toRingEquiv.toRingHom.comp
-      ((Spec.structureSheaf A).presheaf.germ (PrimeSpectrum.basicOpen g) p hp).hom) =
-      sectionValue (PrimeSpectrum.basicOpen g) p hp := by
+      ((Spec.structureSheaf A).presheaf.germ W p hp).hom) =
+      sectionValue W p hp := by
   apply IsLocalization.ringHom_ext (Submonoid.powers g)
   refine RingHom.ext fun a => ?_
   simp only [RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
     RingHom.coe_coe]
   rw [sectionValue_algebraMap]
-  have hgerm : ((Spec.structureSheaf A).presheaf.germ (PrimeSpectrum.basicOpen g) p hp).hom
-      ((algebraMap A ((Spec.structureSheaf A).presheaf.obj
-        (op (PrimeSpectrum.basicOpen g)))) a) =
+  have hgerm : ((Spec.structureSheaf A).presheaf.germ W p hp).hom
+      ((algebraMap A ((Spec.structureSheaf A).presheaf.obj (op W))) a) =
       algebraMap A ((Spec.structureSheaf A).presheaf.stalk p) a := by
-    have h := algebraMap_germ_apply (PrimeSpectrum.basicOpen g) p hp a
+    have h := algebraMap_germ_apply W p hp a
     rw [stalkAlgebra_map]
     exact h
   rw [hgerm]
   exact (IsLocalization.algEquiv p.asIdeal.primeCompl _ _).commutes a
 
-/-- **Germs are units precisely where values are units** (over a basic open): for a section `t`
-of the structure sheaf over `D(g)` and `p ∈ D(g)`, the germ of `t` at `p` is a unit in the
-stalk if and only if the value `t(p)` is a unit in `Localization.AtPrime p`. -/
-theorem isUnit_germ_iff_isUnit_value (g : A) (p : PrimeSpectrum.Top A)
-    (hp : p ∈ PrimeSpectrum.basicOpen g)
-    (t : (Spec.structureSheaf A).presheaf.obj (op (PrimeSpectrum.basicOpen g))) :
-    IsUnit (((Spec.structureSheaf A).presheaf.germ (PrimeSpectrum.basicOpen g) p hp).hom t) ↔
-      IsUnit (sectionValue (PrimeSpectrum.basicOpen g) p hp t) := by
-  have key := DFunLike.congr_fun (algEquiv_germ_eq_sectionValue g p hp) t
+/-- **Germs are units precisely where values are units** (over an open whose section ring is a
+localization, e.g. a basic open): the germ of `t` at `p` is a unit in the stalk if and only if
+the value `t(p)` is a unit in `Localization.AtPrime p`. -/
+theorem isUnit_germ_iff_isUnit_value (g : A) (W : Opens (PrimeSpectrum.Top A))
+    [IsLocalization.Away g
+      (((Spec.structureSheaf A).presheaf.obj (op W) : Type u))]
+    (p : PrimeSpectrum.Top A) (hp : p ∈ W)
+    (t : (Spec.structureSheaf A).presheaf.obj (op W)) :
+    IsUnit (((Spec.structureSheaf A).presheaf.germ W p hp).hom t) ↔
+      IsUnit (sectionValue W p hp t) := by
+  have key := DFunLike.congr_fun (algEquiv_germ_eq_sectionValue g W p hp) t
   simp only [RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
     RingHom.coe_coe] at key
   constructor

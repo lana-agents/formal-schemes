@@ -360,4 +360,197 @@ theorem mapSheafHom_π (n : ℕ) :
 
 end SheafMap
 
+/-!
+### The morphism of locally ringed spaces
+-/
+
+section LocallyRingedSpaceMap
+
+/-- The preimage of a basic open under the map of formal spectra is a basic open. -/
+theorem map_preimage_basicOpen (f₀ : R) :
+    (Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀) = basicOpen J (φ f₀) := by
+  apply Opens.ext
+  ext y
+  change Ideal.Quotient.mk I f₀ ∉ (map I J φ hφ y).asIdeal ↔
+    Ideal.Quotient.mk J (φ f₀) ∉ y.asIdeal
+  change Ideal.Quotient.mk I f₀ ∉
+    (PrimeSpectrum.comap (Ideal.quotientMap J φ hφ) y).asIdeal ↔ _
+  rw [PrimeSpectrum.comap_asIdeal, Ideal.mem_comap, Ideal.quotientMap_mk]
+
+/-- The maps of thickenings match up the distinguished points: the image under
+`Spec (levelRingHom)` of the point of the thickening of `Spf S` corresponding to `y` is the
+point corresponding to `mapTop y`. -/
+theorem comap_levelRingHom_hom (n : ℕ) (y : FormalSpectrum J) :
+    PrimeSpectrum.comap (levelRingHom I J φ hφ n) ((thickeningTopIso J n).hom y) =
+      (thickeningTopIso I n).hom (mapTop I J φ hφ y) := by
+  apply (thickeningHomeomorph I (n + 1) n.succ_ne_zero).symm.injective
+  have h1 := comap_levelRingHom_toThickening I J φ hφ n ((thickeningTopIso J n).hom y)
+  have h2 : (thickeningTopIso J n).inv ((thickeningTopIso J n).hom y) = y :=
+    inv_hom_apply J n y
+  rw [h2] at h1
+  refine h1.trans ?_
+  exact (inv_hom_apply I n (mapTop I J φ hφ y)).symm
+
+/-- The underlying morphism of presheafed spaces `Spf S ⟶ Spf R`. -/
+def presheafedSpaceMap :
+    (sheafedSpaceObj J).toPresheafedSpace ⟶ (sheafedSpaceObj I).toPresheafedSpace where
+  base := mapTop I J φ hφ
+  c := (mapSheafHom I J φ hφ).hom
+
+set_option linter.style.setOption false in
+set_option maxHeartbeats 1000000 in
+-- The proof chases a germ through the level-0 projections of both structure sheaves and
+-- evaluates it, which unfolds the section rings of the structure sheaves; this is slow.
+/-- The stalk maps of the induced morphism of formal spectra are local ring homomorphisms:
+a germ of `O_{Spf R}` whose image is invertible is invertible, because invertibility is
+detected by the value of the level-`0` component, and on values the morphism acts by the
+local homomorphism `Localization.localRingHom`. -/
+theorem isLocalHom_stalkMap (y : FormalSpectrum J) :
+    IsLocalHom ((presheafedSpaceMap I J φ hφ).stalkMap y).hom := by
+  constructor
+  intro a ha
+  -- represent the germ by a section over a basic open around `x = mapTop y`
+  obtain ⟨U, hxU, s, rfl⟩ := TopCat.Presheaf.exists_germ_eq _ a
+  obtain ⟨w, hw, hxw, hwU⟩ := (isTopologicalBasis_basicOpen I).exists_subset_of_mem_open
+    hxU U.2
+  obtain ⟨f₀, rfl⟩ := hw
+  have hDU : basicOpen I f₀ ≤ U := hwU
+  set s' := (structureSheaf I).presheaf.map (homOfLE hDU).op s with hs'
+  have hgerm : ((structureSheaf I).presheaf.germ (basicOpen I f₀)
+        (mapTop I J φ hφ y) hxw).hom s' =
+      ((structureSheaf I).presheaf.germ U (mapTop I J φ hφ y) hxU).hom s :=
+    (structureSheaf I).presheaf.germ_res_apply (homOfLE hDU) (mapTop I J φ hφ y) hxw s
+  -- normalize the hypothesis and the goal to the restricted section
+  have ha' : IsUnit (((presheafedSpaceMap I J φ hφ).stalkMap y).hom
+      (((structureSheaf I).presheaf.germ (basicOpen I f₀)
+        (mapTop I J φ hφ y) hxw).hom s')) := by
+    have h0 : IsUnit (((presheafedSpaceMap I J φ hφ).stalkMap y).hom
+        (((structureSheaf I).presheaf.germ U (mapTop I J φ hφ y) hxU).hom s)) := ha
+    rwa [← hgerm] at h0
+  suffices h : IsUnit (((structureSheaf I).presheaf.germ (basicOpen I f₀)
+      (mapTop I J φ hφ y) hxw).hom s') by
+    have hgoal : IsUnit (((structureSheaf I).presheaf.germ U
+        (mapTop I J φ hφ y) hxU).hom s) := by rwa [hgerm] at h
+    exact hgoal
+  -- it suffices that the level-0 component of `s'` has invertible germ
+  apply isUnit_stalk_of_isUnit_zero I (mapTop I J φ hφ y)
+  rw [show ((stalkProj I (mapTop I J φ hφ y) 0).hom
+      (((structureSheaf I).presheaf.germ (basicOpen I f₀) (mapTop I J φ hφ y) hxw).hom s')) =
+      ((thickeningSheaf I 0).presheaf.germ (basicOpen I f₀) (mapTop I J φ hφ y) hxw).hom
+        (((limit.π (structureSheafFunctor I) ⟨0⟩).hom.app (op (basicOpen I f₀))).hom s') from
+    TopCat.Presheaf.stalkFunctor_map_germ_apply _ _ _
+      (limit.π (structureSheafFunctor I) ⟨0⟩).hom s']
+  -- switch to values via the criterion on `D(f₀)`
+  haveI : IsLocalization.Away (Ideal.Quotient.mk (I ^ (0 + 1)) f₀)
+      (((Spec.structureSheaf (R ⧸ I ^ (0 + 1))).presheaf.obj
+        (op (thickeningOpen I 0 (basicOpen I f₀))) : Type u)) :=
+    isLocalization_away_basicOpen_sections I 0 f₀
+  rw [isUnit_thickeningGerm_iff_isUnit_value I 0 (mapTop I J φ hφ y) (basicOpen I f₀) hxw
+    (Ideal.Quotient.mk (I ^ (0 + 1)) f₀)]
+  -- the image germ is invertible, so the level-0 germ of the image section is invertible
+  have hb : IsUnit (((thickeningSheaf J 0).presheaf.germ
+      ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)) y hxw).hom
+      (((limit.π (structureSheafFunctor J) ⟨0⟩).hom.app
+        (op ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)))).hom
+        (((mapSheafHom I J φ hφ).hom.app (op (basicOpen I f₀))).hom s'))) := by
+    have hst : ((presheafedSpaceMap I J φ hφ).stalkMap y).hom
+        (((structureSheaf I).presheaf.germ (basicOpen I f₀) (mapTop I J φ hφ y) hxw).hom s') =
+        ((structureSheaf J).presheaf.germ
+          ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)) y hxw).hom
+          (((mapSheafHom I J φ hφ).hom.app (op (basicOpen I f₀))).hom s') :=
+      AlgebraicGeometry.PresheafedSpace.stalkMap_germ_apply
+        (presheafedSpaceMap I J φ hφ) (basicOpen I f₀) y hxw s'
+    have h1 := ha'
+    rw [hst] at h1
+    have h2 := h1.map (stalkProj J y 0).hom
+    have hkey : ((stalkProj J y 0).hom
+        (((structureSheaf J).presheaf.germ
+          ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)) y hxw).hom
+          (((mapSheafHom I J φ hφ).hom.app (op (basicOpen I f₀))).hom s'))) =
+        ((thickeningSheaf J 0).presheaf.germ
+          ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)) y hxw).hom
+          (((limit.π (structureSheafFunctor J) ⟨0⟩).hom.app
+            (op ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)))).hom
+            (((mapSheafHom I J φ hφ).hom.app (op (basicOpen I f₀))).hom s')) :=
+      TopCat.Presheaf.stalkFunctor_map_germ_apply _ _ _
+        (limit.π (structureSheafFunctor J) ⟨0⟩).hom _
+    exact hkey ▸ h2
+  -- transfer the invertibility of the level-0 germ on the S-side to values
+  haveI hSloc : IsLocalization.Away (Ideal.Quotient.mk (J ^ (0 + 1)) (φ f₀))
+      (((Spec.structureSheaf (S ⧸ J ^ (0 + 1))).presheaf.obj
+        (op (thickeningOpen J 0 ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)))) :
+          Type u)) :=
+    (map_preimage_basicOpen I J φ hφ f₀).symm ▸
+      isLocalization_away_basicOpen_sections J 0 (φ f₀)
+  have hbv := (isUnit_thickeningGerm_iff_isUnit_value J 0 y
+    ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)) hxw
+    (Ideal.Quotient.mk (J ^ (0 + 1)) (φ f₀)) _).mp hb
+  -- rewrite the section through the compatibility of `mapSheafHom` with the projections
+  have hsec : (((limit.π (structureSheafFunctor J) ⟨0⟩).hom.app
+      (op ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)))).hom
+      (((mapSheafHom I J φ hφ).hom.app (op (basicOpen I f₀))).hom s')) =
+      ((levelSheafHom I J φ hφ 0).hom.app (op (basicOpen I f₀))).hom
+        (((limit.π (structureSheafFunctor I) ⟨0⟩).hom.app (op (basicOpen I f₀))).hom s') :=
+    DFunLike.congr_fun (congrArg (fun (α : structureSheaf I ⟶
+        (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).obj (thickeningSheaf J 0)) =>
+        (α.hom.app (op (basicOpen I f₀))).hom) (mapSheafHom_π I J φ hφ 0)) s'
+  replace hbv := hsec ▸ hbv
+  -- on values, the level map acts by the local homomorphism `Localization.localRingHom`
+  have hval : StructureSheaf.sectionValue
+      (thickeningOpen J 0 ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)))
+      ((thickeningTopIso J 0).hom y) (hom_mem_thickeningOpen J 0 y hxw)
+      (((levelSheafHom I J φ hφ 0).hom.app (op (basicOpen I f₀))).hom
+        (((limit.π (structureSheafFunctor I) ⟨0⟩).hom.app (op (basicOpen I f₀))).hom s')) =
+      Localization.localRingHom
+        (PrimeSpectrum.comap (levelRingHom I J φ hφ 0)
+          ((thickeningTopIso J 0).hom y)).asIdeal
+        ((thickeningTopIso J 0).hom y).asIdeal (levelRingHom I J φ hφ 0) rfl
+        ((((limit.π (structureSheafFunctor I) ⟨0⟩).hom.app (op (basicOpen I f₀))).hom s').1
+          ⟨PrimeSpectrum.comap (levelRingHom I J φ hφ 0) ((thickeningTopIso J 0).hom y),
+            thickeningOpen_map_le I J φ hφ 0 (basicOpen I f₀)
+              (hom_mem_thickeningOpen J 0 y hxw)⟩) :=
+    StructureSheaf.comap_apply (levelRingHom I J φ hφ 0)
+      (thickeningOpen I 0 (basicOpen I f₀))
+      (thickeningOpen J 0 ((Opens.map (mapTop I J φ hφ)).obj (basicOpen I f₀)))
+      (thickeningOpen_map_le I J φ hφ 0 (basicOpen I f₀))
+      (((limit.π (structureSheafFunctor I) ⟨0⟩).hom.app (op (basicOpen I f₀))).hom s')
+      ⟨(thickeningTopIso J 0).hom y, hom_mem_thickeningOpen J 0 y hxw⟩
+  replace hbv := hval ▸ hbv
+  -- `localRingHom` is a local ring homomorphism, so the value on the R-side is a unit
+  haveI hloc := Localization.isLocalHom_localRingHom
+    (PrimeSpectrum.comap (levelRingHom I J φ hφ 0) ((thickeningTopIso J 0).hom y)).asIdeal
+    ((thickeningTopIso J 0).hom y).asIdeal (levelRingHom I J φ hφ 0) rfl
+  have hu := hloc.map_nonunit _ hbv
+  -- finally transport the evaluation point to the point corresponding to `mapTop y`
+  have hpt : (⟨PrimeSpectrum.comap (levelRingHom I J φ hφ 0) ((thickeningTopIso J 0).hom y),
+      thickeningOpen_map_le I J φ hφ 0 (basicOpen I f₀)
+        (hom_mem_thickeningOpen J 0 y hxw)⟩ :
+      (thickeningOpen I 0 (basicOpen I f₀) : Set (PrimeSpectrum (R ⧸ I ^ (0 + 1))))) =
+      ⟨(thickeningTopIso I 0).hom (mapTop I J φ hφ y),
+        hom_mem_thickeningOpen I 0 (mapTop I J φ hφ y) hxw⟩ :=
+    Subtype.ext (comap_levelRingHom_hom I J φ hφ 0 y)
+  change IsUnit ((((limit.π (structureSheafFunctor I) ⟨0⟩).hom.app
+    (op (basicOpen I f₀))).hom s').1
+    ⟨(thickeningTopIso I 0).hom (mapTop I J φ hφ y),
+      hom_mem_thickeningOpen I 0 (mapTop I J φ hφ y) hxw⟩)
+  exact hpt ▸ hu
+
+/-- **Functoriality of the formal spectrum** (EGA I, 10.2.2): a ring homomorphism `φ : R →+* S`
+between adic rings carrying the ideal of definition of `R` into that of `S` (equivalently, a
+continuous ring homomorphism) induces a morphism of locally ringed spaces `Spf S ⟶ Spf R`. -/
+def locallyRingedSpaceMap : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I where
+  toHom := presheafedSpaceMap I J φ hφ
+  prop y := isLocalHom_stalkMap I J φ hφ y
+
+/-- The induced morphism of affine formal schemes `Spf S ⟶ Spf R`. -/
+def spfMap [TopologicalSpace R] [TopologicalSpace S] [IsAdicRing I] [IsAdicRing J] :
+    FormalScheme.Spf J ⟶ FormalScheme.Spf I :=
+  FormalScheme.Hom.mk (locallyRingedSpaceMap I J φ hφ)
+
+end LocallyRingedSpaceMap
+
+
+
+
+
 end FormalSpectrum
