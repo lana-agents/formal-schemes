@@ -17,4 +17,5 @@ import FormalSchemes.Spf
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
+import FormalSchemes.Thickenings
 import FormalSchemes.TopFiniteType
