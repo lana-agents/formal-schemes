@@ -16,7 +16,7 @@ first examples:
 
 * the identity is adic, and adic morphisms compose (`IsAdicHom.id`, `IsAdicHom.comp`);
 * the quotient of an adic ring by an adically closed ideal is adic over it
-  (`IsAdicHom.quotient`), which is the affine model of a **closed formal subscheme**
+  (`IsAdicHom.of_map`), which is the affine model of a **closed formal subscheme**
   (EGA I, 10.14): `Spf (R ⧸ a) ⟶ Spf R`.
 
 ## Main definitions
