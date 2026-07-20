@@ -43,7 +43,7 @@ We reindex by `n : ℕ` standing for the exponent `n + 1`, so that the `n ≠ 0`
 
 noncomputable section
 
-open CategoryTheory AlgebraicGeometry
+open CategoryTheory AlgebraicGeometry Opposite
 
 variable {R : Type*} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
 
@@ -88,25 +88,117 @@ theorem topMap_stepRingHom_comp_inv (n : ℕ) :
   rw [Iso.comp_inv_eq, ← thickeningTopIso_hom_comp_topMap_stepRingHom I n,
     Iso.inv_hom_id_assoc]
 
-omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
-set_option maxHeartbeats 4000000 in
--- Checking that `hom` has the stated type requires unfolding `SheafedSpace.sheaf` and the
--- `TopCat.Sheaf`/`TopCat.Presheaf` pushforward functors against each other, which is slow.
+/-!
+### Sections of the thickening sheaves, and the transition maps of the tower
+
+The `n`-th thickening sheaf on `Spf R` is the pushforward of the structure sheaf of
+`Spec (R ⧸ I ^ (n + 1))` along a homeomorphism, so its ring of sections over an open `U ⊆ Spf R`
+is *definitionally* the ring of sections of `O_{Spec (R ⧸ I ^ (n + 1))}` over the corresponding
+open `thickeningOpen I n U` (`thickeningSheaf_obj`). This lets us define the transition map
+`stepSheafHom` of the tower open-by-open as the map `StructureSheaf.comap` on sections induced
+by the surjection `R ⧸ I ^ (n + 2) →+* R ⧸ I ^ (n + 1)` (so the computation rule
+`stepSheafHom_hom_app` holds by definition). These identifications drive all section- and
+stalk-level computations on `Spf R`.
+-/
+
+section Sections
+
+omit [TopologicalSpace R] [IsAdicRing I]
+
+variable (n : ℕ) (U : TopologicalSpace.Opens (FormalSpectrum I))
+
+open TopologicalSpace in
+/-- The open subset of the `n`-th infinitesimal thickening `Spec (R ⧸ I ^ (n + 1))`
+corresponding to an open subset `U ⊆ Spf R` under the thickening homeomorphism. -/
+def thickeningOpen : Opens (PrimeSpectrum (R ⧸ I ^ (n + 1))) :=
+  (Opens.map (thickeningTopIso I n).inv).obj U
+
+@[simp]
+theorem thickeningOpen_top : thickeningOpen I n ⊤ = ⊤ :=
+  rfl
+
+/-- The sections of the `n`-th thickening sheaf over `U ⊆ Spf R` are, definitionally, the
+sections of the structure sheaf of the `n`-th thickening over `thickeningOpen I n U`. -/
+theorem thickeningSheaf_obj :
+    (thickeningSheaf I n).presheaf.obj (op U) =
+      (Spec.structureSheaf (R ⧸ I ^ (n + 1))).presheaf.obj (op (thickeningOpen I n U)) :=
+  rfl
+
+/-- The transition maps `Spec (R ⧸ I ^ (n + 1)) → Spec (R ⧸ I ^ (n + 2))` of the tower of
+thickenings match up the opens `thickeningOpen` corresponding to a fixed open of `Spf R`. -/
+theorem map_topMap_thickeningOpen :
+    (TopologicalSpace.Opens.map (Spec.topMap (stepRingHom I n))).obj
+        (thickeningOpen I (n + 1) U) =
+      thickeningOpen I n U := by
+  have h : (TopologicalSpace.Opens.map
+        (Spec.topMap (stepRingHom I n) ≫ (thickeningTopIso I (n + 1)).inv)).obj U =
+      thickeningOpen I n U := by
+    rw [topMap_stepRingHom_comp_inv]
+    rfl
+  exact h
+
+theorem thickeningOpen_le_comap :
+    (thickeningOpen I n U : Set (PrimeSpectrum (R ⧸ I ^ (n + 1)))) ⊆
+      PrimeSpectrum.comap (stepRingHom I n).hom ⁻¹'
+        (thickeningOpen I (n + 1) U : Set (PrimeSpectrum (R ⧸ I ^ (n + 2)))) := by
+  rw [← map_topMap_thickeningOpen I n U]
+  exact fun x hx => hx
+
+/-- `StructureSheaf.comap` is compatible with the restriction maps of the structure sheaves:
+the square
+
+```
+Γ(U₁, O_Spec A) → Γ(U₂, O_Spec B)
+      ↓                  ↓
+Γ(V₁, O_Spec A) → Γ(V₂, O_Spec B)
+```
+
+of comaps and restrictions commutes. -/
+theorem comap_comp_map {A B : Type u} [CommRing A] [CommRing B] (φ : A →+* B)
+    {U₁ V₁ : TopologicalSpace.Opens (PrimeSpectrum.Top A)} (i₁ : V₁ ⟶ U₁)
+    {U₂ V₂ : TopologicalSpace.Opens (PrimeSpectrum.Top B)} (i₂ : V₂ ⟶ U₂)
+    (hU : U₂.1 ⊆ PrimeSpectrum.comap φ ⁻¹' U₁.1)
+    (hV : V₂.1 ⊆ PrimeSpectrum.comap φ ⁻¹' V₁.1) :
+    (StructureSheaf.comap φ V₁ V₂ hV).comp
+        ((Spec.structureSheaf A).presheaf.map i₁.op).hom =
+      ((Spec.structureSheaf B).presheaf.map i₂.op).hom.comp
+        (StructureSheaf.comap φ U₁ U₂ hU) := by
+  refine RingHom.ext fun s => Subtype.ext (funext fun p => ?_)
+  change (StructureSheaf.comap φ V₁ V₂ hV
+        (((Spec.structureSheaf A).presheaf.map i₁.op).hom s)).1 p =
+      (StructureSheaf.comap φ U₁ U₂ hU s).1 (i₂ p)
+  rw [StructureSheaf.comap_apply, StructureSheaf.comap_apply]
+  rfl
+
 /-- The transition map `thickeningSheaf I (n + 1) ⟶ thickeningSheaf I n` of the inverse system,
-induced by the closed immersion of thickenings classified by `stepRingHom`. -/
-def stepSheafHom (n : ℕ) : thickeningSheaf I (n + 1) ⟶ thickeningSheaf I n :=
-  have hom :
-      (Spec.sheafedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1 + 1)))).sheaf.obj ⟶
-        ((TopCat.Sheaf.pushforward CommRingCat (Spec.topMap (stepRingHom I n))).obj
-          (Spec.sheafedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1)))).sheaf).obj :=
-    (Spec.sheafedSpaceMap (stepRingHom I n)).hom.c
-  (TopCat.Sheaf.pushforward CommRingCat (thickeningTopIso I (n + 1)).inv).map
-      (ObjectProperty.homMk hom) ≫
-    eqToHom (congrArg
-      (fun f => (TopCat.Sheaf.pushforward CommRingCat f).obj
-        (Spec.sheafedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1)))).sheaf)
-      (topMap_stepRingHom_comp_inv I n))
+induced by the closed immersion of thickenings classified by `stepRingHom`. Over each open
+`U ⊆ Spf R` it is the map on sections `StructureSheaf.comap` induced by the surjection
+`R ⧸ I ^ (n + 2) →+* R ⧸ I ^ (n + 1)`. -/
+def stepSheafHom : thickeningSheaf I (n + 1) ⟶ thickeningSheaf I n :=
+  ObjectProperty.homMk
+    { app := fun U => CommRingCat.ofHom
+        (StructureSheaf.comap (stepRingHom I n).hom
+          (thickeningOpen I (n + 1) U.unop) (thickeningOpen I n U.unop)
+          (thickeningOpen_le_comap I n U.unop))
+      naturality := fun U V i => by
+        apply CommRingCat.hom_ext
+        rw [CommRingCat.hom_comp, CommRingCat.hom_comp]
+        exact comap_comp_map (stepRingHom I n).hom
+          ((TopologicalSpace.Opens.map (thickeningTopIso I (n + 1)).inv).map i.unop)
+          ((TopologicalSpace.Opens.map (thickeningTopIso I n).inv).map i.unop)
+          (thickeningOpen_le_comap I n U.unop) (thickeningOpen_le_comap I n V.unop) }
+
+/-- Computation rule for `stepSheafHom`: over an open `U ⊆ Spf R` it is the map on sections
+`StructureSheaf.comap` induced by the surjection `R ⧸ I ^ (n + 2) →+* R ⧸ I ^ (n + 1)` between
+the structure sheaves of the thickenings. True by definition. -/
+theorem stepSheafHom_hom_app :
+    (stepSheafHom I n).hom.app (op U) =
+      CommRingCat.ofHom (StructureSheaf.comap (stepRingHom I n).hom
+        (thickeningOpen I (n + 1) U) (thickeningOpen I n U)
+        (thickeningOpen_le_comap I n U)) :=
+  rfl
+
+end Sections
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The inverse system of structure sheaves of the thickenings of `Spf R`, whose limit defines

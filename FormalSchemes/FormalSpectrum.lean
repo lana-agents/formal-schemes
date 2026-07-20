@@ -90,6 +90,67 @@ theorem isClosedEmbedding_toPrimeSpectrum : IsClosedEmbedding (toPrimeSpectrum I
     Ideal.Quotient.mk_surjective
 
 /-!
+### Basic opens
+
+The topology of `Spf R` has a basis of *basic opens* `D(f)`, `f ∈ R`, consisting of the open
+primes not containing `f`. Under the identification of `Spf R` with `Spec (R ⧸ I)` these are
+the usual basic opens attached to the residues `f mod I`, and every basic open of `Spec (R ⧸ I)`
+arises this way since `R → R ⧸ I` is surjective. See EGA I, 10.1.4.
+-/
+
+section BasicOpen
+
+omit [TopologicalSpace R] [IsAdicRing I]
+
+/-- The basic open `D(f) ⊆ Spf R` attached to `f : R`: the set of open primes of `R` not
+containing `f`. Under the identification `Spf R = Spec (R ⧸ I)` it is the basic open of the
+residue of `f` modulo `I`. -/
+def basicOpen (f : R) : TopologicalSpace.Opens (FormalSpectrum I) :=
+  PrimeSpectrum.basicOpen (Ideal.Quotient.mk I f)
+
+theorem mem_basicOpen (f : R) (x : FormalSpectrum I) :
+    x ∈ basicOpen I f ↔ Ideal.Quotient.mk I f ∉ x.asIdeal :=
+  Iff.rfl
+
+@[simp]
+theorem basicOpen_one : basicOpen I (1 : R) = ⊤ := by
+  rw [basicOpen, map_one]
+  exact PrimeSpectrum.basicOpen_one
+
+@[simp]
+theorem basicOpen_zero : basicOpen I (0 : R) = ⊥ := by
+  rw [basicOpen, map_zero]
+  exact PrimeSpectrum.basicOpen_zero
+
+theorem basicOpen_mul (f g : R) : basicOpen I (f * g) = basicOpen I f ⊓ basicOpen I g := by
+  rw [basicOpen, map_mul]
+  exact PrimeSpectrum.basicOpen_mul _ _
+
+/-- Every basic open of `Spec (R ⧸ I)` is a basic open of `Spf R`, since `R → R ⧸ I` is
+surjective. -/
+theorem exists_basicOpen_eq (g : R ⧸ I) :
+    ∃ f : R, basicOpen I f = PrimeSpectrum.basicOpen g := by
+  obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective g
+  exact ⟨f, rfl⟩
+
+/-- The basic opens `D(f)`, `f ∈ R`, form a basis of the topology of `Spf R`. -/
+theorem isTopologicalBasis_basicOpen :
+    TopologicalSpace.IsTopologicalBasis
+      (Set.range fun f : R => (basicOpen I f : Set (FormalSpectrum I))) := by
+  have h : (Set.range fun f : R => (basicOpen I f : Set (FormalSpectrum I))) =
+      Set.range fun g : R ⧸ I => (PrimeSpectrum.basicOpen g : Set (PrimeSpectrum (R ⧸ I))) := by
+    apply subset_antisymm
+    · rintro _ ⟨f, rfl⟩
+      exact ⟨Ideal.Quotient.mk I f, rfl⟩
+    · rintro _ ⟨g, rfl⟩
+      obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective g
+      exact ⟨f, rfl⟩
+  rw [h]
+  exact PrimeSpectrum.isTopologicalBasis_basic_opens
+
+end BasicOpen
+
+/-!
 ### Functoriality
 
 A ring homomorphism `φ : R →+* S` between adic rings that maps the ideal of definition `I`
@@ -230,6 +291,26 @@ theorem comap_mk_toThickening (n : ℕ) (hn : n ≠ 0) (x : FormalSpectrum I) :
       toPrimeSpectrum I x := by
   rw [toThickening, toPrimeSpectrum, ← PrimeSpectrum.comap_comp_apply,
     Ideal.Quotient.factor_comp_mk]
+
+/-- The preimage of the basic open `D(f mod I ^ n) ⊆ Spec (R ⧸ I ^ n)` under the map to the
+`n`-th infinitesimal thickening is the basic open `D(f) ⊆ Spf R`. -/
+theorem toThickening_preimage_basicOpen (n : ℕ) (hn : n ≠ 0) (f : R) :
+    toThickening I n hn ⁻¹'
+        (PrimeSpectrum.basicOpen (Ideal.Quotient.mk (I ^ n) f) : Set (PrimeSpectrum (R ⧸ I ^ n)))
+      = (basicOpen I f : Set (FormalSpectrum I)) := by
+  ext x
+  change Ideal.Quotient.mk (I ^ n) f ∉ (PrimeSpectrum.comap _ x).asIdeal ↔ _
+  rw [PrimeSpectrum.comap_asIdeal, Ideal.mem_comap, Ideal.Quotient.factor_mk]
+  rfl
+
+/-- The image of the basic open `D(f) ⊆ Spf R` in the `n`-th infinitesimal thickening
+`Spec (R ⧸ I ^ n)` is the basic open `D(f mod I ^ n)`. -/
+theorem toThickening_image_basicOpen (n : ℕ) (hn : n ≠ 0) (f : R) :
+    toThickening I n hn '' (basicOpen I f : Set (FormalSpectrum I)) =
+      (PrimeSpectrum.basicOpen (Ideal.Quotient.mk (I ^ n) f) :
+        Set (PrimeSpectrum (R ⧸ I ^ n))) := by
+  rw [← toThickening_preimage_basicOpen I n hn f,
+    Set.image_preimage_eq _ (isHomeomorph_toThickening I n hn).bijective.surjective]
 
 end Thickenings
 
