@@ -3,6 +3,7 @@ import FormalSchemes.AdicExtend
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
+import FormalSchemes.CompletedTensor
 import FormalSchemes.Completion
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalScheme
