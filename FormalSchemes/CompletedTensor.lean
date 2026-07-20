@@ -37,6 +37,8 @@ tensor product composed with the continuous-extension machinery of
 * `CompletedTensorProduct.map`: functoriality — a pair of `R`-algebra maps `A →ₐ A'`, `B →ₐ B'`
   induces `A ⊗̂_R B →+* A' ⊗̂_R B'`; `map_inl`, `map_inr` compute it on the factors.
 * `CompletedTensorProduct.commEquiv`: the commutativity isomorphism `A ⊗̂_R B ≃+* B ⊗̂_R A`.
+* `CompletedTensorProduct.unitEquiv`: the left unitor `R ⊗̂_R A ≃+* A` for a complete adic
+  `R`-algebra `A`, absorbing the first factor.
 
 ## References
 
@@ -323,6 +325,79 @@ theorem commEquiv_inr (hI : I.FG) (b : B) :
     commEquiv (R := R) (I := I) (A := A) (B := B) hI (inr R I A B b) = inl R I B A b :=
   commHom_inr hI b
 
+/-- The canonical map `inr` sends the powers of the ideal of definition of the second factor
+`I·B` into the powers of the ideal of definition of `A ⊗̂_R B`. -/
+theorem inr_mem_pow (m : ℕ) {b : B} (hb : b ∈ (I.map (algebraMap R B)) ^ m) :
+    inr R I A B b ∈ (idealOfDefinition R I A B) ^ m := by
+  have h1 : Ideal.map (inr R I A B).toRingHom (Ideal.map (algebraMap R B) I)
+      = idealOfDefinition R I A B := by
+    rw [Ideal.map_map, idealOfDefinition_eq_map]
+    congr 1
+    exact (inr R I A B).comp_algebraMap
+  have hmem : (inr R I A B).toRingHom b
+      ∈ Ideal.map (inr R I A B).toRingHom ((I.map (algebraMap R B)) ^ m) :=
+    Ideal.mem_map_of_mem _ hb
+  rw [Ideal.map_pow, h1] at hmem
+  exact hmem
+
 end Functoriality
+
+/-!
+### The left unitor
+
+For a complete adic `R`-algebra `A` the first factor `R` is absorbed: `R ⊗̂_R A ≃+* A`. This is
+the completed-tensor counterpart of `Algebra.TensorProduct.lid`, and is the isomorphism through
+which the counit laws of a formal group (e.g. `Ĝm`, issue 67) are expressed.
+-/
+
+section Unitor
+
+variable {R I A}
+variable [IsAdicComplete (I.map (algebraMap R A)) A]
+
+/-- The forward map of the left unitor `R ⊗̂_R A →+* A`, given by the universal property with
+`R ↦ A` the structure map and `A ↦ A` the identity: `inl r ↦ algebraMap r`, `inr a ↦ a`. -/
+def unitHom : CompletedTensorProduct R I R A →+* A :=
+  lift (I.map (algebraMap R A)) le_rfl (Algebra.ofId R A) (AlgHom.id R A)
+
+@[simp]
+theorem unitHom_inl (r : R) : unitHom (R := R) (I := I) (A := A) (inl R I R A r)
+    = algebraMap R A r :=
+  lift_inl _ _ _ _ r
+
+@[simp]
+theorem unitHom_inr (a : A) : unitHom (R := R) (I := I) (A := A) (inr R I R A a) = a :=
+  lift_inr _ _ _ _ a
+
+/-- **The left unitor** `R ⊗̂_R A ≃+* A` (for `I` finitely generated and `A` complete), absorbing
+the first factor `R`; the inverse is `inr`. -/
+def unitEquiv (hI : I.FG) : CompletedTensorProduct R I R A ≃+* A :=
+  haveI : IsAdicComplete (idealOfDefinition R I R A) (CompletedTensorProduct R I R A) :=
+    (isAdicRing R I R A hI).toIsAdicComplete
+  RingEquiv.ofRingHom
+    unitHom
+    (inr R I R A)
+    (by ext a; simp)
+    (by
+      refine hom_ext (idealOfDefinition R I R A) hI
+        (fun m x hx => inr_mem_pow m (lift_mem_pow _ _ _ _ hI m hx)) (fun m x hx => hx)
+        (fun r => ?_) (fun a => ?_)
+      · change inr R I R A (unitHom (inl R I R A r)) = inl R I R A r
+        rw [unitHom_inl, AlgHom.commutes]
+        exact ((inl R I R A).commutes r).symm
+      · change inr R I R A (unitHom (inr R I R A a)) = inr R I R A a
+        rw [unitHom_inr])
+
+@[simp]
+theorem unitEquiv_inl (hI : I.FG) (r : R) :
+    unitEquiv (R := R) (I := I) (A := A) hI (inl R I R A r) = algebraMap R A r :=
+  unitHom_inl r
+
+@[simp]
+theorem unitEquiv_inr (hI : I.FG) (a : A) :
+    unitEquiv (R := R) (I := I) (A := A) hI (inr R I R A a) = a :=
+  unitHom_inr a
+
+end Unitor
 
 end CompletedTensorProduct
