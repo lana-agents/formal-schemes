@@ -209,6 +209,37 @@ theorem comap_comp_map {A B : Type u} [CommRing A] [CommRing B] (φ : A →+* B)
   rw [StructureSheaf.comap_apply, StructureSheaf.comap_apply]
   rfl
 
+/-- `StructureSheaf.comap` is compatible with the canonical maps interpreting ring elements as
+sections: `comap φ` sends the section attached to `a` to the section attached to `φ a`. -/
+theorem comap_algebraMap {A B : Type u} [CommRing A] [CommRing B] (φ : A →+* B)
+    (U : TopologicalSpace.Opens (PrimeSpectrum.Top A))
+    (V : TopologicalSpace.Opens (PrimeSpectrum.Top B))
+    (h : V.1 ⊆ PrimeSpectrum.comap φ ⁻¹' U.1) (a : A) :
+    StructureSheaf.comap φ U V h
+        ((algebraMap A ((Spec.structureSheaf A).presheaf.obj (op U))) a) =
+      algebraMap B ((Spec.structureSheaf B).presheaf.obj (op V)) (φ a) := by
+  have h1 : (algebraMap A ((Spec.structureSheaf A).presheaf.obj (op U))) a =
+      StructureSheaf.const a (1 : A) U (by rw [PrimeSpectrum.basicOpen_one]; exact le_top) :=
+    rfl
+  have h2 : (algebraMap B ((Spec.structureSheaf B).presheaf.obj (op V))) (φ a) =
+      StructureSheaf.const (φ a) (1 : B) V
+        (by rw [PrimeSpectrum.basicOpen_one]; exact le_top) :=
+    rfl
+  rw [h1, h2, StructureSheaf.comap_const]
+  simp only [map_one]
+
+/-- The transition maps on sections of the thickening sheaves are compatible with the canonical
+maps interpreting ring elements as sections. -/
+theorem comap_step_algebraMap (x : R ⧸ I ^ (n + 1 + 1)) :
+    StructureSheaf.comap (stepRingHom I n).hom
+        (thickeningOpen I (n + 1) U) (thickeningOpen I n U) (thickeningOpen_le_comap I n U)
+        (algebraMap (R ⧸ I ^ (n + 1 + 1))
+          ((thickeningSheaf I (n + 1)).presheaf.obj (op U)) x) =
+      algebraMap (R ⧸ I ^ (n + 1)) ((thickeningSheaf I n).presheaf.obj (op U))
+        ((stepRingHom I n).hom x) :=
+  comap_algebraMap (stepRingHom I n).hom (thickeningOpen I (n + 1) U) (thickeningOpen I n U)
+    (thickeningOpen_le_comap I n U) x
+
 /-- The transition map `thickeningSheaf I (n + 1) ⟶ thickeningSheaf I n` of the inverse system,
 induced by the closed immersion of thickenings classified by `stepRingHom`. Over each open
 `U ⊆ Spf R` it is the map on sections `StructureSheaf.comap` induced by the surjection

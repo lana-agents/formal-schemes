@@ -185,3 +185,157 @@ def limitRingEquiv : AdicCompletion I R ≃+* (limit (quotientTower I) : CommRin
     rw [limitProj_toLimitHom, evalₐ_fromLimitHom]
 
 end AdicCompletion
+
+/-!
+### Limits of towers identified with a shifted quotient tower
+
+The towers arising from sheaves on formal spectra have level `n` given by (a ring isomorphic
+to) `R ⧸ I ^ (n + 1)` — the tower is *shifted* by one relative to `quotientTower I`, whose level
+`n` is `R ⧸ I ^ n`. The following generic bridge identifies the limit of any such shifted tower
+with `AdicCompletion I R`: given level isomorphisms `e n : T.obj n ≃+* R ⧸ I ^ (n + 1)`
+intertwining the transition maps of `T` with the quotient factor maps, the limit of `T` is the
+adic completion. The missing level `0` of the shifted tower is no loss: `R ⧸ I ^ 0` is the zero
+ring, so it carries no information.
+-/
+
+section ShiftedTower
+
+universe u
+
+namespace AdicCompletion
+
+variable {R : Type u} [CommRing R] (I : Ideal R)
+variable (T : ℕᵒᵖ ⥤ CommRingCat.{u})
+variable (e : ∀ n : ℕ, (T.obj ⟨n⟩ : Type u) ≃+* R ⧸ I ^ (n + 1))
+variable (he : ∀ n : ℕ, (e n).toRingHom.comp (T.map (homOfLE (Nat.le_add_right n 1)).op).hom =
+  (Ideal.Quotient.factorPow I (Nat.le_succ (n + 1))).comp (e (n + 1)).toRingHom)
+
+/-- The projection of the limit of a shifted tower to its `n`-th level, transported to
+`R ⧸ I ^ (n + 1)` through the level isomorphism. -/
+def towerProj (n : ℕ) : (limit T : CommRingCat) →+* R ⧸ I ^ (n + 1) :=
+  (e n).toRingHom.comp (limit.π T ⟨n⟩).hom
+
+theorem towerProj_apply (n : ℕ) (z : (limit T : CommRingCat)) :
+    towerProj I T e n z = e n ((limit.π T ⟨n⟩).hom z) :=
+  rfl
+
+include he in
+theorem factorPow_towerProj (n : ℕ) (z : (limit T : CommRingCat)) :
+    Ideal.Quotient.factorPow I (Nat.le_succ (n + 1)) (towerProj I T e (n + 1) z) =
+      towerProj I T e n z := by
+  have hz : (T.map (homOfLE (Nat.le_add_right n 1)).op).hom ((limit.π T ⟨n + 1⟩).hom z) =
+      (limit.π T ⟨n⟩).hom z := by
+    have h := DFunLike.congr_fun
+      (congrArg CommRingCat.Hom.hom (limit.w T (homOfLE (Nat.le_add_right n 1)).op)) z
+    rwa [CommRingCat.hom_comp] at h
+  have h1 := DFunLike.congr_fun (he n) ((limit.π T ⟨n + 1⟩).hom z)
+  simp only [RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
+    RingHom.coe_coe] at h1
+  rw [towerProj_apply, towerProj_apply, ← hz, h1]
+
+/-- The compatible family of projections `limit T →+* R ⧸ I ^ n`, for *all* `n` (the missing
+level `0` of the shifted tower is recovered by factoring from level `1`). -/
+def towerProjFamily (n : ℕ) : (limit T : CommRingCat) →+* R ⧸ I ^ n :=
+  (Ideal.Quotient.factorPow I (Nat.le_succ n)).comp (towerProj I T e n)
+
+theorem towerProjFamily_apply (n : ℕ) (z : (limit T : CommRingCat)) :
+    towerProjFamily I T e n z =
+      Ideal.Quotient.factorPow I (Nat.le_succ n) (towerProj I T e n z) :=
+  rfl
+
+include he in
+theorem factorPow_comp_towerProjFamily {m n : ℕ} (hmn : m ≤ n) :
+    (Ideal.Quotient.factorPow I hmn).comp (towerProjFamily I T e n) =
+      towerProjFamily I T e m := by
+  induction n, hmn using Nat.le_induction with
+  | base =>
+    refine RingHom.ext fun z => ?_
+    simp only [RingHom.coe_comp, Function.comp_apply, towerProjFamily_apply,
+      Ideal.Quotient.factor_comp_apply]
+  | succ n hmn ih =>
+    refine RingHom.ext fun z => ?_
+    have h1 := DFunLike.congr_fun ih z
+    simp only [RingHom.coe_comp, Function.comp_apply] at h1 ⊢
+    rw [← h1, towerProjFamily_apply, towerProjFamily_apply,
+      ← factorPow_towerProj I T e he n z]
+    simp only [Ideal.Quotient.factor_comp_apply]
+
+/-- The ring homomorphism from the limit of a shifted tower to the adic completion, given by
+the universal property of the completion applied to the projections. -/
+def towerToAdicCompletion : (limit T : CommRingCat) →+* AdicCompletion I R :=
+  AdicCompletion.liftRingHom I (towerProjFamily I T e)
+    (fun hmn => factorPow_comp_towerProjFamily I T e he hmn)
+
+@[simp]
+theorem evalₐ_towerToAdicCompletion (n : ℕ) (y : (limit T : CommRingCat)) :
+    evalₐ I n (towerToAdicCompletion I T e he y) = towerProjFamily I T e n y :=
+  evalₐ_liftRingHom I _ _ n y
+
+/-- The cone over a shifted tower with point the adic completion, whose projections are the
+evaluations `evalₐ` at level `n + 1` transported through the level isomorphisms. -/
+def towerCone : Cone T where
+  pt := CommRingCat.of (AdicCompletion I R)
+  π := NatTrans.ofOpSequence
+    (fun n => CommRingCat.ofHom ((e n).symm.toRingHom.comp (evalₐ I (n + 1)).toRingHom))
+    (fun n => by
+      apply CommRingCat.hom_ext
+      refine RingHom.ext fun x => ?_
+      change (e n).symm (evalₐ I (n + 1) x) =
+        (T.map (homOfLE (Nat.le_add_right n 1)).op).hom
+          ((e (n + 1)).symm (evalₐ I (n + 1 + 1) x))
+      apply (e n).injective
+      rw [RingEquiv.apply_symm_apply]
+      have h := DFunLike.congr_fun (he n) ((e (n + 1)).symm (evalₐ I (n + 1 + 1) x))
+      simp only [RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
+        RingHom.coe_coe, RingEquiv.apply_symm_apply] at h
+      rw [h]
+      exact (factorPow_evalₐ I (Nat.le_succ (n + 1)) x).symm)
+
+@[simp]
+theorem towerCone_π_app (n : ℕ) :
+    (towerCone I T e he).π.app ⟨n⟩ =
+      CommRingCat.ofHom ((e n).symm.toRingHom.comp (evalₐ I (n + 1)).toRingHom) :=
+  rfl
+
+/-- The ring homomorphism from the adic completion to the limit of a shifted tower, induced by
+the cone `towerCone`. -/
+def adicCompletionToTower : AdicCompletion I R →+* (limit T : CommRingCat) :=
+  (limit.lift T (towerCone I T e he)).hom
+
+theorem π_adicCompletionToTower (n : ℕ) (x : AdicCompletion I R) :
+    (limit.π T ⟨n⟩).hom (adicCompletionToTower I T e he x) =
+      (e n).symm (evalₐ I (n + 1) x) := by
+  have h := congrArg CommRingCat.Hom.hom (limit.lift_π (towerCone I T e he) ⟨n⟩)
+  rw [CommRingCat.hom_comp] at h
+  exact DFunLike.congr_fun h x
+
+/-- **The limit of a shifted quotient tower is the adic completion.** Given a tower
+`T : ℕᵒᵖ ⥤ CommRingCat` whose level `n` is identified with `R ⧸ I ^ (n + 1)` compatibly with
+the transition maps, the categorical limit of `T` is `AdicCompletion I R`. -/
+def towerLimitRingEquiv : (limit T : CommRingCat) ≃+* AdicCompletion I R where
+  toFun := towerToAdicCompletion I T e he
+  invFun := adicCompletionToTower I T e he
+  map_mul' := map_mul _
+  map_add' := map_add _
+  left_inv x := by
+    refine Concrete.limit_ext T _ _ fun ⟨n⟩ => ?_
+    change (limit.π T ⟨n⟩).hom _ = (limit.π T ⟨n⟩).hom x
+    rw [π_adicCompletionToTower, evalₐ_towerToAdicCompletion]
+    apply (e n).injective
+    rw [RingEquiv.apply_symm_apply, towerProjFamily_apply,
+      factorPow_towerProj I T e he n x, towerProj_apply]
+  right_inv y := by
+    refine AdicCompletion.ext_evalₐ fun n => ?_
+    rw [evalₐ_towerToAdicCompletion, towerProjFamily_apply, towerProj_apply,
+      π_adicCompletionToTower, RingEquiv.apply_symm_apply]
+    exact factorPow_evalₐ I (Nat.le_succ n) y
+
+theorem evalₐ_towerLimitRingEquiv (n : ℕ) (z : (limit T : CommRingCat)) :
+    evalₐ I (n + 1) (towerLimitRingEquiv I T e he z) = towerProj I T e n z := by
+  change evalₐ I (n + 1) (towerToAdicCompletion I T e he z) = _
+  rw [evalₐ_towerToAdicCompletion, towerProjFamily_apply,
+    factorPow_towerProj I T e he n z]
+
+end AdicCompletion
+
+end ShiftedTower
