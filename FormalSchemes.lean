@@ -11,6 +11,7 @@ import FormalSchemes.FormalSpectrum
 import FormalSchemes.GermValue
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
+import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.RestrictedPowerSeries
