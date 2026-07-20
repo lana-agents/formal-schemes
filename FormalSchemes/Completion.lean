@@ -1,4 +1,6 @@
 import FormalSchemes.RestrictedPowerSeries
+import FormalSchemes.AdicExtend
+import FormalSchemes.SpfMap
 
 set_option linter.style.header false
 
@@ -22,7 +24,11 @@ subscheme one completes along, as it must be.
 * `AdicCompletion.idealOfDefinition I`: the ideal of definition `I·R^` of the completion.
 * `AdicCompletion.ker_evalₐ`: `ker (evalₐ I n) = (I·R^) ^ n` for finitely generated `I`.
 * `AdicCompletion.quotientEquivPow`: `R^ ⧸ (I·R^) ^ n ≃+* R ⧸ I ^ n`.
+* `AdicCompletion.mapCompletion f hf hJ`: the ring map `R^ →+* S^` induced on completions by
+  `f : R →+* S` with `I.map f ≤ J`, with functor laws `mapCompletion_id`, `mapCompletion_comp`.
 * `formalCompletion R I hI : FormalScheme`: the formal completion of `Spec R` along `V(I)`.
+* `formalCompletion.map`: functoriality in `(X, Z)` — the induced morphism of formal schemes
+  `formalCompletion S J ⟶ formalCompletion R I`.
 * `formalCompletionHomeo`: its underlying space is homeomorphic to `Spec (R ⧸ I)`.
 * `range_toPrimeSpectrum_formalCompletion`: which sits inside `Spec R` as the closed subset
   `V(I)`.
@@ -93,6 +99,113 @@ def quotientEquiv (hI : I.FG) :
   (Ideal.quotEquivOfEq (pow_one (idealOfDefinition I)).symm).trans
     ((quotientEquivPow I hI 1).trans (Ideal.quotEquivOfEq (pow_one I)))
 
+/-!
+### Functoriality of the completion
+
+Completion is a functor on adic ring maps: a ring homomorphism `f : R →+* S` carrying `I` into
+`J` (`I.map f ≤ J`, i.e. a map of pairs `(Spec S, V(J)) → (Spec R, V(I))`) induces a continuous
+ring homomorphism `R^ →+* S^` between the completions, functorially. This is built from the
+continuous-extension engine `AdicCompletion.extendRingHom` (`FormalSchemes/AdicExtend.lean`);
+uniqueness of continuous extensions (`hom_ext_of_continuous`) gives the functor laws.
+-/
+
+section Functoriality
+
+variable {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
+  {I : Ideal R} {J : Ideal S} {K : Ideal T}
+
+/-- Membership in the powers of the ideal of definition, expressed through the module
+filtration `I ^ m • ⊤` used by the completion API (`extendRingHom_continuous`,
+`hom_ext_of_continuous`). -/
+theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : AdicCompletion I R) :
+    x ∈ (idealOfDefinition I) ^ m ↔
+      x ∈ (I ^ m • ⊤ : Submodule R (AdicCompletion I R)) := by
+  rw [← Ideal.mem_map_pow_iff_mem_smul_top I m x, Ideal.smul_top_eq_map,
+    Submodule.restrictScalars_mem, Algebra.algebraMap_self, Ideal.map_id]
+
+/-- **Functoriality of the completion**: a ring homomorphism `f : R →+* S` carrying `I` into `J`
+(`I.map f ≤ J`) induces a ring homomorphism `R^ →+* S^` on the `I`- and `J`-adic completions.
+The target ideal `J` is finitely generated so that `S^` is complete. -/
+def mapCompletion (f : R →+* S) (hf : I.map f ≤ J) (hJ : J.FG) :
+    AdicCompletion I R →+* AdicCompletion J S :=
+  haveI : IsAdicComplete (idealOfDefinition J) (AdicCompletion J S) :=
+    (isAdicRing_map J hJ).toIsAdicComplete
+  extendRingHom I (idealOfDefinition J) ((algebraMap S (AdicCompletion J S)).comp f)
+    (fun m => by
+      rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
+      refine Ideal.pow_right_mono ?_ m
+      rw [← Ideal.map_map]
+      exact Ideal.map_mono hf)
+
+theorem mapCompletion_of (f : R →+* S) (hf : I.map f ≤ J) (hJ : J.FG) (r : R) :
+    mapCompletion f hf hJ (AdicCompletion.of I R r) =
+      algebraMap S (AdicCompletion J S) (f r) := by
+  haveI : IsAdicComplete (idealOfDefinition J) (AdicCompletion J S) :=
+    (isAdicRing_map J hJ).toIsAdicComplete
+  exact extendRingHom_of I (idealOfDefinition J) _ _ r
+
+@[simp]
+theorem mapCompletion_algebraMap (f : R →+* S) (hf : I.map f ≤ J) (hJ : J.FG) (r : R) :
+    mapCompletion f hf hJ (algebraMap R (AdicCompletion I R) r) =
+      algebraMap S (AdicCompletion J S) (f r) := by
+  rw [AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply,
+    mapCompletion_of]
+
+theorem mapCompletion_comp_algebraMap (f : R →+* S) (hf : I.map f ≤ J) (hJ : J.FG) :
+    (mapCompletion f hf hJ).comp (algebraMap R (AdicCompletion I R)) =
+      (algebraMap S (AdicCompletion J S)).comp f :=
+  RingHom.ext fun r => by
+    rw [RingHom.comp_apply, RingHom.comp_apply, mapCompletion_algebraMap]
+
+/-- The induced map carries the ideal of definition of `R^` into that of `S^`: `mapCompletion`
+is an adic ring homomorphism. -/
+theorem idealOfDefinition_map_le (f : R →+* S) (hf : I.map f ≤ J) (hJ : J.FG) :
+    (idealOfDefinition I).map (mapCompletion f hf hJ) ≤ idealOfDefinition J := by
+  change (I.map (algebraMap R (AdicCompletion I R))).map (mapCompletion f hf hJ) ≤ _
+  rw [Ideal.map_map, mapCompletion_comp_algebraMap, ← Ideal.map_map]
+  exact Ideal.map_mono hf
+
+/-- Continuity of `mapCompletion`, in the filtration form consumed by
+`hom_ext_of_continuous`. -/
+theorem mapCompletion_mem_pow (f : R →+* S) (hf : I.map f ≤ J) (hJ : J.FG) (hI : I.FG)
+    (m : ℕ) {x : AdicCompletion I R}
+    (hx : x ∈ (I ^ m • ⊤ : Submodule R (AdicCompletion I R))) :
+    mapCompletion f hf hJ x ∈ (idealOfDefinition J) ^ m := by
+  haveI : IsAdicComplete (idealOfDefinition J) (AdicCompletion J S) :=
+    (isAdicRing_map J hJ).toIsAdicComplete
+  exact extendRingHom_continuous I (idealOfDefinition J) _ _ hI m x hx
+
+/-- Completion sends the identity to the identity (functoriality). -/
+theorem mapCompletion_id (hI : I.FG) :
+    mapCompletion (RingHom.id R) (le_of_eq (Ideal.map_id I)) hI =
+      RingHom.id (AdicCompletion I R) := by
+  haveI : IsAdicComplete (idealOfDefinition I) (AdicCompletion I R) :=
+    (isAdicRing_map I hI).toIsAdicComplete
+  refine hom_ext_of_continuous I (idealOfDefinition I) hI
+    (fun m x hx => mapCompletion_mem_pow _ _ _ hI m hx)
+    (fun m x hx => (mem_idealOfDefinition_pow_iff m x).mpr hx) fun r => ?_
+  simp only [mapCompletion_of, RingHom.id_apply, AdicCompletion.algebraMap_apply,
+    Algebra.algebraMap_self]
+
+/-- Completion respects composition (functoriality, contravariant on formal spectra). -/
+theorem mapCompletion_comp (f : R →+* S) (g : S →+* T) (hf : I.map f ≤ J) (hg : J.map g ≤ K)
+    (hJ : J.FG) (hK : K.FG) (hI : I.FG) :
+    (mapCompletion g hg hK).comp (mapCompletion f hf hJ) =
+      mapCompletion (g.comp f)
+        (by rw [← Ideal.map_map]; exact le_trans (Ideal.map_mono hf) hg) hK := by
+  haveI : IsAdicComplete (idealOfDefinition K) (AdicCompletion K T) :=
+    (isAdicRing_map K hK).toIsAdicComplete
+  haveI : IsAdicComplete (idealOfDefinition J) (AdicCompletion J S) :=
+    (isAdicRing_map J hJ).toIsAdicComplete
+  refine hom_ext_of_continuous I (idealOfDefinition K) hI (fun m x hx => ?_)
+    (fun m x hx => mapCompletion_mem_pow _ _ _ hI m hx) fun r => ?_
+  · have h1 := mapCompletion_mem_pow f hf hJ hI m hx
+    rw [mem_idealOfDefinition_pow_iff] at h1
+    exact mapCompletion_mem_pow g hg hK hJ m h1
+  · simp only [RingHom.comp_apply, mapCompletion_of, mapCompletion_algebraMap]
+
+end Functoriality
+
 end AdicCompletion
 
 /-- The **formal completion of `Spec R` along `V(I)`** (EGA I, 10.8): the formal spectrum of the
@@ -120,5 +233,25 @@ theorem range_comap_mk :
   rw [Set.range_comp, (homeo I hI).surjective.range_eq, Set.image_univ]
   have h := range_comap_of_surjective _ (Ideal.Quotient.mk I) Ideal.Quotient.mk_surjective
   rwa [Ideal.mk_ker] at h
+
+/-- **Functoriality of the formal completion in `(X, Z)`** (EGA I, 10.8): a ring homomorphism
+`f : R →+* S` carrying `I` into `J` (`I.map f ≤ J`) — a morphism of pairs
+`(Spec S, V(J)) → (Spec R, V(I))` — induces a morphism of formal schemes
+`formalCompletion S J ⟶ formalCompletion R I` on the completions (contravariantly), namely `Spf`
+of the induced map `R^ →+* S^` on completions.
+
+The functor laws hold on the underlying completion ring maps (`AdicCompletion.mapCompletion_id`,
+`AdicCompletion.mapCompletion_comp`); packaging them as equalities of formal-scheme morphisms
+requires transporting the structure-sheaf component along the equality of base maps and is left
+as a follow-up (cf. the analogous caveat for `FormalSpectrum.thickeningMap`). -/
+def map {S : Type u} [CommRing S] {I : Ideal R} {J : Ideal S} (hI : I.FG) (hJ : J.FG)
+    (f : R →+* S) (hf : I.map f ≤ J) :
+    formalCompletion S J hJ ⟶ formalCompletion R I hI :=
+  haveI := AdicCompletion.isAdicRing_map I hI
+  haveI := AdicCompletion.isAdicRing_map J hJ
+  FormalScheme.Hom.mk
+    (FormalSpectrum.locallyRingedSpaceMap (AdicCompletion.idealOfDefinition I)
+      (AdicCompletion.idealOfDefinition J) (AdicCompletion.mapCompletion f hf hJ)
+      (Ideal.map_le_iff_le_comap.mp (AdicCompletion.idealOfDefinition_map_le f hf hJ)))
 
 end formalCompletion
