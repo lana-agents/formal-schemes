@@ -42,12 +42,14 @@ into `S ⧸ L ^ m`. -/
 def extendLevel (m : ℕ) : AdicCompletion K B →+* S ⧸ L ^ m :=
   (Ideal.quotientMap (L ^ m) ψ (hψ m)).comp (AdicCompletion.evalₐ K m).toRingHom
 
+omit [IsAdicComplete L S] in
 theorem extendLevel_of (m : ℕ) (b : B) :
     extendLevel K L ψ hψ m (AdicCompletion.of K B b) = Ideal.Quotient.mk (L ^ m) (ψ b) := by
   simp only [extendLevel, RingHom.coe_comp, Function.comp_apply, AlgHom.toRingHom_eq_coe,
     RingHom.coe_coe]
   rw [AdicCompletion.evalₐ_of, Ideal.quotientMap_mk]
 
+omit [IsAdicComplete L S] in
 theorem factorPow_comp_extendLevel {m m' : ℕ} (hle : m ≤ m') :
     (Ideal.Quotient.factorPow L hle).comp (extendLevel K L ψ hψ m') =
       extendLevel K L ψ hψ m := by
