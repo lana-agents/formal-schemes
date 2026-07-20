@@ -5,6 +5,7 @@ import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.BaseChange
+import FormalSchemes.CofinalCompletion
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.CompletedTensorFunctor
