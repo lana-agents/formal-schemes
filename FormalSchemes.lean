@@ -2,6 +2,7 @@ import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicExtend
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
+import FormalSchemes.Completion
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
