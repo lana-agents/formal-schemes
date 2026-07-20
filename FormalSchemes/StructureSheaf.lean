@@ -276,6 +276,13 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 def structureSheafFunctor : ℕᵒᵖ ⥤ TopCat.Sheaf CommRingCat (TopCat.of (FormalSpectrum I)) :=
   Functor.ofOpSequence (stepSheafHom I)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
+@[simp]
+theorem structureSheafFunctor_map_succ (n : ℕ) :
+    (structureSheafFunctor I).map (homOfLE (Nat.le_add_right n 1)).op = stepSheafHom I n := by
+  simp only [structureSheafFunctor]
+  exact Functor.ofOpSequence_map_homOfLE_succ _ n
+
 /-- The **structure sheaf** `O_{Spf R}` of the formal spectrum `Spf R` of an adic ring `R` with
 ideal of definition `I`, defined as the inverse limit of the structure sheaves of the
 infinitesimal thickenings `Spec (R ⧸ I ^ n)`. -/

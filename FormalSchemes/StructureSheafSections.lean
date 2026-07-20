@@ -67,4 +67,43 @@ def sectionsLimitIso (U : (Opens ↑(TopCat.of (FormalSpectrum I)))ᵒᵖ) :
     limitObjIsoLimitCompEvaluation
       (structureSheafFunctor I ⋙ TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I))) U
 
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- The identification `sectionsLimitIso` is compatible with the projections: composing with
+the limit projection at level `n` recovers the component at `U` of the limit projection of
+sheaves. -/
+theorem sectionsLimitIso_hom_π (U : (Opens ↑(TopCat.of (FormalSpectrum I)))ᵒᵖ) (n : ℕ) :
+    (sectionsLimitIso I U).hom ≫
+        limit.π (structureSheafFunctor I ⋙ sectionsFunctor I U) ⟨n⟩ =
+      (limit.π (structureSheafFunctor I) ⟨n⟩).hom.app U := by
+  haveI _hf : PreservesLimitsOfShape ℕᵒᵖ
+      (TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I))) :=
+    preservesLimitOfShape_of_createsLimitsOfShape_and_hasLimitsOfShape _
+  have key : (limitObjIsoLimitCompEvaluation
+        (structureSheafFunctor I ⋙
+          TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I))) U).hom ≫
+      limit.π ((structureSheafFunctor I ⋙
+          TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I))) ⋙
+        (evaluation (Opens ↑(TopCat.of (FormalSpectrum I)))ᵒᵖ CommRingCat).obj U) ⟨n⟩ =
+      (limit.π (structureSheafFunctor I ⋙
+        TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I))) ⟨n⟩).app U :=
+    limitObjIsoLimitCompEvaluation_hom_π _ _ _
+  have key2 : (preservesLimitIso
+        (TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I)))
+        (structureSheafFunctor I)).hom ≫
+      limit.π (structureSheafFunctor I ⋙
+        TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I))) ⟨n⟩ =
+      (TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I))).map
+        (limit.π (structureSheafFunctor I) ⟨n⟩) :=
+    preservesLimitIso_hom_π _ _ _
+  have key2' : (preservesLimitIso
+        (TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I)))
+        (structureSheafFunctor I)).hom.app U ≫
+      (limit.π (structureSheafFunctor I ⋙
+        TopCat.Sheaf.forget CommRingCat (TopCat.of (FormalSpectrum I))) ⟨n⟩).app U =
+      (limit.π (structureSheafFunctor I) ⟨n⟩).hom.app U :=
+    NatTrans.congr_app key2 U
+  refine Eq.trans ?_ key2'
+  rw [← key]
+  rfl
+
 end FormalSpectrum

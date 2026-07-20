@@ -139,12 +139,9 @@ theorem basicOpenLevelEquiv_algebraMap_mk (x : R) :
 of sections over `D(f)` with the quotient factor maps of `R_f ⧸ (I·R_f) ^ (n + 1)`. -/
 theorem basicOpenLevelEquiv_step :
     (basicOpenLevelEquiv I f n).toRingHom.comp
-        ((sectionsTower I (basicOpen I f)).map (homOfLE (Nat.le_add_right n 1)).op).hom =
+        ((stepSheafHom I n).hom.app (op (basicOpen I f))).hom =
       (Ideal.Quotient.factorPow (I.map (algebraMap R (Localization.Away f)))
         (Nat.le_succ (n + 1))).comp (basicOpenLevelEquiv I f (n + 1)).toRingHom := by
-  rw [sectionsTower_map_succ]
-  change (basicOpenLevelEquiv I f n).toRingHom.comp
-      ((stepSheafHom I n).hom.app (op (basicOpen I f))).hom = _
   apply IsLocalization.ringHom_ext (Submonoid.powers (Ideal.Quotient.mk (I ^ (n + 1 + 1)) f))
   apply Ideal.Quotient.ringHom_ext
   refine RingHom.ext fun x => ?_
@@ -178,7 +175,9 @@ def sectionsBasicOpenEquiv :
   (sectionsLimitIso I (op (basicOpen I f))).commRingCatIsoToRingEquiv.trans
     (AdicCompletion.towerLimitRingEquiv (I.map (algebraMap R (Localization.Away f)))
       (sectionsTower I (basicOpen I f)) (basicOpenLevelEquiv I f)
-      (basicOpenLevelEquiv_step I f))
+      (fun n => by
+        rw [sectionsTower_map_succ]
+        exact basicOpenLevelEquiv_step I f n))
 
 end BasicOpen
 
@@ -219,12 +218,9 @@ theorem topLevelEquiv_algebraMap (b : R ⧸ I ^ (n + 1)) :
 global sections with the quotient factor maps of `R ⧸ I ^ (n + 1)`. -/
 theorem topLevelEquiv_step :
     (topLevelEquiv I n).toRingHom.comp
-        ((sectionsTower I ⊤).map (homOfLE (Nat.le_add_right n 1)).op).hom =
+        ((stepSheafHom I n).hom.app (op (⊤ : Opens (FormalSpectrum I)))).hom =
       (Ideal.Quotient.factorPow I (Nat.le_succ (n + 1))).comp
         (topLevelEquiv I (n + 1)).toRingHom := by
-  rw [sectionsTower_map_succ]
-  change (topLevelEquiv I n).toRingHom.comp
-      ((stepSheafHom I n).hom.app (op (⊤ : Opens (FormalSpectrum I)))).hom = _
   refine RingHom.ext fun s => ?_
   obtain ⟨b, rfl⟩ := (topLevelEquiv I (n + 1)).symm.surjective s
   have key : topLevelEquiv I n
@@ -244,7 +240,9 @@ def globalSectionsEquivCompletion :
       AdicCompletion I R :=
   (sectionsLimitIso I (op (⊤ : Opens (FormalSpectrum I)))).commRingCatIsoToRingEquiv.trans
     (AdicCompletion.towerLimitRingEquiv I (sectionsTower I ⊤) (topLevelEquiv I)
-      (topLevelEquiv_step I))
+      (fun n => by
+        rw [sectionsTower_map_succ]
+        exact topLevelEquiv_step I n))
 
 end GlobalSections
 

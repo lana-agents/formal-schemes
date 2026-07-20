@@ -1,7 +1,9 @@
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicRing
 import FormalSchemes.FormalSpectrum
+import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.Sections
+import FormalSchemes.Spf
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
