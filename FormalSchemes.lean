@@ -5,6 +5,7 @@ import FormalSchemes.FormalSpectrum
 import FormalSchemes.GermValue
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
+import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.Sections
 import FormalSchemes.Spf
 import FormalSchemes.SpfMap
