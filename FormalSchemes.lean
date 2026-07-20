@@ -1,6 +1,10 @@
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicRing
+<<<<<<< HEAD
 import FormalSchemes.FormalScheme
+=======
+import FormalSchemes.BasicOpenSections
+>>>>>>> origin/master
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
