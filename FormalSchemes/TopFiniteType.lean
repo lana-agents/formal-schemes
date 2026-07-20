@@ -18,12 +18,27 @@ This file provides the affine-algebra layer:
 * `IsTopologicallyFiniteType.isAdicRing`: if moreover the kernel of the presentation is
   adically closed (automatic in the noetherian setting; a hypothesis here), `A` is a complete
   adic ring with ideal of definition `L`, so `Spf A` is an affine formal scheme;
+* `IsTopologicallyFiniteType.isAdicRing_of_noetherian`: the same conclusion with **no**
+  closedness hypothesis when the presenting ring `R{X₁, …, Xₙ}` is Noetherian (Krull
+  intersection, `RingHom.adicKerClosed_of_noetherian`). This is the case Bosch works in: over a
+  Noetherian complete base `R` the restricted power series rings are Noetherian, so every
+  tf-type algebra is automatically a complete adic ring;
 * `IsTopologicallyFiniteType.structMap`: the structural morphism `Spf A ⟶ Spf R` of locally
   ringed spaces.
 
-Closure of tf-type algebras under quotients and base change, and the global notion (formal
-schemes admitting tf-type affine covers over `Spf R`), are left to follow-up work together
-with the gluing machinery.
+## Relation to issue 62 (`FormalSchemes.AdicMorphism`)
+
+`FormalSchemes.AdicMorphism` develops the *morphism-level* theory — adic morphisms
+(`IsAdicHom`, EGA I 10.12) and closed formal subschemes as adic quotients by an adically closed
+ideal (`IsAdicHom.of_map`). This file is the complementary *object-level* layer: it fixes the
+affine `R`-algebras (quotients of `R{X}`) whose formal spectra are the concrete tf-type formal
+schemes over `Spf R` that the Tate construction consumes. The structural morphism `structMap`
+built here is an adic morphism in the sense of `AdicMorphism` (its ideal of definition `L` is
+`I·A` by `map_eq`), tying the two viewpoints together.
+
+Closure of tf-type algebras under base change, and the global notion (formal schemes admitting
+tf-type affine covers over `Spf R`), are left to follow-up work together with the gluing
+machinery.
 
 ## References
 
@@ -77,6 +92,24 @@ theorem isAdicRing (hI : I.FG) {n : ℕ} {ψ : RestrictedPowerSeries R I n →�
     (RestrictedPowerSeries.isAdicRing R I n hI).toIsAdicComplete
   exact IsAdicRing.of_surjective_of_kerClosed
     (RestrictedPowerSeries.idealOfDefinition R I n) hs hker
+
+/-- A tf-type algebra presented by a **Noetherian** restricted power series ring is a complete
+adic ring with ideal of definition `L`, with no closedness hypothesis: in the Noetherian
+setting the kernel of any presentation is automatically adically closed (Krull intersection,
+`RingHom.adicKerClosed_of_noetherian`). Over a Noetherian complete base `R` the presenting rings
+`R{X₁, …, Xₙ}` are Noetherian, so this is the ambient case of the theory. -/
+theorem isAdicRing_of_noetherian (hI : I.FG) {n : ℕ}
+    [IsNoetherianRing (RestrictedPowerSeries R I n)]
+    {ψ : RestrictedPowerSeries R I n →ₐ[R] A} (hs : Function.Surjective ψ)
+    (hL : (RestrictedPowerSeries.idealOfDefinition R I n).map ψ.toRingHom = L) :
+    letI : TopologicalSpace A := L.adicTopology
+    IsAdicRing L := by
+  letI : Algebra (RestrictedPowerSeries R I n) A := ψ.toRingHom.toAlgebra
+  haveI : IsAdicComplete (RestrictedPowerSeries.idealOfDefinition R I n)
+      (RestrictedPowerSeries R I n) :=
+    (RestrictedPowerSeries.isAdicRing R I n hI).toIsAdicComplete
+  exact isAdicRing hI hs hL
+    (RingHom.adicKerClosed_of_noetherian (RestrictedPowerSeries.idealOfDefinition R I n) hs)
 
 /-- Topologically-of-finite-type algebras are closed under further quotients: a surjective
 `R`-algebra image of a tf-type algebra, with the image filtration, is tf-type. -/

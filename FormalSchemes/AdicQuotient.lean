@@ -1,4 +1,5 @@
 import FormalSchemes.RestrictedPowerSeries
+import Mathlib.RingTheory.AdicCompletion.Noetherian
 
 set_option linter.style.header false
 
@@ -27,6 +28,11 @@ Tate-curve constructions live (Bosch, §7) — and behind the affine case of for
 * `IsAdicComplete.of_surjective_of_kerClosed`, `IsAdicRing.of_surjective_of_kerClosed`: the
   combination, in ring form (for the extended ideal `K.map (algebraMap B A)` with its adic
   topology).
+* `RingHom.adicKerClosed_of_noetherian`: **in the Noetherian setting the closedness hypothesis
+  is automatic** — if `B` is Noetherian and `K`-adically complete then every kernel of a
+  surjection out of `B` is `K`-adically closed (Krull intersection). Hence
+  `IsAdicComplete.of_surjective_of_noetherian` and `IsAdicRing.of_surjective_of_noetherian`
+  produce a complete adic ring from a surjection with no extra closedness input.
 
 ## References
 
@@ -139,3 +145,42 @@ theorem IsAdicRing.of_surjective_of_kerClosed [IsAdicComplete K B]
   exact
     { toIsAdicComplete := IsAdicComplete.map_algebraMap K hc
       isAdic := rfl }
+
+/-- **Noetherian case: kernels are automatically adically closed.** If `B` is a Noetherian ring,
+`K`-adically complete, and the structure map `B → A` is surjective, then the kernel of `B → A`
+is `K`-adically closed. The point is Krull's intersection theorem: `A` is a finite `B`-module (a
+surjective image of `B`), so it is `K`-adically Hausdorff because `K` lies in the Jacobson
+radical of a complete ring (`IsHausdorff.of_le_jacobson`, `IsAdicComplete.le_jacobson_bot`); an
+element of `B` congruent to the kernel modulo every `K ^ n` therefore maps into every
+`K ^ n • ⊤` and so to `0`. This makes the closedness hypothesis of the lemmas above automatic in
+the Noetherian setting (Artin–Rees, Bosch §7.3). -/
+theorem RingHom.adicKerClosed_of_noetherian [IsNoetherianRing B] [IsAdicComplete K B]
+    (hs : Function.Surjective (algebraMap B A)) : (algebraMap B A).AdicKerClosed K := by
+  haveI : Module.Finite B A := Module.Finite.of_surjective (Algebra.linearMap B A) hs
+  haveI hH : IsHausdorff K A := IsHausdorff.of_le_jacobson K A (IsAdicComplete.le_jacobson_bot K)
+  intro x hx
+  rw [RingHom.mem_ker]
+  refine hH.haus (algebraMap B A x) fun n => ?_
+  rw [SModEq.zero, mem_smul_top_iff_mem_map]
+  obtain ⟨k, hk, hxk⟩ := hx n
+  have hk0 : algebraMap B A k = 0 := RingHom.mem_ker.mp hk
+  have hxx : algebraMap B A x = algebraMap B A (x - k) := by rw [map_sub, hk0, sub_zero]
+  rw [hxx]
+  exact Ideal.mem_map_of_mem _ hxk
+
+/-- **Quotients of Noetherian complete adic rings are complete adic**, with no closedness
+hypothesis: for `B` Noetherian and `K`-adically complete and `B → A` surjective, `A` is
+`K`-adically complete. Combines `adicKerClosed_of_noetherian` with
+`IsAdicComplete.of_surjective_of_kerClosed`. -/
+theorem IsAdicComplete.of_surjective_of_noetherian [IsNoetherianRing B] [IsAdicComplete K B]
+    (hs : Function.Surjective (algebraMap B A)) : IsAdicComplete K A :=
+  IsAdicComplete.of_surjective_of_kerClosed K hs (RingHom.adicKerClosed_of_noetherian K hs)
+
+/-- **Quotients of Noetherian complete adic rings are complete adic rings**, for the extended
+ideal `K.map (algebraMap B A)` with its adic topology and with no closedness hypothesis. This is
+the Noetherian specialization of `IsAdicRing.of_surjective_of_kerClosed`. -/
+theorem IsAdicRing.of_surjective_of_noetherian [IsNoetherianRing B] [IsAdicComplete K B]
+    (hs : Function.Surjective (algebraMap B A)) :
+    letI : TopologicalSpace A := (K.map (algebraMap B A)).adicTopology
+    IsAdicRing (K.map (algebraMap B A)) :=
+  IsAdicRing.of_surjective_of_kerClosed K hs (RingHom.adicKerClosed_of_noetherian K hs)
