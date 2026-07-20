@@ -6,6 +6,7 @@ import FormalSchemes.FormalGm
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.GermValue
+import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
