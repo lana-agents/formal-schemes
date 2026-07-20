@@ -32,6 +32,11 @@ tensor product composed with the continuous-extension machinery of
   `R`-algebra maps into a complete adic `R`-algebra, whose images of `I` land in the ideal of
   definition, induces a map from the completed tensor product; `lift_inl`, `lift_inr` compute
   it on the factors.
+* `CompletedTensorProduct.hom_ext`: the universal property (uniqueness direction) — two
+  continuous ring homomorphisms out of `A ⊗̂_R B` agreeing on `inl` and `inr` are equal.
+* `CompletedTensorProduct.map`: functoriality — a pair of `R`-algebra maps `A →ₐ A'`, `B →ₐ B'`
+  induces `A ⊗̂_R B →+* A' ⊗̂_R B'`; `map_inl`, `map_inr` compute it on the factors.
+* `CompletedTensorProduct.commEquiv`: the commutativity isomorphism `A ⊗̂_R B ≃+* B ⊗̂_R A`.
 
 ## References
 
@@ -124,5 +129,200 @@ theorem lift_inr (b : B) : lift L hIL f g (inr R I A B b) = g b := by
   rw [h, lift_tmul, map_one, one_mul]
 
 end Lift
+
+/-!
+### The universal property (uniqueness direction) and structural filtration
+
+Two continuous ring homomorphisms out of `A ⊗̂_R B` that agree on the two factors agree. The
+continuity hypotheses are phrased with the powers of the ideal of definition; the following
+lemma bridges those to the module filtration `(I·(A⊗B)) ^ m • ⊤` used by
+`AdicCompletion.hom_ext_of_continuous`, and makes the continuity of `lift`, `map` and the
+commutativity isomorphism compose cleanly.
+-/
+
+section HomExt
+
+variable {R I A B}
+
+/-- The canonical map from the first factor is the completion map of `a ⊗ₜ 1`. -/
+theorem inl_apply (a : A) :
+    inl R I A B a =
+      algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B) (a ⊗ₜ[R] (1 : B)) :=
+  rfl
+
+/-- The canonical map from the second factor is the completion map of `1 ⊗ₜ b`. -/
+theorem inr_apply (b : B) :
+    inr R I A B b =
+      algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B) ((1 : A) ⊗ₜ[R] b) :=
+  rfl
+
+/-- The ideal of definition of the completed tensor product is the extension of `I` itself. -/
+theorem idealOfDefinition_eq_map :
+    idealOfDefinition R I A B = I.map (algebraMap R (CompletedTensorProduct R I A B)) := by
+  change (I.map (algebraMap R (A ⊗[R] B))).map
+    (algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B)) = _
+  rw [Ideal.map_map]
+  congr 1
+
+/-- Membership in the powers of the ideal of definition, expressed through the module filtration
+`(I·(A⊗B)) ^ m • ⊤` used by the completion API. -/
+theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : CompletedTensorProduct R I A B) :
+    x ∈ (idealOfDefinition R I A B) ^ m ↔
+      x ∈ ((I.map (algebraMap R (A ⊗[R] B))) ^ m • ⊤ :
+        Submodule (A ⊗[R] B) (CompletedTensorProduct R I A B)) := by
+  rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (A ⊗[R] B))) m x, idealOfDefinition,
+    Ideal.smul_top_eq_map, Submodule.restrictScalars_mem, Algebra.algebraMap_self, Ideal.map_id]
+
+variable {S : Type u} [CommRing S] (L : Ideal S) [IsAdicComplete L S]
+
+/-- **The universal property of the completed tensor product, uniqueness direction**: two
+continuous ring homomorphisms out of `A ⊗̂_R B` into a complete adic ring — mapping the powers
+of the ideal of definition into the powers of `L` — agreeing on the two canonical maps `inl`
+and `inr` are equal (for `I` finitely generated). -/
+theorem hom_ext (hI : I.FG) {F G : CompletedTensorProduct R I A B →+* S}
+    (hF : ∀ (m : ℕ) (x : CompletedTensorProduct R I A B),
+      x ∈ (idealOfDefinition R I A B) ^ m → F x ∈ L ^ m)
+    (hG : ∀ (m : ℕ) (x : CompletedTensorProduct R I A B),
+      x ∈ (idealOfDefinition R I A B) ^ m → G x ∈ L ^ m)
+    (hl : ∀ a : A, F (inl R I A B a) = G (inl R I A B a))
+    (hr : ∀ b : B, F (inr R I A B b) = G (inr R I A B b)) :
+    F = G := by
+  refine AdicCompletion.hom_ext_of_continuous _ L (hI.map _)
+    (fun m x hx => hF m x ((mem_idealOfDefinition_pow_iff m x).mpr hx))
+    (fun m x hx => hG m x ((mem_idealOfDefinition_pow_iff m x).mpr hx)) ?_
+  intro x
+  have key : F.comp (algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B)) =
+      G.comp (algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B)) := by
+    refine Algebra.TensorProduct.ringHom_ext ?_ ?_
+    · refine RingHom.ext fun a => ?_
+      simp only [RingHom.coe_comp, Function.comp_apply]
+      change F (algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B) (a ⊗ₜ[R] (1 : B))) =
+        G (algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B) (a ⊗ₜ[R] (1 : B)))
+      rw [← inl_apply]
+      exact hl a
+    · refine RingHom.ext fun b => ?_
+      simp only [RingHom.coe_comp, AlgHom.toRingHom_eq_coe, Function.comp_apply, RingHom.coe_coe]
+      change F (algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B) ((1 : A) ⊗ₜ[R] b)) =
+        G (algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B) ((1 : A) ⊗ₜ[R] b))
+      rw [← inr_apply]
+      exact hr b
+  have hx2 := DFunLike.congr_fun key x
+  simp only [RingHom.coe_comp, Function.comp_apply] at hx2
+  have hconv : algebraMap (A ⊗[R] B) (CompletedTensorProduct R I A B) x =
+      AdicCompletion.of (I.map (algebraMap R (A ⊗[R] B))) (A ⊗[R] B) x := by
+    rw [AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
+  rwa [hconv] at hx2
+
+/-- The `lift` of the universal property is continuous: it maps the powers of the ideal of
+definition into the powers of `L` (for `I` finitely generated). -/
+theorem lift_mem_pow [Algebra R S] (hIL : I.map (algebraMap R S) ≤ L)
+    (f : A →ₐ[R] S) (g : B →ₐ[R] S) (hI : I.FG) (m : ℕ)
+    {x : CompletedTensorProduct R I A B} (hx : x ∈ (idealOfDefinition R I A B) ^ m) :
+    lift L hIL f g x ∈ L ^ m := by
+  rw [mem_idealOfDefinition_pow_iff] at hx
+  exact AdicCompletion.extendRingHom_continuous _ L _ _ (hI.map _) m x hx
+
+end HomExt
+
+/-!
+### Functoriality and the commutativity isomorphism
+-/
+
+section Functoriality
+
+variable {R I A B}
+variable {A' B' : Type u} [CommRing A'] [CommRing B'] [Algebra R A'] [Algebra R B']
+
+/-- **Functoriality of the completed tensor product**: a pair of `R`-algebra homomorphisms
+`f : A →ₐ[R] A'`, `g : B →ₐ[R] B'` induces a ring homomorphism `A ⊗̂_R B →+* A' ⊗̂_R B'`
+(for `I` finitely generated), sending `inl a ↦ inl (f a)` and `inr b ↦ inr (g b)`. -/
+def map (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') :
+    CompletedTensorProduct R I A B →+* CompletedTensorProduct R I A' B' :=
+  haveI : IsAdicComplete (idealOfDefinition R I A' B') (CompletedTensorProduct R I A' B') :=
+    (isAdicRing R I A' B' hI).toIsAdicComplete
+  lift (idealOfDefinition R I A' B') (le_of_eq (idealOfDefinition_eq_map).symm)
+    ((inl R I A' B').comp f) ((inr R I A' B').comp g)
+
+@[simp]
+theorem map_inl (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') (a : A) :
+    map hI f g (inl R I A B a) = inl R I A' B' (f a) := by
+  haveI : IsAdicComplete (idealOfDefinition R I A' B') (CompletedTensorProduct R I A' B') :=
+    (isAdicRing R I A' B' hI).toIsAdicComplete
+  exact lift_inl _ _ _ _ a
+
+@[simp]
+theorem map_inr (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') (b : B) :
+    map hI f g (inr R I A B b) = inr R I A' B' (g b) := by
+  haveI : IsAdicComplete (idealOfDefinition R I A' B') (CompletedTensorProduct R I A' B') :=
+    (isAdicRing R I A' B' hI).toIsAdicComplete
+  exact lift_inr _ _ _ _ b
+
+/-- The swap homomorphism `A ⊗̂_R B →+* B ⊗̂_R A` sending `inl a ↦ inr a` and `inr b ↦ inl b`
+(for `I` finitely generated). -/
+def commHom (hI : I.FG) :
+    CompletedTensorProduct R I A B →+* CompletedTensorProduct R I B A :=
+  haveI : IsAdicComplete (idealOfDefinition R I B A) (CompletedTensorProduct R I B A) :=
+    (isAdicRing R I B A hI).toIsAdicComplete
+  lift (idealOfDefinition R I B A) (le_of_eq (idealOfDefinition_eq_map).symm)
+    (inr R I B A) (inl R I B A)
+
+@[simp]
+theorem commHom_inl (hI : I.FG) (a : A) :
+    commHom (R := R) (I := I) (A := A) (B := B) hI (inl R I A B a) = inr R I B A a := by
+  haveI : IsAdicComplete (idealOfDefinition R I B A) (CompletedTensorProduct R I B A) :=
+    (isAdicRing R I B A hI).toIsAdicComplete
+  exact lift_inl _ _ _ _ a
+
+@[simp]
+theorem commHom_inr (hI : I.FG) (b : B) :
+    commHom (R := R) (I := I) (A := A) (B := B) hI (inr R I A B b) = inl R I B A b := by
+  haveI : IsAdicComplete (idealOfDefinition R I B A) (CompletedTensorProduct R I B A) :=
+    (isAdicRing R I B A hI).toIsAdicComplete
+  exact lift_inr _ _ _ _ b
+
+/-- The swap homomorphism maps the powers of the ideal of definition into the powers of the
+ideal of definition of the target (for `I` finitely generated). -/
+theorem commHom_mem_pow (hI : I.FG) (m : ℕ) {x : CompletedTensorProduct R I A B}
+    (hx : x ∈ (idealOfDefinition R I A B) ^ m) :
+    commHom (R := R) (I := I) (A := A) (B := B) hI x ∈ (idealOfDefinition R I B A) ^ m := by
+  haveI : IsAdicComplete (idealOfDefinition R I B A) (CompletedTensorProduct R I B A) :=
+    (isAdicRing R I B A hI).toIsAdicComplete
+  exact lift_mem_pow _ _ _ _ hI m hx
+
+/-- **The commutativity isomorphism** `A ⊗̂_R B ≃+* B ⊗̂_R A` (for `I` finitely generated),
+exchanging the two factors. -/
+def commEquiv (hI : I.FG) :
+    CompletedTensorProduct R I A B ≃+* CompletedTensorProduct R I B A :=
+  haveI hAB : IsAdicComplete (idealOfDefinition R I A B) (CompletedTensorProduct R I A B) :=
+    (isAdicRing R I A B hI).toIsAdicComplete
+  haveI hBA : IsAdicComplete (idealOfDefinition R I B A) (CompletedTensorProduct R I B A) :=
+    (isAdicRing R I B A hI).toIsAdicComplete
+  RingEquiv.ofRingHom
+    (commHom (R := R) (I := I) (A := A) (B := B) hI)
+    (commHom (R := R) (I := I) (A := B) (B := A) hI)
+    (by
+      refine hom_ext (idealOfDefinition R I B A) hI
+        (fun m x hx => ?_) (fun m x hx => hx) (fun b => ?_) (fun a => ?_)
+      · exact commHom_mem_pow hI m (commHom_mem_pow hI m hx)
+      · simp
+      · simp)
+    (by
+      refine hom_ext (idealOfDefinition R I A B) hI
+        (fun m x hx => ?_) (fun m x hx => hx) (fun a => ?_) (fun b => ?_)
+      · exact commHom_mem_pow hI m (commHom_mem_pow hI m hx)
+      · simp
+      · simp)
+
+@[simp]
+theorem commEquiv_inl (hI : I.FG) (a : A) :
+    commEquiv (R := R) (I := I) (A := A) (B := B) hI (inl R I A B a) = inr R I B A a :=
+  commHom_inl hI a
+
+@[simp]
+theorem commEquiv_inr (hI : I.FG) (b : B) :
+    commEquiv (R := R) (I := I) (A := A) (B := B) hI (inr R I A B b) = inl R I B A b :=
+  commHom_inr hI b
+
+end Functoriality
 
 end CompletedTensorProduct
