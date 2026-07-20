@@ -11,6 +11,7 @@ import FormalSchemes.Completion
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
+import FormalSchemes.FormalTorus
 import FormalSchemes.GermValue
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
