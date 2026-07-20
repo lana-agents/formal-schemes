@@ -26,3 +26,4 @@ import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.Thickenings
 import FormalSchemes.TopFiniteType
+import FormalSchemes.TopFiniteTypeBaseChange
