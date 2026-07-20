@@ -10,6 +10,7 @@ import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.Completion
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalScheme
+import FormalSchemes.FormalTorus
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.GermValue
 import FormalSchemes.Gluing
