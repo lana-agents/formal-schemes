@@ -42,8 +42,10 @@ The main results currently formalized are:
 * **Sections on a basic open** `D(f)` are the `I`-adic completion of the localization `R_f`:
   `Γ(D(f), O_{Spf R}) ≃+* AdicCompletion (I·R_f) R_f` (EGA I, 10.1.4 / Stacks Tag 0AI7).
 * **Stalks are local rings**, so `(Spf R, O_{Spf R})` is a locally ringed space (EGA I, 10.1.6).
-* **Functoriality**: a continuous ring homomorphism `R → S` carrying `I` into `J` induces a
-  morphism of locally ringed spaces `Spf S ⟶ Spf R` (EGA I, 10.2.2).
+* **Functoriality**: a continuous ring homomorphism `R → S` carrying `I` into `J` induces the
+  underlying continuous map `Spf S ⟶ Spf R` together with a comparison morphism of structure
+  sheaves `O_{Spf R} ⟶ (Spf φ)_* O_{Spf S}` (EGA I, 10.2.2); assembling these into a morphism of
+  locally ringed spaces is in progress.
 * **Formal schemes** are defined as locally ringed spaces locally isomorphic to some `Spf R`,
   and they form a category (EGA I, 10.4.2).
 
@@ -61,7 +63,7 @@ The main results currently formalized are:
 | `FormalSchemes/GermValue.lean` | Germs of structure-sheaf sections versus their values at points, used for the stalk analysis. |
 | `FormalSchemes/LimitUnits.lean` | In a limit of commutative rings, an element all of whose projections are units is itself a unit — the mechanism by which invertibility propagates through `O_{Spf R}`. |
 | `FormalSchemes/Spf.lean` | Stalks of `O_{Spf R}` are local rings (EGA I, 10.1.6); `(Spf R, O_{Spf R})` as a `SheafedSpace` / `LocallyRingedSpace`. |
-| `FormalSchemes/SpfMap.lean` | The morphism of locally ringed spaces `Spf S ⟶ Spf R` induced by an adic ring homomorphism (EGA I, 10.2.2). |
+| `FormalSchemes/SpfMap.lean` | Functoriality of `Spf`: the continuous map `Spf S ⟶ Spf R` (`mapTop`) and the induced morphism of structure sheaves `O_{Spf R} ⟶ (mapTop)_* O_{Spf S}` (`mapSheafHom`) from an adic ring homomorphism (EGA I, 10.2.2). |
 | `FormalSchemes/FormalScheme.lean` | Formal schemes as locally ringed spaces locally isomorphic to some `Spf R`; the affine formal scheme `FormalScheme.Spf` (EGA I, 10.4.2 / Stacks Tag 0AIL). |
 
 ## References
