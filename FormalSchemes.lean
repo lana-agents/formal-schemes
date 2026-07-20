@@ -6,6 +6,7 @@ import FormalSchemes.AdicRing
 import FormalSchemes.BaseChange
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
+import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.Completion
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalScheme
