@@ -25,9 +25,9 @@ and once, nested, on the inner one).
 
 * `CompletedTensorProduct.liftAlgHom`: the universal-property `lift`, packaged as an `R`-algebra
   homomorphism.
-* `CompletedTensorProduct.inl_mem_pow` / `inr_mem_pow`: the canonical maps carry the powers of the
-  ideal of definition of a factor into the powers of the ideal of definition of the completed
-  tensor product.
+* `CompletedTensorProduct.inl_mem_pow`: the canonical map `inl` carries the powers of the
+  ideal of definition of the first factor into the powers of the ideal of definition of the
+  completed tensor product (the `inr` counterpart lives in `CompletedTensor.lean`).
 * `CompletedTensorProduct.assocHom` / `assocInvHom`: the two structural maps of the associativity
   isomorphism.
 * `CompletedTensorProduct.assocEquiv`: the associativity isomorphism
@@ -62,20 +62,6 @@ theorem inl_mem_pow (m : ℕ) {a : A} (ha : a ∈ (I.map (algebraMap R A)) ^ m) 
   have hmem : (inl R I A B).toRingHom a
       ∈ Ideal.map (inl R I A B).toRingHom ((I.map (algebraMap R A)) ^ m) :=
     Ideal.mem_map_of_mem _ ha
-  rw [Ideal.map_pow, h1] at hmem
-  exact hmem
-
-/-- The canonical map `inr` carries the powers of the ideal of definition `I·B` of the second
-factor into the powers of the ideal of definition of `A ⊗̂_R B`. -/
-theorem inr_mem_pow (m : ℕ) {b : B} (hb : b ∈ (I.map (algebraMap R B)) ^ m) :
-    inr R I A B b ∈ (idealOfDefinition R I A B) ^ m := by
-  have h1 : Ideal.map (inr R I A B).toRingHom (Ideal.map (algebraMap R B) I)
-      = idealOfDefinition R I A B := by
-    rw [Ideal.map_map, idealOfDefinition_eq_map]
-    exact congrArg (Ideal.map · I) (inr R I A B).comp_algebraMap
-  have hmem : (inr R I A B).toRingHom b
-      ∈ Ideal.map (inr R I A B).toRingHom ((I.map (algebraMap R B)) ^ m) :=
-    Ideal.mem_map_of_mem _ hb
   rw [Ideal.map_pow, h1] at hmem
   exact hmem
 
