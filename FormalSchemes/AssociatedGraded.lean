@@ -1,6 +1,9 @@
 import Mathlib.RingTheory.ReesAlgebra
 import Mathlib.RingTheory.Ideal.Quotient.Noetherian
 import Mathlib.Algebra.GradedMonoid
+import Mathlib.RingTheory.GradedAlgebra.Basic
+import Mathlib.Algebra.DirectSum.Decomposition
+import Mathlib.LinearAlgebra.DFinsupp
 
 set_option linter.style.header false
 
@@ -43,11 +46,16 @@ quotient of a Noetherian ring is Noetherian.
   it factors through `K^n/K^{n+1}`.
 * `SetLike.GradedMonoid (grPiece K)` and `AssociatedGraded.iSup_grPiece`: the graded pieces form a
   graded monoid inside `gr_K(B)` and generate it.
+* `AssociatedGraded.instGradedRing`: the decomposition is **direct**, so `gr_K(B) = ⨁_n K^n/K^{n+1}`
+  is a genuine `GradedRing` — the graded pieces `grPiece n` are `iSupIndep` (`isInternal_grPiece`).
+* `AssociatedGraded.deg_eq_zero_iff`: the faithfulness `deg n k = 0 ↔ k ∈ K^{n+1}`, so each `deg n`
+  descends to an *injection* `K^n/K^{n+1} ↪ gr_K(B)`.
 
-Directness of the homogeneous decomposition — which would upgrade `grPiece` to a full `GradedRing`
-instance — is not established here; it is the natural next increment. The above interface (leading
-forms, the vanishing on `K^{n+1}`, and multiplicativity) is what the successive-approximation
-argument of Atiyah–Macdonald 10.25 consumes.
+The directness rests on the coefficient bound `AssociatedGraded.coeff_mem_of_mem_shiftIdeal`: every
+coefficient of an element of `shiftIdeal K` lies one filtration step deeper. This graded structure
+(with the leading forms, their vanishing on `K^{n+1}`, and multiplicativity) is the interface the
+successive-approximation argument of Atiyah–Macdonald 10.25 consumes — in particular the projections
+`DirectSum.decompose` onto homogeneous components that it needs.
 
 ## References
 
@@ -251,5 +259,117 @@ theorem iSup_grPiece : ⨆ n, grPiece K n = ⊤ := by
   rw [hp, map_sum]
   refine Submodule.sum_mem _ fun i _ => ?_
   exact Submodule.mem_iSup_of_mem i (deg_mem_grPiece K i _)
+
+/-! ### Directness of the grading and the `GradedRing` instance
+
+The graded pieces `grPiece n` not only generate `gr_K(B)` (`iSup_grPiece`) but do so *directly*:
+`gr_K(B) = ⨁_n Kⁿ/Kⁿ⁺¹` as an internal direct sum. The essential input is a coefficient bound on
+the degree-shifting ideal — every coefficient of an element of `shiftIdeal K` lies one filtration
+step deeper (`coeff_mem_of_mem_shiftIdeal`) — which makes the leading-form maps `deg n` jointly
+injective. This upgrades the `SetLike.GradedMonoid` structure to a full `GradedRing`, and yields the
+faithfulness of individual leading forms `deg_eq_zero_iff`. -/
+
+/-- Every coefficient of an element of the degree-shifting ideal lies one filtration step deeper:
+if `p ∈ shiftIdeal K`, then `(p : B[X]).coeff r ∈ K^(r+1)` for every `r`. This is the exact
+converse bookkeeping to `monomial_mem_shiftIdeal`, and pins down the degree-`r` homogeneous part of
+`shiftIdeal K` as `K^(r+1)·X^r`. -/
+theorem coeff_mem_of_mem_shiftIdeal {p : reesAlgebra K} (hp : p ∈ shiftIdeal K) :
+    ∀ r, ((p : reesAlgebra K) : B[X]).coeff r ∈ K ^ (r + 1) := by
+  have hp' : p ∈ Submodule.span (reesAlgebra K)
+      (⇑(algebraMap B (reesAlgebra K)) '' (K : Set B)) := hp
+  clear hp
+  induction hp' using Submodule.span_induction with
+  | mem q hq =>
+      obtain ⟨k, hk, rfl⟩ := hq
+      intro r
+      have hCk : ((algebraMap B (reesAlgebra K) k : reesAlgebra K) : B[X]) = C k := by
+        simp [Polynomial.algebraMap_eq]
+      rw [hCk, coeff_C]
+      split_ifs with h
+      · simpa [h] using hk
+      · exact zero_mem _
+  | zero => intro r; simp
+  | add x y _ _ ihx ihy =>
+      intro r
+      have hxy : ((x + y : reesAlgebra K) : B[X]) = (x : B[X]) + (y : B[X]) := by
+        push_cast; ring
+      rw [hxy, coeff_add]
+      exact Ideal.add_mem _ (ihx r) (ihy r)
+  | smul a x _ ih =>
+      intro r
+      have hax : ((a • x : reesAlgebra K) : B[X]) = (a : B[X]) * (x : B[X]) := by
+        rw [smul_eq_mul]; push_cast; ring
+      rw [hax, Polynomial.coeff_mul]
+      refine Ideal.sum_mem _ ?_
+      rintro ⟨i, j⟩ hij
+      rw [Finset.mem_antidiagonal] at hij
+      have hai : (a : B[X]).coeff i ∈ K ^ i := (mem_reesAlgebra_iff (I := K) (a : B[X])).mp a.2 i
+      have hxj : (x : B[X]).coeff j ∈ K ^ (j + 1) := ih j
+      have hmul : (a : B[X]).coeff i * (x : B[X]).coeff j ∈ K ^ i * K ^ (j + 1) :=
+        Ideal.mul_mem_mul hai hxj
+      rw [← pow_add] at hmul
+      rwa [show i + (j + 1) = r + 1 by omega] at hmul
+
+/-- **Faithfulness of leading forms.** A degree-`n` leading form vanishes in `gr_K(B)` iff its
+representative already lies in `K^(n+1)`. The reverse implication is `deg_eq_zero_of_mem_succ`; the
+forward implication uses the coefficient bound `coeff_mem_of_mem_shiftIdeal`. In particular `deg n`
+descends to an *injection* `K^n/K^(n+1) ↪ gr_K(B)`. -/
+theorem deg_eq_zero_iff (n : ℕ) (k : (K ^ n : Ideal B)) :
+    deg K n k = 0 ↔ (k : B) ∈ K ^ (n + 1) := by
+  refine ⟨fun h => ?_, deg_eq_zero_of_mem_succ K n k⟩
+  rw [deg_apply, mk_eq_zero_iff] at h
+  have := coeff_mem_of_mem_shiftIdeal K h n
+  rwa [monomialRees_coe, coeff_monomial, if_pos rfl] at this
+
+/-- The leading-form maps `deg n` are jointly injective: the canonical map `⨁_n grPiece n → gr_K(B)`
+is injective. This is the directness of the grading. -/
+theorem coeLinearMap_grPiece_injective :
+    Function.Injective (DirectSum.coeLinearMap (grPiece K)) := by
+  classical
+  rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
+  intro x hx
+  have hchoose : ∀ n, ∃ k : (K ^ n : Ideal B), deg K n k = (x n : AssociatedGraded K) :=
+    fun n => LinearMap.mem_range.mp (x n).2
+  choose rep hrep using hchoose
+  set P : reesAlgebra K := ∑ n ∈ x.support, monomialRees K n (rep n) with hP
+  -- The image of `x` under the sum map is `mk P`.
+  have hRHS : DirectSum.coeLinearMap (grPiece K) x
+      = ∑ n ∈ x.support, ((x n : grPiece K n) : AssociatedGraded K) := by
+    conv_lhs => rw [← DirectSum.sum_support_of x]
+    rw [map_sum]
+    exact Finset.sum_congr rfl fun n _ => DirectSum.coeLinearMap_of _ n _
+  have hmkP : mk K P = ∑ n ∈ x.support, ((x n : grPiece K n) : AssociatedGraded K) := by
+    rw [hP, map_sum]
+    exact Finset.sum_congr rfl fun n _ => by rw [← deg_apply]; exact hrep n
+  have hP0 : mk K P = 0 := by rw [hmkP, ← hRHS]; exact hx
+  have hcoeff := coeff_mem_of_mem_shiftIdeal K ((mk_eq_zero_iff K P).mp hP0)
+  -- Read off each component of `x` from a coefficient of `P`.
+  refine DFinsupp.ext fun n => ?_
+  change (x n : grPiece K n) = 0
+  by_cases hn : n ∈ x.support
+  · have hcoeffn : ((P : reesAlgebra K) : B[X]).coeff n = (rep n : B) := by
+      rw [hP, AddSubmonoidClass.coe_finsetSum, Polynomial.finsetSum_coeff,
+        Finset.sum_eq_single n (fun m _ hmn => by
+            rw [monomialRees_coe, coeff_monomial, if_neg hmn])
+          (fun h => absurd hn h), monomialRees_coe, coeff_monomial, if_pos rfl]
+    have hmem : (rep n : B) ∈ K ^ (n + 1) := hcoeffn ▸ hcoeff n
+    have hz : (↑(x n) : AssociatedGraded K) = 0 := by
+      rw [← hrep n]; exact (deg_eq_zero_iff K n (rep n)).mpr hmem
+    exact Subtype.ext (hz.trans (ZeroMemClass.coe_zero _).symm)
+  · rw [DFinsupp.mem_support_iff, not_not] at hn; exact hn
+
+/-- The graded pieces of `gr_K(B)` form an **internal direct sum**: `gr_K(B) = ⨁_n Kⁿ/Kⁿ⁺¹`. -/
+theorem isInternal_grPiece : DirectSum.IsInternal (grPiece K) :=
+  DirectSum.isInternal_submodule_of_iSupIndep_of_iSup_eq_top
+    (iSupIndep_of_dfinsupp_lsum_injective _ (coeLinearMap_grPiece_injective K))
+    (iSup_grPiece K)
+
+/-- **The `GradedRing` structure on the associated graded ring.** With the internal direct-sum
+decomposition (`isInternal_grPiece`) on top of the graded-monoid structure, `gr_K(B) = ⨁_n Kⁿ/Kⁿ⁺¹`
+is a graded ring, with degree-`n` piece `grPiece n ≅ Kⁿ/Kⁿ⁺¹`. -/
+noncomputable instance instGradedRing : GradedRing (grPiece K) :=
+  haveI gm : SetLike.GradedMonoid (grPiece K) := inferInstance
+  haveI dec : DirectSum.Decomposition (grPiece K) := (isInternal_grPiece K).chooseDecomposition
+  { gm, dec with }
 
 end AssociatedGraded
