@@ -1,5 +1,6 @@
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicRing
+import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
