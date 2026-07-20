@@ -1,5 +1,6 @@
 import FormalSchemes.TopFiniteType
 import FormalSchemes.BaseChange
+import FormalSchemes.CompletedTensorFunctor
 
 set_option linter.style.header false
 
@@ -46,19 +47,6 @@ namespace CompletedTensorProduct
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {A B A' B' : Type u} [CommRing A] [CommRing B] [CommRing A'] [CommRing B']
   [Algebra R A] [Algebra R B] [Algebra R A'] [Algebra R B']
-
-/-- The functorial map is compatible with the base-ring structure map: it sends `algebraMap R`
-to `algebraMap R`. -/
-theorem map_algebraMap (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') (r : R) :
-    map hI f g (algebraMap R (CompletedTensorProduct R I A B) r) =
-      algebraMap R (CompletedTensorProduct R I A' B') r := by
-  rw [← (inl R I A B).commutes r, map_inl, f.commutes, (inl R I A' B').commutes]
-
-/-- The functorial map is compatible with the base-ring structure map (composed form). -/
-theorem map_comp_algebraMap (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') :
-    (map hI f g).comp (algebraMap R (CompletedTensorProduct R I A B)) =
-      algebraMap R (CompletedTensorProduct R I A' B') :=
-  RingHom.ext (map_algebraMap hI f g)
 
 /-- The functorial map carries the ideal of definition onto the ideal of definition of the target:
 it is the extension of `I` on both sides. -/
