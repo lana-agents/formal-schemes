@@ -356,6 +356,30 @@ theorem assocEquiv_symm_inr_inr (hI : I.FG) (c : C) :
       inr R I (CompletedTensorProduct R I A B) C c :=
   assocInvHom_inr_inr hI c
 
+/-- The associator fixes the image of the base ring: it is an `R`-algebra homomorphism. -/
+theorem assocHom_algebraMap (hI : I.FG) (r : R) :
+    assocHom hI
+        (algebraMap R (CompletedTensorProduct R I (CompletedTensorProduct R I A B) C) r) =
+      algebraMap R (CompletedTensorProduct R I A (CompletedTensorProduct R I B C)) r := by
+  rw [← (inl R I (CompletedTensorProduct R I A B) C).commutes r,
+    ← (inl R I A B).commutes r, assocHom_inl_inl,
+    (inl R I A (CompletedTensorProduct R I B C)).commutes r]
+
+/-- The associator, bundled as an `R`-algebra homomorphism
+`(A ⊗̂_R B) ⊗̂_R C →ₐ[R] A ⊗̂_R (B ⊗̂_R C)`; needed to feed it into universal-property arguments
+(e.g. the coassociativity of `Ĝm`, issue 67) that require `AlgHom`s. -/
+def assocAlgHom (hI : I.FG) :
+    CompletedTensorProduct R I (CompletedTensorProduct R I A B) C →ₐ[R]
+      CompletedTensorProduct R I A (CompletedTensorProduct R I B C) where
+  toRingHom := assocHom hI
+  commutes' := assocHom_algebraMap hI
+
+@[simp]
+theorem assocAlgHom_apply (hI : I.FG)
+    (x : CompletedTensorProduct R I (CompletedTensorProduct R I A B) C) :
+    assocAlgHom hI x = assocHom hI x :=
+  rfl
+
 end Associator
 
 end CompletedTensorProduct

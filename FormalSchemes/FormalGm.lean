@@ -1,6 +1,7 @@
 import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.AdicExtend
 import FormalSchemes.CompletedTensor
+import FormalSchemes.CompletedTensorAssoc
 import Mathlib.Algebra.Polynomial.Laurent
 
 set_option linter.style.header false
@@ -673,6 +674,135 @@ theorem counit_law_right [TopologicalSpace R] [IsAdicRing I] :
     exact (isAdicRing R I hI).toIsAdicComplete
   rw [counitMapRight_comp_comul R I hI]
   exact RingHom.ext fun a => CompletedTensorProduct.rightUnitEquiv_inl hI a
+
+/-!
+### Coassociativity of `Ĝm`
+
+The remaining structural Hopf-algebra axiom: the comultiplication `Δ = comul` is *coassociative*.
+Concretely, applying `Δ` to either tensor factor of `Δ` and then re-associating the completed
+tensor product with the associator
+`(R{X,X⁻¹} ⊗̂_R R{X,X⁻¹}) ⊗̂_R R{X,X⁻¹} ≃+* R{X,X⁻¹} ⊗̂_R (R{X,X⁻¹} ⊗̂_R R{X,X⁻¹})`
+gives the same continuous `R`-algebra map. Both composites send `X ↦ X ⊗ X ⊗ X`.
+-/
+
+/-- The comultiplication tensored with the identity on the second factor, `Δ ⊗̂ id`, bundled as an
+`R`-algebra homomorphism `R{X,X⁻¹} ⊗̂_R R{X,X⁻¹} →ₐ[R] (R{X,X⁻¹} ⊗̂_R R{X,X⁻¹}) ⊗̂_R R{X,X⁻¹}`
+(the `AlgHom` form of `CompletedTensorProduct.map hI comulAlgHom id`; built via `liftAlgHom`, so it
+coincides with `map` as a ring homomorphism). -/
+def comulMapLeftAlgHom :
+    tensorSquare R I →ₐ[R]
+      CompletedTensorProduct R I (tensorSquare R I) (RestrictedLaurentSeries R I) :=
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (tensorSquare R I)
+        (RestrictedLaurentSeries R I))
+      (CompletedTensorProduct R I (tensorSquare R I) (RestrictedLaurentSeries R I)) :=
+    (CompletedTensorProduct.isAdicRing R I (tensorSquare R I)
+      (RestrictedLaurentSeries R I) hI).toIsAdicComplete
+  CompletedTensorProduct.liftAlgHom
+    (CompletedTensorProduct.idealOfDefinition R I (tensorSquare R I) (RestrictedLaurentSeries R I))
+    (le_of_eq CompletedTensorProduct.idealOfDefinition_eq_map.symm)
+    ((CompletedTensorProduct.inl R I (tensorSquare R I) (RestrictedLaurentSeries R I)).comp
+      (comulAlgHom R I hI))
+    ((CompletedTensorProduct.inr R I (tensorSquare R I) (RestrictedLaurentSeries R I)).comp
+      (AlgHom.id R (RestrictedLaurentSeries R I)))
+
+theorem comulMapLeftAlgHom_apply (x : tensorSquare R I) :
+    comulMapLeftAlgHom R I hI x =
+      CompletedTensorProduct.map hI (comulAlgHom R I hI)
+        (AlgHom.id R (RestrictedLaurentSeries R I)) x :=
+  rfl
+
+/-- The identity on the first factor tensored with the comultiplication, `id ⊗̂ Δ`, bundled as an
+`R`-algebra homomorphism `R{X,X⁻¹} ⊗̂_R R{X,X⁻¹} →ₐ[R] R{X,X⁻¹} ⊗̂_R (R{X,X⁻¹} ⊗̂_R R{X,X⁻¹})`
+(the `AlgHom` form of `CompletedTensorProduct.map hI id comulAlgHom`; built via `liftAlgHom`, so it
+coincides with `map` as a ring homomorphism). -/
+def comulMapRightAlgHom :
+    tensorSquare R I →ₐ[R]
+      CompletedTensorProduct R I (RestrictedLaurentSeries R I) (tensorSquare R I) :=
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (tensorSquare R I))
+      (CompletedTensorProduct R I (RestrictedLaurentSeries R I) (tensorSquare R I)) :=
+    (CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (tensorSquare R I) hI).toIsAdicComplete
+  CompletedTensorProduct.liftAlgHom
+    (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I) (tensorSquare R I))
+    (le_of_eq CompletedTensorProduct.idealOfDefinition_eq_map.symm)
+    ((CompletedTensorProduct.inl R I (RestrictedLaurentSeries R I) (tensorSquare R I)).comp
+      (AlgHom.id R (RestrictedLaurentSeries R I)))
+    ((CompletedTensorProduct.inr R I (RestrictedLaurentSeries R I) (tensorSquare R I)).comp
+      (comulAlgHom R I hI))
+
+theorem comulMapRightAlgHom_apply (x : tensorSquare R I) :
+    comulMapRightAlgHom R I hI x =
+      CompletedTensorProduct.map hI (AlgHom.id R (RestrictedLaurentSeries R I))
+        (comulAlgHom R I hI) x :=
+  rfl
+
+set_option maxHeartbeats 1000000 in
+-- The composite runs through the triply-nested completed tensor products
+-- `(R{X,X⁻¹} ⊗̂ R{X,X⁻¹}) ⊗̂ R{X,X⁻¹}`, whose `whnf`/`isDefEq` exceeds the default budget.
+/-- **Coassociativity of the comultiplication of `Ĝm`** — the tensor-level Hopf-algebra
+coassociativity axiom: routing `(Δ ⊗̂ id) ∘ Δ` through the associator agrees with `(id ⊗̂ Δ) ∘ Δ`.
+Both continuous points send the coordinate `X` to `X ⊗ X ⊗ X`. -/
+theorem comul_coassoc :
+    (CompletedTensorProduct.assocHom hI).comp
+        ((CompletedTensorProduct.map hI (comulAlgHom R I hI)
+          (AlgHom.id R (RestrictedLaurentSeries R I))).comp (comul R I hI)) =
+      (CompletedTensorProduct.map hI (AlgHom.id R (RestrictedLaurentSeries R I))
+        (comulAlgHom R I hI)).comp (comul R I hI) := by
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)) (tensorSquare R I) :=
+    (CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (RestrictedLaurentSeries R I) hI).toIsAdicComplete
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (tensorSquare R I)
+        (RestrictedLaurentSeries R I))
+      (CompletedTensorProduct R I (tensorSquare R I) (RestrictedLaurentSeries R I)) :=
+    (CompletedTensorProduct.isAdicRing R I (tensorSquare R I)
+      (RestrictedLaurentSeries R I) hI).toIsAdicComplete
+  haveI : IsAdicComplete
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (tensorSquare R I))
+      (CompletedTensorProduct R I (RestrictedLaurentSeries R I) (tensorSquare R I)) :=
+    (CompletedTensorProduct.isAdicRing R I (RestrictedLaurentSeries R I)
+      (tensorSquare R I) hI).toIsAdicComplete
+  set L := CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+    (tensorSquare R I)
+  have hcomul : IsContinuousPoint R I
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I)) (comulAlgHom R I hI) := fun m x hx =>
+    isContinuousPoint_unitEvalAlgHom R I
+      (CompletedTensorProduct.idealOfDefinition R I (RestrictedLaurentSeries R I)
+        (RestrictedLaurentSeries R I))
+      (by rw [CompletedTensorProduct.idealOfDefinition, Ideal.map_map]; exact le_of_eq rfl)
+      hI (tensorX R I) m x hx
+  have hF : IsContinuousPoint R I L
+      ((CompletedTensorProduct.assocAlgHom hI).comp
+        ((comulMapLeftAlgHom R I hI).comp (comulAlgHom R I hI))) := by
+    intro m x hx
+    rw [AlgHom.comp_apply, AlgHom.comp_apply]
+    exact CompletedTensorProduct.assocHom_mem_pow hI m
+      (CompletedTensorProduct.map_mem_pow hI (comulAlgHom R I hI)
+        (AlgHom.id R (RestrictedLaurentSeries R I)) m (hcomul m x hx))
+  have hG : IsContinuousPoint R I L
+      ((comulMapRightAlgHom R I hI).comp (comulAlgHom R I hI)) := by
+    intro m x hx
+    rw [AlgHom.comp_apply]
+    exact CompletedTensorProduct.map_mem_pow hI (AlgHom.id R (RestrictedLaurentSeries R I))
+      (comulAlgHom R I hI) m (hcomul m x hx)
+  have hX : (CompletedTensorProduct.assocAlgHom hI).comp
+        ((comulMapLeftAlgHom R I hI).comp (comulAlgHom R I hI)) (X R I 1) =
+      (comulMapRightAlgHom R I hI).comp (comulAlgHom R I hI) (X R I 1) := by
+    simp only [AlgHom.comp_apply, comulAlgHom_X, comulMapLeftAlgHom_apply,
+      comulMapRightAlgHom_apply, map_mul, CompletedTensorProduct.map_inl,
+      CompletedTensorProduct.map_inr, AlgHom.id_apply,
+      CompletedTensorProduct.assocAlgHom_apply, CompletedTensorProduct.assocHom_inl_inl,
+      CompletedTensorProduct.assocHom_inl_inr, CompletedTensorProduct.assocHom_inr, mul_assoc]
+  have key := point_ext R I L hI hF hG hX
+  refine RingHom.ext fun z => ?_
+  exact DFunLike.congr_fun key z
 
 end Group
 
