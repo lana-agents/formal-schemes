@@ -235,6 +235,80 @@ def pointsEquivUnits (hI : I.FG) :
 
 end Points2
 
+/-!
+### Naturality of the functor of points
+
+The bijection `pointsEquivUnits : Hom_cont(Spf S, Ĝm) ≃ Sˣ` is natural in the complete adic
+`R`-algebra `S`. Concretely, an `R`-algebra homomorphism `g : S ⟶ S'` acts on points by
+post-composition and on units by `Units.map g`, and these agree under the identification. This
+is what makes the group structure induced on `Hom_cont(Spf S, Ĝm)` (via `Sˣ`) functorial in
+`S`, i.e. exhibits `Ĝm` as a group functor.
+-/
+
+section Naturality
+
+variable {S : Type u} [CommRing S] (L : Ideal S) [Algebra R S] [IsAdicComplete L S]
+variable (hIL : I.map (algebraMap R S) ≤ L)
+variable {S' : Type u} [CommRing S'] (L' : Ideal S') [Algebra R S'] [IsAdicComplete L' S']
+variable (hIL' : I.map (algebraMap R S') ≤ L')
+
+omit [IsAdicComplete L S] [IsAdicComplete L' S'] in
+/-- **Post-composition preserves continuous points** when `g` is continuous, i.e. carries the
+filtration `L` into `L'` (`hg : L.map g ≤ L'`). This is the functoriality of the underlying
+point set. -/
+theorem isContinuousPoint_comp {g : S →ₐ[R] S'} (hg : L.map g.toRingHom ≤ L')
+    {F : RestrictedLaurentSeries R I →ₐ[R] S} (hF : IsContinuousPoint R I L F) :
+    IsContinuousPoint R I L' (g.comp F) := by
+  intro m x hx
+  have hFx : F x ∈ L ^ m := hF m x hx
+  have hmem : g.toRingHom (F x) ∈ Ideal.map g.toRingHom (L ^ m) := Ideal.mem_map_of_mem _ hFx
+  rw [Ideal.map_pow] at hmem
+  have hle : (Ideal.map g.toRingHom L) ^ m ≤ L' ^ m := by gcongr
+  exact hle hmem
+
+/-- **Naturality, points → units (the easy half).** For any `R`-algebra homomorphism
+`g : S ⟶ S'`, the unit attached to the pushed-forward point `g ∘ F` is `Units.map g` applied to
+the unit of `F`. No continuity is needed: `pointUnit` only reads off the image of the variable,
+and `g` is multiplicative. -/
+theorem pointUnit_comp (g : S →ₐ[R] S') (F : RestrictedLaurentSeries R I →ₐ[R] S) :
+    pointUnit R I (g.comp F) = Units.map g.toRingHom.toMonoidHom (pointUnit R I F) := by
+  refine Units.ext ?_
+  rw [Units.coe_map, pointUnit_coe, pointUnit_coe, AlgHom.comp_apply]
+  rfl
+
+/-- **Naturality, units → points.** For continuous `g` (carrying `L` into `L'`), evaluating at
+the pushed-forward unit `Units.map g u` equals post-composing the evaluation at `u` with `g`.
+Both sides are continuous points of `S'` agreeing on the variable, so they coincide by
+`point_ext`. -/
+theorem unitEvalAlgHom_comp (hI : I.FG) {g : S →ₐ[R] S'} (hg : L.map g.toRingHom ≤ L') (u : Sˣ) :
+    g.comp (unitEvalAlgHom R I L hIL u) =
+      unitEvalAlgHom R I L' hIL' (Units.map g.toRingHom.toMonoidHom u) := by
+  refine point_ext R I L' hI
+    (isContinuousPoint_comp R I L L' hg (isContinuousPoint_unitEvalAlgHom R I L hIL hI u))
+    (isContinuousPoint_unitEvalAlgHom R I L' hIL' hI _) ?_
+  rw [AlgHom.comp_apply, unitEvalAlgHom_X, unitEvalAlgHom_X]
+  simp
+
+/-- **Naturality of `pointsEquivUnits` in `S`.** The square
+
+```
+Hom_cont(Spf S, Ĝm)  ≃  Sˣ
+        |                |
+   g ∘ (·)         Units.map g
+        ↓                ↓
+Hom_cont(Spf S', Ĝm) ≃  S'ˣ
+```
+
+commutes for every continuous `R`-algebra homomorphism `g : S ⟶ S'` (`hg : L.map g ≤ L'`). In
+particular the group structure carried by `pointsEquivUnits` is functorial in `S`. -/
+theorem pointsEquivUnits_naturality (hI : I.FG) {g : S →ₐ[R] S'} (hg : L.map g.toRingHom ≤ L')
+    (F : { F : RestrictedLaurentSeries R I →ₐ[R] S // IsContinuousPoint R I L F }) :
+    pointsEquivUnits R I L' hIL' hI ⟨g.comp F.1, isContinuousPoint_comp R I L L' hg F.2⟩ =
+      Units.map g.toRingHom.toMonoidHom (pointsEquivUnits R I L hIL hI F) :=
+  pointUnit_comp R I g F.1
+
+end Naturality
+
 end Points
 
 
