@@ -1,6 +1,9 @@
 import Mathlib.RingTheory.AdicCompletion.LocalRing
+import Mathlib.RingTheory.AdicCompletion.RingHom
 import Mathlib.RingTheory.Finiteness.Ideal
 import Mathlib.Algebra.MvPolynomial.CommRing
+import Mathlib.Algebra.MvPolynomial.Eval
+import FormalSchemes.FormalScheme
 
 set_option linter.style.header false
 
@@ -33,6 +36,10 @@ complete and separated for this ideal, so it is an adic ring in the sense of
   `I·R[X]`-adic completion of `MvPolynomial (Fin n) R`.
 * `RestrictedPowerSeries.idealOfDefinition I n`: the ideal of definition of `R{X}`, the extension of
   the extended ideal `I · R[X]` to `R{X}`.
+* `RestrictedPowerSeries.formalPolydisc I n hI`: for `I` finitely generated, the **formal polydisc**
+  `Spf R{X}` packaged as an affine `FormalScheme` via `AlgebraicGeometry.FormalScheme.Spf`.
+* `RestrictedPowerSeries.eval I n x`: the **evaluation homomorphism** `R{X} → S`, `Xᵢ ↦ xᵢ`, into a
+  complete adic `R`-algebra `S`, realizing the universal property of the formal polydisc.
 
 ## Main results
 
@@ -40,12 +47,8 @@ complete and separated for this ideal, so it is an adic ring in the sense of
   `R{X}` with the adic completion of `R[X]` for the extended ideal.
 * `RestrictedPowerSeries.isAdicComplete`: for `I` finitely generated, `R{X}` is adically complete
   for its ideal of definition.
-
-## TODO
-
-* The universal property of the formal polydisc: for a complete adic `R`-algebra `S` and a tuple
-  `x : Fin n → S`, the `R`-algebra homomorphism `R{X} → S` extending `MvPolynomial.aeval x`
-  (evaluation at `x`). This is deferred to future work.
+* `RestrictedPowerSeries.map_pow_map_aeval`: evaluation `aeval x` is continuous for the adic
+  topologies — it carries `(I · R[X])^k` onto `(I · S)^k` — which is what lets it extend to `R{X}`.
 
 ## References
 
@@ -90,5 +93,72 @@ this exhibits `R{X}` as an adic ring. This is the completion analogue of
 theorem isAdicComplete (hI : I.FG) :
     IsAdicComplete (idealOfDefinition I n) (RestrictedPowerSeries I n) :=
   AdicCompletion.isAdicComplete_self (I.map (algebraMap R (MvPolynomial (Fin n) R))) (hI.map _)
+
+open AlgebraicGeometry in
+set_option linter.style.setOption false in
+set_option maxHeartbeats 800000 in
+-- Building `FormalScheme.Spf` unfolds the structure sheaf (a limit of pushforward sheaves)
+-- against the restriction machinery, which is slow; the same bump is used at `FormalScheme.Spf`.
+/-- The **formal polydisc** `Spf R{X₁, …, Xₙ}` as an affine formal scheme over an adic ring `R`
+with finitely generated ideal of definition `I`. We equip `R{X}` with its ideal-of-definition-adic
+topology; `RestrictedPowerSeries.isAdicComplete` then makes it an `IsAdicRing`, so `R{X}` is an
+adic ring and `FormalScheme.Spf` (issue 22) produces the affine formal scheme. -/
+noncomputable def formalPolydisc (hI : I.FG) : FormalScheme :=
+  letI : TopologicalSpace (RestrictedPowerSeries I n) := (idealOfDefinition I n).adicTopology
+  haveI : IsAdicRing (idealOfDefinition I n) :=
+    { toIsAdicComplete := isAdicComplete I n hI
+      isAdic := rfl }
+  FormalScheme.Spf (idealOfDefinition I n)
+
+section UniversalProperty
+
+variable {S : Type*} [CommRing S] [Algebra R S]
+
+/-- Evaluation `MvPolynomial.aeval x : R[X] → S` carries the extended ideal `I · R[X]` onto
+`I · S`, because it restricts to the structure map `R → S` on constants. -/
+theorem map_map_aeval (x : Fin n → S) :
+    Ideal.map (MvPolynomial.aeval (R := R) x : MvPolynomial (Fin n) R →+* S)
+        (I.map (algebraMap R (MvPolynomial (Fin n) R))) = I.map (algebraMap R S) := by
+  simp only [Ideal.map_map, AlgHom.comp_algebraMap]
+
+/-- The power version of `map_map_aeval`: evaluation carries `(I · R[X])^k` onto `(I · S)^k`. -/
+theorem map_pow_map_aeval (x : Fin n → S) (k : ℕ) :
+    Ideal.map (MvPolynomial.aeval (R := R) x : MvPolynomial (Fin n) R →+* S)
+        ((I.map (algebraMap R (MvPolynomial (Fin n) R))) ^ k) = (I.map (algebraMap R S)) ^ k := by
+  rw [Ideal.map_pow, map_map_aeval]
+
+variable [IsAdicComplete (I.map (algebraMap R S)) S]
+
+/-- The **evaluation homomorphism** `R{X₁, …, Xₙ} → S`, `Xᵢ ↦ xᵢ`, into a complete adic
+`R`-algebra `S` (one that is `I · S`-adically complete). This is the universal property of the
+formal polydisc: `aeval x : R[X] → S` is continuous for the adic topologies (`map_pow_map_aeval`),
+so it extends uniquely along the completion `R[X] → R{X}` to the complete target `S`. The extension
+is built level by level through the finite quotients `S ⧸ (I · S)^k` and assembled with
+`IsAdicComplete.liftAlgHom`. -/
+noncomputable def eval (x : Fin n → S) : RestrictedPowerSeries I n →ₐ[R] S :=
+  IsAdicComplete.liftAlgHom (I.map (algebraMap R S))
+    (fun k =>
+      (Ideal.quotientMapₐ ((I.map (algebraMap R S)) ^ k) (MvPolynomial.aeval x)
+          (by exact Ideal.map_le_iff_le_comap.mp (le_of_eq (map_pow_map_aeval I n x k)))).comp
+        ((AdicCompletion.evalₐ
+            (I.map (algebraMap R (MvPolynomial (Fin n) R))) k).restrictScalars R))
+    (by
+      intro a b hab
+      apply AlgHom.ext
+      intro z
+      obtain ⟨c, rfl⟩ :=
+        AdicCompletion.mk_surjective (I.map (algebraMap R (MvPolynomial (Fin n) R)))
+          (MvPolynomial (Fin n) R) z
+      simp only [AlgHom.comp_apply, AlgHom.restrictScalars_apply, AdicCompletion.evalₐ_mk,
+        Ideal.quotient_map_mkₐ, Ideal.Quotient.mkₐ_eq_mk, Ideal.Quotient.factorₐ_apply_mk]
+      rw [Ideal.Quotient.eq, ← map_sub]
+      have hmem : c.val b - c.val a ∈ (I.map (algebraMap R (MvPolynomial (Fin n) R))) ^ a := by
+        rw [← Ideal.Quotient.eq]
+        exact AdicCompletion.Ideal.mk_eq_mk _ hab c
+      have hmap := Ideal.mem_map_of_mem
+        (MvPolynomial.aeval (R := R) x : MvPolynomial (Fin n) R →+* S) hmem
+      rwa [map_pow_map_aeval I n x a] at hmap)
+
+end UniversalProperty
 
 end RestrictedPowerSeries
