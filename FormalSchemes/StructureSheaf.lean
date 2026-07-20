@@ -209,6 +209,17 @@ theorem comap_comp_map {A B : Type u} [CommRing A] [CommRing B] (φ : A →+* B)
   rw [StructureSheaf.comap_apply, StructureSheaf.comap_apply]
   rfl
 
+/-- `StructureSheaf.comap` at equal ring homomorphisms (and equal opens) agree; the subset
+conditions are proof-irrelevant. -/
+theorem comap_congr {A B : Type u} [CommRing A] [CommRing B] {ψ₁ ψ₂ : A →+* B} (h : ψ₁ = ψ₂)
+    (U : TopologicalSpace.Opens (PrimeSpectrum.Top A))
+    (V : TopologicalSpace.Opens (PrimeSpectrum.Top B))
+    (h₁ : V.1 ⊆ PrimeSpectrum.comap ψ₁ ⁻¹' U.1)
+    (h₂ : V.1 ⊆ PrimeSpectrum.comap ψ₂ ⁻¹' U.1) :
+    StructureSheaf.comap ψ₁ U V h₁ = StructureSheaf.comap ψ₂ U V h₂ := by
+  subst h
+  rfl
+
 /-- `StructureSheaf.comap` is compatible with the canonical maps interpreting ring elements as
 sections: `comap φ` sends the section attached to `a` to the section attached to `φ a`. -/
 theorem comap_algebraMap {A B : Type u} [CommRing A] [CommRing B] (φ : A →+* B)
