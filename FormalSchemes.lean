@@ -1,5 +1,6 @@
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicExtend
+import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.Completion
