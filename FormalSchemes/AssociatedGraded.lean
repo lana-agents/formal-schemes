@@ -1,5 +1,6 @@
 import Mathlib.RingTheory.ReesAlgebra
 import Mathlib.RingTheory.Ideal.Quotient.Noetherian
+import Mathlib.Algebra.GradedMonoid
 
 set_option linter.style.header false
 
@@ -28,11 +29,25 @@ quotient of a Noetherian ring is Noetherian.
 ## Main definitions
 
 * `AssociatedGraded K`: the associated graded ring `gr_K(B)`, as `reesAlgebra K ⧸ J`.
+* `AssociatedGraded.deg n`: the **leading-form map** `K^n → gr_K(B)`, `k ↦ [k·X^n]`, realising the
+  projection onto the degree-`n` piece `K^n/K^{n+1}`.
+* `AssociatedGraded.grPiece n`: the degree-`n` graded piece (image of `deg n`).
 
 ## Main results
 
 * `AssociatedGraded.instIsNoetherianRing`: `gr_K(B)` is Noetherian when `B` is Noetherian
   (Atiyah–Macdonald 10.24).
+* `AssociatedGraded.deg_mul`, `AssociatedGraded.deg_zero_one`: leading forms are multiplicative
+  across degrees and the unit sits in degree `0`.
+* `AssociatedGraded.deg_eq_zero_of_mem_succ`: `deg n` kills the next filtration step `K^{n+1}`, so
+  it factors through `K^n/K^{n+1}`.
+* `SetLike.GradedMonoid (grPiece K)` and `AssociatedGraded.iSup_grPiece`: the graded pieces form a
+  graded monoid inside `gr_K(B)` and generate it.
+
+Directness of the homogeneous decomposition — which would upgrade `grPiece` to a full `GradedRing`
+instance — is not established here; it is the natural next increment. The above interface (leading
+forms, the vanishing on `K^{n+1}`, and multiplicativity) is what the successive-approximation
+argument of Atiyah–Macdonald 10.25 consumes.
 
 ## References
 
@@ -190,5 +205,51 @@ theorem deg_eq_zero_of_mem_succ (n : ℕ) (k : (K ^ n : Ideal B)) (hk : (k : B) 
     deg K n k = 0 := by
   rw [deg_apply, mk_eq_zero_iff]
   exact monomial_mem_shiftIdeal K n hk _ (monomialRees_coe K n k)
+
+/-! ### The graded pieces and the internal grading
+
+The degree-`n` piece `𝒢 n := image of deg n` is a copy of `K^n/K^{n+1}` sitting inside `gr_K(B)`.
+The leading-form multiplicativity `deg_mul` and unit `deg_zero_one` make the family `𝒢` a graded
+monoid inside `gr_K(B)`, and the pieces generate the whole ring. (Directness of the decomposition —
+which would upgrade this to a full `GradedRing` instance — is left to a follow-up; see the module
+docstring.) -/
+
+/-- The degree-`n` **graded piece** of `gr_K(B)`, the image of the leading-form map `deg n`. It is
+the copy of `K^n/K^{n+1}` inside `gr_K(B)`. -/
+def grPiece (n : ℕ) : Submodule B (AssociatedGraded K) :=
+  LinearMap.range (deg K n)
+
+theorem mem_grPiece {n : ℕ} {x : AssociatedGraded K} :
+    x ∈ grPiece K n ↔ ∃ k : (K ^ n : Ideal B), deg K n k = x :=
+  LinearMap.mem_range
+
+theorem deg_mem_grPiece (n : ℕ) (k : (K ^ n : Ideal B)) : deg K n k ∈ grPiece K n :=
+  ⟨k, rfl⟩
+
+/-- The graded pieces form a **graded monoid** inside `gr_K(B)`: the unit sits in degree `0`, and
+the product of a degree-`i` and a degree-`j` element lands in degree `i+j`. -/
+instance : SetLike.GradedMonoid (grPiece K) where
+  one_mem := ⟨⟨1, by simp⟩, deg_zero_one K⟩
+  mul_mem i j x y hx hy := by
+    obtain ⟨a, rfl⟩ := hx
+    obtain ⟨b, rfl⟩ := hy
+    refine ⟨⟨(a : B) * b, ?_⟩, (deg_mul K i j a b).symm⟩
+    rw [pow_add]; exact Ideal.mul_mem_mul a.2 b.2
+
+/-- The graded pieces **generate** `gr_K(B)`: every element is a finite sum of leading forms. -/
+theorem iSup_grPiece : ⨆ n, grPiece K n = ⊤ := by
+  rw [eq_top_iff]
+  rintro x -
+  obtain ⟨p, rfl⟩ := mk_surjective K x
+  -- write `p` as the sum of its monomials in the Rees algebra, then map down
+  have hp : p = ∑ i ∈ (p : B[X]).support,
+      monomialRees K i ⟨(p : B[X]).coeff i, p.2 i⟩ := by
+    apply Subtype.ext
+    rw [AddSubmonoidClass.coe_finsetSum]
+    simp only [monomialRees_coe]
+    exact (Polynomial.as_sum_support (p : B[X]))
+  rw [hp, map_sum]
+  refine Submodule.sum_mem _ fun i _ => ?_
+  exact Submodule.mem_iSup_of_mem i (deg_mem_grPiece K i _)
 
 end AssociatedGraded
