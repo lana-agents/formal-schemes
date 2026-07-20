@@ -51,20 +51,6 @@ namespace CompletedTensorProduct
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {A B : Type u} [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 
-/-- The canonical map `inl` carries the powers of the ideal of definition `I·A` of the first
-factor into the powers of the ideal of definition of `A ⊗̂_R B`. -/
-theorem inl_mem_pow (m : ℕ) {a : A} (ha : a ∈ (I.map (algebraMap R A)) ^ m) :
-    inl R I A B a ∈ (idealOfDefinition R I A B) ^ m := by
-  have h1 : Ideal.map (inl R I A B).toRingHom (Ideal.map (algebraMap R A) I)
-      = idealOfDefinition R I A B := by
-    rw [Ideal.map_map, idealOfDefinition_eq_map]
-    exact congrArg (Ideal.map · I) (inl R I A B).comp_algebraMap
-  have hmem : (inl R I A B).toRingHom a
-      ∈ Ideal.map (inl R I A B).toRingHom ((I.map (algebraMap R A)) ^ m) :=
-    Ideal.mem_map_of_mem _ ha
-  rw [Ideal.map_pow, h1] at hmem
-  exact hmem
-
 /-- Membership in the powers of the ideal of definition of `A ⊗̂_R B`, phrased through the
 extension `I·(A ⊗̂_R B)` of the base ideal (a convenient form of `idealOfDefinition_eq_map`). -/
 theorem mem_pow_iff_map (m : ℕ) {x : CompletedTensorProduct R I A B} :

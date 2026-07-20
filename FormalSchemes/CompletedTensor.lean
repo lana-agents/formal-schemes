@@ -349,6 +349,20 @@ theorem inr_mem_pow (m : ℕ) {b : B} (hb : b ∈ (I.map (algebraMap R B)) ^ m) 
   rw [Ideal.map_pow, h1] at hmem
   exact hmem
 
+/-- The canonical map `inl` sends the powers of the ideal of definition of the first factor
+`I·A` into the powers of the ideal of definition of `A ⊗̂_R B`. -/
+theorem inl_mem_pow (m : ℕ) {a : A} (ha : a ∈ (I.map (algebraMap R A)) ^ m) :
+    inl R I A B a ∈ (idealOfDefinition R I A B) ^ m := by
+  have h1 : Ideal.map (inl R I A B).toRingHom (Ideal.map (algebraMap R A) I)
+      = idealOfDefinition R I A B := by
+    rw [Ideal.map_map, idealOfDefinition_eq_map]
+    congr 1
+  have hmem : (inl R I A B).toRingHom a
+      ∈ Ideal.map (inl R I A B).toRingHom ((I.map (algebraMap R A)) ^ m) :=
+    Ideal.mem_map_of_mem _ ha
+  rw [Ideal.map_pow, h1] at hmem
+  exact hmem
+
 end Functoriality
 
 /-!
@@ -408,5 +422,64 @@ theorem unitEquiv_inr (hI : I.FG) (a : A) :
   unitHom_inr a
 
 end Unitor
+
+/-!
+### The right unitor
+
+Symmetrically, for a complete adic `R`-algebra `A` the second factor `R` is absorbed:
+`A ⊗̂_R R ≃+* A`. This is the completed-tensor counterpart of `Algebra.TensorProduct.rid`, and is
+the isomorphism through which the *right* counit law of a formal group (e.g. `Ĝm`, issue 67) is
+expressed.
+-/
+
+section RightUnitor
+
+variable {R I A}
+variable [IsAdicComplete (I.map (algebraMap R A)) A]
+
+/-- The forward map of the right unitor `A ⊗̂_R R →+* A`, given by the universal property with
+`A ↦ A` the identity and `R ↦ A` the structure map: `inl a ↦ a`, `inr r ↦ algebraMap r`. -/
+def rightUnitHom : CompletedTensorProduct R I A R →+* A :=
+  lift (I.map (algebraMap R A)) le_rfl (AlgHom.id R A) (Algebra.ofId R A)
+
+@[simp]
+theorem rightUnitHom_inl (a : A) : rightUnitHom (R := R) (I := I) (A := A) (inl R I A R a) = a :=
+  lift_inl _ _ _ _ a
+
+@[simp]
+theorem rightUnitHom_inr (r : R) : rightUnitHom (R := R) (I := I) (A := A) (inr R I A R r)
+    = algebraMap R A r :=
+  lift_inr _ _ _ _ r
+
+/-- **The right unitor** `A ⊗̂_R R ≃+* A` (for `I` finitely generated and `A` complete), absorbing
+the second factor `R`; the inverse is `inl`. -/
+def rightUnitEquiv (hI : I.FG) : CompletedTensorProduct R I A R ≃+* A :=
+  haveI : IsAdicComplete (idealOfDefinition R I A R) (CompletedTensorProduct R I A R) :=
+    (isAdicRing R I A R hI).toIsAdicComplete
+  RingEquiv.ofRingHom
+    rightUnitHom
+    (inl R I A R)
+    (by ext a; simp)
+    (by
+      refine hom_ext (idealOfDefinition R I A R) hI
+        (fun m x hx => inl_mem_pow m (lift_mem_pow _ _ _ _ hI m hx)) (fun m x hx => hx)
+        (fun a => ?_) (fun r => ?_)
+      · change inl R I A R (rightUnitHom (inl R I A R a)) = inl R I A R a
+        rw [rightUnitHom_inl]
+      · change inl R I A R (rightUnitHom (inr R I A R r)) = inr R I A R r
+        rw [rightUnitHom_inr, AlgHom.commutes]
+        exact ((inr R I A R).commutes r).symm)
+
+@[simp]
+theorem rightUnitEquiv_inl (hI : I.FG) (a : A) :
+    rightUnitEquiv (R := R) (I := I) (A := A) hI (inl R I A R a) = a :=
+  rightUnitHom_inl a
+
+@[simp]
+theorem rightUnitEquiv_inr (hI : I.FG) (r : R) :
+    rightUnitEquiv (R := R) (I := I) (A := A) hI (inr R I A R r) = algebraMap R A r :=
+  rightUnitHom_inr r
+
+end RightUnitor
 
 end CompletedTensorProduct
