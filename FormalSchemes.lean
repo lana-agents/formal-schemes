@@ -6,6 +6,7 @@ import FormalSchemes.AdicRing
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.BaseChange
+import FormalSchemes.BasicOpenChart
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
