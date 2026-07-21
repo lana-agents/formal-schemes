@@ -24,6 +24,7 @@ import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.Sections
 import FormalSchemes.Spf
 import FormalSchemes.SpfGamma
+import FormalSchemes.SpfGammaBase
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
