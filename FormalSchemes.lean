@@ -5,6 +5,7 @@ import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
+import FormalSchemes.AwayCompletionAway
 import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
 import FormalSchemes.CofinalCompletion
