@@ -23,6 +23,7 @@ import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.RestrictedPowerSeries
+import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.Sections
 import FormalSchemes.Spf
 import FormalSchemes.SpfGamma
