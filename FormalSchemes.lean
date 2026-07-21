@@ -20,6 +20,7 @@ import FormalSchemes.FormalTorus
 import FormalSchemes.GermValue
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
+import FormalSchemes.IndScheme
 import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
