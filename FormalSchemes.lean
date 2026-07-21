@@ -9,6 +9,7 @@ import FormalSchemes.CofinalCompletion
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.CompletedTensorFunctor
+import FormalSchemes.CompleteNoetherian
 import FormalSchemes.Completion
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalScheme
