@@ -29,6 +29,7 @@ import FormalSchemes.IndScheme
 import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
+import FormalSchemes.OpenCover
 import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.Sections
