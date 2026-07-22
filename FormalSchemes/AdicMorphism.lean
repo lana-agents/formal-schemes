@@ -1,5 +1,6 @@
 import FormalSchemes.SpfMap
 import FormalSchemes.AdicQuotient
+import Mathlib.RingTheory.Spectrum.Prime.RingHom
 
 set_option linter.style.header false
 
@@ -26,6 +27,10 @@ first examples:
 * `IsAdicHom.spfMap`: the induced morphism of locally ringed spaces `Spf S ⟶ Spf R`.
 * `closedFormalSubscheme`: the closed formal subscheme `Spf (R ⧸ a) ⟶ Spf R` attached to an
   adically closed ideal `a` of an adic ring.
+* `closedSubschemeBase`: its underlying continuous map, and `range_closedSubschemeBase` /
+  `isClosedEmbedding_closedSubschemeBase`: this map is a closed topological embedding whose range
+  is the vanishing locus `V(ā)` of the image of `a` in `R ⧸ I` — the topological half of the
+  statement that a closed formal subscheme is a closed immersion.
 
 ## References
 
@@ -34,7 +39,7 @@ first examples:
 
 noncomputable section
 
-open Ideal AlgebraicGeometry
+open Ideal AlgebraicGeometry Topology
 
 universe u
 
@@ -104,5 +109,47 @@ def closedFormalSubscheme (ha : (Ideal.Quotient.mk a).AdicKerClosed I) :
   letI := isAdicRing_quotient I a ha
   FormalSpectrum.locallyRingedSpaceMap I (I.map (Ideal.Quotient.mk a)) (Ideal.Quotient.mk a)
     (Ideal.map_le_iff_le_comap.mp le_rfl)
+
+/-!
+#### The underlying closed embedding
+
+The topological content of EGA I 10.14: the underlying map of a closed formal subscheme is a
+closed embedding onto the vanishing locus of the ideal cut out by `a`. This is the `base_closed`
+half of the eventual `IsClosedImmersion` statement — the closed-subscheme analogue of the open
+embedding `FormalSpectrum.isOpenEmbedding_basicOpenChartBase` of the basic-open chart. Since the
+inducing ring map `R ⧸ I → (R ⧸ a) ⧸ (I·(R ⧸ a))` is a quotient (hence surjective) map, no
+`I.FG` hypothesis is needed here, unlike the open case.
+-/
+
+/-- The **underlying continuous map** `Spf (R ⧸ a) → Spf R` of the closed formal subscheme
+`closedFormalSubscheme`, induced by the quotient map `R → R ⧸ a` via `FormalSpectrum.map`. -/
+def closedSubschemeBase :
+    FormalSpectrum (I.map (Ideal.Quotient.mk a)) → FormalSpectrum I :=
+  FormalSpectrum.map I (I.map (Ideal.Quotient.mk a)) (Ideal.Quotient.mk a) Ideal.le_comap_map
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- The **range** of the base map of a closed formal subscheme is the vanishing locus `V(ā)` of the
+image `ā = a·(R ⧸ I)` of `a` in the level-`0` thickening `R ⧸ I`: the closed formal subscheme is
+supported on the closed subset cut out by `a` (EGA I, 10.14). -/
+theorem range_closedSubschemeBase :
+    Set.range (closedSubschemeBase I a) =
+      (PrimeSpectrum.zeroLocus (a.map (Ideal.Quotient.mk I)) : Set (FormalSpectrum I)) := by
+  change Set.range (PrimeSpectrum.comap
+      (Ideal.quotientMap (I.map (Ideal.Quotient.mk a)) (Ideal.Quotient.mk a)
+        Ideal.le_comap_map)) = _
+  rw [range_comap_of_surjective _ _
+      (Ideal.quotientMap_surjective Ideal.Quotient.mk_surjective),
+    Ideal.ker_quotientMap_mk]
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- The base map of a closed formal subscheme is a **closed topological embedding** (EGA I, 10.14):
+`Spf (R ⧸ a)` maps homeomorphically onto the closed subset `V(ā) ⊆ Spf R`. This is the topological
+`base_closed` half of the statement that `closedFormalSubscheme` is a closed immersion. -/
+theorem isClosedEmbedding_closedSubschemeBase :
+    IsClosedEmbedding (closedSubschemeBase I a) := by
+  change IsClosedEmbedding (PrimeSpectrum.comap
+    (Ideal.quotientMap (I.map (Ideal.Quotient.mk a)) (Ideal.Quotient.mk a) Ideal.le_comap_map))
+  exact PrimeSpectrum.isClosedEmbedding_comap_of_surjective _ _
+    (Ideal.quotientMap_surjective Ideal.Quotient.mk_surjective)
 
 end ClosedSubscheme
