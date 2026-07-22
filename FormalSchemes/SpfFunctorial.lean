@@ -21,17 +21,23 @@ towards exhibiting it as a (contravariant) functor on adic rings and continuous 
   ring homomorphism, not on the chosen continuity proof.
 * `levelSheafHom_id`: the level-`n` map of thickening sheaves induced by the identity is the
   canonical transport `eqToHom` (the identity up to the propositional equality `mapTop_id`).
+* `mapSheafHom_id`: the induced map of structure sheaves `O_{Spf R} ⟶ (mapTop id)_* O_{Spf R}` of
+  the identity is the canonical transport `eqToHom`.
+* `presheafedSpaceMap_id`, `locallyRingedSpaceMap_id`: **the formal spectrum respects the
+  identity** — `Spf (id R) = 𝟙 (Spf R)` as a morphism of presheafed / locally ringed spaces.
 
-The remaining, harder identity/composition laws **at the level of locally ringed spaces**
-(`locallyRingedSpaceMap_id : Spf (id R) = 𝟙 (Spf R)` and the composition law) are left as a
-follow-up: since the underlying base maps are only *propositionally* equal (`mapTop_id`/
-`mapTop_comp`), the equality of the sheaf components carries the `eqToHom`/`whiskerRight`
-conjugation that `FormalSchemes/Thickenings.lean` (lines 161-186) deliberately sidesteps for the
-thickening cocone. `levelSheafHom_id` and the pushforward-transport lemmas
-`thickeningSheaf_pushforward_mapTop_id`/`structureSheaf_pushforward_mapTop_id` below are the
-first steps of that argument; the outstanding piece is the `eqToHom`-naturality square relating
-`mapSheafHom_π` at each level to the transport (see the module comment before
-`levelSheafHom_id`).
+The equality `locallyRingedSpaceMap_id` is subtle because the underlying base map `mapTop (id)`
+is only *propositionally* equal to `𝟙` (`mapTop_id`), so the equality of the sheaf components
+carries an `eqToHom`/`whiskerRight` conjugation — the same conjugation that
+`FormalSchemes/Thickenings.lean` (lines 161-186) deliberately sidesteps for the thickening
+cocone. The load-bearing step is `eqToHom_pushforward_limit_square`, which discharges the
+`eqToHom`-naturality square between `mapSheafHom_π` and the transport by reducing (via `subst`)
+to the case where the base map is literally the identity.
+
+The composition law `locallyRingedSpaceMap_comp : Spf (g ∘ f) = Spf g ≫ Spf f` (and its
+corollary `formalCompletion.map_comp`) is left as a follow-up: it needs the analogue of
+`mapSheafHom_id` for a composite, i.e. a `levelSheafHom_comp`/`mapSheafHom_comp` chain mirroring
+`comap_levelRingHom_square`, on top of the same transport technique established here.
 
 ## References
 
@@ -43,6 +49,14 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry TopologicalSpace Opposite
 
 universe u
+
+/-- Whiskering an `eqToHom` natural transformation on the right by a functor is again the
+corresponding `eqToHom`. -/
+theorem CategoryTheory.Functor.whiskerRight_eqToHom_aux {C D E : Type*} [Category C] [Category D]
+    [Category E] {F G : C ⥤ D} (h : F = G) (P : D ⥤ E) :
+    Functor.whiskerRight (eqToHom h) P = eqToHom (by rw [h]) := by
+  subst h
+  simp
 
 namespace FormalSpectrum
 
@@ -166,5 +180,75 @@ theorem levelSheafHom_id (n : ℕ) :
     rfl
 
 end IdentityTransport
+
+/-!
+### The identity law `Spf (id) = 𝟙`
+
+Assembling the transport lemmas above into the equality of morphisms of locally ringed spaces
+`locallyRingedSpaceMap I I (id) = 𝟙 (Spf R)`.
+-/
+
+section IdentityLaw
+
+/-- General `eqToHom`/pushforward–limit naturality square, for a self-map `m` of the base equal
+to the identity. Reducing to `m = 𝟙` by `subst` makes both transports and the pushforward-map
+definitionally trivial. -/
+theorem eqToHom_pushforward_limit_square {X : TopCat.{u}}
+    (F : ℕᵒᵖ ⥤ TopCat.Sheaf CommRingCat.{u} X) (m : X ⟶ X) (e : m = 𝟙 X) (n : ℕ)
+    (pS : limit F = (TopCat.Sheaf.pushforward CommRingCat.{u} m).obj (limit F))
+    (pIn : F.obj ⟨n⟩ = (TopCat.Sheaf.pushforward CommRingCat.{u} m).obj (F.obj ⟨n⟩)) :
+    limit.π F ⟨n⟩ ≫ eqToHom pIn =
+      eqToHom pS ≫ (TopCat.Sheaf.pushforward CommRingCat.{u} m).map (limit.π F ⟨n⟩) := by
+  subst e
+  rfl
+
+/-- The map of structure sheaves induced by the identity is the canonical transport `eqToHom`. -/
+theorem mapSheafHom_id :
+    mapSheafHom I I (RingHom.id R) (Ideal.comap_id I).ge =
+      eqToHom (structureSheaf_pushforward_mapTop_id I) := by
+  refine (isLimitOfPreserves (TopCat.Sheaf.pushforward CommRingCat
+      (mapTop I I (RingHom.id R) (Ideal.comap_id I).ge))
+      (limit.isLimit (structureSheafFunctor I))).hom_ext ?_
+  intro j
+  induction j using Opposite.rec with
+  | op n =>
+    change mapSheafHom I I (RingHom.id R) (Ideal.comap_id I).ge ≫
+        (TopCat.Sheaf.pushforward CommRingCat (mapTop I I (RingHom.id R) (Ideal.comap_id I).ge)).map
+          (limit.π (structureSheafFunctor I) ⟨n⟩) =
+      eqToHom (structureSheaf_pushforward_mapTop_id I) ≫
+        (TopCat.Sheaf.pushforward CommRingCat (mapTop I I (RingHom.id R) (Ideal.comap_id I).ge)).map
+          (limit.π (structureSheafFunctor I) ⟨n⟩)
+    rw [mapSheafHom_π I I (RingHom.id R) (Ideal.comap_id I).ge n, levelSheafHom_id]
+    exact eqToHom_pushforward_limit_square (structureSheafFunctor I)
+      (mapTop I I (RingHom.id R) (Ideal.comap_id I).ge) (mapTop_id I) n _ _
+
+/-- The presheaf-level component of the identity's structure-sheaf map is the transport
+`eqToHom`. -/
+theorem mapSheafHom_id_hom :
+    (mapSheafHom I I (RingHom.id R) (Ideal.comap_id I).ge).hom =
+      eqToHom (congrArg ObjectProperty.FullSubcategory.obj
+        (structureSheaf_pushforward_mapTop_id I)) := by
+  rw [mapSheafHom_id, ← ObjectProperty.ι_map]
+  exact eqToHom_map _ _
+
+/-- The underlying morphism of presheafed spaces induced by the identity is the identity. -/
+theorem presheafedSpaceMap_id :
+    presheafedSpaceMap I I (RingHom.id R) (Ideal.comap_id I).ge =
+      𝟙 ((sheafedSpaceObj I).toPresheafedSpace) := by
+  refine PresheafedSpace.ext _ _ (mapTop_id I) ?_
+  change (mapSheafHom I I (RingHom.id R) (Ideal.comap_id I).ge).hom ≫ _ = 𝟙 _
+  rw [mapSheafHom_id_hom, CategoryTheory.Functor.whiskerRight_eqToHom_aux]
+  exact eqToHom_trans _ _
+
+/-- **The formal spectrum respects the identity** (EGA I, 10.2): the morphism of locally ringed
+spaces induced by the identity ring homomorphism is the identity. -/
+theorem locallyRingedSpaceMap_id :
+    locallyRingedSpaceMap I I (RingHom.id R) (Ideal.comap_id I).ge =
+      𝟙 (locallyRingedSpaceObj I) := by
+  apply LocallyRingedSpace.Hom.ext'
+  rw [LocallyRingedSpace.id_toHom]
+  exact presheafedSpaceMap_id I
+
+end IdentityLaw
 
 end FormalSpectrum
