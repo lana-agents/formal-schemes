@@ -9,6 +9,7 @@ import FormalSchemes.AwayCompletionAway
 import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
+import FormalSchemes.BasicOpenChartComponent
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
