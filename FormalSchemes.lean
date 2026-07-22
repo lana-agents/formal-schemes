@@ -27,6 +27,7 @@ import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.IndScheme
+import FormalSchemes.IndSchemeLimit
 import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
