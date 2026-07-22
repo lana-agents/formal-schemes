@@ -17,6 +17,7 @@ import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.Completion
 import FormalSchemes.FormalGm
+import FormalSchemes.FormalGroupAlgebraHopf
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.FormalTorus
