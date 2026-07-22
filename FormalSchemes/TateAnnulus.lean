@@ -117,12 +117,13 @@ theorem annulus_map_eq :
     I.map (algebraMap R (annulusAlgebra R I q)) = annulusIdealOfDefinition R I q :=
   (annulus_isTopologicallyFiniteType R I q).map_eq
 
-/-- **The Tate annulus is a complete adic ring over a Noetherian base**: when the presenting
-polydisc `R{x, y}` is Noetherian, the kernel `(x·y − q)` is automatically adically closed (Krull
-intersection), so the quotient `A` is a complete adic ring with ideal of definition `I·A` and its
-formal spectrum is an affine formal scheme. -/
+/-- **The Tate annulus is a complete adic ring over a Noetherian base**: over a Noetherian base
+`R` the presenting polydisc `R{x, y}` is Noetherian
+(`RestrictedPowerSeries.instIsNoetherianRing`), so the kernel `(x·y − q)` is automatically adically
+closed (Krull intersection), so the quotient `A` is a complete adic ring with ideal of definition
+`I·A` and its formal spectrum is an affine formal scheme. -/
 theorem annulus_isAdicRing (hI : I.FG)
-    [IsNoetherianRing (RestrictedPowerSeries R I 2)] :
+    [IsNoetherianRing R] :
     IsAdicRing (annulusIdealOfDefinition R I q) :=
   IsTopologicallyFiniteType.isAdicRing_of_noetherian hI (annulusMk_surjective R I q) rfl
 
@@ -137,14 +138,14 @@ theorem annulus_isAdicRing_of_kerClosed (hI : I.FG)
 
 /-- The **formal Tate annulus** `Spf A = Spf R{x, y}/(x·y − q)` as an affine formal scheme over a
 Noetherian base (Bosch, §9). -/
-def annulus (hI : I.FG) [IsNoetherianRing (RestrictedPowerSeries R I 2)] : FormalScheme :=
+def annulus (hI : I.FG) [IsNoetherianRing R] : FormalScheme :=
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
   FormalScheme.Spf (annulusIdealOfDefinition R I q)
 
 /-- The **structural morphism** `Spf A ⟶ Spf R` of the Tate annulus, as a morphism of locally
 ringed spaces coming from the `R`-algebra structure of `A`. -/
 def annulusStructMap [TopologicalSpace R] [IsAdicRing I] (hI : I.FG)
-    [IsNoetherianRing (RestrictedPowerSeries R I 2)] :
+    [IsNoetherianRing R] :
     FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q) ⟶
       FormalSpectrum.locallyRingedSpaceObj I :=
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
