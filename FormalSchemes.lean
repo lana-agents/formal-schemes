@@ -30,6 +30,7 @@ import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.Sections
 import FormalSchemes.Spf
+import FormalSchemes.SpfFunctorial
 import FormalSchemes.SpfGamma
 import FormalSchemes.SpfGammaBase
 import FormalSchemes.SpfMap
