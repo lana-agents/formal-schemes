@@ -12,17 +12,47 @@ range `D(f)` (`FormalSpectrum.isOpenEmbedding_basicOpenChartBase`,
 `FormalSpectrum.range_basicOpenChartBase`); the remaining ingredient is the `c_iso` field, i.e.
 the sheaf component of the chart is an isomorphism on the basis of basic opens `D(g) ⊆ D(f)`.
 
-This file provides the level-`n` matching lemma that identifies the chart's sheaf component on a
-basic open `D(g) ⊆ D(f)`, read through the sections identifications
-`FormalSpectrum.sectionsBasicOpenEquiv`, with the already-merged algebraic isomorphism
+This file packages the chart as a named morphism and develops the **level-`n` (`evalₐ`) behaviour
+of its ring-level `c`-component** — the completed-localization isomorphism
 `FormalSpectrum.awayCompletionChartEquiv` (`R{1/g} ≃+* R{1/f}{1/ḡ}`,
-`FormalSchemes/AwayCompletionInterchange.lean`).
+`FormalSchemes/AwayCompletionInterchange.lean`) — read level by level. This is the reusable
+algebraic core of the `c_iso`-on-basis route towards `LocallyRingedSpace.IsOpenImmersion`.
+
+The key observation is that all the completed maps in play are built from
+`AdicCompletion.mapCompletion`, whose level-`n` component is the induced map of quotients
+(`evalₐ_mapCompletion`). Chaining this along the two factors of `awayCompletionChartEquiv`
+(the localization transitivity `awayAwayLocEquiv` and the interchange `interchangeForward`)
+computes `evalₐ n (awayCompletionChartEquiv …)` as a composite of two `Ideal.quotientMap`s.
 
 ## Main results
 
-* `AdicCompletion.evalₐ_mapCompletion`: the general functoriality rule `evalₐ ∘ mapCompletion =
-  quotientMap ∘ evalₐ`; the level-`n` component of a completed ring map is the induced map of
-  quotients.
+* `AdicCompletion.evalₐ_mapCompletion`: the general functoriality rule
+  `evalₐ n (mapCompletion f x) = Ideal.quotientMap (J ^ n) f _ (evalₐ n x)`; the level-`n`
+  component of a completed ring map is the induced map of quotients. Reusable throughout the
+  `AdicCompletion` development.
+* `FormalSpectrum.basicOpenChart`: the affine basic-open chart `Spf R{1/f} ⟶ Spf R`, packaged as a
+  morphism of locally ringed spaces.
+* `FormalSpectrum.isUnit_algebraMap_away_left`: the containment↔unit bridge — `f` is a unit in
+  `Localization.Away (f * g)`, so each basic open `D(f * g) = D(f) ⊓ D(g) ≤ D(f)` (these form a
+  basis of `D(f)`) carries the interchange hypothesis of `awayCompletionChartEquiv`.
+* `AdicCompletion.evalₐ_interchangeForward`, `FormalSpectrum.evalₐ_awayCompletionAwayEquiv`,
+  `FormalSpectrum.evalₐ_awayCompletionChartEquiv`: the level-`n` components of the interchange
+  forward map, the localization-transitivity isomorphism, and their composite the chart's
+  `c`-component, each as an `Ideal.quotientMap`.
+
+## Remaining follow-up (issue 163 sheaf-level `c_iso`)
+
+The full `LocallyRingedSpace.IsOpenImmersion` still needs the **sheaf-side matching**: identify the
+chart's sheaf component on a basic open `D(g) ⊆ D(f)` — read through
+`FormalSpectrum.sectionsBasicOpenEquiv` on both sides (target open via `map_preimage_basicOpen`) —
+with `awayCompletionChartEquiv`, by `AdicCompletion.ext_evalₐ`, matching at each level `n` the
+`basicOpenLevelEquiv`-conjugation of `levelSheafHom`/`comap (levelRingHom …)` (via
+`mapSheafHom_hom_app_pi` + `eval_sectionsBasicOpenEquiv` in `BasicOpenChartComponent.lean`)
+against the composite quotient map computed here (`evalₐ_awayCompletionChartEquiv`). After that,
+`TopCat.Sheaf.isIso_iff_isIso_basis` on the basis of basic opens below `D(f)` (using
+`isUnit_algebraMap_away_left` for the covering opens `D(f * g)`) upgrades `basicOpenChart` to a
+`PresheafedSpace.IsOpenImmersion`, then `SheafedSpace`/`LocallyRingedSpace` packaging with range
+`basicOpen I f` (`range_basicOpenChartBase`).
 -/
 
 noncomputable section
@@ -74,4 +104,115 @@ theorem evalₐ_mapCompletion (f : R →+* S) (hf : I.map f ≤ J) (hJ : J.FG) (
   rw [hsplit, mapCompletion_of, AdicCompletion.algebraMap_apply, Algebra.algebraMap_self,
     RingHom.id_apply, evalₐ_of, hevalₐ, Ideal.quotientMap_mk]
 
+section Interchange
+
+variable {B : Type u} [CommRing B] (K : Ideal B) (t : B)
+
+/-- Continuity of `locTransition` at level `n`: the localization transitivity carries the ideal
+`(K·B_t) ^ n` into the comap of `(K̂·B̂_{t̂}) ^ n`, so it descends to the truncations. -/
+theorem locTransition_pow_le (n : ℕ) :
+    (locIdeal K t) ^ n ≤ ((completionLocIdeal K t) ^ n).comap (locTransition K t) := by
+  rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
+  exact Ideal.pow_right_mono (map_locTransition K t).le n
+
+/-- **T1 — the level-`n` component of the interchange forward map.** Since `interchangeForward`
+is the completion of `locTransition`, its `n`-th evaluation is the induced map of quotients
+`Ideal.quotientMap`. -/
+theorem evalₐ_interchangeForward (hK : K.FG) (n : ℕ)
+    (x : AdicCompletion (locIdeal K t) (Localization.Away t)) :
+    evalₐ (completionLocIdeal K t) n (interchangeForward K t hK x) =
+      Ideal.quotientMap ((completionLocIdeal K t) ^ n) (locTransition K t)
+        (locTransition_pow_le K t n) (evalₐ (locIdeal K t) n x) :=
+  evalₐ_mapCompletion (locTransition K t) (map_locTransition K t).le
+    (completionLocIdeal_fg K t hK) (locIdeal_fg K t hK) n (locTransition_pow_le K t n) x
+
+end Interchange
+
 end AdicCompletion
+
+namespace FormalSpectrum
+
+variable {R : Type u} [CommRing R] (I : Ideal R) (f g : R)
+
+/-- The affine basic-open chart `Spf R{1/f} ⟶ Spf R`, as a morphism of locally ringed spaces:
+the map of formal spectra induced by the structural ring map `R → R{1/f}`. Its underlying map is
+`basicOpenChartBase I f`, an open topological embedding with range `D(f)`
+(`isOpenEmbedding_basicOpenChartBase`, `range_basicOpenChartBase`). The eventual goal of issue 163
+is to upgrade this to a `LocallyRingedSpace.IsOpenImmersion`. -/
+def basicOpenChart : locallyRingedSpaceObj (awayCompletionIdeal I f) ⟶ locallyRingedSpaceObj I :=
+  locallyRingedSpaceMap I (awayCompletionIdeal I f) (awayCompletionHom I f)
+    (le_comap_awayCompletionHom I f)
+
+/-- For any `f g : R`, the element `f` becomes a unit in `Localization.Away (f * g)`: the product
+`f * g` is a unit there, and a divisor of a unit is a unit. This is the containment↔unit bridge for
+the basic opens `D(f * g) = D(f) ⊓ D(g) ≤ D(f)` (which form a basis of `D(f)`), each of which then
+carries the `IsUnit (algebraMap R (Localization.Away (f * g)) f)` hypothesis of
+`awayCompletionChartEquiv`. -/
+theorem isUnit_algebraMap_away_left :
+    IsUnit (algebraMap R (Localization.Away (f * g)) f) := by
+  have h : IsUnit (algebraMap R (Localization.Away (f * g)) (f * g)) :=
+    IsLocalization.Away.algebraMap_isUnit (f * g)
+  rw [map_mul] at h
+  exact isUnit_of_mul_isUnit_left h
+
+/-- Continuity at level `n` of the localization-transitivity ring map `φ = awayAwayLocEquiv`: it
+carries `(I·R_g) ^ n` into the comap of `KC ^ n` (`KC = (I·R_f)·(R_f)_ḡ`), the ideal of
+definition of the target completion. -/
+theorem awayAwayLocEquiv_pow_le
+    (hfg : IsUnit (algebraMap R (Localization.Away g) f)) (n : ℕ) :
+    (I.map (algebraMap R (Localization.Away g))) ^ n ≤
+      (((I.map (algebraMap R (Localization.Away f))).map
+        (algebraMap (Localization.Away f)
+          (Localization.Away (algebraMap R (Localization.Away f) g)))) ^ n).comap
+        (awayAwayLocEquiv f g hfg).toRingEquiv.toRingHom := by
+  rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
+  refine Ideal.pow_right_mono ?_ n
+  exact le_of_eq ((map_awayAwayLocEquiv I f g hfg).trans
+    (map_algebraMap_localizationAway_eq I f g).symm)
+
+/-- **T2 — the level-`n` component of `awayCompletionAwayEquiv`.** The forward direction of the
+localization-transitivity completion isomorphism is `mapCompletion φ`, so its `n`-th evaluation is
+the induced map of quotients `Ideal.quotientMap` of `φ = awayAwayLocEquiv`. -/
+theorem evalₐ_awayCompletionAwayEquiv (hI : I.FG)
+    (hfg : IsUnit (algebraMap R (Localization.Away g) f)) (n : ℕ)
+    (x : awayCompletion I g) :
+    AdicCompletion.evalₐ
+        ((I.map (algebraMap R (Localization.Away f))).map
+          (algebraMap (Localization.Away f)
+            (Localization.Away (algebraMap R (Localization.Away f) g)))) n
+        (awayCompletionAwayEquiv I f g hI hfg x) =
+      Ideal.quotientMap _ (awayAwayLocEquiv f g hfg).toRingEquiv.toRingHom
+        (awayAwayLocEquiv_pow_le I f g hfg n)
+        (AdicCompletion.evalₐ (I.map (algebraMap R (Localization.Away g))) n x) :=
+  AdicCompletion.evalₐ_mapCompletion (awayAwayLocEquiv f g hfg).toRingEquiv.toRingHom
+    (le_of_eq ((map_awayAwayLocEquiv I f g hfg).trans
+      (map_algebraMap_localizationAway_eq I f g).symm))
+    ((hI.map _).map _) (hI.map _) n (awayAwayLocEquiv_pow_le I f g hfg n) x
+
+/-- **T3 — the level-`n` component of the chart isomorphism `awayCompletionChartEquiv`.** The
+ring-level `c`-component of the affine basic-open chart on `D(g) ⊆ D(f)` is the composite
+`interchangeForward ∘ awayCompletionAwayEquiv`; its `n`-th evaluation is therefore the composite of
+the two induced quotient maps — that of the localization transitivity `φ = awayAwayLocEquiv`
+(`R_g ⧸ (I·R_g)ⁿ → (R_f)_ḡ ⧸ (KC)ⁿ`) followed by that of `locTransition`
+(`(R_f)_ḡ ⧸ (KC)ⁿ → B̂_{t̂} ⧸ (K̂·B̂_{t̂})ⁿ`). This is the concrete level-`n` behaviour of the
+chart's ring-level `c`-component, the key reusable algebraic output of issue 163. -/
+theorem evalₐ_awayCompletionChartEquiv (hI : I.FG)
+    (hfg : IsUnit (algebraMap R (Localization.Away g) f)) (n : ℕ) (x : awayCompletion I g) :
+    AdicCompletion.evalₐ
+        (AdicCompletion.completionLocIdeal (I.map (algebraMap R (Localization.Away f)))
+          (algebraMap R (Localization.Away f) g)) n
+        (awayCompletionChartEquiv I f g hI hfg x) =
+      Ideal.quotientMap _
+        (AdicCompletion.locTransition (I.map (algebraMap R (Localization.Away f)))
+          (algebraMap R (Localization.Away f) g))
+        (AdicCompletion.locTransition_pow_le _ _ n)
+        (Ideal.quotientMap _ (awayAwayLocEquiv f g hfg).toRingEquiv.toRingHom
+          (awayAwayLocEquiv_pow_le I f g hfg n)
+          (AdicCompletion.evalₐ (I.map (algebraMap R (Localization.Away g))) n x)) := by
+  have hchart : awayCompletionChartEquiv I f g hI hfg x =
+      AdicCompletion.interchangeForward (I.map (algebraMap R (Localization.Away f)))
+        (algebraMap R (Localization.Away f) g) (hI.map _)
+        (awayCompletionAwayEquiv I f g hI hfg x) := rfl
+  rw [hchart, AdicCompletion.evalₐ_interchangeForward, evalₐ_awayCompletionAwayEquiv]
+
+end FormalSpectrum
