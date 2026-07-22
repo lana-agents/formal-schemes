@@ -1,4 +1,5 @@
 import FormalSchemes.AdicQuotient
+import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.SpfMap
 
 set_option linter.style.header false
@@ -19,10 +20,11 @@ This file provides the affine-algebra layer:
   adically closed (automatic in the noetherian setting; a hypothesis here), `A` is a complete
   adic ring with ideal of definition `L`, so `Spf A` is an affine formal scheme;
 * `IsTopologicallyFiniteType.isAdicRing_of_noetherian`: the same conclusion with **no**
-  closedness hypothesis when the presenting ring `R{X₁, …, Xₙ}` is Noetherian (Krull
-  intersection, `RingHom.adicKerClosed_of_noetherian`). This is the case Bosch works in: over a
-  Noetherian complete base `R` the restricted power series rings are Noetherian, so every
-  tf-type algebra is automatically a complete adic ring;
+  closedness hypothesis over a Noetherian base `R` (Krull intersection,
+  `RingHom.adicKerClosed_of_noetherian`). This is the case Bosch works in: over a Noetherian
+  base the restricted power series rings `R{X₁, …, Xₙ}` are Noetherian
+  (`RestrictedPowerSeries.instIsNoetherianRing`, issue 98), so every tf-type algebra is
+  automatically a complete adic ring;
 * `IsTopologicallyFiniteType.structMap`: the structural morphism `Spf A ⟶ Spf R` of locally
   ringed spaces.
 
@@ -93,13 +95,13 @@ theorem isAdicRing (hI : I.FG) {n : ℕ} {ψ : RestrictedPowerSeries R I n →�
   exact IsAdicRing.of_surjective_of_kerClosed
     (RestrictedPowerSeries.idealOfDefinition R I n) hs hker
 
-/-- A tf-type algebra presented by a **Noetherian** restricted power series ring is a complete
-adic ring with ideal of definition `L`, with no closedness hypothesis: in the Noetherian
-setting the kernel of any presentation is automatically adically closed (Krull intersection,
-`RingHom.adicKerClosed_of_noetherian`). Over a Noetherian complete base `R` the presenting rings
-`R{X₁, …, Xₙ}` are Noetherian, so this is the ambient case of the theory. -/
+/-- A tf-type algebra over a **Noetherian** base `R` is a complete adic ring with ideal of
+definition `L`, with no closedness hypothesis: over a Noetherian base the presenting ring
+`R{X₁, …, Xₙ}` is Noetherian (`RestrictedPowerSeries.instIsNoetherianRing`, issue 98), so the
+kernel of any presentation is automatically adically closed (Krull intersection,
+`RingHom.adicKerClosed_of_noetherian`). This is the ambient case of the theory. -/
 theorem isAdicRing_of_noetherian (hI : I.FG) {n : ℕ}
-    [IsNoetherianRing (RestrictedPowerSeries R I n)]
+    [IsNoetherianRing R]
     {ψ : RestrictedPowerSeries R I n →ₐ[R] A} (hs : Function.Surjective ψ)
     (hL : (RestrictedPowerSeries.idealOfDefinition R I n).map ψ.toRingHom = L) :
     letI : TopologicalSpace A := L.adicTopology
