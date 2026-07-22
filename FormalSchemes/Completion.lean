@@ -242,11 +242,10 @@ theorem range_comap_mk :
 of the induced map `R^ →+* S^` on completions.
 
 The functor laws hold on the underlying completion ring maps (`AdicCompletion.mapCompletion_id`,
-`AdicCompletion.mapCompletion_comp`). Packaging them as equalities of formal-scheme morphisms
-requires transporting the structure-sheaf component along the equality of base maps; the identity
-law `map_id` below now does this (via `FormalSpectrum.locallyRingedSpaceMap_id`), while the
-composition law `map (g ∘ f) = map f ≫ map g` is left as a follow-up (it needs the composite
-analogue of `FormalSpectrum.mapSheafHom_id`). -/
+`AdicCompletion.mapCompletion_comp`). They are packaged as equalities of formal-scheme morphisms
+below — `map_id` (via `FormalSpectrum.locallyRingedSpaceMap_id`) and `map_comp` (via
+`FormalSpectrum.locallyRingedSpaceMap_comp`) — transporting the structure-sheaf component along the
+propositional equality of base maps. -/
 def map {S : Type u} [CommRing S] {I : Ideal R} {J : Ideal S} (hI : I.FG) (hJ : J.FG)
     (f : R →+* S) (hf : I.map f ≤ J) :
     formalCompletion S J hJ ⟶ formalCompletion R I hI :=
@@ -274,5 +273,35 @@ theorem map_id :
       (le_of_eq (Ideal.map_id I)) hI) (RingHom.id (AdicCompletion I R)) _ _
     (AdicCompletion.mapCompletion_id hI)]
   exact FormalSpectrum.locallyRingedSpaceMap_id (AdicCompletion.idealOfDefinition I)
+
+open CategoryTheory in
+/-- **The formal completion respects composition** (functoriality, EGA I 10.8):
+`map (g ∘ f) = map g ≫ map f` (contravariantly). -/
+theorem map_comp {S T : Type u} [CommRing S] [CommRing T] {J : Ideal S} {K : Ideal T}
+    (hJ : J.FG) (hK : K.FG) (f : R →+* S) (g : S →+* T) (hf : I.map f ≤ J) (hg : J.map g ≤ K) :
+    formalCompletion.map hI hK (g.comp f)
+        (by rw [← Ideal.map_map]; exact le_trans (Ideal.map_mono hf) hg) =
+      formalCompletion.map hJ hK g hg ≫ formalCompletion.map hI hJ f hf := by
+  haveI := AdicCompletion.isAdicRing_map I hI
+  haveI := AdicCompletion.isAdicRing_map J hJ
+  haveI := AdicCompletion.isAdicRing_map K hK
+  apply FormalScheme.Hom.ext'
+  change FormalSpectrum.locallyRingedSpaceMap (AdicCompletion.idealOfDefinition I)
+      (AdicCompletion.idealOfDefinition K)
+      (AdicCompletion.mapCompletion (g.comp f) _ hK) _ =
+    FormalSpectrum.locallyRingedSpaceMap (AdicCompletion.idealOfDefinition J)
+        (AdicCompletion.idealOfDefinition K) (AdicCompletion.mapCompletion g hg hK) _ ≫
+      FormalSpectrum.locallyRingedSpaceMap (AdicCompletion.idealOfDefinition I)
+        (AdicCompletion.idealOfDefinition J) (AdicCompletion.mapCompletion f hf hJ) _
+  rw [FormalSpectrum.locallyRingedSpaceMap_congr (AdicCompletion.idealOfDefinition I)
+    (AdicCompletion.idealOfDefinition K) (AdicCompletion.mapCompletion (g.comp f) _ hK)
+    ((AdicCompletion.mapCompletion g hg hK).comp (AdicCompletion.mapCompletion f hf hJ)) _
+    (by rw [AdicCompletion.mapCompletion_comp f g hf hg hJ hK hI]
+        exact Ideal.map_le_iff_le_comap.mp (AdicCompletion.idealOfDefinition_map_le (g.comp f)
+          (by rw [← Ideal.map_map]; exact le_trans (Ideal.map_mono hf) hg) hK))
+    (AdicCompletion.mapCompletion_comp f g hf hg hJ hK hI).symm]
+  exact FormalSpectrum.locallyRingedSpaceMap_comp (AdicCompletion.idealOfDefinition I)
+    (AdicCompletion.idealOfDefinition J) (AdicCompletion.idealOfDefinition K)
+    (AdicCompletion.mapCompletion f hf hJ) (AdicCompletion.mapCompletion g hg hK) _ _ _
 
 end formalCompletion
