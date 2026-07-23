@@ -132,14 +132,18 @@ theorem range_basicOpenChart (hI : I.FG) :
     Set.range (basicOpenChart I f).toShHom.hom.base = (basicOpen I f : Set (FormalSpectrum I)) := by
   exact range_basicOpenChartBase I f hI
 
-section Scratch
+section Packaging
 
 variable {S : Type u} [CommRing S] (J : Ideal S) (φ : R →+* S)
   (hφ : I ≤ J.comap φ)
 
--- β: the source-space presheaf morphism from the restricted target sheaf to the source sheaf,
--- built from the c-components of `mapSheafHom` on images of source opens.
-example (he : IsOpenEmbedding (mapTop I J φ hφ)) :
+/-- The **source-space comparison morphism** of the chart: on a source open `W`, it is the
+`c`-component `mapSheafHom.app` on the image `he.functor.obj W`, transported by the structure-sheaf
+restriction along `(mapTop)⁻¹ (he.functor.obj W) = W`. As a morphism of the (source-space) sheaves
+`he.functor.op ⋙ O_{Spf R}` (the pushforward/restriction of the target structure sheaf) and
+`O_{Spf S}`, it is a *global* iso exactly when the chart's `c`-component is an isomorphism on every
+open contained in the range — which we verify on a basis. -/
+def chartComparison (he : IsOpenEmbedding (mapTop I J φ hφ)) :
     (he.functor.op ⋙ (structureSheaf I).presheaf) ⟶ (structureSheaf J).presheaf where
   app W := ((mapSheafHom I J φ hφ).hom.app (he.functor.op.obj W)) ≫
     (structureSheaf J).presheaf.map (eqToHom (congrArg op
@@ -155,6 +159,11 @@ example (he : IsOpenEmbedding (mapTop I J φ hφ)) :
     erw [← Functor.map_comp, ← Functor.map_comp]
     congr 1
 
-end Scratch
+/-- The comparison morphism packaged as a morphism of sheaves on the source space `Spf S`. -/
+def chartComparisonSheaf (he : IsOpenEmbedding (mapTop I J φ hφ)) :
+    ((sheafedSpaceObj I).restrict he).sheaf ⟶ structureSheaf J :=
+  Sheaf.Hom.mk (chartComparison I J φ hφ he)
+
+end Packaging
 
 end FormalSpectrum
