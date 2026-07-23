@@ -5,6 +5,7 @@ import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
+import FormalSchemes.AffineSeparated
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.AwayCompletionAway
