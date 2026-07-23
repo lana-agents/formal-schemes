@@ -132,4 +132,29 @@ theorem range_basicOpenChart (hI : I.FG) :
     Set.range (basicOpenChart I f).toShHom.hom.base = (basicOpen I f : Set (FormalSpectrum I)) := by
   exact range_basicOpenChartBase I f hI
 
+section Scratch
+
+variable {S : Type u} [CommRing S] (J : Ideal S) (φ : R →+* S)
+  (hφ : I ≤ J.comap φ)
+
+-- β: the source-space presheaf morphism from the restricted target sheaf to the source sheaf,
+-- built from the c-components of `mapSheafHom` on images of source opens.
+example (he : IsOpenEmbedding (mapTop I J φ hφ)) :
+    (he.functor.op ⋙ (structureSheaf I).presheaf) ⟶ (structureSheaf J).presheaf where
+  app W := ((mapSheafHom I J φ hφ).hom.app (he.functor.op.obj W)) ≫
+    (structureSheaf J).presheaf.map (eqToHom (congrArg op
+      (Opens.map_functor_eq' (mapTop I J φ hφ) he W.unop)))
+  naturality U V i := by
+    have hn := (mapSheafHom I J φ hφ).hom.naturality (he.functor.op.map i)
+    dsimp only [Functor.comp_map, Functor.op_map]
+    rw [Category.assoc]
+    erw [reassoc_of% hn]
+    simp only [Category.assoc]
+    congr 1
+    simp only [TopCat.Sheaf.pushforward_obj_val, TopCat.Presheaf.pushforward_obj_map]
+    erw [← Functor.map_comp, ← Functor.map_comp]
+    congr 1
+
+end Scratch
+
 end FormalSpectrum
