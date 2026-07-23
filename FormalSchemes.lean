@@ -43,6 +43,7 @@ import FormalSchemes.Spf
 import FormalSchemes.SpfFunctorial
 import FormalSchemes.SpfGamma
 import FormalSchemes.SpfGammaBase
+import FormalSchemes.SpfGammaSheaf
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
