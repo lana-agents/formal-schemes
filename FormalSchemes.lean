@@ -3,6 +3,7 @@ import FormalSchemes.AdicExtend
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
+import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.AwayCompletionAway
