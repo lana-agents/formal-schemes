@@ -51,6 +51,7 @@ import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateChartTransition
+import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapTransitionIso
