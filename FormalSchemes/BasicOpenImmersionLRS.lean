@@ -14,9 +14,9 @@ The two halves are already merged:
 
 * **base_open**: `isOpenEmbedding_basicOpenChartBase` / `range_basicOpenChartBase`
   (`BasicOpenChart.lean`) — the underlying map is an open topological embedding onto `D(f)`.
-* **`c_iso` on the basis `{D(f·g)}`**: `bijective_chartComponent` (`BasicOpenImmersionAssembly.lean`)
-  — the sheaf `c`-component of the chart on each basic open `D(f·g) ⊆ D(f)`, conjugated by
-  `sectionsBasicOpenEquiv`, is a ring isomorphism.
+* **`c_iso` on the basis `{D(f·g)}`**: `bijective_chartComponent`
+  (`BasicOpenImmersionAssembly.lean`) — the sheaf `c`-component of the chart on each basic open
+  `D(f·g) ⊆ D(f)`, conjugated by `sectionsBasicOpenEquiv`, is a ring isomorphism.
 
 This file packages those into `PresheafedSpace.IsOpenImmersion (basicOpenChart I f).toShHom.hom`
 (defeq the `presheafedSpaceMap`), hence `SheafedSpace.IsOpenImmersion` and
@@ -60,7 +60,6 @@ def chartComparison (he : IsOpenEmbedding (mapTop I J φ hφ)) :
     dsimp only [Functor.comp_map, Functor.op_map]
     rw [Category.assoc]
     erw [reassoc_of% hn]
-    simp only [Category.assoc]
     congr 1
     simp only [TopCat.Sheaf.pushforward_obj_val, TopCat.Presheaf.pushforward_obj_map]
     erw [← Functor.map_comp, ← Functor.map_comp]
@@ -69,62 +68,24 @@ def chartComparison (he : IsOpenEmbedding (mapTop I J φ hφ)) :
 /-- The comparison morphism packaged as a morphism of sheaves on the source space `Spf S`. -/
 def chartComparisonSheaf (he : IsOpenEmbedding (mapTop I J φ hφ)) :
     ((sheafedSpaceObj I).restrict he).sheaf ⟶ structureSheaf J :=
-  Sheaf.Hom.mk (chartComparison I J φ hφ he)
+  ObjectProperty.homMk (chartComparison I J φ hφ he)
 
 end Packaging
 
 /-!
 ### Route
 
-`LocallyRingedSpace.IsOpenImmersion (basicOpenChart I f)`
-  = `SheafedSpace.IsOpenImmersion (basicOpenChart I f).toShHom`
-  = `PresheafedSpace.IsOpenImmersion (basicOpenChart I f).toShHom.hom`,
-and `(basicOpenChart I f).toShHom.hom` is defeq to
-`presheafedSpaceMap I (awayCompletionIdeal I f) (awayCompletionHom I f) (le_comap_awayCompletionHom I f)`.
+`LocallyRingedSpace.IsOpenImmersion (basicOpenChart I f)` unfolds to
+`PresheafedSpace.IsOpenImmersion (presheafedSpaceMap I J φ hφ)`, whose two fields are the open
+embedding `base_open` (from `isOpenEmbedding_basicOpenChartBase`) and `c_iso`, an isomorphism of the
+`c`-component `mapSheafHom.app` on every open `he.functor.obj U ⊆ D(f)`.
 
-`PresheafedSpace.IsOpenImmersion` has two fields:
-* `base_open : IsOpenEmbedding f.base`, where `f.base = mapTop I J φ hφ`; supplied by
-  `isOpenEmbedding_basicOpenChartBase I f hI` (the coercion of `mapTop … .hom` to a function is defeq
-  `basicOpenChartBase I f = map I J φ hφ`; a `show`/`convert` bridge may be needed).
-* `c_iso : ∀ U : Opens (FormalSpectrum J), IsIso (f.c.app (op (base_open.functor.obj U)))`.
-
-**Key step for `c_iso`.** The map `f.c = (mapSheafHom I J φ hφ).hom` is *not* a global iso on the
-target `FormalSpectrum I` (e.g. on `⊤` it is `R → R{1/f}`). It is an iso only on opens contained in
-`D(f) = range`. The `c_iso` field only ever needs opens `base_open.functor.obj U ⊆ D(f)`.
-
-Transfer strategy: consider the comparison as a morphism of sheaves **on the source space**
-`FormalSpectrum J`, where it *is* a global iso. Concretely, on the basis
-`B g := (Opens.map (mapTop I J φ hφ)).obj (basicOpen I (f * g))` of `FormalSpectrum J`
-(preimages of the basis `{D(f·g)}` of the subspace `D(f)`; a basis because `mapTop` is a
-homeomorphism onto the open `D(f)`), the chart's `c`-component is a ring iso by
-`bijective_chartComponent I f (f * g) hI (isUnit_algebraMap_away_left f g)` (note
-`basicOpen I (f * g) = basicOpen I f ⊓ basicOpen I g ≤ basicOpen I f`, `basicOpen_mul`).
-Then `TopCat.Sheaf.isIso_iff_isIso_basis` upgrades to a global sheaf iso, giving
-`IsIso (f.c.app (op W))` for every `W ⊆ D(f)`, in particular each `base_open.functor.obj U`.
-
-Implementation options (pick whichever compiles cleanly):
-(A) Build `iso : (sheafedSpaceObj J).toPresheafedSpace ≅ (sheafedSpaceObj I).toPresheafedSpace.restrict he`
-    via `PresheafedSpace.isoOfComponents (Iso.refl _) α`, where `α` is built from the basis iso, then
-    `presheafedSpaceMap = iso.hom ≫ ofRestrict he` and conclude by
-    `PresheafedSpace.IsOpenImmersion.comp` + `ofRestrict` + `ofIso`.
-(B) Supply the `c_iso` field directly: reduce `IsIso (c.app (op (functor.obj U)))` to `IsIso` of the
-    corresponding component of the global source-side sheaf iso via `eqToHom`/`Opens.map` transport
-    (`(Opens.map base).obj (functor.obj U) = U`, `Set.preimage_image_eq _ hf.injective`).
-
-### Building blocks recorded elsewhere (all merged)
-* `bijective_chartComponent (I) (f g) (hI : I.FG) (hfg : IsUnit (algebraMap R (Localization.Away g) f))`
-  : `Function.Bijective (chartComponent I f g)`  — `BasicOpenImmersionAssembly.lean`.
-* `chartComponent` (`BasicOpenImmersionSheaf.lean`): its definition unfolds the chart's
-  `c.app (op (basicOpen I g))` conjugated by two `sectionsBasicOpenEquiv` isos and an `eqToHom`
-  structure-sheaf restriction — so `IsIso (chartComponent …)` (from bijectivity, via
-  `CommRingCat.isIso_iff_bijective` / `RingEquiv.ofBijective`) gives, after cancelling those isos,
-  `IsIso ((basicOpenChart I f).c.app (op (basicOpen I g)))`.
-* `isUnit_algebraMap_away_left (f g) : IsUnit (algebraMap R (Localization.Away (f * g)) f)`.
-* `isOpenEmbedding_basicOpenChartBase`, `range_basicOpenChartBase` (`BasicOpenChart.lean`).
-* `basicOpen_mul`, `isTopologicalBasis_basicOpen` (`FormalSpectrum.lean`).
-* `TopCat.Sheaf.isIso_iff_isIso_basis` (Mathlib `Topology/Sheaves/SheafCondition/Sites.lean:258`).
-* `PresheafedSpace.isoOfComponents`, `.ofRestrict`, `PresheafedSpace.IsOpenImmersion.ofRestrict`
-  (Mathlib `Geometry/RingedSpace/{PresheafedSpace,OpenImmersion}.lean`).
+The `c`-component is *not* a global iso on `FormalSpectrum I` (over `⊤` it is `R → R{1/f}`), so we
+transfer to a morphism of sheaves **on the source space** `FormalSpectrum J`, where it is a global
+iso: `chartComparison` reads the chart's `c`-component on the image `he.functor.obj W` of each
+source open `W`, and `isIso_chartComparisonSheaf` proves it a global sheaf isomorphism on the basis
+of preimages of `{D(f·g)}` (`isIso_c_app_basicOpen` + `TopCat.Sheaf.isIso_iff_isIso_basis`). Reading
+off the component at `op U` and cancelling the structure-sheaf restriction gives the `c_iso` field.
 -/
 
 /-- **The chart's sheaf `c`-component is an isomorphism on each basic open `D(g) ⊆ D(f)`.**
@@ -183,7 +144,7 @@ theorem isIso_chartComparisonSheaf (hI : I.FG)
   set B : R → Opens (FormalSpectrum J) :=
     fun h => (Opens.map (mapTop I J φ hφ)).obj (basicOpen I h) with hB
   have hbasis : Opens.IsBasis (Set.range B) := by
-    show TopologicalSpace.IsTopologicalBasis (((↑) : _ → Set (FormalSpectrum J)) '' Set.range B)
+    change TopologicalSpace.IsTopologicalBasis (((↑) : _ → Set (FormalSpectrum J)) '' Set.range B)
     have h2 := (isTopologicalBasis_basicOpen I).isInducing he.isInducing
     have heq : (((↑) : _ → Set (FormalSpectrum J)) '' Set.range B) =
         Set.preimage ⇑(mapTop I J φ hφ) ''
@@ -202,7 +163,7 @@ theorem isIso_chartComparisonSheaf (hI : I.FG)
     have hB2 : IsIso ((structureSheaf J).presheaf.map
         (eqToHom (congrArg op (Opens.map_functor_eq' (mapTop I J φ hφ) he (op (B h)).unop)))) :=
       inferInstance
-    show IsIso ((chartComparison I J φ hφ he).app (op (B h)))
+    change IsIso ((chartComparison I J φ hφ he).app (op (B h)))
     rw [chartComparison]
     change IsIso (_ ≫ _)
     exact IsIso.comp_isIso' h1 hB2
@@ -213,7 +174,38 @@ and `f : R`, the chart `basicOpenChart I f : Spf R{1/f} ⟶ Spf R` is an open im
 ringed spaces. -/
 theorem isOpenImmersion_basicOpenChart (hI : I.FG) :
     LocallyRingedSpace.IsOpenImmersion (basicOpenChart I f) := by
-  sorry
+  set J := awayCompletionIdeal I f with hJ
+  set φ := awayCompletionHom I f with hφd
+  set hφ := le_comap_awayCompletionHom I f with hφl
+  have he : IsOpenEmbedding (mapTop I J φ hφ) := isOpenEmbedding_basicOpenChartBase I f hI
+  haveI := isIso_chartComparisonSheaf I f hI he
+  haveI hval : IsIso (chartComparison I J φ hφ he) :=
+    inferInstanceAs (IsIso ((TopCat.Sheaf.forget CommRingCat _).map
+      (chartComparisonSheaf I J φ hφ he)))
+  refine ⟨he, fun U => ?_⟩
+  change IsIso ((mapSheafHom I J φ hφ).hom.app (op (he.functor.obj U)))
+  haveI happU : IsIso ((chartComparison I J φ hφ he).app (op U)) := inferInstance
+  have heq : (Opens.map (mapTop I J φ hφ)).obj (he.functor.obj U) = U :=
+    Opens.map_functor_eq' (mapTop I J φ hφ) he U
+  haveI hB : IsIso ((structureSheaf J).presheaf.map (eqToHom (congrArg op heq))) := by
+    rw [eqToHom_map]; infer_instance
+  -- Work at the level of underlying ring maps to avoid the `TopCat.Presheaf` opacity: the chart's
+  -- conjugated component `chartComparison.app` is `mapSheafHom.app ≫ (restriction)` definitionally,
+  -- both bijective; cancelling the (bijective) restriction leaves `mapSheafHom.app` bijective.
+  rw [ConcreteCategory.isIso_iff_bijective]
+  have hbij := (ConcreteCategory.isIso_iff_bijective _).mp happU
+  have hgbij := (ConcreteCategory.isIso_iff_bijective _).mp hB
+  have happ_eq : (chartComparison I J φ hφ he).app (op U) =
+      (mapSheafHom I J φ hφ).hom.app (op (he.functor.obj U)) ≫
+        (structureSheaf J).presheaf.map (eqToHom (congrArg op heq)) := rfl
+  rw [happ_eq] at hbij
+  have hcoe : ⇑((mapSheafHom I J φ hφ).hom.app (op (he.functor.obj U)) ≫
+        (structureSheaf J).presheaf.map (eqToHom (congrArg op heq))) =
+      ⇑((structureSheaf J).presheaf.map (eqToHom (congrArg op heq))) ∘
+        ⇑((mapSheafHom I J φ hφ).hom.app (op (he.functor.obj U))) := by
+    funext x; rfl
+  rw [hcoe] at hbij
+  exact (hgbij.of_comp_iff' _).mp hbij
 
 /-- The range of the base map of the affine basic-open chart is `basicOpen I f = D(f)`. -/
 theorem range_basicOpenChart (hI : I.FG) :
