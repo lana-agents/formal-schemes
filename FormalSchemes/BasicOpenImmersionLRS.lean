@@ -120,6 +120,20 @@ theorem isIso_c_app_basicOpen (hI : I.FG) (g : R)
   replace hb := (h2.of_comp_iff' _).mp hb
   exact (Function.Bijective.of_comp_iff _ h3).mp hb
 
+/-- The image under the chart's open embedding of the preimage of a basic open `D(h)` is
+`D(f · h) = D(h) ⊓ D(f)` (intersect with the range `D(f)`). -/
+theorem chartFunctor_image_preimage (hI : I.FG) (h : R)
+    (he : IsOpenEmbedding (mapTop I (awayCompletionIdeal I f) (awayCompletionHom I f)
+      (le_comap_awayCompletionHom I f))) :
+    he.functor.obj ((Opens.map (mapTop I (awayCompletionIdeal I f) (awayCompletionHom I f)
+      (le_comap_awayCompletionHom I f))).obj (basicOpen I h)) = basicOpen I (f * h) := by
+  rw [Opens.functor_obj_map_obj]
+  have htop : he.functor.obj ⊤ = basicOpen I f := by
+    apply Opens.ext
+    rw [IsOpenMap.coe_functor_obj, Opens.coe_top, Set.image_univ]
+    exact range_basicOpenChartBase I f hI
+  rw [htop, basicOpen_mul]
+
 /-- **Issue 163 — the affine basic-open chart is an open immersion.** For `(R, I)` adic with `I.FG`
 and `f : R`, the chart `basicOpenChart I f : Spf R{1/f} ⟶ Spf R` is an open immersion of locally
 ringed spaces. -/
