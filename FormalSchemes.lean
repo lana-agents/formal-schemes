@@ -13,6 +13,7 @@ import FormalSchemes.BasicOpenChart
 import FormalSchemes.BasicOpenChartComponent
 import FormalSchemes.BasicOpenImmersion
 import FormalSchemes.BasicOpenImmersionAssembly
+import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CompleteNoetherian
