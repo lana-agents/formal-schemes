@@ -50,6 +50,7 @@ import FormalSchemes.StructureSheafSections
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapImmersion
+import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateTransition
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
