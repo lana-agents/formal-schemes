@@ -31,7 +31,7 @@ This file packages those into `PresheafedSpace.IsOpenImmersion (basicOpenChart I
 
 noncomputable section
 
-open CategoryTheory CategoryTheory.Limits AlgebraicGeometry TopologicalSpace Opposite
+open CategoryTheory CategoryTheory.Limits AlgebraicGeometry TopologicalSpace Opposite Topology
 
 universe u
 
@@ -93,6 +93,33 @@ Implementation options (pick whichever compiles cleanly):
   (Mathlib `Geometry/RingedSpace/{PresheafedSpace,OpenImmersion}.lean`).
 -/
 
+/-- **The chart's sheaf `c`-component is an isomorphism on each basic open `D(g) ⊆ D(f)`.**
+Extracted from `bijective_chartComponent` by cancelling the three flanking isomorphisms
+(`sectionsBasicOpenEquiv` on both sides and the structure-sheaf restriction along the open equality
+`(mapTop)⁻¹ D(g) = D(ḡ)`) that conjugate the sheaf component into `chartComponent`. -/
+theorem isIso_c_app_basicOpen (hI : I.FG) (g : R)
+    (hfg : IsUnit (algebraMap R (Localization.Away g) f)) :
+    IsIso ((basicOpenChart I f).c.app (op (basicOpen I g))) := by
+  set J := awayCompletionIdeal I f with hJ
+  set φ := awayCompletionHom I f with hφd
+  set hφ := le_comap_awayCompletionHom I f with hφl
+  rw [ConcreteCategory.isIso_iff_bijective]
+  -- bijectivity of the chart's conjugated component (the ring-side fact) …
+  have hb := bijective_chartComponent I f g hI hfg
+  -- … and bijectivity of the three flanking isomorphisms
+  have h1 := (sectionsBasicOpenEquiv J (φ g)).bijective
+  have h3 := (sectionsBasicOpenEquiv I g).symm.bijective
+  haveI hM : IsIso ((structureSheaf J).presheaf.map
+      (eqToHom (congrArg op (map_preimage_basicOpen I J φ hφ g)))) := inferInstance
+  have h2 := (ConcreteCategory.isIso_iff_bijective ((structureSheaf J).presheaf.map
+      (eqToHom (congrArg op (map_preimage_basicOpen I J φ hφ g))))).mp hM
+  -- unfold `chartComponent` to the composite of the four ring homomorphisms and peel the flanks
+  unfold chartComponent at hb
+  simp only [RingHom.coe_comp] at hb
+  replace hb := (h1.of_comp_iff' _).mp hb
+  replace hb := (h2.of_comp_iff' _).mp hb
+  exact (Function.Bijective.of_comp_iff _ h3).mp hb
+
 /-- **Issue 163 — the affine basic-open chart is an open immersion.** For `(R, I)` adic with `I.FG`
 and `f : R`, the chart `basicOpenChart I f : Spf R{1/f} ⟶ Spf R` is an open immersion of locally
 ringed spaces. -/
@@ -103,6 +130,6 @@ theorem isOpenImmersion_basicOpenChart (hI : I.FG) :
 /-- The range of the base map of the affine basic-open chart is `basicOpen I f = D(f)`. -/
 theorem range_basicOpenChart (hI : I.FG) :
     Set.range (basicOpenChart I f).toShHom.hom.base = (basicOpen I f : Set (FormalSpectrum I)) := by
-  sorry
+  exact range_basicOpenChartBase I f hI
 
 end FormalSpectrum
