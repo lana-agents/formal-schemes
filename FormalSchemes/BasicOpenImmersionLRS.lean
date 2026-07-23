@@ -39,6 +39,40 @@ namespace FormalSpectrum
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (f : R)
 
+section Packaging
+
+variable {S : Type u} [CommRing S] (J : Ideal S) (φ : R →+* S)
+  (hφ : I ≤ J.comap φ)
+
+/-- The **source-space comparison morphism** of the chart: on a source open `W`, it is the
+`c`-component `mapSheafHom.app` on the image `he.functor.obj W`, transported by the structure-sheaf
+restriction along `(mapTop)⁻¹ (he.functor.obj W) = W`. As a morphism of the (source-space) sheaves
+`he.functor.op ⋙ O_{Spf R}` (the pushforward/restriction of the target structure sheaf) and
+`O_{Spf S}`, it is a *global* iso exactly when the chart's `c`-component is an isomorphism on every
+open contained in the range — which we verify on a basis. -/
+def chartComparison (he : IsOpenEmbedding (mapTop I J φ hφ)) :
+    (he.functor.op ⋙ (structureSheaf I).presheaf) ⟶ (structureSheaf J).presheaf where
+  app W := ((mapSheafHom I J φ hφ).hom.app (he.functor.op.obj W)) ≫
+    (structureSheaf J).presheaf.map (eqToHom (congrArg op
+      (Opens.map_functor_eq' (mapTop I J φ hφ) he W.unop)))
+  naturality U V i := by
+    have hn := (mapSheafHom I J φ hφ).hom.naturality (he.functor.op.map i)
+    dsimp only [Functor.comp_map, Functor.op_map]
+    rw [Category.assoc]
+    erw [reassoc_of% hn]
+    simp only [Category.assoc]
+    congr 1
+    simp only [TopCat.Sheaf.pushforward_obj_val, TopCat.Presheaf.pushforward_obj_map]
+    erw [← Functor.map_comp, ← Functor.map_comp]
+    congr 1
+
+/-- The comparison morphism packaged as a morphism of sheaves on the source space `Spf S`. -/
+def chartComparisonSheaf (he : IsOpenEmbedding (mapTop I J φ hφ)) :
+    ((sheafedSpaceObj I).restrict he).sheaf ⟶ structureSheaf J :=
+  Sheaf.Hom.mk (chartComparison I J φ hφ he)
+
+end Packaging
+
 /-!
 ### Route
 
@@ -134,6 +168,46 @@ theorem chartFunctor_image_preimage (hI : I.FG) (h : R)
     exact range_basicOpenChartBase I f hI
   rw [htop, basicOpen_mul]
 
+/-- **The source-space comparison sheaf morphism of the chart is a (global) isomorphism.** Proved on
+the basis of preimages `(mapTop)⁻¹ D(h)` of the basic opens of `Spf R`, where the comparison
+restricts (on `(mapTop)⁻¹ D(h)`, whose image is `D(f · h) ⊆ D(f)`) to the chart's `c`-component,
+an isomorphism by `isIso_c_app_basicOpen`. -/
+theorem isIso_chartComparisonSheaf (hI : I.FG)
+    (he : IsOpenEmbedding (mapTop I (awayCompletionIdeal I f) (awayCompletionHom I f)
+      (le_comap_awayCompletionHom I f))) :
+    IsIso (chartComparisonSheaf I (awayCompletionIdeal I f) (awayCompletionHom I f)
+      (le_comap_awayCompletionHom I f) he) := by
+  set J := awayCompletionIdeal I f with hJ
+  set φ := awayCompletionHom I f with hφd
+  set hφ := le_comap_awayCompletionHom I f with hφl
+  set B : R → Opens (FormalSpectrum J) :=
+    fun h => (Opens.map (mapTop I J φ hφ)).obj (basicOpen I h) with hB
+  have hbasis : Opens.IsBasis (Set.range B) := by
+    show TopologicalSpace.IsTopologicalBasis (((↑) : _ → Set (FormalSpectrum J)) '' Set.range B)
+    have h2 := (isTopologicalBasis_basicOpen I).isInducing he.isInducing
+    have heq : (((↑) : _ → Set (FormalSpectrum J)) '' Set.range B) =
+        Set.preimage ⇑(mapTop I J φ hφ) ''
+          Set.range (fun g => (basicOpen I g : Set (FormalSpectrum I))) := by
+      rw [hB, ← Set.range_comp, ← Set.range_comp]
+      rfl
+    rw [heq]; exact h2
+  have happ : ∀ h : R, IsIso ((chartComparisonSheaf I J φ hφ he).hom.app (op (B h))) := by
+    intro h
+    have hkey : IsIso ((basicOpenChart I f).c.app (op (basicOpen I (f * h)))) :=
+      isIso_c_app_basicOpen I f hI (f * h) (isUnit_algebraMap_away_left f h)
+    have h1 : IsIso ((mapSheafHom I J φ hφ).hom.app (he.functor.op.obj (op (B h)))) := by
+      have hidx : he.functor.op.obj (op (B h)) = op (basicOpen I (f * h)) :=
+        congrArg op (chartFunctor_image_preimage I f hI h he)
+      rw [hidx]; exact hkey
+    have hB2 : IsIso ((structureSheaf J).presheaf.map
+        (eqToHom (congrArg op (Opens.map_functor_eq' (mapTop I J φ hφ) he (op (B h)).unop)))) :=
+      inferInstance
+    show IsIso ((chartComparison I J φ hφ he).app (op (B h)))
+    rw [chartComparison]
+    change IsIso (_ ≫ _)
+    exact IsIso.comp_isIso' h1 hB2
+  exact TopCat.Sheaf.isIso_iff_isIso_basis hbasis happ
+
 /-- **Issue 163 — the affine basic-open chart is an open immersion.** For `(R, I)` adic with `I.FG`
 and `f : R`, the chart `basicOpenChart I f : Spf R{1/f} ⟶ Spf R` is an open immersion of locally
 ringed spaces. -/
@@ -145,39 +219,5 @@ theorem isOpenImmersion_basicOpenChart (hI : I.FG) :
 theorem range_basicOpenChart (hI : I.FG) :
     Set.range (basicOpenChart I f).toShHom.hom.base = (basicOpen I f : Set (FormalSpectrum I)) := by
   exact range_basicOpenChartBase I f hI
-
-section Packaging
-
-variable {S : Type u} [CommRing S] (J : Ideal S) (φ : R →+* S)
-  (hφ : I ≤ J.comap φ)
-
-/-- The **source-space comparison morphism** of the chart: on a source open `W`, it is the
-`c`-component `mapSheafHom.app` on the image `he.functor.obj W`, transported by the structure-sheaf
-restriction along `(mapTop)⁻¹ (he.functor.obj W) = W`. As a morphism of the (source-space) sheaves
-`he.functor.op ⋙ O_{Spf R}` (the pushforward/restriction of the target structure sheaf) and
-`O_{Spf S}`, it is a *global* iso exactly when the chart's `c`-component is an isomorphism on every
-open contained in the range — which we verify on a basis. -/
-def chartComparison (he : IsOpenEmbedding (mapTop I J φ hφ)) :
-    (he.functor.op ⋙ (structureSheaf I).presheaf) ⟶ (structureSheaf J).presheaf where
-  app W := ((mapSheafHom I J φ hφ).hom.app (he.functor.op.obj W)) ≫
-    (structureSheaf J).presheaf.map (eqToHom (congrArg op
-      (Opens.map_functor_eq' (mapTop I J φ hφ) he W.unop)))
-  naturality U V i := by
-    have hn := (mapSheafHom I J φ hφ).hom.naturality (he.functor.op.map i)
-    dsimp only [Functor.comp_map, Functor.op_map]
-    rw [Category.assoc]
-    erw [reassoc_of% hn]
-    simp only [Category.assoc]
-    congr 1
-    simp only [TopCat.Sheaf.pushforward_obj_val, TopCat.Presheaf.pushforward_obj_map]
-    erw [← Functor.map_comp, ← Functor.map_comp]
-    congr 1
-
-/-- The comparison morphism packaged as a morphism of sheaves on the source space `Spf S`. -/
-def chartComparisonSheaf (he : IsOpenEmbedding (mapTop I J φ hφ)) :
-    ((sheafedSpaceObj I).restrict he).sheaf ⟶ structureSheaf J :=
-  Sheaf.Hom.mk (chartComparison I J φ hφ he)
-
-end Packaging
 
 end FormalSpectrum
