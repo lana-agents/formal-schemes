@@ -18,6 +18,7 @@ import FormalSchemes.BasicOpenImmersionAssembly
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.CofinalCompletion
+import FormalSchemes.CofinalCompletionFunctorial
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
