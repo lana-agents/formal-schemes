@@ -33,6 +33,7 @@ import FormalSchemes.FormalSpectrum
 import FormalSchemes.FormalTorus
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
+import FormalSchemes.GlueMorphisms
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.IndScheme
