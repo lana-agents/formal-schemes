@@ -25,6 +25,7 @@ import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.Completion
+import FormalSchemes.EmptyLocallyRingedSpace
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalGroupAlgebraHopf
 import FormalSchemes.FormalScheme
@@ -56,6 +57,7 @@ import FormalSchemes.TateAnnulus
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateOverlap
+import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateTransition
