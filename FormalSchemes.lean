@@ -25,6 +25,7 @@ import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.Completion
+import FormalSchemes.CompletionSheafComparison
 import FormalSchemes.EmptyLocallyRingedSpace
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalGroupAlgebraHopf
