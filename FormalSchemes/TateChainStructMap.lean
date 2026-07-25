@@ -13,8 +13,8 @@ nilpotent Tate parameter `q ∈ I`. The formal Tate chain `T = tateChain R I q h
 (`A = R{x, y} / (x·y − q)`) along their consecutive overlaps. Each patch `Spf A` carries the affine
 structural morphism `annulusStructMap : Spf A ⟶ Spf R` over the base.
 
-The eventual goal (issue 209) is to assemble these per-patch structural morphisms into the single
-glued structural morphism `tateChainStructMap : T ⟶ Spf R`, via the morphism-gluing combinator
+This file assembles these per-patch structural morphisms into the single glued structural morphism
+`tateChainStructMap : T ⟶ Spf R`, via the morphism-gluing combinator
 `FormalScheme.GlueData.glueMorphisms` (`FormalSchemes.GlueMorphisms`). Its compatibility obligation
 `f i j ≫ k i = t i j ≫ f j i ≫ k j` (with `k i = annulusStructMap` for every `i`) is verified by
 casing on the index difference `d = j.down - i.down`:
@@ -29,33 +29,32 @@ casing on the index difference `d = j.down - i.down`:
 
 ## What this file provides
 
-This file lands the **ring-level and formal-spectrum infrastructure** for the adjacent-overlap crux:
+The development builds bottom-up from the ring-level identity to the glued morphism:
 
-* `AdicCompletion.congrIdeal_algebraMap` / `congrIdeal_symm_algebraMap`: the completion
-  ideal-transport isomorphism (and its inverse) fixes the image of the base ring.
-* `FormalSpectrum.spfCongrIdeal_hom_eq` / `spfCongrIdeal_inv_eq`: the geometric ideal-transport
-  `spfCongrIdeal` is `Spf` of the completion transport `congrIdeal` — expressed as an honest
-  `locallyRingedSpaceMap`, ready to be collapsed by `locallyRingedSpaceMap_comp`.
-* `annulusOverlapTransitionInv_comp_algebraMap`: **the load-bearing ring identity** — the inverse
-  completed transition `A[y⁻¹]^∧ →+* A[x⁻¹]^∧` composed with `R → A[y⁻¹]^∧` equals `R → A[x⁻¹]^∧`,
-  i.e. the transition is a morphism of `R`-algebras. This is *the* reason the per-patch structural
-  morphisms agree on the overlaps.
-* `annulusOverlapTransitionSpf_hom_eq`: the forward completed-overlap transition as a
-  `locallyRingedSpaceMap`.
-
-## Remaining work (issue 209)
-
-The final assembly is **not yet delivered** here:
-
-* the combined ring-hom equality feeding `locallyRingedSpaceMap_congr` after both sides of the crux
-  are collapsed to a single `locallyRingedSpaceMap` (the composite
-  `R → A → A{1/y} ≅ A[y⁻¹]^∧ →(swap) A[x⁻¹]^∧ ≅ A{1/x}` equals `R → A → A{1/x}`) — the direct proof
-  runs into very expensive `IsScalarTower` instance synthesis through the nested `AdicCompletion`
-  towers (the same cost that already forces `synthInstance.maxHeartbeats` on the ring identity
-  below), and needs a cheaper route than the naive scalar-tower rewrite chain;
-* the geometric crux lemma `annulusOverlapChart ≫ s = (annulusChartTransitionSpf).hom ≫
-  annulusOverlapChartY ≫ s` built from it via `locallyRingedSpaceMap_comp`/`_congr`;
-* `tateChainStructMap` itself via `glueMorphisms` with the four-case `h`-obligation above.
+* **Ring/formal-spectrum infrastructure for the crux.**
+  * `AdicCompletion.congrIdeal_algebraMap` / `congrIdeal_symm_algebraMap` (and their `RingHom.comp`
+    forms): the completion ideal-transport isomorphism (and its inverse) fixes the image of the
+    base ring; stated over an abstract base so `congrIdeal` stays opaque under `rw`.
+  * `FormalSpectrum.spfCongrIdeal_hom_eq` / `spfCongrIdeal_inv_eq`: the geometric ideal-transport
+    `spfCongrIdeal` is `Spf` of the completion transport `congrIdeal` — expressed as an honest
+    `locallyRingedSpaceMap`, ready to be collapsed by `locallyRingedSpaceMap_comp`.
+  * `annulusOverlapTransitionInv_comp_algebraMap`: **the load-bearing ring identity** — the inverse
+    completed transition `A[y⁻¹]^∧ →+* A[x⁻¹]^∧` composed with `R → A[y⁻¹]^∧` equals `R → A[x⁻¹]^∧`,
+    i.e. the transition is a morphism of `R`-algebras. This is *the* reason the per-patch structural
+    morphisms agree on the overlaps.
+  * `annulusOverlapTransitionSpf_hom_eq`: the forward completed-overlap transition as a
+    `locallyRingedSpaceMap`.
+* **The combined ring-hom equality.** `annulusChartTransition_comp_awayCompletionHom`: the composite
+  ring map underlying `annulusChartTransitionSpf.hom` (namely
+  `R → A → A{1/y} ≅ A[y⁻¹]^∧ →(swap) A[x⁻¹]^∧ ≅ A{1/x}`) precomposed with `R → A → A{1/y}` equals
+  `R → A → A{1/x}`. The proof stays entirely at the `RingHom.comp` level so the expensive
+  `congrIdeal` transports are never unfolded.
+* **The geometric adjacent-overlap crux.** `annulusOverlapChart_comp_structMap` (forward step) and
+  `annulusOverlapChartY_comp_structMap` (backward step): both sides collapse to a single
+  `locallyRingedSpaceMap` and match by `locallyRingedSpaceMap_congr` fed by the ring identity above.
+* **The glued structural morphism** `tateChainStructMap : T ⟶ Spf R`, assembled via `glueMorphisms`
+  with the four-case compatibility obligation (diagonal / far-empty / forward / backward) discharged
+  as described above. This completes the deliverable of issue 209.
 
 ## References
 
