@@ -55,6 +55,7 @@ import FormalSchemes.SpfGamma
 import FormalSchemes.SpfGammaBase
 import FormalSchemes.SpfGammaFunctorial
 import FormalSchemes.SpfGammaSheafComponent
+import FormalSchemes.SpfGammaSheafComponentArb
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
