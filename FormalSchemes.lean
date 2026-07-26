@@ -23,6 +23,7 @@ import FormalSchemes.BasicOpenImmersion
 import FormalSchemes.BasicOpenImmersionAssembly
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
+import FormalSchemes.ClosedImmersionStalk
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalCompletionFunctorial
 import FormalSchemes.CofinalSheafComparison
