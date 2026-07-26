@@ -37,6 +37,7 @@ import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.CompletedTensorAwayInterchange
+import FormalSchemes.CompletedTensorAwayInterchangeSpf
 import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.CompletedTensorMapSpf
 import FormalSchemes.CompletedTensorMapSpfPr
