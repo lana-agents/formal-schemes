@@ -116,6 +116,70 @@ theorem c_app_eq_on_basicOpen (hI : I.FG) (hJ : J.FG)
   rw [eqA, eqM] at key
   exact (sectionsBasicOpenEquiv J (globalSectionsMap I J f g)).injective key
 
+set_option maxHeartbeats 4000000 in
+-- The final assembly matches `f.c` against the reconstructed sheaf hom on every basic open through
+-- the defining `ℕᵒᵖ`-limit of the structure sheaves, which the kernel unfolds slowly.
+/-- **The Spf–Γ round-trip** (converse of EGA I 10.4.6, step (c)): an arbitrary morphism of formal
+spectra `f : Spf S ⟶ Spf R` with continuous global-sections map
+(`hφ : I ≤ J.comap (globalSectionsMap I J f)`) is reconstructed from `φ = globalSectionsMap I J f`:
+the model morphism `Spf φ = locallyRingedSpaceMap I J φ hφ` equals `f`. Proved by
+`LocallyRingedSpace.Hom.ext'` + `PresheafedSpace.ext`: the base maps agree by `base_eq_mapTop`, and
+the sheaf `c`-components agree by `TopCat.Sheaf.hom_ext` on the basic-open basis, where on each
+`D(g)` the agreement is `c_app_eq_on_basicOpen` (up to the reindexing isomorphisms). -/
+theorem locallyRingedSpaceMap_globalSectionsMap (hI : I.FG) (hJ : J.FG)
+    (f : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+    (hφ : I ≤ J.comap (globalSectionsMap I J f)) :
+    locallyRingedSpaceMap I J (globalSectionsMap I J f) hφ = f := by
+  apply LocallyRingedSpace.Hom.ext'
+  refine PresheafedSpace.ext _ f.toHom (base_eq_mapTop I J f hφ).symm ?_
+  rw [CategoryTheory.Functor.whiskerRight_eqToHom_aux]
+  refine TopCat.Sheaf.hom_ext (structureSheaf I).presheaf
+    ((TopCat.Sheaf.pushforward CommRingCat f.base).obj (structureSheaf J))
+    (isBasis_basicOpen I) (fun g => ?_)
+  rw [TopCat.Presheaf.comp_app, eqToHom_app]
+  -- `rb`, `rm`: the structure-sheaf reindexings along `f.base⁻¹ D(g) = D(φ g)` and
+  -- `mapTop⁻¹ D(g) = D(φ g)`; both are isomorphisms (`eqToHom` restrictions).
+  set rb := (structureSheaf J).presheaf.map
+      (eqToHom (congrArg op (base_preimage_basicOpen I J f g))) with hrb
+  set rm := (structureSheaf J).presheaf.map
+      (eqToHom (congrArg op (map_preimage_basicOpen I J (globalSectionsMap I J f) hφ g))) with hrm
+  -- Reindexed agreement of the two `c`-components on `D(g)`, from `c_app_eq_on_basicOpen`.
+  have hc : (f.c.app (op (basicOpen I g))) ≫ rb
+      = (locallyRingedSpaceMap I J (globalSectionsMap I J f) hφ).c.app
+          (op (basicOpen I g)) ≫ rm := by
+    apply CommRingCat.hom_ext
+    rw [CommRingCat.hom_comp, CommRingCat.hom_comp, hrb, hrm]
+    exact c_app_eq_on_basicOpen I J hI hJ f g hφ
+  haveI hiso : IsIso rb := by rw [hrb, eqToHom_map]; infer_instance
+  -- Cancel the reindexing iso `rb`; both sides collapse to `mapc ≫ rm` (the middle `eqToHom`
+  -- restrictions compose to `rm`).
+  refine (cancel_mono rb).1 ?_
+  refine Eq.trans ?_ hc.symm
+  refine (Category.assoc _ _ _).trans ?_
+  congr 1
+  simp only [hrb, hrm, eqToHom_map]
+  exact eqToHom_trans _ _
+
+variable (hI : I.FG) (hJ : J.FG)
+
+/-- **`Spf` and `Γ` are mutually inverse on continuous ring homomorphisms** (issue 96, the payoff of
+the converse of EGA I 10.4.6): for finitely generated ideals of definition `I`, `J`, the passage
+`φ ↦ Spf φ` is a bijection from continuous ring homomorphisms `R →+* S` (those carrying `I` into
+`J.comap φ`) to morphisms of formal spectra `Spf S ⟶ Spf R` with continuous global-sections map.
+Its inverse is `f ↦ globalSectionsMap I J f`; the round-trips are
+`globalSectionsMap_locallyRingedSpaceMap` (`Γ ∘ Spf = id`) and
+`locallyRingedSpaceMap_globalSectionsMap` (`Spf ∘ Γ = id`). -/
+def spfGammaEquiv :
+    { φ : R →+* S // I ≤ J.comap φ } ≃
+      { f : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I //
+        I ≤ J.comap (globalSectionsMap I J f) } where
+  toFun := fun ⟨φ, hφ⟩ =>
+    ⟨locallyRingedSpaceMap I J φ hφ, by rw [globalSectionsMap_locallyRingedSpaceMap]; exact hφ⟩
+  invFun := fun ⟨f, hf⟩ => ⟨globalSectionsMap I J f, hf⟩
+  left_inv := fun ⟨φ, hφ⟩ => Subtype.ext (globalSectionsMap_locallyRingedSpaceMap I J φ hφ)
+  right_inv := fun ⟨f, hf⟩ =>
+    Subtype.ext (locallyRingedSpaceMap_globalSectionsMap I J hI hJ f hf)
+
 end FormalSpectrum
 
 end
