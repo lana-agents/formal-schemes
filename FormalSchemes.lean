@@ -1,3 +1,4 @@
+import FormalSchemes.ActionQuotient
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicExtend
 import FormalSchemes.AdicMorphism
@@ -75,6 +76,7 @@ import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.TateAction
+import FormalSchemes.TateActionQuotient
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainStructMap
