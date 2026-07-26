@@ -37,6 +37,7 @@ import FormalSchemes.FormalSpectrum
 import FormalSchemes.FormalTorus
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
+import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
@@ -64,6 +65,7 @@ import FormalSchemes.SpfGammaSheafComponentFunctor
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
+import FormalSchemes.TateAction
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainStructMap
