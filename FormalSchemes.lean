@@ -72,6 +72,7 @@ import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapTransitionIso
+import FormalSchemes.TateShift
 import FormalSchemes.TateTransition
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
