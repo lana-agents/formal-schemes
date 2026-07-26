@@ -38,6 +38,7 @@ import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.CompletedTensorAwayInterchange
 import FormalSchemes.CompletedTensorAwayInterchangeBoth
+import FormalSchemes.CompletedTensorAwayInterchangePr
 import FormalSchemes.CompletedTensorAwayInterchangeRight
 import FormalSchemes.CompletedTensorAwayInterchangeSpf
 import FormalSchemes.CompletedTensorFunctor
