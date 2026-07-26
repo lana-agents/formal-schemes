@@ -117,3 +117,4 @@ import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
 import FormalSchemes.TwoPatchFibreProduct
 import FormalSchemes.TwoPatchFibreProductObject
+import FormalSchemes.TwoPatchFibreProductPr
