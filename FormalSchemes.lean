@@ -35,6 +35,7 @@ import FormalSchemes.CofinalSheafComparisonNaturality
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
+import FormalSchemes.CompletedTensorAwayInterchange
 import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.Completion
 import FormalSchemes.CompletionBasicOpen
