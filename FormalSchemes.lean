@@ -8,6 +8,7 @@ import FormalSchemes.AdicRingCat
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductLRS
+import FormalSchemes.AffineFibreProductScheme
 import FormalSchemes.AffineFibreProductUniqueness
 import FormalSchemes.AffineSeparated
 import FormalSchemes.AnnulusNontrivial
