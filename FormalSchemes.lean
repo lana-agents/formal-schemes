@@ -107,3 +107,4 @@ import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
+import FormalSchemes.TwoPatchFibreProduct
