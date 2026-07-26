@@ -40,6 +40,7 @@ import FormalSchemes.CompletedTensorAwayInterchange
 import FormalSchemes.CompletedTensorAwayInterchangeSpf
 import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.CompletedTensorMapSpf
+import FormalSchemes.CompletedTensorMapSpfIso
 import FormalSchemes.CompletedTensorMapSpfPr
 import FormalSchemes.Completion
 import FormalSchemes.CompletionBasicOpen
