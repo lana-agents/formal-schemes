@@ -36,6 +36,7 @@ import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.Completion
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletionSheafComparison
+import FormalSchemes.CoproductOpenImmersion
 import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.EmptyLocallyRingedSpace
 import FormalSchemes.FormalGm
