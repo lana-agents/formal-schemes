@@ -60,6 +60,62 @@ theorem arbSheafComponent_eq_modelSheafComponent (hI : I.FG) (hJ : J.FG)
   rw [arbSheafComponent_eq_mapCompletion I J hI hJ f g hφ,
     modelSheafComponent_eq_mapCompletion I J (globalSectionsMap I J f) hφ g hI hJ]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- The basic opens `D(g)`, `g ∈ R`, viewed as a family of `Opens (Spf R)`, form an `Opens.IsBasis`
+of the topology of `Spf R`. Repackages `isTopologicalBasis_basicOpen` in the `Opens.IsBasis`
+formulation required by `TopCat.Sheaf.hom_ext`. -/
+theorem isBasis_basicOpen : Opens.IsBasis (Set.range (basicOpen I)) := by
+  rw [Opens.IsBasis, ← Set.range_comp]
+  exact isTopologicalBasis_basicOpen I
+
+/-- **The sheaf `c`-components of `f` and of the reconstructed morphism agree on a basic open.**
+Cancelling the outer `sectionsBasicOpenEquiv` isomorphisms from
+`arbSheafComponent_eq_modelSheafComponent`, the component of `f` on `D(g)`, restricted along
+`f.base⁻¹ D(g) = D(φ g)`, equals the reconstructed model morphism's component on `D(g)`, restricted
+along `mapTop⁻¹ D(g) = D(φ g)` (`φ = globalSectionsMap I J f`). -/
+theorem c_app_eq_on_basicOpen (hI : I.FG) (hJ : J.FG)
+    (f : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I) (g : R)
+    (hφ : I ≤ J.comap (globalSectionsMap I J f)) :
+    (((structureSheaf J).presheaf.map
+          (eqToHom (congrArg op (base_preimage_basicOpen I J f g)))).hom).comp
+        (f.c.app (op (basicOpen I g))).hom =
+      (((structureSheaf J).presheaf.map
+          (eqToHom (congrArg op
+            (map_preimage_basicOpen I J (globalSectionsMap I J f) hφ g)))).hom).comp
+        ((mapSheafHom I J (globalSectionsMap I J f) hφ).hom.app (op (basicOpen I g))).hom := by
+  refine RingHom.ext fun s => ?_
+  have key := RingHom.congr_fun
+    (arbSheafComponent_eq_modelSheafComponent I J hI hJ f g hφ)
+    (sectionsBasicOpenEquiv I g s)
+  -- Unfold each conjugated component at `sectionsBasicOpenEquiv I g s`; the outer
+  -- `sectionsBasicOpenEquiv I g` and the inner `.symm` cancel by `symm_apply_apply` (the rest is
+  -- definitional composition), leaving the restricted `c`-component applied to `s`.
+  have eqA : arbSheafComponent I J f g (sectionsBasicOpenEquiv I g s)
+      = sectionsBasicOpenEquiv J (globalSectionsMap I J f g)
+          (((structureSheaf J).presheaf.map
+              (eqToHom (congrArg op (base_preimage_basicOpen I J f g)))).hom
+            ((f.c.app (op (basicOpen I g))).hom s)) :=
+    congrArg (fun t => sectionsBasicOpenEquiv J (globalSectionsMap I J f g)
+        (((structureSheaf J).presheaf.map
+            (eqToHom (congrArg op (base_preimage_basicOpen I J f g)))).hom
+          ((f.c.app (op (basicOpen I g))).hom t)))
+      ((sectionsBasicOpenEquiv I g).symm_apply_apply s)
+  have eqM : modelSheafComponent I J (globalSectionsMap I J f) hφ g (sectionsBasicOpenEquiv I g s)
+      = sectionsBasicOpenEquiv J (globalSectionsMap I J f g)
+          (((structureSheaf J).presheaf.map
+              (eqToHom (congrArg op
+                (map_preimage_basicOpen I J (globalSectionsMap I J f) hφ g)))).hom
+            (((mapSheafHom I J (globalSectionsMap I J f) hφ).hom.app
+              (op (basicOpen I g))).hom s)) :=
+    congrArg (fun t => sectionsBasicOpenEquiv J (globalSectionsMap I J f g)
+        (((structureSheaf J).presheaf.map
+            (eqToHom (congrArg op
+              (map_preimage_basicOpen I J (globalSectionsMap I J f) hφ g)))).hom
+          (((mapSheafHom I J (globalSectionsMap I J f) hφ).hom.app (op (basicOpen I g))).hom t)))
+      ((sectionsBasicOpenEquiv I g).symm_apply_apply s)
+  rw [eqA, eqM] at key
+  exact (sectionsBasicOpenEquiv J (globalSectionsMap I J f g)).injective key
+
 end FormalSpectrum
 
 end
