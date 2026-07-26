@@ -37,6 +37,7 @@ import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.CompletedTensorFunctor
+import FormalSchemes.CompletedTensorMapSpf
 import FormalSchemes.Completion
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletionSheafComparison
