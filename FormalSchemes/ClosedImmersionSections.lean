@@ -160,4 +160,67 @@ theorem isClosedEmbedding_base_and_surjective_stalkMap_of_surjective
   isClosedEmbedding_base_and_surjective_stalkMap_of_surjective_sections I J φ hφ hφsurj
     (fun g => surjective_mapSheafHom_app_basicOpen I J φ hφ g hI hφsurj hIJ)
 
+section ClosedSubscheme
+
+variable {R : Type u} [CommRing R] (I a : Ideal R)
+
+/-- **The closed formal subscheme `Spf (R ⧸ a) ⟶ Spf R` is a closed immersion** (EGA I §10.14): its
+underlying base map is a closed embedding and its stalk maps are surjective. The inducing ring hom
+is the quotient map `Ideal.Quotient.mk a`, surjective with `I.map (mk a) = I.map (mk a)`. This is
+the sheaf-level completion of the topological `isClosedEmbedding_closedSubschemeBase`. -/
+theorem closedFormalSubscheme_isClosedImmersion (hI : I.FG) :
+    IsClosedEmbedding
+        (map I (I.map (Ideal.Quotient.mk a)) (Ideal.Quotient.mk a) Ideal.le_comap_map) ∧
+      ∀ y, Function.Surjective
+        ((presheafedSpaceMap I (I.map (Ideal.Quotient.mk a)) (Ideal.Quotient.mk a)
+          Ideal.le_comap_map).stalkMap y).hom :=
+  isClosedEmbedding_base_and_surjective_stalkMap_of_surjective I (I.map (Ideal.Quotient.mk a))
+    (Ideal.Quotient.mk a) Ideal.le_comap_map hI Ideal.Quotient.mk_surjective rfl
+
+end ClosedSubscheme
+
 end FormalSpectrum
+
+namespace CompletedTensorProduct
+
+variable {R : Type u} [CommRing R] {I : Ideal R}
+variable {A : Type u} [CommRing A] [Algebra R A]
+variable [TopologicalSpace R] [IsAdicRing I]
+variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
+variable [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)]
+
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
+/-- The codiagonal is an `R`-algebra map: it sends `algebraMap R (A ⊗̂_R A)` to `algebraMap R A`. -/
+theorem codiagonal_comp_algebraMap :
+    (codiagonal R I A).comp (algebraMap R (CompletedTensorProduct R I A A)) = algebraMap R A := by
+  ext r
+  rw [RingHom.comp_apply, AdicCompletion.algebraMap_apply]
+  unfold codiagonal
+  rw [lift_of]
+  exact AlgHom.commutes _ r
+
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
+/-- The codiagonal carries the ideal of definition of `A ⊗̂_R A` exactly onto that of `A` (`I·A`);
+it is surjective, so the containment `codiagonal_le_comap` is an equality. -/
+theorem map_codiagonal_eq :
+    (idealOfDefinition R I A A).map (codiagonal R I A) = I.map (algebraMap R A) := by
+  rw [idealOfDefinition_eq_map, Ideal.map_map, codiagonal_comp_algebraMap]
+
+/-- **The affine diagonal `Δ_{A/R}` is a closed immersion** (EGA I §10.15): its underlying base map
+`Spf A → Spf (A ⊗̂_R A)` (`diagonal_base_eq`) is a closed embedding and its stalk maps are
+surjective. The inducing ring hom is the surjective codiagonal `∇ : A ⊗̂_R A → A`, with
+`(idealOfDefinition R I A A).map ∇ = I·A`. This is the sheaf-level completion of the topological
+`isClosedEmbedding_diagonal_base`, exhibiting `Spf A` as separated over `Spf R`. -/
+theorem diagonal_isClosedImmersion (hI : I.FG) :
+    IsClosedEmbedding (FormalSpectrum.map (idealOfDefinition R I A A) (I.map (algebraMap R A))
+        (codiagonal R I A) (codiagonal_le_comap hI)) ∧
+      ∀ y, Function.Surjective ((FormalSpectrum.presheafedSpaceMap (idealOfDefinition R I A A)
+        (I.map (algebraMap R A)) (codiagonal R I A) (codiagonal_le_comap hI)).stalkMap y).hom :=
+  FormalSpectrum.isClosedEmbedding_base_and_surjective_stalkMap_of_surjective
+    (idealOfDefinition R I A A) (I.map (algebraMap R A)) (codiagonal R I A) (codiagonal_le_comap hI)
+    (by rw [idealOfDefinition_eq_map]; exact hI.map _) codiagonal_surjective map_codiagonal_eq
+
+end CompletedTensorProduct
