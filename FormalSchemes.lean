@@ -110,3 +110,4 @@ import FormalSchemes.Thickenings
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
 import FormalSchemes.TwoPatchFibreProduct
+import FormalSchemes.TwoPatchFibreProductObject
