@@ -24,10 +24,11 @@ identity ring homomorphism `RingHom.id R` (a continuous map of pairs `(R, I) →
   `AdicCompletion.cofinalRingEquiv` — a ring isomorphism, since `I · R_g` and `J · R_g` are cofinal.
 
 The key new algebraic input is that the completion map `AdicCompletion.mapCompletion` of a ring
-homomorphism acting as the identity coincides with the cofinal comparison `AdicCompletion.cofinalHom`
-(`AdicCompletion.mapCompletion_eq_cofinalHom`); this bridges the *same-exponent* level maps
-produced by `mapSheafHom` with the *reindexed* level maps of `cofinalHom`. The sheaf iso follows from
-`TopCat.Sheaf.isIso_iff_isIso_basis` and the locally-ringed-space iso from
+homomorphism acting as the identity coincides with the cofinal comparison
+`AdicCompletion.cofinalHom` (`AdicCompletion.mapCompletion_eq_cofinalHom`); this bridges the
+*same-exponent* level maps produced by `mapSheafHom` with the *reindexed* level maps of
+`cofinalHom`. The sheaf iso follows from `TopCat.Sheaf.isIso_iff_isIso_basis`, and the
+locally-ringed-space iso from
 `PresheafedSpace.isIso_of_components` reflected back along the forgetful functors.
 
 ## Main definitions and results
