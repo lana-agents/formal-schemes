@@ -8,6 +8,7 @@ import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductUniqueness
 import FormalSchemes.AffineSeparated
 import FormalSchemes.AnnulusNontrivial
+import FormalSchemes.AnnulusOverlapProper
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.AwayCompletionAway
@@ -40,6 +41,7 @@ import FormalSchemes.FormalTorus
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
+import FormalSchemes.GlueDataImageInter
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
@@ -75,6 +77,7 @@ import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateFreeness
+import FormalSchemes.TateFreenessAdjacent
 import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapDisjoint
