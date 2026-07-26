@@ -84,6 +84,7 @@ import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateCurveModel
+import FormalSchemes.TateCurveTopFiniteType
 import FormalSchemes.TateFreeness
 import FormalSchemes.TateFreenessAdjacent
 import FormalSchemes.TateGlueTwoPatch
