@@ -4,6 +4,7 @@ import FormalSchemes.AdicExtend
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
+import FormalSchemes.AdicRingCat
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductLRS
