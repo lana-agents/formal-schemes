@@ -85,6 +85,7 @@ import FormalSchemes.TateAnnulus
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateChartTransition
+import FormalSchemes.TateCurveModel
 import FormalSchemes.TateFreeness
 import FormalSchemes.TateFreenessAdjacent
 import FormalSchemes.TateGlueTwoPatch
