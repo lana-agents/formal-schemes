@@ -5,6 +5,7 @@ import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
+import FormalSchemes.AffineFibreProductLRS
 import FormalSchemes.AffineFibreProductUniqueness
 import FormalSchemes.AffineSeparated
 import FormalSchemes.AnnulusNontrivial
