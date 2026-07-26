@@ -44,6 +44,7 @@ import FormalSchemes.CompletedTensorMapSpfIso
 import FormalSchemes.CompletedTensorMapSpfPr
 import FormalSchemes.Completion
 import FormalSchemes.CompletionBasicOpen
+import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionSheafComparison
 import FormalSchemes.CoproductOpenImmersion
 import FormalSchemes.DiagonalClosedEmbedding
