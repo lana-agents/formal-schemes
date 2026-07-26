@@ -102,6 +102,7 @@ import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapTransitionIso
+import FormalSchemes.TateSelfProductOverlap
 import FormalSchemes.TateShift
 import FormalSchemes.TateTransition
 import FormalSchemes.ThickeningCocone
