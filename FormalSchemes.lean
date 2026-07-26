@@ -58,6 +58,7 @@ import FormalSchemes.SpfFunctorial
 import FormalSchemes.SpfGamma
 import FormalSchemes.SpfGammaBase
 import FormalSchemes.SpfGammaFunctorial
+import FormalSchemes.SpfGammaRoundTrip
 import FormalSchemes.SpfGammaSheafComponent
 import FormalSchemes.SpfGammaSheafComponentArb
 import FormalSchemes.SpfGammaSheafComponentArbComp
