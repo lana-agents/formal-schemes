@@ -7,6 +7,7 @@ import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductUniqueness
 import FormalSchemes.AffineSeparated
+import FormalSchemes.AnnulusNontrivial
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.AwayCompletionAway
