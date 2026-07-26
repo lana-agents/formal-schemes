@@ -21,6 +21,7 @@ import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalCompletionFunctorial
 import FormalSchemes.CofinalSheafComparison
+import FormalSchemes.CofinalSheafComparisonBasis
 import FormalSchemes.CofinalSheafComparisonNaturality
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
