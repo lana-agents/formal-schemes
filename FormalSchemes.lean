@@ -99,6 +99,7 @@ import FormalSchemes.TateAnnulus
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateChartTransition
+import FormalSchemes.TateChartTransitionAlgEq
 import FormalSchemes.TateCurveModel
 import FormalSchemes.TateFreeness
 import FormalSchemes.TateFreenessAdjacent
