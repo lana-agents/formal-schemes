@@ -60,6 +60,7 @@ import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.FormalTorus
 import FormalSchemes.GeneralFibreProductAffineBase
+import FormalSchemes.GeneralFibreProductProjection
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
