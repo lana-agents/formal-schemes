@@ -64,6 +64,7 @@ import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.GlueMorphisms
+import FormalSchemes.GlueTPrimeOfLift
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.IndScheme
