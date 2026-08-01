@@ -73,6 +73,7 @@ import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.OpenCover
 import FormalSchemes.PullbackIsoRangeLegs
+import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.RestrictedPowerSeries
