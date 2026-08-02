@@ -66,6 +66,7 @@ import FormalSchemes.FormalSpectrum
 import FormalSchemes.FormalTorus
 import FormalSchemes.GeneralFibreProductAffineBase
 import FormalSchemes.GeneralFibreProductAlgebraData
+import FormalSchemes.GeneralFibreProductBothAlgebraData
 import FormalSchemes.GeneralFibreProductBothAlgebraDataObject
 import FormalSchemes.GeneralFibreProductBothObject
 import FormalSchemes.GeneralFibreProductConeLeft
