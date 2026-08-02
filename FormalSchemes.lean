@@ -131,6 +131,7 @@ import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateSelfProductBothOverlap
+import FormalSchemes.TateSelfProductDSigma
 import FormalSchemes.TateSelfProductGlueDatum
 import FormalSchemes.TateSelfProductGlueTPrime
 import FormalSchemes.TateSelfProductGlueTPrimeIso
