@@ -97,25 +97,25 @@ private abbrev dAY : LocallyRingedSpace.{u} :=
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapY R I q)))
 
 /-- `Spf(A{1/x} ⊗̂_R A{1/x})`: the `(x, x)`-summand of the both-factors overlap object. -/
-private abbrev dXX : LocallyRingedSpace.{u} :=
+abbrev dXX : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (idealOfDefinition R I
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapX R I q))
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapX R I q)))
 
 /-- `Spf(A{1/x} ⊗̂_R A{1/y})`: the `(x, y)`-summand of the both-factors overlap object. -/
-private abbrev dXY : LocallyRingedSpace.{u} :=
+abbrev dXY : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (idealOfDefinition R I
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapX R I q))
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapY R I q)))
 
 /-- `Spf(A{1/y} ⊗̂_R A{1/x})`: the `(y, x)`-summand of the both-factors overlap object. -/
-private abbrev dYX : LocallyRingedSpace.{u} :=
+abbrev dYX : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (idealOfDefinition R I
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapY R I q))
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapX R I q)))
 
 /-- `Spf(A{1/y} ⊗̂_R A{1/y})`: the `(y, y)`-summand of the both-factors overlap object. -/
-private abbrev dYY : LocallyRingedSpace.{u} :=
+abbrev dYY : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (idealOfDefinition R I
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapY R I q))
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapY R I q)))
