@@ -68,7 +68,7 @@ namespace AlgebraicGeometry
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 
 /-- The coordinate ring of the formal Tate annulus, base for the self fibre-product. -/
-private abbrev A : Type u := annulusAlgebra R I q
+abbrev A : Type u := annulusAlgebra R I q
 
 /-! ### The chart-domain objects
 
@@ -77,22 +77,22 @@ overlap objects, presented over the `I.map (algebraMap R ·)` ideal convention t
 immersions use so that they match the domains of `TateSelfProduct*Overlap` definitionally. -/
 
 /-- `Spf(A{1/x} ⊗̂_R A)`: the `x`-summand of the first-factor overlap object. -/
-private abbrev dXA : LocallyRingedSpace.{u} :=
+abbrev dXA : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (idealOfDefinition R I
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapX R I q)) (A R I q))
 
 /-- `Spf(A{1/y} ⊗̂_R A)`: the `y`-summand of the first-factor overlap object. -/
-private abbrev dYA : LocallyRingedSpace.{u} :=
+abbrev dYA : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (idealOfDefinition R I
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapY R I q)) (A R I q))
 
 /-- `Spf(A ⊗̂_R A{1/x})`: the `x`-summand of the second-factor overlap object. -/
-private abbrev dAX : LocallyRingedSpace.{u} :=
+abbrev dAX : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (idealOfDefinition R I (A R I q)
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapX R I q)))
 
 /-- `Spf(A ⊗̂_R A{1/y})`: the `y`-summand of the second-factor overlap object. -/
-private abbrev dAY : LocallyRingedSpace.{u} :=
+abbrev dAY : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (idealOfDefinition R I (A R I q)
     (awayCompletion (I.map (algebraMap R (A R I q))) (overlapY R I q)))
 
@@ -124,24 +124,24 @@ abbrev dYY : LocallyRingedSpace.{u} :=
 
 /-- The first-factor per-summand transition `Spf(A{1/x} ⊗̂_R A) ≅ Spf(A{1/y} ⊗̂_R A)`: the
 base-changed annulus chart transition of the two-patch fibre product with `B := A`. -/
-private abbrev firstSummand (hI : I.FG) : dXA R I q ≅ dYA R I q :=
+abbrev firstSummand (hI : I.FG) : dXA R I q ≅ dYA R I q :=
   twoPatchFibreProductTransition R I q (A R I q) hI
 
 /-- The second-factor per-summand transition `Spf(A ⊗̂_R A{1/x}) ≅ Spf(A ⊗̂_R A{1/y})`: `mapSpfIso`
 of the identity on the fixed first factor and the annulus chart transition on the second. -/
-private abbrev rightSummand (hI : I.FG) : dAX R I q ≅ dAY R I q :=
+abbrev rightSummand (hI : I.FG) : dAX R I q ≅ dAY R I q :=
   mapSpfIso hI (AlgEquiv.refl (R := R) (A₁ := A R I q)) (annulusFibreChartTransitionAlg R I q hI)
 
 /-- The `(x, x) ≅ (y, y)` per-summand transition
 `Spf(A{1/x} ⊗̂_R A{1/x}) ≅ Spf(A{1/y} ⊗̂_R A{1/y})`:
 `mapSpfIso` of the annulus chart transition on *both* factors. -/
-private abbrev bothSummandDiag (hI : I.FG) : dXX R I q ≅ dYY R I q :=
+abbrev bothSummandDiag (hI : I.FG) : dXX R I q ≅ dYY R I q :=
   mapSpfIso hI (annulusFibreChartTransitionAlg R I q hI) (annulusFibreChartTransitionAlg R I q hI)
 
 /-- The `(x, y) ≅ (y, x)` per-summand transition
 `Spf(A{1/x} ⊗̂_R A{1/y}) ≅ Spf(A{1/y} ⊗̂_R A{1/x})`:
 `mapSpfIso` of the annulus chart transition on the first factor and its inverse on the second. -/
-private abbrev bothSummandAnti (hI : I.FG) : dXY R I q ≅ dYX R I q :=
+abbrev bothSummandAnti (hI : I.FG) : dXY R I q ≅ dYX R I q :=
   mapSpfIso hI (annulusFibreChartTransitionAlg R I q hI)
     (annulusFibreChartTransitionAlg R I q hI).symm
 

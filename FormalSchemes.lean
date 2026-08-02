@@ -134,6 +134,7 @@ import FormalSchemes.TateSelfProductGlueTPrime
 import FormalSchemes.TateSelfProductGlueTPrimeIso
 import FormalSchemes.TateSelfProductOverlap
 import FormalSchemes.TateSelfProductRightOverlap
+import FormalSchemes.TateSelfProductSummandNaturality
 import FormalSchemes.TateSelfProductTPrimeSummand
 import FormalSchemes.TateSelfProductTPrimeSummandIdentify
 import FormalSchemes.TateSelfProductTransition
