@@ -122,6 +122,8 @@ import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateSelfProductBothOverlap
 import FormalSchemes.TateSelfProductGlueDatum
+import FormalSchemes.TateSelfProductGlueTPrime
+import FormalSchemes.TateSelfProductGlueTPrimeIso
 import FormalSchemes.TateSelfProductOverlap
 import FormalSchemes.TateSelfProductRightOverlap
 import FormalSchemes.TateSelfProductTransition
