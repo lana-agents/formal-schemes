@@ -123,6 +123,7 @@ import FormalSchemes.TateSelfProductGlueDatum
 import FormalSchemes.TateSelfProductOverlap
 import FormalSchemes.TateSelfProductRightOverlap
 import FormalSchemes.TateSelfProductTransition
+import FormalSchemes.TateSelfProductTransitionRange
 import FormalSchemes.TateSelfProductTripleOverlap
 import FormalSchemes.TateShift
 import FormalSchemes.TateTransition
