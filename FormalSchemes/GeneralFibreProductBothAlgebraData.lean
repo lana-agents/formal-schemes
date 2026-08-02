@@ -92,6 +92,40 @@ def eqPullbackIso {V₁ W₁ V₂ W₂ Z : LocallyRingedSpace.{u}} (imm₁ : W�
   exact pullback.congrHom (by rw [eqToHom_refl, Category.id_comp])
     (by rw [eqToHom_refl, Category.id_comp])
 
+/-- The `pullback.fst` leg of `eqPullbackIso`'s inverse: it re-embeds the un-cast pullback into the
+`eqToHom`-cast one, recording the object-reduction cast `eqToHom e₁.symm` on the first factor. -/
+theorem eqPullbackIso_inv_fst {V₁ W₁ V₂ W₂ Z : LocallyRingedSpace.{u}} (imm₁ : W₁ ⟶ Z)
+    (imm₂ : W₂ ⟶ Z) [LocallyRingedSpace.IsOpenImmersion imm₁]
+    [LocallyRingedSpace.IsOpenImmersion imm₂] (e₁ : V₁ = W₁) (e₂ : V₂ = W₂) :
+    (eqPullbackIso imm₁ imm₂ e₁ e₂).inv ≫
+        pullback.fst (eqToHom e₁ ≫ imm₁) (eqToHom e₂ ≫ imm₂) =
+      pullback.fst imm₁ imm₂ ≫ eqToHom e₁.symm := by
+  subst e₁; subst e₂
+  simp [eqPullbackIso, pullback.lift_fst]
+
+/-- The `pullback.snd` leg of `eqPullbackIso`'s inverse. -/
+theorem eqPullbackIso_inv_snd {V₁ W₁ V₂ W₂ Z : LocallyRingedSpace.{u}} (imm₁ : W₁ ⟶ Z)
+    (imm₂ : W₂ ⟶ Z) [LocallyRingedSpace.IsOpenImmersion imm₁]
+    [LocallyRingedSpace.IsOpenImmersion imm₂] (e₁ : V₁ = W₁) (e₂ : V₂ = W₂) :
+    (eqPullbackIso imm₁ imm₂ e₁ e₂).inv ≫
+        pullback.snd (eqToHom e₁ ≫ imm₁) (eqToHom e₂ ≫ imm₂) =
+      pullback.snd imm₁ imm₂ ≫ eqToHom e₂.symm := by
+  subst e₁; subst e₂
+  simp [eqPullbackIso, pullback.lift_snd]
+
+/-- The `pullback.fst` leg of the inverse of `pullback.congrHom`: it transports the first leg back
+across the equalities of the two cospan legs. -/
+theorem congrHom_inv_fst {C : Type*} [Category C] {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y ⟶ Z}
+    (h₁ : f₁ = f₂) (h₂ : g₁ = g₂) [HasPullback f₁ g₁] [HasPullback f₂ g₂] :
+    (pullback.congrHom h₁ h₂).inv ≫ pullback.fst f₁ g₁ = pullback.fst f₂ g₂ := by
+  simp [pullback.congrHom_inv, pullback.lift_fst]
+
+/-- The `pullback.snd` leg of the inverse of `pullback.congrHom`. -/
+theorem congrHom_inv_snd {C : Type*} [Category C] {X Y Z : C} {f₁ f₂ : X ⟶ Z} {g₁ g₂ : Y ⟶ Z}
+    (h₁ : f₁ = f₂) (h₂ : g₁ = g₂) [HasPullback f₁ g₁] [HasPullback f₂ g₂] :
+    (pullback.congrHom h₁ h₂).inv ≫ pullback.snd f₁ g₁ = pullback.snd f₂ g₂ := by
+  simp [pullback.congrHom_inv, pullback.lift_snd]
+
 /-! ### The dispatched source/target pullback isomorphisms
 
 For a chart `p` with two legs to distinct charts `p'` and `p''`, the triple overlap
