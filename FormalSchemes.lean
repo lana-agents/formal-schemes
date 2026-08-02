@@ -127,6 +127,7 @@ import FormalSchemes.TateSelfProductGlueTPrime
 import FormalSchemes.TateSelfProductGlueTPrimeIso
 import FormalSchemes.TateSelfProductOverlap
 import FormalSchemes.TateSelfProductRightOverlap
+import FormalSchemes.TateSelfProductTPrimeSummand
 import FormalSchemes.TateSelfProductTransition
 import FormalSchemes.TateSelfProductTransitionRange
 import FormalSchemes.TateSelfProductTransitionRangeRight
