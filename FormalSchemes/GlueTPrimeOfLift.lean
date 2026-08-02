@@ -109,6 +109,22 @@ theorem glueTPrimeOfLift_fac
     glueTPrimeOfLift a b c d τ H ≫ pullback.snd c d = pullback.fst a b ≫ τ :=
   lift_fac _ _ H
 
+/-- **The `t'` first-leg-through-chart law, for free.** Composing the lift-built `t'` with the
+*canonical map* `pullback.fst c d ≫ c : pullback c d ⟶ Z` of its target overlap into the common base
+`Z` gives `pullback.fst a b ≫ τ ≫ d`. This is the first-leg analogue of `glueTPrimeOfLift_fac` (the
+second-leg law `t_fac`): it is obtained from `t_fac` by post-composing with `d` and folding through
+`pullback.condition` (`pullback.fst c d ≫ c = pullback.snd c d ≫ d`). It is the `glueTPrimeOfLift`
+analogue of Mathlib's `AlgebraicGeometry.Cover.gluedCoverT'_fst`, and the leg law a `GlueData'`
+cocycle telescoping (`t' i j k ≫ t' j k i ≫ t' k i j = 𝟙`) reaches for once the composite is
+cancelled against the mono `pullback.fst a b ≫ a`: it exposes the genuine transition `τ ≫ d` sitting
+on the shared triple overlap, which no amount of categorical bookkeeping can remove (`τ ≫ d ≠ a` in
+general — the transition permutes the summands of the overlap object). -/
+@[reassoc]
+theorem glueTPrimeOfLift_fst_comp
+    (H : Set.range (pullback.fst a b ≫ τ).base ⊆ Set.range (pullback.snd c d).base) :
+    glueTPrimeOfLift a b c d τ H ≫ pullback.fst c d ≫ c = pullback.fst a b ≫ τ ≫ d := by
+  rw [pullback.condition, glueTPrimeOfLift_fac_assoc]
+
 /-- **`t'` is an isomorphism** when the range inclusion is in fact an equality. This upgrades the
 lift to an iso (`lift` of an open immersion is an iso precisely when the two ranges coincide), which
 is the form a genuine `GlueData'.cocycle` (three `t'` composing to `𝟙`) consumes. The extra
