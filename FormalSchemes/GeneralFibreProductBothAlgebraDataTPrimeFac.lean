@@ -150,7 +150,26 @@ theorem bothAlgDataT'_fac (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' :
       · by_cases h2'' : p.2 = p''.2
         · by_cases h1t : p'.1 = p''.1
           · exact absurd (Prod.ext h1t (h2'.symm.trans h2'')) hp'p''
-          · sorry -- leaf fst_fst
+          · -- leaf fst_fst
+            rw [bothAlgDataT'_fst_fst gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+              h1' h2' h1'' h2'' h1t]
+            have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+                  (bothAlgDataF hI gX gY p p'' hpp'') =
+                (bothAlgDataSrcIso_fst_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'').inv ≫
+                  mapSpf hI (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI)
+                    (AlgHom.id R (B p.2)) ≫
+                  eqToHom (bothAlgDataV_fst hI gX gY p p' hpp' h1' h2').symm := by
+              rw [← bothAlgDataSrcIso_fst_fst_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2'
+                h1'' h2'', Iso.inv_hom_id_assoc]
+            rw [Category.assoc, Category.assoc,
+              bothAlgDataSrcIso_fst_fst_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm h1t
+                (h2'.symm.trans h2'') (fun e => h1' e.symm) h2'.symm,
+              hfst, bothAlgDataT_fst gX gY τX τY hI p p' hpp' h1' h2']
+            simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+              Category.id_comp, Iso.cancel_iso_inv_left]
+            simp only [mapSpfIso_hom]
+            rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+            simp only [AlgHom.id_comp, AlgHom.comp_id, hστX p.1 p'.1 p''.1 h1' h1'' h1t]
         · by_cases h1t : p'.1 = p''.1
           · sorry -- leaf fst_both_snd
           · sorry -- leaf fst_both_both
@@ -166,6 +185,27 @@ theorem bothAlgDataT'_fac (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' :
           · sorry -- leaf both_both_snd
           · by_cases h2t : p'.2 = p''.2
             · sorry -- leaf both_both_fst
-            · sorry -- leaf both_both_both
+            · -- leaf both_both_both
+              rw [bothAlgDataT'_both_both_both gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+                h1' h2' h1'' h2'' h1t h2t]
+              have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+                    (bothAlgDataF hI gX gY p p'' hpp'') =
+                  (bothAlgDataSrcIso_both_both hI gX gY p p' p'' hpp' hpp'' h1' h2'
+                    h1'' h2'').inv ≫
+                    mapSpf hI (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI)
+                      (furtherLocFst I (gY p.2 p'.2) (gY p.2 p''.2) hI) ≫
+                    eqToHom (bothAlgDataV_both hI gX gY p p' hpp' h1' h2').symm := by
+                rw [← bothAlgDataSrcIso_both_both_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2'
+                  h1'' h2'', Iso.inv_hom_id_assoc]
+              rw [Category.assoc, Category.assoc,
+                bothAlgDataSrcIso_both_both_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm h1t h2t
+                  (fun e => h1' e.symm) (fun e => h2' e.symm),
+                hfst, bothAlgDataT_both gX gY τX τY hI p p' hpp' h1' h2']
+              simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+                Category.id_comp, Iso.cancel_iso_inv_left]
+              simp only [mapSpfIso_hom]
+              rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+              simp only [hστX p.1 p'.1 p''.1 h1' h1'' h1t,
+                hστY p.2 p'.2 p''.2 h2' h2'' h2t]
 
 end AlgebraicGeometry
