@@ -134,6 +134,7 @@ variable (p p' p'' : JX × JY)
 
 include gX gY τX τY σX σY hστX hστY hI hpp' hpp'' hp'p''
 
+omit hστX in
 /-- **`t_fac`, leaf `(snd, snd)`.** `A`-factor transport, `B`-factor genuine (`hστY`). -/
 theorem bothAlgDataT'_fac_snd_snd (h1' : p.1 = p'.1) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -170,6 +171,7 @@ theorem bothAlgDataT'_fac_snd_snd (h1' : p.1 = p'.1) (h1'' : p.1 = p''.1) :
   simp only [AlgHom.id_comp, AlgHom.comp_id,
     hστY p.2 p'.2 p''.2 h2' h2'' (fun eq => hp'p'' (Prod.ext (h1'.symm.trans h1'') eq))]
 
+omit hστY in
 /-- **`t_fac`, leaf `(fst, fst)`.** `A`-factor genuine (`hστX`), `B`-factor transport. -/
 theorem bothAlgDataT'_fac_fst_fst (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1)
     (h2'' : p.2 = p''.2) (h1t : p'.1 ≠ p''.1) :
