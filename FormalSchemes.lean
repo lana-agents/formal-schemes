@@ -133,6 +133,7 @@ import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateSelfProductBothOverlap
 import FormalSchemes.TateSelfProductCocycle
+import FormalSchemes.TateSelfProductCone
 import FormalSchemes.TateSelfProductDSigma
 import FormalSchemes.TateSelfProductGlueDatum
 import FormalSchemes.TateSelfProductGlueTPrime
