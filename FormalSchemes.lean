@@ -136,6 +136,7 @@ import FormalSchemes.TateSelfProductDSigma
 import FormalSchemes.TateSelfProductGlueDatum
 import FormalSchemes.TateSelfProductGlueTPrime
 import FormalSchemes.TateSelfProductGlueTPrimeIso
+import FormalSchemes.TateSelfProductObject
 import FormalSchemes.TateSelfProductOverlap
 import FormalSchemes.TateSelfProductRightOverlap
 import FormalSchemes.TateSelfProductSummandNaturality
