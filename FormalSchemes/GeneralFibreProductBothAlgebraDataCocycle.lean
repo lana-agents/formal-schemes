@@ -34,6 +34,22 @@ namespace AlgebraicGeometry
 
 open scoped Classical
 
+/-- **Conjugated-`mapSpf` collapse.** If the two underlying algebra endomorphisms are the identity,
+the `Sp`-conjugated `mapSpf` is the identity. This packages the final collapse shared by every mixed
+cocycle leaf: after telescoping the source isos and combining the three `mapSpf` into one, the goal is
+of this shape, and the two per-factor `AlgHom` cocycle identities `hfA`/`hfB` discharge it. -/
+theorem inv_mapSpf_hom_collapse {R : Type u} [CommRing R] {I : Ideal R} {D E : Type u}
+    [CommRing D] [CommRing E] [Algebra R D] [Algebra R E] (hI : I.FG)
+    {W : LocallyRingedSpace}
+    (Sp : (haveI := isAdicRing R I D E hI;
+      FormalSpectrum.locallyRingedSpaceObj (idealOfDefinition R I D E)) ≅ W)
+    (fA : D →ₐ[R] D) (fB : E →ₐ[R] E)
+    (hfA : fA = AlgHom.id R D) (hfB : fB = AlgHom.id R E) :
+    haveI := isAdicRing R I D E hI
+    Sp.inv ≫ CompletedTensorProduct.mapSpf hI fA fB ≫ Sp.hom = 𝟙 W := by
+  haveI := isAdicRing R I D E hI
+  rw [hfA, hfB, CompletedTensorProduct.mapSpf_id, Category.id_comp, Iso.inv_hom_id]
+
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {JX JY : Type u}
 variable {A : JX → Type u} {B : JY → Type u}
@@ -110,10 +126,12 @@ theorem bothAlgDataT'_cocycle_snd_fst (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) 
   simp only [mapSpfIso_hom]
   rw [← Category.assoc (mapSpf hI _ _), ← mapSpf_comp,
     ← Category.assoc (mapSpf hI _ _), ← mapSpf_comp]
-  -- Goal: `Sp.inv ≫ mapSpf hI fA fB ≫ Sp.hom = 𝟙`, `fA`/`fB` the two per-factor 3-fold composites.
-  -- The two closers `hfA`/`hfB` (`fA = id`, `fB = id`) are the genuine algebra content: for the
-  -- degenerate first coordinate (p.1 = p'.1) `fA` telescopes via `τX_symm` + the self-multiply
-  -- atoms; likewise `fB` via `τY_symm`.  Then `mapSpf_congr` + `mapSpf_id` collapse to `𝟙`.
-  sorry
+  refine inv_mapSpf_hom_collapse hI _ _ _ ?hfA ?hfB
+  case hfA =>
+    rw [AlgHom.comp_assoc]
+    sorry
+  case hfB =>
+    rw [AlgHom.comp_assoc]
+    sorry
 
 end AlgebraicGeometry
