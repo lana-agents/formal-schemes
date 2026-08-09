@@ -92,6 +92,7 @@ import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.GlueOpenCoverFactor
+import FormalSchemes.GlueOpenCoverFactorBoth
 import FormalSchemes.GlueTPrimeOfLift
 import FormalSchemes.Gluing
 import FormalSchemes.IdealsOfDefinition
