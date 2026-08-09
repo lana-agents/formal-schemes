@@ -747,4 +747,142 @@ theorem bothAlgDataT'_cocycle_both_both_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ 
     simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hcx hσx ⊢
     simp only [hcx, hσx]
 
+include τY_symm hσcX in
+/-- **Cocycle, mixed leaf `fst_both_both`.** `(p,p')` differs in the first coordinate (degenerate
+`B`-transport), `(p,p'')` and `(p',p'')` in both coordinates (genuine `σX`). -/
+theorem bothAlgDataT'_cocycle_fst_both_both (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2)
+    (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) (h1t : p'.1 ≠ p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    letI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+    letI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        bothAlgDataT' hI gX gY τX τY σX σY p' p'' p hp'p'' hpp'.symm hpp''.symm ≫
+      bothAlgDataT' hI gX gY τX τY σX σY p'' p p' hpp''.symm hp'p''.symm hpp' = 𝟙 _ := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  haveI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+  haveI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+  have h2t : p'.2 ≠ p''.2 := fun e => h2'' (h2'.trans e)
+  rw [bothAlgDataT'_fst_both_both gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+      h1' h2' h1'' h2'' h1t,
+    bothAlgDataT'_both_fst_both gX gY τX τY σX σY hI p' p'' p hp'p'' hpp'.symm hpp''.symm
+      h1t h2t (fun e => h1' e.symm) h2'.symm (fun e => h1'' e.symm),
+    bothAlgDataT'_both_both_fst gX gY τX τY σX σY hI p'' p p' hpp''.symm hp'p''.symm hpp'
+      (fun e => h1'' e.symm) (fun e => h2'' e.symm) (fun e => h1t e.symm) (fun e => h2t e.symm)
+      h1' h2']
+  simp only [Category.assoc]
+  rw [Iso.hom_inv_id_assoc, Iso.hom_inv_id_assoc]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc (mapSpf hI _ _), ← mapSpf_comp,
+    ← Category.assoc (mapSpf hI _ _), ← mapSpf_comp]
+  refine inv_mapSpf_hom_collapse hI _ _ _ ?hfA ?hfB
+  case hfA =>
+    rw [AlgHom.comp_assoc]
+    refine trans_cocycle_symm_comp _ _ _ ?_
+    ext x
+    have hcx := AlgEquiv.ext_iff.mp
+      (awayCongrEltA_mulComm_trans_refl (I := I) (gX p'.1 p''.1) (gX p'.1 p.1))
+    have hσx := AlgEquiv.ext_iff.mp (hσcX p.1 p'.1 p''.1 h1' h1'' h1t)
+    simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hcx hσx ⊢
+    simp only [hcx, hσx]
+  case hfB =>
+    rw [AlgHom.comp_assoc]
+    exact cocycle_fst_snd_hfB gY τY τY_symm hI
+
+include τY_symm hσcX in
+/-- **Cocycle, mixed leaf `both_fst_both`.** `(p,p'')` differs in the first coordinate (degenerate
+`B`-transport), `(p,p')` and `(p',p'')` in both coordinates (genuine `σX`). -/
+theorem bothAlgDataT'_cocycle_both_fst_both (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2)
+    (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) (h1t : p'.1 ≠ p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    letI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+    letI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        bothAlgDataT' hI gX gY τX τY σX σY p' p'' p hp'p'' hpp'.symm hpp''.symm ≫
+      bothAlgDataT' hI gX gY τX τY σX σY p'' p p' hpp''.symm hp'p''.symm hpp' = 𝟙 _ := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  haveI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+  haveI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+  have h2t : p'.2 ≠ p''.2 := fun e => h2' (h2''.trans e.symm)
+  rw [bothAlgDataT'_both_fst_both gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+      h1' h2' h1'' h2'' h1t,
+    bothAlgDataT'_both_both_fst gX gY τX τY σX σY hI p' p'' p hp'p'' hpp'.symm hpp''.symm
+      h1t h2t (fun e => h1' e.symm) (fun e => h2' e.symm) (fun e => h1'' e.symm) h2''.symm,
+    bothAlgDataT'_fst_both_both gX gY τX τY σX σY hI p'' p p' hpp''.symm hp'p''.symm hpp'
+      (fun e => h1'' e.symm) h2''.symm (fun e => h1t e.symm) (fun e => h2t e.symm) h1']
+  simp only [Category.assoc]
+  rw [Iso.hom_inv_id_assoc, Iso.hom_inv_id_assoc]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc (mapSpf hI _ _), ← mapSpf_comp,
+    ← Category.assoc (mapSpf hI _ _), ← mapSpf_comp]
+  refine inv_mapSpf_hom_collapse hI _ _ _ ?hfA ?hfB
+  case hfA =>
+    rw [AlgHom.comp_assoc]
+    refine trans_cocycle_symm_comp _ _ _ ?_
+    ext x
+    have hcx := AlgEquiv.ext_iff.mp
+      (awayCongrEltA_mulComm_trans_refl (I := I) (gX p.1 p''.1) (gX p.1 p'.1))
+    have hσx := AlgEquiv.ext_iff.mp (hσcX p.1 p'.1 p''.1 h1' h1'' h1t)
+    simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hcx hσx ⊢
+    simp only [hcx, hσx]
+  case hfB =>
+    rw [AlgHom.comp_assoc]
+    exact cocycle_snd_fst_hfB gY τY τY_symm hI
+
+include τY_symm hσcX in
+/-- **Cocycle, mixed leaf `both_both_fst`.** `(p',p'')` differs in the second coordinate (degenerate
+`B`-transport), `(p,p')` and `(p,p'')` in both coordinates (genuine `σX`). -/
+theorem bothAlgDataT'_cocycle_both_both_fst (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2)
+    (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) (h1t : p'.1 ≠ p''.1) (h2t : p'.2 = p''.2) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    letI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+    letI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        bothAlgDataT' hI gX gY τX τY σX σY p' p'' p hp'p'' hpp'.symm hpp''.symm ≫
+      bothAlgDataT' hI gX gY τX τY σX σY p'' p p' hpp''.symm hp'p''.symm hpp' = 𝟙 _ := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  haveI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+  haveI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+  rw [bothAlgDataT'_both_both_fst gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+      h1' h2' h1'' h2'' h1t h2t,
+    bothAlgDataT'_fst_both_both gX gY τX τY σX σY hI p' p'' p hp'p'' hpp'.symm hpp''.symm
+      h1t h2t (fun e => h1' e.symm) (fun e => h2' e.symm) (fun e => h1'' e.symm),
+    bothAlgDataT'_both_fst_both gX gY τX τY σX σY hI p'' p p' hpp''.symm hp'p''.symm hpp'
+      (fun e => h1'' e.symm) (fun e => h2'' e.symm) (fun e => h1t e.symm) h2t.symm h1']
+  simp only [Category.assoc]
+  rw [Iso.hom_inv_id_assoc, Iso.hom_inv_id_assoc]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc (mapSpf hI _ _), ← mapSpf_comp,
+    ← Category.assoc (mapSpf hI _ _), ← mapSpf_comp]
+  refine inv_mapSpf_hom_collapse hI _ _ _ ?hfA ?hfB
+  case hfA =>
+    rw [AlgHom.comp_assoc]
+    refine trans_cocycle_symm_comp _ _ _ ?_
+    ext x
+    have hcx := AlgEquiv.ext_iff.mp
+      (awayCongrEltA_mulComm_trans_refl (I := I) (gX p''.1 p.1) (gX p''.1 p'.1))
+    have hσx := AlgEquiv.ext_iff.mp (hσcX p.1 p'.1 p''.1 h1' h1'' h1t)
+    simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hcx hσx ⊢
+    simp only [hcx, hσx]
+  case hfB =>
+    rw [AlgHom.comp_assoc]
+    exact cocycle_snd_both_fst_hfB gY τY τY_symm hI
+
 end AlgebraicGeometry
