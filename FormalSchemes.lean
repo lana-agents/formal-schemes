@@ -101,6 +101,7 @@ import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.OpenCover
+import FormalSchemes.OpenCoverHomExt
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
