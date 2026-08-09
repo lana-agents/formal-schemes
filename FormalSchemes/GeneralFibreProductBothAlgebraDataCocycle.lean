@@ -951,4 +951,81 @@ theorem bothAlgDataT'_cocycle :
             · exact bothAlgDataT'_cocycle_both_both_both gX gY τX τY σX σY hσcX hσcY hI p p' p''
                 hpp' hpp'' hp'p'' h1' h2' h1'' h2'' h1t h2t
 
+/-! ### The smart constructor from algebra data
+
+The two-sided analogue of `AlgebraicGeometry.AffineChartedFibreDatum.ofAlgebraData`: the caller
+supplies only the non-geometric algebra fields together with the double-overlap transitions
+`σX`/`σY`, their σ/τ compatibilities `hστX`/`hστY` and their algebra cocycles `hσcX`/`hσcY`; the
+geometric fields are derived by the dispatched helpers. -/
+
+namespace BothChartedFibreDatum
+
+omit hpp' hpp'' hp'p'' in
+/-- **The smart constructor for `BothChartedFibreDatum` from algebra data.** The caller supplies the
+non-geometric fields (`A`, `B`, `gX`, `gY`, `τX`, `τX_symm`, `τY`, `τY_symm`) together with the
+double-overlap transitions `σX`/`σY`, their σ/τ compatibilities `hστX`/`hστY` and their algebra
+cocycles `hσcX`/`hσcY`; the geometric fields `V`, `f`, `hf`, `t`, `t_inv`, `t'`, `t_fac`, `cocycle`
+are derived by the dispatched helpers `bothAlgDataV`/…/`bothAlgDataT'_fac`/`bothAlgDataT'_cocycle`. -/
+def ofAlgebraData
+    (hστX : ∀ (i i' i'' : JX) (h1 : i ≠ i') (h2 : i ≠ i'') (h3 : i' ≠ i''),
+      (σX i i' i'' h1 h2 h3).symm.toAlgHom.comp (furtherLocSnd I (gX i' i'') (gX i' i) hI) =
+        (furtherLocFst I (gX i i') (gX i i'') hI).comp (τX i i' h1).symm.toAlgHom)
+    (hστY : ∀ (j j' j'' : JY) (h1 : j ≠ j') (h2 : j ≠ j'') (h3 : j' ≠ j''),
+      (σY j j' j'' h1 h2 h3).symm.toAlgHom.comp (furtherLocSnd I (gY j' j'') (gY j' j) hI) =
+        (furtherLocFst I (gY j j') (gY j j'') hI).comp (τY j j' h1).symm.toAlgHom) :
+    BothChartedFibreDatum R I hI where
+  JX := JX
+  JY := JY
+  A := A
+  B := B
+  gX := gX
+  gY := gY
+  τX := τX
+  τX_symm := τX_symm
+  τY := τY
+  τY_symm := τY_symm
+  V := bothAlgDataV hI gX gY
+  f := bothAlgDataF hI gX gY
+  hf := bothAlgDataHf hI gX gY
+  t := bothAlgDataT hI gX gY τX τY
+  t_inv := bothAlgDataT_inv hI gX gY τX τY τX_symm τY_symm
+  t' := bothAlgDataT' hI gX gY τX τY σX σY
+  t_fac := bothAlgDataT'_fac gX gY hI τX τY σX σY hστX hστY
+  cocycle := bothAlgDataT'_cocycle gX gY τX τY σX σY hσcX hσcY τX_symm τY_symm hI
+
+end BothChartedFibreDatum
+
+/-! ### Validation: the subsingleton-index witness through the smart constructor
+
+On `JX = JY = PUnit` the product index `PUnit × PUnit` is a subsingleton, so no two indices are
+distinct and every `≠`-hypothesis is `False`; the whole algebra datum (`τX`, …, `hσcY`) is vacuous.
+Routing this through `ofAlgebraData` re-exhibits a genuine `BothChartedFibreDatum` and hence a real
+`generalFibreProduct : FormalScheme`. -/
+
+omit gX gY τX τY σX σY hI hpp' hpp'' hp'p'' in
+/-- **A subsingleton-index witness built through `ofAlgebraData`.** Mirrors `punitBothAlgDataDatum`
+but routed via the smart constructor, with all overlap/transition data vacuous. -/
+def punitBothAlgDataDatumOfAlg (R : Type u) [CommRing R] (I : Ideal R) (hI : I.FG) :
+    BothChartedFibreDatum R I hI :=
+  BothChartedFibreDatum.ofAlgebraData
+    (A := fun _ : PUnit => R) (B := fun _ : PUnit => R)
+    (gX := fun _ _ => 1) (gY := fun _ _ => 1)
+    (τX := fun i i' h => (h (Subsingleton.elim i i')).elim)
+    (τX_symm := fun i i' h => (h (Subsingleton.elim i i')).elim)
+    (τY := fun j j' h => (h (Subsingleton.elim j j')).elim)
+    (τY_symm := fun j j' h => (h (Subsingleton.elim j j')).elim)
+    (σX := fun i i' _ h _ _ => (h (Subsingleton.elim i i')).elim)
+    (σY := fun j j' _ h _ _ => (h (Subsingleton.elim j j')).elim)
+    (hσcX := fun i i' _ h _ _ => (h (Subsingleton.elim i i')).elim)
+    (hσcY := fun j j' _ h _ _ => (h (Subsingleton.elim j j')).elim)
+    (hI := hI)
+    (hστX := fun i i' _ h _ _ => (h (Subsingleton.elim i i')).elim)
+    (hστY := fun j j' _ h _ _ => (h (Subsingleton.elim j j')).elim)
+
+omit gX gY τX τY σX σY hI hpp' hpp'' hp'p'' in
+/-- The subsingleton-index witness built through `ofAlgebraData` yields a genuine glued
+`FormalScheme`, confirming the smart-constructor pipeline typechecks end-to-end. -/
+example (R : Type u) [CommRing R] (I : Ideal R) (hI : I.FG) : FormalScheme.{u} :=
+  (punitBothAlgDataDatumOfAlg R I hI).generalFibreProduct
+
 end AlgebraicGeometry
