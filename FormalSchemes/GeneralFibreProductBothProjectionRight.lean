@@ -48,8 +48,8 @@ factor):
   affine-base second-projection naturality (`snd_baseR`), assembled from the interchange `inr`-factor
   law, the base-changed transition sliding through `inr`, and the exposed `Y`'s own glue relation
   `y_glue_rel`;
-* both coordinates differ (`both_baseR`): the coordinate flip realises the `snd_baseR` relation after
-  forgetting the `A`-localization.
+* both coordinates differ (`both_baseR`): the coordinate flip realises the `snd_baseR` relation
+  after forgetting the `A`-localization.
 
 ## Main definitions
 
