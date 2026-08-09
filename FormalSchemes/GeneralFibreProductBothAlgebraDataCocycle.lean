@@ -74,6 +74,38 @@ theorem awayCongrEltB_refl {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u}
     {B : JY → Type u} [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)] {j : JY} {g : B j}
     (h : g = g) : awayCongrEltB (I := I) h = AlgEquiv.refl := rfl
 
+/-- Composition of two element-congruences on the `A` factor. -/
+theorem awayCongrEltA_trans {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u}
+    {A : JX → Type u} [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)] {i : JX} {g g' g'' : A i}
+    (h : g = g') (h' : g' = g'') :
+    (awayCongrEltA (I := I) h).trans (awayCongrEltA h') = awayCongrEltA (h.trans h') := by
+  subst h
+  subst h'
+  rfl
+
+/-- Composition of two element-congruences on the `B` factor. -/
+theorem awayCongrEltB_trans {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u}
+    {B : JY → Type u} [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)] {j : JY} {g g' g'' : B j}
+    (h : g = g') (h' : g' = g'') :
+    (awayCongrEltB (I := I) h).trans (awayCongrEltB h') = awayCongrEltB (h.trans h') := by
+  subst h
+  subst h'
+  rfl
+
+/-- The two `mul_comm` element-congruences on the `A` factor cancel to the identity. -/
+theorem awayCongrEltA_mulComm_trans_refl {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u}
+    {A : JX → Type u} [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)] {i : JX} (a b : A i) :
+    (awayCongrEltA (I := I) (mul_comm a b)).trans (awayCongrEltA (mul_comm b a)) =
+      AlgEquiv.refl := by
+  rw [awayCongrEltA_trans, awayCongrEltA_refl]
+
+/-- The two `mul_comm` element-congruences on the `B` factor cancel to the identity. -/
+theorem awayCongrEltB_mulComm_trans_refl {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u}
+    {B : JY → Type u} [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)] {j : JY} (a b : B j) :
+    (awayCongrEltB (I := I) (mul_comm a b)).trans (awayCongrEltB (mul_comm b a)) =
+      AlgEquiv.refl := by
+  rw [awayCongrEltB_trans, awayCongrEltB_refl]
+
 /-! ### Generic per-factor closers for mixed cocycle leaves with one degenerate coordinate
 
 `cocycle_snd_fst_hfA`/`cocycle_snd_fst_hfB` close the two per-factor `AlgHom` cocycle identities
@@ -574,5 +606,52 @@ theorem bothAlgDataT'_cocycle_both_fst_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p
   case hfB =>
     rw [AlgHom.comp_assoc]
     exact cocycle_snd_fst_hfB gY τY τY_symm hI
+
+include τX_symm hσcY in
+/-- **Cocycle, mixed leaf `snd_both_both`.** `(p,p')` differs in the second coordinate (degenerate
+`A`-transport), `(p,p'')` and `(p',p'')` in both coordinates (genuine `σY`). -/
+theorem bothAlgDataT'_cocycle_snd_both_both (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1)
+    (h2'' : p.2 ≠ p''.2) (h2t : p'.2 ≠ p''.2) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    letI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+    letI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        bothAlgDataT' hI gX gY τX τY σX σY p' p'' p hp'p'' hpp'.symm hpp''.symm ≫
+      bothAlgDataT' hI gX gY τX τY σX σY p'' p p' hpp''.symm hp'p''.symm hpp' = 𝟙 _ := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  haveI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+  haveI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+  have h2' : p.2 ≠ p'.2 := fun e => hpp' (Prod.ext h1' e)
+  have h1t : p'.1 ≠ p''.1 := fun e => h1'' (h1'.trans e)
+  rw [bothAlgDataT'_snd_both_both gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+      h1' h1'' h2'' h2t,
+    bothAlgDataT'_both_snd_both gX gY τX τY σX σY hI p' p'' p hp'p'' hpp'.symm hpp''.symm
+      h1t h2t h1'.symm (fun e => h2'' e.symm),
+    bothAlgDataT'_both_both_snd gX gY τX τY σX σY hI p'' p p' hpp''.symm hp'p''.symm hpp'
+      (fun e => h1'' e.symm) (fun e => h2'' e.symm) (fun e => h1t e.symm) (fun e => h2t e.symm) h1']
+  simp only [Category.assoc]
+  rw [Iso.hom_inv_id_assoc, Iso.hom_inv_id_assoc]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc (mapSpf hI _ _), ← mapSpf_comp,
+    ← Category.assoc (mapSpf hI _ _), ← mapSpf_comp]
+  refine inv_mapSpf_hom_collapse hI _ _ _ ?hfA ?hfB
+  case hfA =>
+    rw [AlgHom.comp_assoc]
+    exact cocycle_snd_fst_hfA gX τX τX_symm hI
+  case hfB =>
+    rw [AlgHom.comp_assoc]
+    refine trans_cocycle_symm_comp _ _ _ ?_
+    ext x
+    have hcx := AlgEquiv.ext_iff.mp
+      (awayCongrEltB_mulComm_trans_refl (I := I) (gY p'.2 p''.2) (gY p'.2 p.2))
+    have hσx := AlgEquiv.ext_iff.mp (hσcY p.2 p'.2 p''.2 h2' h2'' h2t)
+    simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hcx hσx ⊢
+    rw [hcx, hσx]
 
 end AlgebraicGeometry
