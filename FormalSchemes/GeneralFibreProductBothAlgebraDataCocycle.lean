@@ -100,6 +100,27 @@ theorem bothAlgDataT'_cocycle_snd_fst (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) 
   have h2' : p.2 ≠ p'.2 := fun e => hpp' (Prod.ext h1' e)
   have h1t : p'.1 ≠ p''.1 := fun e => h1'' (h1'.trans e)
   have h2t : p'.2 ≠ p''.2 := fun e => h2' (h2''.trans e.symm)
+  have hmid :
+      (mapSpfIso hI (awayIdxTransA h1' (fun x => gX x p''.1))
+          ((τY p.2 p'.2 (fun e => hpp' (Prod.ext h1' e))).trans
+            ((awaySelfMulB hI (gY p'.2 p.2)).trans
+              (awayCongrEltB (by rw [h2'']))))).hom ≫
+      (mapSpfIso hI ((τX p'.1 p''.1 h1t).trans ((awaySelfMulA hI (gX p''.1 p'.1)).trans
+            (awayCongrEltA (by rw [h1'.symm]))))
+          ((awayCongrEltB (by rw [h2''.symm])).trans ((awaySelfMulB hI (gY p'.2 p''.2)).symm.trans
+            (τY p'.2 p''.2 h2t)))).hom ≫
+      (mapSpfIso hI ((awayCongrEltA (by rw [h1'])).trans ((awaySelfMulA hI (gX p''.1 p.1)).symm.trans
+            (τX p''.1 p.1 h1''.symm)))
+          (awayIdxTransB h2''.symm (fun y => gY y p'.2))).hom = 𝟙 _ := by
+    rw [mapSpfIso_hom, mapSpfIso_hom, mapSpfIso_hom]
+    refine mapSpf_comp₃ hI _ _ _ _ _ _ ?hA ?hB
+    -- hA : the A-factor 3-fold `.comp = id` cocycle.  Via `trans_cocycle_symm_comp` this becomes
+    --   `(awayIdxTransA h1' _).trans (E₂.trans E₃) = AlgEquiv.refl`, where E₂/E₃ wrap `τX` with
+    --   `awaySelfMulA`/`awayCongrEltA`.  Since p.1 = p'.1 (degenerate coord) it needs only
+    --   `τX_symm` + the `TPrimeFacAux` atoms (idxTrans transport, selfMul bridge), NOT `hσcX`.
+    case hA => refine trans_cocycle_symm_comp _ _ _ ?_; sorry
+    -- hB : the B-factor 3-fold `.comp = id` cocycle (mirror, `τY_symm` + atoms).
+    case hB => refine trans_cocycle_symm_comp _ _ _ ?_; sorry
   rw [bothAlgDataT'_snd_fst gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p'' h1' h1'' h2'',
     bothAlgDataT'_both_snd_fst gX gY τX τY σX σY hI p' p'' p hp'p'' hpp'.symm hpp''.symm
       h1t h2t h1'.symm h2''.symm,
@@ -107,10 +128,11 @@ theorem bothAlgDataT'_cocycle_snd_fst (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) 
       h1''.symm h2''.symm h1t.symm h2t.symm h1']
   simp only [Category.assoc]
   rw [Iso.hom_inv_id_assoc, Iso.hom_inv_id_assoc]
-  simp only [mapSpfIso_hom]
-  rw [← Category.assoc (mapSpf hI _ _), ← mapSpf_comp,
-    ← Category.assoc (mapSpf hI _ _), ← mapSpf_comp]
-  trace_state
+  -- Goal: `Sp.inv ≫ M₁ ≫ M₂ ≫ M₃ ≫ Sp.hom = 𝟙`.  The same-shape leaves close this with
+  -- `reassoc_of% hmid, Iso.inv_hom_id`, but for these mixed M-values `reassoc_of% hmid` hits the
+  -- `instances`-transparency `kabstract` wall (`awaySelfMul.symm`/`awayIdxTrans` force ill-typed
+  -- unfolding).  WORKAROUND TO TRY: `simp only [mapSpfIso_hom]` to convert the M's to `mapSpf`, then
+  -- combine with `← mapSpf_comp` and close via `mapSpf_id` (mapSpf-form avoids the mapSpfIso wall).
   sorry
 
 end AlgebraicGeometry
