@@ -885,4 +885,70 @@ theorem bothAlgDataT'_cocycle_both_both_fst (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ 
     rw [AlgHom.comp_assoc]
     exact cocycle_snd_both_fst_hfB gY τY τY_symm hI
 
+/-! ### The dispatch cocycle law
+
+The single `BothChartedFibreDatum.cocycle`-shaped triple-overlap cocycle, dispatched by the fifteen
+coordinate branches of `bothAlgDataT'` onto the fifteen `bothAlgDataT'_cocycle_*` leaves above. -/
+
+include hσcX hσcY τX_symm τY_symm in
+/-- **`bothAlgDataT'_cocycle`.** The dispatched triple-overlap transition `bothAlgDataT'` satisfies
+the two-sided cocycle law, matching the `cocycle` field of
+`AlgebraicGeometry.BothChartedFibreDatum`. -/
+theorem bothAlgDataT'_cocycle :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    letI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+    letI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        bothAlgDataT' hI gX gY τX τY σX σY p' p'' p hp'p'' hpp'.symm hpp''.symm ≫
+      bothAlgDataT' hI gX gY τX τY σX σY p'' p p' hpp''.symm hp'p''.symm hpp' = 𝟙 _ := by
+  by_cases h1' : p.1 = p'.1
+  · by_cases h1'' : p.1 = p''.1
+    · exact bothAlgDataT'_cocycle_snd_snd gX gY τX τY σX σY hσcY hI p p' p'' hpp' hpp'' hp'p''
+        h1' h1''
+    · by_cases h2'' : p.2 = p''.2
+      · exact bothAlgDataT'_cocycle_snd_fst gX gY τX τY σX σY τX_symm τY_symm hI p p' p'' hpp'
+          hpp'' hp'p'' h1' h1'' h2''
+      · by_cases h2t : p'.2 = p''.2
+        · exact bothAlgDataT'_cocycle_snd_both_fst gX gY τX τY σX σY τX_symm τY_symm hI p p' p''
+            hpp' hpp'' hp'p'' h1' h1'' h2'' h2t
+        · exact bothAlgDataT'_cocycle_snd_both_both gX gY τX τY σX σY hσcY τX_symm hI p p' p''
+            hpp' hpp'' hp'p'' h1' h1'' h2'' h2t
+  · by_cases h2' : p.2 = p'.2
+    · by_cases h1'' : p.1 = p''.1
+      · exact bothAlgDataT'_cocycle_fst_snd gX gY τX τY σX σY τX_symm τY_symm hI p p' p'' hpp'
+          hpp'' hp'p'' h1' h2' h1''
+      · by_cases h2'' : p.2 = p''.2
+        · by_cases h1t : p'.1 = p''.1
+          · exact absurd (Prod.ext h1t (h2'.symm.trans h2'')) hp'p''
+          · exact bothAlgDataT'_cocycle_fst_fst gX gY τX τY σX σY hσcX hI p p' p'' hpp' hpp''
+              hp'p'' h1' h2' h1'' h2'' h1t
+        · by_cases h1t : p'.1 = p''.1
+          · exact bothAlgDataT'_cocycle_fst_both_snd gX gY τX τY σX σY τX_symm τY_symm hI p p' p''
+              hpp' hpp'' hp'p'' h1' h2' h1'' h2'' h1t
+          · exact bothAlgDataT'_cocycle_fst_both_both gX gY τX τY σX σY hσcX τY_symm hI p p' p''
+              hpp' hpp'' hp'p'' h1' h2' h1'' h2'' h1t
+    · by_cases h1'' : p.1 = p''.1
+      · by_cases h2t : p'.2 = p''.2
+        · exact bothAlgDataT'_cocycle_both_snd_fst gX gY τX τY σX σY τX_symm τY_symm hI p p' p''
+            hpp' hpp'' hp'p'' h1' h2' h1'' h2t
+        · exact bothAlgDataT'_cocycle_both_snd_both gX gY τX τY σX σY hσcY τX_symm hI p p' p''
+            hpp' hpp'' hp'p'' h1' h2' h1'' h2t
+      · by_cases h2'' : p.2 = p''.2
+        · by_cases h1t : p'.1 = p''.1
+          · exact bothAlgDataT'_cocycle_both_fst_snd gX gY τX τY σX σY τX_symm τY_symm hI p p' p''
+              hpp' hpp'' hp'p'' h1' h2' h1'' h2'' h1t
+          · exact bothAlgDataT'_cocycle_both_fst_both gX gY τX τY σX σY hσcX τY_symm hI p p' p''
+              hpp' hpp'' hp'p'' h1' h2' h1'' h2'' h1t
+        · by_cases h1t : p'.1 = p''.1
+          · exact bothAlgDataT'_cocycle_both_both_snd gX gY τX τY σX σY hσcY τX_symm hI p p' p''
+              hpp' hpp'' hp'p'' h1' h2' h1'' h2'' h1t
+          · by_cases h2t : p'.2 = p''.2
+            · exact bothAlgDataT'_cocycle_both_both_fst gX gY τX τY σX σY hσcX τY_symm hI p p' p''
+                hpp' hpp'' hp'p'' h1' h2' h1'' h2'' h1t h2t
+            · exact bothAlgDataT'_cocycle_both_both_both gX gY τX τY σX σY hσcX hσcY hI p p' p''
+                hpp' hpp'' hp'p'' h1' h2' h1'' h2'' h1t h2t
+
 end AlgebraicGeometry
