@@ -852,4 +852,93 @@ theorem mono_tateSelfProductDiagonal (hq : q ∈ I) (hI : I.FG) :
   haveI := isSplitMono_tateSelfProductDiagonal R I q hq hI
   inferInstance
 
+/-! ### Surjectivity of the stalk maps of the glued diagonal -/
+
+/-- Surjectivity of the underlying ring hom is preserved by composition in `CommRingCat`. -/
+theorem surjective_hom_comp {X Y Z : CommRingCat} {f : X ⟶ Y} {g : Y ⟶ Z}
+    (hf : Function.Surjective f.hom) (hg : Function.Surjective g.hom) :
+    Function.Surjective (f ≫ g).hom := by
+  rw [CommRingCat.hom_comp, RingHom.coe_comp]
+  exact hg.comp hf
+
+/-- An open immersion of locally ringed spaces has surjective (indeed bijective) stalk maps. -/
+theorem surjective_stalkMap_of_isOpenImmersion {X Y : LocallyRingedSpace} (f : X ⟶ Y)
+    [LocallyRingedSpace.IsOpenImmersion f] (x : X) :
+    Function.Surjective (f.stalkMap x).hom :=
+  ((ConcreteCategory.isIso_iff_bijective _).mp inferInstance).surjective
+
+/-- Surjectivity of stalk maps is stable under composition: if `g` is surjective on the stalk over
+`f x` and `f` is surjective on the stalk over `x`, then so is `f ≫ g`. -/
+theorem surjective_stalkMap_comp {X Y Z : LocallyRingedSpace} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X)
+    (hg : Function.Surjective (g.stalkMap (f.base x)).hom)
+    (hf : Function.Surjective (f.stalkMap x).hom) :
+    Function.Surjective ((f ≫ g).stalkMap x).hom := by
+  rw [LocallyRingedSpace.stalkMap_comp]
+  exact surjective_hom_comp hg hf
+
+/-- Surjectivity of stalk maps is local on the source along open immersions: if `f` is an open
+immersion and `f ≫ g` has a surjective stalk map at `x`, then `g` has a surjective stalk map at
+`f x`. The chart stalk map `f.stalkMap x` is an isomorphism, so it can be cancelled on the right. -/
+theorem surjective_stalkMap_of_comp {X Y Z : LocallyRingedSpace} (f : X ⟶ Y)
+    [LocallyRingedSpace.IsOpenImmersion f] (g : Y ⟶ Z) (x : X)
+    (h : Function.Surjective ((f ≫ g).stalkMap x).hom) :
+    Function.Surjective (g.stalkMap (f.base x)).hom := by
+  have hEq : g.stalkMap (f.base x) = (f ≫ g).stalkMap x ≫ (asIso (f.stalkMap x)).inv :=
+    (Iso.eq_comp_inv _).mpr (LocallyRingedSpace.stalkMap_comp f g x).symm
+  rw [hEq]
+  exact surjective_hom_comp h
+    ((ConcreteCategory.isIso_iff_bijective _).mp inferInstance).surjective
+
+/-- **The stalk maps of the glued Tate diagonal are surjective** (source-local half of the
+closed-immersion criterion for the diagonal, EGA I §10.15). Being surjective on stalks is a
+condition local on the source, so by joint surjectivity of the two open-immersion charts
+`(tateCurveFormalGlueData …).ι b` it suffices to check it after precomposing with each `ι b`. On
+the `b`-chart the diagonal factors as the affine diagonal `diagChart` followed by the open-immersion
+chart `ι ⟨(b, b)⟩` of the self-product. The two chart stalk maps are isomorphisms, and `diagChart`
+has surjective stalk maps: its underlying `presheafedSpaceMap` is the topology-free formal spectrum
+of the surjective codiagonal `∇`, whose stalk maps are surjective by
+`isClosedEmbedding_base_and_surjective_stalkMap_of_surjective`, with target ideal identified through
+`map_codiagonal_eq` and `annulus_map_eq`. Composing (surjective after cancelling the chart
+isomorphisms) gives the claim. -/
+theorem tateSelfProductDiagonal_surjective_stalkMap (hq : q ∈ I) (hI : I.FG) :
+    ∀ y, Function.Surjective ((tateSelfProductDiagonal R I q hq hI).stalkMap y).hom := by
+  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+    annulus_isAdicRing_map R I q hI
+  haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+  haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (annulusAlgebra R I q)
+      (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I (annulusAlgebra R I q) (annulusAlgebra R I q) hI
+  have hmapeq : Ideal.map (CompletedTensorProduct.codiagonal R I (annulusAlgebra R I q))
+      (CompletedTensorProduct.idealOfDefinition R I (annulusAlgebra R I q)
+        (annulusAlgebra R I q)) = annulusIdealOfDefinition R I q :=
+    (CompletedTensorProduct.map_codiagonal_eq (R := R) (I := I)
+      (A := annulusAlgebra R I q)).trans (annulus_map_eq R I q)
+  have hsurjcod : Function.Surjective
+      (CompletedTensorProduct.codiagonal R I (annulusAlgebra R I q)) := by
+    intro a
+    exact ⟨CompletedTensorProduct.inl R I _ _ a, by
+      rw [CompletedTensorProduct.codiagonal, CompletedTensorProduct.lift_inl, AlgHom.id_apply]⟩
+  have hdiag : ∀ y', Function.Surjective ((diagChart R I q hI).stalkMap y').hom :=
+    (FormalSpectrum.isClosedEmbedding_base_and_surjective_stalkMap_of_surjective
+      (CompletedTensorProduct.idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))
+      (annulusIdealOfDefinition R I q)
+      (CompletedTensorProduct.codiagonal R I (annulusAlgebra R I q))
+      (Ideal.map_le_iff_le_comap.mp (le_of_eq hmapeq))
+      (by rw [CompletedTensorProduct.idealOfDefinition_eq_map]; exact hI.map _)
+      hsurjcod hmapeq).2
+  intro y
+  obtain ⟨b, y', hy'⟩ := (tateCurveFormalGlueData R I q hq hI).ι_jointly_surjective y
+  subst hy'
+  have hΔ : (tateCurveFormalGlueData R I q hq hI).ι b ≫ tateSelfProductDiagonal R I q hq hI =
+      diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
+    rw [tateSelfProductDiagonal]
+    exact (tateCurveFormalGlueData R I q hq hI).ι_glueMorphisms _ _ b
+  have hRHSsurj := surjective_stalkMap_comp (diagChart R I q hI)
+    ((tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩) y'
+    (surjective_stalkMap_of_isOpenImmersion
+      ((tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩) _) (hdiag y')
+  have hcompsurj := hΔ.symm ▸ hRHSsurj
+  exact surjective_stalkMap_of_comp ((tateCurveFormalGlueData R I q hq hI).ι b)
+    (tateSelfProductDiagonal R I q hq hI) y' hcompsurj
+
 end AlgebraicGeometry
