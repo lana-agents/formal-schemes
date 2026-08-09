@@ -133,6 +133,58 @@ theorem cocycle_snd_fst_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u
   ext x
   simp [awayCongrEltB_refl]
 
+/-- **`A`-factor closer, degenerate first coordinate, rotation `R1`.** Companion of
+`cocycle_snd_fst_hfA` in which the index-transport factor sits in the *last* position; used by leaves
+whose `A`-factor order is `[Fwd, Bwd, I]`. -/
+theorem cocycle_fst_snd_hfA {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u}
+    {A : JX → Type u} [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
+    (gX : ∀ i i' : JX, A i)
+    (τX : ∀ (i i' : JX), i ≠ i' →
+      awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
+        awayCompletion (I.map (algebraMap R (A i'))) (gX i' i))
+    (τX_symm : ∀ (i i' : JX) (h : i ≠ i'), τX i' i h.symm = (τX i i' h).symm)
+    (hI : I.FG) {i i' i'' : JX} {h : i'' = i} {hii' : i ≠ i'} {hi'i'' : i' ≠ i''}
+    {m : A i'} {heq1 : gX i' i * gX i' i = m} {heq2 : m = gX i' i'' * gX i' i''} :
+    ((τX i i' hii').trans
+          ((awaySelfMulA hI (gX i' i)).trans (awayCongrEltA heq1))).symm.toAlgHom.comp
+        (((awayCongrEltA heq2).trans
+              ((awaySelfMulA hI (gX i' i'')).symm.trans (τX i' i'' hi'i''))).symm.toAlgHom.comp
+          (awayIdxTransA h (fun x => gX x i')).symm.toAlgHom) =
+      AlgHom.id R (awayCompletion (I.map (algebraMap R (A i))) (gX i i')) := by
+  subst h
+  subst heq1
+  refine trans_cocycle_symm_comp _ _ _ ?_
+  have hτ : τX i' i'' hi'i'' = (τX i'' i' hii').symm := τX_symm i'' i' hii'
+  rw [hτ, awayIdxTransA_refl]
+  ext x
+  simp [awayCongrEltA_refl]
+
+/-- **`B`-factor closer, degenerate second coordinate, rotation `R0`.** Companion of
+`cocycle_snd_fst_hfB` in which the index-transport factor sits in the *first* position (the exact
+`B`-mirror of `cocycle_snd_fst_hfA`); used by leaves whose `B`-factor order is `[I, Fwd, Bwd]`. -/
+theorem cocycle_fst_snd_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u}
+    {B : JY → Type u} [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
+    (gY : ∀ j j' : JY, B j)
+    (τY : ∀ (j j' : JY), j ≠ j' →
+      awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
+        awayCompletion (I.map (algebraMap R (B j'))) (gY j' j))
+    (τY_symm : ∀ (j j' : JY) (h : j ≠ j'), τY j' j h.symm = (τY j j' h).symm)
+    (hI : I.FG) {j j' k : JY} {h : j = j'} {hj'k : j' ≠ k} {hkj : k ≠ j}
+    {m : B k} {heq2 : gY k j' * gY k j' = m} {heq3 : m = gY k j * gY k j} :
+    (awayIdxTransB h (fun y => gY y k)).symm.toAlgHom.comp
+        (((τY j' k hj'k).trans
+              ((awaySelfMulB hI (gY k j')).trans (awayCongrEltB heq2))).symm.toAlgHom.comp
+          ((awayCongrEltB heq3).trans
+              ((awaySelfMulB hI (gY k j)).symm.trans (τY k j hkj))).symm.toAlgHom) =
+      AlgHom.id R (awayCompletion (I.map (algebraMap R (B j))) (gY j k)) := by
+  subst h
+  subst heq2
+  refine trans_cocycle_symm_comp _ _ _ ?_
+  have hτ : τY k j hkj = (τY j k hj'k).symm := τY_symm j k hj'k
+  rw [hτ, awayIdxTransB_refl]
+  ext x
+  simp [awayCongrEltB_refl]
+
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {JX JY : Type u}
 variable {A : JX → Type u} {B : JY → Type u}
@@ -216,5 +268,45 @@ theorem bothAlgDataT'_cocycle_snd_fst (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) 
   case hfB =>
     rw [AlgHom.comp_assoc]
     exact cocycle_snd_fst_hfB gY τY τY_symm hI
+
+include τX_symm τY_symm in
+/-- **Cocycle, mixed leaf `fst_snd`.** `(p,p')` differs in the first coordinate, `(p,p'')` in the
+second. -/
+theorem bothAlgDataT'_cocycle_fst_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 = p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    letI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+    letI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        bothAlgDataT' hI gX gY τX τY σX σY p' p'' p hp'p'' hpp'.symm hpp''.symm ≫
+      bothAlgDataT' hI gX gY τX τY σX σY p'' p p' hpp''.symm hp'p''.symm hpp' = 𝟙 _ := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  haveI := bothAlgDataHf hI gX gY p'' p hpp''.symm
+  haveI := bothAlgDataHf hI gX gY p'' p' hp'p''.symm
+  have h2'' : p.2 ≠ p''.2 := fun e => hpp'' (Prod.ext h1'' e)
+  have h1t : p'.1 ≠ p''.1 := fun e => h1' (h1''.trans e.symm)
+  have h2t : p'.2 ≠ p''.2 := fun e => h2'' (h2'.trans e)
+  rw [bothAlgDataT'_fst_snd gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p'' h1' h2' h1'',
+    bothAlgDataT'_both_fst_snd gX gY τX τY σX σY hI p' p'' p hp'p'' hpp'.symm hpp''.symm
+      h1t h2t (fun e => h1' e.symm) h2'.symm h1''.symm,
+    bothAlgDataT'_snd_both_fst gX gY τX τY σX σY hI p'' p p' hpp''.symm hp'p''.symm hpp'
+      h1''.symm (fun e => h1t e.symm) (fun e => h2t e.symm) h2']
+  simp only [Category.assoc]
+  rw [Iso.hom_inv_id_assoc, Iso.hom_inv_id_assoc]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc (mapSpf hI _ _), ← mapSpf_comp,
+    ← Category.assoc (mapSpf hI _ _), ← mapSpf_comp]
+  refine inv_mapSpf_hom_collapse hI _ _ _ ?hfA ?hfB
+  case hfA =>
+    rw [AlgHom.comp_assoc]
+    exact cocycle_fst_snd_hfA gX τX τX_symm hI
+  case hfB =>
+    rw [AlgHom.comp_assoc]
+    exact cocycle_fst_snd_hfB gY τY τY_symm hI
 
 end AlgebraicGeometry
