@@ -43,12 +43,12 @@ roles of the two genuine/invariant shapes are *swapped* (the second projection f
 factor):
 
 * first coordinate differs (`p.1 ≠ p'.1`, `p.2 = p'.2`): the second projection is *invariant* under
-  the `A`-localization transition (`fst_base`), so both sides land in the same glue chart `ι p.2`;
+  the `A`-localization transition (`fst_baseR`), so both sides land in the same glue chart `ι p.2`;
 * second coordinate differs (`p.1 = p'.1`, `p.2 ≠ p'.2`): the *genuine* case, a verbatim port of the
-  affine-base second-projection naturality (`snd_base`), assembled from the interchange `inr`-factor
+  affine-base second-projection naturality (`snd_baseR`), assembled from the interchange `inr`-factor
   law, the base-changed transition sliding through `inr`, and the exposed `Y`'s own glue relation
   `y_glue_rel`;
-* both coordinates differ (`both_base`): the coordinate flip realises the `snd_base` relation after
+* both coordinates differ (`both_baseR`): the coordinate flip realises the `snd_baseR` relation after
   forgetting the `A`-localization.
 
 ## Main definitions
@@ -227,7 +227,7 @@ theorem spfτsymm_awayInr (j j' : D.JY) (h : j ≠ j') :
 and `ι_j` equals the base-changed transition `t = (mapSpfIso (refl A_i) (τY j j')).hom` followed by
 the `(j',j)`-interchange chart, `pr₂ChartSelf` and `ι_{j'}`. Factor-swap mirror of the first
 projection's `fst_base` (the genuine glued-target square) with base `A := A_i`. -/
-theorem snd_base (i : D.JX) (j j' : D.JY) (h : j ≠ j') :
+theorem snd_baseR (i : D.JX) (j j' : D.JY) (h : j ≠ j') :
     letI := D.commRingA
     letI := D.algebraA
     letI := D.commRingB
@@ -285,7 +285,7 @@ theorem bBaseGlue (j j' : D.JY) (h : j ≠ j') :
 the `A`-localization `interchangeOpenImmersion` is *forgotten* by the second projection `Spf(inr)`
 (the `B`-factor is untouched), so both sides land in the same `B`-base chart. Factor-swap mirror of
 the first projection's invariant `snd_base`. -/
-theorem fst_base (i i' : D.JX) (h : i ≠ i') (j : D.JY) :
+theorem fst_baseR (i i' : D.JX) (h : i ≠ i') (j : D.JY) :
     letI := D.commRingA
     letI := D.algebraA
     letI := D.commRingB
@@ -331,7 +331,7 @@ base-changed transition `(mapSpfIso (τX i i') (τY j j')).hom` followed by the 
 `pr₂ChartSelf` and `ι_{j'}`. The `A`-localizations are forgotten by the second projection (the two
 `inr`-factor naturalities of `mapSpf`), reducing the square to the shared `B`-base relation
 `bBaseGlue`, with the `A`/`B`-transition sliding through `inr`. -/
-theorem both_base (i i' : D.JX) (h : i ≠ i') (j j' : D.JY) (h' : j ≠ j') :
+theorem both_baseR (i i' : D.JX) (h : i ≠ i') (j j' : D.JY) (h' : j ≠ j') :
     letI := D.commRingA
     letI := D.algebraA
     letI := D.commRingB
@@ -376,7 +376,7 @@ glue. For distinct product-index charts `(i, j) ≠ (i', j')`, the concrete over
 by the per-chart second projection into its glue chart equals the concrete transition then the
 flipped overlap immersion and its second projection — the datum `glueMorphisms` consumes once the
 abstract carried glue has been pinned to `bothAlgData*` by the concreteness hypotheses. Dispatched
-by which coordinate differs (`snd_base`/`fst_base`/`both_base`). -/
+by which coordinate differs (`snd_baseR`/`fst_baseR`/`both_baseR`). -/
 theorem bothAlgData_pr₂_naturality (i i' : D.JX) (j j' : D.JY) (h : (i, j) ≠ (i', j')) :
     letI := D.commRingA
     letI := D.algebraA
@@ -401,7 +401,7 @@ theorem bothAlgData_pr₂_naturality (i i' : D.JX) (j j' : D.JY) (h : (i, j) ≠
     rw [dif_pos hc1, dif_pos hc1, dif_pos hc2]
     simp only [eqAlgEquivA_self', Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
       Category.id_comp]
-    rw [D.snd_base i j j' hb]
+    rw [D.snd_baseR i j j' hb]
   · by_cases hjj : j = j'
     · -- first coordinate differs: invariant under `Spf(inr)`
       subst hjj
@@ -413,7 +413,7 @@ theorem bothAlgData_pr₂_naturality (i i' : D.JX) (j j' : D.JY) (h : (i, j) ≠
       rw [dif_neg hc1, dif_pos hc2, dif_neg hc1, dif_pos hc2, dif_neg hc1', dif_pos hc2']
       simp only [eqAlgEquivB_self', Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
         Category.id_comp]
-      rw [reassoc_of% (D.fst_base i i' hii j)]
+      rw [reassoc_of% (D.fst_baseR i i' hii j)]
     · -- both coordinates differ
       have hc1 : ¬ ((i, j) : D.JX × D.JY).1 = ((i', j') : D.JX × D.JY).1 := hii
       have hc1' : ¬ ((i', j') : D.JX × D.JY).1 = ((i, j) : D.JX × D.JY).1 := fun e => hii e.symm
@@ -422,7 +422,7 @@ theorem bothAlgData_pr₂_naturality (i i' : D.JX) (j j' : D.JY) (h : (i, j) ≠
       unfold bothAlgDataF bothAlgDataT
       rw [dif_neg hc1, dif_neg hc2, dif_neg hc1, dif_neg hc2, dif_neg hc1', dif_neg hc2']
       simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [D.both_base i i' hii j j' hjj]
+      rw [D.both_baseR i i' hii j j' hjj]
 
 /-! ### The glued second projection -/
 
