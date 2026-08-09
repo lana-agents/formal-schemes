@@ -45,8 +45,8 @@ factor):
 * first coordinate differs (`p.1 ≠ p'.1`, `p.2 = p'.2`): the second projection is *invariant* under
   the `A`-localization transition (`fst_baseR`), so both sides land in the same glue chart `ι p.2`;
 * second coordinate differs (`p.1 = p'.1`, `p.2 ≠ p'.2`): the *genuine* case, a verbatim port of the
-  affine-base second-projection naturality (`snd_baseR`), assembled from the interchange `inr`-factor
-  law, the base-changed transition sliding through `inr`, and the exposed `Y`'s own glue relation
+  affine-base second-projection naturality (`snd_baseR`), assembled from the interchange
+  `inr`-factor law, the base-changed transition sliding through `inr`, and the exposed `Y`'s glue
   `y_glue_rel`;
 * both coordinates differ (`both_baseR`): the coordinate flip realises the `snd_baseR` relation
   after forgetting the `A`-localization.
