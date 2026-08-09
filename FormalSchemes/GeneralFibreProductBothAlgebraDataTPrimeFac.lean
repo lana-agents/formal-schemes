@@ -1,4 +1,5 @@
 import FormalSchemes.GeneralFibreProductBothAlgebraDataTPrime
+import FormalSchemes.GeneralFibreProductBothAlgebraDataTPrimeFacAux
 
 set_option linter.style.header false
 set_option linter.style.setOption false
@@ -243,6 +244,684 @@ theorem bothAlgDataT'_fac_both_both_both (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.
   rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
   simp only [hστX p.1 p'.1 p''.1 h1' h1'' h1t,
     hστY p.2 p'.2 p''.2 h2' h2'' h2t]
+
+/-! ### The mixed-shape `t_fac` leaves
+
+For these the source and/or target leg is a mixed interchange immersion; converting it to `mapSpf`
+via `interchangeOpenImmersion_eq_mapSpf`/`rightInterchangeOpenImmersion_eq_mapSpf` restores the same
+`mapSpf`-functoriality reduction. The two per-factor closers are drawn from the Aux atoms:
+`awayIdxTrans*_scalarTower_compat` for the shared-coordinate index transport, and
+`trans_selfMul_symm_comp` (via `awayCongrElt*`/`awaySelfMul*`) for the self-multiply collapse. -/
+
+omit hστX hστY in
+/-- **`t_fac`, leaf `(snd, fst)`.** `A`-factor index transport, `B`-factor self-multiply collapse
+(the genuine `τY` survives). -/
+theorem bothAlgDataT'_fac_snd_fst (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  have h2' : p.2 ≠ p'.2 := fun e => hpp' (Prod.ext h1' e)
+  rw [bothAlgDataT'_snd_fst gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p'' h1' h1'' h2'']
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_snd_fst hI gX gY p p' p'' hpp' hpp'' h1' h1'' h2'').inv ≫
+        interchangeOpenImmersion
+            (B := awayCompletion (I.map (algebraMap R (B p.2))) (gY p.2 p'.2))
+            I (gX p.1 p''.1) hI ≫
+        eqToHom (bothAlgDataV_snd hI gX gY p p' hpp' h1').symm := by
+    rw [← bothAlgDataSrcIso_snd_fst_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hB : ((τY p.2 p'.2 h2').trans ((awaySelfMulB hI (gY p'.2 p.2)).trans
+        (awayCongrEltB (show gY p'.2 p.2 * gY p'.2 p.2 = gY p'.2 p.2 * gY p'.2 p''.2
+          from by rw [h2''])))).symm.toAlgHom.comp
+        (furtherLocFst I (gY p'.2 p.2) (gY p'.2 p''.2) hI) =
+      (τY p.2 p'.2 h2').symm.toAlgHom :=
+    trans_selfMul_symm_comp _ _ _ _ (by
+      rw [awayCongrEltB_symm_comp_furtherLocFst (gY p'.2 p.2) (gY p'.2 p''.2)
+          (show gY p'.2 p.2 * gY p'.2 p.2 = gY p'.2 p.2 * gY p'.2 p''.2 from by rw [h2''])
+          (show gY p'.2 p''.2 = gY p'.2 p.2 from by rw [h2'']) hI,
+        awaySelfMulB_symm_comp_furtherLocFst_self (gY p'.2 p.2) hI])
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_both_snd_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      (fun e => h1'' (h1'.trans e)) (fun e => h2' (h2''.trans e.symm)) h1'.symm,
+    hfst, interchangeOpenImmersion_eq_mapSpf
+      (B := awayCompletion (I.map (algebraMap R (B p.2))) (gY p.2 p'.2)) I (gX p.1 p''.1) hI,
+    bothAlgDataT_snd gX gY τX τY hI p p' hpp' h1']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.id_comp,
+    awayIdxTransA_scalarTower_compat h1' (fun x => gX x p''.1), hB]
+
+omit hστX hστY in
+/-- **`t_fac`, leaf `(snd, both)`, target `fst`.** `A`-factor index transport, `B`-factor
+self-multiply expand. -/
+theorem bothAlgDataT'_fac_snd_both_fst (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2)
+    (h2t : p'.2 = p''.2) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  have h2' : p.2 ≠ p'.2 := fun e => hpp' (Prod.ext h1' e)
+  rw [bothAlgDataT'_snd_both_fst gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h1'' h2'' h2t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_snd_both hI gX gY p p' p'' hpp' hpp'' h1' h1'' h2'').inv ≫
+        mapSpf hI (IsScalarTower.toAlgHom R (A p.1)
+            (awayCompletion (I.map (algebraMap R (A p.1))) (gX p.1 p''.1)))
+          (furtherLocFst I (gY p.2 p'.2) (gY p.2 p''.2) hI) ≫
+        eqToHom (bothAlgDataV_snd hI gX gY p p' hpp' h1').symm := by
+    rw [← bothAlgDataSrcIso_snd_both_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hB : ((awayCongrEltB (show gY p.2 p'.2 * gY p.2 p''.2 = gY p.2 p'.2 * gY p.2 p'.2
+          from by rw [h2t])).trans
+        ((awaySelfMulB hI (gY p.2 p'.2)).symm.trans (τY p.2 p'.2 h2'))).symm.toAlgHom =
+      (furtherLocFst I (gY p.2 p'.2) (gY p.2 p''.2) hI).comp
+        (τY p.2 p'.2 h2').symm.toAlgHom :=
+    trans_expand_symm_toAlgHom _ _ _ _
+      (awayCongrEltB_symm_comp_awaySelfMulB (gY p.2 p'.2) (gY p.2 p''.2)
+        (show gY p.2 p'.2 * gY p.2 p''.2 = gY p.2 p'.2 * gY p.2 p'.2 from by rw [h2t])
+        (show gY p.2 p''.2 = gY p.2 p'.2 from by rw [h2t]) hI)
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_fst_snd_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      (fun e => h1'' (h1'.trans e)) h2t h1'.symm,
+    interchangeOpenImmersion_eq_mapSpf
+      (B := awayCompletion (I.map (algebraMap R (B p'.2))) (gY p'.2 p.2)) I (gX p'.1 p''.1) hI,
+    hfst, bothAlgDataT_snd gX gY τX τY hI p p' hpp' h1']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.comp_id,
+    awayIdxTransA_scalarTower_compat h1' (fun x => gX x p''.1), hB]
+
+omit hστX hστY in
+/-- **`t_fac`, leaf `(fst, snd)`.** `A`-factor self-multiply collapse, `B`-factor index transport
+(mirror of `(snd, fst)`). -/
+theorem bothAlgDataT'_fac_fst_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 = p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_fst_snd gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p'' h1' h2' h1'']
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_fst_snd hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'').inv ≫
+        rightInterchangeOpenImmersion
+            (A := awayCompletion (I.map (algebraMap R (A p.1))) (gX p.1 p'.1))
+            I (gY p.2 p''.2) hI ≫
+        eqToHom (bothAlgDataV_fst hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_fst_snd_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'',
+      Iso.inv_hom_id_assoc]
+  have hA : ((τX p.1 p'.1 h1').trans ((awaySelfMulA hI (gX p'.1 p.1)).trans
+        (awayCongrEltA (show gX p'.1 p.1 * gX p'.1 p.1 = gX p'.1 p.1 * gX p'.1 p''.1
+          from by rw [h1''])))).symm.toAlgHom.comp
+        (furtherLocFst I (gX p'.1 p.1) (gX p'.1 p''.1) hI) =
+      (τX p.1 p'.1 h1').symm.toAlgHom :=
+    trans_selfMul_symm_comp _ _ _ _ (by
+      rw [awayCongrEltA_symm_comp_furtherLocFst (gX p'.1 p.1) (gX p'.1 p''.1)
+          (show gX p'.1 p.1 * gX p'.1 p.1 = gX p'.1 p.1 * gX p'.1 p''.1 from by rw [h1''])
+          (show gX p'.1 p''.1 = gX p'.1 p.1 from by rw [h1'']) hI,
+        awaySelfMulA_symm_comp_furtherLocFst_self (gX p'.1 p.1) hI])
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_both_fst_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      (fun e => h1' (h1''.trans e.symm)) (fun e => hpp'' (Prod.ext h1'' (h2'.trans e)))
+      (fun e => h1' e.symm) h2'.symm,
+    hfst, rightInterchangeOpenImmersion_eq_mapSpf
+      (A := awayCompletion (I.map (algebraMap R (A p.1))) (gX p.1 p'.1)) I (gY p.2 p''.2) hI,
+    bothAlgDataT_fst gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.id_comp,
+    awayIdxTransB_scalarTower_compat h2' (fun y => gY y p''.2), hA]
+
+omit hστX hστY in
+/-- **`t_fac`, leaf `(fst, both)`, target `snd`.** `A`-factor self-multiply expand, `B`-factor index
+transport (mirror of `(snd, both)`/target `fst`). -/
+theorem bothAlgDataT'_fac_fst_both_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1)
+    (h2'' : p.2 ≠ p''.2) (h1t : p'.1 = p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_fst_both_snd gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h2' h1'' h2'' h1t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_fst_both hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'').inv ≫
+        mapSpf hI (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI)
+          (IsScalarTower.toAlgHom R (B p.2)
+            (awayCompletion (I.map (algebraMap R (B p.2))) (gY p.2 p''.2))) ≫
+        eqToHom (bothAlgDataV_fst hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_fst_both_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hA : ((awayCongrEltA (show gX p.1 p'.1 * gX p.1 p''.1 = gX p.1 p'.1 * gX p.1 p'.1
+          from by rw [h1t])).trans
+        ((awaySelfMulA hI (gX p.1 p'.1)).symm.trans (τX p.1 p'.1 h1'))).symm.toAlgHom =
+      (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI).comp
+        (τX p.1 p'.1 h1').symm.toAlgHom :=
+    trans_expand_symm_toAlgHom _ _ _ _
+      (awayCongrEltA_symm_comp_awaySelfMulA (gX p.1 p'.1) (gX p.1 p''.1)
+        (show gX p.1 p'.1 * gX p.1 p''.1 = gX p.1 p'.1 * gX p.1 p'.1 from by rw [h1t])
+        (show gX p.1 p''.1 = gX p.1 p'.1 from by rw [h1t]) hI)
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_snd_fst_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      h1t (fun e => h1' e.symm) h2'.symm,
+    rightInterchangeOpenImmersion_eq_mapSpf
+      (A := awayCompletion (I.map (algebraMap R (A p'.1))) (gX p'.1 p.1)) I (gY p'.2 p''.2) hI,
+    hfst, bothAlgDataT_fst gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.comp_id,
+    awayIdxTransB_scalarTower_compat h2' (fun y => gY y p''.2), hA]
+
+omit hστX hστY in
+/-- **`t_fac`, leaf `(both, snd)`, target `fst`.** `A`-factor self-multiply collapse, `B`-factor
+self-multiply expand (both on the `furtherLocSnd` diagonal). -/
+theorem bothAlgDataT'_fac_both_snd_fst (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 = p''.1)
+    (h2t : p'.2 = p''.2) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_both_snd_fst gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h2' h1'' h2t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_both_snd hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'').inv ≫
+        mapSpf hI (AlgHom.id R (awayCompletion (I.map (algebraMap R (A p.1))) (gX p.1 p'.1)))
+          (furtherLocSnd I (gY p.2 p''.2) (gY p.2 p'.2) hI) ≫
+        eqToHom (bothAlgDataV_both hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_both_snd_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'',
+      Iso.inv_hom_id_assoc]
+  have hA : ((τX p.1 p'.1 h1').trans ((awaySelfMulA hI (gX p'.1 p.1)).trans
+        (awayCongrEltA (show gX p'.1 p.1 * gX p'.1 p.1 = gX p'.1 p''.1 * gX p'.1 p.1
+          from by rw [h1''])))).symm.toAlgHom.comp
+        (furtherLocSnd I (gX p'.1 p''.1) (gX p'.1 p.1) hI) =
+      (τX p.1 p'.1 h1').symm.toAlgHom :=
+    trans_selfMul_symm_comp _ _ _ _ (by
+      rw [awayCongrEltA_symm_comp_furtherLocSnd (gX p'.1 p.1) (gX p'.1 p''.1)
+          (show gX p'.1 p.1 * gX p'.1 p.1 = gX p'.1 p''.1 * gX p'.1 p.1 from by rw [h1''])
+          (show gX p'.1 p''.1 = gX p'.1 p.1 from by rw [h1'']) hI,
+        awaySelfMulA_symm_comp_furtherLocSnd_self (gX p'.1 p.1) hI])
+  have hB : ((awayCongrEltB (show gY p.2 p''.2 * gY p.2 p'.2 = gY p.2 p'.2 * gY p.2 p'.2
+          from by rw [h2t])).trans
+        ((awaySelfMulB hI (gY p.2 p'.2)).symm.trans (τY p.2 p'.2 h2'))).symm.toAlgHom =
+      (furtherLocSnd I (gY p.2 p''.2) (gY p.2 p'.2) hI).comp
+        (τY p.2 p'.2 h2').symm.toAlgHom :=
+    trans_expand_symm_toAlgHom _ _ _ _
+      (awayCongrEltB_symm_comp_awaySelfMulB_snd (gY p.2 p'.2) (gY p.2 p''.2)
+        (show gY p.2 p''.2 * gY p.2 p'.2 = gY p.2 p'.2 * gY p.2 p'.2 from by rw [h2t])
+        (show gY p.2 p''.2 = gY p.2 p'.2 from by rw [h2t]) hI)
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_fst_both_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      (fun e => h1' (h1''.trans e.symm)) h2t (fun e => h1' e.symm) (fun e => h2' e.symm),
+    hfst, bothAlgDataT_both gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.id_comp, AlgHom.comp_id, hA, hB]
+
+omit hστX hστY in
+/-- **`t_fac`, leaf `(both, fst)`, target `snd`.** `A`-factor self-multiply expand, `B`-factor
+self-multiply collapse (mirror of `(both, snd)`/target `fst`). -/
+theorem bothAlgDataT'_fac_both_fst_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1)
+    (h2'' : p.2 = p''.2) (h1t : p'.1 = p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_both_fst_snd gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h2' h1'' h2'' h1t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_both_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'').inv ≫
+        mapSpf hI (furtherLocSnd I (gX p.1 p''.1) (gX p.1 p'.1) hI)
+          (AlgHom.id R (awayCompletion (I.map (algebraMap R (B p.2))) (gY p.2 p'.2))) ≫
+        eqToHom (bothAlgDataV_both hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_both_fst_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hA : ((awayCongrEltA (show gX p.1 p''.1 * gX p.1 p'.1 = gX p.1 p'.1 * gX p.1 p'.1
+          from by rw [h1t])).trans
+        ((awaySelfMulA hI (gX p.1 p'.1)).symm.trans (τX p.1 p'.1 h1'))).symm.toAlgHom =
+      (furtherLocSnd I (gX p.1 p''.1) (gX p.1 p'.1) hI).comp
+        (τX p.1 p'.1 h1').symm.toAlgHom :=
+    trans_expand_symm_toAlgHom _ _ _ _
+      (awayCongrEltA_symm_comp_awaySelfMulA_snd (gX p.1 p'.1) (gX p.1 p''.1)
+        (show gX p.1 p''.1 * gX p.1 p'.1 = gX p.1 p'.1 * gX p.1 p'.1 from by rw [h1t])
+        (show gX p.1 p''.1 = gX p.1 p'.1 from by rw [h1t]) hI)
+  have hB : ((τY p.2 p'.2 h2').trans ((awaySelfMulB hI (gY p'.2 p.2)).trans
+        (awayCongrEltB (show gY p'.2 p.2 * gY p'.2 p.2 = gY p'.2 p''.2 * gY p'.2 p.2
+          from by rw [h2''])))).symm.toAlgHom.comp
+        (furtherLocSnd I (gY p'.2 p''.2) (gY p'.2 p.2) hI) =
+      (τY p.2 p'.2 h2').symm.toAlgHom :=
+    trans_selfMul_symm_comp _ _ _ _ (by
+      rw [awayCongrEltB_symm_comp_furtherLocSnd (gY p'.2 p.2) (gY p'.2 p''.2)
+          (show gY p'.2 p.2 * gY p'.2 p.2 = gY p'.2 p''.2 * gY p'.2 p.2 from by rw [h2''])
+          (show gY p'.2 p''.2 = gY p'.2 p.2 from by rw [h2'']) hI,
+        awaySelfMulB_symm_comp_furtherLocSnd_self (gY p'.2 p.2) hI])
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_snd_both_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      h1t (fun e => h1' e.symm) (fun e => h2' e.symm),
+    hfst, bothAlgDataT_both gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.id_comp, AlgHom.comp_id, hA, hB]
+
+omit hστX in
+/-- **`t_fac`, leaf `(snd, both)`, target `both`.** `A`-factor index transport, `B`-factor genuine
+(`hστY`) after the `mul_comm` further-localization swap. -/
+theorem bothAlgDataT'_fac_snd_both_both (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2)
+    (h2t : p'.2 ≠ p''.2) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  have h2' : p.2 ≠ p'.2 := fun e => hpp' (Prod.ext h1' e)
+  rw [bothAlgDataT'_snd_both_both gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h1'' h2'' h2t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_snd_both hI gX gY p p' p'' hpp' hpp'' h1' h1'' h2'').inv ≫
+        mapSpf hI (IsScalarTower.toAlgHom R (A p.1)
+            (awayCompletion (I.map (algebraMap R (A p.1))) (gX p.1 p''.1)))
+          (furtherLocFst I (gY p.2 p'.2) (gY p.2 p''.2) hI) ≫
+        eqToHom (bothAlgDataV_snd hI gX gY p p' hpp' h1').symm := by
+    rw [← bothAlgDataSrcIso_snd_both_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hB : ((σY p.2 p'.2 p''.2 h2' h2'' h2t).trans
+        (awayCongrEltB (mul_comm (gY p'.2 p''.2) (gY p'.2 p.2)))).symm.toAlgHom.comp
+        (furtherLocFst I (gY p'.2 p.2) (gY p'.2 p''.2) hI) =
+      (furtherLocFst I (gY p.2 p'.2) (gY p.2 p''.2) hI).comp (τY p.2 p'.2 h2').symm.toAlgHom := by
+    rw [trans_symm_toAlgHom, AlgHom.comp_assoc,
+      awayCongrEltB_mulComm_symm_comp_furtherLocFst (gY p'.2 p.2) (gY p'.2 p''.2) hI,
+      hστY p.2 p'.2 p''.2 h2' h2'' h2t]
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_both_snd_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      (fun e => h1'' (h1'.trans e)) h2t h1'.symm,
+    hfst, bothAlgDataT_snd gX gY τX τY hI p p' hpp' h1']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [awayIdxTransA_scalarTower_compat h1' (fun x => gX x p''.1), hB]
+
+omit hστY in
+/-- **`t_fac`, leaf `(fst, both)`, target `both`.** `A`-factor genuine (`hστX`) after the `mul_comm`
+further-localization swap, `B`-factor index transport. -/
+theorem bothAlgDataT'_fac_fst_both_both (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1)
+    (h2'' : p.2 ≠ p''.2) (h1t : p'.1 ≠ p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_fst_both_both gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h2' h1'' h2'' h1t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_fst_both hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'').inv ≫
+        mapSpf hI (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI)
+          (IsScalarTower.toAlgHom R (B p.2)
+            (awayCompletion (I.map (algebraMap R (B p.2))) (gY p.2 p''.2))) ≫
+        eqToHom (bothAlgDataV_fst hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_fst_both_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hA : ((σX p.1 p'.1 p''.1 h1' h1'' h1t).trans
+        (awayCongrEltA (mul_comm (gX p'.1 p''.1) (gX p'.1 p.1)))).symm.toAlgHom.comp
+        (furtherLocFst I (gX p'.1 p.1) (gX p'.1 p''.1) hI) =
+      (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI).comp (τX p.1 p'.1 h1').symm.toAlgHom := by
+    rw [trans_symm_toAlgHom, AlgHom.comp_assoc,
+      awayCongrEltA_mulComm_symm_comp_furtherLocFst (gX p'.1 p.1) (gX p'.1 p''.1) hI,
+      hστX p.1 p'.1 p''.1 h1' h1'' h1t]
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_both_fst_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      h1t (fun e => h2'' (h2'.trans e)) (fun e => h1' e.symm) h2'.symm,
+    hfst, bothAlgDataT_fst gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [awayIdxTransB_scalarTower_compat h2' (fun y => gY y p''.2), hA]
+
+omit hστX in
+/-- **`t_fac`, leaf `(both, snd)`, target `both`.** `A`-factor self-multiply collapse, `B`-factor
+genuine (`hστY`) after the `mul_comm` swap (the congruence sits on the *left* of `σY`). -/
+theorem bothAlgDataT'_fac_both_snd_both (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 = p''.1)
+    (h2t : p'.2 ≠ p''.2) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_both_snd_both gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h2' h1'' h2t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_both_snd hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'').inv ≫
+        mapSpf hI (AlgHom.id R (awayCompletion (I.map (algebraMap R (A p.1))) (gX p.1 p'.1)))
+          (furtherLocSnd I (gY p.2 p''.2) (gY p.2 p'.2) hI) ≫
+        eqToHom (bothAlgDataV_both hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_both_snd_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'',
+      Iso.inv_hom_id_assoc]
+  have hA : ((τX p.1 p'.1 h1').trans ((awaySelfMulA hI (gX p'.1 p.1)).trans
+        (awayCongrEltA (show gX p'.1 p.1 * gX p'.1 p.1 = gX p'.1 p''.1 * gX p'.1 p.1
+          from by rw [h1''])))).symm.toAlgHom.comp
+        (furtherLocSnd I (gX p'.1 p''.1) (gX p'.1 p.1) hI) =
+      (τX p.1 p'.1 h1').symm.toAlgHom :=
+    trans_selfMul_symm_comp _ _ _ _ (by
+      rw [awayCongrEltA_symm_comp_furtherLocSnd (gX p'.1 p.1) (gX p'.1 p''.1)
+          (show gX p'.1 p.1 * gX p'.1 p.1 = gX p'.1 p''.1 * gX p'.1 p.1 from by rw [h1''])
+          (show gX p'.1 p''.1 = gX p'.1 p.1 from by rw [h1'']) hI,
+        awaySelfMulA_symm_comp_furtherLocSnd_self (gX p'.1 p.1) hI])
+  have hB : ((awayCongrEltB (mul_comm (gY p.2 p''.2) (gY p.2 p'.2))).trans
+        (σY p.2 p'.2 p''.2 h2' (fun eq => hpp'' (Prod.ext h1'' eq)) h2t)).symm.toAlgHom.comp
+        (furtherLocSnd I (gY p'.2 p''.2) (gY p'.2 p.2) hI) =
+      (furtherLocSnd I (gY p.2 p''.2) (gY p.2 p'.2) hI).comp (τY p.2 p'.2 h2').symm.toAlgHom := by
+    rw [trans_symm_toAlgHom, AlgHom.comp_assoc,
+      hστY p.2 p'.2 p''.2 h2' (fun eq => hpp'' (Prod.ext h1'' eq)) h2t,
+      ← AlgHom.comp_assoc,
+      awayCongrEltB_mulComm_symm_comp_furtherLocFst (gY p.2 p'.2) (gY p.2 p''.2) hI]
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_both_both_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      (fun e => h1' (h1''.trans e.symm)) h2t (fun e => h1' e.symm) (fun e => h2' e.symm),
+    hfst, bothAlgDataT_both gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.id_comp, hA, hB]
+
+omit hστY in
+/-- **`t_fac`, leaf `(both, fst)`, target `both`.** `A`-factor genuine (`hστX`) after the `mul_comm`
+swap (congruence on the *left* of `σX`), `B`-factor self-multiply collapse. -/
+theorem bothAlgDataT'_fac_both_fst_both (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1)
+    (h2'' : p.2 = p''.2) (h1t : p'.1 ≠ p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_both_fst_both gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h2' h1'' h2'' h1t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_both_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'').inv ≫
+        mapSpf hI (furtherLocSnd I (gX p.1 p''.1) (gX p.1 p'.1) hI)
+          (AlgHom.id R (awayCompletion (I.map (algebraMap R (B p.2))) (gY p.2 p'.2))) ≫
+        eqToHom (bothAlgDataV_both hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_both_fst_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hA : ((awayCongrEltA (mul_comm (gX p.1 p''.1) (gX p.1 p'.1))).trans
+        (σX p.1 p'.1 p''.1 h1' h1'' h1t)).symm.toAlgHom.comp
+        (furtherLocSnd I (gX p'.1 p''.1) (gX p'.1 p.1) hI) =
+      (furtherLocSnd I (gX p.1 p''.1) (gX p.1 p'.1) hI).comp (τX p.1 p'.1 h1').symm.toAlgHom := by
+    rw [trans_symm_toAlgHom, AlgHom.comp_assoc,
+      hστX p.1 p'.1 p''.1 h1' h1'' h1t,
+      ← AlgHom.comp_assoc,
+      awayCongrEltA_mulComm_symm_comp_furtherLocFst (gX p.1 p'.1) (gX p.1 p''.1) hI]
+  have hB : ((τY p.2 p'.2 h2').trans ((awaySelfMulB hI (gY p'.2 p.2)).trans
+        (awayCongrEltB (show gY p'.2 p.2 * gY p'.2 p.2 = gY p'.2 p''.2 * gY p'.2 p.2
+          from by rw [h2''])))).symm.toAlgHom.comp
+        (furtherLocSnd I (gY p'.2 p''.2) (gY p'.2 p.2) hI) =
+      (τY p.2 p'.2 h2').symm.toAlgHom :=
+    trans_selfMul_symm_comp _ _ _ _ (by
+      rw [awayCongrEltB_symm_comp_furtherLocSnd (gY p'.2 p.2) (gY p'.2 p''.2)
+          (show gY p'.2 p.2 * gY p'.2 p.2 = gY p'.2 p''.2 * gY p'.2 p.2 from by rw [h2''])
+          (show gY p'.2 p''.2 = gY p'.2 p.2 from by rw [h2'']) hI,
+        awaySelfMulB_symm_comp_furtherLocSnd_self (gY p'.2 p.2) hI])
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_both_both_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      h1t (fun e => h2' (h2''.trans e.symm)) (fun e => h1' e.symm) (fun e => h2' e.symm),
+    hfst, bothAlgDataT_both gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.id_comp, hA, hB]
+
+omit hστY in
+/-- **`t_fac`, leaf `(both, both)`, target `fst`.** `A`-factor genuine (`hστX`), `B`-factor
+self-multiply expand. -/
+theorem bothAlgDataT'_fac_both_both_fst (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1)
+    (h2'' : p.2 ≠ p''.2) (h1t : p'.1 ≠ p''.1) (h2t : p'.2 = p''.2) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_both_both_fst gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h2' h1'' h2'' h1t h2t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_both_both hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'').inv ≫
+        mapSpf hI (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI)
+          (furtherLocFst I (gY p.2 p'.2) (gY p.2 p''.2) hI) ≫
+        eqToHom (bothAlgDataV_both hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_both_both_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hB : ((awayCongrEltB (show gY p.2 p'.2 * gY p.2 p''.2 = gY p.2 p'.2 * gY p.2 p'.2
+          from by rw [h2t])).trans
+        ((awaySelfMulB hI (gY p.2 p'.2)).symm.trans (τY p.2 p'.2 h2'))).symm.toAlgHom =
+      (furtherLocFst I (gY p.2 p'.2) (gY p.2 p''.2) hI).comp
+        (τY p.2 p'.2 h2').symm.toAlgHom :=
+    trans_expand_symm_toAlgHom _ _ _ _
+      (awayCongrEltB_symm_comp_awaySelfMulB (gY p.2 p'.2) (gY p.2 p''.2)
+        (show gY p.2 p'.2 * gY p.2 p''.2 = gY p.2 p'.2 * gY p.2 p'.2 from by rw [h2t])
+        (show gY p.2 p''.2 = gY p.2 p'.2 from by rw [h2t]) hI)
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_fst_both_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      h1t h2t (fun e => h1' e.symm) (fun e => h2' e.symm),
+    hfst, bothAlgDataT_both gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.comp_id, hστX p.1 p'.1 p''.1 h1' h1'' h1t, hB]
+
+omit hστX in
+/-- **`t_fac`, leaf `(both, both)`, target `snd`.** `A`-factor self-multiply expand, `B`-factor
+genuine (`hστY`). -/
+theorem bothAlgDataT'_fac_both_both_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1)
+    (h2'' : p.2 ≠ p''.2) (h1t : p'.1 = p''.1) :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  haveI := bothAlgDataHf hI gX gY p p' hpp'
+  haveI := bothAlgDataHf hI gX gY p p'' hpp''
+  haveI := bothAlgDataHf hI gX gY p' p'' hp'p''
+  haveI := bothAlgDataHf hI gX gY p' p hpp'.symm
+  rw [bothAlgDataT'_both_both_snd gX gY τX τY σX σY hI p p' p'' hpp' hpp'' hp'p''
+    h1' h2' h1'' h2'' h1t]
+  have hfst : pullback.fst (bothAlgDataF hI gX gY p p' hpp')
+        (bothAlgDataF hI gX gY p p'' hpp'') =
+      (bothAlgDataSrcIso_both_both hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'').inv ≫
+        mapSpf hI (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI)
+          (furtherLocFst I (gY p.2 p'.2) (gY p.2 p''.2) hI) ≫
+        eqToHom (bothAlgDataV_both hI gX gY p p' hpp' h1' h2').symm := by
+    rw [← bothAlgDataSrcIso_both_both_hom_fst hI gX gY p p' p'' hpp' hpp'' h1' h2' h1'' h2'',
+      Iso.inv_hom_id_assoc]
+  have hA : ((awayCongrEltA (show gX p.1 p'.1 * gX p.1 p''.1 = gX p.1 p'.1 * gX p.1 p'.1
+          from by rw [h1t])).trans
+        ((awaySelfMulA hI (gX p.1 p'.1)).symm.trans (τX p.1 p'.1 h1'))).symm.toAlgHom =
+      (furtherLocFst I (gX p.1 p'.1) (gX p.1 p''.1) hI).comp
+        (τX p.1 p'.1 h1').symm.toAlgHom :=
+    trans_expand_symm_toAlgHom _ _ _ _
+      (awayCongrEltA_symm_comp_awaySelfMulA (gX p.1 p'.1) (gX p.1 p''.1)
+        (show gX p.1 p'.1 * gX p.1 p''.1 = gX p.1 p'.1 * gX p.1 p'.1 from by rw [h1t])
+        (show gX p.1 p''.1 = gX p.1 p'.1 from by rw [h1t]) hI)
+  rw [Category.assoc, Category.assoc,
+    bothAlgDataSrcIso_snd_both_hom_snd hI gX gY p' p'' p hp'p'' hpp'.symm
+      h1t (fun e => h1' e.symm) (fun e => h2' e.symm),
+    hfst, bothAlgDataT_both gX gY τX τY hI p p' hpp' h1' h2']
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp, Iso.cancel_iso_inv_left]
+  simp only [mapSpfIso_hom]
+  rw [← Category.assoc, ← Category.assoc, ← mapSpf_comp, ← mapSpf_comp]
+  simp only [AlgHom.comp_id, hA,
+    hστY p.2 p'.2 p''.2 h2' h2'' (fun eq => hp'p'' (Prod.ext h1t eq))]
+
+/-! ### The dispatch `t_fac` law
+
+The single `BothChartedFibreDatum.t_fac`-shaped compatibility, dispatched by the fifteen coordinate
+branches of `bothAlgDataT'` onto the fifteen `bothAlgDataT'_fac_*` leaves above. -/
+
+/-- **`bothAlgDataT'_fac`.** The dispatched triple-overlap transition `bothAlgDataT'` satisfies the
+two-sided `t_fac` compatibility with the double-overlap transition `bothAlgDataT`, matching the
+`t_fac` field of `AlgebraicGeometry.BothChartedFibreDatum`. -/
+theorem bothAlgDataT'_fac :
+    letI := bothAlgDataHf hI gX gY p p' hpp'
+    letI := bothAlgDataHf hI gX gY p p'' hpp''
+    letI := bothAlgDataHf hI gX gY p' p'' hp'p''
+    letI := bothAlgDataHf hI gX gY p' p hpp'.symm
+    bothAlgDataT' hI gX gY τX τY σX σY p p' p'' hpp' hpp'' hp'p'' ≫
+        pullback.snd (bothAlgDataF hI gX gY p' p'' hp'p'') (bothAlgDataF hI gX gY p' p hpp'.symm) =
+      pullback.fst (bothAlgDataF hI gX gY p p' hpp') (bothAlgDataF hI gX gY p p'' hpp'') ≫
+        bothAlgDataT hI gX gY τX τY p p' hpp' := by
+  by_cases h1' : p.1 = p'.1
+  · by_cases h1'' : p.1 = p''.1
+    · exact bothAlgDataT'_fac_snd_snd gX gY hI τX τY σX σY hστY p p' p'' hpp' hpp'' hp'p'' h1' h1''
+    · by_cases h2'' : p.2 = p''.2
+      · exact bothAlgDataT'_fac_snd_fst gX gY hI τX τY σX σY p p' p'' hpp' hpp'' hp'p''
+          h1' h1'' h2''
+      · by_cases h2t : p'.2 = p''.2
+        · exact bothAlgDataT'_fac_snd_both_fst gX gY hI τX τY σX σY p p' p'' hpp' hpp'' hp'p''
+            h1' h1'' h2'' h2t
+        · exact bothAlgDataT'_fac_snd_both_both gX gY hI τX τY σX σY hστY p p' p'' hpp' hpp'' hp'p''
+            h1' h1'' h2'' h2t
+  · by_cases h2' : p.2 = p'.2
+    · by_cases h1'' : p.1 = p''.1
+      · exact bothAlgDataT'_fac_fst_snd gX gY hI τX τY σX σY p p' p'' hpp' hpp'' hp'p''
+          h1' h2' h1''
+      · by_cases h2'' : p.2 = p''.2
+        · by_cases h1t : p'.1 = p''.1
+          · exact absurd (Prod.ext h1t (h2'.symm.trans h2'')) hp'p''
+          · exact bothAlgDataT'_fac_fst_fst gX gY hI τX τY σX σY hστX p p' p'' hpp' hpp'' hp'p''
+              h1' h2' h1'' h2'' h1t
+        · by_cases h1t : p'.1 = p''.1
+          · exact bothAlgDataT'_fac_fst_both_snd gX gY hI τX τY σX σY p p' p'' hpp' hpp'' hp'p''
+              h1' h2' h1'' h2'' h1t
+          · exact bothAlgDataT'_fac_fst_both_both gX gY hI τX τY σX σY hστX p p' p'' hpp' hpp''
+              hp'p'' h1' h2' h1'' h2'' h1t
+    · by_cases h1'' : p.1 = p''.1
+      · by_cases h2t : p'.2 = p''.2
+        · exact bothAlgDataT'_fac_both_snd_fst gX gY hI τX τY σX σY p p' p'' hpp' hpp'' hp'p''
+            h1' h2' h1'' h2t
+        · exact bothAlgDataT'_fac_both_snd_both gX gY hI τX τY σX σY hστY p p' p'' hpp' hpp'' hp'p''
+            h1' h2' h1'' h2t
+      · by_cases h2'' : p.2 = p''.2
+        · by_cases h1t : p'.1 = p''.1
+          · exact bothAlgDataT'_fac_both_fst_snd gX gY hI τX τY σX σY p p' p'' hpp' hpp'' hp'p''
+              h1' h2' h1'' h2'' h1t
+          · exact bothAlgDataT'_fac_both_fst_both gX gY hI τX τY σX σY hστX p p' p'' hpp' hpp''
+              hp'p'' h1' h2' h1'' h2'' h1t
+        · by_cases h1t : p'.1 = p''.1
+          · exact bothAlgDataT'_fac_both_both_snd gX gY hI τX τY σX σY hστY p p' p'' hpp' hpp''
+              hp'p'' h1' h2' h1'' h2'' h1t
+          · by_cases h2t : p'.2 = p''.2
+            · exact bothAlgDataT'_fac_both_both_fst gX gY hI τX τY σX σY hστX p p' p'' hpp' hpp''
+                hp'p'' h1' h2' h1'' h2'' h1t h2t
+            · exact bothAlgDataT'_fac_both_both_both gX gY hI τX τY σX σY hστX hστY p p' p'' hpp'
+                hpp'' hp'p'' h1' h2' h1'' h2'' h1t h2t
 
 end Leaves
 
