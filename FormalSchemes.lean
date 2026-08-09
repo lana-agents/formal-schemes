@@ -158,6 +158,7 @@ import FormalSchemes.TateSelfProductTransition
 import FormalSchemes.TateSelfProductTransitionRange
 import FormalSchemes.TateSelfProductTransitionRangeRight
 import FormalSchemes.TateSelfProductTripleOverlap
+import FormalSchemes.TateSeparated
 import FormalSchemes.TateShift
 import FormalSchemes.TateTransition
 import FormalSchemes.ThickeningCocone
