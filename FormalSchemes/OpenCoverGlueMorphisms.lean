@@ -44,7 +44,7 @@ so `LocallyRingedSpace.IsOpenImmersion.to_iso` applies. Precomposing the glued-o
 
 noncomputable section
 
-open CategoryTheory CategoryTheory.Limits TopologicalSpace
+open CategoryTheory CategoryTheory.Limits TopologicalSpace Topology
 
 universe u
 
@@ -147,7 +147,10 @@ isomorphism (see the `IsIso` instance below). Mirrors `AlgebraicGeometry.Scheme.
 def fromGlued :
     𝒰.gluedCover.gluedFormalScheme.toLocallyRingedSpace ⟶ X.toLocallyRingedSpace :=
   𝒰.gluedCover.glueMorphisms (fun i => 𝒰.cmap i) fun i j => by
-    simpa using pullback.condition (f := 𝒰.cmap i) (g := 𝒰.cmap j)
+    change pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ 𝒰.cmap i =
+      (pullbackSymmetry _ _).hom ≫ pullback.fst (𝒰.cmap j) (𝒰.cmap i) ≫ 𝒰.cmap j
+    rw [pullbackSymmetry_hom_comp_fst_assoc]
+    exact pullback.condition
 
 @[reassoc (attr := simp)]
 theorem ι_fromGlued (i : 𝒰.J) : 𝒰.glueι i ≫ 𝒰.fromGlued = 𝒰.cmap i :=
@@ -159,10 +162,15 @@ instance isIso_fromGlued_stalkMap
     (x : 𝒰.gluedCover.gluedFormalScheme.toLocallyRingedSpace) :
     IsIso (𝒰.fromGlued.stalkMap x) := by
   obtain ⟨i, y, rfl⟩ := 𝒰.gluedCoverLRS.ι_jointly_surjective x
-  have h := LocallyRingedSpace.stalkMap_congr_hom _ _ (𝒰.ι_fromGlued i) y
-  rw [LocallyRingedSpace.stalkMap_comp, ← IsIso.eq_comp_inv] at h
-  rw [h]
-  infer_instance
+  haveI hci : IsIso ((𝒰.cmap i).stalkMap y) :=
+    inferInstanceAs (IsIso ((𝒰.map i).toLRSHom.toShHom.hom.stalkMap y))
+  haveI hgi : IsIso ((𝒰.glueι i).stalkMap y) :=
+    inferInstanceAs (IsIso ((𝒰.gluedCover.ι i).toShHom.hom.stalkMap y))
+  haveI hcomp : IsIso ((𝒰.glueι i ≫ 𝒰.fromGlued).stalkMap y) := by
+    rw [𝒰.ι_fromGlued i]; exact hci
+  rw [LocallyRingedSpace.stalkMap_comp] at hcomp
+  exact (CategoryTheory.isIso_comp_right_iff (𝒰.fromGlued.stalkMap _)
+    ((𝒰.glueι i).stalkMap y)).mp hcomp
 
 /-- `fromGlued` is surjective on base points: every point of `X` is covered. -/
 theorem fromGlued_base_surjective : Function.Surjective 𝒰.fromGlued.base := by
@@ -189,16 +197,14 @@ theorem fromGlued_base_isOpenEmbedding : IsOpenEmbedding ⇑𝒰.fromGlued.base 
     𝒰.fromGlued_base_injective 𝒰.fromGlued_base_isOpenMap
 
 instance isOpenImmersion_fromGlued : LocallyRingedSpace.IsOpenImmersion 𝒰.fromGlued :=
-  SheafedSpace.IsOpenImmersion.of_stalk_iso (H := fun x => inferInstance)
-    𝒰.fromGlued.toShHom 𝒰.fromGlued_base_isOpenEmbedding
+  LocallyRingedSpace.IsOpenImmersion.of_stalk_iso 𝒰.fromGlued 𝒰.fromGlued_base_isOpenEmbedding
 
-instance : Epi 𝒰.fromGlued.toShHom.hom.base := by
+instance epi_fromGlued_base : Epi 𝒰.fromGlued.base := by
   rw [TopCat.epi_iff_surjective]
   exact 𝒰.fromGlued_base_surjective
 
-instance isIso_fromGlued : IsIso 𝒰.fromGlued := by
-  haveI : IsIso 𝒰.fromGlued.toShHom := SheafedSpace.IsOpenImmersion.to_iso 𝒰.fromGlued.toShHom
-  exact isIso_of_reflects_iso 𝒰.fromGlued LocallyRingedSpace.forgetToSheafedSpace
+instance isIso_fromGlued : IsIso 𝒰.fromGlued :=
+  LocallyRingedSpace.IsOpenImmersion.to_iso 𝒰.fromGlued
 
 /-- **Gluing a family of morphisms out of an open cover.** Given a family `k i : 𝒰.obj i ⟶ Y`
 of morphisms to a locally ringed space that agree on the pairwise overlaps
@@ -208,16 +214,18 @@ def glueMorphisms {Y : LocallyRingedSpace.{u}} (k : ∀ i, (𝒰.obj i).toLocall
       pullback.snd (𝒰.cmap i) (𝒰.cmap j) ≫ k j) :
     X.toLocallyRingedSpace ⟶ Y :=
   inv 𝒰.fromGlued ≫ 𝒰.gluedCover.glueMorphisms k fun i j => by
-    have := h i j
-    simpa using this
+    change pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ k i =
+      (pullbackSymmetry _ _).hom ≫ pullback.fst (𝒰.cmap j) (𝒰.cmap i) ≫ k j
+    rw [pullbackSymmetry_hom_comp_fst_assoc]
+    exact h i j
 
 @[reassoc (attr := simp)]
 theorem map_glueMorphisms {Y : LocallyRingedSpace.{u}} (k : ∀ i, (𝒰.obj i).toLocallyRingedSpace ⟶ Y)
     (h : ∀ i j, pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ k i =
       pullback.snd (𝒰.cmap i) (𝒰.cmap j) ≫ k j) (i : 𝒰.J) :
     𝒰.cmap i ≫ 𝒰.glueMorphisms k h = k i := by
-  rw [glueMorphisms, ← 𝒰.ι_fromGlued i, Category.assoc, IsIso.hom_inv_id_assoc,
-    𝒰.gluedCover.ι_glueMorphisms]
+  rw [glueMorphisms, ← 𝒰.ι_fromGlued i, Category.assoc, IsIso.hom_inv_id_assoc]
+  exact 𝒰.gluedCover.ι_glueMorphisms _ _ i
 
 end AlgebraicGeometry.FormalScheme.OpenCover
 
