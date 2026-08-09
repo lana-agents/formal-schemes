@@ -142,8 +142,7 @@ abbrev glueι (i : 𝒰.J) :
   𝒰.gluedCover.ι i
 
 /-- The **canonical morphism** from the glued cover into `X`, glued from the cover maps. It is an
-isomorphism (see the `IsIso` instance below). Mirrors `AlgebraicGeometry.Scheme.OpenCover.fromGlued`.
--/
+isomorphism (see the `IsIso` instance below). Mirrors `Scheme.OpenCover.fromGlued`. -/
 def fromGlued :
     𝒰.gluedCover.gluedFormalScheme.toLocallyRingedSpace ⟶ X.toLocallyRingedSpace :=
   𝒰.gluedCover.glueMorphisms (fun i => 𝒰.cmap i) fun i j => by
