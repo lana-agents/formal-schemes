@@ -36,8 +36,8 @@ open scoped Classical
 
 /-- **Conjugated-`mapSpf` collapse.** If the two underlying algebra endomorphisms are the identity,
 the `Sp`-conjugated `mapSpf` is the identity. This packages the final collapse shared by every mixed
-cocycle leaf: after telescoping the source isos and combining the three `mapSpf` into one, the goal is
-of this shape, and the two per-factor `AlgHom` cocycle identities `hfA`/`hfB` discharge it. -/
+cocycle leaf: after telescoping the source isos and combining the three `mapSpf` into one, the
+goal is of this shape, and the two per-factor `AlgHom` cocycle identities `hfA`/`hfB` close it. -/
 theorem inv_mapSpf_hom_collapse {R : Type u} [CommRing R] {I : Ideal R} {D E : Type u}
     [CommRing D] [CommRing E] [Algebra R D] [Algebra R E] (hI : I.FG)
     {W : LocallyRingedSpace}
@@ -166,8 +166,8 @@ theorem cocycle_snd_fst_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u
   simp [awayCongrEltB_refl]
 
 /-- **`A`-factor closer, degenerate first coordinate, rotation `R1`.** Companion of
-`cocycle_snd_fst_hfA` in which the index-transport factor sits in the *last* position; used by leaves
-whose `A`-factor order is `[Fwd, Bwd, I]`. -/
+`cocycle_snd_fst_hfA` in which the index-transport factor sits in the *last* position; used by
+leaves whose `A`-factor order is `[Fwd, Bwd, I]`. -/
 theorem cocycle_fst_snd_hfA {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u}
     {A : JX → Type u} [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
     (gX : ∀ i i' : JX, A i)
@@ -490,8 +490,8 @@ theorem bothAlgDataT'_cocycle_snd_both_fst (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p'
 include τX_symm τY_symm in
 /-- **Cocycle, mixed leaf `fst_both_snd`.** `(p,p')` differs in the first coordinate, `(p,p'')` in
 both, `(p',p'')` in the second. -/
-theorem bothAlgDataT'_cocycle_fst_both_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1)
-    (h2'' : p.2 ≠ p''.2) (h1t : p'.1 = p''.1) :
+theorem bothAlgDataT'_cocycle_fst_both_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2)
+    (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) (h1t : p'.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
     letI := bothAlgDataHf hI gX gY p' p'' hp'p''
@@ -530,8 +530,8 @@ theorem bothAlgDataT'_cocycle_fst_both_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.
 include τX_symm τY_symm in
 /-- **Cocycle, mixed leaf `both_snd_fst`.** `(p,p')` differs in both coordinates, `(p,p'')` in the
 first, `(p',p'')` in the second. -/
-theorem bothAlgDataT'_cocycle_both_snd_fst (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 = p''.1)
-    (h2t : p'.2 = p''.2) :
+theorem bothAlgDataT'_cocycle_both_snd_fst (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2)
+    (h1'' : p.1 = p''.1) (h2t : p'.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
     letI := bothAlgDataHf hI gX gY p' p'' hp'p''
@@ -570,8 +570,8 @@ theorem bothAlgDataT'_cocycle_both_snd_fst (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p
 include τX_symm τY_symm in
 /-- **Cocycle, mixed leaf `both_fst_snd`.** `(p,p')` differs in both coordinates, `(p,p'')` in the
 second, `(p',p'')` in the first. -/
-theorem bothAlgDataT'_cocycle_both_fst_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1)
-    (h2'' : p.2 = p''.2) (h1t : p'.1 = p''.1) :
+theorem bothAlgDataT'_cocycle_both_fst_snd (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2)
+    (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) (h1t : p'.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
     letI := bothAlgDataHf hI gX gY p' p'' hp'p''
