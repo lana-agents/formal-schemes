@@ -184,13 +184,80 @@ theorem fromGlued_base_surjective : Function.Surjective 𝒰.fromGlued.base := b
   rw [hι]
   exact hy
 
+/-- (Helper) A point of the overlap `𝒰.obj i ×_X 𝒰.obj j` maps to equal points of the glued cover
+along the two inclusions. This is the glue-relation direction of
+`AlgebraicGeometry.Scheme.GlueData.ι_eq_iff` we need, obtained directly from the glue condition
+`f i j ≫ ι i = t i j ≫ f j i ≫ ι j` of the underlying `CategoryTheory.GlueData`. -/
+private theorem gluedCoverLRS_ι_base_eq_of (i j : 𝒰.J) (z : 𝒰.gluedCoverLRS.V (i, j)) :
+    (𝒰.gluedCoverLRS.toGlueData.ι i).base ((𝒰.gluedCoverLRS.f i j).base z) =
+      (𝒰.gluedCoverLRS.toGlueData.ι j).base
+        ((𝒰.gluedCoverLRS.t i j ≫ 𝒰.gluedCoverLRS.f j i).base z) := by
+  have h := ConcreteCategory.congr_hom
+    (congrArg (fun m : 𝒰.gluedCoverLRS.V (i, j) ⟶ 𝒰.gluedCoverLRS.toGlueData.glued => m.base)
+      (𝒰.gluedCoverLRS.toGlueData.glue_condition i j)) z
+  simpa only [LocallyRingedSpace.comp_base, TopCat.comp_app, ConcreteCategory.comp_apply]
+    using h.symm
+
+/-- (Helper) A set of the glued cover is open iff its preimage along every inclusion `ι i` is open.
+The locally-ringed-space analogue of `AlgebraicGeometry.Scheme.GlueData.isOpen_iff`, obtained by
+transporting `TopCat.GlueData.isOpen_iff` across the carrier homeomorphism `isoCarrier`. -/
+private theorem gluedCoverLRS_isOpen_iff
+    (U : Set 𝒰.gluedCoverLRS.toGlueData.glued.carrier) :
+    IsOpen U ↔ ∀ i, IsOpen ((𝒰.gluedCoverLRS.toGlueData.ι i).base ⁻¹' U) := by
+  rw [← (TopCat.homeoOfIso 𝒰.gluedCoverLRS.isoCarrier.symm).isOpen_preimage,
+    TopCat.GlueData.isOpen_iff]
+  refine forall_congr' fun i => ?_
+  rw [← Set.preimage_comp, ← 𝒰.gluedCoverLRS.ι_isoCarrier_inv]
+  rfl
+
+/-- (Helper) `fromGlued.base` sends `ι i x` to `cmap i x`. -/
+private theorem fromGlued_base_glueι (i : 𝒰.J) (z : 𝒰.gluedCoverLRS.U i) :
+    𝒰.fromGlued.base ((𝒰.glueι i).base z) = (𝒰.cmap i).base z := by
+  have hι := ConcreteCategory.congr_hom
+    (congrArg (fun φ : (𝒰.obj i).toLocallyRingedSpace ⟶ X.toLocallyRingedSpace => φ.base)
+      (𝒰.ι_fromGlued i)) z
+  simpa only [LocallyRingedSpace.comp_base, TopCat.comp_app] using hι
+
 /-- `fromGlued` is injective on base points. Mirrors `Scheme.OpenCover.fromGlued_injective`. -/
 theorem fromGlued_base_injective : Function.Injective 𝒰.fromGlued.base := by
-  sorry
+  intro p q h
+  obtain ⟨i, x, rfl⟩ := 𝒰.gluedCoverLRS.ι_jointly_surjective p
+  obtain ⟨j, y, rfl⟩ := 𝒰.gluedCoverLRS.ι_jointly_surjective q
+  have h' : (𝒰.cmap i).base x = (𝒰.cmap j).base y := by
+    rw [← 𝒰.fromGlued_base_glueι i x, ← 𝒰.fromGlued_base_glueι j y]
+    exact h
+  haveI : PreservesLimit (cospan (𝒰.cmap i) (𝒰.cmap j)) LocallyRingedSpace.forgetToTop :=
+    inferInstanceAs (PreservesLimit (cospan (𝒰.cmap i) (𝒰.cmap j))
+      (LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forget CommRingCat))
+  let e := (TopCat.pullbackConeIsLimit _ _).conePointUniqueUpToIso
+    (isLimitOfHasPullbackOfPreservesLimit LocallyRingedSpace.forgetToTop (𝒰.cmap i) (𝒰.cmap j))
+  have hzx : (𝒰.gluedCoverLRS.f i j).base (e.hom ⟨⟨x, y⟩, h'⟩) = x := by
+    erw [← ConcreteCategory.comp_apply,
+      IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.left]
+    rfl
+  have hzy : (𝒰.gluedCoverLRS.t i j ≫ 𝒰.gluedCoverLRS.f j i).base (e.hom ⟨⟨x, y⟩, h'⟩) = y := by
+    erw [← ConcreteCategory.comp_apply, pullbackSymmetry_hom_comp_fst,
+      IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right]
+    rfl
+  have key := 𝒰.gluedCoverLRS_ι_base_eq_of i j (e.hom ⟨⟨x, y⟩, h'⟩)
+  rw [hzx, hzy] at key
+  exact key
 
 /-- `fromGlued` is an open map on base points. Mirrors `Scheme.OpenCover.isOpenMap_fromGlued`. -/
 theorem fromGlued_base_isOpenMap : IsOpenMap 𝒰.fromGlued.base := by
-  sorry
+  intro U hU
+  rw [isOpen_iff_forall_mem_open]
+  intro x hx
+  replace hU := (𝒰.gluedCoverLRS_isOpen_iff U).mp hU
+  refine ⟨𝒰.fromGlued.base '' U ∩ Set.range (𝒰.cmap (𝒰.idx x)).base,
+    Set.inter_subset_left, ?_, hx, 𝒰.covers x⟩
+  rw [← Set.image_preimage_eq_inter_range]
+  apply (𝒰.isOpenImmersion (𝒰.idx x)).base_open.isOpenMap
+  convert! hU (𝒰.idx x) using 1
+  simp only [← 𝒰.ι_fromGlued, LocallyRingedSpace.comp_base, TopCat.hom_comp,
+    ContinuousMap.coe_comp, Set.preimage_comp]
+  congr! 1
+  exact Set.preimage_image_eq _ 𝒰.fromGlued_base_injective
 
 theorem fromGlued_base_isOpenEmbedding : IsOpenEmbedding ⇑𝒰.fromGlued.base :=
   IsOpenEmbedding.of_continuous_injective_isOpenMap (by fun_prop)
