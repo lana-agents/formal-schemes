@@ -965,7 +965,7 @@ omit hpp' hpp'' hp'p'' in
 non-geometric fields (`A`, `B`, `gX`, `gY`, `τX`, `τX_symm`, `τY`, `τY_symm`) together with the
 double-overlap transitions `σX`/`σY`, their σ/τ compatibilities `hστX`/`hστY` and their algebra
 cocycles `hσcX`/`hσcY`; the geometric fields `V`, `f`, `hf`, `t`, `t_inv`, `t'`, `t_fac`, `cocycle`
-are derived by the dispatched helpers `bothAlgDataV`/…/`bothAlgDataT'_fac`/`bothAlgDataT'_cocycle`. -/
+are derived by the dispatched helpers `bothAlgDataV`/… /`bothAlgDataT'_cocycle`. -/
 def ofAlgebraData
     (hστX : ∀ (i i' i'' : JX) (h1 : i ≠ i') (h2 : i ≠ i'') (h3 : i' ≠ i''),
       (σX i i' i'' h1 h2 h3).symm.toAlgHom.comp (furtherLocSnd I (gX i' i'') (gX i' i) hI) =
