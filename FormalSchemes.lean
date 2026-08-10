@@ -137,6 +137,7 @@ import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateChartTransitionAlgEq
 import FormalSchemes.TateCurveModel
+import FormalSchemes.TateDiagonalClosedCover
 import FormalSchemes.TateFreeness
 import FormalSchemes.TateFreenessAdjacent
 import FormalSchemes.TateGlueTwoPatch
