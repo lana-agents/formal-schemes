@@ -36,12 +36,12 @@ jobs:
         uses: chrisflav/trust-action@v1
         with:
           module: FormalSchemes
-          # Our own declarations, not the whole import closure.  Unfiltered this
-          # would index all of Mathlib as well — a far larger export, and most of
-          # a workflow that runs on every push.  The cost is that a Mathlib name
-          # appears as an edge that does not unfold; drop this line to have them
-          # too.
-          module-filter: 'FormalSchemes,FormalSchemes.*'
+          # No `module-filter`, so the index covers the whole import closure —
+          # Mathlib included.  A far larger export than our own declarations
+          # alone, and the reason to pay for it is that this development is
+          # mostly *about* what it rests on: filtered, a Mathlib name is an edge
+          # that stops, and following the definitions out of `Spf` into the
+          # scheme theory underneath is the question the graph exists to answer.
           # Nothing names a version of trust: the exporter can only read the
           # `.olean` files of the Lean it was built on, so the action reads
           # `lean-toolchain` and fetches the release built for it.  When the
