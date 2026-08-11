@@ -1,0 +1,51 @@
+# An index of this development is only worth as much as it is current, and a
+# formalization moves whether or not anyone remembers to re-export it.  So the
+# export runs here, where the library is already being built.
+#
+# What comes out is a static directory — the definitional dependency graph, the
+# rendered source, and the marks — which the trust web UI reads directly.  It is
+# uploaded as an artifact rather than published anywhere; see the README of
+# chrisflav/trust-action for how to look at one.
+name: Trust index
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Only the newest commit on a branch is worth indexing; the older run is
+# answering a question nobody is still asking.
+concurrency:
+  group: trust-index-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - id: trust
+        uses: chrisflav/trust-action@v1
+        with:
+          module: FormalSchemes
+          # Our own declarations, not the whole import closure.  Unfiltered this
+          # would index all of Mathlib as well — a far larger export, and most of
+          # a workflow that runs on every push.  The cost is that a Mathlib name
+          # appears as an edge that does not unfold; drop this line to have them
+          # too.
+          module-filter: 'FormalSchemes,FormalSchemes.*'
+          # Nothing names a version of trust: the exporter can only read the
+          # `.olean` files of the Lean it was built on, so the action reads
+          # `lean-toolchain` and fetches the release built for it.  When the
+          # Mathlib update action moves us to a Lean no trust has been released
+          # for yet, this fails saying exactly that.
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trust-index
+          # The root rather than the index directory, so the artifact unpacks
+          # into the `<root>/<name>/meta.json` shape the frontend reads.
+          path: ${{ steps.trust.outputs.index-root }}
+          retention-days: 30
