@@ -11,6 +11,12 @@ name: Trust index
 on:
   push:
     branches: [master]
+  # Only when this file changes.  An export is minutes of work that says nothing
+  # about a pull request's mathematics, so it has no business running on every
+  # one — but a change to the workflow itself has to be testable before it is
+  # merged, and `workflow_dispatch` cannot do that from a branch.
+  pull_request:
+    paths: ['.github/workflows/trust-index.yml']
   workflow_dispatch:
 
 # Only the newest commit on a branch is worth indexing; the older run is
