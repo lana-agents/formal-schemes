@@ -233,4 +233,20 @@ theorem annulusOverlapInversion_symm_comp_algebraMap :
   show (annulusOverlapInversion R I q hI).symm (algebraMap R (annulusOverlapY R I q) r) = _
   rw [← annulusOverlapInversion_algebraMap R I q hI r, RingEquiv.symm_apply_apply]
 
+/-- **Geometric acceptance witness: the corrected transition glues by genuine 𝔾m-inversion, not the
+swap.** The ring homomorphism underlying the forward geometric transition
+`annulusOverlapInversionSpf.hom` is precisely `(annulusOverlapInversion R I q hI).symm.toRingHom`
+(the map that `FormalSpectrum.locallyRingedSpaceMap` sends to that hom); read through the crux
+identification `overlapEquiv`, it carries the `y`-chart unit `overlapY` to `X (-1)`, i.e. `Y ↦ X⁻¹`.
+The coordinate *swap* `annulusChartTransitionSpf` would instead give `X 1`, so this lemma certifies
+that `annulusChartTransitionInvSpf` realises the Néron 2-gon gluing `x₀·y₁ = 1` and hence that the
+rerouted `tateCurveModel` (issue 435) is separated. It is the geometric-level repackaging of the
+ring-level witness `overlapEquiv_annulusOverlapInversion_symm_overlapY` (issue 436). -/
+theorem overlapEquiv_annulusOverlapInversionSpf_ringHom_overlapY :
+    overlapEquiv R I q hI
+        ((annulusOverlapInversion R I q hI).symm.toRingHom
+          (algebraMap (annulusAlgebra R I q) (annulusOverlapY R I q) (overlapY R I q))) =
+      RestrictedLaurentSeries.X R I (-1) :=
+  overlapEquiv_annulusOverlapInversion_symm_overlapY R I q hI
+
 end
