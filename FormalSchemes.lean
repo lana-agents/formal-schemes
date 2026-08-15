@@ -138,6 +138,7 @@ import FormalSchemes.TateActionQuotient
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainStructMap
+import FormalSchemes.TateChainStructMapInv
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateChartTransitionAlgEq
 import FormalSchemes.TateCurveModel
