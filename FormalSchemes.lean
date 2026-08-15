@@ -114,6 +114,7 @@ import FormalSchemes.PullbackRangeLRS
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesNoetherian
+import FormalSchemes.RightCodiagonalClosedEmbedding
 import FormalSchemes.Sections
 import FormalSchemes.Spf
 import FormalSchemes.SpfFullyFaithful
