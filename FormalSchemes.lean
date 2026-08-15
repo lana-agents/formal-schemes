@@ -148,6 +148,7 @@ import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
+import FormalSchemes.TateOverlapInversion
 import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateSelfProductBothOverlap
 import FormalSchemes.TateSelfProductCocycle
