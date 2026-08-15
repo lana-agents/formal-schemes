@@ -4,8 +4,19 @@
 #
 # What comes out is a static directory — the definitional dependency graph, the
 # rendered source, and the marks — which the trust web UI reads directly.  It is
-# uploaded as an artifact rather than published anywhere; see the README of
-# chrisflav/trust-action for how to look at one.
+# published to the `trust-index` branch, where `raw.githubusercontent.com`
+# serves it, so that anyone can read this development at
+#
+#     https://<a trust deployment>/?gh=lana-agents/formal-schemes
+#
+# and it is kept as an artifact besides, for `gh run download`.
+#
+# The branch is what a browser can actually fetch.  Downloading a workflow
+# artifact requires a token with the `repo` scope even though this repository is
+# public, so a frontend reading artifacts would have to ask every reader for
+# full control of their private repositories to show them a public dependency
+# graph; a branch is anonymous and comes with the CORS header that makes it
+# readable.  See the `publish` input of chrisflav/trust-action.
 name: Trust index
 
 on:
@@ -29,6 +40,10 @@ jobs:
   index:
     runs-on: ubuntu-latest
 
+    # Only to push the index branch; nothing else here writes anything.
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v5
 
@@ -47,6 +62,14 @@ jobs:
           # `lean-toolchain` and fetches the release built for it.  When the
           # Mathlib update action moves us to a Lean no trust has been released
           # for yet, this fails saying exactly that.
+          #
+          # Publish from master only.  This workflow also runs on a pull request
+          # that edits it, and an index of a branch force-pushed over master's
+          # would leave the published one describing a commit that was never
+          # merged — quite apart from a fork's token having no write access to
+          # push it with.  `github.ref` is `refs/pull/N/merge` there and
+          # `refs/heads/master` for both a push and a manual run.
+          publish: ${{ github.ref == 'refs/heads/master' && 'branch' || 'false' }}
 
       - uses: actions/upload-artifact@v4
         with:
