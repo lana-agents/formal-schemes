@@ -110,6 +110,7 @@ import FormalSchemes.LocallyFG
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.OpenCoverHomExt
+import FormalSchemes.OpenImmersionSourceFormalScheme
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
