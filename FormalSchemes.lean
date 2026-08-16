@@ -93,6 +93,7 @@ import FormalSchemes.GeneralFibreProductConeLeft
 import FormalSchemes.GeneralFibreProductExposeX
 import FormalSchemes.GeneralFibreProductExposeXStructMap
 import FormalSchemes.GeneralFibreProductLift
+import FormalSchemes.GeneralFibreProductLiftCharts
 import FormalSchemes.GeneralFibreProductLiftPiece
 import FormalSchemes.GeneralFibreProductLiftUnique
 import FormalSchemes.GeneralFibreProductOfFactors
