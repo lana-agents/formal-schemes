@@ -6,6 +6,10 @@ import FormalSchemes.TateSelfProductSummandNaturality
 import FormalSchemes.TwoPatchFibreProductProjectionLeft
 import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 import FormalSchemes.GlueMorphisms
+import FormalSchemes.TwoPatchFibreProductProjectionLeftInv
+import FormalSchemes.TateSelfProductObjectInv
+import FormalSchemes.TateSelfProductTransitionInv
+import FormalSchemes.TateSelfProductDSigmaInv
 
 set_option linter.style.header false
 set_option linter.style.setOption false
@@ -15,24 +19,31 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # The first projection of the four-chart Tate self-fibre-product into `𝔈_q`
 
-The four-chart Tate self-fibre product `𝔈_q ×_{Spf R} 𝔈_q` (`tateSelfProduct`) is glued from four
+The four-chart Tate self-fibre product `𝔈_q ×_{Spf R} 𝔈_q` (`tateSelfProductInv`) is glued from four
 copies of `Spf(A ⊗̂_R A)` (`A = R{x, y}/(x·y − q)`) indexed by `Bool × Bool`. This file builds the
 **first projection** `pr₁ : 𝔈_q ×_{Spf R} 𝔈_q ⟶ 𝔈_q` into the glued Tate curve model `𝔈_q`
 (`tateCurveModel`), gluing the affine first projections `pr₁Chart = Spf(inl)` (transported to the
 base ideal convention) across the four charts and composing with the glue inclusions `ι` of `𝔈_q`,
 via `FormalScheme.GlueData.glueMorphisms`.
 
+The `𝔈_q` model is now glued from two annulus charts by the **𝔾m-inversion** chart transition
+(`annulusChartTransitionInvSpf`), and the self-product object is glued by the induced inversion
+transitions (`tateSelfProductFirstTransitionInv`, `tateSelfProductRightTransitionInv`,
+`tateSelfProductBothTransitionInv`).
+
 The compatibility datum consumed by `glueMorphisms` on each of the sixteen chart pairs `(i, j)`
 splits by the *difference type* of `i, j`:
 
 * second coordinate differs (`i.1 = j.1`): the first projection is invariant under the second-factor
-  swap transition (`rightTransition_comp_firstProj`), so both sides land in the same glue chart;
+  inversion transition (`rightTransitionInv_comp_firstProj`), so both sides land in the same glue
+  chart;
 * first coordinate differs (`i.1 ≠ j.1`, `i.2 = j.2`): the port of the two-chart curve naturality
   squares (`firstShape`), assembled by `coprod.hom_ext` from the base-changed two-patch
   fibre-product first-projection naturality;
-* both coordinates differ: the coordinate-flip realises the `𝔈_q` chart transition on the first
-  factor (`bothShape`), using the both-factor transition naturality
-  (`tateSelfProductBothTransition_naturality`) and the raw first-projection naturality of `mapSpf`.
+* both coordinates differ: the coordinate inversion realises the `𝔈_q` chart transition on the first
+  factor (`bothShape`), obtained by factoring the both-factor chart through the first-factor chart
+  (`bothChart_firstProj_factor`) and porting `firstShape` across the residual second-factor
+  localization (`rightInterchange_pr₁_naturality_inv`).
 
 ## Main definitions
 
@@ -69,8 +80,8 @@ theorem pr₁Chart_eq :
 theorem tateCurve_glue_condition (hq : q ∈ I) (hI : I.FG) :
     coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
-      coprod.desc ((annulusChartTransitionSpf R I q hI).hom ≫ coprod.inr)
-          ((annulusChartTransitionSpf R I q hI).inv ≫ coprod.inl) ≫
+      coprod.desc ((annulusChartTransitionInvSpf R I q hI).hom ≫ coprod.inr)
+          ((annulusChartTransitionInvSpf R I q hI).inv ≫ coprod.inl) ≫
         coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
           (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
   have h01 : ({ down := false } : ULift.{u} Bool) ≠ { down := true } := by decide
@@ -88,7 +99,7 @@ theorem tateCurve_glue_condition (hq : q ∈ I) (hI : I.FG) :
 /-- The `x`-overlap circular glue relation of `𝔈_q`. -/
 theorem tateCurve_glue_rel_x (hq : q ∈ I) (hI : I.FG) :
     annulusOverlapChart R I q ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
-      (annulusChartTransitionSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
+      (annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
   have := tateCurve_glue_condition R I q hq hI
   have h := congrArg (fun m => coprod.inl ≫ m) this
@@ -98,7 +109,7 @@ theorem tateCurve_glue_rel_x (hq : q ∈ I) (hI : I.FG) :
 /-- The `y`-overlap circular glue relation of `𝔈_q`. -/
 theorem tateCurve_glue_rel_y (hq : q ∈ I) (hI : I.FG) :
     annulusOverlapChartY R I q ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
-      (annulusChartTransitionSpf R I q hI).inv ≫ annulusOverlapChart R I q ≫
+      (annulusChartTransitionInvSpf R I q hI).inv ≫ annulusOverlapChart R I q ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
   have := tateCurve_glue_condition R I q hq hI
   have h := congrArg (fun m => coprod.inr ≫ m) this
@@ -111,34 +122,34 @@ theorem tateCurve_glue_rel_y (hq : q ∈ I) (hI : I.FG) :
 theorem firstShape_inl (hq : q ∈ I) (hI : I.FG) :
     interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapX R I q) hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
-      (twoPatchFibreProductTransition R I q (annulusAlgebra R I q) hI).hom ≫
+      (twoPatchFibreProductInvTransition R I q (annulusAlgebra R I q) hI).hom ≫
         interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapY R I q) hI ≫
           pr₁Chart R I q (annulusAlgebra R I q) ≫
             (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
   simp only [pr₁Chart, Category.assoc]
   rw [reassoc_of% (interchangeOpenImmersion_comp_locallyRingedSpaceMap_inl I (overlapX R I q) hI),
     reassoc_of% (interchangeOpenImmersion_comp_locallyRingedSpaceMap_inl I (overlapY R I q) hI),
-    twoPatchFibreProductTransition, mapSpfIso_hom,
+    twoPatchFibreProductInvTransition, mapSpfIso_hom,
     reassoc_of% (CompletedTensorProduct.mapSpf_comp_inlMap hI
-      (annulusFibreChartTransitionAlg R I q hI).symm.toAlgHom
+      (annulusFibreChartTransitionInvAlg R I q hI).symm.toAlgHom
       (AlgEquiv.refl (R := R) (A₁ := annulusAlgebra R I q)).symm.toAlgHom),
     reassoc_of% (spfAwayX_comp_baseBridge R I q),
     tateCurve_glue_rel_x R I q hq hI,
-    reassoc_of% (spfESymm_comp_spfAwayY_comp_baseBridge R I q hI)]
+    reassoc_of% (spfESymm_comp_spfAwayY_comp_baseBridge_inv R I q hI)]
 
 /-- `y`-overlap first-projection naturality (`ι₀`-side, with prepended transition). -/
 theorem firstShape_inr' (hq : q ∈ I) (hI : I.FG) :
-    (twoPatchFibreProductTransition R I q (annulusAlgebra R I q) hI).hom ≫
+    (twoPatchFibreProductInvTransition R I q (annulusAlgebra R I q) hI).hom ≫
         interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapY R I q) hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
       interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapX R I q) hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
-  simp only [pr₁Chart, Category.assoc, twoPatchFibreProductTransition, mapSpfIso_hom]
+  simp only [pr₁Chart, Category.assoc, twoPatchFibreProductInvTransition, mapSpfIso_hom]
   rw [reassoc_of% (interchangeOpenImmersion_comp_locallyRingedSpaceMap_inl I (overlapY R I q) hI),
     reassoc_of% (CompletedTensorProduct.mapSpf_comp_inlMap hI
-      (annulusFibreChartTransitionAlg R I q hI).symm.toAlgHom
+      (annulusFibreChartTransitionInvAlg R I q hI).symm.toAlgHom
       (AlgEquiv.refl (R := R) (A₁ := annulusAlgebra R I q)).symm.toAlgHom),
-    reassoc_of% (spfESymm_comp_spfAwayY_comp_baseBridge R I q hI),
+    reassoc_of% (spfESymm_comp_spfAwayY_comp_baseBridge_inv R I q hI),
     reassoc_of% (interchangeOpenImmersion_comp_locallyRingedSpaceMap_inl I (overlapX R I q) hI),
     reassoc_of% (spfAwayX_comp_baseBridge R I q),
     tateCurve_glue_rel_y R I q hq hI]
@@ -148,7 +159,7 @@ theorem firstShape_inr' (hq : q ∈ I) (hI : I.FG) :
 theorem firstShape_inr (hq : q ∈ I) (hI : I.FG) :
     interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapY R I q) hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
-      (twoPatchFibreProductTransition R I q (annulusAlgebra R I q) hI).inv ≫
+      (twoPatchFibreProductInvTransition R I q (annulusAlgebra R I q) hI).inv ≫
         interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapX R I q) hI ≫
           pr₁Chart R I q (annulusAlgebra R I q) ≫
             (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
@@ -156,17 +167,17 @@ theorem firstShape_inr (hq : q ∈ I) (hI : I.FG) :
 
 /-- **SHAPE 2 forward** (`i.1 = false`, `j.1 = true`): the first-differ compatibility square, whose
 `ι` indices go `false ↦ true`. Assembled by `coprod.hom_ext` from `firstShape_inl`/`firstShape_inr`
-(`firstSummand = twoPatchFibreProductTransition`). -/
+(`firstSummandInv = twoPatchFibreProductInvTransition`). -/
 theorem firstShape_fwd (hq : q ∈ I) (hI : I.FG) :
     firstFactorOverlapChart R I q hI ≫ pr₁Chart R I q (annulusAlgebra R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
-      (tateSelfProductFirstTransition R I q hI).hom ≫ firstFactorOverlapChart R I q hI ≫
+      (tateSelfProductFirstTransitionInv R I q hI).hom ≫ firstFactorOverlapChart R I q hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
   refine coprod.hom_ext ?_ ?_
-  · simp only [firstFactorOverlapChart, tateSelfProductFirstTransition, firstSummand,
+  · simp only [firstFactorOverlapChart, tateSelfProductFirstTransitionInv, firstSummandInv,
       coprod.inl_desc_assoc, coprod.inr_desc_assoc, Category.assoc]
     exact firstShape_inl R I q hq hI
-  · simp only [firstFactorOverlapChart, tateSelfProductFirstTransition, firstSummand,
+  · simp only [firstFactorOverlapChart, tateSelfProductFirstTransitionInv, firstSummandInv,
       coprod.inr_desc_assoc, coprod.inl_desc_assoc, Category.assoc]
     exact firstShape_inr R I q hq hI
 
@@ -175,87 +186,31 @@ theorem firstShape_fwd (hq : q ∈ I) (hI : I.FG) :
 theorem firstShape_rev (hq : q ∈ I) (hI : I.FG) :
     firstFactorOverlapChart R I q hI ≫ pr₁Chart R I q (annulusAlgebra R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ =
-      (tateSelfProductFirstTransition R I q hI).hom ≫ firstFactorOverlapChart R I q hI ≫
+      (tateSelfProductFirstTransitionInv R I q hI).hom ≫ firstFactorOverlapChart R I q hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫
           (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ := by
   refine coprod.hom_ext ?_ ?_
-  · simp only [firstFactorOverlapChart, tateSelfProductFirstTransition, firstSummand,
+  · simp only [firstFactorOverlapChart, tateSelfProductFirstTransitionInv, firstSummandInv,
       coprod.inl_desc_assoc, coprod.inr_desc_assoc, Category.assoc]
     exact (firstShape_inr' R I q hq hI).symm
-  · simp only [firstFactorOverlapChart, tateSelfProductFirstTransition, firstSummand,
+  · simp only [firstFactorOverlapChart, tateSelfProductFirstTransitionInv, firstSummandInv,
       coprod.inr_desc_assoc, coprod.inl_desc_assoc, Category.assoc]
     -- goal: interchangeY ≫ P ≫ ι₁ = t.inv ≫ interchangeX ≫ P ≫ ι₀
     rw [firstShape_inl R I q hq hI, Iso.inv_hom_id_assoc]
 
 /-! ### SHAPE 1: second-differ (the first projection is invariant) -/
 
-/-- **SHAPE 1** (`i.1 = j.1`): the second-factor swap transition is invisible to the first
+/-- **SHAPE 1** (`i.1 = j.1`): the second-factor inversion transition is invisible to the first
 projection, so both sides land in the *same* glue chart `ι b`. -/
 theorem secondShape (hq : q ∈ I) (hI : I.FG) (b : ULift.{u} Bool) :
     secondFactorOverlapChart R I q hI ≫ pr₁Chart R I q (annulusAlgebra R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι b =
-      (tateSelfProductRightTransition R I q hI).hom ≫ secondFactorOverlapChart R I q hI ≫
+      (tateSelfProductRightTransitionInv R I q hI).hom ≫ secondFactorOverlapChart R I q hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι b := by
   simp only [pr₁Chart_eq, Category.assoc]
-  rw [reassoc_of% (rightTransition_comp_firstProj R I q hI)]
+  rw [reassoc_of% (rightTransitionInv_comp_firstProj R I q hI)]
 
-/-! ### SHAPE 3: both-differ (the coordinate flip realises the chart transition) -/
-
-/-- The base coordinate-flip `Spf(annulusFlip) : Spf(I·A) ⟶ Spf(I·A)`, the residual of the
-both-factor transition under the first projection. -/
-def spfFlipBase (hI : I.FG) :
-    locallyRingedSpaceObj (I.map (algebraMap R (annulusAlgebra R I q))) ⟶
-      locallyRingedSpaceObj (I.map (algebraMap R (annulusAlgebra R I q))) :=
-  FormalSpectrum.locallyRingedSpaceMap (I.map (algebraMap R (annulusAlgebra R I q)))
-    (I.map (algebraMap R (annulusAlgebra R I q)))
-    (annulusFlip R I q hI).toAlgHom.toRingHom
-    (CompletedTensorProduct.algHom_mapIdeal_isAdicHom (annulusFlip R I q hI).toAlgHom).le_comap
-
-omit [IsNoetherianRing R] in
-/-- **The first-factor transition is a morphism over the first projection, up to the base
-coordinate-flip.** -/
-theorem firstTransition_comp_firstProj (hI : I.FG) :
-    (tateSelfProductFirstTransition R I q hI).hom ≫
-        firstFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q =
-      firstFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q ≫ spfFlipBase R I q hI := by
-  rw [reassoc_of% (tateSelfProductFirstTransition_naturality R I q hI), spfFlipBase, pr₁ChartSelf,
-    CompletedTensorProduct.mapSpf_comp_inlMap hI (annulusFlip R I q hI).toAlgHom
-      (AlgHom.id R (annulusAlgebra R I q))]
-
-/-- The first-factor base relation (forward): the first projection of the first-factor overlap chart
-into `ι₀` equals its coordinate-flip into `ι₁`. Reformulation of `firstShape_fwd`. -/
-theorem firstBaseRel_fwd (hq : q ∈ I) (hI : I.FG) :
-    firstFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q ≫
-        annulusBaseBridge R I q ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
-      firstFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q ≫ spfFlipBase R I q hI ≫
-        annulusBaseBridge R I q ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
-  have h := firstShape_fwd R I q hq hI
-  simp only [pr₁Chart_eq, Category.assoc] at h
-  rw [reassoc_of% (firstTransition_comp_firstProj R I q hI)] at h
-  exact h
-
-/-- The first-factor base relation (reverse). Reformulation of `firstShape_rev`. -/
-theorem firstBaseRel_rev (hq : q ∈ I) (hI : I.FG) :
-    firstFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q ≫
-        annulusBaseBridge R I q ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ =
-      firstFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q ≫ spfFlipBase R I q hI ≫
-        annulusBaseBridge R I q ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ := by
-  have h := firstShape_rev R I q hq hI
-  simp only [pr₁Chart_eq, Category.assoc] at h
-  rw [reassoc_of% (firstTransition_comp_firstProj R I q hI)] at h
-  exact h
-
-omit [IsNoetherianRing R] in
-/-- **The both-factor transition is a morphism over the first projection, up to the base
-coordinate-flip.** Under the first projection `Spf(inl)`, the both-factor swap transition acts as
-the coordinate-flip on the first tensor factor (the second factor being forgotten). -/
-theorem bothTransition_comp_firstProj (hI : I.FG) :
-    (tateSelfProductBothTransition R I q hI).hom ≫
-        bothFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q =
-      bothFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q ≫ spfFlipBase R I q hI := by
-  rw [reassoc_of% (tateSelfProductBothTransition_naturality R I q hI), spfFlipBase, pr₁ChartSelf,
-    CompletedTensorProduct.mapSpf_comp_inlMap hI (annulusFlip R I q hI).toAlgHom
-      (annulusFlip R I q hI).toAlgHom]
+/-! ### SHAPE 3: both-differ (the coordinate inversion realises the chart transition) -/
 
 omit [IsNoetherianRing R] in
 /-- **Per-summand first-projection factorisation.** Under the first projection `Spf(inl)`, the
@@ -336,28 +291,108 @@ theorem bothChart_firstProj_factor (hI : I.FG) :
       Category.assoc]
     exact bothInterchange_pr₁ChartSelf_factor R I q (overlapY R I q) (overlapY R I q) hI
 
+omit [IsNoetherianRing R] in
+/-- `Spf` of an identity `R`-algebra map (through its `toRingHom`) is the identity morphism.
+Reusable collapse for the residual `Spf(id)` terms produced by `mapSpf_comp_inlMap` when the
+surviving first-factor map is an identity. -/
+theorem locallyRingedSpaceMap_algHom_id (C : Type u) [CommRing C] [Algebra R C] (J : Ideal C)
+    (h : J ≤ J.comap (AlgHom.id R C).toRingHom) :
+    FormalSpectrum.locallyRingedSpaceMap J J (AlgHom.id R C).toRingHom h = 𝟙 _ := by
+  have hf : (AlgHom.id R C).toRingHom = RingHom.id C := by
+    ext x
+    simp
+  rw [FormalSpectrum.locallyRingedSpaceMap_congr (φ₂ := RingHom.id C)
+      (h₂ := (Ideal.comap_id J).ge) (hφ := hf), FormalSpectrum.locallyRingedSpaceMap_id]
+
+omit [IsNoetherianRing R] in
+/-- **Backbone naturality of the forget-second-factor collapse `Ξ`.** The both-factor inversion
+transition, followed by the both-chart collapse onto the first-factor chart (`Ξ`), followed by the
+first-factor chart and first projection, coincides with `Ξ` followed by the first-factor inversion
+transition (and first chart/projection). The second-factor localizations `Ξ` carries are invisible
+to the first projection (`rightInterchange_pr₁_naturality_inv`/`_inv'`), so only the first-factor
+inversion transition survives. This is the residual of the both-transition under `pr₁`, replacing
+the swap file's base coordinate-flip. -/
+theorem bothTransitionInv_firstProj_naturality (hI : I.FG) :
+    (tateSelfProductBothTransitionInv R I q hI).hom ≫
+        bothFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q =
+      coprod.desc
+        (coprod.desc
+          (rightInterchangeOpenImmersion
+              (A := awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))
+              I (overlapX R I q) hI ≫ coprod.inl)
+          (rightInterchangeOpenImmersion
+              (A := awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))
+              I (overlapY R I q) hI ≫ coprod.inl))
+        (coprod.desc
+          (rightInterchangeOpenImmersion
+              (A := awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+              I (overlapX R I q) hI ≫ coprod.inr)
+          (rightInterchangeOpenImmersion
+              (A := awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+              I (overlapY R I q) hI ≫ coprod.inr)) ≫
+        (tateSelfProductFirstTransitionInv R I q hI).hom ≫
+          firstFactorOverlapChart R I q hI ≫ pr₁ChartSelf R I q := by
+  rw [bothChart_firstProj_factor R I q hI]
+  refine coprod.hom_ext (coprod.hom_ext ?_ ?_) (coprod.hom_ext ?_ ?_)
+  · simp only [tateSelfProductBothTransitionInv, tateSelfProductFirstTransitionInv,
+      firstFactorOverlapChart, bothSummandDiagInv, firstSummandInv,
+      twoPatchFibreProductInvTransition, coprod.inl_desc_assoc,
+      coprod.inr_desc_assoc, Category.assoc, mapSpfIso_hom, mapSpfIso_inv,
+      rightInterchangeOpenImmersion_eq_mapSpf, interchangeOpenImmersion_eq_mapSpf, pr₁ChartSelf]
+    simp only [CompletedTensorProduct.mapSpf_comp_inlMap,
+      reassoc_of% CompletedTensorProduct.mapSpf_comp_inlMap, locallyRingedSpaceMap_algHom_id,
+      Category.id_comp]
+  · simp only [tateSelfProductBothTransitionInv, tateSelfProductFirstTransitionInv,
+      firstFactorOverlapChart, bothSummandAntiInv, firstSummandInv,
+      twoPatchFibreProductInvTransition, coprod.inl_desc_assoc,
+      coprod.inr_desc_assoc, Category.assoc, mapSpfIso_hom, mapSpfIso_inv,
+      rightInterchangeOpenImmersion_eq_mapSpf, interchangeOpenImmersion_eq_mapSpf, pr₁ChartSelf]
+    simp only [CompletedTensorProduct.mapSpf_comp_inlMap,
+      reassoc_of% CompletedTensorProduct.mapSpf_comp_inlMap, locallyRingedSpaceMap_algHom_id,
+      Category.id_comp]
+  · simp only [tateSelfProductBothTransitionInv, tateSelfProductFirstTransitionInv,
+      firstFactorOverlapChart, bothSummandAntiInv, firstSummandInv,
+      twoPatchFibreProductInvTransition, coprod.inl_desc_assoc,
+      coprod.inr_desc_assoc, Category.assoc, mapSpfIso_hom, mapSpfIso_inv,
+      rightInterchangeOpenImmersion_eq_mapSpf, interchangeOpenImmersion_eq_mapSpf, pr₁ChartSelf]
+    simp only [CompletedTensorProduct.mapSpf_comp_inlMap,
+      reassoc_of% CompletedTensorProduct.mapSpf_comp_inlMap, locallyRingedSpaceMap_algHom_id,
+      Category.id_comp]
+  · simp only [tateSelfProductBothTransitionInv, tateSelfProductFirstTransitionInv,
+      firstFactorOverlapChart, bothSummandDiagInv, firstSummandInv,
+      twoPatchFibreProductInvTransition, coprod.inl_desc_assoc,
+      coprod.inr_desc_assoc, Category.assoc, mapSpfIso_hom, mapSpfIso_inv,
+      rightInterchangeOpenImmersion_eq_mapSpf, interchangeOpenImmersion_eq_mapSpf, pr₁ChartSelf]
+    simp only [CompletedTensorProduct.mapSpf_comp_inlMap,
+      reassoc_of% CompletedTensorProduct.mapSpf_comp_inlMap, locallyRingedSpaceMap_algHom_id,
+      Category.id_comp]
+
 /-- **SHAPE 3 forward** (`i.1 = false`, `j.1 = true`). -/
 theorem bothShape_fwd (hq : q ∈ I) (hI : I.FG) :
     bothFactorOverlapChart R I q hI ≫ pr₁Chart R I q (annulusAlgebra R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ =
-      (tateSelfProductBothTransition R I q hI).hom ≫ bothFactorOverlapChart R I q hI ≫
+      (tateSelfProductBothTransitionInv R I q hI).hom ≫ bothFactorOverlapChart R I q hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
   simp only [pr₁Chart_eq, Category.assoc]
-  rw [reassoc_of% (bothTransition_comp_firstProj R I q hI)]
-  simp only [reassoc_of% (bothChart_firstProj_factor R I q hI)]
-  rw [firstBaseRel_fwd R I q hq hI]
+  rw [reassoc_of% (bothTransitionInv_firstProj_naturality R I q hI),
+    reassoc_of% (bothChart_firstProj_factor R I q hI)]
+  have hf := firstShape_fwd R I q hq hI
+  simp only [pr₁Chart_eq, Category.assoc] at hf
+  rw [hf]
 
 /-- **SHAPE 3 reverse** (`i.1 = true`, `j.1 = false`). -/
 theorem bothShape_rev (hq : q ∈ I) (hI : I.FG) :
     bothFactorOverlapChart R I q hI ≫ pr₁Chart R I q (annulusAlgebra R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ =
-      (tateSelfProductBothTransition R I q hI).hom ≫ bothFactorOverlapChart R I q hI ≫
+      (tateSelfProductBothTransitionInv R I q hI).hom ≫ bothFactorOverlapChart R I q hI ≫
         pr₁Chart R I q (annulusAlgebra R I q) ≫
           (tateCurveFormalGlueData R I q hq hI).ι ⟨false⟩ := by
   simp only [pr₁Chart_eq, Category.assoc]
-  rw [reassoc_of% (bothTransition_comp_firstProj R I q hI)]
-  simp only [reassoc_of% (bothChart_firstProj_factor R I q hI)]
-  rw [firstBaseRel_rev R I q hq hI]
+  rw [reassoc_of% (bothTransitionInv_firstProj_naturality R I q hI),
+    reassoc_of% (bothChart_firstProj_factor R I q hI)]
+  have hf := firstShape_rev R I q hq hI
+  simp only [pr₁Chart_eq, Category.assoc] at hf
+  rw [hf]
 
 /-! ### The glued first projection -/
 
@@ -365,9 +400,9 @@ theorem bothShape_rev (hq : q ∈ I) (hI : I.FG) :
 𝔈_q`, glued from the four affine first projections `pr₁Chart` (composed with the glue inclusions of
 `𝔈_q`) via `FormalScheme.GlueData.glueMorphisms`, using the sixteen-case compatibility squares. -/
 def tateSelfProductPr₁ (hq : q ∈ I) (hI : I.FG) :
-    (tateSelfProduct R I q hq hI).toLocallyRingedSpace ⟶
+    (tateSelfProductInv R I q hq hI).toLocallyRingedSpace ⟶
       (tateCurveModel R I q hq hI).toLocallyRingedSpace :=
-  (tateSelfProductFormalGlueData R I q hq hI).glueMorphisms
+  (tateSelfProductFormalGlueDataInv R I q hq hI).glueMorphisms
     (fun i => pr₁Chart R I q (annulusAlgebra R I q) ≫
       (tateCurveFormalGlueData R I q hq hI).ι ⟨i.down.1⟩) (by
       intro i j
@@ -376,8 +411,8 @@ def tateSelfProductPr₁ (hq : q ∈ I) (hI : I.FG) :
         simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
       · have hij' : ¬ @Eq (ULift.{u} (Bool × Bool)) i j := hij
         have hji' : ¬ @Eq (ULift.{u} (Bool × Bool)) j i := fun heq => hij heq.symm
-        simp only [tateSelfProductFormalGlueData, tateSelfProductLRSGlueData,
-          tateSelfProductGlueData', CategoryTheory.GlueData.ofGlueData',
+        simp only [tateSelfProductFormalGlueDataInv, tateSelfProductLRSGlueDataInv,
+          tateSelfProductGlueData'Inv, CategoryTheory.GlueData.ofGlueData',
           CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
           eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
         congr 1
@@ -391,4 +426,3 @@ def tateSelfProductPr₁ (hq : q ∈ I) (hI : I.FG) :
             | exact bothShape_rev R I q hq hI)
 
 end AlgebraicGeometry
-
