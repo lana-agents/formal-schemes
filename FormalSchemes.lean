@@ -66,6 +66,7 @@ import FormalSchemes.FormalGroupAlgebraHopf
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.FormalTorus
+import FormalSchemes.GeneralDiagonal
 import FormalSchemes.GeneralFibreProductAffineBase
 import FormalSchemes.GeneralFibreProductAlgebraData
 import FormalSchemes.GeneralFibreProductBothAlgebraData
