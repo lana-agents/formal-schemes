@@ -1,5 +1,6 @@
 import FormalSchemes.CoproductOpenImmersion
 import FormalSchemes.TateChainStructMap
+import FormalSchemes.TateChainStructMapInv
 import FormalSchemes.Gluing
 
 set_option linter.style.header false
@@ -29,17 +30,22 @@ Concretely, the overlap object is the **binary coproduct**
 is `coprod.desc annulusOverlapChart annulusOverlapChartY`, sending the `x`-summand to the locus
 `D(x)` and the `y`-summand to the locus `D(y)`; these two loci are disjoint
 (`annulusOverlapChart_range_disjoint`), so the combined chart is an open immersion
-(`LocallyRingedSpace.IsOpenImmersion.coprodDesc`). The transition datum `t` is the summand-swap:
-the `x`-summand is carried by the geometric transition `annulusChartTransitionSpf.hom` into the
-`y`-summand and the `y`-summand is carried by its inverse into the `x`-summand. This transition is
-manifestly direction-independent and self-inverse, so on the two-element index type `ULift Bool`
+(`LocallyRingedSpace.IsOpenImmersion.coprodDesc`). The transition datum `t` glues the two summands
+by the genuine **𝔾m-inversion** transition: the `x`-summand is carried by
+`annulusChartTransitionInvSpf.hom` (the coordinate inversion `X ↦ Y⁻¹`, realising the locus
+`x₀·y₁ = 1` of the Néron 2-gon) into the `y`-summand and the `y`-summand is carried by its inverse
+into the `x`-summand. This is the model correction of issue 435: gluing by the inversion rather than
+the coordinate-swap `annulusChartTransitionSpf` (which would yield the *non-separated*
+line-with-doubled-origin) makes `𝔈_q` a genuinely separated (compact) formal curve. The transition
+is manifestly direction-independent and self-inverse, so on the two-element index type `ULift Bool`
 the fields `t'`, `t_fac`, `cocycle` remain **vacuous** (no triple of `Bool`-indices is pairwise
 distinct), exactly as in the open prototype.
 
 ## Main definitions
 
 * `AlgebraicGeometry.tateCurveGlueData'`: the `CategoryTheory.GlueData' LocallyRingedSpace` value
-  assembling the two annulus copies and their coproduct overlap datum.
+  assembling the two annulus copies and their coproduct overlap datum, glued by the 𝔾m-inversion
+transition.
 * `AlgebraicGeometry.tateCurveLRSGlueData`: the induced
   `AlgebraicGeometry.LocallyRingedSpace.GlueData`.
 * `AlgebraicGeometry.tateCurveFormalGlueData`: the `AlgebraicGeometry.FormalScheme.GlueData`, each
@@ -52,10 +58,11 @@ distinct), exactly as in the open prototype.
 ## What is delivered vs. what remains
 
 Delivered: the circular glue datum at all three levels (`GlueData'`, `LocallyRingedSpace.GlueData`,
-`FormalScheme.GlueData`), the glued formal scheme `tateCurveModel`, and the structural morphism
-`tateCurveModelStructMap : 𝔈_q ⟶ Spf R` over the base. Separatedness/properness of `𝔈_q` (which
-exhibits it as a genuinely *compact* formal curve, the geometric content distinguishing the circular
-model from the open chain) is **not** proved here and remains a documented follow-up.
+`FormalScheme.GlueData`), glued by the 𝔾m-inversion transition (issue 435 model fix), the glued
+formal scheme `tateCurveModel`, and the structural morphism `tateCurveModelStructMap : 𝔈_q ⟶ Spf R`
+over the base. With the inversion gluing in place, `𝔈_q` is the correct *separated* (compact) formal
+curve; the closed-immersion diagonal witnessing separatedness (which distinguishes the circular
+model from the open chain) is assembled downstream (issues 238/375/411) and is **not** proved here.
 
 ## References
 
@@ -107,8 +114,9 @@ theorem isOpenImmersion_tateCurveOverlapChart (hq : q ∈ I) (hI : I.FG) :
 
 /-- **The two-chart circular glue datum** of the Tate curve, as a `CategoryTheory.GlueData'` on the
 index type `ULift Bool`: two copies of `Spf A` glued along the coproduct overlap
-`Spf A{1/x} ⨿ Spf A{1/y}` in two places, via the summand-swap transition. The three fields `t'`,
-`t_fac`, `cocycle` are vacuous because no triple of `Bool`-indices is pairwise distinct. -/
+`Spf A{1/x} ⨿ Spf A{1/y}` in two places, via the 𝔾m-inversion transition
+`annulusChartTransitionInvSpf` (issue 435 model fix, `X ↦ Y⁻¹`). The three fields `t'`, `t_fac`,
+`cocycle` are vacuous because no triple of `Bool`-indices is pairwise distinct. -/
 def tateCurveGlueData' (hq : q ∈ I) (hI : I.FG) :
     CategoryTheory.GlueData' LocallyRingedSpace.{u} where
   J := ULift.{u} Bool
@@ -126,8 +134,8 @@ def tateCurveGlueData' (hq : q ∈ I) (hI : I.FG) :
     exact inferInstanceAs (HasPullback
       (coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q))
       (coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q)))
-  t := fun _ _ _ => coprod.desc ((annulusChartTransitionSpf R I q hI).hom ≫ coprod.inr)
-    ((annulusChartTransitionSpf R I q hI).inv ≫ coprod.inl)
+  t := fun _ _ _ => coprod.desc ((annulusChartTransitionInvSpf R I q hI).hom ≫ coprod.inr)
+    ((annulusChartTransitionInvSpf R I q hI).inv ≫ coprod.inl)
   t' := fun _ _ _ hij hik hjk => (tcBool_not_pairwise_distinct hij hik hjk).elim
   t_fac := fun _ _ _ hij hik hjk => (tcBool_not_pairwise_distinct hij hik hjk).elim
   t_inv := by
@@ -176,9 +184,9 @@ per-patch structural morphisms `annulusStructMap : Spf A ⟶ Spf R` via `glueMor
 compatibility is verified by casing on whether the two indices coincide: on the diagonal the
 transition `t` is the identity so both sides collapse to `annulusStructMap`; off the diagonal the
 overlap is the coproduct `Spf A{1/x} ⨿ Spf A{1/y}`, and the obligation is checked summandwise by
-`coprod.hom_ext`, landing on the two geometric crux identities
-`annulusOverlapChart_comp_structMap` (the `x`-summand) and `annulusOverlapChartY_comp_structMap`
-(the `y`-summand). -/
+`coprod.hom_ext`, landing on the two geometric crux identities for the 𝔾m-inversion gluing
+`annulusOverlapChart_comp_structMap_inv` (the `x`-summand) and
+`annulusOverlapChartY_comp_structMap_inv` (the `y`-summand). -/
 def tateCurveModelStructMap [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) :
     (tateCurveModel R I q hq hI).toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
@@ -196,9 +204,9 @@ def tateCurveModelStructMap [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRin
       refine coprod.hom_ext ?_ ?_
       · rw [coprod.inl_desc_assoc, coprod.inl_desc_assoc, Category.assoc,
           coprod.inr_desc_assoc]
-        exact annulusOverlapChart_comp_structMap R I q hI
+        exact annulusOverlapChart_comp_structMap_inv R I q hI
       · rw [coprod.inr_desc_assoc, coprod.inr_desc_assoc, Category.assoc,
           coprod.inl_desc_assoc]
-        exact annulusOverlapChartY_comp_structMap R I q hI)
+        exact annulusOverlapChartY_comp_structMap_inv R I q hI)
 
 end AlgebraicGeometry
