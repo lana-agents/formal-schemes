@@ -177,6 +177,43 @@ theorem bothChartLift_overlap (hcomm : a ≫ D.xStructMap = b ≫ D.yStructMap)
   -- Continuity of the internally chosen refined factor of `m₁` (the crux, issue 156-restricted).
   sorry
 
+include hV hf ht in
+/-- **The general fibre-product mediating morphism** `fibreLift : Z ⟶ X ×_{Spf R} Y` (EGA I §10.7,
+existence half): glue the per-piece maps `k c` over the refined source cover via
+`OpenCover.glueMorphisms`, the overlap obligation discharged by `bothChartLift_overlap`. -/
+def fibreLift (hcomm : a ≫ D.xStructMap = b ≫ D.yStructMap)
+    (hs : ∀ c, I ≤ (D.bothRefinedChart a b hZ c).J.comap (D.refinedStructHom a b hZ c)) :
+    Z.toLocallyRingedSpace ⟶ D.generalFibreProduct.toLocallyRingedSpace :=
+  (D.bothRefinedCover a b hZ).glueMorphisms (D.bothChartLift a b hZ hcomm hs)
+    (D.bothChartLift_overlap a b hZ hV hf ht hcomm hs)
+
+include hV hf ht in
+/-- **The mediating morphism recovers `a` after the first projection**: `fibreLift ≫ pr₁ = a`.
+By `OpenCover.hom_ext`, reduce to per-piece `cmap c ≫ fibreLift = k c` (`map_glueMorphisms`) then the
+per-piece triangle `k c ≫ pr₁ = cmap c ≫ a` (`bothChartLift_comp_pr₁`). -/
+theorem fibreLift_comp_pr₁ (hcomm : a ≫ D.xStructMap = b ≫ D.yStructMap)
+    (hs : ∀ c, I ≤ (D.bothRefinedChart a b hZ c).J.comap (D.refinedStructHom a b hZ c)) :
+    D.fibreLift a b hZ hV hf ht hcomm hs ≫ D.pr₁ hV hf ht = a := by
+  refine (D.bothRefinedCover a b hZ).hom_ext _ _ (fun c => ?_)
+  have h1 : (D.bothRefinedCover a b hZ).cmap c ≫ D.fibreLift a b hZ hV hf ht hcomm hs =
+      D.bothChartLift a b hZ hcomm hs c :=
+    (D.bothRefinedCover a b hZ).map_glueMorphisms _ _ c
+  exact ((Category.assoc _ _ _).symm.trans (congrArg (· ≫ D.pr₁ hV hf ht) h1)).trans
+    (D.bothChartLift_comp_pr₁ a b hZ hV hf ht hcomm hs c)
+
+include hV hf ht in
+/-- **The mediating morphism recovers `b` after the second projection**: `fibreLift ≫ pr₂ = b`.
+Analogue of `fibreLift_comp_pr₁` on the `Y`-side. -/
+theorem fibreLift_comp_pr₂ (hcomm : a ≫ D.xStructMap = b ≫ D.yStructMap)
+    (hs : ∀ c, I ≤ (D.bothRefinedChart a b hZ c).J.comap (D.refinedStructHom a b hZ c)) :
+    D.fibreLift a b hZ hV hf ht hcomm hs ≫ D.pr₂ hV hf ht = b := by
+  refine (D.bothRefinedCover a b hZ).hom_ext _ _ (fun c => ?_)
+  have h1 : (D.bothRefinedCover a b hZ).cmap c ≫ D.fibreLift a b hZ hV hf ht hcomm hs =
+      D.bothChartLift a b hZ hcomm hs c :=
+    (D.bothRefinedCover a b hZ).map_glueMorphisms _ _ c
+  exact ((Category.assoc _ _ _).symm.trans (congrArg (· ≫ D.pr₂ hV hf ht) h1)).trans
+    (D.bothChartLift_comp_pr₂ a b hZ hV hf ht hcomm hs c)
+
 end BothChartedFibreDatumXY
 
 end AlgebraicGeometry
