@@ -87,6 +87,8 @@ import FormalSchemes.GeneralFibreProductChartLift
 import FormalSchemes.GeneralFibreProductConeLeft
 import FormalSchemes.GeneralFibreProductExposeX
 import FormalSchemes.GeneralFibreProductExposeXStructMap
+import FormalSchemes.GeneralFibreProductLift
+import FormalSchemes.GeneralFibreProductLiftPiece
 import FormalSchemes.GeneralFibreProductLiftUnique
 import FormalSchemes.GeneralFibreProductProjection
 import FormalSchemes.GeneralFibreProductProjectionLeft
@@ -105,6 +107,7 @@ import FormalSchemes.IndScheme
 import FormalSchemes.IndSchemeForward
 import FormalSchemes.IndSchemeLimit
 import FormalSchemes.LargestIdealOfDefinition
+import FormalSchemes.LiftedBasicOpenCover
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.LocallyFG
