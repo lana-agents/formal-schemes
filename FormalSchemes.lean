@@ -3,6 +3,7 @@ import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicExtend
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicOnSections
+import FormalSchemes.AdicOnSectionsDescent
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AdicRingCat
