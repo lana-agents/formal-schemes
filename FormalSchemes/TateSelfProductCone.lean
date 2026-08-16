@@ -101,21 +101,21 @@ glued source, reducing on each chart to the affine cone identity. -/
 theorem tateSelfProduct_cone_comm (hq : q ∈ I) (hI : I.FG) :
     tateSelfProductPr₁ R I q hq hI ≫ tateCurveModelStructMap R I q hq hI =
       tateSelfProductPr₂ R I q hq hI ≫ tateCurveModelStructMap R I q hq hI := by
-  refine (tateSelfProductFormalGlueData R I q hq hI).hom_ext (fun i => ?_)
+  refine (tateSelfProductFormalGlueDataInv R I q hq hI).hom_ext (fun i => ?_)
   -- Per-chart restriction of each projection (`ι_glueMorphisms`) and of the structural map. These
   -- typecheck at default transparency; the ensuing combination is kept in pure term mode
   -- (`congrArg`/`Category.assoc`/`Eq.trans`), so no `rw` ever rebuilds a motive containing `i.down`
   -- across the `J = ULift (Bool × Bool)` object-defeq wall (which fails at instances transparency).
-  have h1 : (tateSelfProductFormalGlueData R I q hq hI).ι i ≫ tateSelfProductPr₁ R I q hq hI =
+  have h1 : (tateSelfProductFormalGlueDataInv R I q hq hI).ι i ≫ tateSelfProductPr₁ R I q hq hI =
       pr₁Chart R I q (annulusAlgebra R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨i.down.1⟩ := by
     rw [tateSelfProductPr₁]
-    exact (tateSelfProductFormalGlueData R I q hq hI).ι_glueMorphisms _ _ i
-  have h2 : (tateSelfProductFormalGlueData R I q hq hI).ι i ≫ tateSelfProductPr₂ R I q hq hI =
+    exact (tateSelfProductFormalGlueDataInv R I q hq hI).ι_glueMorphisms _ _ i
+  have h2 : (tateSelfProductFormalGlueDataInv R I q hq hI).ι i ≫ tateSelfProductPr₂ R I q hq hI =
       pr₂Chart R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≫
         annulusBaseBridge R I q ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨i.down.2⟩ := by
     rw [tateSelfProductPr₂]
-    exact (tateSelfProductFormalGlueData R I q hq hI).ι_glueMorphisms _ _ i
+    exact (tateSelfProductFormalGlueDataInv R I q hq hI).ι_glueMorphisms _ _ i
   have hs1 : (tateCurveFormalGlueData R I q hq hI).ι ⟨i.down.1⟩ ≫
       tateCurveModelStructMap R I q hq hI = annulusStructMap R I q hI := by
     rw [tateCurveModelStructMap]
@@ -124,14 +124,14 @@ theorem tateSelfProduct_cone_comm (hq : q ∈ I) (hI : I.FG) :
       tateCurveModelStructMap R I q hq hI = annulusStructMap R I q hI := by
     rw [tateCurveModelStructMap]
     exact (tateCurveFormalGlueData R I q hq hI).ι_glueMorphisms _ _ ⟨i.down.2⟩
-  have hL : (tateSelfProductFormalGlueData R I q hq hI).ι i ≫
+  have hL : (tateSelfProductFormalGlueDataInv R I q hq hI).ι i ≫
         tateSelfProductPr₁ R I q hq hI ≫ tateCurveModelStructMap R I q hq hI =
       pr₁Chart R I q (annulusAlgebra R I q) ≫ annulusStructMap R I q hI :=
     (Category.assoc _ _ _).symm.trans <|
       (congrArg (· ≫ tateCurveModelStructMap R I q hq hI) h1).trans <|
         (Category.assoc _ _ _).trans <|
           congrArg (pr₁Chart R I q (annulusAlgebra R I q) ≫ ·) hs1
-  have hR : (tateSelfProductFormalGlueData R I q hq hI).ι i ≫
+  have hR : (tateSelfProductFormalGlueDataInv R I q hq hI).ι i ≫
         tateSelfProductPr₂ R I q hq hI ≫ tateCurveModelStructMap R I q hq hI =
       pr₂Chart R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≫
         annulusBaseBridge R I q ≫ annulusStructMap R I q hI :=
