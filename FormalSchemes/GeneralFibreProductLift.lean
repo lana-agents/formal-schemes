@@ -133,6 +133,50 @@ theorem bothChartLift_comp_pr₂ (hcomm : a ≫ D.xStructMap = b ≫ D.yStructMa
     (hI.map (algebraMap R (D.B (D.yIndex a b hZ c)))) (D.bothRefinedChart a b hZ c).fg
     (D.yFactor a b hZ c) _
 
+include hV hf ht in
+/-- **The `glueMorphisms` overlap obligation.** The two per-piece maps `k c`, `k c'` agree after
+pulling back to the overlap `V(c,c') = pullback (cmap c) (cmap c')`. Package `V(c,c')` as a
+`LocallyFG` formal scheme (`overlapFormalScheme`, issue 447) and apply the fibre-product uniqueness
+`fibreLift_unique` (issue 234d): both composites agree after `pr₁` (via `a` and `pullback.condition`)
+and after `pr₂` (via `b`). -/
+theorem bothChartLift_overlap (hcomm : a ≫ D.xStructMap = b ≫ D.yStructMap)
+    (hs : ∀ c, I ≤ (D.bothRefinedChart a b hZ c).J.comap (D.refinedStructHom a b hZ c))
+    (c c' : (D.bothRefinedCover a b hZ).J) :
+    pullback.fst ((D.bothRefinedCover a b hZ).cmap c) ((D.bothRefinedCover a b hZ).cmap c') ≫
+        D.bothChartLift a b hZ hcomm hs c =
+      pullback.snd ((D.bothRefinedCover a b hZ).cmap c) ((D.bothRefinedCover a b hZ).cmap c') ≫
+        D.bothChartLift a b hZ hcomm hs c' := by
+  have hLFG : ((D.bothRefinedCover a b hZ).obj c).LocallyFG :=
+    FormalScheme.locallyFG_Spf (D.bothRefinedChart a b hZ c).fg
+  -- Agreement after `pr₁`: both sides equal `(pullback.fst ≫ cmap c) ≫ a` by `pullback.condition`.
+  -- Proven with the natural `pullback` domain so `rw` typechecks; `fibreLift_unique` then reads it
+  -- against the definitionally-equal `overlapFormalScheme` domain.
+  have hpr₁ : (pullback.fst ((D.bothRefinedCover a b hZ).cmap c) ((D.bothRefinedCover a b hZ).cmap c')
+        ≫ D.bothChartLift a b hZ hcomm hs c) ≫ D.pr₁ hV hf ht =
+      (pullback.snd ((D.bothRefinedCover a b hZ).cmap c) ((D.bothRefinedCover a b hZ).cmap c')
+        ≫ D.bothChartLift a b hZ hcomm hs c') ≫ D.pr₁ hV hf ht := by
+    rw [Category.assoc, Category.assoc, D.bothChartLift_comp_pr₁ a b hZ hV hf ht hcomm hs c,
+      D.bothChartLift_comp_pr₁ a b hZ hV hf ht hcomm hs c']
+    exact ((Category.assoc _ _ _).symm.trans
+      (congrArg (· ≫ a) pullback.condition)).trans (Category.assoc _ _ _)
+  have hpr₂ : (pullback.fst ((D.bothRefinedCover a b hZ).cmap c) ((D.bothRefinedCover a b hZ).cmap c')
+        ≫ D.bothChartLift a b hZ hcomm hs c) ≫ D.pr₂ hV hf ht =
+      (pullback.snd ((D.bothRefinedCover a b hZ).cmap c) ((D.bothRefinedCover a b hZ).cmap c')
+        ≫ D.bothChartLift a b hZ hcomm hs c') ≫ D.pr₂ hV hf ht := by
+    rw [Category.assoc, Category.assoc, D.bothChartLift_comp_pr₂ a b hZ hV hf ht hcomm hs c,
+      D.bothChartLift_comp_pr₂ a b hZ hV hf ht hcomm hs c']
+    exact ((Category.assoc _ _ _).symm.trans
+      (congrArg (· ≫ b) pullback.condition)).trans (Category.assoc _ _ _)
+  refine D.fibreLift_unique hV hf ht
+    (Z := (D.bothRefinedCover a b hZ).overlapFormalScheme c c' hLFG)
+    (pullback.fst ((D.bothRefinedCover a b hZ).cmap c) ((D.bothRefinedCover a b hZ).cmap c') ≫
+      D.bothChartLift a b hZ hcomm hs c)
+    (pullback.snd ((D.bothRefinedCover a b hZ).cmap c) ((D.bothRefinedCover a b hZ).cmap c') ≫
+      D.bothChartLift a b hZ hcomm hs c')
+    ((D.bothRefinedCover a b hZ).overlapFormalScheme_locallyFG c c' hLFG) hpr₁ hpr₂ ?_
+  -- Continuity of the internally chosen refined factor of `m₁` (the crux, issue 156-restricted).
+  sorry
+
 end BothChartedFibreDatumXY
 
 end AlgebraicGeometry
