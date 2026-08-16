@@ -339,6 +339,36 @@ theorem tateSelfProduct_both_glue_condition (hq : q ∈ I) (hI : I.FG) :
   rw [cancel_epi] at key
   exact key.symm
 
+omit [IsNoetherianRing R] in
+/-- **The diagonal-chart glue relation of the self-fibre product.** On the
+`(false,false)`–`(true,true)` overlap of `tateSelfProduct` (a both-factor-differing pair, whose
+overlap chart is `bothFactorOverlapChart` and whose transition is the inversion both-transition),
+the glue inclusion of the `(false,false)` chart equals the both-factor transition followed by the
+glue inclusion of the
+`(true,true)` chart. Extracted from the `LocallyRingedSpace.GlueData.glue_condition`, mirroring
+`tateCurve_glue_condition`. -/
+theorem tateSelfProduct_both_glue_condition_inv (hq : q ∈ I) (hI : I.FG) :
+    bothFactorOverlapChart R I q hI ≫
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ =
+      (tateSelfProductBothTransitionInv R I q hI).hom ≫ bothFactorOverlapChart R I q hI ≫
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
+  have h01 : ({ down := (false, false) } : ULift.{u} (Bool × Bool)) ≠ { down := (true, true) } := by
+    decide
+  have h10 : ({ down := (true, true) } : ULift.{u} (Bool × Bool)) ≠ { down := (false, false) } := by
+    decide
+  have key := (tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.glue_condition
+    ⟨(false, false)⟩ ⟨(true, true)⟩
+  set ι0 := (tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.ι ⟨(false, false)⟩
+    with hι0
+  set ι1 := (tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.ι ⟨(true, true)⟩ with hι1
+  simp only [tateSelfProductLRSGlueDataInv, tateSelfProductGlueData'Inv,
+    tateSelfProductGlueF, tateSelfProductGlueTInv,
+    CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f',
+    dif_neg h01, dif_neg h10, Category.assoc,
+    eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
+  rw [cancel_epi] at key
+  exact key.symm
+
 end AlgebraicGeometry
 
 namespace AlgebraicGeometry
@@ -660,6 +690,88 @@ theorem diagXX_transition (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIK_R)]
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ hring
 
+set_option maxRecDepth 4000 in
+omit [IsNoetherianRing R] in
+/-- Diagonal-chart transition reconciliation (inversion); mirror of `diagXX_transition`
+with the 𝔾m-inversion transition. -/
+theorem diagXX_transition_inv (hI : I.FG) :
+    diagChartXX R I q hI ≫ (bothSummandDiagInv R I q hI).hom =
+      (annulusChartTransitionInvSpf R I q hI).hom ≫ diagChartYY R I q hI := by
+  haveI hax : IsAdicRing (I.map (algebraMap R
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)))) :=
+    isAdicRing_locX R I q hI
+  haveI hay : IsAdicRing (I.map (algebraMap R
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)))) :=
+    isAdicRing_locY R I q hI
+  haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have hid : (annulusFibreChartBridgeX R I q).toRingHom.comp
+      (annulusFibreChartBridgeX R I q).symm.toRingHom = RingHom.id _ := by
+    simp only [annulusFibreChartBridgeX, AdicCompletion.congrIdealₐ_toRingHom,
+      AdicCompletion.congrIdealₐ_symm_toRingHom]
+    exact RingEquiv.toRingHom_comp_symm_toRingHom _
+  have hcore : (annulusFibreChartBridgeX R I q).toRingHom.comp
+        (annulusFibreChartTransitionInvAlg R I q hI).symm.toRingHom =
+      (annulusChartTransitionInvAlg R I q hI).symm.toRingHom.comp
+        (annulusFibreChartBridgeY R I q).toRingHom := by
+    rw [annulusFibreChartTransitionInvAlg_symm_toRingHom, ← RingHom.comp_assoc, hid,
+      RingHom.id_comp]
+  have hring : ((annulusFibreChartBridgeX R I q).toRingHom.comp
+          (CompletedTensorProduct.codiagonal R I
+            (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)))).comp
+        (CompletedTensorProduct.map hI
+          (annulusFibreChartTransitionInvAlg R I q hI).symm.toAlgHom
+          (annulusFibreChartTransitionInvAlg R I q hI).symm.toAlgHom) =
+      (annulusChartTransitionInvAlg R I q hI).symm.toRingHom.comp
+        ((annulusFibreChartBridgeY R I q).toRingHom.comp
+          (CompletedTensorProduct.codiagonal R I
+            (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)))) := by
+    rw [RingHom.comp_assoc,
+      CompletedTensorProduct.codiagonal_naturality
+        (annulusFibreChartTransitionInvAlg R I q hI).symm.toAlgHom hI,
+      algEquiv_toAlgHom_toRingHom, ← RingHom.comp_assoc, hcore, RingHom.comp_assoc]
+  have hIK_R : CompletedTensorProduct.idealOfDefinition R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) ≤
+      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q)).comap
+        ((annulusChartTransitionInvAlg R I q hI).symm.toRingHom.comp
+          ((annulusFibreChartBridgeY R I q).toRingHom.comp
+            (CompletedTensorProduct.codiagonal R I
+          (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))))) := by
+    rw [← Ideal.comap_comap, ← Ideal.comap_comap]
+    refine (CompletedTensorProduct.codiagonal_le_comap' hI).trans (Ideal.comap_mono ?_)
+    have hbY : I.map (algebraMap R
+          (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))) ≤
+        (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q)).comap
+          (annulusFibreChartBridgeY R I q).toRingHom := by
+      rw [annulusFibreChartBridgeY, AdicCompletion.congrIdealₐ_toRingHom,
+        ← CompletedTensorAwayInterchange.idealOfDef_Achart_eq (A := annulusAlgebra R I q) I
+          (overlapY R I q)]
+      exact FormalSpectrum.le_comap_congrIdeal _
+    exact hbY.trans (Ideal.comap_mono (annulusChartTransitionInvAlg_symm_le_comap R I q hI))
+  have hIK_L : CompletedTensorProduct.idealOfDefinition R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) ≤
+      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q)).comap
+        (((annulusFibreChartBridgeX R I q).toRingHom.comp
+            (CompletedTensorProduct.codiagonal R I
+              (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)))).comp
+          (CompletedTensorProduct.map hI
+            (annulusFibreChartTransitionInvAlg R I q hI).symm.toAlgHom
+            (annulusFibreChartTransitionInvAlg R I q hI).symm.toAlgHom)) := by
+    rw [hring]; exact hIK_R
+  rw [diagChartXX, bothSummandDiagInv, CompletedTensorProduct.mapSpfIso_hom,
+    CompletedTensorProduct.mapSpf_eq, annulusChartTransitionInvSpf_hom_eq, diagChartYY,
+    ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIK_L),
+    ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIK_R)]
+  exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ hring
+
 omit [IsNoetherianRing R] in
 /-- The inverse form of `diagXX_transition`. -/
 theorem diagYY_transition_inv (hI : I.FG) :
@@ -667,22 +779,29 @@ theorem diagYY_transition_inv (hI : I.FG) :
       (annulusChartTransitionSpf R I q hI).inv ≫ diagChartXX R I q hI := by
   rw [Iso.comp_inv_eq, Category.assoc, diagXX_transition R I q hI, Iso.inv_hom_id_assoc]
 
+omit [IsNoetherianRing R] in
+/-- The inverse form of `diagXX_transition_inv`. -/
+theorem diagYY_transition_inv_inv (hI : I.FG) :
+    diagChartYY R I q hI ≫ (bothSummandDiagInv R I q hI).inv =
+      (annulusChartTransitionInvSpf R I q hI).inv ≫ diagChartXX R I q hI := by
+  rw [Iso.comp_inv_eq, Category.assoc, diagXX_transition_inv R I q hI, Iso.inv_hom_id_assoc]
+
 /-! ### The per-summand diagonal glue relations of the self-product -/
 
 omit [IsNoetherianRing R] in
-/-- The `(x,x)` diagonal chart glue relation, extracted from `tateSelfProduct_both_glue_condition`
-by precomposition with the `(x,x)`-summand inclusion. -/
+/-- The `(x,x)` diagonal chart glue relation, extracted from the inversion both-glue relation
+`tateSelfProduct_both_glue_condition_inv` by precomposition with the `(x,x)`-summand inclusion. -/
 theorem diagBoth_glue_xx (hq : q ∈ I) (hI : I.FG) :
     bothInterchangeOpenImmersion (A := annulusAlgebra R I q) (B := annulusAlgebra R I q) I
         (overlapX R I q) (overlapX R I q) hI ≫
-        (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(false, false)⟩ =
-      (bothSummandDiag R I q hI).hom ≫
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ =
+      (bothSummandDiagInv R I q hI).hom ≫
         bothInterchangeOpenImmersion (A := annulusAlgebra R I q) (B := annulusAlgebra R I q) I
           (overlapY R I q) (overlapY R I q) hI ≫
-          (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(true, true)⟩ := by
+          (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
   have h := congrArg (fun m => (coprod.inl ≫ coprod.inl) ≫ m)
-    (tateSelfProduct_both_glue_condition R I q hq hI)
-  simpa only [bothFactorOverlapChart, tateSelfProductBothTransition, Category.assoc,
+    (tateSelfProduct_both_glue_condition_inv R I q hq hI)
+  simpa only [bothFactorOverlapChart, tateSelfProductBothTransitionInv, Category.assoc,
     coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc, coprod.inr_desc_assoc] using h
 
 omit [IsNoetherianRing R] in
@@ -690,23 +809,23 @@ omit [IsNoetherianRing R] in
 theorem diagBoth_glue_yy (hq : q ∈ I) (hI : I.FG) :
     bothInterchangeOpenImmersion (A := annulusAlgebra R I q) (B := annulusAlgebra R I q) I
         (overlapY R I q) (overlapY R I q) hI ≫
-        (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(false, false)⟩ =
-      (bothSummandDiag R I q hI).inv ≫
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ =
+      (bothSummandDiagInv R I q hI).inv ≫
         bothInterchangeOpenImmersion (A := annulusAlgebra R I q) (B := annulusAlgebra R I q) I
           (overlapX R I q) (overlapX R I q) hI ≫
-          (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(true, true)⟩ := by
+          (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
   have h := congrArg (fun m => (coprod.inr ≫ coprod.inr) ≫ m)
-    (tateSelfProduct_both_glue_condition R I q hq hI)
-  simpa only [bothFactorOverlapChart, tateSelfProductBothTransition, Category.assoc,
+    (tateSelfProduct_both_glue_condition_inv R I q hq hI)
+  simpa only [bothFactorOverlapChart, tateSelfProductBothTransitionInv, Category.assoc,
     coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc, coprod.inr_desc_assoc] using h
 
 omit [IsNoetherianRing R] in
 /-- The chart-swap transition datum of `𝔈_q` is its own inverse. -/
 theorem chartSwap_selfinv (hI : I.FG) :
-    coprod.desc ((annulusChartTransitionSpf R I q hI).hom ≫ coprod.inr)
-        ((annulusChartTransitionSpf R I q hI).inv ≫ coprod.inl) ≫
-      coprod.desc ((annulusChartTransitionSpf R I q hI).hom ≫ coprod.inr)
-        ((annulusChartTransitionSpf R I q hI).inv ≫ coprod.inl) =
+    coprod.desc ((annulusChartTransitionInvSpf R I q hI).hom ≫ coprod.inr)
+        ((annulusChartTransitionInvSpf R I q hI).inv ≫ coprod.inl) ≫
+      coprod.desc ((annulusChartTransitionInvSpf R I q hI).hom ≫ coprod.inr)
+        ((annulusChartTransitionInvSpf R I q hI).inv ≫ coprod.inl) =
       𝟙 (locallyRingedSpaceObj
           (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q)) ⨿
         locallyRingedSpaceObj
@@ -720,31 +839,31 @@ theorem chartSwap_selfinv (hI : I.FG) :
 /-- x-summand of the forward diagonal glue relation on the `(false,true)` source overlap. -/
 theorem diagBothSummandX_fwd (hq : q ∈ I) (hI : I.FG) :
     annulusOverlapChart R I q ≫ diagChart R I q hI ≫
-        (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(false, false)⟩ =
-      (annulusChartTransitionSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫ diagChart R I q hI ≫
-        (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(true, true)⟩ := by
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ =
+      (annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
+        diagChart R I q hI ≫ (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
   rw [reassoc_of% (overlapChart_comp_diagChart_x R I q hI), diagBoth_glue_xx R I q hq hI,
-    reassoc_of% (diagXX_transition R I q hI),
+    reassoc_of% (diagXX_transition_inv R I q hI),
     ← reassoc_of% (overlapChart_comp_diagChart_y R I q hI)]
 
 /-- y-summand of the forward diagonal glue relation. -/
 theorem diagBothSummandY_fwd (hq : q ∈ I) (hI : I.FG) :
     annulusOverlapChartY R I q ≫ diagChart R I q hI ≫
-        (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(false, false)⟩ =
-      (annulusChartTransitionSpf R I q hI).inv ≫ annulusOverlapChart R I q ≫ diagChart R I q hI ≫
-        (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(true, true)⟩ := by
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ =
+      (annulusChartTransitionInvSpf R I q hI).inv ≫ annulusOverlapChart R I q ≫ diagChart R I q hI ≫
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
   rw [reassoc_of% (overlapChart_comp_diagChart_y R I q hI), diagBoth_glue_yy R I q hq hI,
-    reassoc_of% (diagYY_transition_inv R I q hI),
+    reassoc_of% (diagYY_transition_inv_inv R I q hI),
     ← reassoc_of% (overlapChart_comp_diagChart_x R I q hI)]
 
 /-- **Forward diagonal glue relation** on the `(false,true)` source overlap. -/
 theorem diagBothGlue_fwd (hq : q ∈ I) (hI : I.FG) :
     coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
-        diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(false, false)⟩ =
-      coprod.desc ((annulusChartTransitionSpf R I q hI).hom ≫ coprod.inr)
-          ((annulusChartTransitionSpf R I q hI).inv ≫ coprod.inl) ≫
+        diagChart R I q hI ≫ (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ =
+      coprod.desc ((annulusChartTransitionInvSpf R I q hI).hom ≫ coprod.inr)
+          ((annulusChartTransitionInvSpf R I q hI).inv ≫ coprod.inl) ≫
         coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
-          diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(true, true)⟩ := by
+          diagChart R I q hI ≫ (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
   refine coprod.hom_ext ?_ ?_
   · simp only [coprod.inl_desc_assoc, coprod.inr_desc_assoc, Category.assoc]
     exact diagBothSummandX_fwd R I q hq hI
@@ -755,11 +874,12 @@ theorem diagBothGlue_fwd (hq : q ∈ I) (hI : I.FG) :
 relation and the self-inverse property of the chart-swap transition. -/
 theorem diagBothGlue_rev (hq : q ∈ I) (hI : I.FG) :
     coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
-        diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(true, true)⟩ =
-      coprod.desc ((annulusChartTransitionSpf R I q hI).hom ≫ coprod.inr)
-          ((annulusChartTransitionSpf R I q hI).inv ≫ coprod.inl) ≫
+        diagChart R I q hI ≫ (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ =
+      coprod.desc ((annulusChartTransitionInvSpf R I q hI).hom ≫ coprod.inr)
+          ((annulusChartTransitionInvSpf R I q hI).inv ≫ coprod.inl) ≫
         coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
-          diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(false, false)⟩ := by
+          diagChart R I q hI ≫
+            (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ := by
   rw [diagBothGlue_fwd R I q hq hI, reassoc_of% (chartSwap_selfinv R I q hI)]
 
 /-! ### The glued diagonal, its section identities, and separatedness -/
@@ -768,10 +888,10 @@ theorem diagBothGlue_rev (hq : q ∈ I) (hI : I.FG) :
 `diagChart` composed with the glue inclusion of the diagonal product chart `(b, b)`. -/
 def tateSelfProductDiagonal (hq : q ∈ I) (hI : I.FG) :
     (tateCurveModel R I q hq hI).toLocallyRingedSpace ⟶
-      (tateSelfProduct R I q hq hI).toLocallyRingedSpace :=
+      (tateSelfProductInv R I q hq hI).toLocallyRingedSpace :=
   (tateCurveFormalGlueData R I q hq hI).glueMorphisms
     (fun b => diagChart R I q hI ≫
-      (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩) (by
+      (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩) (by
       intro i j
       by_cases hij : i = j
       · subst hij
@@ -793,14 +913,14 @@ theorem tateSelfProductDiagonal_comp_pr₁ (hq : q ∈ I) (hI : I.FG) :
     tateSelfProductDiagonal R I q hq hI ≫ tateSelfProductPr₁ R I q hq hI = 𝟙 _ := by
   refine (tateCurveFormalGlueData R I q hq hI).hom_ext (fun b => ?_)
   have hΔ : (tateCurveFormalGlueData R I q hq hI).ι b ≫ tateSelfProductDiagonal R I q hq hI =
-      diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
+      diagChart R I q hI ≫ (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
     rw [tateSelfProductDiagonal]
     exact (tateCurveFormalGlueData R I q hq hI).ι_glueMorphisms _ _ b
-  have hpr : (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩ ≫
+  have hpr : (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩ ≫
         tateSelfProductPr₁ R I q hq hI =
       pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨b.down⟩ := by
     rw [tateSelfProductPr₁]
-    exact (tateSelfProductFormalGlueData R I q hq hI).ι_glueMorphisms _ _ ⟨(b.down, b.down)⟩
+    exact (tateSelfProductFormalGlueDataInv R I q hq hI).ι_glueMorphisms _ _ ⟨(b.down, b.down)⟩
   have key : (tateCurveFormalGlueData R I q hq hI).ι b ≫
         tateSelfProductDiagonal R I q hq hI ≫ tateSelfProductPr₁ R I q hq hI =
       (tateCurveFormalGlueData R I q hq hI).ι b :=
@@ -818,15 +938,15 @@ theorem tateSelfProductDiagonal_comp_pr₂ (hq : q ∈ I) (hI : I.FG) :
     tateSelfProductDiagonal R I q hq hI ≫ tateSelfProductPr₂ R I q hq hI = 𝟙 _ := by
   refine (tateCurveFormalGlueData R I q hq hI).hom_ext (fun b => ?_)
   have hΔ : (tateCurveFormalGlueData R I q hq hI).ι b ≫ tateSelfProductDiagonal R I q hq hI =
-      diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
+      diagChart R I q hI ≫ (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
     rw [tateSelfProductDiagonal]
     exact (tateCurveFormalGlueData R I q hq hI).ι_glueMorphisms _ _ b
-  have hpr : (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩ ≫
+  have hpr : (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩ ≫
         tateSelfProductPr₂ R I q hq hI =
       pr₂Chart R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≫ annulusBaseBridge R I q ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨b.down⟩ := by
     rw [tateSelfProductPr₂]
-    exact (tateSelfProductFormalGlueData R I q hq hI).ι_glueMorphisms _ _ ⟨(b.down, b.down)⟩
+    exact (tateSelfProductFormalGlueDataInv R I q hq hI).ι_glueMorphisms _ _ ⟨(b.down, b.down)⟩
   have key : (tateCurveFormalGlueData R I q hq hI).ι b ≫
         tateSelfProductDiagonal R I q hq hI ≫ tateSelfProductPr₂ R I q hq hI =
       (tateCurveFormalGlueData R I q hq hI).ι b :=
@@ -930,13 +1050,13 @@ theorem tateSelfProductDiagonal_surjective_stalkMap (hq : q ∈ I) (hI : I.FG) :
   obtain ⟨b, y', hy'⟩ := (tateCurveFormalGlueData R I q hq hI).ι_jointly_surjective y
   subst hy'
   have hΔ : (tateCurveFormalGlueData R I q hq hI).ι b ≫ tateSelfProductDiagonal R I q hq hI =
-      diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
+      diagChart R I q hI ≫ (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
     rw [tateSelfProductDiagonal]
     exact (tateCurveFormalGlueData R I q hq hI).ι_glueMorphisms _ _ b
   have hRHSsurj := surjective_stalkMap_comp (diagChart R I q hI)
-    ((tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩) y'
+    ((tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩) y'
     (surjective_stalkMap_of_isOpenImmersion
-      ((tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩) _) (hdiag y')
+      ((tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩) _) (hdiag y')
   have hcompsurj := hΔ.symm ▸ hRHSsurj
   exact surjective_stalkMap_of_comp ((tateCurveFormalGlueData R I q hq hI).ι b)
     (tateSelfProductDiagonal R I q hq hI) y' hcompsurj

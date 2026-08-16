@@ -60,9 +60,9 @@ contributes the open set `range (ι p).base`, the image of the affine chart `Spf
 glue inclusion; it is open because `ι p` is an open immersion. -/
 def tateSelfProductChartCover (hq : q ∈ I) (hI : I.FG) :
     ULift (Bool × Bool) →
-      TopologicalSpace.Opens ((tateSelfProduct R I q hq hI).toLocallyRingedSpace) :=
-  fun p => ⟨Set.range ((tateSelfProductFormalGlueData R I q hq hI).ι p).base,
-    ((tateSelfProductFormalGlueData R I q hq hI).ι_isOpenImmersion p).base_open.isOpen_range⟩
+      TopologicalSpace.Opens ((tateSelfProductInv R I q hq hI).toLocallyRingedSpace) :=
+  fun p => ⟨Set.range ((tateSelfProductFormalGlueDataInv R I q hq hI).ι p).base,
+    ((tateSelfProductFormalGlueDataInv R I q hq hI).ι_isOpenImmersion p).base_open.isOpen_range⟩
 
 omit [IsNoetherianRing R] in
 /-- **The four charts form an open cover** of the Tate self-product: their union is the whole space,
@@ -73,7 +73,7 @@ theorem tateSelfProductChartCover_isOpenCover (hq : q ∈ I) (hI : I.FG) :
   refine TopologicalSpace.Opens.ext ?_
   rw [TopologicalSpace.Opens.coe_iSup, TopologicalSpace.Opens.coe_top, Set.eq_univ_iff_forall]
   intro x
-  obtain ⟨i, y, hy⟩ := (tateSelfProductFormalGlueData R I q hq hI).ι_jointly_surjective x
+  obtain ⟨i, y, hy⟩ := (tateSelfProductFormalGlueDataInv R I q hq hI).ι_jointly_surjective x
   exact Set.mem_iUnion.mpr ⟨i, y, hy⟩
 
 /-- **The base map of the per-chart affine diagonal is a closed topological embedding.** The
@@ -114,28 +114,28 @@ theorem restrictPreimage_diagonal_diagChart (hq : q ∈ I) (hI : I.FG) (b : ULif
     IsClosedEmbedding
       (Set.restrictPreimage
         ((tateSelfProductChartCover R I q hq hI ⟨(b.down, b.down)⟩ :
-          Set ((tateSelfProduct R I q hq hI).toLocallyRingedSpace)))
+          Set ((tateSelfProductInv R I q hq hI).toLocallyRingedSpace)))
         (tateSelfProductDiagonal R I q hq hI).base) := by
   -- The factorisation of the diagonal on the `b`-chart.
   have hΔ : (tateCurveFormalGlueData R I q hq hI).ι ⟨b.down⟩ ≫ tateSelfProductDiagonal R I q hq hI =
-      diagChart R I q hI ≫ (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
+      diagChart R I q hI ≫ (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩ := by
     rw [tateSelfProductDiagonal]
     exact (tateCurveFormalGlueData R I q hq hI).ι_glueMorphisms _ _ ⟨b.down⟩
   -- The compatibility of the first projection with the diagonal chart.
-  have hpr : (tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩ ≫
+  have hpr : (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩ ≫
         tateSelfProductPr₁ R I q hq hI =
       pr₁Chart R I q (annulusAlgebra R I q) ≫ (tateCurveFormalGlueData R I q hq hI).ι ⟨b.down⟩ := by
     rw [tateSelfProductPr₁]
-    exact (tateSelfProductFormalGlueData R I q hq hI).ι_glueMorphisms _ _ ⟨(b.down, b.down)⟩
+    exact (tateSelfProductFormalGlueDataInv R I q hq hI).ι_glueMorphisms _ _ ⟨(b.down, b.down)⟩
   -- Pointwise base identities extracted from the categorical equalities.
   have hΔpt : ∀ x, (tateSelfProductDiagonal R I q hq hI).base
         (((tateCurveFormalGlueData R I q hq hI).ι ⟨b.down⟩).base x) =
-      ((tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩).base
+      ((tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩).base
         ((diagChart R I q hI).base x) := by
     intro x
     exact congrArg (fun m => m.base x) hΔ
   have hprpt : ∀ w, (tateSelfProductPr₁ R I q hq hI).base
-        (((tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩).base w) =
+        (((tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩).base w) =
       ((tateCurveFormalGlueData R I q hq hI).ι ⟨b.down⟩).base
         ((pr₁Chart R I q (annulusAlgebra R I q)).base w) := by
     intro w
@@ -154,8 +154,8 @@ theorem restrictPreimage_diagonal_diagChart (hq : q ∈ I) (hI : I.FG) (b : ULif
     Topology.IsEmbedding.of_leftInverse hsecpt hcpr hcΔ
   -- The chart inclusions are open embeddings and `diagChart.base` is a closed embedding.
   have he_emb : IsOpenEmbedding
-      ⇑((tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩).base :=
-    ((tateSelfProductFormalGlueData R I q hq hI).ι_isOpenImmersion ⟨(b.down, b.down)⟩).base_open
+      ⇑((tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩).base :=
+    ((tateSelfProductFormalGlueDataInv R I q hq hI).ι_isOpenImmersion ⟨(b.down, b.down)⟩).base_open
   have hd_ce : IsClosedEmbedding ⇑(diagChart R I q hI).base :=
     isClosedEmbedding_diagChart_base R I q hI
   -- The homeomorphism of `Spf(A ⊗̂_R A)` onto the chart (its range equals the chart cover set).
@@ -168,7 +168,7 @@ theorem restrictPreimage_diagonal_diagChart (hq : q ∈ I) (hI : I.FG) (b : ULif
       Set.range ⇑(diagChart R I q hI).base := by
     ext z
     have hval : Subtype.val (ψ z) =
-        ((tateSelfProductFormalGlueData R I q hq hI).ι ⟨(b.down, b.down)⟩).base z := rfl
+        ((tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩).base z := rfl
     simp only [Set.mem_preimage, Set.mem_range]
     rw [hval]
     constructor

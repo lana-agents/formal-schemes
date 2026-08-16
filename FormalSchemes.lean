@@ -161,6 +161,7 @@ import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateChainStructMapInv
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateChartTransitionAlgEq
+import FormalSchemes.TateChartTransitionInvAlgEq
 import FormalSchemes.TateCurveModel
 import FormalSchemes.TateDiagonalClosedCover
 import FormalSchemes.TateFreeness
@@ -207,3 +208,4 @@ import FormalSchemes.TwoPatchFibreProduct
 import FormalSchemes.TwoPatchFibreProductObject
 import FormalSchemes.TwoPatchFibreProductProjection
 import FormalSchemes.TwoPatchFibreProductProjectionLeft
+import FormalSchemes.TwoPatchFibreProductProjectionLeftInv
