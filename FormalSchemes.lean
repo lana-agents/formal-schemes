@@ -90,6 +90,7 @@ import FormalSchemes.GeneralFibreProductExposeXStructMap
 import FormalSchemes.GeneralFibreProductLift
 import FormalSchemes.GeneralFibreProductLiftPiece
 import FormalSchemes.GeneralFibreProductLiftUnique
+import FormalSchemes.GeneralFibreProductOfFactors
 import FormalSchemes.GeneralFibreProductProjection
 import FormalSchemes.GeneralFibreProductProjectionLeft
 import FormalSchemes.GermValue
