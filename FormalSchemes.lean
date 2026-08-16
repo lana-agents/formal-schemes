@@ -103,6 +103,7 @@ import FormalSchemes.GeneralFibreProductLiftUnique
 import FormalSchemes.GeneralFibreProductOfFactors
 import FormalSchemes.GeneralFibreProductProjection
 import FormalSchemes.GeneralFibreProductProjectionLeft
+import FormalSchemes.GeneralSeparated
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
