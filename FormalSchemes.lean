@@ -71,6 +71,7 @@ import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.FormalTorus
 import FormalSchemes.GeneralDiagonal
+import FormalSchemes.GeneralDiagonalUnconditional
 import FormalSchemes.GeneralFibreProductAffineBase
 import FormalSchemes.GeneralFibreProductAlgebraData
 import FormalSchemes.GeneralFibreProductBothAlgebraData
@@ -93,6 +94,7 @@ import FormalSchemes.GeneralFibreProductConeLeft
 import FormalSchemes.GeneralFibreProductExposeX
 import FormalSchemes.GeneralFibreProductExposeXStructMap
 import FormalSchemes.GeneralFibreProductLift
+import FormalSchemes.GeneralFibreProductLiftCharts
 import FormalSchemes.GeneralFibreProductLiftPiece
 import FormalSchemes.GeneralFibreProductLiftUnique
 import FormalSchemes.GeneralFibreProductOfFactors
