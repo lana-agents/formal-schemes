@@ -33,6 +33,7 @@ import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionSections
 import FormalSchemes.ClosedImmersionStalk
+import FormalSchemes.ClosedImmersionSubscheme
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalCompletionFunctorial
 import FormalSchemes.CofinalSheafComparison
