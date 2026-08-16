@@ -22,6 +22,7 @@ import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
 import FormalSchemes.BasicOpenChartComponent
+import FormalSchemes.BasicOpenCoverVanishing
 import FormalSchemes.BasicOpenImmersion
 import FormalSchemes.BasicOpenImmersionAssembly
 import FormalSchemes.BasicOpenImmersionLRS
