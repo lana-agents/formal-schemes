@@ -122,6 +122,7 @@ import FormalSchemes.IndScheme
 import FormalSchemes.IndSchemeForward
 import FormalSchemes.IndSchemeLimit
 import FormalSchemes.InversionCodiagonalClosedEmbedding
+import FormalSchemes.InversionCodiagonalClosedEmbeddingY
 import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LiftedBasicOpenCover
 import FormalSchemes.LimitUnits
