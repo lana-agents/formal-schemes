@@ -32,6 +32,7 @@ import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
+import FormalSchemes.ClosedImmersionIso
 import FormalSchemes.ClosedImmersionSections
 import FormalSchemes.ClosedImmersionStalk
 import FormalSchemes.ClosedImmersionSubscheme
