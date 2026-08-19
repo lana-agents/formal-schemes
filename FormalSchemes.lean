@@ -174,6 +174,7 @@ import FormalSchemes.TateDiagonalClosedCover
 import FormalSchemes.TateFreeness
 import FormalSchemes.TateFreenessAdjacent
 import FormalSchemes.TateGlueTwoPatch
+import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
