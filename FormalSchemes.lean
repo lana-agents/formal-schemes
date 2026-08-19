@@ -16,6 +16,7 @@ import FormalSchemes.AffineFibreProductUniqueness
 import FormalSchemes.AffineSeparated
 import FormalSchemes.AffineSeparatedInstance
 import FormalSchemes.AffineSeparatedIso
+import FormalSchemes.AffineSeparatedTopological
 import FormalSchemes.AffineSeparatedValue
 import FormalSchemes.AnnulusNontrivial
 import FormalSchemes.AnnulusOverlapProper
@@ -37,6 +38,7 @@ import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
 import FormalSchemes.ClosedImmersionIso
 import FormalSchemes.ClosedImmersionSections
+import FormalSchemes.ClosedImmersionSplitMono
 import FormalSchemes.ClosedImmersionStalk
 import FormalSchemes.ClosedImmersionSubscheme
 import FormalSchemes.CofinalCompletion
@@ -109,6 +111,7 @@ import FormalSchemes.GeneralFibreProductOfFactors
 import FormalSchemes.GeneralFibreProductProjection
 import FormalSchemes.GeneralFibreProductProjectionLeft
 import FormalSchemes.GeneralSeparated
+import FormalSchemes.GeneralSeparatedTopological
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
