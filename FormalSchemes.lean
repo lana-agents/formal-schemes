@@ -118,6 +118,7 @@ import FormalSchemes.GlueOpenCoverFactorBoth
 import FormalSchemes.GlueOpenCoverFactorBothAlg
 import FormalSchemes.GlueTPrimeOfLift
 import FormalSchemes.Gluing
+import FormalSchemes.GraphCodiagonalClosedEmbedding
 import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.IndScheme
 import FormalSchemes.IndSchemeForward
