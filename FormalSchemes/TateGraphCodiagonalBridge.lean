@@ -318,4 +318,434 @@ theorem graphLiftX_comp_map_transition (hI : I.FG) :
       codiagonal_inr]
 
 
+/-! ### The plain `y`-chart bridge and the `y`-side lifts -/
+
+/-- **The plain `y`-side chart bridge** `A{1/y} ≃ₐ[R] A[y⁻¹]^∧` (no inversion twist). -/
+def chartBridgeY :
+    awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q) ≃ₐ[R]
+      annulusOverlapY R I q :=
+  (annulusFibreChartBridgeY R I q).trans (annulusChartOverlapAlgY R I q)
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+theorem chartBridgeY_comp_awayCompletionHom :
+    (chartBridgeY R I q).toRingHom.comp
+        (awayCompletionHom (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) =
+      algebraMap (annulusAlgebra R I q) (annulusOverlapY R I q) := by
+  rw [chartBridgeY, algEquiv_trans_toRingHom, RingHom.comp_assoc,
+    bridgeY_comp_awayCompletionHom, chartOverlapAlgY_comp_awayCompletionHom]
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+theorem chartBridgeY_algebraMap (a : annulusAlgebra R I q) :
+    chartBridgeY R I q
+        (algebraMap (annulusAlgebra R I q)
+          (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) a) =
+      algebraMap (annulusAlgebra R I q) (annulusOverlapY R I q) a := by
+  have h := RingHom.congr_fun (chartBridgeY_comp_awayCompletionHom R I q) a
+  rwa [RingHom.comp_apply, FormalSpectrum.awayCompletionHom_eq_algebraMap] at h
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+/-- **The 𝔾m-inversion chart transition, read through the plain bridges**: `τ⁻¹ ≫ ψʸ_plain`
+is `ψˣ` followed by the inversion. -/
+theorem annulusFibreChartTransitionInvAlg_trans_chartBridgeY (hI : I.FG) :
+    (annulusFibreChartTransitionInvAlg R I q hI).trans (chartBridgeY R I q) =
+      (graphChartAlgX R I q).trans (annulusOverlapInversionAlg R I q hI) := by
+  rw [chartBridgeY, graphChartAlgX, annulusFibreChartTransitionInvAlg,
+    annulusChartTransitionInvAlg]
+  simp only [AlgEquiv.trans_assoc', AlgEquiv.symm_trans_cancel, AlgEquiv.symm_trans_self,
+    AlgEquiv.trans_refl']
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+theorem chartBridgeY_comp_transitionInv (hI : I.FG) :
+    (chartBridgeY R I q).toRingHom.comp
+        (annulusFibreChartTransitionInvAlg R I q hI).toRingHom =
+      (annulusOverlapInversionAlg R I q hI).toRingHom.comp (graphChartAlgX R I q).toRingHom := by
+  rw [← algEquiv_trans_toRingHom, ← algEquiv_trans_toRingHom,
+    annulusFibreChartTransitionInvAlg_trans_chartBridgeY]
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+theorem chartBridgeY_transition_apply (hI : I.FG)
+    (z : awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)) :
+    chartBridgeY R I q (annulusFibreChartTransitionInvAlg R I q hI z) =
+      annulusOverlapInversion R I q hI (graphChartAlgX R I q z) := by
+  have h := RingHom.congr_fun (chartBridgeY_comp_transitionInv R I q hI) z
+  rwa [RingHom.comp_apply, RingHom.comp_apply] at h
+
+/-! ### The three remaining graph lifts -/
+
+/-- `A →ₐ[R] A[y⁻¹]^∧`, the structural map of `A` into the `x`-overlap followed by the
+𝔾m-inversion: the coordinate map of the partner point of the gluing. -/
+def invLocXY (hI : I.FG) : annulusAlgebra R I q →ₐ[R] annulusOverlapY R I q :=
+  (annulusOverlapInversionAlg R I q hI).toAlgHom.comp
+    (IsScalarTower.toAlgHom R (annulusAlgebra R I q) (annulusOverlap R I q))
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+@[simp] theorem invLocXY_apply (hI : I.FG) (a : annulusAlgebra R I q) :
+    invLocXY R I q hI a =
+      annulusOverlapInversion R I q hI
+        (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q) a) := rfl
+
+/-- The `y`-side graph lift `A{1/y} ⊗̂_R A →+* A[y⁻¹]^∧`. -/
+def graphLiftY (hI : I.FG) :
+    CompletedTensorProduct R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+        (annulusAlgebra R I q) →+* annulusOverlapY R I q :=
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  CompletedTensorProduct.lift (annulusOverlapIdealY R I q)
+    (le_of_eq (overlapIdealY_eq_map R I q).symm)
+    (chartBridgeY R I q).toAlgHom (invLocXY R I q hI)
+
+/-- The mixed graph lift `A{1/y} ⊗̂_R A →+* A[x⁻¹]^∧` (first factor localized). -/
+def graphLiftXY (hI : I.FG) :
+    CompletedTensorProduct R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+        (annulusAlgebra R I q) →+* annulusOverlap R I q :=
+  haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
+    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
+  CompletedTensorProduct.lift (annulusOverlapIdeal R I q)
+    (le_of_eq (overlapIdeal_eq_map R I q).symm)
+    (graphChartAlgY R I q hI).toAlgHom
+    (IsScalarTower.toAlgHom R (annulusAlgebra R I q) (annulusOverlap R I q))
+
+/-- The mixed graph lift `A ⊗̂_R A{1/y} →+* A[y⁻¹]^∧` (second factor localized). -/
+def graphLiftYX (hI : I.FG) :
+    CompletedTensorProduct R I (annulusAlgebra R I q)
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) →+*
+      annulusOverlapY R I q :=
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  CompletedTensorProduct.lift (annulusOverlapIdealY R I q)
+    (le_of_eq (overlapIdealY_eq_map R I q).symm)
+    (invLocXY R I q hI) (chartBridgeY R I q).toAlgHom
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+theorem graphLiftY_mem_pow (hI : I.FG) (m : ℕ)
+    {x : CompletedTensorProduct R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+      (annulusAlgebra R I q)}
+    (hx : x ∈ (idealOfDefinition R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+      (annulusAlgebra R I q)) ^ m) :
+    graphLiftY R I q hI x ∈ (annulusOverlapIdealY R I q) ^ m := by
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  exact lift_mem_pow _ _ _ _ hI m hx
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+theorem graphLiftXY_mem_pow (hI : I.FG) (m : ℕ)
+    {x : CompletedTensorProduct R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+      (annulusAlgebra R I q)}
+    (hx : x ∈ (idealOfDefinition R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+      (annulusAlgebra R I q)) ^ m) :
+    graphLiftXY R I q hI x ∈ (annulusOverlapIdeal R I q) ^ m := by
+  haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
+    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
+  exact lift_mem_pow _ _ _ _ hI m hx
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+theorem graphLiftYX_mem_pow (hI : I.FG) (m : ℕ)
+    {x : CompletedTensorProduct R I (annulusAlgebra R I q)
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))}
+    (hx : x ∈ (idealOfDefinition R I (annulusAlgebra R I q)
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))) ^ m) :
+    graphLiftYX R I q hI x ∈ (annulusOverlapIdealY R I q) ^ m := by
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  exact lift_mem_pow _ _ _ _ hI m hx
+
+/-! ### The `(A)` and `(B)` identities of the three remaining lifts -/
+
+set_option linter.unusedSectionVars false in
+theorem graphLiftY_comp_map (hI : I.FG) :
+    (graphLiftY R I q hI).comp
+        (map hI
+          (IsScalarTower.toAlgHom R (annulusAlgebra R I q)
+            (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)))
+          (AlgHom.id R (annulusAlgebra R I q))) =
+      graphCodiagY R I q hI := by
+  haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
+    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+    annulus_isAdicRing_map R I q hI
+  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
+    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  refine hom_ext (annulusOverlapIdealY R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
+    (fun a => ?_) (fun b => ?_)
+  · exact graphLiftY_mem_pow R I q hI m (map_mem_pow hI _ _ m hx)
+  · rw [graphCodiagY, RingHom.comp_apply, RingHom.comp_apply]
+    have h1 : commHom (R := R) (I := I) (A := annulusAlgebra R I q)
+        (B := annulusAlgebra R I q) hI x ∈
+        (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) ^ m := by
+      rw [commHom]
+      exact lift_mem_pow _ _ _ _ hI m hx
+    have h2 : graphCodiagX R I q hI (commHom (R := R) (I := I) (A := annulusAlgebra R I q)
+        (B := annulusAlgebra R I q) hI x) ∈ (annulusOverlapIdeal R I q) ^ m := by
+      rw [graphCodiagX, RingHom.comp_apply, localizedCodiagInvX]
+      exact lift_mem_pow _ _ _ _ hI m (map_mem_pow hI _ _ m h1)
+    have h3 : ((annulusOverlapIdeal R I q) ^ m).map
+        (annulusOverlapInversion R I q hI : annulusOverlap R I q →+* annulusOverlapY R I q) =
+        (annulusOverlapIdealY R I q) ^ m := by
+      rw [Ideal.map_pow, map_annulusOverlapInversion_annulusOverlapIdeal]
+    exact h3.le (Ideal.mem_map_of_mem _ h2)
+  · rw [RingHom.comp_apply, map_inl, graphLiftY, lift_inl, IsScalarTower.coe_toAlgHom',
+      AlgEquiv.coe_toAlgHom, chartBridgeY_algebraMap, graphCodiagY_inl]
+    rfl
+  · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftY, lift_inr, invLocXY_apply,
+      graphCodiagY_inr]
+    rfl
+
+set_option linter.unusedSectionVars false in
+theorem graphLiftY_comp_map_transition (hI : I.FG) :
+    haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+      annulus_isAdicRing_map R I q hI
+    ((graphLiftY R I q hI).comp
+        (map hI (annulusFibreChartTransitionInvAlg R I q hI).toAlgHom
+          (AlgEquiv.refl (R := R) (A₁ := annulusAlgebra R I q)).toAlgHom)).comp
+      (map hI
+        (IsScalarTower.toAlgHom R (annulusAlgebra R I q)
+          (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)))
+        (AlgHom.id R (annulusAlgebra R I q))) =
+      (invLocXY R I q hI).toRingHom.comp (codiagonal R I (annulusAlgebra R I q)) := by
+  haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
+    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+    annulus_isAdicRing_map R I q hI
+  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
+    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have h0 : (invLocXY R I q hI).toRingHom =
+      ((annulusOverlapInversion R I q hI : annulusOverlap R I q →+* annulusOverlapY R I q)).comp
+        (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) := rfl
+  have h1 : (I.map (algebraMap R (annulusAlgebra R I q))).map
+      (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) = annulusOverlapIdeal R I q := by
+    rw [Ideal.map_map,
+      ← IsScalarTower.algebraMap_eq R (annulusAlgebra R I q) (annulusOverlap R I q),
+      overlapIdeal_eq_map]
+  have hid : (I.map (algebraMap R (annulusAlgebra R I q))).map
+      (invLocXY R I q hI).toRingHom = annulusOverlapIdealY R I q := by
+    rw [h0, ← Ideal.map_map, h1, map_annulusOverlapInversion_annulusOverlapIdeal]
+  refine hom_ext (annulusOverlapIdealY R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
+    (fun a => ?_) (fun b => ?_)
+  · exact graphLiftY_mem_pow R I q hI m (map_mem_pow hI _ _ m (map_mem_pow hI _ _ m hx))
+  · have h1 : codiagonal R I (annulusAlgebra R I q) x ∈
+        (I.map (algebraMap R (annulusAlgebra R I q))) ^ m :=
+      lift_mem_pow _ (le_refl _) (AlgHom.id R _) (AlgHom.id R _) hI m hx
+    have h2 : ((I.map (algebraMap R (annulusAlgebra R I q))) ^ m).map
+        (invLocXY R I q hI).toRingHom = (annulusOverlapIdealY R I q) ^ m := by
+      rw [Ideal.map_pow, hid]
+    exact h2.le (Ideal.mem_map_of_mem _ h1)
+  · rw [RingHom.comp_apply, RingHom.comp_apply, map_inl, map_inl, graphLiftY, lift_inl]
+    simp only [AlgEquiv.coe_toAlgHom, IsScalarTower.coe_toAlgHom']
+    rw [chartBridgeY_transition_apply, graphChartAlgX_algebraMap, RingHom.comp_apply,
+      codiagonal_inl]
+    rfl
+  · rw [RingHom.comp_apply, RingHom.comp_apply, map_inr, map_inr, AlgHom.id_apply, graphLiftY,
+      lift_inr, RingHom.comp_apply, codiagonal_inr]
+    rfl
+
+set_option linter.unusedSectionVars false in
+theorem graphLiftXY_comp_map (hI : I.FG) :
+    (graphLiftXY R I q hI).comp
+        (map hI
+          (IsScalarTower.toAlgHom R (annulusAlgebra R I q)
+            (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)))
+          (AlgHom.id R (annulusAlgebra R I q))) =
+      (graphCodiagX R I q hI).comp
+        (commHom (R := R) (I := I) (A := annulusAlgebra R I q)
+          (B := annulusAlgebra R I q) hI) := by
+  haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
+    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+    annulus_isAdicRing_map R I q hI
+  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
+    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have hcod : ∀ (m : ℕ) (z : CompletedTensorProduct R I (annulusAlgebra R I q)
+      (annulusAlgebra R I q)), z ∈ (idealOfDefinition R I (annulusAlgebra R I q)
+        (annulusAlgebra R I q)) ^ m →
+      graphCodiagX R I q hI z ∈ (annulusOverlapIdeal R I q) ^ m := by
+    intro m z hz
+    rw [graphCodiagX, RingHom.comp_apply, localizedCodiagInvX]
+    exact lift_mem_pow _ _ _ _ hI m (map_mem_pow hI _ _ m hz)
+  have hcomm : ∀ (m : ℕ) (z : CompletedTensorProduct R I (annulusAlgebra R I q)
+      (annulusAlgebra R I q)), z ∈ (idealOfDefinition R I (annulusAlgebra R I q)
+        (annulusAlgebra R I q)) ^ m →
+      commHom (R := R) (I := I) (A := annulusAlgebra R I q) (B := annulusAlgebra R I q) hI z ∈
+        (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) ^ m := by
+    intro m z hz
+    rw [commHom]
+    exact lift_mem_pow _ _ _ _ hI m hz
+  refine hom_ext (annulusOverlapIdeal R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
+    (fun a => ?_) (fun b => ?_)
+  · exact graphLiftXY_mem_pow R I q hI m (map_mem_pow hI _ _ m hx)
+  · rw [RingHom.comp_apply]
+    exact hcod m _ (hcomm m x hx)
+  · rw [RingHom.comp_apply, map_inl, graphLiftXY, lift_inl, IsScalarTower.coe_toAlgHom',
+      AlgEquiv.coe_toAlgHom, graphChartAlgY_algebraMap, RingHom.comp_apply, commHom_inl,
+      graphCodiagX_inr]
+    rfl
+  · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftXY, lift_inr, RingHom.comp_apply,
+      commHom_inr, graphCodiagX_inl]
+
+set_option linter.unusedSectionVars false in
+theorem graphLiftXY_comp_map_transition (hI : I.FG) :
+    haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+      annulus_isAdicRing_map R I q hI
+    ((graphLiftXY R I q hI).comp
+        (map hI (annulusFibreChartTransitionInvAlg R I q hI).toAlgHom
+          (AlgEquiv.refl (R := R) (A₁ := annulusAlgebra R I q)).toAlgHom)).comp
+      (map hI
+        (IsScalarTower.toAlgHom R (annulusAlgebra R I q)
+          (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)))
+        (AlgHom.id R (annulusAlgebra R I q))) =
+      (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)).comp
+        (codiagonal R I (annulusAlgebra R I q)) := by
+  haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
+    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+    annulus_isAdicRing_map R I q hI
+  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
+    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have h1 : (I.map (algebraMap R (annulusAlgebra R I q))).map
+      (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) = annulusOverlapIdeal R I q := by
+    rw [Ideal.map_map,
+      ← IsScalarTower.algebraMap_eq R (annulusAlgebra R I q) (annulusOverlap R I q),
+      overlapIdeal_eq_map]
+  refine hom_ext (annulusOverlapIdeal R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
+    (fun a => ?_) (fun b => ?_)
+  · exact graphLiftXY_mem_pow R I q hI m (map_mem_pow hI _ _ m (map_mem_pow hI _ _ m hx))
+  · have hc : codiagonal R I (annulusAlgebra R I q) x ∈
+        (I.map (algebraMap R (annulusAlgebra R I q))) ^ m :=
+      lift_mem_pow _ (le_refl _) (AlgHom.id R _) (AlgHom.id R _) hI m hx
+    have h2 : ((I.map (algebraMap R (annulusAlgebra R I q))) ^ m).map
+        (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) =
+        (annulusOverlapIdeal R I q) ^ m := by rw [Ideal.map_pow, h1]
+    exact h2.le (Ideal.mem_map_of_mem _ hc)
+  · rw [RingHom.comp_apply, RingHom.comp_apply, map_inl, map_inl, graphLiftXY, lift_inl]
+    simp only [AlgEquiv.coe_toAlgHom, IsScalarTower.coe_toAlgHom']
+    rw [graphChartAlgY_transition_apply, graphChartAlgX_algebraMap, RingHom.comp_apply,
+      codiagonal_inl]
+  · rw [RingHom.comp_apply, RingHom.comp_apply, map_inr, map_inr, AlgHom.id_apply, graphLiftXY,
+      lift_inr, RingHom.comp_apply, codiagonal_inr]
+    rfl
+
+set_option linter.unusedSectionVars false in
+theorem graphLiftYX_comp_map (hI : I.FG) :
+    (graphLiftYX R I q hI).comp
+        (map hI (AlgHom.id R (annulusAlgebra R I q))
+          (IsScalarTower.toAlgHom R (annulusAlgebra R I q)
+            (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)))) =
+      (graphCodiagY R I q hI).comp
+        (commHom (R := R) (I := I) (A := annulusAlgebra R I q)
+          (B := annulusAlgebra R I q) hI) := by
+  haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
+    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+    annulus_isAdicRing_map R I q hI
+  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
+    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have hcod : ∀ (m : ℕ) (z : CompletedTensorProduct R I (annulusAlgebra R I q)
+      (annulusAlgebra R I q)), z ∈ (idealOfDefinition R I (annulusAlgebra R I q)
+        (annulusAlgebra R I q)) ^ m →
+      graphCodiagX R I q hI z ∈ (annulusOverlapIdeal R I q) ^ m := by
+    intro m z hz
+    rw [graphCodiagX, RingHom.comp_apply, localizedCodiagInvX]
+    exact lift_mem_pow _ _ _ _ hI m (map_mem_pow hI _ _ m hz)
+  have hcomm : ∀ (m : ℕ) (z : CompletedTensorProduct R I (annulusAlgebra R I q)
+      (annulusAlgebra R I q)), z ∈ (idealOfDefinition R I (annulusAlgebra R I q)
+        (annulusAlgebra R I q)) ^ m →
+      commHom (R := R) (I := I) (A := annulusAlgebra R I q) (B := annulusAlgebra R I q) hI z ∈
+        (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) ^ m := by
+    intro m z hz
+    rw [commHom]
+    exact lift_mem_pow _ _ _ _ hI m hz
+  have h3 : ∀ m : ℕ, ((annulusOverlapIdeal R I q) ^ m).map
+      (annulusOverlapInversion R I q hI : annulusOverlap R I q →+* annulusOverlapY R I q) =
+      (annulusOverlapIdealY R I q) ^ m := by
+    intro m
+    rw [Ideal.map_pow, map_annulusOverlapInversion_annulusOverlapIdeal]
+  refine hom_ext (annulusOverlapIdealY R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
+    (fun a => ?_) (fun b => ?_)
+  · exact graphLiftYX_mem_pow R I q hI m (map_mem_pow hI _ _ m hx)
+  · rw [RingHom.comp_apply, graphCodiagY, RingHom.comp_apply, RingHom.comp_apply]
+    exact (h3 m).le (Ideal.mem_map_of_mem _ (hcod m _ (hcomm m _ (hcomm m x hx))))
+  · rw [RingHom.comp_apply, map_inl, AlgHom.id_apply, graphLiftYX, lift_inl, invLocXY_apply,
+      RingHom.comp_apply, commHom_inl, graphCodiagY_inr]
+    rfl
+  · rw [RingHom.comp_apply, map_inr, graphLiftYX, lift_inr, IsScalarTower.coe_toAlgHom',
+      AlgEquiv.coe_toAlgHom, chartBridgeY_algebraMap, RingHom.comp_apply, commHom_inr,
+      graphCodiagY_inl]
+    rfl
+
+set_option linter.unusedSectionVars false in
+theorem graphLiftYX_comp_map_transition (hI : I.FG) :
+    haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+      annulus_isAdicRing_map R I q hI
+    ((graphLiftYX R I q hI).comp
+        (map hI (AlgEquiv.refl (R := R) (A₁ := annulusAlgebra R I q)).toAlgHom
+          (annulusFibreChartTransitionInvAlg R I q hI).toAlgHom)).comp
+      (map hI (AlgHom.id R (annulusAlgebra R I q))
+        (IsScalarTower.toAlgHom R (annulusAlgebra R I q)
+          (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)))) =
+      (invLocXY R I q hI).toRingHom.comp (codiagonal R I (annulusAlgebra R I q)) := by
+  haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
+    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
+    (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+    annulus_isAdicRing_map R I q hI
+  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
+    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have h0 : (invLocXY R I q hI).toRingHom =
+      ((annulusOverlapInversion R I q hI : annulusOverlap R I q →+* annulusOverlapY R I q)).comp
+        (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) := rfl
+  have h1 : (I.map (algebraMap R (annulusAlgebra R I q))).map
+      (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) = annulusOverlapIdeal R I q := by
+    rw [Ideal.map_map,
+      ← IsScalarTower.algebraMap_eq R (annulusAlgebra R I q) (annulusOverlap R I q),
+      overlapIdeal_eq_map]
+  have hid : (I.map (algebraMap R (annulusAlgebra R I q))).map
+      (invLocXY R I q hI).toRingHom = annulusOverlapIdealY R I q := by
+    rw [h0, ← Ideal.map_map, h1, map_annulusOverlapInversion_annulusOverlapIdeal]
+  refine hom_ext (annulusOverlapIdealY R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
+    (fun a => ?_) (fun b => ?_)
+  · exact graphLiftYX_mem_pow R I q hI m (map_mem_pow hI _ _ m (map_mem_pow hI _ _ m hx))
+  · have hc : codiagonal R I (annulusAlgebra R I q) x ∈
+        (I.map (algebraMap R (annulusAlgebra R I q))) ^ m :=
+      lift_mem_pow _ (le_refl _) (AlgHom.id R _) (AlgHom.id R _) hI m hx
+    have h2 : ((I.map (algebraMap R (annulusAlgebra R I q))) ^ m).map
+        (invLocXY R I q hI).toRingHom = (annulusOverlapIdealY R I q) ^ m := by
+      rw [Ideal.map_pow, hid]
+    exact h2.le (Ideal.mem_map_of_mem _ hc)
+  · rw [RingHom.comp_apply, RingHom.comp_apply, map_inl, map_inl, AlgHom.id_apply, graphLiftYX,
+      lift_inl, RingHom.comp_apply, codiagonal_inl]
+    rfl
+  · rw [RingHom.comp_apply, RingHom.comp_apply, map_inr, map_inr, graphLiftYX, lift_inr]
+    simp only [AlgEquiv.coe_toAlgHom, IsScalarTower.coe_toAlgHom']
+    rw [chartBridgeY_transition_apply, graphChartAlgX_algebraMap, RingHom.comp_apply,
+      codiagonal_inr]
+    rfl
+
 end AlgebraicGeometry
