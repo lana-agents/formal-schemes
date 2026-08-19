@@ -188,6 +188,7 @@ import FormalSchemes.TateSelfProductDSigmaInv
 import FormalSchemes.TateSelfProductGlueDatum
 import FormalSchemes.TateSelfProductGlueTPrime
 import FormalSchemes.TateSelfProductGlueTPrimeIso
+import FormalSchemes.TateSelfProductMixedGlue
 import FormalSchemes.TateSelfProductObject
 import FormalSchemes.TateSelfProductObjectInv
 import FormalSchemes.TateSelfProductOverlap
