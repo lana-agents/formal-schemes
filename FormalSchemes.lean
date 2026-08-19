@@ -205,6 +205,7 @@ import FormalSchemes.TateSelfProductTransitionRangeRight
 import FormalSchemes.TateSelfProductTripleOverlap
 import FormalSchemes.TateSeparated
 import FormalSchemes.TateShift
+import FormalSchemes.TateShiftAction
 import FormalSchemes.TateTransition
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
