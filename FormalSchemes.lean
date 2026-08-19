@@ -29,6 +29,7 @@ import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
 import FormalSchemes.BasicOpenChartComponent
 import FormalSchemes.BasicOpenChartOverlap
+import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.BasicOpenCoverVanishing
 import FormalSchemes.BasicOpenImmersion
 import FormalSchemes.BasicOpenImmersionAssembly
