@@ -235,4 +235,236 @@ theorem spfGraphCodiagX_comp_ι_ft (hq : q ∈ I) (hI : I.FG) :
           (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ := by
         rw [spfGraphLiftX_comp_transition R I q hI]; simp only [Category.assoc]
 
+/-! ### The `y`-piece of the mixed chart `(false, true)` -/
+
+/-- `Spf` of the `y`-side graph codiagonal. -/
+def spfGraphCodiagY (hI : I.FG) :
+    haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+    haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+      CompletedTensorProduct.isAdicRing R I _ _ hI
+    locallyRingedSpaceObj (annulusOverlapIdealY R I q) ⟶
+      locallyRingedSpaceObj
+        (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+  haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  locallyRingedSpaceMap _ _ (graphCodiagY R I q hI) (graphCodiagY_le_comap hI)
+
+/-- `Spf` of the `y`-side graph lift. -/
+def spfGraphLiftY (hI : I.FG) :
+    haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+    haveI : IsAdicRing (idealOfDefinition R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+        (annulusAlgebra R I q)) :=
+      CompletedTensorProduct.isAdicRing R I _ _ hI
+    locallyRingedSpaceObj (annulusOverlapIdealY R I q) ⟶
+      locallyRingedSpaceObj (idealOfDefinition R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+        (annulusAlgebra R I q)) :=
+  haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+  haveI : IsAdicRing (idealOfDefinition R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+      (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  locallyRingedSpaceMap _ _ (graphLiftY R I q hI) (by
+    intro x hx
+    rw [Ideal.mem_comap]
+    have h := graphLiftY_mem_pow R I q hI 1 (by rwa [pow_one])
+    rwa [pow_one] at h)
+
+/-- `Spf` of the partner-coordinate map `A →+* A[y⁻¹]^∧`. -/
+def spfInvLocXY (hI : I.FG) :
+    haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+    haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+    locallyRingedSpaceObj (annulusOverlapIdealY R I q) ⟶
+      locallyRingedSpaceObj (annulusIdealOfDefinition R I q) :=
+  haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+  haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+  locallyRingedSpaceMap _ _ (invLocXY R I q hI).toRingHom
+    (Ideal.map_le_iff_le_comap.mp (by
+      have h0 : (invLocXY R I q hI).toRingHom =
+          ((annulusOverlapInversion R I q hI :
+              annulusOverlap R I q →+* annulusOverlapY R I q)).comp
+            (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) := rfl
+      have h1 : (I.map (algebraMap R (annulusAlgebra R I q))).map
+          (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) =
+          annulusOverlapIdeal R I q := by
+        rw [Ideal.map_map,
+          ← IsScalarTower.algebraMap_eq R (annulusAlgebra R I q) (annulusOverlap R I q),
+          overlapIdeal_eq_map]
+      rw [h0, ← annulus_map_eq, ← Ideal.map_map, h1,
+        map_annulusOverlapInversion_annulusOverlapIdeal]))
+
+set_option linter.unusedSectionVars false in
+/-- **(A)** for the `y`-piece: the `y`-side graph codiagonal factors through the `y`-summand of the
+first-factor overlap chart. -/
+theorem spfGraphCodiagY_eq (hI : I.FG) :
+    haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+    haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+      CompletedTensorProduct.isAdicRing R I _ _ hI
+    haveI : IsAdicRing (idealOfDefinition R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+        (annulusAlgebra R I q)) :=
+      CompletedTensorProduct.isAdicRing R I _ _ hI
+    spfGraphCodiagY R I q hI =
+      spfGraphLiftY R I q hI ≫
+        interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapY R I q) hI := by
+  haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  haveI : IsAdicRing (idealOfDefinition R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+      (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have hIK : idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
+      (annulusOverlapIdealY R I q).comap ((graphLiftY R I q hI).comp
+        (CompletedTensorProduct.map hI
+          (IsScalarTower.toAlgHom R (annulusAlgebra R I q)
+            (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)))
+          (AlgHom.id R (annulusAlgebra R I q)))) := by
+    rw [graphLiftY_comp_map R I q hI]
+    exact graphCodiagY_le_comap hI
+  rw [interchangeOpenImmersion_eq_mapSpf, CompletedTensorProduct.mapSpf_eq,
+    spfGraphLiftY, spfGraphCodiagY,
+    ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIK)]
+  exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
+    (graphLiftY_comp_map R I q hI).symm
+
+set_option linter.unusedSectionVars false in
+/-- **(B)** for the `y`-piece. -/
+theorem spfGraphLiftY_comp_transition (hI : I.FG) :
+    haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+    haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+    haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+      CompletedTensorProduct.isAdicRing R I _ _ hI
+    haveI : IsAdicRing (idealOfDefinition R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+        (annulusAlgebra R I q)) :=
+      CompletedTensorProduct.isAdicRing R I _ _ hI
+    haveI : IsAdicRing (idealOfDefinition R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))
+        (annulusAlgebra R I q)) :=
+      CompletedTensorProduct.isAdicRing R I _ _ hI
+    spfGraphLiftY R I q hI ≫ (firstSummandInv R I q hI).inv ≫
+        interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapX R I q) hI =
+      spfInvLocXY R I q hI ≫ diagChart R I q hI := by
+  haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+  haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
+    annulus_isAdicRing_map R I q hI
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  haveI : IsAdicRing (idealOfDefinition R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
+      (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  haveI : IsAdicRing (idealOfDefinition R I
+      (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))
+      (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have hIK₂ : idealOfDefinition R I
+        (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))
+        (annulusAlgebra R I q) ≤
+      (annulusOverlapIdealY R I q).comap ((graphLiftY R I q hI).comp
+        (CompletedTensorProduct.map hI
+          (annulusFibreChartTransitionInvAlg R I q hI).toAlgHom
+          (AlgEquiv.refl (R := R) (A₁ := annulusAlgebra R I q)).toAlgHom)) := by
+    intro x hx
+    rw [Ideal.mem_comap, RingHom.comp_apply]
+    have h := graphLiftY_mem_pow R I q hI 1
+      (CompletedTensorProduct.map_mem_pow hI
+        (annulusFibreChartTransitionInvAlg R I q hI).toAlgHom
+        (AlgEquiv.refl (R := R) (A₁ := annulusAlgebra R I q)).toAlgHom 1 (by rwa [pow_one]))
+    rwa [pow_one] at h
+  have hIKR : idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
+      (annulusOverlapIdealY R I q).comap
+        ((invLocXY R I q hI).toRingHom.comp
+          (CompletedTensorProduct.codiagonal R I (annulusAlgebra R I q))) := by
+    intro x hx
+    rw [Ideal.mem_comap, RingHom.comp_apply]
+    have hc : CompletedTensorProduct.codiagonal R I (annulusAlgebra R I q) x ∈
+        I.map (algebraMap R (annulusAlgebra R I q)) := by
+      have := CompletedTensorProduct.lift_mem_pow _ (le_refl _) (AlgHom.id R _) (AlgHom.id R _)
+        hI 1 (show x ∈ _ ^ 1 by rwa [pow_one])
+      rwa [pow_one] at this
+    have h0 : (invLocXY R I q hI).toRingHom =
+        ((annulusOverlapInversion R I q hI :
+            annulusOverlap R I q →+* annulusOverlapY R I q)).comp
+          (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) := rfl
+    have h1 : (I.map (algebraMap R (annulusAlgebra R I q))).map
+        (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)) =
+        annulusOverlapIdeal R I q := by
+      rw [Ideal.map_map,
+        ← IsScalarTower.algebraMap_eq R (annulusAlgebra R I q) (annulusOverlap R I q),
+        overlapIdeal_eq_map]
+    have hid : (I.map (algebraMap R (annulusAlgebra R I q))).map
+        (invLocXY R I q hI).toRingHom = annulusOverlapIdealY R I q := by
+      rw [h0, ← Ideal.map_map, h1, map_annulusOverlapInversion_annulusOverlapIdeal]
+    exact hid.le (Ideal.mem_map_of_mem _ hc)
+  have hIK₁ : idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
+      (annulusOverlapIdealY R I q).comap
+        (((graphLiftY R I q hI).comp
+          (CompletedTensorProduct.map hI
+            (annulusFibreChartTransitionInvAlg R I q hI).toAlgHom
+            (AlgEquiv.refl (R := R) (A₁ := annulusAlgebra R I q)).toAlgHom)).comp
+          (CompletedTensorProduct.map hI
+            (IsScalarTower.toAlgHom R (annulusAlgebra R I q)
+              (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)))
+            (AlgHom.id R (annulusAlgebra R I q)))) := by
+    rw [graphLiftY_comp_map_transition R I q hI]
+    exact hIKR
+  rw [← Category.assoc, interchangeOpenImmersion_eq_mapSpf,
+    CompletedTensorProduct.mapSpf_eq, firstSummandInv, twoPatchFibreProductInvTransition,
+    CompletedTensorProduct.mapSpfIso_inv, CompletedTensorProduct.mapSpf_eq,
+    spfGraphLiftY, spfInvLocXY, diagChart,
+    ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIK₂),
+    ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIK₁),
+    ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIKR)]
+  exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
+    (graphLiftY_comp_map_transition R I q hI)
+
+set_option linter.unusedSectionVars false in
+/-- **The `y`-piece of the mixed chart `(false, true)` lands in the diagonal.** -/
+theorem spfGraphCodiagY_comp_ι_ft (hq : q ∈ I) (hI : I.FG) :
+    haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+    haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+    haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+      CompletedTensorProduct.isAdicRing R I _ _ hI
+    spfGraphCodiagY R I q hI ≫
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, true)⟩ =
+      spfInvLocXY R I q hI ≫ diagChart R I q hI ≫
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
+  haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
+  haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+  haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
+    CompletedTensorProduct.isAdicRing R I _ _ hI
+  have hinl : (coprod.inl : dXA R I q ⟶ dXA R I q ⨿ dYA R I q) ≫
+      firstFactorOverlapChart R I q hI =
+      interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapX R I q) hI :=
+    coprod.inl_desc _ _
+  have hinr : (coprod.inr : dYA R I q ⟶ dXA R I q ⨿ dYA R I q) ≫
+      firstFactorOverlapChart R I q hI =
+      interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapY R I q) hI :=
+    coprod.inr_desc _ _
+  have htr : (coprod.inr : dYA R I q ⟶ dXA R I q ⨿ dYA R I q) ≫
+      (tateSelfProductFirstTransitionInv R I q hI).hom =
+      (firstSummandInv R I q hI).inv ≫ coprod.inl :=
+    coprod.inr_desc _ _
+  calc spfGraphCodiagY R I q hI ≫
+        (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, true)⟩
+      = spfGraphLiftY R I q hI ≫ coprod.inr ≫ (firstFactorOverlapChart R I q hI ≫
+          (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, true)⟩) := by
+        rw [spfGraphCodiagY_eq R I q hI, ← hinr]; simp only [Category.assoc]
+    _ = spfGraphLiftY R I q hI ≫ (coprod.inr ≫ (tateSelfProductFirstTransitionInv R I q hI).hom) ≫
+          firstFactorOverlapChart R I q hI ≫
+            (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
+        rw [tateSelfProduct_first_glue_condition_inv_ft]; simp only [Category.assoc]
+    _ = (spfGraphLiftY R I q hI ≫ (firstSummandInv R I q hI).inv ≫
+          interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapX R I q) hI) ≫
+            (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
+        rw [htr, ← hinl]; simp only [Category.assoc]
+    _ = spfInvLocXY R I q hI ≫ diagChart R I q hI ≫
+          (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
+        rw [spfGraphLiftY_comp_transition R I q hI]; simp only [Category.assoc]
+
 end AlgebraicGeometry
