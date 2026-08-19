@@ -16,6 +16,7 @@ import FormalSchemes.AffineFibreProductUniqueness
 import FormalSchemes.AffineSeparated
 import FormalSchemes.AffineSeparatedInstance
 import FormalSchemes.AffineSeparatedIso
+import FormalSchemes.AffineSeparatedValue
 import FormalSchemes.AnnulusNontrivial
 import FormalSchemes.AnnulusOverlapProper
 import FormalSchemes.AssociatedGraded
