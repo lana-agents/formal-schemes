@@ -1,0 +1,285 @@
+import FormalSchemes.AwayCompletionNestedNaturality
+import FormalSchemes.ThreeChartDatum
+
+set_option linter.style.header false
+set_option linter.style.setOption false
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
+/-!
+# The charts of the three-chart open cover, and their overlaps
+
+Fix an adic base `(R, I)` with `I` finitely generated, an `R`-algebra `A` and three elements
+`f₀, f₁, f₂ : A`. This file sets up the charts of the open cover of `Spf A` by the three basic
+opens `D(f_i)` — chart algebras `A i := A{1/f_i}` and overlap elements
+`g i j := ` the image of `f_i · f_j` in `A{1/f_i}` — and identifies the chart-local single and
+double overlaps with completed localizations of `A` itself:
+
+```
+A{1/f_i}{1/g_ij}          ≃ₐ[R]  A{1/(f_i f_j)}
+A{1/f_i}{1/(g_ij·g_ik)}   ≃ₐ[R]  A{1/(f_i f_j · f_i f_k)}
+```
+
+Both are the nested basic-open chart identification of issue 607
+(`FormalSpectrum.awayCompletionNestedAlgEquiv`), the second composed with the transport
+`awayCongrEquivOfEq` absorbing `map_mul`. Their **naturality**
+(`awayCongrHom_chartOverlapEquiv`, `awayCongrHom_chartOverlapEquiv'`) is what
+`FormalSchemes.ThreeChartCoverTransitions` uses to reduce the datum's `hστ` obligation to the
+corresponding statement downstairs on `A`; it rests on the naturality square of
+`FormalSchemes.AwayCompletionNestedNaturality`.
+
+Note that `A` itself is **not** required to be an adic ring: only the chart algebras `A{1/f_i}`
+occur as charts, and a completed localization is adic for free
+(`AdicCompletion.isAdicRing_map`, packaged here as `chartIsAdicRing`).
+
+## Cost note — read this before touching anything in this file
+
+The chart-local double overlap `A{1/f_i}{1/(g_ij·g_ik)}` is a **doubly nested** completion of a
+localization, and its away element is a *product* of two elements of a completion. Anything that
+makes Lean reduce such a term is catastrophically expensive — but the cost is invisible to
+`set_option profiler true`, because it is all **kernel type-checking**, which Lean 4.32 performs
+in asynchronous tasks that the profiler does not attribute. (`set_option debug.skipKernelTC true`
+takes this file from minutes to seconds. That is how the cost was located.)
+
+Three consequences shaped the code below, and undoing any of them costs ~10 minutes of build
+time or an out-of-memory kill:
+
+1. `awayCongrEquivOfEq` transports along an *equality* of away elements by matching on `rfl`,
+   rather than `awayCongrEquiv` at two mutual divisibilities. The latter drags
+   `IsLocalization.Away.lift` through the multiplication of the nested completion.
+   `AdicCompletion.congrIdealAlg` (`FormalSchemes.AwayCompletionNested`) is `subst`-built for the
+   same reason.
+2. The naturality lemmas are stated with `awayCongrHom`, not `furtherLocFst`/`furtherLocSnd`, and
+   are *pure applications* with no rewriting. The two families of maps are equal
+   (`furtherLocFst_eq_awayCongrHom`), but that rewrite is performed in
+   `FormalSchemes.ThreeChartCoverTransitions`, where the chart algebra is a variable.
+3. The transitions and the three datum laws live in separate files, and the laws are proved by
+   conjugation lemmas stated with the chart algebras abstract. See the module note there.
+
+## References
+
+* [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1 (10.1.4), §10.7.
+-/
+
+noncomputable section
+
+open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
+open CompletedTensorAwayInterchange
+
+universe u
+
+namespace AlgebraicGeometry
+
+namespace ThreeChartCover
+
+variable {R : Type u} [CommRing R] (I : Ideal R)
+variable {A : Type u} [CommRing A] [Algebra R A]
+variable (f : ULift.{u} (Fin 3) → A)
+
+/-! ### The charts and their overlaps -/
+
+/-- **The `i`-th chart algebra** `A{1/f_i}`: the sections of `O_{Spf A}` over the basic open
+`D(f_i)`. Unlike the charts of `FormalSchemes.ThreeChartDatum`, these genuinely differ from one
+another. -/
+abbrev chartAlgebra (i : ULift.{u} (Fin 3)) : Type u :=
+  awayCompletion (I.map (algebraMap R A)) (f i)
+
+/-- **The overlap element** `g i j : A{1/f_i}`, the image of `f_i · f_j`. It cuts out
+`D(f_j) ∩ D(f_i)` inside the chart `Spf A{1/f_i}` — the image of `f_j` would cut out the same
+basic open, but this spelling is the one for which the nested chart identification of issue 607
+applies verbatim. -/
+abbrev overlapElt (i j : ULift.{u} (Fin 3)) : chartAlgebra I f i :=
+  awayCompletionHom (I.map (algebraMap R A)) (f i) (f i * f j)
+
+/-- The chart algebras are adic rings, with no hypothesis on `A`: a completed localization is
+complete for the extension of its ideal, and the datum's ideal spelling
+`I.map (algebraMap R (A{1/f_i}))` is that extension (`map_algebraMap_awayCompletion_eq`). -/
+theorem chartIsAdicRing (hI : I.FG) (i : ULift.{u} (Fin 3)) :
+    IsAdicRing (I.map (algebraMap R (chartAlgebra I f i))) := by
+  rw [map_algebraMap_awayCompletion_eq]
+  exact AdicCompletion.isAdicRing_map _ ((hI.map (algebraMap R A)).map _)
+
+/-! ### Units -/
+
+/-- `f_i` becomes a unit after inverting `f_i · f_j`. -/
+theorem isUnit_self_mul (i j : ULift.{u} (Fin 3)) :
+    IsUnit (algebraMap A (Localization.Away (f i * f j)) (f i)) :=
+  isUnit_algebraMap_away_of_dvd_pow 1 ⟨f j, by rw [pow_one]⟩
+
+/-- `f_i` becomes a unit after inverting `f_i f_j · f_i f_k`. -/
+theorem isUnit_self_triple (i j k : ULift.{u} (Fin 3)) :
+    IsUnit (algebraMap A (Localization.Away (f i * f j * (f i * f k))) (f i)) :=
+  isUnit_algebraMap_away_of_dvd_pow 1 ⟨f j * (f i * f k), by rw [pow_one]; ring⟩
+
+/-- `f_i f_j` becomes a unit after inverting `f_i f_j · f_i f_k`. -/
+theorem isUnit_mul_triple (i j k : ULift.{u} (Fin 3)) :
+    IsUnit (algebraMap A (Localization.Away (f i * f j * (f i * f k))) (f i * f j)) :=
+  isUnit_algebraMap_away_of_dvd_pow 1 ⟨f i * f k, by rw [pow_one]⟩
+
+/-- `f_i f_j` becomes a unit after inverting `f_i f_k · f_i f_j`. -/
+theorem isUnit_mul_triple' (i j k : ULift.{u} (Fin 3)) :
+    IsUnit (algebraMap A (Localization.Away (f i * f k * (f i * f j))) (f i * f j)) :=
+  isUnit_algebraMap_away_of_dvd_pow 1 ⟨f i * f k, by rw [pow_one]; ring⟩
+
+/-- The image of `f_i f_j · f_i f_k` in the chart `A{1/f_i}` is the product `g_ij · g_ik` of the
+two overlap elements — the chart-level away element the datum's double overlap is presented at. -/
+theorem chartHom_triple (i j k : ULift.{u} (Fin 3)) :
+    awayCompletionHom (I.map (algebraMap R A)) (f i) (f i * f j * (f i * f k)) =
+      overlapElt I f i j * overlapElt I f i k :=
+  map_mul _ _ _
+
+/-- `g_ij` becomes a unit after inverting `g_ij · g_ik`. -/
+theorem isUnit_overlapElt_mul (i j k : ULift.{u} (Fin 3)) :
+    IsUnit (algebraMap (chartAlgebra I f i)
+      (Localization.Away (overlapElt I f i j * overlapElt I f i k)) (overlapElt I f i j)) :=
+  isUnit_algebraMap_away_of_dvd_pow 1 ⟨overlapElt I f i k, by rw [pow_one]⟩
+
+/-- `g_ij` becomes a unit after inverting `g_ik · g_ij` — the `furtherLocSnd` orientation. -/
+theorem isUnit_overlapElt_mul_right (i j k : ULift.{u} (Fin 3)) :
+    IsUnit (algebraMap (chartAlgebra I f i)
+      (Localization.Away (overlapElt I f i k * overlapElt I f i j)) (overlapElt I f i j)) :=
+  isUnit_algebraMap_away_of_dvd_pow 1 ⟨overlapElt I f i k, by rw [pow_one]; ring⟩
+
+/-- `g_ij` is a unit after inverting the image of the triple product. -/
+theorem isUnit_overlapElt_chartHom (i j k : ULift.{u} (Fin 3)) :
+    IsUnit (algebraMap (chartAlgebra I f i)
+      (Localization.Away
+        (awayCompletionHom (I.map (algebraMap R A)) (f i) (f i * f j * (f i * f k))))
+      (overlapElt I f i j)) :=
+  isUnit_algebraMap_away_of_dvd_pow 1
+    ⟨overlapElt I f i k, by rw [pow_one]; exact chartHom_triple I f i j k⟩
+
+/-- `g_ij` is a unit after inverting the image of the triple product written the other way round
+(the `furtherLocSnd` orientation). -/
+theorem isUnit_overlapElt_chartHom' (i j k : ULift.{u} (Fin 3)) :
+    IsUnit (algebraMap (chartAlgebra I f i)
+      (Localization.Away
+        (awayCompletionHom (I.map (algebraMap R A)) (f i) (f i * f k * (f i * f j))))
+      (overlapElt I f i j)) :=
+  isUnit_algebraMap_away_of_dvd_pow 1
+    ⟨overlapElt I f i k, by rw [pow_one]; exact (chartHom_triple I f i k j).trans (mul_comm _ _)⟩
+
+/-! ### Transport along an equality of away elements -/
+
+/-- **Transport of a completed localization along an equality of away elements.** Built by
+pattern-matching on `rfl`, so it reduces to `AlgEquiv.refl` and the kernel never has to look at
+either element.
+
+This matters: the alternative — `awayCongrEquiv` at the two mutual divisibilities — drags
+`IsLocalization.Away.lift` through the multiplication of a *doubly nested* completion, and the
+kernel then spends minutes (and gigabytes) reducing it. `AdicCompletion.congrIdealAlg`
+(`FormalSchemes.AwayCompletionNested`) is `subst`-built for exactly the same reason. -/
+def awayCongrEquivOfEq {A' : Type u} [CommRing A'] [Algebra R A'] :
+    ∀ {x y : A'}, x = y →
+      (awayCompletion (I.map (algebraMap R A')) x ≃ₐ[R]
+        awayCompletion (I.map (algebraMap R A')) y)
+  | _, _, rfl => AlgEquiv.refl
+
+/-- **The transport is the comparison isomorphism.** Stated and proved with the two elements
+abstract, so that instantiating it never reduces them: the content is `awayCongrHom_self`. -/
+theorem awayCongrEquiv_eq_ofEq {A' : Type u} [CommRing A'] [Algebra R A'] (hI : I.FG)
+    {x y : A'} (h : x = y)
+    (hxy : IsUnit (algebraMap A' (Localization.Away y) x))
+    (hyx : IsUnit (algebraMap A' (Localization.Away x) y)) :
+    awayCongrEquiv I x y hI hxy hyx = awayCongrEquivOfEq I h := by
+  subst h
+  refine AlgEquiv.ext fun z => ?_
+  exact AlgHom.congr_fun (awayCongrHom_self I x hI hxy) z
+
+/-- **The naturality square of `FormalSchemes.AwayCompletionNestedNaturality`, in `subst` form.**
+When the chart-level target away element `t` is *equal* to the image of `h` — the case an
+open-cover datum is in — the comparison isomorphism on the right can be replaced by the transport
+`awayCongrEquivOfEq`.
+
+Stated and proved with everything abstract, so that instantiating it at a concrete doubly nested
+completion is pure substitution: the kernel never reduces `t`. Instantiating the `awayCongrEquiv`
+form instead costs minutes. This belongs next to `awayCongrHom_nestedCongr` in
+`FormalSchemes.AwayCompletionNestedNaturality`; it lives here only because that file is the one
+under review. -/
+theorem awayCongrHom_nestedCongrOfEq (hI : I.FG) (a g h : A)
+    (hag : IsUnit (algebraMap A (Localization.Away g) a))
+    (hah : IsUnit (algebraMap A (Localization.Away h) a))
+    (hgh : IsUnit (algebraMap A (Localization.Away h) g))
+    (hcgh : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a)
+      (Localization.Away (awayCompletionHom (I.map (algebraMap R A)) a h))
+      (awayCompletionHom (I.map (algebraMap R A)) a g)))
+    (t : awayCompletion (I.map (algebraMap R A)) a)
+    (heq : awayCompletionHom (I.map (algebraMap R A)) a h = t)
+    (hbar : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a) (Localization.Away t)
+      (awayCompletionHom (I.map (algebraMap R A)) a g)))
+    (x : awayCompletion (I.map (algebraMap R A)) g) :
+    awayCongrHom I (awayCompletionHom (I.map (algebraMap R A)) a g) t hI hbar
+        (awayCompletionNestedAlgEquiv I hI a g hag x) =
+      awayCongrEquivOfEq I heq
+        (awayCompletionNestedAlgEquiv I hI a h hah (awayCongrHom I g h hI hgh x)) := by
+  subst heq
+  have hself : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a)
+      (Localization.Away (awayCompletionHom (I.map (algebraMap R A)) a h))
+      (awayCompletionHom (I.map (algebraMap R A)) a h)) :=
+    IsLocalization.Away.algebraMap_isUnit _
+  rw [← awayCongrEquiv_eq_ofEq I hI rfl hself hself]
+  exact awayCongrHom_nestedCongr I hI a g h hag hah hgh hcgh _ hself hself hbar x
+
+/-! ### The chart identifications `N` -/
+
+/-- **The single overlap, read downstairs.** The chart-local overlap `A{1/f_i}{1/g_ij}` of the
+`i`-th and `j`-th charts is identified with the completed localization `A{1/(f_i f_j)}` of `A`
+itself; this is the `g := f · g` case of issue 607's nested chart identification. -/
+def chartOverlapEquiv (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
+    awayCompletion (I.map (algebraMap R A)) (f i * f j) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j) :=
+  awayCompletionNestedAlgEquiv I hI (f i) (f i * f j) (isUnit_self_mul f i j)
+
+/-- **The double overlap, read downstairs.** The chart-local double overlap
+`A{1/f_i}{1/(g_ij·g_ik)}` is identified with `A{1/(f_i f_j · f_i f_k)}`: the nested chart
+identification of issue 607, followed by the comparison isomorphism absorbing
+`chartHom_triple` (the image of the triple product and the product of the two overlap elements are
+equal elements of `A{1/f_i}`, but index different completed localizations). -/
+def chartTripleEquiv (hI : I.FG) (i j k : ULift.{u} (Fin 3)) :
+    awayCompletion (I.map (algebraMap R A)) (f i * f j * (f i * f k)) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R (chartAlgebra I f i)))
+        (overlapElt I f i j * overlapElt I f i k) :=
+  (awayCompletionNestedAlgEquiv I hI (f i) (f i * f j * (f i * f k))
+      (isUnit_self_triple f i j k)).trans
+    (awayCongrEquivOfEq I (chartHom_triple I f i j k))
+
+/-! ### Naturality of `N` -/
+
+/-- **The left leg is natural.** Restricting from the single overlap `D(g_ij)` to the double
+overlap `D(g_ij·g_ik)` inside the chart `Spf A{1/f_i}` agrees, through the identifications `N`,
+with restricting from `D(f_i f_j)` to `D(f_i f_j · f_i f_k)` downstairs on `Spf A`.
+
+Phrased with `awayCongrHom` rather than `furtherLocFst`: the two are the same map
+(`furtherLocFst_eq_awayCongrHom`), but performing that rewrite *here*, at a doubly nested
+completion, costs minutes of kernel time. It is done instead inside
+`ThreeChartCover.sigma_tau_conj`, where the chart algebra is a variable. -/
+theorem awayCongrHom_chartOverlapEquiv (hI : I.FG) (i j k : ULift.{u} (Fin 3))
+    (x : awayCompletion (I.map (algebraMap R A)) (f i * f j)) :
+    awayCongrHom I (overlapElt I f i j) (overlapElt I f i j * overlapElt I f i k) hI
+        (isUnit_overlapElt_mul I f i j k) (chartOverlapEquiv I f hI i j x) =
+      chartTripleEquiv I f hI i j k (awayCongrHom I (f i * f j) (f i * f j * (f i * f k)) hI
+        (isUnit_mul_triple f i j k) x) :=
+  awayCongrHom_nestedCongrOfEq I hI (f i) (f i * f j) (f i * f j * (f i * f k))
+    (isUnit_self_mul f i j) (isUnit_self_triple f i j k) (isUnit_mul_triple f i j k)
+    (isUnit_overlapElt_chartHom I f i j k) _ (chartHom_triple I f i j k)
+    (isUnit_overlapElt_mul I f i j k) x
+
+/-- **The right leg is natural**, the companion of `awayCongrHom_chartOverlapEquiv` in which the
+double overlap is presented as `g_ik · g_ij`. -/
+theorem awayCongrHom_chartOverlapEquiv' (hI : I.FG) (i j k : ULift.{u} (Fin 3))
+    (x : awayCompletion (I.map (algebraMap R A)) (f i * f j)) :
+    awayCongrHom I (overlapElt I f i j) (overlapElt I f i k * overlapElt I f i j) hI
+        (isUnit_overlapElt_mul_right I f i j k) (chartOverlapEquiv I f hI i j x) =
+      chartTripleEquiv I f hI i k j (awayCongrHom I (f i * f j) (f i * f k * (f i * f j)) hI
+        (isUnit_mul_triple' f i j k) x) :=
+  awayCongrHom_nestedCongrOfEq I hI (f i) (f i * f j) (f i * f k * (f i * f j))
+    (isUnit_self_mul f i j) (isUnit_self_triple f i k j) (isUnit_mul_triple' f i j k)
+    (isUnit_overlapElt_chartHom' I f i j k) _ (chartHom_triple I f i k j)
+    (isUnit_overlapElt_mul_right I f i j k) x
+
+
+end ThreeChartCover
+
+end AlgebraicGeometry
+
+end
