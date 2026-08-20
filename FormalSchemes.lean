@@ -24,6 +24,7 @@ import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.AwayCompletionAway
 import FormalSchemes.AwayCompletionInterchange
+import FormalSchemes.AwayCompletionNested
 import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
