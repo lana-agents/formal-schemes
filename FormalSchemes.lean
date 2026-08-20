@@ -173,6 +173,7 @@ import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.TateAction
+import FormalSchemes.TateActionInv
 import FormalSchemes.TateActionQuotient
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateChainGlue
@@ -227,6 +228,7 @@ import FormalSchemes.TateSelfProductTransitionRangeRight
 import FormalSchemes.TateSelfProductTripleOverlap
 import FormalSchemes.TateSeparated
 import FormalSchemes.TateShift
+import FormalSchemes.TateShiftInv
 import FormalSchemes.TateTransition
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
