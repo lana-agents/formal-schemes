@@ -190,6 +190,7 @@ import FormalSchemes.TateDiagonalClosedRange
 import FormalSchemes.TateDiagonalPreimageBounds
 import FormalSchemes.TateFreeness
 import FormalSchemes.TateFreenessAdjacent
+import FormalSchemes.TateFreenessInv
 import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
