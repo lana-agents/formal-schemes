@@ -75,6 +75,7 @@ import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionSheafComparison
 import FormalSchemes.CoproductOpenImmersion
 import FormalSchemes.DiagonalClosedEmbedding
+import FormalSchemes.DiagonalPreimageGraph
 import FormalSchemes.EmptyLocallyRingedSpace
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalGroupAlgebraHopf
