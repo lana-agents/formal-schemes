@@ -28,6 +28,7 @@ import FormalSchemes.AwayCompletionAway
 import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.AwayCompletionNested
+import FormalSchemes.AwayCompletionNestedNaturality
 import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
