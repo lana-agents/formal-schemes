@@ -180,6 +180,7 @@ import FormalSchemes.TateAction
 import FormalSchemes.TateActionInv
 import FormalSchemes.TateActionQuotient
 import FormalSchemes.TateAnnulus
+import FormalSchemes.TateAwaySplit
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainInvGlue
 import FormalSchemes.TateChainStructMap
