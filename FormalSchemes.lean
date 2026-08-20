@@ -210,6 +210,7 @@ import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapInversion
 import FormalSchemes.TateOverlapInversionIso
+import FormalSchemes.TateOverlapSummandAffine
 import FormalSchemes.TateOverlapTransitionAlg
 import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateQuotientMap
