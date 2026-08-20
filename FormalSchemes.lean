@@ -211,6 +211,8 @@ import FormalSchemes.TateSelfProductCocycleInv
 import FormalSchemes.TateSelfProductCone
 import FormalSchemes.TateSelfProductDSigma
 import FormalSchemes.TateSelfProductDSigmaInv
+import FormalSchemes.TateSelfProductDSigmaInvFirst
+import FormalSchemes.TateSelfProductDSigmaInvSecond
 import FormalSchemes.TateSelfProductGlueDatum
 import FormalSchemes.TateSelfProductGlueTPrime
 import FormalSchemes.TateSelfProductGlueTPrimeIso
@@ -221,6 +223,7 @@ import FormalSchemes.TateSelfProductOverlap
 import FormalSchemes.TateSelfProductProjectionLeft
 import FormalSchemes.TateSelfProductProjectionRight
 import FormalSchemes.TateSelfProductRightOverlap
+import FormalSchemes.TateSelfProductSigmaInv
 import FormalSchemes.TateSelfProductSummandNaturality
 import FormalSchemes.TateSelfProductSwapNaturality
 import FormalSchemes.TateSelfProductTPrimeSummand
