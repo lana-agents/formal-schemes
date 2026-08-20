@@ -179,6 +179,7 @@ import FormalSchemes.TateChartTransitionAlgEq
 import FormalSchemes.TateChartTransitionInvAlgEq
 import FormalSchemes.TateCurveModel
 import FormalSchemes.TateDiagonalClosedCover
+import FormalSchemes.TateDiagonalClosedImmersion
 import FormalSchemes.TateDiagonalClosedRange
 import FormalSchemes.TateDiagonalPreimageBounds
 import FormalSchemes.TateFreeness
