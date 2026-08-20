@@ -149,6 +149,7 @@ import FormalSchemes.LocallyFG
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.OpenCoverHomExt
+import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.OpenImmersionReflectsIdeal
 import FormalSchemes.OpenImmersionSheafComponentIso
 import FormalSchemes.OpenImmersionSourceFormalScheme
@@ -202,6 +203,7 @@ import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
 import FormalSchemes.TateMixedChartDescent
 import FormalSchemes.TateOverlap
+import FormalSchemes.TateOverlapChartIso
 import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapInversion
