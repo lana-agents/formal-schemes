@@ -140,6 +140,7 @@ import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LiftedBasicOpenCover
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
+import FormalSchemes.LocalizationSplitOfNilpotentMul
 import FormalSchemes.LocallyFG
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
