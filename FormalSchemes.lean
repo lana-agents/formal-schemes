@@ -183,6 +183,7 @@ import FormalSchemes.TateFreenessAdjacent
 import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
+import FormalSchemes.TateGraphCodiagonalXLift
 import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
