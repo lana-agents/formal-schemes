@@ -7,6 +7,9 @@ set_option linter.style.header false
 /-!
 # Full freeness of the `q^ℤ`-period action on the formal Tate chain
 
+(The `q^ℤ` naming is inherited from the pre-435 model — see the discussion in
+`FormalSchemes.TateShift`. Freeness itself is a statement about the index shift and is unaffected.)
+
 Fix an adic base `(R, I)` with `I` finitely generated, Noetherian `R`, and a topologically nilpotent
 Tate parameter `q ∈ I`. The large-period freeness (`FormalSchemes.TateFreeness`,
 `tateShiftAut_zpow_ne_one`) rules out every period of absolute value `≥ 2`; this file closes the

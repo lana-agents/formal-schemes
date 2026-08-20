@@ -11,8 +11,10 @@ transition induced by the **coordinate swap** `x ↦ y`. The two-chart Tate curv
 `tateCurveModel` (`FormalSchemes.TateCurveModel`) was rerouted (issue 435 and its successors) onto
 `annulusChartTransitionInvSpf`, the transition induced by the **𝔾m-inversion**. The chain was never
 rerouted, so the two objects on master today are glued by *different* identifications of the same
-overlap `Ĝm`, and neither `T ⟶ 𝔈_q` nor the quotient presentation `𝔈_q = T/q^ℤ` can be stated
-while that is so.
+overlap `Ĝm`, and neither `T ⟶ 𝔈_q` nor a quotient presentation of `𝔈_q` can be stated while that
+is so. (The presentation, once available, is `𝔈_q = T_inv/⟨σ²⟩` and not `T_inv/⟨σ⟩`: the model
+glues its two patches along *both* overlaps, so it has period `q²`. See the period note in
+`FormalSchemes.TateCurveModel`.)
 
 This file builds the inversion-glued chain `T_inv`, additively and alongside the swap-glued `T`,
 which is left untouched.
@@ -216,7 +218,7 @@ def tateChainInvFormalGlueData (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] :
 /-- **The formal Tate chain `T_inv`, glued by the 𝔾m-inversion.** The ℤ-indexed chain of formal
 annuli `Spf A` glued along `x_n · y_{n+1} = 1` — the identification the rerouted `tateCurveModel`
 uses, so that `T_inv` (and not the swap-glued `tateChain`) is the object that can carry the
-quotient presentation `𝔈_q = T/q^ℤ`. -/
+quotient presentation `𝔈_q = T_inv/⟨σ²⟩` (`FormalSchemes.TateQuotientMap`). -/
 def tateChainInv (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] : FormalScheme.{u} :=
   (tateChainInvFormalGlueData R I q hq hI).gluedFormalScheme
 

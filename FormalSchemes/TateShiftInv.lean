@@ -16,6 +16,14 @@ identification the rerouted two-chart model `tateCurveModel` uses (issue 435 and
 the swap-glued chain `tateChain` of `FormalSchemes.TateShift` is glued by the identification that
 reroute rejected (issue 606).
 
+## A note on the period
+
+Here the `q^ℤ` naming is accurate: `x_n · y_{n+1} = 1` together with `x_n · y_n = q` gives
+`x_{n+1} = q · x_n`, so the one-patch shift `σ` really is multiplication by the Tate parameter, and
+`T_inv/⟨σ⟩` is the Tate curve of period `q`. The two-chart model `tateCurveModel` glues `U₀` to `U₁`
+along **both** overlaps, so it is `T_inv/⟨σ²⟩` — period `q²`, not `q`. See the period note in
+`FormalSchemes.TateCurveModel`, and `FormalSchemes.TateQuotientMap` for the presentation.
+
 This file is the `Inv` analogue of `FormalSchemes.TateShift`: it builds the `±1` index shifts of
 `T_inv` and packages them as an automorphism. Nothing in `FormalSchemes.TateShift` is touched;
 the two chains coexist until the migration of issue 606 lands in full.

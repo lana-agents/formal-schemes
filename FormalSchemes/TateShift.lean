@@ -14,8 +14,21 @@ nilpotent Tate parameter `q ∈ I`. The formal Tate chain `T = tateChain R I q h
 (`A = R{x, y} / (x·y − q)`) along their consecutive overlaps `{x invertible} ≅ {y invertible}`.
 
 The chain carries a canonical `+1` index shift: the map that sends patch `U_n` to patch `U_{n+1}`.
-Geometrically this is (the formal model of) multiplication by the Tate parameter `q` on the Tate
-curve — the generator of the `q^ℤ`-action whose quotient is the Tate elliptic curve (issue 135).
+
+## What "`q^ℤ`" means here, and why it is inherited rather than accurate
+
+The reading "the shift is multiplication by the Tate parameter `q`" is correct for the
+**inversion-glued** chain `T_inv` (`FormalSchemes.TateShiftInv`), not for the swap-glued chain of
+this file. Under the inversion gluing `x_n · y_{n+1} = 1` the relation `x_n · y_n = q` gives
+`x_{n+1} = q · x_n`; under the *swap* gluing `y_{n+1} = x_n` of this file it gives instead
+`x_{n+1} = q / x_n`, which is not a translation. That is the discrepancy issue 435 rerouted
+`tateCurveModel` away from, and issue 606 is migrating the chain to match.
+
+The `q^ℤ` labels are kept here because they name the declarations
+(`tatePeriodAction` and friends), and renaming would be a large mechanical diff; the geometric
+reading belongs to the `Inv` files. Note also that the two-chart model `tateCurveModel` is the
+quotient by the **square** of the shift, hence has period `q²` — see the period note in
+`FormalSchemes.TateCurveModel`.
 
 ## What this file provides
 

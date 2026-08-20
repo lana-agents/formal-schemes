@@ -11,8 +11,12 @@ Fix an adic base `(R, I)` with `I` finitely generated and Noetherian `R`, and a 
 nilpotent Tate parameter `q ∈ I`. The formal Tate chain `T = tateChain R I q hq hI`
 (`FormalSchemes.TateChainGlue`) is glued from the `ℤ`-indexed family of formal annuli `Spf A`
 (`A = R{x, y} / (x·y − q)`); the shift automorphism `tateShiftIso : T ≅ T`
-(`FormalSchemes.TateShift`) sends the patch `U_n` to `U_{n+1}` — the formal model of multiplication
-by the Tate parameter `q`.
+(`FormalSchemes.TateShift`) sends the patch `U_n` to `U_{n+1}`.
+
+The `q^ℤ` naming is inherited from the pre-435 model: the shift is multiplication by `q` on the
+**inversion-glued** chain (`FormalSchemes.TateActionInv`), whereas the swap gluing of this file
+gives `x_{n+1} = q / x_n`. See the discussion in `FormalSchemes.TateShift` and the period note in
+`FormalSchemes.TateCurveModel`.
 
 This file packages the `q^ℤ`-action and its two defining geometric properties, following Bosch,
 LNM 2105, §9:
@@ -21,8 +25,8 @@ LNM 2105, §9:
 
 * `tateShiftAut`: the shift automorphism as an element of the group `Aut T`.
 * `tatePeriodAction`: the group homomorphism `ℤ → Aut T`, `n ↦ σⁿ`, sending the additive generator
-  `1` to the shift automorphism (via `zpowersHom`). This is the `q^ℤ`-action whose quotient is the
-  Tate curve (issue 69).
+  `1` to the shift automorphism (via `zpowersHom`). The Tate curve model is the quotient by `σ²`,
+  not by `σ` (issue 69); see the period note in `FormalSchemes.TateCurveModel`.
 * `ι_tateShiftAut_zpow`: the **cover-shift law** `ι i ≫ (σⁿ).hom = ι ⟨i.down + n⟩` — the `n`-fold
   shift translates the patch `U_i` onto the patch `U_{i+n}`, computed by induction on `n : ℤ`.
 * `tateShiftAut_zpow_comp_structMap`: the action is **over `Spf R`** — every `σⁿ` commutes with the
@@ -70,8 +74,10 @@ theorem tateShiftAut_inv : (tateShiftAut R I q hq hI).inv = tateShiftInv R I q h
 
 /-- **The `q^ℤ`-period action** of the formal Tate chain: the group homomorphism
 `ℤ → Aut T`, `n ↦ σⁿ`, sending the additive generator to the shift automorphism `tateShiftAut`.
-The generator `σ` is the formal model of multiplication by the Tate parameter `q`, so this is the
-`q^ℤ`-action whose quotient is the Tate curve (issue 69). -/
+
+The name is inherited: `σ` is multiplication by `q` on the *inversion-glued* chain
+(`tateInvPeriodAction`), not on this swap-glued one. And the two-chart model is the quotient by
+`σ²`, not by `σ` — see the period note in `FormalSchemes.TateCurveModel`. -/
 def tatePeriodAction :
     Multiplicative ℤ →* CategoryTheory.Aut (tateChain R I q hq hI).toLocallyRingedSpace :=
   zpowersHom _ (tateShiftAut R I q hq hI)

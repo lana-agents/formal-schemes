@@ -19,9 +19,14 @@ morphism `T ⟶ Spf R` is invariant under the action, hence descends to any quot
 This is exactly `tateShiftAut_zpow_comp_structMap` (every power of the shift automorphism commutes
 with the structural morphism) repackaged through the general-purpose `IsActionInvariant` predicate,
 confirming the interface is non-vacuous and matches the merged Tate infrastructure. When the
-quotient `𝔈_q = T / q^ℤ` is constructed (issue 223 for the concrete two-chart model, or the general
-construction here) as an `IsActionQuotient`, its `desc` applied to this invariant morphism produces
-the structural morphism `𝔈_q ⟶ Spf R`.
+quotient is constructed (issue 223 for the concrete two-chart model, or the general construction
+here) as an `IsActionQuotient`, its `desc` applied to this invariant morphism produces the
+structural morphism `𝔈_q ⟶ Spf R`.
+
+Note that `𝔈_q = tateCurveModel` is the quotient of the *inversion-glued* chain `T_inv` by the
+**square** `σ²` of the shift, not by `σ` — it has period `q²`. See the period note in
+`FormalSchemes.TateCurveModel`, and `FormalSchemes.TateQuotientMap` for the presentation itself.
+This file is about the swap-glued chain `T`, which issue 606 supersedes.
 
 ## References
 
