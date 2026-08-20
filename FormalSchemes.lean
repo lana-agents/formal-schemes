@@ -1,5 +1,6 @@
 import FormalSchemes.ActionQuotient
 import FormalSchemes.AdicCompletionLimit
+import FormalSchemes.AdicCompletionSplitAway
 import FormalSchemes.AdicExtend
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicOnSections
