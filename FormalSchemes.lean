@@ -237,6 +237,9 @@ import FormalSchemes.TateShiftInv
 import FormalSchemes.TateTransition
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
+import FormalSchemes.ThreeChartCoverCharts
+import FormalSchemes.ThreeChartCoverDatum
+import FormalSchemes.ThreeChartCoverTransitions
 import FormalSchemes.ThreeChartDatum
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
