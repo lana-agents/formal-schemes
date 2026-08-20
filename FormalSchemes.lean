@@ -201,6 +201,7 @@ import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapInversion
 import FormalSchemes.TateOverlapInversionIso
 import FormalSchemes.TateOverlapTransitionIso
+import FormalSchemes.TateQuotientMap
 import FormalSchemes.TateSelfProductBothOverlap
 import FormalSchemes.TateSelfProductCocycle
 import FormalSchemes.TateSelfProductCocycleInv
