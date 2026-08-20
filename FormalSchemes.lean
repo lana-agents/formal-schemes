@@ -190,6 +190,7 @@ import FormalSchemes.TateChainStructMapInv
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateChartTransitionAlgEq
 import FormalSchemes.TateChartTransitionInvAlgEq
+import FormalSchemes.TateCurveExposeXDatum
 import FormalSchemes.TateCurveModel
 import FormalSchemes.TateDiagonalClosedCover
 import FormalSchemes.TateDiagonalClosedImmersion
