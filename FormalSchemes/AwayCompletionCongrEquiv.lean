@@ -212,6 +212,33 @@ theorem furtherLocSnd_eq_awayCongrHom (g₁ g₂ : A) (hI : I.FG)
   rw [furtherLocSnd]
   exact furtherLocAlgHom_eq_awayCongrHom I _ _ hI _ _ h
 
+/-! ### Transport along an equality of away elements -/
+
+/-- **Transport of a completed localization along an equality of away elements.** Built by
+pattern-matching on `rfl`, so it reduces to `AlgEquiv.refl` and the kernel never has to look at
+either element.
+
+This matters: the alternative — `awayCongrEquiv` at the two mutual divisibilities — drags
+`IsLocalization.Away.lift` through the multiplication of a *doubly nested* completion, and the
+kernel then spends minutes (and gigabytes) reducing it. `AdicCompletion.congrIdealₐ`
+(`FormalSchemes.AdicCompletionCongrIdealAlg`) is `subst`-built for exactly the same reason. -/
+def awayCongrEquivOfEq {A' : Type u} [CommRing A'] [Algebra R A'] :
+    ∀ {x y : A'}, x = y →
+      (awayCompletion (I.map (algebraMap R A')) x ≃ₐ[R]
+        awayCompletion (I.map (algebraMap R A')) y)
+  | _, _, rfl => AlgEquiv.refl
+
+/-- **The transport is the comparison isomorphism.** Stated and proved with the two elements
+abstract, so that instantiating it never reduces them: the content is `awayCongrHom_self`. -/
+theorem awayCongrEquiv_eq_ofEq {A' : Type u} [CommRing A'] [Algebra R A'] (hI : I.FG)
+    {x y : A'} (h : x = y)
+    (hxy : IsUnit (algebraMap A' (Localization.Away y) x))
+    (hyx : IsUnit (algebraMap A' (Localization.Away x) y)) :
+    awayCongrEquiv I x y hI hxy hyx = awayCongrEquivOfEq I h := by
+  subst h
+  refine AlgEquiv.ext fun z => ?_
+  exact AlgHom.congr_fun (awayCongrHom_self I x hI hxy) z
+
 end CompletedTensorAwayInterchange
 
 end

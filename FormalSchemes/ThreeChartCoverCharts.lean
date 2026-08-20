@@ -47,8 +47,8 @@ time or an out-of-memory kill:
 1. `awayCongrEquivOfEq` transports along an *equality* of away elements by matching on `rfl`,
    rather than `awayCongrEquiv` at two mutual divisibilities. The latter drags
    `IsLocalization.Away.lift` through the multiplication of the nested completion.
-   `AdicCompletion.congrIdealAlg` (`FormalSchemes.AwayCompletionNested`) is `subst`-built for the
-   same reason.
+   `AdicCompletion.congrIdealₐ` (`FormalSchemes.AdicCompletionCongrIdealAlg`) is `subst`-built
+   for the same reason.
 2. The naturality lemmas are stated with `awayCongrHom`, not `furtherLocFst`/`furtherLocSnd`, and
    are *pure applications* with no rewriting. The two families of maps are equal
    (`furtherLocFst_eq_awayCongrHom`), but that rewrite is performed in
@@ -158,67 +158,6 @@ theorem isUnit_overlapElt_chartHom' (i j k : ULift.{u} (Fin 3)) :
       (overlapElt I f i j)) :=
   isUnit_algebraMap_away_of_dvd_pow 1
     ⟨overlapElt I f i k, by rw [pow_one]; exact (chartHom_triple I f i k j).trans (mul_comm _ _)⟩
-
-/-! ### Transport along an equality of away elements -/
-
-/-- **Transport of a completed localization along an equality of away elements.** Built by
-pattern-matching on `rfl`, so it reduces to `AlgEquiv.refl` and the kernel never has to look at
-either element.
-
-This matters: the alternative — `awayCongrEquiv` at the two mutual divisibilities — drags
-`IsLocalization.Away.lift` through the multiplication of a *doubly nested* completion, and the
-kernel then spends minutes (and gigabytes) reducing it. `AdicCompletion.congrIdealAlg`
-(`FormalSchemes.AwayCompletionNested`) is `subst`-built for exactly the same reason. -/
-def awayCongrEquivOfEq {A' : Type u} [CommRing A'] [Algebra R A'] :
-    ∀ {x y : A'}, x = y →
-      (awayCompletion (I.map (algebraMap R A')) x ≃ₐ[R]
-        awayCompletion (I.map (algebraMap R A')) y)
-  | _, _, rfl => AlgEquiv.refl
-
-/-- **The transport is the comparison isomorphism.** Stated and proved with the two elements
-abstract, so that instantiating it never reduces them: the content is `awayCongrHom_self`. -/
-theorem awayCongrEquiv_eq_ofEq {A' : Type u} [CommRing A'] [Algebra R A'] (hI : I.FG)
-    {x y : A'} (h : x = y)
-    (hxy : IsUnit (algebraMap A' (Localization.Away y) x))
-    (hyx : IsUnit (algebraMap A' (Localization.Away x) y)) :
-    awayCongrEquiv I x y hI hxy hyx = awayCongrEquivOfEq I h := by
-  subst h
-  refine AlgEquiv.ext fun z => ?_
-  exact AlgHom.congr_fun (awayCongrHom_self I x hI hxy) z
-
-/-- **The naturality square of `FormalSchemes.AwayCompletionNestedNaturality`, in `subst` form.**
-When the chart-level target away element `t` is *equal* to the image of `h` — the case an
-open-cover datum is in — the comparison isomorphism on the right can be replaced by the transport
-`awayCongrEquivOfEq`.
-
-Stated and proved with everything abstract, so that instantiating it at a concrete doubly nested
-completion is pure substitution: the kernel never reduces `t`. Instantiating the `awayCongrEquiv`
-form instead costs minutes. This belongs next to `awayCongrHom_nestedCongr` in
-`FormalSchemes.AwayCompletionNestedNaturality`; it lives here only because that file is the one
-under review. -/
-theorem awayCongrHom_nestedCongrOfEq (hI : I.FG) (a g h : A)
-    (hag : IsUnit (algebraMap A (Localization.Away g) a))
-    (hah : IsUnit (algebraMap A (Localization.Away h) a))
-    (hgh : IsUnit (algebraMap A (Localization.Away h) g))
-    (hcgh : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a)
-      (Localization.Away (awayCompletionHom (I.map (algebraMap R A)) a h))
-      (awayCompletionHom (I.map (algebraMap R A)) a g)))
-    (t : awayCompletion (I.map (algebraMap R A)) a)
-    (heq : awayCompletionHom (I.map (algebraMap R A)) a h = t)
-    (hbar : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a) (Localization.Away t)
-      (awayCompletionHom (I.map (algebraMap R A)) a g)))
-    (x : awayCompletion (I.map (algebraMap R A)) g) :
-    awayCongrHom I (awayCompletionHom (I.map (algebraMap R A)) a g) t hI hbar
-        (awayCompletionNestedAlgEquiv I hI a g hag x) =
-      awayCongrEquivOfEq I heq
-        (awayCompletionNestedAlgEquiv I hI a h hah (awayCongrHom I g h hI hgh x)) := by
-  subst heq
-  have hself : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a)
-      (Localization.Away (awayCompletionHom (I.map (algebraMap R A)) a h))
-      (awayCompletionHom (I.map (algebraMap R A)) a h)) :=
-    IsLocalization.Away.algebraMap_isUnit _
-  rw [← awayCongrEquiv_eq_ofEq I hI rfl hself hself]
-  exact awayCongrHom_nestedCongr I hI a g h hag hah hgh hcgh _ hself hself hbar x
 
 /-! ### The chart identifications `N` -/
 
