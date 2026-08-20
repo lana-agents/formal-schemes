@@ -1,4 +1,5 @@
 import FormalSchemes.ActionQuotient
+import FormalSchemes.AdicCompletionCongrLevel
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicExtend
 import FormalSchemes.AdicMorphism
