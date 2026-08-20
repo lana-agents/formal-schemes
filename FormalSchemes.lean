@@ -23,6 +23,7 @@ import FormalSchemes.AnnulusOverlapProper
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.AwayCompletionAway
+import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.BaseChange
@@ -226,6 +227,7 @@ import FormalSchemes.TateShift
 import FormalSchemes.TateTransition
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
+import FormalSchemes.ThreeChartDatum
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
 import FormalSchemes.TwoPatchFibreProduct
