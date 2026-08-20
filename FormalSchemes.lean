@@ -31,6 +31,7 @@ import FormalSchemes.BasicOpenChartComponent
 import FormalSchemes.BasicOpenChartOverlap
 import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.BasicOpenCoverVanishing
+import FormalSchemes.BasicOpenDisjointUnion
 import FormalSchemes.BasicOpenImmersion
 import FormalSchemes.BasicOpenImmersionAssembly
 import FormalSchemes.BasicOpenImmersionLRS
