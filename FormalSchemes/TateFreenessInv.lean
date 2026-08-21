@@ -85,18 +85,6 @@ namespace AlgebraicGeometry
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I) (hI : I.FG)
 
-/-- Pre-composing with an `eqToHom` isomorphism does not change the underlying-space range.
-(Duplicate of the private helper of `FormalSchemes.TateFreenessAdjacent`, kept here so that this
-file is purely additive and independent of the swap-chain freeness files.) -/
-private theorem range_eqToHom_comp {X Y Z : LocallyRingedSpace.{u}} (e : X = Y) (g : Y ⟶ Z) :
-    Set.range (eqToHom e ≫ g).base = Set.range g.base := by subst e; simp
-
-/-- The range of a composite morphism factors through the image of the second leg. (Duplicate of
-the private helper of `FormalSchemes.TateFreenessAdjacent`.) -/
-private theorem range_comp_base {X Y Z : LocallyRingedSpace.{u}} (a : X ⟶ Y) (b : Y ⟶ Z) :
-    Set.range (a ≫ b).base = ⇑b.base '' Set.range ⇑a.base := by
-  rw [LocallyRingedSpace.comp_base, TopCat.coe_comp, Set.range_comp]
-
 /-! ### Nonemptiness of the patches -/
 
 omit [TopologicalSpace R] [IsAdicRing I] in

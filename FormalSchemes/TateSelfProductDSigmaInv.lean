@@ -649,7 +649,8 @@ private theorem legSecondShape {S T V W : Type u} [CommRing S] [CommRing T] [Com
 
 Each is a `coprod`-free equation between two composites of `mapSpf`s. Stating them separately —
 rather than inlining them as branches of the shape lemmas — is what keeps this module inside the
-kernel's memory budget: see the module docstring of `TateSelfProductDInvLegs`. -/
+kernel's memory budget: see this module's docstring, "Build cost — do not inline the leg lemmas
+back into the shape lemmas (issue 636)". -/
 
 /-- First shape, `(x, x)` summand. -/
 private theorem firstLegXX (hI : I.FG) :

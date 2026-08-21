@@ -12,6 +12,15 @@ formal Tate annulus with ideal of definition `I·A`. The flagship goal of issue 
 `ℤ`-indexed chain of consecutive translates of `Spf A` into a single (non-affine) formal scheme
 `T` — the formal model of the Tate curve before quotienting by the `q^ℤ`-action.
 
+The `q^ℤ` naming here is **inherited from the pre-435 model and is not accurate for this chain**.
+The shift is multiplication by `q` on the *inversion*-glued chain `T_inv`
+(`FormalSchemes.TateChainInvGlue`, `FormalSchemes.TateShiftInv`), where `x_n · y_{n+1} = 1` and
+`x_n · y_n = q` give `x_{n+1} = q · x_n`; under the coordinate-*swap* gluing `y_{n+1} = x_n` of
+this file the same computation gives `x_{n+1} = q / x_n`, which is not a translation at all. The
+labels are kept because they name the declarations (`tatePeriodAction` and friends); see the
+discussion in `FormalSchemes.TateShift` and the period note in `FormalSchemes.TateCurveModel`
+(issues 435, 606, 620).
+
 This file assembles that datum. The two-patch prototype (`FormalSchemes.TateGlueTwoPatch`) glued two
 copies of `Spf A` along `{x invertible} ≅ {y invertible}`; here we carry that construction to the
 full index type `ℤ` (lifted to the ambient universe as `ULift.{u} ℤ`). Patch `U_n = Spf A` overlaps
@@ -50,13 +59,21 @@ Tate chain glues with no genuine cocycle obstruction.
 * `AlgebraicGeometry.tateChainFormalGlueData`: the `FormalScheme.GlueData`, each patch `Spf A`.
 * `AlgebraicGeometry.tateChain`: the glued (non-affine) formal scheme `T`, the formal Tate chain.
 
+## Shared helpers
+
+The four range/emptiness helpers below the chart definitions — `range_eqToHom_comp`,
+`range_comp_base`, `range_emptyTo_empty`, `tateF_range_disjoint` and `isEmpty_tatePullback` — are
+public rather than `private`. None of them mentions the glue transition `t`, so they are literally
+the same statements for the inversion-glued chain (`FormalSchemes.TateChainInvGlue`) and for the
+freeness files, all of which cite them from here rather than re-deriving them (issue 621).
+
 ## Remaining work (issue 208)
 
 The glued structural morphism `T ⟶ Spf R` (assembling the per-patch `annulusStructMap` into a
 morphism over the base, exhibiting the chain as a formal scheme over `Spf R`) remains open: the
 in-repo gluing framework (`FormalSchemes.Gluing`) does not yet provide a morphism-gluing combinator
 (`GlueData.glueMorphisms` / `Multicoequalizer.desc`). Part 3 (issue 135, the `q^ℤ`-shift action on
-`T` and its proper discontinuity) also follows.
+`T` and its proper discontinuity — inherited naming, see above) also follows.
 
 ## References
 
@@ -163,12 +180,17 @@ def tateT (hI : I.FG) (i j : ULift.{u} ℤ) : tateV R I q i j ⟶ tateV R I q j 
 
 /-- The range of `f i j` on underlying spaces is unchanged by the `eqToHom` pre-composition:
 pre-composing with an isomorphism does not change the range. -/
-private theorem range_eqToHom_comp {X Y Z : LocallyRingedSpace.{u}} (e : X = Y) (g : Y ⟶ Z) :
+theorem range_eqToHom_comp {X Y Z : LocallyRingedSpace.{u}} (e : X = Y) (g : Y ⟶ Z) :
     Set.range (eqToHom e ≫ g).base = Set.range g.base := by
   subst e; simp
 
+/-- The range of a composite morphism is the image of the first leg's range under the second. -/
+theorem range_comp_base {X Y Z : LocallyRingedSpace.{u}} (a : X ⟶ Y) (b : Y ⟶ Z) :
+    Set.range (a ≫ b).base = ⇑b.base '' Set.range ⇑a.base := by
+  rw [LocallyRingedSpace.comp_base, TopCat.coe_comp, Set.range_comp]
+
 /-- The empty-source initial map has empty range. -/
-private theorem range_emptyTo_empty (X : LocallyRingedSpace.{u}) :
+theorem range_emptyTo_empty (X : LocallyRingedSpace.{u}) :
     Set.range (LocallyRingedSpace.emptyTo X).base = ∅ := by
   rw [Set.range_eq_empty_iff]
   exact inferInstanceAs (IsEmpty (∅ : LocallyRingedSpace.{u}))
@@ -176,8 +198,12 @@ private theorem range_emptyTo_empty (X : LocallyRingedSpace.{u}) :
 /-- **The legs of any pairwise-distinct triple overlap have disjoint ranges.** This is the geometric
 crux (`FormalSchemes.TateOverlapDisjoint`): for distinct `j ≠ k`, at least one of `f i j`, `f i k`
 either has empty source (non-adjacent patch) or the two are the `x`- and `y`-charts with disjoint
-loci `D(x)`, `D(y)`. -/
-private theorem tateF_range_disjoint (hq : q ∈ I) (hI : I.FG) {i j k : ULift.{u} ℤ}
+loci `D(x)`, `D(y)`.
+
+This depends only on `tateF`, never on the glue transition `t`, so it is the same statement for
+both the swap-glued chain of this file and the inversion-glued `tateChainInv`
+(`FormalSchemes.TateChainInvGlue`), which cites it. -/
+theorem tateF_range_disjoint (hq : q ∈ I) (hI : I.FG) {i j k : ULift.{u} ℤ}
     (hjk : j ≠ k) :
     Disjoint (Set.range (tateF R I q i j).base) (Set.range (tateF R I q i k).base) := by
   -- If either leg is a "far" (empty-source) map, its range is empty.
@@ -206,7 +232,7 @@ private theorem tateF_range_disjoint (hq : q ∈ I) (hI : I.FG) {i j k : ULift.{
 
 /-- **The triple overlap of any pairwise-distinct triple is empty.** The tool that degenerates the
 Tate-chain cocycle: `pullback (f i j) (f i k)` has empty carrier, hence is initial. -/
-private theorem isEmpty_tatePullback (hq : q ∈ I) (hI : I.FG) (i : ULift.{u} ℤ) {j k : ULift.{u} ℤ}
+theorem isEmpty_tatePullback (hq : q ∈ I) (hI : I.FG) (i : ULift.{u} ℤ) {j k : ULift.{u} ℤ}
     (hjk : j ≠ k) [HasPullback (tateF R I q i j) (tateF R I q i k)] :
     IsEmpty (pullback (tateF R I q i j) (tateF R I q i k) : LocallyRingedSpace.{u}) :=
   LocallyRingedSpace.isEmpty_pullback _ _ (tateF_range_disjoint R I q hq hI hjk)
@@ -281,7 +307,9 @@ def tateChainFormalGlueData (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] :
 /-- **The formal Tate chain `T`**: the (non-affine) formal scheme obtained by gluing the ℤ-indexed
 chain of formal Tate annuli `Spf A` along their consecutive overlaps `{x invertible} ≅
 {y invertible}`. This is the flagship geometric object of issue 208 — the formal model of the Tate
-curve before quotienting by the `q^ℤ`-action (issue 135). -/
+curve before quotienting by the `q^ℤ`-action (issue 135), with the naming caveat of the module
+docstring: on this swap-glued chain the shift is `x ↦ q / x`, not multiplication by `q`, and it is
+the inversion-glued `tateChainInv` that carries the quotient presentation. -/
 def tateChain (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] : FormalScheme.{u} :=
   (tateChainFormalGlueData R I q hq hI).gluedFormalScheme
 

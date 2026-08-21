@@ -35,11 +35,10 @@ the direction:
 
 ## What this file provides
 
-* `tateChainInv_glueMorphisms_compat`: the abstract compatibility criterion for gluing a family
-  `k : ∀ i, Spf A ⟶ Y` out of `T_inv`. Proved by the same four-case split as
-  `tateChainInvStructMap` (diagonal via `t_id`; far via initiality of the empty overlap; adjacent
-  via the supplied hypotheses), with `annulusChartTransitionInvSpf` in place of
-  `annulusChartTransitionSpf`.
+The abstract gluing criterion `tateChainInv_glueMorphisms_compat`, which both shifts below are
+built from, lives in `FormalSchemes.TateChainInvGlue` beside the glue datum it unfolds — it is not
+specific to shifts, and `tateChainInvStructMap` is the other instance of it (issue 621).
+
 * `tateInvShift_overlap_forward_gen` / `tateInvShift_overlap_backward_gen`: for **any** index map
   `σ` preserving the index difference on an adjacent pair, the two per-patch inclusions
   `annulusOverlapChart(Y) ≫ ι (σ ·)` agree over the inversion chart transition. These are read off
@@ -67,55 +66,6 @@ universe u
 namespace AlgebraicGeometry
 
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
-
-/-! ### The abstract gluing criterion -/
-
-set_option maxHeartbeats 1600000 in
--- The four-case unfolding of the glue datum `ofGlueData'` produces a large term; raise the budget.
-/-- **Abstract criterion for gluing a family of morphisms out of the inversion-glued Tate chain.**
-A family `k i : Spf A ⟶ Y` is compatible with the gluing (i.e. satisfies the obligation of
-`FormalScheme.GlueData.glueMorphisms`) as soon as the `x`- and `y`-charts agree with `k` over the
-𝔾m-inversion chart transition on each adjacent pair. `Inv` analogue of
-`tateChain_glueMorphisms_compat`; the proof is the same four-case split as
-`tateChainInvStructMap` (diagonal via `t_id`; far via initiality of the empty overlap; adjacent via
-`hf` / `hb`). -/
-theorem tateChainInv_glueMorphisms_compat [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
-    (hq : q ∈ I) (hI : I.FG) {Y : LocallyRingedSpace.{u}}
-    (k : ∀ _ : ULift.{u} ℤ, locallyRingedSpaceObj (annulusIdealOfDefinition R I q) ⟶ Y)
-    (hf : ∀ i j : ULift.{u} ℤ, j.down - i.down = 1 →
-      annulusOverlapChart R I q ≫ k i =
-        (annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫ k j)
-    (hb : ∀ i j : ULift.{u} ℤ, j.down - i.down = -1 →
-      annulusOverlapChartY R I q ≫ k i =
-        (annulusChartTransitionInvSpf R I q hI).inv ≫ annulusOverlapChart R I q ≫ k j)
-    (i j : ULift.{u} ℤ) :
-    (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.f i j ≫ k i =
-      (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.t i j ≫
-        (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.f j i ≫
-          k j := by
-  haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
-  by_cases hij : i = j
-  · subst hij
-    simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-  · have hij' : ¬ @Eq (ULift.{u} ℤ) i j := hij
-    have hji' : ¬ @Eq (ULift.{u} ℤ) j i := fun h => hij h.symm
-    simp only [tateChainInvFormalGlueData, tateChainInvLRSGlueData, tateChainInvGlueData',
-      CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij',
-      dif_neg hji', Category.assoc]
-    by_cases h1 : j.down - i.down = 1
-    · rw [tateF_forward R I q h1, tateTInv, dif_pos h1,
-        tateF_backward R I q (show i.down - j.down = -1 by omega)]
-      simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [hf i j h1]
-    · by_cases h2 : j.down - i.down = -1
-      · rw [tateF_backward R I q h2, tateTInv, dif_neg h1, dif_pos h2,
-          tateF_forward R I q (show i.down - j.down = 1 by omega)]
-        simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-        rw [hb i j h2]
-      · haveI : IsEmpty (tateV R I q i j) := (tateV_far R I q h1 h2) ▸ inferInstance
-        simp only [eqToHom_trans_assoc]
-        congr 1
-        exact (LocallyRingedSpace.isInitialOfIsEmpty (X := tateV R I q i j)).hom_ext _ _
 
 /-! ### The adjacent-overlap cruxes -/
 
