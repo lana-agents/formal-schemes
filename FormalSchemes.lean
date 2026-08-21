@@ -243,6 +243,7 @@ import FormalSchemes.TateSeparated
 import FormalSchemes.TateShift
 import FormalSchemes.TateShiftInv
 import FormalSchemes.TateTransition
+import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
