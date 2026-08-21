@@ -243,6 +243,7 @@ import FormalSchemes.TateSeparated
 import FormalSchemes.TateShift
 import FormalSchemes.TateShiftInv
 import FormalSchemes.TateTensorOverlapChartIso
+import FormalSchemes.TateTensorOverlapChartIsoBoth
 import FormalSchemes.TateTransition
 import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningCocone
