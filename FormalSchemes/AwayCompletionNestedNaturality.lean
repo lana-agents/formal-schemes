@@ -52,8 +52,8 @@ The rest of the file makes the square's two legs literally of that shape. Every 
 `mapCompletion`: `awayCompletionAwayEquiv` is `mapCompletion` of the localization transitivity
 `awayAwayLocEquiv` (definitionally), `AdicCompletion.interchangeForward` is `mapCompletion` of
 `AdicCompletion.locTransition` (definitionally), `awayCongrHom` is `mapCompletion` of
-`IsLocalization.Away.lift`, and the ideal transport `AdicCompletion.congrIdealAlg` is absorbed by
-`congrIdealAlg_mapCompletion`. So `AdicCompletion.mapCompletion_comp` collapses each leg to a
+`IsLocalization.Away.lift`, and the ideal transport `AdicCompletion.congrIdealₐ` is absorbed by
+`congrIdealₐ_mapCompletion`. So `AdicCompletion.mapCompletion_comp` collapses each leg to a
 single `mapCompletion`, and the two underlying maps agree on `A` by `nestedLocHom_algebraMap`.
 
 Note that only the **forward** direction of `N` is used: the backward direction is
@@ -65,7 +65,7 @@ appear (`F ∘ e.symm = G` ⟺ `F = G ∘ e`) before applying anything here.
 
 * `AdicCompletion.mapCompletion_congr_localizationAway`: the generalised rigidity — an arbitrary
   target.
-* `AdicCompletion.congrIdealAlg_mapCompletion`: the ideal transport absorbed into a
+* `AdicCompletion.congrIdealₐ_mapCompletion`: the ideal transport absorbed into a
   `mapCompletion`.
 * `FormalSpectrum.nestedLocHom`, `nestedLocHom_algebraMap`: the base-ring map underlying `N`, and
   its value on the image of `A`.
@@ -185,14 +185,14 @@ theorem mapCompletion_congr_localizationAway {A : Type u} [CommRing A] (s : A)
   rfl
 
 /-- **The ideal transport is absorbed into the map.** Post-composing a `mapCompletion` with the
-`subst`-built transport `congrIdealAlg` along an equality of target ideals is again the same
+`subst`-built transport `congrIdealₐ` along an equality of target ideals is again the same
 `mapCompletion`, read with the other ideal. -/
-theorem congrIdealAlg_mapCompletion {B : Type u} [CommRing B] (R : Type u) [CommRing R]
+theorem congrIdealₐ_mapCompletion {B : Type u} [CommRing B] (R : Type u) [CommRing R]
     [Algebra R B] {K₁ K₂ : Ideal B} (h : K₁ = K₂)
     {A' : Type u} [CommRing A'] {J : Ideal A'} (ρ : A' →+* B)
     (hle₁ : J.map ρ ≤ K₁) (hle₂ : J.map ρ ≤ K₂) (hK₁ : K₁.FG) (hK₂ : K₂.FG)
     (x : AdicCompletion J A') :
-    congrIdealAlg R h (mapCompletion ρ hle₁ hK₁ x) = mapCompletion ρ hle₂ hK₂ x := by
+    congrIdealₐ R h (mapCompletion ρ hle₁ hK₁ x) = mapCompletion ρ hle₂ hK₂ x := by
   subst h; rfl
 
 end AdicCompletion
@@ -236,7 +236,7 @@ theorem awayCompletionNestedAlgEquiv_apply_eq (hI : I.FG) (f g : A)
   rw [h2, awayCompletionChartEquiv_toRingHom_eq (I.map (algebraMap R A)) f g (hI.map _) hfg
       (nestedLocHom_map_le _ f g hfg)
       (AdicCompletion.completionLocIdeal_fg _ _ ((hI.map (algebraMap R A)).map _))]
-  exact AdicCompletion.congrIdealAlg_mapCompletion R _ _ _ _ _ _ x
+  exact AdicCompletion.congrIdealₐ_mapCompletion R _ _ _ _ _ _ x
 
 /-- The comparison map is a `mapCompletion` of `IsLocalization.Away.lift` (definitionally). -/
 theorem awayCongrHom_apply_eq (hI : I.FG) (f g : A)
@@ -319,6 +319,38 @@ theorem awayCongrHom_nestedCongr (hI : I.FG) (f g h : A)
         (awayCompletionNestedAlgEquiv I hI f h hfh (awayCongrHom I g h hI hgh x)) := by
   rw [awayCongrEquiv_apply_eq, ← awayCongrHom_nested I hI f g h hfg hfh hgh hcgh x]
   exact (AlgHom.congr_fun (awayCongrHom_comp I _ _ _ hI hcgh h1) _).symm
+
+/-- **The naturality square of `FormalSchemes.AwayCompletionNestedNaturality`, in `subst` form.**
+When the chart-level target away element `t` is *equal* to the image of `h` — the case an
+open-cover datum is in — the comparison isomorphism on the right can be replaced by the transport
+`awayCongrEquivOfEq`.
+
+Stated and proved with everything abstract, so that instantiating it at a concrete doubly nested
+completion is pure substitution: the kernel never reduces `t`. Instantiating the `awayCongrEquiv`
+form instead costs minutes. -/
+theorem awayCongrHom_nestedCongrOfEq (hI : I.FG) (a g h : A)
+    (hag : IsUnit (algebraMap A (Localization.Away g) a))
+    (hah : IsUnit (algebraMap A (Localization.Away h) a))
+    (hgh : IsUnit (algebraMap A (Localization.Away h) g))
+    (hcgh : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a)
+      (Localization.Away (awayCompletionHom (I.map (algebraMap R A)) a h))
+      (awayCompletionHom (I.map (algebraMap R A)) a g)))
+    (t : awayCompletion (I.map (algebraMap R A)) a)
+    (heq : awayCompletionHom (I.map (algebraMap R A)) a h = t)
+    (hbar : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a) (Localization.Away t)
+      (awayCompletionHom (I.map (algebraMap R A)) a g)))
+    (x : awayCompletion (I.map (algebraMap R A)) g) :
+    awayCongrHom I (awayCompletionHom (I.map (algebraMap R A)) a g) t hI hbar
+        (awayCompletionNestedAlgEquiv I hI a g hag x) =
+      awayCongrEquivOfEq I heq
+        (awayCompletionNestedAlgEquiv I hI a h hah (awayCongrHom I g h hI hgh x)) := by
+  subst heq
+  have hself : IsUnit (algebraMap (awayCompletion (I.map (algebraMap R A)) a)
+      (Localization.Away (awayCompletionHom (I.map (algebraMap R A)) a h))
+      (awayCompletionHom (I.map (algebraMap R A)) a h)) :=
+    IsLocalization.Away.algebraMap_isUnit _
+  rw [← awayCongrEquiv_eq_ofEq I hI rfl hself hself]
+  exact awayCongrHom_nestedCongr I hI a g h hag hah hgh hcgh _ hself hself hbar x
 
 end FormalSpectrum
 

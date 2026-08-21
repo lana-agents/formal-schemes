@@ -31,13 +31,12 @@ coproduct of charts with a single chart is the typical way this lemma gets used 
 
 ## Implementation notes
 
-`range_coprodDesc_base` duplicates `AlgebraicGeometry.range_coprodDesc_base` in
-`FormalSchemes.TateSelfProductBothOverlap`, which states the same general locally-ringed-space
-fact in the middle of the Tate self-product tower. The copy here is deliberate: this file is meant
-to be importable by anything, whereas that one drags in the whole completed-tensor interchange
-tower. **The one in `TateSelfProductBothOverlap` is the duplicate to delete** once that file can
-be edited again (it is inside `FormalSchemes.TateSelfProductDSigmaInv`'s import closure, which
-currently cannot be rebuilt); it is on issue 617's consolidation list.
+`range_coprodDesc_base` is the single home of this general locally-ringed-space fact. It was for a
+while duplicated as `AlgebraicGeometry.range_coprodDesc_base` in
+`FormalSchemes.TateSelfProductBothOverlap`, in the middle of the Tate self-product tower; that copy
+has been deleted (issue 617) and its call sites re-pointed here. Keep the statement in this file:
+it imports only `FormalSchemes.CoproductOpenImmersion`, so anything in the library may cite it,
+whereas the Tate self-product tower drags in the whole completed-tensor interchange chain.
 
 ## References
 

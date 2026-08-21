@@ -1,3 +1,4 @@
+import FormalSchemes.AdicCompletionCongrIdealAlg
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateChainStructMap
 import FormalSchemes.CompletedTensorAwayInterchangeSpf
@@ -38,7 +39,6 @@ overlap transition. This file supplies the two ingredients that base change need
 
 ## Main definitions
 
-* `AdicCompletion.congrIdealₐ`: the `R`-algebra version of `AdicCompletion.congrIdeal`.
 * `AlgebraicGeometry.annulusChartTransitionAlg`: the `R`-algebra chart transition
   `A{1/x} ≃ₐ[R] A{1/y}`.
 * `AlgebraicGeometry.twoPatchFibreTransition`: the base-changed transition of formal spectra
@@ -55,22 +55,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry FormalSpectrum
 
 universe u
-
-namespace AdicCompletion
-
-/-- The `R`-algebra version of `AdicCompletion.congrIdeal`: for equal ideals `K₁ = K₂` the
-completions `AdicCompletion K₁ B` and `AdicCompletion K₂ B` are canonically isomorphic as
-`R`-algebras. Because
-it is built by `subst` from `AlgEquiv.refl`, its algebra-map compatibility is definitional and the
-transport never has to be projected at a point — the pointwise route through `congrIdeal` is
-pathologically expensive at the concrete completion types (cf.
-`FormalSchemes.TateChainStructMap`). -/
-def congrIdealₐ {B : Type u} [CommRing B] (R : Type u) [CommRing R] [Algebra R B]
-    {K₁ K₂ : Ideal B} (h : K₁ = K₂) :
-    AdicCompletion K₁ B ≃ₐ[R] AdicCompletion K₂ B := by
-  subst h; exact AlgEquiv.refl
-
-end AdicCompletion
 
 namespace AlgebraicGeometry
 

@@ -1,3 +1,4 @@
+import FormalSchemes.AdicCompletionCongrIdealAlg
 import FormalSchemes.AwayCompletionInterchange
 
 set_option linter.style.header false
@@ -29,11 +30,6 @@ consumes.
 
 ## Contents
 
-* `AdicCompletion.congrIdealAlg`: the `R`-algebra transport of a completion along an equality of
-  ideals, with `congrIdealAlg_algebraMap`. (This is the same construction as
-  `AdicCompletion.congrIdealₐ`, which is unavailable here because it currently lives in
-  `FormalSchemes.TwoPatchFibreProduct`, behind the whole Tate tower; the two should be consolidated
-  into one early-layer declaration when that file is next touched.)
 * `FormalSpectrum.awayCompletionAwayEquiv_algebraMap` and
   `FormalSpectrum.awayCompletionChartEquiv_algebraMap`: the two existing ring isomorphisms fix the
   structural image of `A`. These are the computational content of the upgrade.
@@ -55,26 +51,6 @@ consumes.
 noncomputable section
 
 universe u
-
-namespace AdicCompletion
-
-/-- **The `R`-algebra transport of a completion along an equality of ideals.** Built by `subst`
-from `AlgEquiv.refl`, so its algebra-map compatibility is definitional and the transport never has
-to be projected at a point (the pointwise route through the plain `AdicCompletion.congrIdeal` is
-pathologically expensive at concrete completion types). -/
-def congrIdealAlg {B : Type u} [CommRing B] (R : Type u) [CommRing R] [Algebra R B]
-    {K₁ K₂ : Ideal B} (h : K₁ = K₂) :
-    AdicCompletion K₁ B ≃ₐ[R] AdicCompletion K₂ B := by
-  subst h; exact AlgEquiv.refl
-
-/-- The transport fixes the structural image of the base ring. -/
-theorem congrIdealAlg_algebraMap {B : Type u} [CommRing B] (R : Type u) [CommRing R] [Algebra R B]
-    {K₁ K₂ : Ideal B} (h : K₁ = K₂) (b : B) :
-    congrIdealAlg R h (algebraMap B (AdicCompletion K₁ B) b) =
-      algebraMap B (AdicCompletion K₂ B) b := by
-  subst h; rfl
-
-end AdicCompletion
 
 namespace FormalSpectrum
 
@@ -195,7 +171,7 @@ def awayCompletionNestedAlgEquiv (hI : I.FG) (f g : A)
       awayCompletion (I.map (algebraMap R (awayCompletion (I.map (algebraMap R A)) f)))
         (awayCompletionHom (I.map (algebraMap R A)) f g) :=
   (awayCompletionChartAlgEquiv I hI f g hfg).trans
-    (AdicCompletion.congrIdealAlg R
+    (AdicCompletion.congrIdealₐ R
       (congrArg (Ideal.map (algebraMap (awayCompletion (I.map (algebraMap R A)) f)
           (Localization.Away (awayCompletionHom (I.map (algebraMap R A)) f g))))
         (map_algebraMap_awayCompletion_eq I f).symm))
@@ -213,7 +189,7 @@ def awayCompletionNestedMulAlgEquiv (hI : I.FG) (f g : A) :
       (dvd_mul_right f g))
 
 /-- The transported isomorphism still fixes `A`; the transport contributes nothing because
-`congrIdealAlg` is `subst`-built. -/
+`congrIdealₐ` is `subst`-built. -/
 theorem awayCompletionNestedAlgEquiv_algebraMap (hI : I.FG) (f g : A)
     (hfg : IsUnit (algebraMap A (Localization.Away g) f)) (a : A) :
     awayCompletionNestedAlgEquiv I hI f g hfg
@@ -225,7 +201,7 @@ theorem awayCompletionNestedAlgEquiv_algebraMap (hI : I.FG) (f g : A)
       (Localization.Away (awayCompletionHom (I.map (algebraMap R A)) f g))
       (awayCompletion (awayCompletionIdeal (I.map (algebraMap R A)) f)
         (awayCompletionHom (I.map (algebraMap R A)) f g)),
-    AdicCompletion.congrIdealAlg_algebraMap, ← IsScalarTower.algebraMap_apply]
+    AdicCompletion.congrIdealₐ_algebraMap, ← IsScalarTower.algebraMap_apply]
 
 end FormalSpectrum
 

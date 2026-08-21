@@ -124,7 +124,7 @@ theorem range_firstFactorOverlapChart (hI : I.FG) :
             (overlapY R I q))) :
         Set (FormalSpectrum (CompletedTensorProduct.idealOfDefinition R I
           (annulusAlgebra R I q) (annulusAlgebra R I q)))) := by
-  rw [firstFactorOverlapChart, range_coprodDesc_base]
+  rw [firstFactorOverlapChart, LocallyRingedSpace.range_coprodDesc_base]
   refine congrArg₂ (· ∪ ·) ?_ ?_
   · exact range_interchangeOpenImmersion_base (B := annulusAlgebra R I q) I (overlapX R I q) hI
   · exact range_interchangeOpenImmersion_base (B := annulusAlgebra R I q) I (overlapY R I q) hI
@@ -144,7 +144,7 @@ theorem range_secondFactorOverlapChart (hI : I.FG) :
             (overlapY R I q))) :
         Set (FormalSpectrum (CompletedTensorProduct.idealOfDefinition R I
           (annulusAlgebra R I q) (annulusAlgebra R I q)))) := by
-  rw [secondFactorOverlapChart, range_coprodDesc_base]
+  rw [secondFactorOverlapChart, LocallyRingedSpace.range_coprodDesc_base]
   refine congrArg₂ (· ∪ ·) ?_ ?_
   · exact range_rightInterchangeOpenImmersion_base (A := annulusAlgebra R I q) I (overlapX R I q) hI
   · exact range_rightInterchangeOpenImmersion_base (A := annulusAlgebra R I q) I (overlapY R I q) hI
@@ -195,7 +195,8 @@ theorem range_bothFactorOverlapChart (hI : I.FG) :
                 (overlapY R I q)))) :
         Set (FormalSpectrum (CompletedTensorProduct.idealOfDefinition R I
           (annulusAlgebra R I q) (annulusAlgebra R I q)))) := by
-  rw [bothFactorOverlapChart, range_coprodDesc_base, range_coprodDesc_base, range_coprodDesc_base]
+  rw [bothFactorOverlapChart, LocallyRingedSpace.range_coprodDesc_base,
+    LocallyRingedSpace.range_coprodDesc_base, LocallyRingedSpace.range_coprodDesc_base]
   refine congrArg₂ (· ∪ ·) (congrArg₂ (· ∪ ·) ?_ ?_) (congrArg₂ (· ∪ ·) ?_ ?_)
   · exact range_bothInterchangeOpenImmersion_base (A := annulusAlgebra R I q)
       (B := annulusAlgebra R I q) I (overlapX R I q) (overlapX R I q) hI

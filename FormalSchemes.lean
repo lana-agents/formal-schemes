@@ -1,5 +1,6 @@
 import FormalSchemes.ActionQuotient
 import FormalSchemes.AdicCompletionAwayTrans
+import FormalSchemes.AdicCompletionCongrIdealAlg
 import FormalSchemes.AdicCompletionCongrLevel
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicCompletionSplitAway

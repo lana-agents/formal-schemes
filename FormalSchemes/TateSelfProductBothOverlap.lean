@@ -1,3 +1,4 @@
+import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.TateSelfProductRightOverlap
 import FormalSchemes.CompletedTensorAwayInterchangeBoth
 
@@ -42,8 +43,6 @@ of `TateSelfProductRightOverlap`.
 
 ## Main results
 
-* `AlgebraicGeometry.range_coprodDesc_base`: the underlying-space range of `coprod.desc f g` is the
-  union of the ranges of `f` and `g` (a general locally-ringed-space fact).
 * `AlgebraicGeometry.isOpenImmersion_tateSelfProductBothOverlapChart`: the nested four-chart
   coproduct chart into `Spf(A ⊗̂_R A)` is an open immersion.
 
@@ -61,34 +60,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
 universe u
 
 namespace AlgebraicGeometry
-
-section CoprodRange
-
-variable {X Y Z : LocallyRingedSpace.{u}}
-
-/-- **The underlying-space range of a coproduct descent map is the union of the ranges.** For
-`f : X ⟶ Z`, `g : Y ⟶ Z`, the base of `coprod.desc f g : X ⨿ Y ⟶ Z` has range
-`range f.base ∪ range g.base`, since the two coproduct inclusions cover `X ⨿ Y`
-(`coprod_base_mem_range`) and `coprod.desc f g` restricts to `f` and `g` along them
-(`coprodDesc_base_comp_inl`/`_inr`). -/
-theorem range_coprodDesc_base (f : X ⟶ Z) (g : Y ⟶ Z) :
-    Set.range (coprod.desc f g).base = Set.range f.base ∪ Set.range g.base := by
-  have key_inl : ∀ a, (coprod.desc f g).base ((coprod.inl : X ⟶ X ⨿ Y).base a) = f.base a :=
-    fun a => congrArg (fun m => m a)
-      (LocallyRingedSpace.IsOpenImmersion.coprodDesc_base_comp_inl f g)
-  have key_inr : ∀ b, (coprod.desc f g).base ((coprod.inr : Y ⟶ X ⨿ Y).base b) = g.base b :=
-    fun b => congrArg (fun m => m b)
-      (LocallyRingedSpace.IsOpenImmersion.coprodDesc_base_comp_inr f g)
-  apply Set.Subset.antisymm
-  · rintro _ ⟨w, rfl⟩
-    rcases LocallyRingedSpace.coprod_base_mem_range w with ⟨a, ha⟩ | ⟨b, hb⟩
-    · exact Or.inl ⟨a, by rw [← ha, key_inl]⟩
-    · exact Or.inr ⟨b, by rw [← hb, key_inr]⟩
-  · rintro _ (⟨a, rfl⟩ | ⟨b, rfl⟩)
-    · exact ⟨(coprod.inl : X ⟶ X ⨿ Y).base a, key_inl a⟩
-    · exact ⟨(coprod.inr : Y ⟶ X ⨿ Y).base b, key_inr b⟩
-
-end CoprodRange
 
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 
@@ -148,7 +119,7 @@ private theorem innerChart_range_disjoint (hq : q ∈ I) (hI : I.FG) :
           (CompletedTensorProduct.inl R I (A R I q) (A R I q) (overlapX R I q)) :
             Set (FormalSpectrum (CompletedTensorProduct.idealOfDefinition R I
               (A R I q) (A R I q)))) := by
-    rw [range_coprodDesc_base]
+    rw [LocallyRingedSpace.range_coprodDesc_base]
     refine Set.union_subset ?_ ?_ <;>
       · rw [range_bothInterchangeOpenImmersion_base, TopologicalSpace.Opens.coe_inf]
         exact Set.inter_subset_left
@@ -161,7 +132,7 @@ private theorem innerChart_range_disjoint (hq : q ∈ I) (hI : I.FG) :
           (CompletedTensorProduct.inl R I (A R I q) (A R I q) (overlapY R I q)) :
             Set (FormalSpectrum (CompletedTensorProduct.idealOfDefinition R I
               (A R I q) (A R I q)))) := by
-    rw [range_coprodDesc_base]
+    rw [LocallyRingedSpace.range_coprodDesc_base]
     refine Set.union_subset ?_ ?_ <;>
       · rw [range_bothInterchangeOpenImmersion_base, TopologicalSpace.Opens.coe_inf]
         exact Set.inter_subset_left
