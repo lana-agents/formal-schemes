@@ -51,15 +51,6 @@ namespace AlgebraicGeometry
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I) (hI : I.FG)
 
-/-- Pre-composing with an `eqToHom` isomorphism does not change the underlying-space range. -/
-private theorem range_eqToHom_comp {X Y Z : LocallyRingedSpace.{u}} (e : X = Y) (g : Y ⟶ Z) :
-    Set.range (eqToHom e ≫ g).base = Set.range g.base := by subst e; simp
-
-/-- The range of a composite morphism factors through the image of the second leg. -/
-private theorem range_comp_base {X Y Z : LocallyRingedSpace.{u}} (a : X ⟶ Y) (b : Y ⟶ Z) :
-    Set.range (a ≫ b).base = ⇑b.base '' Set.range ⇑a.base := by
-  rw [LocallyRingedSpace.comp_base, TopCat.coe_comp, Set.range_comp]
-
 omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 /-- **The glue map of a forward step is the `x`-chart `D(x)`.** For `j.down = i.down + 1` the range
 of the Tate-chain glue inclusion `f i j : V(i, j) ⟶ U i` equals the range of the overlap chart

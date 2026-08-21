@@ -16,11 +16,15 @@ underlying-space images are disjoint. Then the induced map out of the coproduct
 is again an open immersion. Geometrically, the binary coproduct `X ⨿ Y` is the disjoint union of
 `X` and `Y`, and `coprod.desc f g` realises it as the open subspace `im f ∪ im g` of `Z`.
 
-This is the locally-ringed-space input to the two-chart Tate-curve model `𝔈_q = T/q^ℤ` (issue 223):
-the overlap object `V(0,1)` of the two-patch glue datum is the coproduct of the two formal-`Ĝm`
-charts `Spf A{1/x} ⊔ Spf A{1/y}`, and the combined overlap chart into a patch `Spf A` is exactly
+This is the locally-ringed-space input to the two-chart Tate-curve model `𝔈_q` (issue 223): the
+overlap object `V(0,1)` of the two-patch glue datum is the coproduct of the two formal-`Ĝm` charts
+`Spf A{1/x} ⊔ Spf A{1/y}`, and the combined overlap chart into a patch `Spf A` is exactly
 `coprod.desc` of the two affine overlap charts, whose images `D(x)` and `D(y)` are disjoint
 (`annulusOverlapChart_range_disjoint`).
+
+That the overlap is this *coproduct* — both loci at once — is exactly why the model is the chain
+modulo the **square** of the shift: the presentation is `𝔈_q = T_inv/⟨σ²⟩`, not `T/q^ℤ`, so `𝔈_q`
+has period `q²`. See the period note in `FormalSchemes.TateCurveModel` (issues 435, 620).
 
 ## Main results
 
