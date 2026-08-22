@@ -55,6 +55,15 @@ time or an out-of-memory kill:
    `FormalSchemes.ThreeChartCoverTransitions`, where the chart algebra is a variable.
 3. The transitions and the three datum laws live in separate files, and the laws are proved by
    conjugation lemmas stated with the chart algebras abstract. See the module note there.
+4. `chartOverlapEquiv` is **never delta-unfolded by the kernel inside a statement**. The naturality
+   lemmas are stated in terms of it, as their consumers need, but proved by `congrArg` against
+   `chartOverlapEquiv_apply` — a top-level `rfl` that performs the one unfolding in isolation.
+   Removing that step and closing the lemmas by `exact awayCongrHom_nestedCongrOfEq …` directly
+   is what the file used to do, and it cost **~160 s of kernel time per lemma**: the kernel then
+   has to unfold `chartOverlapEquiv` while comparing two equations between doubly nested
+   completions, instead of comparing two elements of one. Measured on issue 737: the module went
+   from **368 s / 7.49 GB peak** to **10 s / 2.86 GB peak** — the whole cost of the file was those
+   two unfoldings, and every other declaration in it is free.
 
 ## References
 
@@ -182,6 +191,21 @@ def chartTripleEquiv (hI : I.FG) (i j k : ULift.{u} (Fin 3)) :
       (isUnit_self_triple f i j k)).trans
     (awayCongrEquivOfEq I (chartHom_triple I f i j k))
 
+/-- **`chartOverlapEquiv` applied to an element**, spelled out as the nested chart identification
+it is by definition.
+
+This looks redundant, and it is not: it is the whole build cost of this file. Stating the
+naturality lemmas below directly in terms of `chartOverlapEquiv` forces the kernel to delta-unfold
+this definition *inside* an equation between doubly nested completions, and that single unfolding
+costs about 160 s per lemma. Discharging it once here, at the top level where the two sides are
+compared directly, costs nothing, and the naturality lemmas then close by `congrArg` against a
+statement the kernel can match syntactically. Measured: 368 s → 20 s for the module (issue 737). -/
+theorem chartOverlapEquiv_apply (hI : I.FG) (i j : ULift.{u} (Fin 3))
+    (x : awayCompletion (I.map (algebraMap R A)) (f i * f j)) :
+    chartOverlapEquiv I f hI i j x =
+      awayCompletionNestedAlgEquiv I hI (f i) (f i * f j) (isUnit_self_mul f i j) x :=
+  rfl
+
 /-! ### Naturality of `N` -/
 
 /-- **The left leg is natural.** Restricting from the single overlap `D(g_ij)` to the double
@@ -198,10 +222,13 @@ theorem awayCongrHom_chartOverlapEquiv (hI : I.FG) (i j k : ULift.{u} (Fin 3))
         (isUnit_overlapElt_mul I f i j k) (chartOverlapEquiv I f hI i j x) =
       chartTripleEquiv I f hI i j k (awayCongrHom I (f i * f j) (f i * f j * (f i * f k)) hI
         (isUnit_mul_triple f i j k) x) :=
-  awayCongrHom_nestedCongrOfEq I hI (f i) (f i * f j) (f i * f j * (f i * f k))
-    (isUnit_self_mul f i j) (isUnit_self_triple f i j k) (isUnit_mul_triple f i j k)
-    (isUnit_overlapElt_chartHom I f i j k) _ (chartHom_triple I f i j k)
-    (isUnit_overlapElt_mul I f i j k) x
+  (congrArg (fun y => awayCongrHom I (overlapElt I f i j)
+        (overlapElt I f i j * overlapElt I f i k) hI (isUnit_overlapElt_mul I f i j k) y)
+      (chartOverlapEquiv_apply I f hI i j x)).trans
+    (awayCongrHom_nestedCongrOfEq I hI (f i) (f i * f j) (f i * f j * (f i * f k))
+      (isUnit_self_mul f i j) (isUnit_self_triple f i j k) (isUnit_mul_triple f i j k)
+      (isUnit_overlapElt_chartHom I f i j k) _ (chartHom_triple I f i j k)
+      (isUnit_overlapElt_mul I f i j k) x)
 
 /-- **The right leg is natural**, the companion of `awayCongrHom_chartOverlapEquiv` in which the
 double overlap is presented as `g_ik · g_ij`. -/
@@ -211,10 +238,13 @@ theorem awayCongrHom_chartOverlapEquiv' (hI : I.FG) (i j k : ULift.{u} (Fin 3))
         (isUnit_overlapElt_mul_right I f i j k) (chartOverlapEquiv I f hI i j x) =
       chartTripleEquiv I f hI i k j (awayCongrHom I (f i * f j) (f i * f k * (f i * f j)) hI
         (isUnit_mul_triple' f i j k) x) :=
-  awayCongrHom_nestedCongrOfEq I hI (f i) (f i * f j) (f i * f k * (f i * f j))
-    (isUnit_self_mul f i j) (isUnit_self_triple f i k j) (isUnit_mul_triple' f i j k)
-    (isUnit_overlapElt_chartHom' I f i j k) _ (chartHom_triple I f i k j)
-    (isUnit_overlapElt_mul_right I f i j k) x
+  (congrArg (fun y => awayCongrHom I (overlapElt I f i j)
+        (overlapElt I f i k * overlapElt I f i j) hI (isUnit_overlapElt_mul_right I f i j k) y)
+      (chartOverlapEquiv_apply I f hI i j x)).trans
+    (awayCongrHom_nestedCongrOfEq I hI (f i) (f i * f j) (f i * f k * (f i * f j))
+      (isUnit_self_mul f i j) (isUnit_self_triple f i k j) (isUnit_mul_triple' f i j k)
+      (isUnit_overlapElt_chartHom' I f i j k) _ (chartHom_triple I f i k j)
+      (isUnit_overlapElt_mul_right I f i j k) x)
 
 
 end ThreeChartCover
