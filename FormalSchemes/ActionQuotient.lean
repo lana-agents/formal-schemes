@@ -9,8 +9,9 @@ This file develops, in an arbitrary category `C`, the universal property of the 
 object `X` by an action of a group (or monoid) `G` by automorphisms**, packaged as an explicit
 mediating-morphism + uniqueness pair. It is the reusable categorical interface behind the quotient
 of a formal scheme by a free, properly discontinuous group action (issue 224 / EGA I §10.6; the
-motivating instance is `G = ℤ` acting on the Tate chain `T` by the `q^ℤ` shift, whose quotient is
-the Tate-curve formal model `𝔈_q = T / q^ℤ`).
+motivating instance is `G = ℤ` acting on the inversion-glued Tate chain `T_inv` by the `q^ℤ`
+shift `σ`, whose quotient by the *square* `σ²` is the Tate-curve formal model
+`𝔈_q = T_inv / q^{2ℤ}` — see the period note in `FormalSchemes.TateCurveModel`).
 
 An action of `G` on `X` by automorphisms is a monoid homomorphism `a : G →* Aut X`.
 

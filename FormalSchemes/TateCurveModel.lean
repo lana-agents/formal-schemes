@@ -6,14 +6,52 @@ import FormalSchemes.Gluing
 set_option linter.style.header false
 
 /-!
-# The Tate curve formal model `𝔈_q = T/q^ℤ` as a two-chart circular quotient
+# The Tate curve formal model as a two-chart circular quotient
 
 Fix an adic base `R` with finitely generated ideal of definition `I` and a Tate parameter `q ∈ I`,
 and let `A = R{x, y} / (x·y − q)` be the coordinate ring of the formal Tate annulus with ideal of
-definition `I·A`. The **Tate curve** `𝔈_q = T/q^ℤ` is the quotient of the formal torus by the
-multiplicative `q^ℤ`-action; as a *compact* (proper) formal `R`-curve it is obtained by gluing
-finitely many copies of the annulus in a **circle**. This file delivers the smallest such circular
-model: the **two-chart circular quotient**.
+definition `I·A`. A **Tate curve** is a quotient of the formal torus by a multiplicative
+`p^ℤ`-action; as a *compact* (proper) formal `R`-curve it is obtained by gluing finitely many
+copies of the annulus in a **circle**. This file delivers the smallest such circular model: the
+**two-chart circular quotient** `tateCurveModel R I q`.
+
+## Its period is `q²`, not `q` — read this before using it
+
+`tateCurveModel R I q` is the formal model of the Tate curve **of period `q²`**. The parameter `q`
+it is built from is a *square root* of the period, not the period. Throughout the tree the symbol
+`𝔈_q` denotes this object, i.e. `𝔈_q := tateCurveModel R I q`; it should **not** be read as "the
+Tate curve of period `q`", which would be `T_inv/⟨σ⟩` for `σ` the one-patch shift.
+
+Two independent derivations, both short enough to redo on paper:
+
+**1. One patch shift = multiplication by `q`.** On patch `n` the annulus relation gives
+`x_n · y_n = q`. Since the issue-435 reroute, consecutive patches are glued by the 𝔾m-**inversion**
+`annulusChartTransitionInvSpf`, i.e. by `x_n · y_{n+1} = 1` (`x ↦ y⁻¹`; see
+`FormalSchemes.TateOverlapInversion`). Combining,
+
+```
+x_{n+1} = q / y_{n+1} = q · x_n ,
+```
+
+so the one-patch shift `σ` acts on the generic-fibre coordinate as multiplication by `q`. Hence
+`T_inv/⟨σ⟩ = 𝔾ₘ/q^ℤ = E_q`, whereas `T_inv/⟨σ²⟩ = 𝔾ₘ/q^{2ℤ} = E_{q²}`.
+
+Now, `tateCurveModel` glues its two patches `U₀`, `U₁` along **both** overlaps at once —
+`D(x₀) ≅ D(y₁)` *and* `D(y₀) ≅ D(x₁)` — so `U₁` is simultaneously the patch after `U₀` and the
+patch before it. That is exactly the chain modulo `σ²`. Hence period `q²`.
+
+**2. Component count.** On the special fibre each patch is `Spec R̄[x, y]/(x·y)`, two lines meeting
+at a node, and the inversion gluing joins `L_x^{(n)}` to `L_y^{(n+1)}` into a single `ℙ¹`. With two
+patches identified modulo `σ²` this leaves **two** components and **two** nodes: a Néron 2-gon. A
+`v(q)`-gon is the reduction of `E_q`, so over a base with `v(q) = 1` a 2-gon is `E_{q²}`.
+
+The discrepancy only appeared after the 435 reroute: under the old coordinate-*swap* gluing the
+object was not a Tate curve at all, so the earlier naming was not right either — it was differently
+wrong. The construction is deliberately left as it is: re-parameterising by a square root of `q`
+would change the signature of every Tate declaration in the tree for no mathematical gain.
+
+Consequence for the quotient presentation (issue 224): `𝔈_q = T_inv/⟨σ²⟩`, so the acting map is
+`n ↦ tateInvShiftAut ^ (2 * n)`, **not** `tateInvPeriodAction`.
 
 ## The two-chart circular model
 
@@ -168,10 +206,14 @@ def tateCurveFormalGlueData (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] :
     isFormalScheme := fun _ =>
       ⟨FormalScheme.Spf (annulusIdealOfDefinition R I q), ⟨Iso.refl _⟩⟩ }
 
-/-- **The Tate curve formal model `𝔈_q = T/q^ℤ`** (two-chart circular model): the (non-affine,
-compact) formal scheme obtained by gluing two copies of the formal Tate annulus `Spf A` along the
-coproduct overlap `Spf A{1/x} ⨿ Spf A{1/y}` in two places. This is the headline object of this
-file. -/
+/-- **The Tate curve formal model `𝔈_q`** (two-chart circular model): the (non-affine, compact)
+formal scheme obtained by gluing two copies of the formal Tate annulus `Spf A` along the coproduct
+overlap `Spf A{1/x} ⨿ Spf A{1/y}` in two places. This is the headline object of this file.
+
+**Its period is `q²`, not `q`**: gluing along both overlaps identifies the chain modulo the
+*square* of the one-patch shift, and the one-patch shift is multiplication by `q`. So
+`𝔈_q = T_inv/⟨σ²⟩ = E_{q²}`, and the parameter `q` is a square root of the period. The module
+docstring carries both derivations. -/
 def tateCurveModel (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] : FormalScheme.{u} :=
   (tateCurveFormalGlueData R I q hq hI).gluedFormalScheme
 
