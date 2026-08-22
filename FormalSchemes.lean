@@ -196,6 +196,7 @@ import FormalSchemes.TateDiagonalClosedCover
 import FormalSchemes.TateDiagonalClosedImmersion
 import FormalSchemes.TateDiagonalClosedRange
 import FormalSchemes.TateDiagonalPreimageBounds
+import FormalSchemes.TateFibreProductHom
 import FormalSchemes.TateFreeness
 import FormalSchemes.TateFreenessAdjacent
 import FormalSchemes.TateFreenessInv
