@@ -123,6 +123,7 @@ import FormalSchemes.GeneralFibreProductOfFactors
 import FormalSchemes.GeneralFibreProductProjection
 import FormalSchemes.GeneralFibreProductProjectionLeft
 import FormalSchemes.GeneralSeparated
+import FormalSchemes.GeneralSeparatedRange
 import FormalSchemes.GeneralSeparatedTopological
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
