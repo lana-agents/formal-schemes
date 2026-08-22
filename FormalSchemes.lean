@@ -201,6 +201,7 @@ import FormalSchemes.TateDiagonalClosedImmersion
 import FormalSchemes.TateDiagonalClosedRange
 import FormalSchemes.TateDiagonalPreimageBounds
 import FormalSchemes.TateFibreOverlapCompare
+import FormalSchemes.TateFibreOverlapTransition
 import FormalSchemes.TateFibreProductHom
 import FormalSchemes.TateFreeness
 import FormalSchemes.TateFreenessAdjacent
