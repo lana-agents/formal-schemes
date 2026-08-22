@@ -32,6 +32,9 @@ and proves that they *are* the summand inclusions, by the mono argument of 703.
   laws `…_comp` placing each over the merged chart at `(x + y, x + y)`.
 * `AlgebraicGeometry.coprod_inl_inl_comp_tensorOverlapChartIsoBoth_inv` and its three siblings:
   **the headline**.
+* `AlgebraicGeometry.coprod_desc_tensorOverlapSummandBoth`: the packaged form
+  `coprod.desc (coprod.desc XX XY) (coprod.desc YX YY) = (tensorOverlapChartIsoBoth …).inv`, which
+  is what 705c consumes, with its two row halves.
 
 ## Build cost, measured
 
@@ -42,8 +45,9 @@ silent-looking stack overflows rather than Lean errors:
 * `@[simp]` overflows *cumulatively* — one such lemma in the simp set is fine, a second one
   elaborated afterwards in the same module is not.
 
-So the four headline lemmas are shipped **bare**. There is also no packaged `coprod.desc` form; see
-the section note at the end for the measurement.
+So the four headline lemmas are shipped **bare**. A third cost of the same kind — an inline nested
+`coprod.hom_ext` re-elaborating the four-fold coproduct object once per branch — shapes the proof of
+the packaged form; see the section note at the end.
 
 ## References
 
@@ -256,25 +260,59 @@ theorem coprod_inr_inr_comp_tensorOverlapChartIsoBoth_inv (hq : q ∈ I) (hI : I
     bothFactorOverlapChart, coprod.inr_desc, coprod.inr_desc]
   exact (tensorOverlapSummandYYBoth_comp R I q hq hI).symm
 
-/-! ### No packaged `coprod.desc` form here — measured, not skipped
+/-! ### The packaged `coprod.desc` form
 
-The one-sided sections ship `coprod_desc_tensorOverlapSummandFirst` / `…Second`, packaging the four
-summand identifications as `coprod.desc … = …inv`. The four-fold analogue
+The one-sided sections of `FormalSchemes.TateTensorOverlapSummandAffine` ship
+`coprod_desc_tensorOverlapSummandFirst` / `…Second`, packaging their summand identifications as
+`coprod.desc … = …inv`. This is the four-fold analogue, and it is the shape 705c's `coprod.hom_ext`
+consumes.
 
-```
-coprod.desc (coprod.desc XX XY) (coprod.desc YX YY) = (tensorOverlapChartIsoBoth …).inv
-```
+Build-cost note, because the shape of the proof is forced and not a matter of taste. The
+*statement* is cheap — it elaborates in about 8 s. What is not cheap is proving it with the two
+`coprod.hom_ext`s **nested inline**, one inside each branch of the other: that re-elaborates the
+four-fold coproduct object separately in every branch, and the fourth branch times out at `whnf` at
+`maxHeartbeats 3200000` (the first three do close). Splitting the two halves out as the top-level
+lemmas below, and reaching them with `exact`, pins each coproduct object once and takes the whole
+group to about 26 s.
 
-is **deliberately absent**. Its *statement* does not elaborate: building the nested coproduct object
-from the four completed-tensor summands and unifying it with the isomorphism's codomain exceeds
-`maxHeartbeats 3200000` in `whnf`, before any proof is attempted. Three proof routes were tried
-(nested `coprod.hom_ext`, `cancel_mono` + `coprod.desc_comp`, and unfolding `bothFactorOverlapChart`
-first) and all three die at the same place, which is the header, not the tactic block.
+This is the same discipline as the note on the four headline lemmas above: at this size, never let a
+four-fold coproduct of completed tensor products be re-elaborated inside a tactic branch. -/
 
-Nothing is lost: the four `coprod_in?_in?_comp_tensorOverlapChartIsoBoth_inv` lemmas above determine
-the inverse completely, and a consumer that needs the packaged form should use `coprod.hom_ext`
-twice at the point of use, where the coproduct object is already fixed by the surrounding goal and
-so costs nothing to elaborate. -/
+/-- **The left half of the packaged form**: the `x`-row of the both-factor overlap. -/
+theorem coprod_desc_tensorOverlapSummandXBoth (hq : q ∈ I) (hI : I.FG) :
+    coprod.desc (tensorOverlapSummandXXBoth R I q hq hI)
+        (tensorOverlapSummandXYBoth R I q hq hI) =
+      coprod.inl ≫ (tensorOverlapChartIsoBoth R I q hq hI).inv := by
+  refine coprod.hom_ext ?_ ?_
+  · rw [coprod.inl_desc]
+    exact (coprod_inl_inl_comp_tensorOverlapChartIsoBoth_inv R I q hq hI).symm
+  · rw [coprod.inr_desc]
+    exact (coprod_inr_inl_comp_tensorOverlapChartIsoBoth_inv R I q hq hI).symm
+
+/-- **The right half of the packaged form**: the `y`-row of the both-factor overlap. -/
+theorem coprod_desc_tensorOverlapSummandYBoth (hq : q ∈ I) (hI : I.FG) :
+    coprod.desc (tensorOverlapSummandYXBoth R I q hq hI)
+        (tensorOverlapSummandYYBoth R I q hq hI) =
+      coprod.inr ≫ (tensorOverlapChartIsoBoth R I q hq hI).inv := by
+  refine coprod.hom_ext ?_ ?_
+  · rw [coprod.inl_desc]
+    exact (coprod_inl_inr_comp_tensorOverlapChartIsoBoth_inv R I q hq hI).symm
+  · rw [coprod.inr_desc]
+    exact (coprod_inr_inr_comp_tensorOverlapChartIsoBoth_inv R I q hq hI).symm
+
+/-- **The packaged form**: the inverse of the tensored both-factor identification is the four-fold
+coproduct of the affine summand maps, nested as `bothFactorOverlapChart` nests them. -/
+theorem coprod_desc_tensorOverlapSummandBoth (hq : q ∈ I) (hI : I.FG) :
+    coprod.desc (coprod.desc (tensorOverlapSummandXXBoth R I q hq hI)
+          (tensorOverlapSummandXYBoth R I q hq hI))
+        (coprod.desc (tensorOverlapSummandYXBoth R I q hq hI)
+          (tensorOverlapSummandYYBoth R I q hq hI)) =
+      (tensorOverlapChartIsoBoth R I q hq hI).inv := by
+  refine coprod.hom_ext ?_ ?_
+  · rw [coprod.inl_desc]
+    exact coprod_desc_tensorOverlapSummandXBoth R I q hq hI
+  · rw [coprod.inr_desc]
+    exact coprod_desc_tensorOverlapSummandYBoth R I q hq hI
 
 end AlgebraicGeometry
 
