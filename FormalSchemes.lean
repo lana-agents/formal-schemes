@@ -210,6 +210,7 @@ import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapInversion
 import FormalSchemes.TateOverlapInversionIso
+import FormalSchemes.TateOverlapSummandAffine
 import FormalSchemes.TateOverlapTransitionAlg
 import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateQuotientMap
@@ -242,6 +243,7 @@ import FormalSchemes.TateSeparated
 import FormalSchemes.TateShift
 import FormalSchemes.TateShiftInv
 import FormalSchemes.TateTransition
+import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
