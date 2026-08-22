@@ -218,6 +218,7 @@ import FormalSchemes.TateOverlapSummandAffine
 import FormalSchemes.TateOverlapTransitionAlg
 import FormalSchemes.TateOverlapTransitionIso
 import FormalSchemes.TateQuotientMap
+import FormalSchemes.TateSelfProductAdicOverBase
 import FormalSchemes.TateSelfProductBothOverlap
 import FormalSchemes.TateSelfProductCocycle
 import FormalSchemes.TateSelfProductCocycleInv
