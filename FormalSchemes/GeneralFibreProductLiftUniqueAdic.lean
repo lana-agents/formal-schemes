@@ -1,6 +1,8 @@
 import FormalSchemes.AdicOverBaseChart
-import FormalSchemes.GeneralFibreProductLiftUnique
+import FormalSchemes.AffineFibreProductLRS
+import FormalSchemes.GeneralFibreProductChartInter
 import FormalSchemes.GlueOpenCoverFactorBothAlg
+import FormalSchemes.OpenCoverHomExt
 
 set_option linter.style.header false
 set_option linter.style.setOption false

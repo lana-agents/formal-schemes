@@ -1,4 +1,7 @@
-import FormalSchemes.GeneralFibreProductLift
+import FormalSchemes.GeneralFibreProductLiftPiece
+import FormalSchemes.GlueOpenCoverFactorBothAlg
+import FormalSchemes.LiftedBasicOpenCover
+import FormalSchemes.OpenCoverGlueMorphisms
 
 set_option linter.style.header false
 set_option linter.style.setOption false
@@ -8,7 +11,7 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # The general fibre-product mediating morphism over an *explicit* refined chart family
 
-The merged general `fibreLift` (`FormalSchemes.GeneralFibreProductLift`, issue 234c) refines the
+The general `fibreLift` (issue 234c, deleted in issue 805) refined the
 source cover of `Z` using the internally-chosen refined charts `bothRefinedChart a b hZ`, obtained
 by `Classical.choice` from `nonempty_bothRefinedChart`. That choice is opaque: the chosen chart's
 `BothRefinedChart` fields carry no adic-over-base bound, and `Classical.choice` erases which witness

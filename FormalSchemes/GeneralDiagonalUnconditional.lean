@@ -10,7 +10,7 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # The unconditional general diagonal `Δ : X ⟶ X ×_{Spf R} X`
 
-The general diagonal `diagonal` (`FormalSchemes.GeneralDiagonal`, issue 467) carries a standing
+The general diagonal `diagonal` (issue 467, deleted in issue 805) carried a standing
 continuity hypothesis `hs`: each piece of the internally-chosen refined source cover must be adic on
 global sections over the base. For the plain `bothRefinedChart` cover (built by `Classical.choice`)
 that hypothesis is *unreachable* — the chosen chart carries no adic-over-base bound and
@@ -24,7 +24,7 @@ every point, a finitely generated affine chart that lands in the required inters
 preimages *and* is adic on global sections over `xStructMap`. Feeding that adic-carrying chart
 family `adicDiagonalCharts` to the chart-parametrised mediating morphism `fibreLiftOf`
 (`FormalSchemes.GeneralFibreProductLiftCharts`) yields the **unconditional** diagonal `diagonal'`,
-whose two projection triangles and monomorphism-ness follow exactly as for `diagonal`.
+whose two projection triangles and monomorphism-ness follow exactly as they did for `diagonal`.
 
 `diagonal'`, `diagonal'_comp_pr₁`/`_pr₂` and `mono_diagonal'` are the input to EGA I §10.15 general
 separatedness (issue 62): `X` is separated over `Spf R` iff its diagonal is a mono (a closed

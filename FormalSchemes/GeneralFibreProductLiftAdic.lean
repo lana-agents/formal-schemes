@@ -9,7 +9,7 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # The adic-over-base mediating morphism `Z ⟶ X ×_{Spf R} Y`
 
-The general `fibreLift` (`FormalSchemes.GeneralFibreProductLift`, issue 234c) carries two standing
+The general `fibreLift` (issue 234c, deleted in issue 805) carried two standing
 hypotheses: `hZ : Z.LocallyFG`, and the per-piece continuity witness
 
 ```
@@ -57,6 +57,22 @@ exactly this step.
 file's `fibreLiftAdic` at `Z := xGlued`, `a = b = 𝟙`, `s := xStructMap`. It is not needed by
 anything; it is the check that nothing was quietly weakened in the generalisation, and it lives in
 `FormalSchemes.GeneralDiagonalUnconditionalAdic` so that this file stays low in the import graph.
+
+## The deleted `fibreLift` layer (issue 805)
+
+Docstrings throughout this library — here, in `FormalSchemes.GeneralFibreProductLiftCharts`,
+`…LiftPiece`, `…LiftUniqueAdic`, `FormalSchemes.GeneralDiagonalUnconditional` and the Tate
+`TateFibreProduct*` files — explain the `Of`/`Adic` constructions by comparison with
+
+  `BothChartedFibreDatumXY.fibreLift`, `fibreLiftPiece`, `fibreLift_overlap`,
+  `fibreLift_comp_pr₁`/`_comp_pr₂`, `fibreLift_unique`, and `BothChartedFibreDatumXY.diagonal`.
+
+**None of those declarations exist any more.** All of them carried the unreachable `hs`/`hcont`
+hypothesis, all of them were superseded by the chart-parametrised layer, and issue 805 deleted them
+once issue 798 removed their last consumer. Every mention of those names in this library is
+**history**, not a live cross-reference; do not go looking for them, and do not reintroduce an
+`hs`-shaped hypothesis in a new one. The live spellings are `fibreLiftOf`, `fibreLiftAdic`,
+`fibreLift_unique_adicOverBase` and `diagonal'`.
 
 ## References
 

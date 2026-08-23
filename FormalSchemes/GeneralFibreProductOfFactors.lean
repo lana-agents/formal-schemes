@@ -29,11 +29,12 @@ record the `σ` data. So `ofFactors` takes the per-factor `σX`/`hστX`/`hσcX`
 exposed fields (`topology`/`isAdic`/`xt'`/`xt_fac`/`xcocycle`) verbatim into the `X`- resp.
 `Y`-side of the two-sided datum.
 
-Because the product-overlap fields are *definitionally* `bothAlgData…`, the `fibreLift` hypotheses
-`hV`/`hf`/`ht` (`FormalSchemes.GeneralFibreProductLift`) become trivial: `hV` is `rfl` and `hf`/`ht`
-collapse the `eqToHom rfl = 𝟙`. And because the exposed `X`-side (resp. `Y`-side) fields are copied
-verbatim from `DX` (resp. `DY`), the glued factor and its structural map agree definitionally with
-`DX`'s (resp. `DY`'s): `ofFactors_xGlued`/`ofFactors_yGlued`/`ofFactors_xStructMap`/
+Because the product-overlap fields are *definitionally* `bothAlgData…`, the fibre-product
+hypotheses `hV`/`hf`/`ht` (`FormalSchemes.GeneralFibreProductLiftCharts`) become trivial: `hV` is
+`rfl` and `hf`/`ht` collapse the `eqToHom rfl = 𝟙`. And because the exposed `X`-side (resp.
+`Y`-side) fields are copied verbatim from `DX` (resp. `DY`), the glued factor and its structural
+map agree definitionally with `DX`'s (resp. `DY`'s):
+`ofFactors_xGlued`/`ofFactors_yGlued`/`ofFactors_xStructMap`/
 `ofFactors_yStructMap` are all `rfl`. These bridges are what the general diagonal (issue 235b/c)
 consumes: feeding the same factor twice makes `yGlued` defeq `xGlued`.
 
