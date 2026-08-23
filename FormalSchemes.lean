@@ -51,6 +51,7 @@ import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartedDatumGlueMorphisms
+import FormalSchemes.ChartedDatumGlueOpenImmersion
 import FormalSchemes.ChartedDatumTopFiniteType
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
@@ -147,6 +148,7 @@ import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.GlueMorphisms
+import FormalSchemes.GlueMorphismsOpenImmersion
 import FormalSchemes.GlueOpenCoverFactorBoth
 import FormalSchemes.GlueOpenCoverFactorBothAlg
 import FormalSchemes.GlueTPrimeOfLift
@@ -279,6 +281,7 @@ import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
+import FormalSchemes.ThreeChartCoverOpenImmersion
 import FormalSchemes.ThreeChartCoverOverBase
 import FormalSchemes.ThreeChartCoverSeparated
 import FormalSchemes.ThreeChartCoverSeparatedScheme
