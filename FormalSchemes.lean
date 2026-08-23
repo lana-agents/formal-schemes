@@ -260,6 +260,7 @@ import FormalSchemes.TateSelfProductTransitionRange
 import FormalSchemes.TateSelfProductTransitionRangeRight
 import FormalSchemes.TateSelfProductTripleOverlap
 import FormalSchemes.TateSeparated
+import FormalSchemes.TateSeparatedScheme
 import FormalSchemes.TateSeparatedTopFiniteType
 import FormalSchemes.TateSeparatedValue
 import FormalSchemes.TateShift
