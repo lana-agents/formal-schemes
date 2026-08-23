@@ -35,9 +35,12 @@ consumes.
   structural image of `A`. These are the computational content of the upgrade.
 * `FormalSpectrum.awayCompletionChartAlgEquiv`: the `≃ₐ[R]` upgrade of `awayCompletionChartEquiv`,
   with `…_algebraMap` and `…_symm_algebraMap`.
-* `FormalSpectrum.map_algebraMap_awayCompletion_eq`: the ideal-convention bridge
-  `I·A{1/f} = awayCompletionIdeal (I·A) f`, i.e. the ideal of definition of the chart algebra is the
-  one the datum's `I.map (algebraMap R (A i))` spelling produces.
+* The ideal-convention bridge `I·A{1/f} = awayCompletionIdeal (I·A) f` — the fact that the ideal of
+  definition of the chart algebra is the one the datum's `I.map (algebraMap R (A i))` spelling
+  produces — is used throughout below. It used to be declared here as
+  `FormalSpectrum.map_algebraMap_awayCompletion_eq`; issue 895 moved it to
+  `FormalSchemes.BasicOpenChart`, where its ingredients are defined, after finding it had been
+  written out seven times across six modules.
 * `FormalSpectrum.awayCompletionNestedAlgEquiv`, and its `g := f · g` specialisation
   `awayCompletionNestedMulAlgEquiv`: the same isomorphism with its target transported along that
   bridge — the form an affine-charted datum whose charts are `A i := A{1/f_i}` consumes, where the
@@ -128,16 +131,6 @@ def awayCompletionChartAlgEquiv (hI : I.FG) (f g : A)
     fun r => by
       rw [IsScalarTower.algebraMap_apply R A (awayCompletion (I.map (algebraMap R A)) g),
         awayCompletionChartEquiv_algebraMap, ← IsScalarTower.algebraMap_apply]
-
-/-- **The ideal-convention bridge.** The ideal of definition of the chart algebra `A{1/f}`, spelled
-as an affine-charted datum spells it (`I.map (algebraMap R (A i))`), is the `awayCompletionIdeal`
-of the chart. Both are the image of `I` under `R → A → A_f → A{1/f}`. -/
-theorem map_algebraMap_awayCompletion_eq (f : A) :
-    I.map (algebraMap R (awayCompletion (I.map (algebraMap R A)) f)) =
-      awayCompletionIdeal (I.map (algebraMap R A)) f := by
-  rw [IsScalarTower.algebraMap_eq R A (awayCompletion (I.map (algebraMap R A)) f),
-    ← Ideal.map_map]
-  exact map_awayCompletionHom (I.map (algebraMap R A)) f
 
 /-- The `R`-algebra upgrade still fixes `A` (restatement of
 `awayCompletionChartEquiv_algebraMap` at the upgraded map). -/

@@ -145,22 +145,6 @@ end FormalScheme
 
 end AlgebraicGeometry
 
-namespace FormalSpectrum
-
-variable {R : Type u} [CommRing R] (I : Ideal R)
-variable {A : Type u} [CommRing A] [Algebra R A]
-
-/-- The base ideal extends into the away completion's own ideal of definition: `I·A{1/f}` is
-`awayCompletionIdeal (I·A) f`. -/
-theorem map_algebraMap_le_awayCompletionIdeal (f : A) :
-    I.map (algebraMap R (awayCompletion (I.map (algebraMap R A)) f)) ≤
-      awayCompletionIdeal (I.map (algebraMap R A)) f := by
-  rw [show (algebraMap R (awayCompletion (I.map (algebraMap R A)) f)) =
-      (awayCompletionHom (I.map (algebraMap R A)) f).comp (algebraMap R A) from rfl,
-    ← Ideal.map_map, map_awayCompletionHom]
-
-end FormalSpectrum
-
 namespace AlgebraicGeometry
 
 namespace AffineChartedFibreDatumX
@@ -219,7 +203,7 @@ def chartCodiagonal (i j : DX.J) (h : i ≠ j) :
       (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
     (AdicCompletion.isAdicRing_map _ ((hI.map _).map _)).toIsAdicComplete
   CompletedTensorProduct.lift (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
-    (map_algebraMap_le_awayCompletionIdeal I (DX.g i j))
+    (map_algebraMap_awayCompletion_eq I (DX.g i j)).le
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h)
 
 /-- The chart codiagonal restricted to the first factor is the away-completion map `A i → A i{1/g}`
@@ -234,7 +218,7 @@ theorem chartCodiagonal_comp_inl (i j : DX.J) (h : i ≠ j) :
       (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
     (AdicCompletion.isAdicRing_map _ ((hI.map _).map _)).toIsAdicComplete
   exact RingHom.ext fun a => CompletedTensorProduct.lift_inl _
-    (map_algebraMap_le_awayCompletionIdeal I (DX.g i j)) _ _ a
+    (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ a
 
 /-- The chart codiagonal restricted to the second factor is the away-completion map
 `A j → A j{1/g j i}` followed by the transition `(τ i j)⁻¹`. -/
@@ -249,7 +233,7 @@ theorem chartCodiagonal_comp_inr (i j : DX.J) (h : i ≠ j) :
       (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
     (AdicCompletion.isAdicRing_map _ ((hI.map _).map _)).toIsAdicComplete
   exact RingHom.ext fun a => CompletedTensorProduct.lift_inr _
-    (map_algebraMap_le_awayCompletionIdeal I (DX.g i j)) _ _ a
+    (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ a
 
 /-! ### The chart-restricted diagonal, affinely -/
 
@@ -266,7 +250,7 @@ def chartCodiagonalMap (i j : DX.J) (h : i ≠ j) :
     AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
   haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
     CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
-  CompletedTensorProduct.fibreLift (map_algebraMap_le_awayCompletionIdeal I (DX.g i j))
+  CompletedTensorProduct.fibreLift (map_algebraMap_awayCompletion_eq I (DX.g i j)).le
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h) hI
 
 /-- **The chart-restricted diagonal followed by the first projection is the overlap's inclusion
@@ -443,7 +427,7 @@ theorem overlapChart_comp_ι_eq (i j : DX.J) (h : i ≠ j) :
           (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
           (DX.overlapAlgSnd i j h).toRingHom
           (CompletedTensorProduct.algHom_le_comap (DX.overlapAlgSnd i j h)
-            (map_algebraMap_le_awayCompletionIdeal I (DX.g i j))) ≫
+            (map_algebraMap_awayCompletion_eq I (DX.g i j)).le) ≫
         (diagonalDatum DX σX hστX hσcX).yFormalGlueData.ι j := by
   letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
   exact (BothChartedFibreDatumXY.x_glue_rel (diagonalDatum DX σX hστX hσcX) i j h).trans <|
@@ -475,7 +459,7 @@ theorem overlapChart_comp_diagonal' (i j : DX.J) (h : i ≠ j) :
   haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
     CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
   exact chartLift_comp_diagonal' DX σX hστX hσcX (DX.fg_awayCompletionIdeal i j)
-    (map_algebraMap_le_awayCompletionIdeal I (DX.g i j)) i j
+    (map_algebraMap_awayCompletion_eq I (DX.g i j)).le i j
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h) _ rfl
     (overlapChart_comp_ι_eq DX σX hστX hσcX i j h)
 
@@ -604,7 +588,7 @@ theorem preimage_range_diagonal'_eq_range_chartCodiagonalMap (i j : DX.J) (h : i
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A j))) (DX.g j i)) :=
     AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
   exact preimage_range_diagonal'_eq_range_fibreLift DX σX hστX hσcX
-    (DX.fg_awayCompletionIdeal i j) (map_algebraMap_le_awayCompletionIdeal I (DX.g i j)) i j
+    (DX.fg_awayCompletionIdeal i j) (map_algebraMap_awayCompletion_eq I (DX.g i j)).le i j
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h) _ rfl
     (overlapChart_comp_ι_eq DX σX hστX hσcX i j h)
     (range_overlapChart_comp_ι DX σX hστX hσcX i j h)
@@ -672,7 +656,7 @@ theorem isSeparated_of_chartCodiagonal_surjective
       (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
       (DX.chartCodiagonal i j hij)
       (CompletedTensorProduct.lift_le_comap
-        (map_algebraMap_le_awayCompletionIdeal I (DX.g i j)) _ _ hI)
+        (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ hI)
       (hsurj i j hij)).isClosed_range
 
 

@@ -19,7 +19,7 @@ It never builds the glued `X` object itself.
 This file builds `X`'s own glue pipeline, mirroring the fibre-product pipeline
 `AffineChartedFibreDatum.glueData' → lrsGlueData → formalGlueData → fibreProduct`, but for `X` alone
 (no `⊗̂_R B`), cleanly in the `I·A_i = I.map (algebraMap R (A i))` convention. The key
-simplification is `CompletedTensorAwayInterchange.idealOfDef_base_eq`, which identifies the ideal of
+simplification is `FormalSpectrum.map_algebraMap_awayCompletion_eq`, which identifies the ideal of
 definition `I·(A_i{1/g})` of the away completion with `FormalSpectrum.awayCompletionIdeal`, so `X`'s
 overlaps live over `FormalSpectrum.basicOpenChart` with no ideal-convention bridges.
 
@@ -57,15 +57,15 @@ variable {S S' : Type u} [CommRing S] [CommRing S'] [Algebra R S] [Algebra R S']
 /-- **The `le_comap` datum for the `X`-side transition of two away-completion charts.** For an
 `R`-algebra isomorphism `e` between the away completions `A{1/s}` and `A'{1/s'}`, the underlying
 ring hom of `e.symm` carries the ideal of definition of `A'{1/s'}` into that of `A{1/s}`; phrased in
-the `awayCompletionIdeal` convention via `idealOfDef_base_eq`. -/
+the `awayCompletionIdeal` convention via `FormalSpectrum.map_algebraMap_awayCompletion_eq`. -/
 theorem awayCompletionTransition_le_comap (s : S) (s' : S')
     (e : awayCompletion (I.map (algebraMap R S)) s ≃ₐ[R]
       awayCompletion (I.map (algebraMap R S')) s') :
     awayCompletionIdeal (I.map (algebraMap R S')) s' ≤
       (awayCompletionIdeal (I.map (algebraMap R S)) s).comap e.symm.toRingHom := by
   have key := CompletedTensorProduct.algHom_mapIdeal_isAdicHom (I := I) e.symm.toAlgHom
-  rw [CompletedTensorAwayInterchange.idealOfDef_base_eq,
-    CompletedTensorAwayInterchange.idealOfDef_base_eq] at key
+  rw [FormalSpectrum.map_algebraMap_awayCompletion_eq,
+    FormalSpectrum.map_algebraMap_awayCompletion_eq] at key
   exact key.le_comap
 
 /-- **The `X`-side transition** `Spf(A{1/s}) ⟶ Spf(A'{1/s'})` of two away-completion charts induced

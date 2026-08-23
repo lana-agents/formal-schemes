@@ -157,7 +157,7 @@ def annulusOverlapBridgeX :
     (I.map (algebraMap R (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q)))
       (overlapX R I q))))
     (annulusFibreChartBridgeX R I q).symm.toRingHom (by
-      rw [CompletedTensorAwayInterchange.idealOfDef_base_eq, annulusFibreChartBridgeX,
+      rw [FormalSpectrum.map_algebraMap_awayCompletion_eq, annulusFibreChartBridgeX,
         AdicCompletion.congrIdealₐ_symm_toRingHom]
       exact FormalSpectrum.le_comap_congrIdeal_symm _)
 
@@ -282,7 +282,7 @@ theorem spfESymm_comp_spfAwayY_comp_baseBridge (hI : I.FG) :
   have h3 : awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q) ≤
       (I.map (algebraMap R (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q)))
         (overlapX R I q)))).comap (annulusFibreChartBridgeX R I q).symm.toRingHom := by
-    rw [CompletedTensorAwayInterchange.idealOfDef_base_eq, annulusFibreChartBridgeX,
+    rw [FormalSpectrum.map_algebraMap_awayCompletion_eq, annulusFibreChartBridgeX,
       AdicCompletion.congrIdealₐ_symm_toRingHom]
     exact FormalSpectrum.le_comap_congrIdeal_symm _
   have hR_outer : annulusIdealOfDefinition R I q ≤

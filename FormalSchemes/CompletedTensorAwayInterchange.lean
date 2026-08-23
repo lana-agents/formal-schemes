@@ -103,15 +103,21 @@ theorem map_srcBaseIdeal_locMap :
   congr 1
   exact (Localization.awayMapₐ (CompletedTensorProduct.inl R I A B) f).comp_algebraMap
 
-/-- `I·C{1/f̄}` is exactly the ideal of definition of `C{1/f̄}`. -/
+/-- `I·C{1/f̄}` is exactly the ideal of definition of `C{1/f̄}`.
+
+`FormalSpectrum.map_algebraMap_awayCompletion` (`FormalSchemes.BasicOpenChart`) at
+`L := CompletedTensorProduct.idealOfDefinition R I A B`. This is the instance that motivates that
+lemma's `h : I·A = L` hypothesis rather than the `rfl` form: the ideal of definition of
+`A ⊗̂_R B` is equal to `I·(A ⊗̂_R B)` but is not that term, so `idealOfDefinition_eq_map` has to
+supply the identification. -/
 theorem idealOfDef_tgt_eq :
     I.map (algebraMap R (FormalSpectrum.awayCompletion
         (CompletedTensorProduct.idealOfDefinition R I A B)
         (CompletedTensorProduct.inl R I A B f))) =
       FormalSpectrum.awayCompletionIdeal (CompletedTensorProduct.idealOfDefinition R I A B)
-        (CompletedTensorProduct.inl R I A B f) := by
-  rw [← FormalSpectrum.awayCompletionHom_comp_algebraMap, ← Ideal.map_map,
-    ← CompletedTensorProduct.idealOfDefinition_eq_map, FormalSpectrum.map_awayCompletionHom]
+        (CompletedTensorProduct.inl R I A B f) :=
+  FormalSpectrum.map_algebraMap_awayCompletion _
+    (CompletedTensorProduct.idealOfDefinition_eq_map (R := R) (I := I) (A := A) (B := B)).symm
 
 /-! ### The forward homomorphism -/
 
@@ -474,26 +480,18 @@ theorem backwardHom_mem_pow (hI : I.FG) (m : ℕ)
 
 /-! ### The maps are mutually inverse -/
 
-/-- The ideal of definition of `A{1/f}` (as `AdicCompletion` of `A_f`) equals `I·A{1/f}`. -/
+/-- The ideal of definition of `A{1/f}` (as `AdicCompletion` of `A_f`) equals `I·A{1/f}`.
+
+The left-hand side is `FormalSpectrum.awayCompletionIdeal (I·A) f` unfolded — `awayCompletionIdeal`
+is an `abbrev` for exactly this — so this is `map_algebraMap_awayCompletion_eq` read backwards. It
+keeps its own name because its six consumers in `FormalSchemes.TateSeparated` meet the unfolded
+spelling and `rw` is syntactic. (Issue 895: this was the seventh declaration of one fact, and the
+one whose name shares no substring with the other six.) -/
 theorem idealOfDef_Achart_eq :
     AdicCompletion.idealOfDefinition
         ((I.map (algebraMap R A)).map (algebraMap A (Localization.Away f))) =
-      I.map (algebraMap R (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f)) := by
-  have hcomp :
-      ((algebraMap (Localization.Away f)
-              (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f)).comp
-          (algebraMap A (Localization.Away f))).comp (algebraMap R A) =
-        algebraMap R (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f) := by
-    refine RingHom.ext fun r => ?_
-    rw [RingHom.comp_apply, RingHom.comp_apply, ← algebraMap_A_Achart,
-      algebraMap_A_Achart_algebraMap]
-  refine Eq.trans (Ideal.map_map (algebraMap A (Localization.Away f))
-      (algebraMap (Localization.Away f) (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f)))
-    (Eq.trans (Ideal.map_map (algebraMap R A)
-      ((algebraMap (Localization.Away f)
-        (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f)).comp
-        (algebraMap A (Localization.Away f))))
-      (congrArg (fun g => Ideal.map g I) hcomp))
+      I.map (algebraMap R (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f)) :=
+  (FormalSpectrum.map_algebraMap_awayCompletion_eq I f).symm
 
 /-- On `C = A ⊗̂_R B`, forward ∘ `gCHom` is the structural map `C → C{1/f̄}`. -/
 theorem forward_gCHom (hI : I.FG) :
