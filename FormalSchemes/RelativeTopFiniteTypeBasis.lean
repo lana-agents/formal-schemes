@@ -86,30 +86,18 @@ theorem awayCompletionHom_comp_algebraMap (g : A) :
     ← IsScalarTower.algebraMap_eq R A (Localization.Away g),
     ← IsScalarTower.algebraMap_eq R (Localization.Away g) (FormalSpectrum.awayCompletion L g)]
 
-variable [TopologicalSpace R] [IsAdicRing I]
-
-omit [TopologicalSpace R] [IsAdicRing I] in
-/-- `FormalSpectrum.locallyRingedSpaceMap` depends only on the ring homomorphism, not on the
-continuity proof accompanying it.
-
-Stated with the two homomorphisms as *variables* so that the equation can be `subst`-ed: the
-continuity argument is a proof **about** the homomorphism, so rewriting the homomorphism in place
-fails with "motive is not type correct". This is the same move as
-`Ideal.map_algebraMap_of_tower` (`FormalSchemes.AwayTopFiniteType`, issue 807). -/
-theorem FormalSpectrum.locallyRingedSpaceMap_congr {C : Type u} [CommRing C] [TopologicalSpace C]
-    (K : Ideal C) [IsAdicRing K] {φ ψ : R →+* C} (hφψ : φ = ψ)
-    (hφ : I ≤ K.comap φ) (hψ : I ≤ K.comap ψ) :
-    FormalSpectrum.locallyRingedSpaceMap I K φ hφ =
-      FormalSpectrum.locallyRingedSpaceMap I K ψ hψ := by
-  subst hφψ; rfl
-
-variable [TopologicalSpace A] [IsAdicRing L]
+variable [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A] [IsAdicRing L]
 
 /-- **The crux.** The basic-open chart `Spf A{1/g}^ ⟶ Spf A`, followed by the structural morphism
 `Spf A ⟶ Spf R` of a tf-type `A`, is the structural morphism of `A{1/g}^`.
 
 Both sides are `Spf` of a ring homomorphism, so this is `locallyRingedSpaceMap_comp` plus
-`awayCompletionHom_comp_algebraMap`. The tf-type witness at the completed localization is taken as
+`awayCompletionHom_comp_algebraMap`, glued by the pre-existing
+`FormalSpectrum.locallyRingedSpaceMap_congr` (`FormalSchemes.SpfFunctorial`), which is needed
+because `locallyRingedSpaceMap`'s continuity argument is a proof *about* the homomorphism being
+rewritten, so a direct `rw` fails with "motive is not type correct".
+
+The tf-type witness at the completed localization is taken as
 an argument rather than produced by `IsTopologicallyFiniteType.awayCompletion`, so that the
 statement is usable with whatever witness the caller already has: `structMap` sees only the
 proof `map_eq`, and proofs are irrelevant. -/
@@ -122,7 +110,8 @@ theorem basicOpenChart_comp_structMap (g : A)
       IsTopologicallyFiniteType.structMap h'.map_eq := by
   rw [IsTopologicallyFiniteType.structMap, IsTopologicallyFiniteType.structMap,
     FormalSpectrum.basicOpenChart, ← FormalSpectrum.locallyRingedSpaceMap_comp]
-  · exact FormalSpectrum.locallyRingedSpaceMap_congr _ (awayCompletionHom_comp_algebraMap g) _ _
+  · exact _root_.FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
+      (awayCompletionHom_comp_algebraMap g)
   · rw [awayCompletionHom_comp_algebraMap]
     exact Ideal.map_le_iff_le_comap.mp h'.map_eq.le
 
