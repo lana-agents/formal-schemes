@@ -17,18 +17,14 @@ geometric object*.
 > **The Tate curve formal model `𝔈_q` is separated over `Spf R`**, unconditionally, and the
 > statement mentions no chart, no datum and no cocycle.
 
-## Why this is cheap, and what it is not blocked on
+## Why this is cheap
 
-The affine value `Spf A` — the one a reader would expect first — is blocked on a structural
-compatibility for the one-chart gluing isomorphism `oneChartXGluedIso`
-(`FormalSchemes.AffineSeparatedIso`) that does not exist on master; `GeneralSeparatedScheme`'s
-module docstring names it, and it is tracked separately.
-
-The Tate analogue of exactly that missing lemma **does** exist:
+A scheme-level value needs the datum's gluing isomorphism to be a morphism **over the base**, and
+for `𝔈_q` that compatibility already exists:
 `tateXGluedHom_comp_tateCurveModelStructMap` (`FormalSchemes.TateSeparatedTopFiniteType`, issue
 813) says 704's comparison isomorphism between the datum's glued object and `𝔈_q` is a morphism
-over `Spf R`. So the Tate value, which reads like the harder one, is the one that is available,
-and it is packaging over three facts already on master:
+over `Spf R`. So the Tate value, which reads like the harder one, was the first available, and it
+is packaging over three facts already on master:
 
 * `tate_isSeparated` (`FormalSchemes.TateSeparatedValue`, issues 706/798) — the presentation-level
   value, unconditional;

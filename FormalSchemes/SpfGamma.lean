@@ -18,9 +18,11 @@ globalSectionsMap (Spf φ) = φ
 (`FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap`): the passage from a continuous ring
 homomorphism to a morphism of formal spectra and back is the identity. This is one half of the
 universal property of `Spf` (EGA I, 10.4.6) — in particular `Spf` is faithful on continuous
-ring homomorphisms. The converse half (every morphism of formal spectra arises this way, so
-that the correspondence is bijective) is the analogue of the `Γ ⊣ Spec` adjunction for schemes
-and is left to future work.
+ring homomorphisms. The converse half (every morphism of formal spectra with continuous
+global-sections map arises this way, so that the correspondence is bijective) is the analogue of
+the `Γ ⊣ Spec` adjunction for schemes; it is `FormalSpectrum.spfGammaEquiv`
+(`FormalSchemes.SpfGammaRoundTrip`), packaged for the formal-spectrum functor as
+`AdicRingCat.spfHomEquiv` (`FormalSchemes.SpfFullyFaithful`).
 
 ## Main definitions and results
 

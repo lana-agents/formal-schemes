@@ -20,9 +20,10 @@ is glued.
 This file establishes the **underlying open embedding** of that chart: the continuous map
 `Spf R{1/f} → Spf R` induced (via `FormalSpectrum.map`) by the structural ring map
 `R → R_f → R{1/f}` is an open topological embedding whose range is exactly `D(f)`. This is the
-`base_open` half of the eventual `LocallyRingedSpace.IsOpenImmersion` statement (the remaining
-`c_iso`/stalk-iso half, feeding `SheafedSpace.IsOpenImmersion.of_stalk_iso`, is left as follow-up;
-see the module note below).
+`base_open` half of the `LocallyRingedSpace.IsOpenImmersion` statement; the `c_iso`/stalk-iso half,
+feeding `SheafedSpace.IsOpenImmersion.of_stalk_iso`, is proved in
+`FormalSchemes.BasicOpenImmersionLRS`, where the two are assembled into
+`FormalSpectrum.isOpenImmersion_basicOpenChart`.
 
 ## Main definitions and results
 

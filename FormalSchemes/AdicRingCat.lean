@@ -39,9 +39,11 @@ functor is **not** full onto arbitrary morphisms of formal schemes: an abstract 
 locally ringed spaces `Spf S ⟶ Spf R` need not be *continuous* (its global-sections map need not
 carry the ideal of definition into that of the target), because the structure sheaves here carry
 no ambient topology. The precise bijection — the full EGA I, 10.4.6 statement — is
-`FormalSpectrum.spfGammaEquiv`, stated over the continuity-restricted subtypes on *both* sides.
-Packaging that as a `FullyFaithful` datum for a subcategory of `FormalScheme` cut out by the
-continuity property is left as follow-up; this file records the functor and its faithfulness.
+`FormalSpectrum.spfGammaEquiv`, stated over the continuity-restricted subtypes on *both* sides;
+`AdicRingCat.spfHomEquiv` (`FormalSchemes.SpfFullyFaithful`) is that bijection transported to this
+file's `spfFunctor`. Packaging it as a `CategoryTheory.Functor.FullyFaithful` datum for a
+subcategory of `FormalScheme` cut out by the continuity property is left as follow-up; this file
+records the functor and its faithfulness.
 
 ## References
 

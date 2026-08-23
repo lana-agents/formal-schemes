@@ -40,12 +40,13 @@ slice tractable ahead of the full chain, where the cocycle condition carries rea
 * `AlgebraicGeometry.tateTwoPatch`: the glued (non-affine) formal scheme obtained from the two
   patches.
 
-## Remaining work (issue 208)
+## What this is a slice of
 
-This is only the `J = Bool` slice. The full flagship deliverable — the `ℤ`-indexed
-`FormalScheme.GlueData` of the annulus chain, whose `cocycle` is genuine on adjacent triples, and
-the glued structural morphism `T ⟶ Spf R` exhibiting the chain as a formal scheme over the base —
-remains open.
+This is only the `J = Bool` slice. The `ℤ`-indexed `FormalScheme.GlueData` of the annulus chain,
+whose `cocycle` is genuine on adjacent triples, is `tateChainFormalGlueData` with glued object
+`tateChain` (`FormalSchemes.TateChainGlue`), and the glued structural morphism `T ⟶ Spf R`
+exhibiting the chain as a formal scheme over the base is `tateChainStructMap`
+(`FormalSchemes.TateChainStructMap`).
 
 ## References
 

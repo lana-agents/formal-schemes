@@ -35,13 +35,18 @@ presentation-level predicate, and enters this vocabulary through
 predicate should eventually be retired in favour of this one is a separate question, and one that
 should be argued against real consumers.
 
-There is also **no concrete value here**, deliberately. The natural first one is `Spf A`, from
-`oneChart_isSeparated` and the one-chart gluing isomorphism `oneChartXGluedIso`
-(`FormalSchemes.AffineSeparatedIso`); what blocks it is that the structural compatibility of that
-isomorphism — `oneChartXGluedIso.hom` composed with the structural morphism of `Spf A` being
-`xStructMap` — does not exist yet. Proving it is a statement about the one-chart glue, not
-packaging, and it is the prerequisite for the first value here and for the `𝔈_q` and three-chart
-values after it.
+There is also **no concrete value here**, deliberately: the values live downstream, in the modules
+that own the objects they are about. There are three.
+
+* `Spf A` — `spf_isSeparatedOverSpf` (`FormalSchemes.AffineSeparatedScheme`), read off
+  `oneChart_isSeparated` through the one-chart gluing isomorphism `oneChartXGluedIso`
+  (`FormalSchemes.AffineSeparatedIso`) and its structural compatibility
+  `oneChartXGluedIso_hom_comp_structMap`.
+* `𝔈_q` — `tateCurveModel_isSeparatedOverSpf` (`FormalSchemes.TateSeparatedScheme`).
+* The three-chart open cover — `datumX_isSeparatedOverSpf` and `gluedX_isSeparatedOverSpf`
+  (`FormalSchemes.ThreeChartCoverSeparatedScheme`), restated chart-free as
+  `ThreeChartCover.coverSubscheme_isSeparatedOverSpf`
+  (`FormalSchemes.ThreeChartCoverOpenSubscheme`).
 
 ## Main results
 
