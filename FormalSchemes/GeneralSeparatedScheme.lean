@@ -12,7 +12,7 @@ are isomorphic over `Spf R` are separated or not together. This file draws the c
 states separatedness as a predicate on the formal scheme and its structural morphism:
 
 ```
-X.IsSeparatedOverSpf s ↔ IsSeparated DX σX hστX hσcX   for any presentation of `X` over `s`
+X.IsSeparatedOverSpf hI s ↔ IsSeparated DX σX hστX hσcX   for any presentation of `X` over `s`
 ```
 
 `IsSeparatedOverSpf` quantifies existentially over presentations, and `isSeparatedOverSpf_iff` says
@@ -75,7 +75,13 @@ structural morphism `s`: some affine charted datum whose glued object is isomorp
 is separated in the sense of `BothChartedFibreDatumXY.IsSeparated`.
 
 The existential is harmless because `isSeparatedOverSpf_iff` shows every presentation of `X` over
-`s` computes this predicate, not merely the witnessing one. -/
+`s` computes this predicate, not merely the witnessing one.
+
+Note what else the existential asserts: that `X` *admits* an affine charted presentation over `s` at
+all. `FormalScheme` only asks that `X` be locally isomorphic to some `Spf`, whereas a presentation
+additionally demands a single chart family over the same base `R` whose overlaps are basic opens, so
+this predicate is false — not merely unproved — for a formal scheme carrying no such presentation.
+Every formal scheme in this development is built from charted data, so no consumer is affected. -/
 def IsSeparatedOverSpf (X : FormalScheme.{u})
     (s : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I) : Prop :=
   ∃ (BX : Type u) (_ : CommRing BX) (_ : Algebra R BX)
