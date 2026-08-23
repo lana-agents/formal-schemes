@@ -135,6 +135,7 @@ import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataImageInter
+import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.GlueOpenCoverFactor
 import FormalSchemes.GlueOpenCoverFactorBoth
