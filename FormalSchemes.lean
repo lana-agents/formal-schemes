@@ -34,6 +34,7 @@ import FormalSchemes.AwayCompletionNestedNaturality
 import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.AwayCompletionSurjective
 import FormalSchemes.AwayCongrAlgebraMap
+import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
 import FormalSchemes.BasicOpenChartComponent
