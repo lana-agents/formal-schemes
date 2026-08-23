@@ -6,7 +6,7 @@ set_option linter.style.header false
 /-!
 # The three-chart open cover is separated, as a formal scheme (EGA I §10.15)
 
-`FormalSchemes/ThreeChartCoverSeparated.lean` (issue 617) proves `datumX_isSeparated`: the
+`FormalSchemes/ThreeChartCoverSeparated.lean` (issue 779) proves `datumX_isSeparated`: the
 three-chart open-cover datum presenting `D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A` satisfies
 `BothChartedFibreDatumXY.IsSeparated`, a predicate on a **presentation**. Issue 842
 (`FormalSchemes/GeneralSeparatedScheme.lean`) introduced `FormalScheme.IsSeparatedOverSpf`, the
