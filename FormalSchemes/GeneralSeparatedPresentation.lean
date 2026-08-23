@@ -45,9 +45,13 @@ witness is used one level down, inside `compareIso`.
 Closed immersions are stable under composition with an isomorphism on either side
 (`FormalScheme.IsClosedImmersion.iso_comp`, `.comp_iso`), which turns that equation into the
 `Iff`. Getting there needs the two `LocallyRingedSpace` isomorphisms as isomorphisms of *formal
-schemes*; `FormalScheme.isIso_of_isIso_toLRSHom` (added to
-`FormalSchemes.ClosedImmersionIso` beside its existing converse) is what makes that free, since
-formal schemes are a full subcategory of locally ringed spaces.
+schemes*; since formal schemes are a full subcategory of locally ringed spaces, both legs are just
+`FormalScheme.Hom.mk` and the round trips are `FormalScheme.Hom.ext'`, packaged as
+`FormalScheme.isoOfLRSIso` (added to `FormalSchemes.ClosedImmersionIso` beside the new
+`FormalScheme.isIso_of_isIso_toLRSHom`). That packaging, rather than `asIso` of the latter, is what
+keeps `.hom` and `.inv` *definitionally* `Hom.mk` of `e.hom` and `e.inv`, which is what
+`schemeDiagonal'_transport`'s `Hom.ext'` proof needs — `asIso`'s `.inv` is only propositionally
+`Hom.mk e.inv`.
 
 ## The `xGlued` spelling wall
 
@@ -192,28 +196,17 @@ theorem diagonal'_transport :
   · rw [diagonal'_comp_pr₂, hpr₂]
   · rw [← Category.assoc, diagonal'_comp_pr₁, Category.id_comp]
 
-/-- **`compareDiagonalIso` as an isomorphism of formal schemes.** Formal schemes are a full
-subcategory of locally ringed spaces, so the two round-trip identities transport through
-`FormalScheme.Hom.ext'` unchanged. -/
+/-- **`compareDiagonalIso` as an isomorphism of formal schemes**, via
+`FormalScheme.isoOfLRSIso`. -/
 def compareDiagonalSchemeIso :
     (diagonalDatum DX₁ σX₁ hστX₁ hσcX₁).generalFibreProduct ≅
-      (diagonalDatum DX₂ σX₂ hστX₂ hσcX₂).generalFibreProduct where
-  hom := FormalScheme.Hom.mk
-    (compareDiagonalIso DX₁ σX₁ hστX₁ hσcX₁ DX₂ σX₂ hστX₂ hσcX₂ eX hX).hom
-  inv := FormalScheme.Hom.mk
-    (compareDiagonalIso DX₁ σX₁ hστX₁ hσcX₁ DX₂ σX₂ hστX₂ hσcX₂ eX hX).inv
-  hom_inv_id := FormalScheme.Hom.ext'
-    (compareDiagonalIso DX₁ σX₁ hστX₁ hσcX₁ DX₂ σX₂ hστX₂ hσcX₂ eX hX).hom_inv_id
-  inv_hom_id := FormalScheme.Hom.ext'
-    (compareDiagonalIso DX₁ σX₁ hστX₁ hσcX₁ DX₂ σX₂ hστX₂ hσcX₂ eX hX).inv_hom_id
+      (diagonalDatum DX₂ σX₂ hστX₂ hσcX₂).generalFibreProduct :=
+  FormalScheme.isoOfLRSIso (compareDiagonalIso DX₁ σX₁ hστX₁ hσcX₁ DX₂ σX₂ hστX₂ hσcX₂ eX hX)
 
 /-- **The factor isomorphism as an isomorphism of formal schemes.** -/
 def xGluedSchemeIso :
-    (diagonalDatum DX₁ σX₁ hστX₁ hσcX₁).xGlued ≅ (diagonalDatum DX₂ σX₂ hστX₂ hσcX₂).xGlued where
-  hom := FormalScheme.Hom.mk eX.hom
-  inv := FormalScheme.Hom.mk eX.inv
-  hom_inv_id := FormalScheme.Hom.ext' eX.hom_inv_id
-  inv_hom_id := FormalScheme.Hom.ext' eX.inv_hom_id
+    (diagonalDatum DX₁ σX₁ hστX₁ hσcX₁).xGlued ≅ (diagonalDatum DX₂ σX₂ hστX₂ hσcX₂).xGlued :=
+  FormalScheme.isoOfLRSIso eX
 
 /-- **`diagonal'_transport` at the `FormalScheme` level.** `schemeDiagonal'` is `Hom.mk` of
 `diagonal'` and both sides of the equation have the same underlying locally-ringed-space morphism,
