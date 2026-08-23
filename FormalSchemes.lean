@@ -135,6 +135,7 @@ import FormalSchemes.GeneralSeparatedChartPreimage
 import FormalSchemes.GeneralSeparatedOpenCover
 import FormalSchemes.GeneralSeparatedPresentation
 import FormalSchemes.GeneralSeparatedRange
+import FormalSchemes.GeneralSeparatedScheme
 import FormalSchemes.GeneralSeparatedTopological
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalTopFiniteType
