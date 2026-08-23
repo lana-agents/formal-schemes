@@ -89,19 +89,36 @@ theorem StructureSheaf.ofHom_comap_comp {A B C : Type u} [CommRing A] [CommRing 
 namespace FormalSpectrum
 
 /-!
-### Continuity of a composite ring homomorphism
+### Two small facts that every consumer of the laws below needs
 
-`locallyRingedSpaceMap_comp` below takes a hypothesis `hIK : I ≤ K.comap (ψ.comp φ)` alongside the
-two it collapses, and that hypothesis is essentially never available directly — every caller has
-`hIJ` and `hJK` and must chain them. `le_comap_comp` does the chaining. It is stated here, at the
-top of this file, rather than beside `locallyRingedSpaceMap_comp`: the `CompositionLaw` section
-binds `I`, `J`, `K`, `φ`, `ψ` as section variables, which would be auto-included and change the
-argument order, whereas every consumer wants exactly the four-argument form below.
+Both of the following are stated here, at the top of this file and before its `variable` block,
+rather than beside the laws that consume them. Neither has any composition-law content: one is a
+statement about `Ideal.comap`, the other about `eqToHom`, and keeping them out of that narrative
+keeps them discoverable. `SpfFunctorial` imports only `FormalSchemes.SpfMap`, so it is early enough
+that every module in the tree can already reach them — which is the whole point. Both were
+previously duplicated across the tree, in each case because the general version existed but sat
+somewhere unreachable, and every author who needed it correctly declined the import and wrote it
+again.
 
-The statement mentions no formal spectrum — it is a fact about `Ideal.comap` and could equally live
-in Mathlib next to `Ideal.le_comap_map` (`exact?` finds no such lemma there as of Mathlib
-`v4.32.0`). It is kept in `FormalSpectrum` because supplying `hIK` is its only purpose, and every
-consumer already `open`s this namespace.
+* `le_comap_comp` supplies `locallyRingedSpaceMap_comp`'s hypothesis `hIK : I ≤ K.comap (ψ.comp φ)`
+  alongside the two it collapses. That hypothesis is essentially never available directly — every
+  caller has `hIJ` and `hJK` and must chain them — and it cannot be inlined as
+  `fun _ hx => hJK (hIJ hx)`, because in the `hIK` position the intermediate ideal `J` is otherwise
+  an undetermined metavariable. Issue 869 consolidated **ten** private copies into this one.
+* `eqToHom_comp_locallyRingedSpaceMap` identifies the morphisms induced by two *equal* ideals of
+  definition of the target, up to the canonical transport of the source. Issue 876 moved it here
+  from `FormalSchemes.TateFibreProductHom`, where sitting above the Tate self-product tower put it
+  out of reach of the general layer at a measured cost of 15 modules.
+
+Neither statement mentions a formal spectrum, and `le_comap_comp` could equally live in Mathlib next
+to `Ideal.le_comap_map` (`exact?` finds no such lemma there as of Mathlib `v4.32.0`). They are kept
+in `FormalSpectrum` because serving `locallyRingedSpaceMap` is their only purpose and every consumer
+already `open`s this namespace.
+
+Placing `le_comap_comp` inside `section CompositionLaw` would in fact compile unchanged, with a
+byte-identical signature: its own binders shadow every one of that section's variables, so none is
+auto-included. An earlier version of this paragraph claimed the opposite. The placement above is a
+readability choice, not a forced one — but do not restate the false reason for it.
 -/
 
 /-- **Continuity of a composite ring homomorphism**: if `φ` carries `I` into `J` and `ψ` carries
@@ -113,6 +130,27 @@ theorem le_comap_comp {A B C : Type u} [CommRing A] [CommRing B] [CommRing C]
     {I : Ideal A} {J : Ideal B} {K : Ideal C} (φ : A →+* B) (ψ : B →+* C)
     (hIJ : I ≤ J.comap φ) (hJK : J ≤ K.comap ψ) : I ≤ K.comap (ψ.comp φ) :=
   fun _ hx => hJK (hIJ hx)
+
+/-- **A morphism of formal spectra transports along an equality of ideals of definition.**
+
+If two ideals `K = L` of `S` both receive `I` along `φ : R →+* S`, the two induced morphisms
+`Spf S ⟶ Spf R` agree up to the canonical transport `eqToHom` of their common source. Stated
+generically in the two ideals, so `subst` discharges it and no concrete completion is ever
+unfolded.
+
+This is what is needed whenever one object has two spellings of its ideal of definition — typically
+`I.map (algebraMap R A)` against `FormalSpectrum.awayCompletionIdeal` for a basic-open chart — and
+morphisms built at the two spellings must be identified.
+
+For the transport on the other side of the equation, apply this at `h.symm` and take `.symm`: the
+resulting `eqToHom` arguments are proofs of the same equation, so proof irrelevance identifies them
+and `rw` accepts either orientation. -/
+theorem eqToHom_comp_locallyRingedSpaceMap {R S : Type u} [CommRing R] [CommRing S] {I : Ideal R}
+    {K L : Ideal S} (h : K = L) (φ : R →+* S) (hK : I ≤ K.comap φ) (hL : I ≤ L.comap φ) :
+    eqToHom (congrArg locallyRingedSpaceObj h).symm ≫ locallyRingedSpaceMap I K φ hK =
+      locallyRingedSpaceMap I L φ hL := by
+  subst h
+  rw [eqToHom_refl, Category.id_comp]
 
 variable {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
 variable (I : Ideal R) (J : Ideal S) (K : Ideal T)
