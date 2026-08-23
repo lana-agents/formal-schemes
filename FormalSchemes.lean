@@ -47,6 +47,7 @@ import FormalSchemes.BasicOpenImmersionAssembly
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.BothDatumAdicOverBase
+import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
 import FormalSchemes.ClosedImmersionIso
@@ -119,6 +120,7 @@ import FormalSchemes.GeneralFibreProductExposeX
 import FormalSchemes.GeneralFibreProductExposeXAlgebraData
 import FormalSchemes.GeneralFibreProductExposeXStructMap
 import FormalSchemes.GeneralFibreProductLiftAdic
+import FormalSchemes.GeneralFibreProductLiftAdicSelf
 import FormalSchemes.GeneralFibreProductLiftCharts
 import FormalSchemes.GeneralFibreProductLiftPiece
 import FormalSchemes.GeneralFibreProductLiftUniqueAdic
