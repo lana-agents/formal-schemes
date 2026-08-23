@@ -63,6 +63,9 @@ same reason recorded in `FormalSchemes.ThreeChartCoverTopFiniteType`. They are t
   `Spf A`.
 * `AlgebraicGeometry.ThreeChartCover.coverSubscheme_isSeparatedOverSpf` and
   `coverSubscheme_isRelativelyTopFiniteType`: **the two EGA properties, without a presentation.**
+* `AlgebraicGeometry.ThreeChartCover.coverSubschemeIsoSpf` and `gluedXIsoSpf_eq`: when the three
+  basic opens cover, the open subscheme is `Spf A` and `gluedXIsoSpf` (issue 864) is the
+  degenerate case of `gluedXIsoCoverSubscheme`.
 
 ## References
 
@@ -251,6 +254,70 @@ theorem coverSubscheme_isRelativelyTopFiniteType (hI : I.FG) {L : Ideal A}
   rw [← gluedXIsoCoverSubscheme_symm_hom_comp_structHom I f R hI]
   exact (gluedX_isRelativelyTopFiniteType I f R hI hA).of_iso
     (gluedXIsoCoverSubscheme I f R hI).symm
+
+/-! ### The covering case is the degenerate case
+
+`FormalSchemes.ThreeChartCoverOpenImmersion` (issue 864) proves `gluedX ≅ Spf A` **under the
+hypothesis that the three basic opens cover**, by showing `gluedXToBase` is then an isomorphism.
+With `gluedXIsoCoverSubscheme` above — which carries no such hypothesis — that is no longer an
+independent fact: under the covering hypothesis the open `coverOpen I f` is `⊤`, the open
+subscheme it cuts out is `Spf A` (`FormalScheme.restrictOpenTopIso`), and `gluedXIsoSpf` is the
+composite. `gluedXIsoSpf_eq` says exactly that, so the special case is now derived rather than
+separately established.
+
+The derivation is stated here and not in `ThreeChartCoverOpenImmersion`, whose `gluedXIsoSpf` is
+left as it stands: that module is *below* this one in the import graph, so rewriting its proof in
+place would reverse an import. Nothing is duplicated — the two are proved equal. -/
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **When the three basic opens cover, the open subscheme they cut out is `Spf A` itself.**
+The covering hypothesis is exactly `coverOpen I f = ⊤`, so this is `restrictOpenCongr` followed by
+`restrictOpenTopIso`. -/
+def coverSubschemeIsoSpf (hI : I.FG) (hcov : coverOpen I f = ⊤) :
+    coverSubscheme I f hI ≅ FormalScheme.Spf (I.map (algebraMap R A)) :=
+  FormalScheme.restrictOpenCongr _ (ambient_locallyFG I hI) hcov ≪≫
+    FormalScheme.restrictOpenTopIso _ (ambient_locallyFG I hI)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The degeneration is the inclusion.** As everywhere on this chain, the comparison is only
+usable together with what it does over `Spf A`. -/
+theorem coverSubschemeIsoSpf_hom (hI : I.FG) (hcov : coverOpen I f = ⊤) :
+    (coverSubschemeIsoSpf I f hI hcov).hom = FormalScheme.Hom.mk (coverSubschemeι I f hI) :=
+  FormalScheme.restrictOpenCongrTop_hom _ (ambient_locallyFG I hI) hcov
+
+/-- `gluedXIsoSpf` is `preimageIso` of `asIso gluedXToBase`, so its underlying morphism is
+`gluedXToBase`. -/
+theorem gluedXIsoSpf_hom_toLRSHom (hI : I.FG)
+    (hcov : basicOpen (I.map (algebraMap R A)) (f ⟨0⟩) ⊔
+      basicOpen (I.map (algebraMap R A)) (f ⟨1⟩) ⊔
+      basicOpen (I.map (algebraMap R A)) (f ⟨2⟩) = ⊤) :
+    (gluedXIsoSpf I f B hI hcov).hom.toLRSHom = gluedXToBase I f B hI :=
+  (Functor.FullyFaithful.ofFullyFaithful
+    FormalScheme.forgetToLocallyRingedSpace).map_preimage _
+
+/-- **`gluedXIsoSpf` is the degenerate case of `gluedXIsoCoverSubscheme`.**
+
+Note that `hcov`, stated in `ThreeChartCoverOpenImmersion`'s spelling as an equality of a triple
+`⊔` of basic opens, is *definitionally* `coverOpen I f = ⊤` — `coverOpen` is that sup — so it is
+passed straight through with no bridging lemma.
+
+Both sides are determined by their underlying locally ringed space morphism, and both are
+`gluedXToBase`: on the left by `gluedXIsoSpf_hom_toLRSHom`, on the right by
+`coverSubschemeIsoSpf_hom` composed with the triangle `gluedXIsoCoverSubscheme_hom_comp`. -/
+theorem gluedXIsoSpf_eq (hI : I.FG)
+    (hcov : basicOpen (I.map (algebraMap R A)) (f ⟨0⟩) ⊔
+      basicOpen (I.map (algebraMap R A)) (f ⟨1⟩) ⊔
+      basicOpen (I.map (algebraMap R A)) (f ⟨2⟩) = ⊤) :
+    gluedXIsoSpf I f B hI hcov =
+      gluedXIsoCoverSubscheme I f B hI ≪≫ coverSubschemeIsoSpf I f hI hcov := by
+  refine Iso.ext (FormalScheme.forgetToLocallyRingedSpace.map_injective ?_)
+  change (gluedXIsoSpf I f B hI hcov).hom.toLRSHom =
+    ((gluedXIsoCoverSubscheme I f B hI).hom ≫ (coverSubschemeIsoSpf I f hI hcov).hom).toLRSHom
+  rw [gluedXIsoSpf_hom_toLRSHom]
+  change gluedXToBase I f B hI = (gluedXIsoCoverSubscheme I f B hI).hom.toLRSHom ≫
+    (coverSubschemeIsoSpf I f hI hcov).hom.toLRSHom
+  rw [coverSubschemeIsoSpf_hom]
+  exact (gluedXIsoCoverSubscheme_hom_comp I f B hI).symm
 
 end ThreeChartCover
 

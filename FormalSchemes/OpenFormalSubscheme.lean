@@ -49,6 +49,11 @@ iterates.
 * `AlgebraicGeometry.FormalScheme.restrictOpenIso`, `restrictOpenIso_hom_comp`,
   `restrictOpenSchemeIso`: the comparison with any open immersion of range `U`, and the triangle
   over `X`.
+* `AlgebraicGeometry.FormalScheme.restrictOpenTopIso` and `restrictOpenTopIso_hom`: the open
+  subscheme cut out by `⊤` is `X`, and the comparison **is** the inclusion — so
+  `restrictOpenHom hX ⊤` is an isomorphism (`isIso_restrictOpenHom_top`).
+* `AlgebraicGeometry.FormalScheme.restrictOpenCongr` and `restrictOpenCongrTop_hom`: transport
+  along an equality of opens, and its packaged composite with the `⊤` case.
 
 ## References
 
@@ -186,6 +191,67 @@ theorem restrictOpenSchemeIso_inv_comp :
     rw [restrictOpenSchemeIso_inv_toLRSHom, restrictOpenIso_inv_comp])
 
 end
+
+/-! ### The degenerate open: `U = ⊤`
+
+`restrictOpen` at `U = ⊤` is `X` again. Mathlib supplies the underlying isomorphism as
+`LocallyRingedSpace.restrictTopIso`, which this tree already uses at `FormalSchemes.FormalScheme`
+to exhibit `Spf I` as a formal scheme; what is added here is its lift to `FormalScheme` and — the
+half that makes it usable — the identification of that lift with the inclusion itself.
+
+That identification is stronger than a bare isomorphism and is what the consumers want: it says
+`restrictOpenHom hX ⊤` **is** an isomorphism, so a statement proved about `X.restrictOpen hX ⊤`
+relative to the inclusion transports to `X` relative to the identity, with no opaque comparison
+morphism left in the way. It holds because `LocallyRingedSpace.restrictTopIso` is *defined* with
+`hom := X.ofRestrict _`, which is `restrictOpenι` on the nose. -/
+
+/-- **The open formal subscheme cut out by `⊤` is `X` itself.** `LocallyRingedSpace.restrictTopIso`
+lifted along the fully faithful forgetful functor; the `show` pins the source, whose spelling
+`restrictOpen_toLocallyRingedSpace` makes `rfl`-equal to Mathlib's. -/
+def restrictOpenTopIso : X.restrictOpen hX ⊤ ≅ X :=
+  (Functor.FullyFaithful.ofFullyFaithful forgetToLocallyRingedSpace).preimageIso
+    (show (X.restrictOpen hX ⊤).toLocallyRingedSpace ≅ X.toLocallyRingedSpace from
+      X.toLocallyRingedSpace.restrictTopIso)
+
+/-- **The comparison at `⊤` is the inclusion.** This is the load-bearing half: without it the
+isomorphism says nothing about what it does over `X`. Mathlib's `restrictTopIso` has
+`hom := ofRestrict _` definitionally, so this is `map_preimage` and nothing else. -/
+@[simp]
+theorem restrictOpenTopIso_hom : (X.restrictOpenTopIso hX).hom = X.restrictOpenHom hX ⊤ :=
+  forgetToLocallyRingedSpace.map_injective
+    ((Functor.FullyFaithful.ofFullyFaithful forgetToLocallyRingedSpace).map_preimage _)
+
+/-- **The inclusion of `⊤` is an isomorphism**, which is the form instance search wants. -/
+instance isIso_restrictOpenHom_top : IsIso (X.restrictOpenHom hX ⊤) :=
+  X.restrictOpenTopIso_hom hX ▸ (X.restrictOpenTopIso hX).isIso_hom
+
+/-! ### Transport along an equality of opens
+
+`restrictOpen` takes the open as an argument, so an equality of opens gives an equality of objects
+and `eqToIso` suffices. It is recorded here with its triangle because the pair
+`restrictOpenCongr … ≪≫ restrictOpenTopIso` is what a consumer holding a *covering* hypothesis
+`U = ⊤` in some other spelling actually needs, and assembling it at each call site costs a `subst`
+in a context where `restrictOpen`'s argument is buried. -/
+
+/-- **Equal opens cut out equal open formal subschemes.** -/
+def restrictOpenCongr {U U' : Opens X} (h : U = U') :
+    X.restrictOpen hX U ≅ X.restrictOpen hX U' :=
+  eqToIso (congrArg _ h)
+
+/-- The transport commutes with the two inclusions. -/
+@[reassoc (attr := simp)]
+theorem restrictOpenCongr_hom_comp {U U' : Opens X} (h : U = U') :
+    (X.restrictOpenCongr hX h).hom ≫ X.restrictOpenHom hX U' = X.restrictOpenHom hX U := by
+  subst h
+  simp [restrictOpenCongr]
+
+/-- **An open equal to `⊤` cuts out `X`, and the resulting comparison is the inclusion.** This is
+the packaged form: a consumer with `hU : U = ⊤` gets `X.restrictOpen hX U ≅ X` together with the
+statement that it is `restrictOpenHom hX U`, which is what transports a property stated over the
+inclusion. -/
+theorem restrictOpenCongrTop_hom {U : Opens X} (h : U = ⊤) :
+    (X.restrictOpenCongr hX h ≪≫ X.restrictOpenTopIso hX).hom = X.restrictOpenHom hX U := by
+  rw [Iso.trans_hom, restrictOpenTopIso_hom, restrictOpenCongr_hom_comp]
 
 end AlgebraicGeometry.FormalScheme
 
