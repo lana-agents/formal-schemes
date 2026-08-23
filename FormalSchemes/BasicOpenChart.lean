@@ -31,6 +31,16 @@ see the module note below).
 * `FormalSpectrum.basicOpenChartBase I f`: the underlying map `Spf R{1/f} → Spf R` of the chart.
 * `FormalSpectrum.range_basicOpenChartBase`: its range is `basicOpen I f = D(f)`.
 * `FormalSpectrum.isOpenEmbedding_basicOpenChartBase`: it is an open topological embedding.
+* `FormalSpectrum.awayCompletionHom_comp_algebraMap`: the structural map `A → A{1/g}^` of a
+  completed localization is a map of `R`-algebras.
+* `FormalSpectrum.map_algebraMap_awayCompletion`, its `rfl` case
+  `FormalSpectrum.map_algebraMap_awayCompletion_eq`, and
+  `FormalSpectrum.awayCompletionIdeal_eq_map_algebraMap`: the ideal-convention bookkeeping —
+  `awayCompletionIdeal L g` is the extension of the base ideal `I` along `R → A{1/g}^`, in the
+  spellings the rest of the tree meets it in. These live here, rather than in the modules that
+  need them, because their ingredients are all defined in this file and this module is in the
+  import closure of every consumer; their own docstrings record how many times each had been
+  written out elsewhere before issues 881 and 895 moved them.
 
 ## References
 
@@ -86,13 +96,63 @@ importing the whole topologically-finite-type sub-tower, plus two instances of i
 `FormalSchemes.CompletedTensorAwayInterchangePrLeft`, and a pointwise fourth in the former under an
 unrelated name. Issue 881 consolidated them here, beside `awayCompletionHom` itself.
 
-The binders `R` and `A` deliberately shadow this file's section variables `R` and `I`: a
-declaration's own binders shadow section variables, which are then not auto-included, so the
-signature is exactly the form its six consumer modules pass. -/
+The binder `R` deliberately shadows this file's section variable `R`, which there is the *chart*
+ring; `A`, `L` and `g` are fresh names. A declaration's own binders shadow section variables, and
+the file's `I` and `f` are then not referenced at all, so neither is auto-included and the
+signature is exactly the form its consumer modules pass. -/
 theorem awayCompletionHom_comp_algebraMap {R A : Type u} [CommRing R] [CommRing A] [Algebra R A]
     {L : Ideal A} (g : A) :
     (awayCompletionHom L g).comp (algebraMap R A) = algebraMap R (awayCompletion L g) :=
   (IsScalarTower.algebraMap_eq R A (awayCompletion L g)).symm
+
+/-- **The ideal of definition of `A{1/g}^` is the extension of `L` along `A → A{1/g}^`**, with the
+structural map spelled as an `algebraMap` rather than as `awayCompletionHom`.
+
+This is `map_awayCompletionHom` — the two are the *same term*, since `awayCompletionHom L g` is
+`algebraMap A (awayCompletion L g)` on the nose (see `awayCompletionHom_comp_algebraMap`). It
+earns a name for the same reason that one does: `rw` is syntactic, so a goal spelled with
+`algebraMap` is not reachable from `map_awayCompletionHom`. It is the bridge between the two
+spellings, not new content. -/
+theorem awayCompletionIdeal_eq_map_algebraMap {A : Type u} [CommRing A] {L : Ideal A} (g : A) :
+    L.map (algebraMap A (awayCompletion L g)) = awayCompletionIdeal L g :=
+  map_awayCompletionHom L g
+
+/-- **The ideal of definition of `A{1/g}^`, written as the extension of the base ideal.** If `A` is
+an `R`-algebra whose ideal `L` is the extension `I·A`, then `I·(A{1/g}^)` is `awayCompletionIdeal L
+g`.
+
+The hypothesis `h` is what makes this the general form of the whole family: the three ideals the
+tree cares about — `I.map (algebraMap R A)` itself, `CompletedTensorProduct.idealOfDefinition`, and
+whatever a chart datum supplies — all satisfy it, but only the first satisfies it by `rfl`.
+`map_algebraMap_awayCompletion_eq` below is that `rfl` case, which is what almost every call site
+wants.
+
+Proof: `awayCompletionHom_comp_algebraMap` turns `algebraMap R (A{1/g}^)` into
+`awayCompletionHom L g ∘ algebraMap R A`, `Ideal.map_map` splits the extension in two, `h`
+identifies the inner half with `L`, and `map_awayCompletionHom` closes it. Every ingredient is in
+this file, which is why the statement belongs here.
+
+This fact was previously declared **seven** times across the tree, in six modules, none of which
+could reach the general version: it lived in `FormalSchemes.AwayTopFiniteType`, a topologically-
+finite-type module in the closure of none of its consumers — the same layering fault, and the same
+sub-tower, that issue 881 extracted `awayCompletionHom_comp_algebraMap` from. Issue 895
+consolidated them here. -/
+theorem map_algebraMap_awayCompletion {R : Type u} [CommRing R] {I : Ideal R} {A : Type u}
+    [CommRing A] [Algebra R A] {L : Ideal A} (g : A) (h : I.map (algebraMap R A) = L) :
+    I.map (algebraMap R (awayCompletion L g)) = awayCompletionIdeal L g := by
+  rw [← awayCompletionHom_comp_algebraMap (L := L) g, ← Ideal.map_map, h, map_awayCompletionHom]
+
+/-- **The ideal-convention bridge.** The ideal of definition of the chart algebra `A{1/f}`, spelled
+as an affine-charted datum spells it (`I.map (algebraMap R (A i))`), is the `awayCompletionIdeal`
+of the chart. Both are the image of `I` under `R → A → A_f → A{1/f}`.
+
+The `rfl` case of `map_algebraMap_awayCompletion`, and the form every call site outside
+`FormalSchemes.CompletedTensorAwayInterchange` uses. -/
+theorem map_algebraMap_awayCompletion_eq {R : Type u} [CommRing R] (I : Ideal R) {A : Type u}
+    [CommRing A] [Algebra R A] (f : A) :
+    I.map (algebraMap R (awayCompletion (I.map (algebraMap R A)) f)) =
+      awayCompletionIdeal (I.map (algebraMap R A)) f :=
+  map_algebraMap_awayCompletion f rfl
 
 /-- The underlying continuous map `Spf R{1/f} → Spf R` of the affine basic-open chart. -/
 def basicOpenChartBase : FormalSpectrum (awayCompletionIdeal I f) → FormalSpectrum I :=

@@ -36,8 +36,12 @@ variables gives a presentation of `A{1/g}^` by `n + 1`.
 * `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_base`: the specialisation to
   `A = R`, `L = I`, which is the shape `FormalSpectrum.basicOpenChart` charts on `Spf R` appear in.
   It needs `[IsAdicComplete I R]`, inherited from `self`.
-* `Ideal.map_algebraMap_of_tower`, `AlgebraicGeometry.map_algebraMap_awayCompletion`: the ideal
-  bookkeeping, reusable and stated separately for the reason in the next-but-one section.
+* `Ideal.map_algebraMap_of_tower`: transitivity of ideal extension along a tower, stated for the
+  reason in the next-but-one section. The `awayCompletion`-specific consequences that used to sit
+  beside it — `awayCompletionIdeal_eq_map_algebraMap` and `map_algebraMap_awayCompletion` — moved
+  to `FormalSchemes.BasicOpenChart` in issue 895; this file now consumes them from there. Nothing
+  in the tree currently uses `map_algebraMap_of_tower` itself, which was left in place rather than
+  deleted because it is a general `Ideal` fact independent of this file's subject.
 
 ## Route
 
@@ -54,8 +58,7 @@ No polynomial presentation `A[T]/(T·g − 1)` is built and completed. Instead:
    `RestrictedPowerSeries.hom_ext`; the `hinv` half is `χ(Xₙ₊₁) = g⁻¹` by construction.
 3. The ideal condition `(idealOfDefinition R I (n+1))·χ = L·A{1/g}^` is independent of `χ`: since
    `χ` is an `R`-algebra map it reduces to `I·A{1/g}^ = awayCompletionIdeal L g`, which is
-   transitivity of ideal extension along `R → A → A_g → A{1/g}^`
-   (`Ideal.map_algebraMap_of_tower`).
+   `FormalSpectrum.map_algebraMap_awayCompletion` (`FormalSchemes.BasicOpenChart`).
 
 ## The ideal convention, stated once
 
@@ -63,8 +66,9 @@ No polynomial presentation `A[T]/(T·g − 1)` is built and completed. Instead:
 ideal of the ring **being localized**. This file uses that convention throughout, with `C = A` and
 `K = L`. It is *not* definitionally the extension of an ideal of the base `R`, even though
 `I·A = L` makes the two equal (`Ideal.map f I` unfolds to `Ideal.span (f '' I)`, so no unifier
-bridges them). `map_algebraMap_awayCompletion` is the bridge, and it is used explicitly wherever
-the two spellings meet — see `FormalSchemes/TateFibreOverlapTransition.lean` for the same wall.
+bridges them). `FormalSpectrum.map_algebraMap_awayCompletion` (`FormalSchemes.BasicOpenChart`) is
+the bridge, and it is used explicitly wherever the two spellings meet — see
+`FormalSchemes/TateFibreOverlapTransition.lean` for the same wall.
 
 ## References
 
@@ -103,20 +107,6 @@ abbrev rpsCoord (R : Type u) [CommRing R] (I : Ideal R) (n : ℕ) (i : Fin n) :
     (MvPolynomial.X i)
 
 /-! ### The ideal of definition of the completed localization -/
-
-/-- The ideal of definition of `A{1/g}^` is the extension of `L` along `A → A{1/g}^`. -/
-theorem awayCompletionIdeal_eq_map_algebraMap :
-    L.map (algebraMap A (awayCompletion L g)) = awayCompletionIdeal L g :=
-  Ideal.map_algebraMap_of_tower (S := awayCompletion L g) L
-    (L.map (algebraMap A (Localization.Away g))) rfl
-
-/-- **The ideal of definition of `A{1/g}^` is the extension of the base ideal `I`**, given
-`I·A = L`. This is the bridge between the two ideal conventions described in the module
-docstring. -/
-theorem map_algebraMap_awayCompletion (h : I.map (algebraMap R A) = L) :
-    I.map (algebraMap R (awayCompletion L g)) = awayCompletionIdeal L g :=
-  (Ideal.map_algebraMap_of_tower (S := awayCompletion L g) I L h).trans
-    (awayCompletionIdeal_eq_map_algebraMap g)
 
 /-- `L·A_g` is finitely generated when `I` is, given `I·A = L`. -/
 theorem awayLocIdeal_fg (hI : I.FG) (h : I.map (algebraMap R A) = L) :

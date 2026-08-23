@@ -135,8 +135,9 @@ theorem y_glue_rel (j j' : D.JY) (h : j ≠ j') :
 /-! ### The overlap ideal-convention bridge and its two squares (second-differ shape) -/
 
 /-- **The overlap bridge** `Spf(I·(B_j{1/g})) ⟶ Spf(awayCompletionIdeal (I·B_j) g)`.
-`Spf` of the identity ring hom across the two (equal, by `idealOfDef_base_eq`) ideals of definition
-of the away completion `B_j{1/g}`. Reconciles the `I·(B_j{1/g})` convention produced by
+`Spf` of the identity ring hom across the two ideals of definition of the away completion
+`B_j{1/g}`, which are equal by `FormalSpectrum.map_algebraMap_awayCompletion_eq`. Reconciles the
+`I·(B_j{1/g})` convention produced by
 `rightInterchangeOpenImmersion_comp_locallyRingedSpaceMap_inr` with the `awayCompletionIdeal`
 convention of the exposed `Y`'s overlap charts. -/
 def yOverlapBridge (j j' : D.JY) :
@@ -152,7 +153,7 @@ def yOverlapBridge (j j' : D.JY) :
     (I.map (algebraMap R (awayCompletion (I.map (algebraMap R (D.B j))) (D.gY j j'))))
     (RingHom.id _) (by
       rw [Ideal.comap_id]
-      exact (CompletedTensorAwayInterchange.idealOfDef_base_eq I (D.gY j j')).ge)
+      exact (FormalSpectrum.map_algebraMap_awayCompletion_eq I (D.gY j j')).ge)
 
 /-- **The interchange `inr`-factor of chart `j` factors through the overlap bridge and `Y`'s
 basic-open chart.** -/
@@ -207,7 +208,7 @@ theorem spfτsymm_awayInr (j j' : D.JY) (h : j ≠ j') :
         (awayCompletionHom (I.map (algebraMap R (D.B j'))) (D.gY j' j)))
       (ψ := RingHom.id _)
       (hIK := by
-        rw [RingHom.id_comp, CompletedTensorAwayInterchange.idealOfDef_base_eq]
+        rw [RingHom.id_comp, FormalSpectrum.map_algebraMap_awayCompletion_eq]
         exact le_comap_comp _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
           (awayCompletionTransition_le_comap (D.gY j j') (D.gY j' j) (D.τY j j' h)))]
   refine FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_

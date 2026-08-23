@@ -48,25 +48,13 @@ variable {R : Type u} [CommRing R] (I : Ideal R)
 variable {A B : Type u} [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 variable (f : A)
 
-/-- The ideal of definition of `A{1/f}` written as the extension of `I` along `R → A{1/f}`:
-`I·(A{1/f}) = (I·A)·(A{1/f})`. The base-ring `A` analogue of the merged `idealOfDef_tgt_eq`.
-
-Both are `FormalSpectrum.awayCompletionHom_comp_algebraMap` (`FormalSchemes.BasicOpenChart`) at
-two different ideals; generalising this pair the way issue 881 generalised that lemma is a
-follow-up. -/
-theorem idealOfDef_base_eq :
-    I.map (algebraMap R (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f)) =
-      FormalSpectrum.awayCompletionIdeal (I.map (algebraMap R A)) f := by
-  rw [← awayCompletionHom_comp_algebraMap f, ← Ideal.map_map,
-    FormalSpectrum.map_awayCompletionHom]
-
 /-- The `le_comap` datum for the affine basic-open chart of `A` at `f`, phrased with the ideal of
 definition `I·(A{1/f})` of `A{1/f}` (rather than `awayCompletionIdeal`). -/
 theorem le_comap_awayCompletionHom_base :
     I.map (algebraMap R A) ≤
       (I.map (algebraMap R (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f))).comap
         (FormalSpectrum.awayCompletionHom (I.map (algebraMap R A)) f) := by
-  rw [idealOfDef_base_eq]
+  rw [FormalSpectrum.map_algebraMap_awayCompletion_eq]
   exact FormalSpectrum.le_comap_awayCompletionHom (I.map (algebraMap R A)) f
 
 /-- **The interchange open immersion followed by the first projection is the localised first

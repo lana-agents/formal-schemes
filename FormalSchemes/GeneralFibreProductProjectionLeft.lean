@@ -27,7 +27,7 @@ Because the exposed `X` is glued directly in the `I·A_i = I.map (algebraMap R (
 whose target `tateTwoPatch` lived over `annulusIdealOfDefinition`). A single light *overlap* bridge
 `xOverlapBridge` — `Spf(id)` across the equal ideals `I·(A_i{1/g_ij})` and
 `FormalSpectrum.awayCompletionIdeal (I·A_i) (g_ij)`
-(`CompletedTensorAwayInterchange.idealOfDef_base_eq`) — reconciles the interchange's `inl`-factor
+(`FormalSpectrum.map_algebraMap_awayCompletion_eq`) — reconciles the interchange's `inl`-factor
 with `X`'s basic-open overlap charts.
 
 The compatibility datum `glueMorphisms` consumes on the double overlap is the naturality square
@@ -87,9 +87,10 @@ def pr₁Chart (i : D.J) :
     CompletedTensorProduct.inl_isAdicHom.le_comap
 
 /-- **The overlap ideal-convention bridge** `Spf(I·(A_i{1/g_ij})) ⟶ Spf(awayCompletionIdeal (I·A_i)
-g_ij)`: `Spf` of the identity ring hom across the two (equal, by `idealOfDef_base_eq`) ideals of
-definition of the away completion `A_i{1/g_ij}`. Reconciles the `I·(A_i{1/g})` convention produced
-by `interchangeOpenImmersion_comp_locallyRingedSpaceMap_inl` with the `awayCompletionIdeal`
+g_ij)`: `Spf` of the identity ring hom across the two ideals of definition of the away completion
+`A_i{1/g_ij}`, which are equal by `FormalSpectrum.map_algebraMap_awayCompletion_eq`. Reconciles
+the `I·(A_i{1/g})` convention produced by
+`interchangeOpenImmersion_comp_locallyRingedSpaceMap_inl` with the `awayCompletionIdeal`
 convention of `X`'s overlap charts. -/
 def xOverlapBridge (i j : D.J) :
     letI := D.commRing
@@ -104,7 +105,7 @@ def xOverlapBridge (i j : D.J) :
     (I.map (algebraMap R (awayCompletion (I.map (algebraMap R (D.A i))) (D.g i j))))
     (RingHom.id _) (by
       rw [Ideal.comap_id]
-      exact (CompletedTensorAwayInterchange.idealOfDef_base_eq I (D.g i j)).ge)
+      exact (FormalSpectrum.map_algebraMap_awayCompletion_eq I (D.g i j)).ge)
 
 /-! ### The two ideal-convention bridge squares -/
 
@@ -168,7 +169,7 @@ theorem spfτsymm_awayInl (i j : D.J) (h : i ≠ j) :
         (awayCompletionHom (I.map (algebraMap R (D.A j))) (D.g j i)))
       (ψ := RingHom.id _)
       (hIK := by
-        rw [RingHom.id_comp, CompletedTensorAwayInterchange.idealOfDef_base_eq]
+        rw [RingHom.id_comp, FormalSpectrum.map_algebraMap_awayCompletion_eq]
         exact le_comap_comp _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
           (awayCompletionTransition_le_comap (D.g i j) (D.g j i) (D.τ i j h)))]
   refine FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_

@@ -21,7 +21,7 @@ factor's **own** basic-open glue cocycle, and builds each factor's glue pipeline
 `AlgebraicGeometry.AffineChartedFibreDatumX` of `FormalSchemes.GeneralFibreProductExposeX`, applied
 once to the `A`/`gX`/`τX` data and symmetrically once to the `B`/`gY`/`τY` data), cleanly in the
 `I·A_i = I.map (algebraMap R (A i))` / `I·B_j = I.map (algebraMap R (B j))` convention (via
-`CompletedTensorAwayInterchange.idealOfDef_base_eq`, so overlaps live over
+`FormalSpectrum.map_algebraMap_awayCompletion_eq`, so overlaps live over
 `FormalSpectrum.basicOpenChart` with no ideal bridges). It also builds each factor's structural
 morphism to the base, `xStructMap : X ⟶ Spf R` and `yStructMap : Y ⟶ Spf R` (mirroring
 `FormalSchemes.GeneralFibreProductExposeXStructMap`).
