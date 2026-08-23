@@ -133,6 +133,7 @@ import FormalSchemes.GeneralSeparatedChartCodiagonal
 import FormalSchemes.GeneralSeparatedChartCodiagonalSurjective
 import FormalSchemes.GeneralSeparatedChartPreimage
 import FormalSchemes.GeneralSeparatedOpenCover
+import FormalSchemes.GeneralSeparatedPresentation
 import FormalSchemes.GeneralSeparatedRange
 import FormalSchemes.GeneralSeparatedTopological
 import FormalSchemes.GermValue
