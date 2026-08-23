@@ -1,4 +1,6 @@
+import FormalSchemes.GeneralFibreProductChartLift
 import FormalSchemes.GeneralFibreProductLiftPiece
+import FormalSchemes.GlueOpenCoverFactorBoth
 import FormalSchemes.GlueOpenCoverFactorBothAlg
 import FormalSchemes.LiftedBasicOpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
