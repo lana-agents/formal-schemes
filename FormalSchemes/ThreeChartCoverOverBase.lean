@@ -43,7 +43,9 @@ non-duplicated half, restated over the merged `gluedXToBase`. The proofs transfe
 
 The one simplification the merge bought: at #308's spelling, the chart-level compatibility is the
 scalar tower `R → A → A{1/f_i}` and closes with `IsScalarTower.algebraMap_eq` alone. #309 needed
-`awayCompletionHom_comp_algebraMap_base` and a private `le_comap_comp` helper — which at the time
+`awayCompletionHom_comp_algebraMap_base` (since consolidated into
+`FormalSpectrum.awayCompletionHom_comp_algebraMap` by issue 881) and a private `le_comap_comp`
+helper — which at the time
 would have been a *sixth* private copy of that two-line lemma. Neither is needed now, and no new
 private helper is introduced. (Those private copies no longer exist: there were ten of them, and
 they were consolidated into `FormalSpectrum.le_comap_comp` in `FormalSchemes.SpfFunctorial`.)

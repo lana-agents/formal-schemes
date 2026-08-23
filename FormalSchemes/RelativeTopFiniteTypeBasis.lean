@@ -76,23 +76,13 @@ variable {A : Type u} [CommRing A] [Algebra R A] {L : Ideal A}
 
 /-! ### The crux: a basic-open chart over the base -/
 
-/-- The structural ring map `A → A{1/g}^` of the completed localization, precomposed with the
-base's structure map, is the base's structure map for `A{1/g}^`: two applications of
-`IsScalarTower.algebraMap_eq` along `R → A → A_g → A{1/g}^`. -/
-theorem awayCompletionHom_comp_algebraMap (g : A) :
-    (FormalSpectrum.awayCompletionHom L g).comp (algebraMap R A) =
-      algebraMap R (FormalSpectrum.awayCompletion L g) := by
-  rw [FormalSpectrum.awayCompletionHom, RingHom.comp_assoc,
-    ← IsScalarTower.algebraMap_eq R A (Localization.Away g),
-    ← IsScalarTower.algebraMap_eq R (Localization.Away g) (FormalSpectrum.awayCompletion L g)]
-
 variable [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A] [IsAdicRing L]
 
 /-- **The crux.** The basic-open chart `Spf A{1/g}^ ⟶ Spf A`, followed by the structural morphism
 `Spf A ⟶ Spf R` of a tf-type `A`, is the structural morphism of `A{1/g}^`.
 
 Both sides are `Spf` of a ring homomorphism, so this is `locallyRingedSpaceMap_comp` plus
-`awayCompletionHom_comp_algebraMap`, glued by the pre-existing
+`FormalSpectrum.awayCompletionHom_comp_algebraMap`, glued by the pre-existing
 `FormalSpectrum.locallyRingedSpaceMap_congr` (`FormalSchemes.SpfFunctorial`), which is needed
 because `locallyRingedSpaceMap`'s continuity argument is a proof *about* the homomorphism being
 rewritten, so a direct `rw` fails with "motive is not type correct".
@@ -111,8 +101,8 @@ theorem basicOpenChart_comp_structMap (g : A)
   rw [IsTopologicallyFiniteType.structMap, IsTopologicallyFiniteType.structMap,
     FormalSpectrum.basicOpenChart, ← FormalSpectrum.locallyRingedSpaceMap_comp]
   · exact _root_.FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
-      (awayCompletionHom_comp_algebraMap g)
-  · rw [awayCompletionHom_comp_algebraMap]
+      (FormalSpectrum.awayCompletionHom_comp_algebraMap g)
+  · rw [FormalSpectrum.awayCompletionHom_comp_algebraMap]
     exact Ideal.map_le_iff_le_comap.mp h'.map_eq.le
 
 namespace FormalScheme

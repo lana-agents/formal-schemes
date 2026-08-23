@@ -1,6 +1,5 @@
 import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.GeneralFibreProductBothOverlapRange
-import FormalSchemes.RelativeTopFiniteTypeBasis
 import FormalSchemes.ThreeChartCoverDatum
 import FormalSchemes.ThreeChartCoverSeparated
 
@@ -57,12 +56,13 @@ each case rather than guessed.
 * `range_eqToHom_comp_base` is public in `FormalSchemes.GeneralFibreProductBothOverlapRange`, which
   was **already** in this file's import closure — reusing it added nothing, so it is reused.
 * The scalar-tower fact `A → A{1/f_i} → A{1/f_i}{1/g_ij}` is
-  `AlgebraicGeometry.awayCompletionHom_comp_algebraMap` in
-  `FormalSchemes.RelativeTopFiniteTypeBasis`, at the tower level one step down. Importing it costs
-  **5** modules — which is why this file, otherwise about gluing, imports a
-  topologically-finite-type module. That is worth paying to avoid a duplicated argument. (The
-  lemma is a pure `IsScalarTower` fact and arguably belongs in an early module rather than that
-  one; relocating it is a follow-up.)
+  `FormalSpectrum.awayCompletionHom_comp_algebraMap`, and it is reused at no cost: it now lives in
+  `FormalSchemes.BasicOpenChart`, beside `awayCompletionHom` itself, which was already in this
+  file's closure. Until issue 881 it lived in `FormalSchemes.RelativeTopFiniteTypeBasis`, and
+  importing it cost **5** modules — the whole topologically-finite-type sub-tower
+  (`RelativeTopFiniteTypeBasis`, `RelativeTopFiniteType`, `GlobalTopFiniteType`,
+  `AwayTopFiniteType`, `TopFiniteTypeBasis`) — dragged into a gluing file for one `IsScalarTower`
+  rewrite. That import is gone and this file's closure is 5 modules smaller.
 * The ideal-of-definition transport `FormalSpectrum.eqToHom_comp_locallyRingedSpaceMap` is reused.
   Until issue 876 it was not: it lived in `FormalSchemes.TateFibreProductHom`, above the Tate
   self-product tower, and importing it cost **15** modules — among them
@@ -210,8 +210,8 @@ theorem chartToBase_naturality (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
         (awayCompletionTransition_le_comap (overlapElt I f i j) (overlapElt I f j i)
           (tau I f hI i j)))]
   refine FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_
-  rw [AlgebraicGeometry.awayCompletionHom_comp_algebraMap (R := A),
-    AlgebraicGeometry.awayCompletionHom_comp_algebraMap (R := A)]
+  rw [FormalSpectrum.awayCompletionHom_comp_algebraMap (R := A),
+    FormalSpectrum.awayCompletionHom_comp_algebraMap (R := A)]
   exact RingHom.ext fun a => (tau_symm_algebraMap I f hI i j a).symm
 
 variable (B : Type u) [CommRing B] [Algebra R B]

@@ -103,20 +103,6 @@ theorem map_srcBaseIdeal_locMap :
   congr 1
   exact (Localization.awayMapₐ (CompletedTensorProduct.inl R I A B) f).comp_algebraMap
 
-/-- The structural map `C → C{1/f̄}` factored through `R`:
-`awayCompletionHom ∘ (R → C) = (R → C{1/f̄})`. -/
-theorem awayCompletionHom_comp_algebraMap :
-    (FormalSpectrum.awayCompletionHom (CompletedTensorProduct.idealOfDefinition R I A B)
-        (CompletedTensorProduct.inl R I A B f)).comp
-        (algebraMap R (CompletedTensorProduct R I A B)) =
-      algebraMap R (FormalSpectrum.awayCompletion (CompletedTensorProduct.idealOfDefinition R I A B)
-        (CompletedTensorProduct.inl R I A B f)) := by
-  refine RingHom.ext fun r => ?_
-  rw [RingHom.comp_apply, FormalSpectrum.awayCompletionHom, RingHom.comp_apply,
-    ← IsScalarTower.algebraMap_apply R (CompletedTensorProduct R I A B)
-      (Localization.Away (CompletedTensorProduct.inl R I A B f)),
-    algebraMap_eq_of, ← algebraMap_eq_of, ← IsScalarTower.algebraMap_apply]
-
 /-- `I·C{1/f̄}` is exactly the ideal of definition of `C{1/f̄}`. -/
 theorem idealOfDef_tgt_eq :
     I.map (algebraMap R (FormalSpectrum.awayCompletion
@@ -124,7 +110,7 @@ theorem idealOfDef_tgt_eq :
         (CompletedTensorProduct.inl R I A B f))) =
       FormalSpectrum.awayCompletionIdeal (CompletedTensorProduct.idealOfDefinition R I A B)
         (CompletedTensorProduct.inl R I A B f) := by
-  rw [← awayCompletionHom_comp_algebraMap, ← Ideal.map_map,
+  rw [← FormalSpectrum.awayCompletionHom_comp_algebraMap, ← Ideal.map_map,
     ← CompletedTensorProduct.idealOfDefinition_eq_map, FormalSpectrum.map_awayCompletionHom]
 
 /-! ### The forward homomorphism -/
@@ -181,7 +167,7 @@ theorem forwardHomB_commutes (r : R) :
         (CompletedTensorProduct.inl R I A B f)) r := by
   simp only [RingHom.coe_comp, Function.comp_apply, AlgHom.toRingHom_eq_coe, RingHom.coe_coe]
   rw [(CompletedTensorProduct.inr R I A B).commutes, ← RingHom.comp_apply,
-    awayCompletionHom_comp_algebraMap]
+    FormalSpectrum.awayCompletionHom_comp_algebraMap]
 
 /-- The structural map `B →ₐ[R] C{1/f̄}`, i.e. `B → C → C{1/f̄}`. -/
 def forwardHomB :
@@ -268,12 +254,16 @@ private theorem algebraMap_A_Achart (a : A) :
         (algebraMap A (Localization.Away f) a) := by
   rw [AdicCompletion.algebraMap_apply, algebraMap_eq_of]
 
-/-- The `R`-algebra structure on `A{1/f}` factors through `A`. -/
+/-- The `R`-algebra structure on `A{1/f}` factors through `A`. The pointwise form of
+`FormalSpectrum.awayCompletionHom_comp_algebraMap`, and like it a direct instance of
+`IsScalarTower.algebraMap_apply`: the tower `R → A → A{1/f}` is already an instance, so the
+`algebraMap_eq_of`/`AdicCompletion.algebraMap_apply` chain this proof used to carry was never
+needed. (Issue 881; found by sweeping for the *shape* of the consolidated lemma rather than its
+name, which is how this fourth declaration of the same fact came to light.) -/
 private theorem algebraMap_A_Achart_algebraMap (r : R) :
     algebraMap A (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f) (algebraMap R A r) =
-      algebraMap R (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f) r := by
-  rw [algebraMap_A_Achart, ← IsScalarTower.algebraMap_apply R A (Localization.Away f),
-    algebraMap_eq_of, AdicCompletion.algebraMap_apply]
+      algebraMap R (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) f) r :=
+  (IsScalarTower.algebraMap_apply R A _ r).symm
 
 /-- `f` becomes a unit in `A{1/f}`. -/
 private theorem isUnit_algebraMap_A_Achart :

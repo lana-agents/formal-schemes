@@ -242,7 +242,7 @@ theorem xStructMap_naturality (i j : D.JX) (h : i ≠ j) :
           Ideal.le_comap_map (le_comap_awayCompletionHom _ _))
         (awayCompletionTransition_le_comap (D.gX i j) (D.gX j i) (D.τX i j h)))]
   refine FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_
-  rw [awayCompletionHom_comp_algebraMap_base, awayCompletionHom_comp_algebraMap_base]
+  rw [awayCompletionHom_comp_algebraMap, awayCompletionHom_comp_algebraMap]
   exact RingHom.ext fun r => ((D.τX i j h).symm.commutes r).symm
 
 /-- **The glued structural morphism of the factor `X`** `X ⟶ Spf R`, assembled from the per-chart
@@ -364,7 +364,7 @@ theorem yStructMap_naturality (j j' : D.JY) (h : j ≠ j') :
           Ideal.le_comap_map (le_comap_awayCompletionHom _ _))
         (awayCompletionTransition_le_comap (D.gY j j') (D.gY j' j) (D.τY j j' h)))]
   refine FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_
-  rw [awayCompletionHom_comp_algebraMap_base, awayCompletionHom_comp_algebraMap_base]
+  rw [awayCompletionHom_comp_algebraMap, awayCompletionHom_comp_algebraMap]
   exact RingHom.ext fun r => ((D.τY j j' h).symm.commutes r).symm
 
 /-- **The glued structural morphism of the factor `Y`** `Y ⟶ Spf R`, assembled from the per-chart
