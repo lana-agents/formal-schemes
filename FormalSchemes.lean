@@ -261,6 +261,7 @@ import FormalSchemes.TateTensorOverlapChartIso
 import FormalSchemes.TateTensorOverlapChartIsoBoth
 import FormalSchemes.TateTensorOverlapSummandAffine
 import FormalSchemes.TateTensorOverlapSummandAffineBoth
+import FormalSchemes.TateTopFiniteType
 import FormalSchemes.TateTransition
 import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningCocone
