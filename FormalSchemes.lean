@@ -50,6 +50,7 @@ import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
+import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.ChartedDatumTopFiniteType
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
@@ -280,6 +281,7 @@ import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
 import FormalSchemes.ThreeChartCoverSeparated
 import FormalSchemes.ThreeChartCoverSeparatedScheme
+import FormalSchemes.ThreeChartCoverToBase
 import FormalSchemes.ThreeChartCoverTopFiniteType
 import FormalSchemes.ThreeChartCoverTransitions
 import FormalSchemes.ThreeChartDatum
