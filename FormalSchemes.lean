@@ -60,6 +60,7 @@ import FormalSchemes.ClosedImmersionSections
 import FormalSchemes.ClosedImmersionSplitMono
 import FormalSchemes.ClosedImmersionStalk
 import FormalSchemes.ClosedImmersionSubscheme
+import FormalSchemes.ClosedImmersionTargetLocal
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalCompletionFunctorial
 import FormalSchemes.CofinalSheafComparison
