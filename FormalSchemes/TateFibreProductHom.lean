@@ -1,4 +1,6 @@
 import FormalSchemes.GeneralDiagonal
+import FormalSchemes.GeneralFibreProductLiftAdic
+import FormalSchemes.TateSelfProductAdicOverBase
 import FormalSchemes.TateSelfProductCone
 import FormalSchemes.TateXGluedIso
 
@@ -18,15 +20,25 @@ supplies **one half** of that identification, the half that needs no glue-datum 
 the morphism from the hand-built object to the generic one, together with its two projection
 compatibilities.
 
-The construction is the general fibre-product mediating morphism `fibreLift`, fed the two legs
+The construction is the adic-over-base fibre-product mediating morphism `fibreLiftAdic` (794),
+fed the two legs
 
 ```
 pr₁ ≫ tateXGluedInv ,  pr₂ ≫ tateXGluedInv  :  𝔈_q ×_{Spf R} 𝔈_q ⟶ (datum).xGlued
 ```
 
-so the projection laws come out of `fibreLift_comp_pr₁` / `_comp_pr₂` rather than having to be
+so the projection laws come out of `fibreLiftAdic_comp_pr₁` / `_comp_pr₂` rather than having to be
 proved. `FormalSchemes/GeneralDiagonal.lean` is the same construction for the pair of identities
 `(𝟙, 𝟙)`; this file is that file with the legs changed.
+
+**No hypotheses (issue 798).** `fibreLiftAdic` asks only that the source be adic over a base
+morphism it is given, and #276's `tateSelfProductInv_adicOverBase` says exactly that for
+`tateSelfProductStructMap`. That single input replaces both hypotheses the plain `fibreLift`
+carries — `hZ : LocallyFG` (which `AdicOverBaseLocallyFG.locallyFG` implies) and the
+per-refined-chart continuity witness `hs`, which is *unreachable* for `fibreLift`'s internally
+chosen cover (issues 460/468/472/487) and was previously abbreviated `TateFibreLiftContinuity` and
+propagated through this whole tower. It is gone; nothing here has a hypothesis beyond `hq`, `hI`
+and the ambient instances.
 
 The reverse morphism — the one that genuinely needs the overlap comparison of 738/739/751 and the
 transition law — is not here.
@@ -66,6 +78,8 @@ that points at the wrong lemma.
 * `AlgebraicGeometry.tateDiagonalDatum`: the Tate curve model's diagonal datum (the double-overlap
   data are vacuous on a two-element index type).
 * `AlgebraicGeometry.tateFibreLegX`, `tateFibreLegY`: the two legs, and `tateFibreLeg_cone_comm`.
+* `AlgebraicGeometry.tateFibreLegX_comp_xStructMap`: the `X`-leg is a morphism over the base, in
+  the spelling `fibreLiftAdic`'s `hbase` wants.
 * `AlgebraicGeometry.tateFibreProductHom`: the comparison morphism, with
   `tateFibreProductHom_comp_pr₁` and `tateFibreProductHom_comp_pr₂`.
 
@@ -193,62 +207,65 @@ theorem tateFibreLeg_cone_comm (hq : q ∈ I) (hI : I.FG) :
 
 /-! ### The comparison morphism -/
 
-/-- **The per-refined-chart continuity input** of `fibreLift`, for the two Tate legs. Named because
-it is long and appears in every statement below.
+/-- **The `X`-leg is a morphism over the base**, in the spelling `fibreLiftAdic` wants: the leg
+followed by the datum's structural morphism is `tateSelfProductStructMap`, the base morphism over
+which #276 proved the source adic.
 
-It stays a hypothesis, exactly as it does for the general diagonal
-(`BothChartedFibreDatumXY.diagonal`): discharging it in general is issue 235c, and nothing in this
-file makes the Tate case easier than the general one. The same applies to `LocallyFG` of the
-source. -/
-abbrev TateFibreLiftContinuity (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG) : Prop :=
-  ∀ c, I ≤ ((tateDiagonalDatum R I q B hq hI).bothRefinedChart
-      (tateFibreLegX R I q B hq hI) (tateFibreLegY R I q B hq hI) hZ c).J.comap
-    ((tateDiagonalDatum R I q B hq hI).refinedStructHom
-      (tateFibreLegX R I q B hq hI) (tateFibreLegY R I q B hq hI) hZ c)
+Kept in pure term mode with the type-ascribed `congrArg`: `(tateDiagonalDatum …).xGlued` and the
+model are definitionally but not syntactically equal, the goal is not type-correct at `instances`
+transparency, and `rw` cannot build a motive across it — the wall documented above. -/
+theorem tateFibreLegX_comp_xStructMap (hq : q ∈ I) (hI : I.FG) :
+    tateFibreLegX R I q B hq hI ≫ (tateDiagonalDatum R I q B hq hI).xStructMap =
+      tateSelfProductStructMap R I q hq hI :=
+  (Category.assoc _ _ _).trans
+    (congrArg (fun g : (tateCurveModel R I q hq hI).toLocallyRingedSpace ⟶
+        locallyRingedSpaceObj I => tateSelfProductPr₁ R I q hq hI ≫ g)
+      (tateXGluedInv_comp_tateDiagonalDatum_xStructMap R I q B hq hI))
 
 /-- **The comparison morphism** `𝔈_q ×_{Spf R} 𝔈_q ⟶ (Tate diagonal datum).generalFibreProduct`,
 from the hand-built four-chart self fibre product to the generic one, defined as the fibre-product
 mediating morphism of the two legs.
 
 This is the direction of the brick-4 comparison that needs no glue-datum work: the overlap
-identifications of 738/739/751 are consumed by the *other* direction. -/
-def tateFibreProductHom (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
+identifications of 738/739/751 are consumed by the *other* direction.
+
+**Unconditional** (issue 798). It is `fibreLiftAdic` (794), not `fibreLift`: the source is adic
+over `tateSelfProductStructMap` by #276's `tateSelfProductInv_adicOverBase`, which discharges both
+`fibreLift`'s `hZ : LocallyFG` and its per-refined-chart continuity witness `hs` outright. The
+former abbreviation `TateFibreLiftContinuity` for that witness is gone; nothing in this tower
+carries a hypothesis beyond `hq` and `hI` any more. -/
+def tateFibreProductHom (hq : q ∈ I) (hI : I.FG) :
     (tateSelfProductInv R I q hq hI).toLocallyRingedSpace ⟶
       (tateDiagonalDatum R I q B hq hI).generalFibreProduct.toLocallyRingedSpace :=
-  (tateDiagonalDatum R I q B hq hI).fibreLift
+  (tateDiagonalDatum R I q B hq hI).fibreLiftAdic
+    (tateFibreLegX R I q B hq hI) (tateFibreLegY R I q B hq hI)
+    (tateSelfProductStructMap R I q hq hI)
+    (tateSelfProductInv_adicOverBase R I q hq hI)
+    (tateFibreLegX_comp_xStructMap R I q B hq hI)
     (BothChartedFibreDatumXY.ofFactors_hV _ _ _ _ _ _ _ _)
     (BothChartedFibreDatumXY.ofFactors_hf _ _ _ _ _ _ _ _)
     (BothChartedFibreDatumXY.ofFactors_ht _ _ _ _ _ _ _ _)
-    (Z := tateSelfProductInv R I q hq hI)
-    (tateFibreLegX R I q B hq hI) (tateFibreLegY R I q B hq hI) hZ
-    (tateFibreLeg_cone_comm R I q B hq hI) hs
+    (tateFibreLeg_cone_comm R I q B hq hI)
 
 /-- **The comparison morphism recovers the first projection.** Together with its `pr₂` mirror this
 is the shape brick 4c (706) consumes: `schemeDiagonal'` for the Tate model is pinned by its two
 projections, and these are what identify them with `tateSelfProductPr₁` / `Pr₂`. -/
-theorem tateFibreProductHom_comp_pr₁ (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
-    tateFibreProductHom R I q B hq hI hZ hs ≫ (tateDiagonalDatum R I q B hq hI).pr₁
+theorem tateFibreProductHom_comp_pr₁ (hq : q ∈ I) (hI : I.FG) :
+    tateFibreProductHom R I q B hq hI ≫ (tateDiagonalDatum R I q B hq hI).pr₁
         (BothChartedFibreDatumXY.ofFactors_hV _ _ _ _ _ _ _ _)
         (BothChartedFibreDatumXY.ofFactors_hf _ _ _ _ _ _ _ _)
         (BothChartedFibreDatumXY.ofFactors_ht _ _ _ _ _ _ _ _) =
       tateFibreLegX R I q B hq hI :=
-  (tateDiagonalDatum R I q B hq hI).fibreLift_comp_pr₁ _ _ _ _ _ hZ _ hs
+  (tateDiagonalDatum R I q B hq hI).fibreLiftAdic_comp_pr₁ _ _ _ _ _ _ _ _ _
 
 /-- **The comparison morphism recovers the second projection.** -/
-theorem tateFibreProductHom_comp_pr₂ (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
-    tateFibreProductHom R I q B hq hI hZ hs ≫ (tateDiagonalDatum R I q B hq hI).pr₂
+theorem tateFibreProductHom_comp_pr₂ (hq : q ∈ I) (hI : I.FG) :
+    tateFibreProductHom R I q B hq hI ≫ (tateDiagonalDatum R I q B hq hI).pr₂
         (BothChartedFibreDatumXY.ofFactors_hV _ _ _ _ _ _ _ _)
         (BothChartedFibreDatumXY.ofFactors_hf _ _ _ _ _ _ _ _)
         (BothChartedFibreDatumXY.ofFactors_ht _ _ _ _ _ _ _ _) =
       tateFibreLegY R I q B hq hI :=
-  (tateDiagonalDatum R I q B hq hI).fibreLift_comp_pr₂ _ _ _ _ _ hZ _ hs
+  (tateDiagonalDatum R I q B hq hI).fibreLiftAdic_comp_pr₂ _ _ _ _ _ _ _ _ _
 
 end AlgebraicGeometry
 

@@ -18,8 +18,10 @@ in the sense of `FormalScheme.AdicOverBaseLocallyFG`, and hence in particular `L
 Both statements are hypotheses that the general fibre-product API leaves to its callers, and both
 are consumed by the brick-4 comparison of issue 740:
 
-* `tateFibreProductHom` (the `Φ` half, `FormalSchemes/TateFibreProductHom.lean`) takes
-  `hZ : (tateSelfProductInv …).LocallyFG` as a hypothesis;
+* `tateFibreProductHom` (the `Φ` half, `FormalSchemes/TateFibreProductHom.lean`) is
+  `BothChartedFibreDatumXY.fibreLiftAdic` (794) at this witness, which is what makes it
+  **unconditional** — the witness discharges both `fibreLift`'s `hZ : LocallyFG` and its otherwise
+  unreachable per-refined-chart continuity bound (issue 798);
 * `BothChartedFibreDatumXY.fibreLift_unique_adicOverBase` — the lemma that makes the round trip
   `Ψ ≫ Φ = 𝟙` free once the reverse comparison exists — needs
   `FormalScheme.AdicOverBaseLocallyFG Z s` for `Z = tateSelfProductInv`.
