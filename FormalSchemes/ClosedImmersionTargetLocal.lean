@@ -10,7 +10,8 @@ set_option linter.style.header false
 `FormalScheme.IsClosedImmersion` descends along an open cover of the target. Its stalk condition
 did not descend, and was carried as a **global** hypothesis, because the tree had no way to say
 "the restriction of `f` over the chart `V`" as a morphism of formal schemes — so there was nothing
-whose stalk maps one could hypothesise about. That module's own docstring records the gap:
+whose stalk maps one could hypothesise about. That module's own docstring recorded the gap, before
+it was repointed at this file:
 
 > A fully target-local variant, whose per-chart hypothesis is a genuine `IsClosedImmersion` of the
 > restricted morphism (relating `(restricted f).stalkMap` to `f.stalkMap` through the
