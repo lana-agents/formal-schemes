@@ -12,24 +12,33 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # Adic-tracking refined cover and an internal-continuity uniqueness variant
 
-This file provides an *adic-tracking* variant of the source-cover refinement of
-`FormalSchemes.GlueOpenCoverFactor` together with a corresponding variant of
-`BothChartedFibreDatumXY.fibreLift_unique` whose per-chart continuity hypothesis `hcont` is
-discharged internally from a source `AdicOverBaseLocallyFG` witness.
+This file provides an *adic-tracking* refinement of the source cover of a morphism into a glued
+formal scheme, together with a uniqueness statement for the general fibre-product mediating
+morphism whose per-chart continuity hypothesis `hcont` is discharged internally from a source
+`AdicOverBaseLocallyFG` witness.
 
 ## Part 1 — the adic-tracking cover
 
-Mirroring `GlueOpenCoverFactor`, but with a base morphism `s : Z ⟶ Spf I`, the structure
-`RefinedChartAdic` records, on top of the plain `RefinedChart` data, the base-relative adicity
-bound `I ≤ J.comap (Γ (map ≫ s))` inherited from `AdicOverBaseLocallyFG`. The associated
-`refinedCoverAdic` / `chartIndexAdic` / `factorAdic` / `factorAdic_comp_ι` mirror the plain
-versions and thread the adic witness.
+Let `D : FormalScheme.GlueData`, let `a : Z ⟶ D.gluedFormalScheme`, and let `s : Z ⟶ Spf I` be a
+base morphism. An arbitrary affine chart of `Z` need not map into a single glued chart of `D`, so
+the cover is refined: `RefinedChartAdic` bundles, around each point of `Z`, a finitely generated
+affine chart whose range lands inside `a⁻¹(range (D.ι i))` for a single `i` **and** which records
+the base-relative adicity bound `I ≤ J.comap (Γ (map ≫ s))` inherited from
+`AdicOverBaseLocallyFG`. The associated `refinedCoverAdic` / `chartIndexAdic` / `factorAdic` /
+`factorAdic_comp_ι` assemble those charts into an `OpenCover Z` and factor `map ≫ a` through the
+selected glued chart, threading the adic witness.
+
+Recording that bound in the structure is the whole point, and it is why there is no bound-free
+version of this cover any longer: one existed (`FormalSchemes.GlueOpenCoverFactor`), its charts
+were drawn by `Classical.choice` from a subtype carrying no adic data, and every consumer was
+left with a hypothesis nobody could discharge (issues 460/468/472/487). Issue 812 deleted it.
 
 ## Part 2 — the uniqueness variant
 
 `BothChartedFibreDatumXY.fibreLift_unique_adicOverBase` replaces the standing `hcont` hypothesis of
-`fibreLift_unique` with a source witness `hZadic : AdicOverBaseLocallyFG Z s` together with the
-compatibility `m₁ ≫ (pr₁ ≫ xStructMap) = s`. The per-chart continuity fact is then *derived* from
+the superseded `fibreLift_unique` (deleted in issue 805) with a source witness
+`hZadic : AdicOverBaseLocallyFG Z s` together with the compatibility
+`m₁ ≫ (pr₁ ≫ xStructMap) = s`. The per-chart continuity fact is then *derived* from
 the recorded adic bound of the refined chart, via the morphism identity
 `chart.map ≫ s = factorAdic … ≫ (pr₁ChartSelf ≫ xStructMapChart)` pushed to global sections.
 

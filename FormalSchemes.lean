@@ -138,7 +138,6 @@ import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.GlueMorphisms
-import FormalSchemes.GlueOpenCoverFactor
 import FormalSchemes.GlueOpenCoverFactorBoth
 import FormalSchemes.GlueOpenCoverFactorBothAlg
 import FormalSchemes.GlueTPrimeOfLift

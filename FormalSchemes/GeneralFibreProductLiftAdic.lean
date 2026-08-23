@@ -74,6 +74,34 @@ once issue 798 removed their last consumer. Every mention of those names in this
 `hs`-shaped hypothesis in a new one. The live spellings are `fibreLiftOf`, `fibreLiftAdic`,
 `fibreLift_unique_adicOverBase` and `diagonal'`.
 
+## The deleted `Classical.choice` refined-cover layer (issue 812)
+
+The same applies one layer down. Docstrings here and in
+`FormalSchemes.GeneralFibreProductLiftCharts`, `FormalSchemes.GeneralDiagonalUnconditional`,
+`FormalSchemes.AdicOverBaseChart` and `FormalSchemes.BothDatumAdicOverBase` motivate the
+`Of`/`Adic` constructions by comparison with
+
+  `BothChartedFibreDatumXY.nonempty_bothRefinedChart`, `bothRefinedChart`, `bothRefinedCover`,
+  `xIndex`, `yIndex`, `xFactor`, `yFactor`, `xFactor_comp_ι`, `yFactor_comp_ι`,
+  `refinedStructHom`, `refinedAlgebra`, `refinedAlgebra_hIL`, `xAlg`, `yAlg`,
+
+and with a one-sided module `FormalSchemes.GlueOpenCoverFactor`
+(`FormalScheme.GlueData.RefinedChart`, `refinedChart`, `refinedCover`, `chartIndex`, `factor`,
+`factor_comp_ι`).
+
+**None of those exist any more; the module is gone entirely.** They chose their charts by
+`Classical.choice`, which is exactly what made the chosen chart carry no adic-over-base bound
+(issue 460) and left every consumer with the unreachable `hs`. Issue 805 removed their last
+callers and issue 812 deleted them. Every mention of those names in this library is **history**.
+
+What survives, and is live: the **structure** `BothChartedFibreDatumXY.BothRefinedChart`
+(`FormalSchemes.GlueOpenCoverFactorBoth`), now a pure data type over which the whole tower is
+parametrised — `bothRefinedCoverOf`, `refinedStructHomOf`, `xAlgOf`, `yAlgOf`, `fibreLiftOf`
+(`FormalSchemes.GeneralFibreProductLiftCharts`) — together with the families built to order by
+`adicBothCharts` here and by `refinedChartAdic` / `RefinedChartAdic`
+(`FormalSchemes.GeneralFibreProductLiftUniqueAdic`). **If you need a cover, build the family you
+need and pass it in; do not reintroduce a chosen one.**
+
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.12, §10.15.
