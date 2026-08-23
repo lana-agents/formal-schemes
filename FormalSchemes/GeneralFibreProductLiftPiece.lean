@@ -1,4 +1,6 @@
-import FormalSchemes.GeneralFibreProductLiftUnique
+import FormalSchemes.AffineFibreProductLRS
+import FormalSchemes.GeneralFibreProductChartInter
+import FormalSchemes.SpfGammaFunctorial
 
 set_option linter.style.header false
 set_option linter.style.setOption false
@@ -9,7 +11,7 @@ set_option synthInstance.maxHeartbeats 1000000
 # The per-piece uniqueness primitive for the general fibre product `X ×_{Spf R} Y`
 
 The uniqueness half of the fibre-product universal property (issue 234d,
-`FormalSchemes.GeneralFibreProductLiftUnique`) reduces, via `OpenCover.hom_ext`, to a *per-chart*
+`fibreLift_unique`, deleted in issue 805) reduces, via `OpenCover.hom_ext`, to a *per-chart*
 statement: on a single affine chart `w : Spf L ⟶ Z` whose restriction `w ≫ m₁` of `m₁` factors
 through a single product chart `Spf(A_{P.1} ⊗̂_R B_{P.2})` (with a continuity witness for that
 factorisation), the two restrictions `w ≫ m₁` and `w ≫ m₂` of morphisms agreeing after both
