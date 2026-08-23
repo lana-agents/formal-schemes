@@ -1,6 +1,7 @@
 import FormalSchemes.GeneralSeparatedScheme
 import FormalSchemes.TateSeparatedTopFiniteType
 import FormalSchemes.TateSeparatedValue
+import FormalSchemes.TateTopFiniteType
 
 set_option linter.style.header false
 
@@ -57,11 +58,11 @@ available there. With this file the pairing is stated the other way round, at th
 `tateCurveModel_isSeparatedOverSpf_and_isRelativelyTopFiniteType` below is that pairing as one
 theorem.
 
-Stating it here costs nothing, because `TateTopFiniteType` is already in this module's transitive
-import closure through `TateSeparatedTopFiniteType`, which imports it directly. (An earlier
-revision of this docstring claimed the finite-type half was deliberately cited by name rather than
-imported "so that this module stays a leaf"; that was wrong — the dependency is there either way,
-and only the import *line* was absent.)
+Stating it here costs nothing, because `TateTopFiniteType` was already in this module's transitive
+import closure through `TateSeparatedTopFiniteType`, which imports it directly; the import line
+above therefore adds a name, not a dependency. (An earlier revision of this docstring claimed the
+finite-type half was deliberately cited by name rather than imported "so that this module stays a
+leaf"; that was wrong — the dependency is there either way.)
 
 ## Main results
 
