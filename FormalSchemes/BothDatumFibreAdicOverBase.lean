@@ -88,11 +88,9 @@ that is a deletion in the style of issues 805/812 and it touches the Tate tower.
 noncomputable section
 
 open CategoryTheory TopologicalSpace Topology FormalSpectrum
-open CompletedTensorProduct
+open AlgebraicGeometry CompletedTensorProduct
 
 universe u
-
-namespace AlgebraicGeometry
 
 namespace CompletedTensorProduct
 
@@ -123,6 +121,8 @@ theorem inl_comp_baseMap :
     (AlgHom.comp_algebraMap (inl R I A B))
 
 end CompletedTensorProduct
+
+namespace AlgebraicGeometry
 
 namespace BothChartedFibreDatumXY
 
