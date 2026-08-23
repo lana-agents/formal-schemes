@@ -1,4 +1,5 @@
-import FormalSchemes.GeneralSeparatedChartCodiagonal
+import FormalSchemes.AwayCongrAlgebraMap
+import FormalSchemes.GeneralSeparatedChartCodiagonalSurjective
 import FormalSchemes.ThreeChartCoverDatum
 
 set_option linter.style.header false
@@ -39,12 +40,12 @@ through `inl`, and `f_j` in `A{1/f_j}^`, reached through `inr`. **That is the wh
 statement**, and it is exactly what fails for a non-separated datum: for the line with a doubled
 origin the two charts are the same `A`, the overlap is `A{1/x}`, and neither factor supplies `x⁻¹`.
 
-The step from "the image contains a generating set" to "the map is surjective" is successive
-approximation for complete adic rings (`surjective_of_mk_map_comp_surjective`), in the shape
-`FormalSchemes/InversionCodiagonalClosedEmbedding.lean` (issue 502) uses for the Tate annulus. It
-is generalised here — `FormalSpectrum.surjective_of_algebraMap_mem_range` — so that it is stated
-once for an arbitrary continuous map into an arbitrary away completion, rather than a fourth time
-for a concrete one.
+So all this file has to do is exhibit the witness `inl (f_i⁻¹) · inr (f_j⁻¹)` and multiply out.
+Everything else — the passage from "the image contains a generating set" to genuine surjectivity,
+which is successive approximation for complete adic rings — is
+`AffineChartedFibreDatumX.chartCodiagonal_surjective_of_mul_eq_one`
+(`FormalSchemes/GeneralSeparatedChartCodiagonalSurjective.lean`), stated there for an arbitrary
+datum.
 
 **No hypothesis had to be added.** In particular neither `IsNoetherianRing R` nor adicity of `A` is
 needed: `I.FG` is enough for the approximation argument, and only the chart algebras `A{1/f_i}`
@@ -62,13 +63,6 @@ structural advantage over the Tate datum, whose transition is a genuine automorp
 
 ## Main definitions and results
 
-* `FormalSpectrum.surjective_of_algebraMap_mem_range`: a continuous map into an away completion
-  `C{1/g}^` is surjective as soon as its image contains `C` and the inverse of `g`.
-* `AlgebraicGeometry.AffineChartedFibreDatumX.map_idealOfDefinition_chartCodiagonal`: the chart
-  codiagonal carries the ideal of definition onto the overlap's.
-* `AlgebraicGeometry.AffineChartedFibreDatumX.chartCodiagonal_surjective_of_invSelf_mem_range` and
-  `chartCodiagonal_surjective_of_mul_eq_one`: **for any datum**, the chart codiagonal is surjective
-  as soon as some element maps to an inverse of `g_ij`.
 * `AlgebraicGeometry.ThreeChartCover.tau_symm_algebraMap`: the open cover's transition fixes the
   image of `A`.
 * `AlgebraicGeometry.ThreeChartCover.chartCodiagonal_witness_mul_eq_one`: the witness
@@ -78,6 +72,16 @@ structural advantage over the Tate datum, whose transition is a genuine automorp
 * `AlgebraicGeometry.ThreeChartCover.datumX_isSeparated`: **`D(f₀) ∪ D(f₁) ∪ D(f₂)` is separated
   over `Spf R`.**
 
+The datum-generic machinery this file consumes lives elsewhere, so that another instance can reach
+it without importing the three-chart tower:
+`FormalSpectrum.surjective_of_algebraMap_mem_range` in
+`FormalSchemes/AwayCompletionSurjective.lean`;
+`AffineChartedFibreDatumX.map_idealOfDefinition_chartCodiagonal` and
+`chartCodiagonal_surjective_of_mul_eq_one` in
+`FormalSchemes/GeneralSeparatedChartCodiagonalSurjective.lean`; and
+`CompletedTensorAwayInterchange.awayCongrEquiv_algebraMap` in
+`FormalSchemes/AwayCongrAlgebraMap.lean`.
+
 ## Implementation notes
 
 The cost note of `FormalSchemes/ThreeChartCoverCharts.lean` is in force: `chartOverlapEquiv` must
@@ -85,19 +89,14 @@ never be delta-unfolded by the kernel inside a statement about the doubly nested
 not here — `chartOverlapEquiv_algebraMap` consumes the top-level `chartOverlapEquiv_apply` exactly
 as that file intends, and the module costs seconds.
 
-Two spelling frictions inherited from issue 778, both hit here:
-
-* `AlgHom.comp_algebraMap` produces `↑a ∘ algebraMap`, which `rw` will not match against a goal
-  containing `a.toRingHom.comp (algebraMap …)`; pin it as an ascribed `have`.
-* `rw` cannot build a motive through `awayCompletionIdeal (I.map …)`, whose `CommRing` instance
-  depends on the ideal. `map_idealOfDefinition_chartCodiagonal` is therefore a `calc` of
-  `Ideal.map_map` steps and `congrArg`s rather than a `rw` chain.
-
-And one that is specific to writing *ring* identities against a datum: an equation between the two
+The friction specific to writing *ring* identities against a datum: an equation between the two
 spellings of a chart algebra elaborates (`Eq` unifies up to definitional equality), but a
 **product** of one element in each does not — `HMul` is synthesised from the syntactic type, and
 `(datumX …).A i` is not syntactically `chartAlgebra I f i`. `coverCodiagonal` exists solely to fix
-the spelling once, and every identity below is stated against it.
+the spelling once, and every identity below is stated against it. (The two frictions inherited from
+issue 778 — `AlgHom.comp_algebraMap`'s coercion, and `rw` failing to build a motive through
+`awayCompletionIdeal`'s ideal-dependent `CommRing` — are recorded with the lemmas they bit, in
+`FormalSchemes/GeneralSeparatedChartCodiagonalSurjective.lean`.)
 
 ## References
 
@@ -112,259 +111,7 @@ open CompletedTensorAwayInterchange
 
 universe u
 
-/-! ### Surjectivity onto an away completion -/
-
-namespace FormalSpectrum
-
-variable {C : Type u} [CommRing C] (K : Ideal C) (g : C)
-
-/-- Every element of the away localization `C_g` is `c · (g⁻¹)ⁿ` for the chosen numerator and
-exponent `(c, n) = IsLocalization.Away.sec g w`. -/
-theorem localizationAway_eq_sec (w : Localization.Away g) :
-    w = algebraMap C (Localization.Away g) (IsLocalization.Away.sec g w).1 *
-      IsLocalization.Away.invSelf g ^ (IsLocalization.Away.sec g w).2 := by
-  have hpow : (algebraMap C (Localization.Away g) (g ^ (IsLocalization.Away.sec g w).2))
-      * IsLocalization.Away.invSelf g ^ (IsLocalization.Away.sec g w).2 = 1 := by
-    rw [map_pow, ← mul_pow, IsLocalization.Away.mul_invSelf, one_pow]
-  have hs := IsLocalization.Away.sec_spec g w
-  calc w = w * ((algebraMap C (Localization.Away g) (g ^ (IsLocalization.Away.sec g w).2))
-              * IsLocalization.Away.invSelf g ^ (IsLocalization.Away.sec g w).2) := by
-          rw [hpow, mul_one]
-    _ = (w * algebraMap C (Localization.Away g) (g ^ (IsLocalization.Away.sec g w).2))
-          * IsLocalization.Away.invSelf g ^ (IsLocalization.Away.sec g w).2 := by ring
-    _ = _ := by rw [hs]
-
-/-- **The level-one approximation step.** If a point `y` of the completion `C{1/g}` and the image
-of a point `w` of the localization `C_g` have the same first thickening, they differ by an element
-of the ideal of definition. -/
-theorem sub_algebraMap_mem_awayCompletionIdeal (hK : K.FG)
-    (y : awayCompletion K g) (w : Localization.Away g)
-    (hw : Ideal.Quotient.mk ((K.map (algebraMap C (Localization.Away g))) ^ 1) w =
-      AdicCompletion.evalₐ (K.map (algebraMap C (Localization.Away g))) 1 y) :
-    y - algebraMap (Localization.Away g) (awayCompletion K g) w ∈ awayCompletionIdeal K g := by
-  have hof : algebraMap (Localization.Away g) (awayCompletion K g) w =
-      AdicCompletion.of (K.map (algebraMap C (Localization.Away g))) (Localization.Away g) w := by
-    rw [AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
-  have hev : AdicCompletion.evalₐ (K.map (algebraMap C (Localization.Away g))) 1
-      (y - algebraMap (Localization.Away g) (awayCompletion K g) w) = 0 := by
-    rw [map_sub, sub_eq_zero, hof, AdicCompletion.evalₐ_of, hw]
-  have hmem : y - algebraMap (Localization.Away g) (awayCompletion K g) w ∈
-      RingHom.ker
-        (AdicCompletion.evalₐ (K.map (algebraMap C (Localization.Away g))) 1).toRingHom :=
-    RingHom.mem_ker.mpr hev
-  rwa [AdicCompletion.ker_evalₐ _ (hK.map _) 1, pow_one] at hmem
-
-/-- **A continuous map into an away completion is surjective as soon as its image contains the
-base ring and the inverse of the away element.**
-
-Modulo the ideal of definition `C{1/g}` is the localization `C̄_ḡ` of `C̄ = C/K` at `ḡ`; the two
-hypotheses say the image mod `K` contains `C̄` and `ḡ⁻¹`, hence all of `C̄_ḡ`, and successive
-approximation for complete adic rings (`surjective_of_mk_map_comp_surjective`) lifts that to
-surjectivity. This is the argument `FormalSchemes/InversionCodiagonalClosedEmbedding.lean` (issue
-502) runs for the Tate annulus, stated once for an arbitrary source. -/
-theorem surjective_of_algebraMap_mem_range (hK : K.FG)
-    {D : Type u} [CommRing D] (J : Ideal D) [IsPrecomplete J D] (φ : D →+* awayCompletion K g)
-    (hJ : J.map φ = awayCompletionIdeal K g)
-    (hbase : ∀ c : C, ∃ d, φ d = algebraMap C (awayCompletion K g) c)
-    (hinv : ∃ d, φ d =
-      algebraMap (Localization.Away g) (awayCompletion K g) (IsLocalization.Away.invSelf g)) :
-    Function.Surjective φ := by
-  haveI : IsAdicRing (awayCompletionIdeal K g) := AdicCompletion.isAdicRing_map _ (hK.map _)
-  haveI : IsHausdorff (J.map φ) (awayCompletion K g) := by
-    rw [hJ]
-    exact (inferInstance : IsAdicComplete (awayCompletionIdeal K g)
-      (awayCompletion K g)).toIsHausdorff
-  refine _root_.surjective_of_mk_map_comp_surjective (I := J) (f := φ) ?_
-  intro ybar
-  obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective ybar
-  obtain ⟨w, hw⟩ := Ideal.Quotient.mk_surjective
-    (AdicCompletion.evalₐ (K.map (algebraMap C (Localization.Away g))) 1 y)
-  obtain ⟨d, hd⟩ := hbase (IsLocalization.Away.sec g w).1
-  obtain ⟨e, he⟩ := hinv
-  refine ⟨d * e ^ (IsLocalization.Away.sec g w).2, ?_⟩
-  have hφ : φ (d * e ^ (IsLocalization.Away.sec g w).2) =
-      algebraMap (Localization.Away g) (awayCompletion K g) w := by
-    rw [map_mul, map_pow, hd, he, ← map_pow,
-      IsScalarTower.algebraMap_apply C (Localization.Away g) (awayCompletion K g), ← map_mul,
-      ← localizationAway_eq_sec]
-  rw [RingHom.coe_comp, Function.comp_apply, Ideal.Quotient.mk_eq_mk_iff_sub_mem, hJ, hφ]
-  have hneg := neg_mem (sub_algebraMap_mem_awayCompletionIdeal K g hK y w hw)
-  rwa [neg_sub] at hneg
-
-end FormalSpectrum
-
-/-! ### The comparison maps fix the base -/
-
-namespace CompletedTensorAwayInterchange
-
-variable {R : Type u} [CommRing R] (I : Ideal R)
-variable {A : Type u} [CommRing A] [Algebra R A]
-
-/-- **The comparison map `A{1/x} →ₐ[R] A{1/y}` fixes the image of `A`** — it is the completion of
-an `A`-compatible localization map. -/
-theorem awayCongrHom_algebraMap (x y : A) (hI : I.FG)
-    (hxy : IsUnit (algebraMap A (Localization.Away y) x)) (a : A) :
-    awayCongrHom I x y hI hxy (algebraMap A (awayCompletion (I.map (algebraMap R A)) x) a) =
-      algebraMap A (awayCompletion (I.map (algebraMap R A)) y) a :=
-  furtherLocAlgHom_algebraMap I x y hI _ _ a
-
-/-- **The comparison isomorphism fixes the image of `A`.** -/
-theorem awayCongrEquiv_algebraMap (x y : A) (hI : I.FG)
-    (hxy : IsUnit (algebraMap A (Localization.Away y) x))
-    (hyx : IsUnit (algebraMap A (Localization.Away x) y)) (a : A) :
-    awayCongrEquiv I x y hI hxy hyx
-        (algebraMap A (awayCompletion (I.map (algebraMap R A)) x) a) =
-      algebraMap A (awayCompletion (I.map (algebraMap R A)) y) a :=
-  awayCongrHom_algebraMap I x y hI hxy a
-
-end CompletedTensorAwayInterchange
-
 namespace AlgebraicGeometry
-
-/-! ### The chart codiagonal of an arbitrary datum -/
-
-namespace AffineChartedFibreDatumX
-
-variable {R : Type u} [CommRing R] {I : Ideal R} {hI : I.FG}
-variable [TopologicalSpace R] [IsAdicRing I]
-variable {BX : Type u} [CommRing BX] [Algebra R BX]
-variable (DX : AffineChartedFibreDatumX R I hI BX)
-
-/-- The chart codiagonal on the first factor is the away-completion map, pointwise. -/
-theorem chartCodiagonal_inl (i j : DX.J) (h : i ≠ j) :
-    letI := DX.commRing; letI := DX.algebra
-    ∀ c : DX.A i, DX.chartCodiagonal i j h (CompletedTensorProduct.inl R I (DX.A i) (DX.A j) c) =
-      algebraMap (DX.A i) (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j)) c := by
-  letI := DX.commRing; letI := DX.algebra
-  exact fun c => RingHom.congr_fun (DX.chartCodiagonal_comp_inl i j h) c
-
-/-- The chart codiagonal on the second factor is the away-completion map of the `j`-th chart read
-through the datum's transition, pointwise. -/
-theorem chartCodiagonal_inr (i j : DX.J) (h : i ≠ j) :
-    letI := DX.commRing; letI := DX.algebra
-    ∀ c : DX.A j, DX.chartCodiagonal i j h (CompletedTensorProduct.inr R I (DX.A i) (DX.A j) c) =
-      (DX.τ i j h).symm
-        (algebraMap (DX.A j) (awayCompletion (I.map (algebraMap R (DX.A j))) (DX.g j i)) c) := by
-  letI := DX.commRing; letI := DX.algebra
-  exact fun c => RingHom.congr_fun (DX.chartCodiagonal_comp_inr i j h) c
-
-/-- The chart codiagonal is a map of `R`-algebras, in the composite spelling the ideal computation
-below consumes. -/
-theorem chartCodiagonal_comp_algebraMap (i j : DX.J) (h : i ≠ j) :
-    letI := DX.commRing; letI := DX.algebra
-    (DX.chartCodiagonal i j h).comp
-        (algebraMap R (CompletedTensorProduct R I (DX.A i) (DX.A j))) =
-      (awayCompletionHom (I.map (algebraMap R (DX.A i))) (DX.g i j)).comp
-        (algebraMap R (DX.A i)) := by
-  letI := DX.commRing; letI := DX.algebra
-  have hca : (CompletedTensorProduct.inl R I (DX.A i) (DX.A j)).toRingHom.comp
-      (algebraMap R (DX.A i)) =
-      algebraMap R (CompletedTensorProduct R I (DX.A i) (DX.A j)) :=
-    AlgHom.comp_algebraMap _
-  calc (DX.chartCodiagonal i j h).comp
-        (algebraMap R (CompletedTensorProduct R I (DX.A i) (DX.A j)))
-      = (DX.chartCodiagonal i j h).comp
-          ((CompletedTensorProduct.inl R I (DX.A i) (DX.A j)).toRingHom.comp
-            (algebraMap R (DX.A i))) :=
-        congrArg (fun ψ => (DX.chartCodiagonal i j h).comp ψ) hca.symm
-    _ = ((DX.chartCodiagonal i j h).comp
-          (CompletedTensorProduct.inl R I (DX.A i) (DX.A j)).toRingHom).comp
-            (algebraMap R (DX.A i)) := (RingHom.comp_assoc _ _ _).symm
-    _ = (awayCompletionHom (I.map (algebraMap R (DX.A i))) (DX.g i j)).comp
-          (algebraMap R (DX.A i)) :=
-        congrArg (fun ψ => RingHom.comp ψ (algebraMap R (DX.A i)))
-          (DX.chartCodiagonal_comp_inl i j h)
-
-/-- **The chart codiagonal carries the ideal of definition of `A_i ⊗̂_R A_j` onto that of the
-overlap.** Both are the extension of `I`, and the codiagonal is a map of `R`-algebras. -/
-theorem map_idealOfDefinition_chartCodiagonal (i j : DX.J) (h : i ≠ j) :
-    letI := DX.commRing; letI := DX.algebra
-    (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)).map
-        (DX.chartCodiagonal i j h) =
-      awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j) := by
-  letI := DX.commRing; letI := DX.algebra
-  calc (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)).map
-        (DX.chartCodiagonal i j h)
-      = (I.map (algebraMap R (CompletedTensorProduct R I (DX.A i) (DX.A j)))).map
-          (DX.chartCodiagonal i j h) := by
-        rw [CompletedTensorProduct.idealOfDefinition_eq_map]
-    _ = I.map ((DX.chartCodiagonal i j h).comp
-          (algebraMap R (CompletedTensorProduct R I (DX.A i) (DX.A j)))) := Ideal.map_map _ _
-    _ = I.map ((awayCompletionHom (I.map (algebraMap R (DX.A i))) (DX.g i j)).comp
-          (algebraMap R (DX.A i))) :=
-        congrArg (fun φ => Ideal.map φ I) (DX.chartCodiagonal_comp_algebraMap i j h)
-    _ = (I.map (algebraMap R (DX.A i))).map
-          (awayCompletionHom (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-        (Ideal.map_map _ _).symm
-    _ = awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j) :=
-        map_awayCompletionHom _ _
-
-/-- **The separatedness criterion, one pair at a time: the chart codiagonal is surjective as soon
-as the inverse of the overlap element is in its image.**
-
-The first factor already supplies the whole chart `A_i` (`chartCodiagonal_inl`), so this is the
-only thing missing, and `FormalSpectrum.surjective_of_algebraMap_mem_range` closes the gap. Any
-datum can consume this; for the open cover of `FormalSchemes/ThreeChartCoverDatum.lean` the witness
-is the product of the two chart-local inverses of `f_i` and `f_j`. -/
-theorem chartCodiagonal_surjective_of_invSelf_mem_range (i j : DX.J) (h : i ≠ j)
-    (hinv : letI := DX.commRing; letI := DX.algebra
-      ∃ d, DX.chartCodiagonal i j h d =
-        algebraMap (Localization.Away (DX.g i j))
-          (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-          (IsLocalization.Away.invSelf (DX.g i j))) :
-    letI := DX.commRing; letI := DX.algebra
-    Function.Surjective (DX.chartCodiagonal i j h) := by
-  letI := DX.commRing; letI := DX.algebra
-  haveI : IsPrecomplete (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j))
-      (CompletedTensorProduct R I (DX.A i) (DX.A j)) :=
-    (CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI).toIsAdicComplete.toIsPrecomplete
-  exact FormalSpectrum.surjective_of_algebraMap_mem_range _ _ (hI.map _) _ _
-    (DX.map_idealOfDefinition_chartCodiagonal i j h)
-    (fun c => ⟨CompletedTensorProduct.inl R I (DX.A i) (DX.A j) c,
-      DX.chartCodiagonal_inl i j h c⟩)
-    hinv
-
-/-- **The chart codiagonal is surjective as soon as some element of `A_i ⊗̂_R A_j` maps to an
-inverse of the overlap element `g_ij`.** The practical form of
-`chartCodiagonal_surjective_of_invSelf_mem_range`: inverses are unique, so a witness for the
-multiplicative inverse of `g_ij` is a witness for `IsLocalization.Away.invSelf`. -/
-theorem chartCodiagonal_surjective_of_mul_eq_one (i j : DX.J) (h : i ≠ j)
-    (d : letI := DX.commRing; letI := DX.algebra
-      CompletedTensorProduct R I (DX.A i) (DX.A j))
-    (hd : letI := DX.commRing; letI := DX.algebra
-      DX.chartCodiagonal i j h d *
-        algebraMap (DX.A i) (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-          (DX.g i j) = 1) :
-    letI := DX.commRing; letI := DX.algebra
-    Function.Surjective (DX.chartCodiagonal i j h) := by
-  letI := DX.commRing; letI := DX.algebra
-  refine DX.chartCodiagonal_surjective_of_invSelf_mem_range i j h ⟨d, ?_⟩
-  have hright : algebraMap (Localization.Away (DX.g i j))
-        (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-        (IsLocalization.Away.invSelf (DX.g i j)) *
-      algebraMap (DX.A i) (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-        (DX.g i j) = 1 := by
-    rw [IsScalarTower.algebraMap_apply (DX.A i) (Localization.Away (DX.g i j))
-      (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j)), ← map_mul, mul_comm,
-      IsLocalization.Away.mul_invSelf, map_one]
-  calc DX.chartCodiagonal i j h d
-      = DX.chartCodiagonal i j h d *
-          (algebraMap (Localization.Away (DX.g i j))
-              (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-              (IsLocalization.Away.invSelf (DX.g i j)) *
-            algebraMap (DX.A i) (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-              (DX.g i j)) := by rw [hright, mul_one]
-    _ = (DX.chartCodiagonal i j h d *
-          algebraMap (DX.A i) (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-            (DX.g i j)) *
-        algebraMap (Localization.Away (DX.g i j))
-          (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-          (IsLocalization.Away.invSelf (DX.g i j)) := by ring
-    _ = algebraMap (Localization.Away (DX.g i j))
-          (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j))
-          (IsLocalization.Away.invSelf (DX.g i j)) := by rw [hd, one_mul]
-
-end AffineChartedFibreDatumX
 
 /-! ### 594's comparison isomorphism fixes the base -/
 
