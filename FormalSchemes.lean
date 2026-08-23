@@ -32,6 +32,8 @@ import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.AwayCompletionNested
 import FormalSchemes.AwayCompletionNestedNaturality
 import FormalSchemes.AwayCompletionSelfMul
+import FormalSchemes.AwayCompletionSurjective
+import FormalSchemes.AwayCongrAlgebraMap
 import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
 import FormalSchemes.BasicOpenChartComponent
@@ -124,6 +126,7 @@ import FormalSchemes.GeneralFibreProductProjection
 import FormalSchemes.GeneralFibreProductProjectionLeft
 import FormalSchemes.GeneralSeparated
 import FormalSchemes.GeneralSeparatedChartCodiagonal
+import FormalSchemes.GeneralSeparatedChartCodiagonalSurjective
 import FormalSchemes.GeneralSeparatedChartPreimage
 import FormalSchemes.GeneralSeparatedOpenCover
 import FormalSchemes.GeneralSeparatedRange
