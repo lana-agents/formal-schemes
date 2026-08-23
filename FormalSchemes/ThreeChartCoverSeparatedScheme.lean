@@ -29,6 +29,11 @@ as `(datumX I f B hI).xStructMap`. This is **not** the chart-free headline that
 formal subscheme of `Spf A` — the identification that `ThreeChartCoverSeparated`'s own module
 docstring records as deliberately avoided, since the separatedness proof does not need it.
 
+That identification has since been made: `FormalSchemes.ThreeChartCoverOpenSubscheme` builds the
+open formal subscheme `D(f₀) ∪ D(f₁) ∪ D(f₂)` of `Spf A` and restates the theorem below about it,
+as `ThreeChartCover.coverSubscheme_isSeparatedOverSpf`, with no presentation in the statement. What
+is above stays true of *this* file, which still names the datum; the chart-free form is downstream.
+
 ## Why the third value is worth having anyway
 
 It is the first inhabitant of `FormalScheme.IsSeparatedOverSpf` whose witnessing presentation has

@@ -169,6 +169,7 @@ import FormalSchemes.LocallyFG
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.OpenCoverHomExt
+import FormalSchemes.OpenFormalSubscheme
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.OpenImmersionReflectsIdeal
 import FormalSchemes.OpenImmersionSheafComponentIso
@@ -282,6 +283,7 @@ import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
 import FormalSchemes.ThreeChartCoverOpenImmersion
+import FormalSchemes.ThreeChartCoverOpenSubscheme
 import FormalSchemes.ThreeChartCoverOverBase
 import FormalSchemes.ThreeChartCoverSeparated
 import FormalSchemes.ThreeChartCoverSeparatedScheme

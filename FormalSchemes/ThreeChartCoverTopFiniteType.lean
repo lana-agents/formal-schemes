@@ -34,11 +34,14 @@ one hypothesis, and it is doing real work.
 
 ## What this is not: a chart-free statement
 
-As in `FormalSchemes.ThreeChartCoverSeparatedScheme`, the object can only be named through its own
-presentation, as `(datumX I f B hI).xGlued`, because the three-chart cover has no gluing
-isomorphism onto an independently constructed formal scheme. The genuinely chart-free form would be
-about the open formal subscheme `D(f₀) ∪ D(f₁) ∪ D(f₂)` of `Spf A`, and identifying `xGlued` with
-it is a construction nobody has done. Unlike `𝔈_q` (issue 856), this pairing is therefore a
+As in `FormalSchemes.ThreeChartCoverSeparatedScheme`, the object is named here through its own
+presentation, as `(datumX I f B hI).xGlued`, because at the time this file was written the
+three-chart cover had no gluing isomorphism onto an independently constructed formal scheme. The
+genuinely chart-free form is about the open formal subscheme `D(f₀) ∪ D(f₁) ∪ D(f₂)` of `Spf A`;
+that object and the identification of `xGlued` with it now exist, in
+`FormalSchemes.ThreeChartCoverOpenSubscheme`, where both results below are restated with no
+presentation in the statement (`coverSubscheme_isRelativelyTopFiniteType`,
+`coverSubscheme_isSeparatedOverSpf`). Unlike `𝔈_q` (issue 856), this pairing is therefore a
 statement about a presentation's glued object, not about a named formal scheme, and the module
 docstring of the separatedness file says the same thing for the same reason.
 
