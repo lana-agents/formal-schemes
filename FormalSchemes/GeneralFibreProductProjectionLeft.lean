@@ -64,12 +64,6 @@ universe u
 
 namespace AlgebraicGeometry
 
-/-- Continuity of a composite ring homomorphism, in `comap` form. -/
-private theorem le_comap_comp' {S T U : Type u} [CommRing S] [CommRing T] [CommRing U]
-    {J : Ideal S} {K : Ideal T} {L : Ideal U} (φ : S →+* T) (ψ : T →+* U)
-    (hJK : J ≤ K.comap φ) (hKL : K ≤ L.comap ψ) : J ≤ L.comap (ψ.comp φ) :=
-  fun _ hx => hKL (hJK hx)
-
 namespace AffineChartedFibreDatumX
 
 variable {R : Type u} [CommRing R] {I : Ideal R} {hI : I.FG}
@@ -161,13 +155,13 @@ theorem spfτsymm_awayInl (i j : D.J) (h : i ≠ j) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (φ := awayCompletionHom (I.map (algebraMap R (D.A j))) (D.g j i))
       (ψ := (D.τ i j h).symm.toAlgHom.toRingHom)
-      (hIK := le_comap_comp' _ _ (le_comap_awayCompletionHom_base I (D.g j i))
+      (hIK := le_comap_comp _ _ (le_comap_awayCompletionHom_base I (D.g j i))
         (CompletedTensorProduct.algHom_mapIdeal_isAdicHom (D.τ i j h).symm.toAlgHom).le_comap),
     -- RHS: fuse `awayCompletionTransition ≫ basicOpenChart_j`, then the overlap bridge.
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (φ := awayCompletionHom (I.map (algebraMap R (D.A j))) (D.g j i))
       (ψ := (D.τ i j h).symm.toRingHom)
-      (hIK := le_comap_comp' _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
+      (hIK := le_comap_comp _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
         (awayCompletionTransition_le_comap (D.g i j) (D.g j i) (D.τ i j h))),
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (φ := ((D.τ i j h).symm.toRingHom).comp
@@ -175,7 +169,7 @@ theorem spfτsymm_awayInl (i j : D.J) (h : i ≠ j) :
       (ψ := RingHom.id _)
       (hIK := by
         rw [RingHom.id_comp, CompletedTensorAwayInterchange.idealOfDef_base_eq]
-        exact le_comap_comp' _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
+        exact le_comap_comp _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
           (awayCompletionTransition_le_comap (D.g i j) (D.g j i) (D.τ i j h)))]
   refine FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_
   rw [RingHom.id_comp]

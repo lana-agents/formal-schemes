@@ -202,12 +202,6 @@ theorem algEquiv_toAlgHom_toRingHom {S T U : Type u} [CommSemiring S] [Semiring 
     e.toAlgHom.toRingHom = e.toRingHom :=
   rfl
 
-/-- Continuity of a composite ring homomorphism, in `comap` form. -/
-private theorem le_comap_comp' {S T U : Type u} [CommRing S] [CommRing T] [CommRing U]
-    {J : Ideal S} {K : Ideal T} {L : Ideal U} (φ : S →+* T) (ψ : T →+* U)
-    (hJK : J ≤ K.comap φ) (hKL : K ≤ L.comap ψ) : J ≤ L.comap (ψ.comp φ) :=
-  fun _ hx => hKL (hJK hx)
-
 /-! ### The two ideal-convention bridge squares -/
 
 /-- **The affine first projection of `A` at `x`, transported to the target convention, factors
@@ -282,7 +276,7 @@ theorem spfESymm_comp_spfAwayY_comp_baseBridge (hI : I.FG) :
       (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q)).comap
         ((annulusChartTransitionAlg R I q hI).symm.toRingHom.comp
           (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q))) :=
-    le_comap_comp' _ _
+    le_comap_comp _ _
       (FormalSpectrum.le_comap_awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q))
       (annulusChartTransitionAlg_symm_le_comap R I q hI)
   have h3 : awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q) ≤
@@ -297,7 +291,7 @@ theorem spfESymm_comp_spfAwayY_comp_baseBridge (hI : I.FG) :
         ((annulusFibreChartBridgeX R I q).symm.toRingHom.comp
           ((annulusChartTransitionAlg R I q hI).symm.toRingHom.comp
             (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)))) :=
-    le_comap_comp' _ _ hR_inner h3
+    le_comap_comp _ _ hR_inner h3
   have hL_outer : annulusIdealOfDefinition R I q ≤
       (I.map (algebraMap R (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q)))
         (overlapX R I q)))).comap

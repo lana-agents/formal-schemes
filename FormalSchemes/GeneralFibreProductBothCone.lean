@@ -58,12 +58,6 @@ universe u
 
 namespace AlgebraicGeometry
 
-/-- Continuity of a composite ring homomorphism, in `comap` form. -/
-private theorem le_comap_comp' {S T U : Type u} [CommRing S] [CommRing T] [CommRing U]
-    {J : Ideal S} {K : Ideal T} {L : Ideal U} (φ : S →+* T) (ψ : T →+* U)
-    (hJK : J ≤ K.comap φ) (hKL : K ≤ L.comap ψ) : J ≤ L.comap (ψ.comp φ) :=
-  fun _ hx => hKL (hJK hx)
-
 namespace BothChartedFibreDatumXY
 
 variable {R : Type u} [CommRing R] {I : Ideal R} {hI : I.FG}
@@ -94,7 +88,7 @@ theorem cone_identity_chart (p : D.JX × D.JY) :
       (ψ := (CompletedTensorProduct.inl R I (D.A p.1) (D.B p.2)).toRingHom)
       (hIJ := Ideal.le_comap_map)
       (hJK := CompletedTensorProduct.inl_isAdicHom.le_comap)
-      (hIK := le_comap_comp' (algebraMap R (D.A p.1))
+      (hIK := le_comap_comp (algebraMap R (D.A p.1))
         (CompletedTensorProduct.inl R I (D.A p.1) (D.B p.2)).toRingHom
         Ideal.le_comap_map CompletedTensorProduct.inl_isAdicHom.le_comap),
     ← FormalSpectrum.locallyRingedSpaceMap_comp
@@ -104,7 +98,7 @@ theorem cone_identity_chart (p : D.JX × D.JY) :
       (ψ := (CompletedTensorProduct.inr R I (D.A p.1) (D.B p.2)).toRingHom)
       (hIJ := Ideal.le_comap_map)
       (hJK := CompletedTensorProduct.inr_isAdicHom.le_comap)
-      (hIK := le_comap_comp' (algebraMap R (D.B p.2))
+      (hIK := le_comap_comp (algebraMap R (D.B p.2))
         (CompletedTensorProduct.inr R I (D.A p.1) (D.B p.2)).toRingHom
         Ideal.le_comap_map CompletedTensorProduct.inr_isAdicHom.le_comap)]
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _

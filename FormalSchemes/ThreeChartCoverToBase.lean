@@ -144,23 +144,6 @@ private theorem locallyRingedSpaceMap_transport {S T : Type u} [CommRing S] [Com
   subst h
   rw [eqToHom_refl, Category.id_comp]
 
-/-- Continuity of a composite: if `φ` carries `K` into `L` and `ψ` carries `L` into `M`, then
-`ψ.comp φ` carries `K` into `M`.
-
-This is the **fifth** private copy of this two-line lemma in the tree — the others are
-`le_comap_comp'` in `FormalSchemes.GeneralFibreProductExposeXStructMap` and
-`FormalSchemes.GeneralFibreProductConeLeft`, `le_comap_comp''` in
-`FormalSchemes.GeneralFibreProductBothProjectionLeft` and `le_comap_comp'''` in
-`FormalSchemes.GeneralFibreProductBothProjectionRight`. It is repeated rather than imported
-because each of those is `private`, and it is *needed* rather than inlined because the intermediate
-ideal is otherwise undetermined when it is passed as `locallyRingedSpaceMap_comp`'s `hIK`.
-Consolidating the five into one public early-layer declaration is a follow-up, not this file's
-business. -/
-private theorem le_comap_comp' {S T U : Type u} [CommRing S] [CommRing T] [CommRing U]
-    {K : Ideal S} {L : Ideal T} {M : Ideal U} (φ : S →+* T) (ψ : T →+* U)
-    (hKL : K ≤ L.comap φ) (hLM : L ≤ M.comap ψ) : K ≤ M.comap (ψ.comp φ) :=
-  fun _ hx => hLM (hKL hx)
-
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The `i`-th chart, in the datum's ideal spelling, is the source of `basicOpenChart (I·A) (f i)`.
 The two spellings of its ideal of definition are `map_algebraMap_awayCompletion_eq`. -/
@@ -223,19 +206,19 @@ theorem chartToBase_naturality (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
           chartToBase I f j := by
   rw [chartToBase, chartToBase, basicOpenChart, basicOpenChart, awayCompletionTransition,
     ← FormalSpectrum.locallyRingedSpaceMap_comp
-      (hIK := le_comap_comp' (algebraMap A (chartAlgebra I f i))
+      (hIK := le_comap_comp (algebraMap A (chartAlgebra I f i))
         (awayCompletionHom (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j))
         (le_comap_chartToBase I f i) (le_comap_awayCompletionHom _ _)),
     ← FormalSpectrum.locallyRingedSpaceMap_comp
-      (hIK := le_comap_comp' (algebraMap A (chartAlgebra I f j))
+      (hIK := le_comap_comp (algebraMap A (chartAlgebra I f j))
         (awayCompletionHom (I.map (algebraMap R (chartAlgebra I f j))) (overlapElt I f j i))
         (le_comap_chartToBase I f j) (le_comap_awayCompletionHom _ _)),
     ← FormalSpectrum.locallyRingedSpaceMap_comp
-      (hIK := le_comap_comp'
+      (hIK := le_comap_comp
         ((awayCompletionHom (I.map (algebraMap R (chartAlgebra I f j))) (overlapElt I f j i)).comp
           (algebraMap A (chartAlgebra I f j)))
         (tau I f hI i j).symm.toRingHom
-        (le_comap_comp' (algebraMap A (chartAlgebra I f j))
+        (le_comap_comp (algebraMap A (chartAlgebra I f j))
           (awayCompletionHom (I.map (algebraMap R (chartAlgebra I f j))) (overlapElt I f j i))
           (le_comap_chartToBase I f j) (le_comap_awayCompletionHom _ _))
         (awayCompletionTransition_le_comap (overlapElt I f i j) (overlapElt I f j i)

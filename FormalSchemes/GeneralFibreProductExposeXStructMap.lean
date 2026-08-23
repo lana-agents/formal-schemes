@@ -54,14 +54,6 @@ universe u
 
 namespace AlgebraicGeometry
 
-/-- Continuity of a composite ring homomorphism: if `φ` carries `I` into `J` and `ψ` carries `J`
-into `K` (in the `comap` sense), then `ψ.comp φ` carries `I` into `K`. Used to supply the combined
-`hIK` when collapsing a composite `locallyRingedSpaceMap` via `locallyRingedSpaceMap_comp`. -/
-private theorem le_comap_comp' {A B C : Type u} [CommRing A] [CommRing B] [CommRing C]
-    {I : Ideal A} {J : Ideal B} {K : Ideal C} (φ : A →+* B) (ψ : B →+* C)
-    (hIJ : I ≤ J.comap φ) (hJK : J ≤ K.comap ψ) : I ≤ K.comap (ψ.comp φ) :=
-  fun _ hx => hJK (hIJ hx)
-
 namespace AffineChartedFibreDatumX
 
 variable {R : Type u} [CommRing R] {I : Ideal R} {hI : I.FG}
@@ -96,18 +88,18 @@ theorem xStructMap_naturality (i j : D.J) (h : i ≠ j) :
   letI := D.algebra
   rw [xStructMapChart, xStructMapChart, basicOpenChart, basicOpenChart, awayCompletionTransition,
     ← FormalSpectrum.locallyRingedSpaceMap_comp
-      (hIK := le_comap_comp' (algebraMap R (D.A i))
+      (hIK := le_comap_comp (algebraMap R (D.A i))
         (awayCompletionHom (I.map (algebraMap R (D.A i))) (D.g i j))
         Ideal.le_comap_map (le_comap_awayCompletionHom _ _)),
     ← FormalSpectrum.locallyRingedSpaceMap_comp
-      (hIK := le_comap_comp' (algebraMap R (D.A j))
+      (hIK := le_comap_comp (algebraMap R (D.A j))
         (awayCompletionHom (I.map (algebraMap R (D.A j))) (D.g j i))
         Ideal.le_comap_map (le_comap_awayCompletionHom _ _)),
     ← FormalSpectrum.locallyRingedSpaceMap_comp
-      (hIK := le_comap_comp'
+      (hIK := le_comap_comp
         ((awayCompletionHom (I.map (algebraMap R (D.A j))) (D.g j i)).comp (algebraMap R (D.A j)))
         (D.τ i j h).symm.toRingHom
-        (le_comap_comp' (algebraMap R (D.A j))
+        (le_comap_comp (algebraMap R (D.A j))
           (awayCompletionHom (I.map (algebraMap R (D.A j))) (D.g j i))
           Ideal.le_comap_map (le_comap_awayCompletionHom _ _))
         (awayCompletionTransition_le_comap (D.g i j) (D.g j i) (D.τ i j h)))]

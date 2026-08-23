@@ -88,6 +88,32 @@ theorem StructureSheaf.ofHom_comap_comp {A B C : Type u} [CommRing A] [CommRing 
 
 namespace FormalSpectrum
 
+/-!
+### Continuity of a composite ring homomorphism
+
+`locallyRingedSpaceMap_comp` below takes a hypothesis `hIK : I ≤ K.comap (ψ.comp φ)` alongside the
+two it collapses, and that hypothesis is essentially never available directly — every caller has
+`hIJ` and `hJK` and must chain them. `le_comap_comp` does the chaining. It is stated here, at the
+top of this file, rather than beside `locallyRingedSpaceMap_comp`: the `CompositionLaw` section
+binds `I`, `J`, `K`, `φ`, `ψ` as section variables, which would be auto-included and change the
+argument order, whereas every consumer wants exactly the four-argument form below.
+
+The statement mentions no formal spectrum — it is a fact about `Ideal.comap` and could equally live
+in Mathlib next to `Ideal.le_comap_map` (`exact?` finds no such lemma there as of Mathlib
+`v4.32.0`). It is kept in `FormalSpectrum` because supplying `hIK` is its only purpose, and every
+consumer already `open`s this namespace.
+-/
+
+/-- **Continuity of a composite ring homomorphism**: if `φ` carries `I` into `J` and `ψ` carries
+`J` into `K` (in the `comap` sense), then `ψ.comp φ` carries `I` into `K`.
+
+Used to supply the `hIK` argument when collapsing a composite `locallyRingedSpaceMap` via
+`locallyRingedSpaceMap_comp`. -/
+theorem le_comap_comp {A B C : Type u} [CommRing A] [CommRing B] [CommRing C]
+    {I : Ideal A} {J : Ideal B} {K : Ideal C} (φ : A →+* B) (ψ : B →+* C)
+    (hIJ : I ≤ J.comap φ) (hJK : J ≤ K.comap ψ) : I ≤ K.comap (ψ.comp φ) :=
+  fun _ hx => hJK (hIJ hx)
+
 variable {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
 variable (I : Ideal R) (J : Ideal S) (K : Ideal T)
 

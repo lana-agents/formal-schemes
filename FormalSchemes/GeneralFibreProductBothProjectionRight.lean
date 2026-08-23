@@ -74,12 +74,6 @@ universe u
 
 namespace AlgebraicGeometry
 
-/-- Continuity of a composite ring homomorphism, in `comap` form. -/
-private theorem le_comap_comp''' {S T U : Type u} [CommRing S] [CommRing T] [CommRing U]
-    {J : Ideal S} {K : Ideal T} {L : Ideal U} (φ : S →+* T) (ψ : T →+* U)
-    (hJK : J ≤ K.comap φ) (hKL : K ≤ L.comap ψ) : J ≤ L.comap (ψ.comp φ) :=
-  fun _ hx => hKL (hJK hx)
-
 /-- The identity-index transport `eqAlgEquivA` at a reflexive equality is the identity. -/
 private theorem eqAlgEquivA_self' {R : Type u} [CommRing R] {JX : Type u} {A : JX → Type u}
     [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)] {i : JX} (h : i = i) :
@@ -201,12 +195,12 @@ theorem spfτsymm_awayInr (j j' : D.JY) (h : j ≠ j') :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (φ := awayCompletionHom (I.map (algebraMap R (D.B j'))) (D.gY j' j))
       (ψ := (D.τY j j' h).symm.toAlgHom.toRingHom)
-      (hIK := le_comap_comp''' _ _ (le_comap_awayCompletionHom_base I (D.gY j' j))
+      (hIK := le_comap_comp _ _ (le_comap_awayCompletionHom_base I (D.gY j' j))
         (CompletedTensorProduct.algHom_mapIdeal_isAdicHom (D.τY j j' h).symm.toAlgHom).le_comap),
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (φ := awayCompletionHom (I.map (algebraMap R (D.B j'))) (D.gY j' j))
       (ψ := (D.τY j j' h).symm.toRingHom)
-      (hIK := le_comap_comp''' _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
+      (hIK := le_comap_comp _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
         (awayCompletionTransition_le_comap (D.gY j j') (D.gY j' j) (D.τY j j' h))),
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (φ := ((D.τY j j' h).symm.toRingHom).comp
@@ -214,7 +208,7 @@ theorem spfτsymm_awayInr (j j' : D.JY) (h : j ≠ j') :
       (ψ := RingHom.id _)
       (hIK := by
         rw [RingHom.id_comp, CompletedTensorAwayInterchange.idealOfDef_base_eq]
-        exact le_comap_comp''' _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
+        exact le_comap_comp _ _ (FormalSpectrum.le_comap_awayCompletionHom _ _)
           (awayCompletionTransition_le_comap (D.gY j j') (D.gY j' j) (D.τY j j' h)))]
   refine FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_
   rw [RingHom.id_comp]
