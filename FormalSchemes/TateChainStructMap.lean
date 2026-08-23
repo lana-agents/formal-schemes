@@ -258,14 +258,6 @@ theorem annulusChartTransition_comp_awayCompletionHom (hI : I.FG) :
   rw [hL, hCY, ← RingHom.comp_assoc, hcore, RingHom.comp_assoc,
     annulusLocTransition_symm_comp_algebraMap R I q hI]
 
-/-- Continuity of a composite ring homomorphism: if `φ` carries `I` into `J` and `ψ` carries `J`
-into `K` (in the `comap` sense), then `ψ.comp φ` carries `I` into `K`. Used to supply the `hIK`
-argument when collapsing a composite `locallyRingedSpaceMap` via `locallyRingedSpaceMap_comp`. -/
-theorem le_comap_comp {A B C : Type u} [CommRing A] [CommRing B] [CommRing C]
-    {I : Ideal A} {J : Ideal B} {K : Ideal C} (φ : A →+* B) (ψ : B →+* C)
-    (hIJ : I ≤ J.comap φ) (hJK : J ≤ K.comap ψ) : I ≤ K.comap (ψ.comp φ) :=
-  fun _ hx => hJK (hIJ hx)
-
 set_option synthInstance.maxHeartbeats 400000 in
 -- Collapsing both sides to a single `locallyRingedSpaceMap` resolves algebra/`IsScalarTower`
 -- instances through the nested `AdicCompletion` towers, which is slow.
