@@ -252,6 +252,7 @@ import FormalSchemes.TateSelfProductTransitionRange
 import FormalSchemes.TateSelfProductTransitionRangeRight
 import FormalSchemes.TateSelfProductTripleOverlap
 import FormalSchemes.TateSeparated
+import FormalSchemes.TateSeparatedValue
 import FormalSchemes.TateShift
 import FormalSchemes.TateShiftInv
 import FormalSchemes.TateTensorOverlapChartIso
