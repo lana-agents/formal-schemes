@@ -49,7 +49,8 @@ transition law — is not here.
 isomorphism of 704 is known to be a morphism over `Spf R`**, which 704 did not record: it ships
 `tateXGluedIso` and its `ι` characterisations but never relates either to a structural morphism.
 `tateXGluedInv_comp_xStructMap` below supplies that, by `GlueData.hom_ext` over the model's two
-charts, reducing to the ideal-convention transport `eqToHom_comp_locallyRingedSpaceMap`.
+charts, reducing to the ideal-convention transport
+`FormalSpectrum.eqToHom_comp_locallyRingedSpaceMap` (`FormalSchemes.SpfFunctorial`).
 
 ## Implementation notes: the `xGlued` spelling wall
 
@@ -93,22 +94,6 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
 
 universe u
-
-namespace FormalSpectrum
-
-variable {R : Type u} [CommRing R]
-
-/-- **A structural morphism transports along an equality of ideals of definition.** Stated
-generically in the two ideals, so `subst` discharges it and no concrete completion is ever
-unfolded. -/
-theorem eqToHom_comp_locallyRingedSpaceMap {S : Type u} [CommRing S] {I : Ideal R} {K L : Ideal S}
-    (h : K = L) (φ : R →+* S) (hK : I ≤ K.comap φ) (hL : I ≤ L.comap φ) :
-    eqToHom (congrArg locallyRingedSpaceObj h).symm ≫ locallyRingedSpaceMap I K φ hK =
-      locallyRingedSpaceMap I L φ hL := by
-  subst h
-  rw [eqToHom_refl, Category.id_comp]
-
-end FormalSpectrum
 
 namespace AlgebraicGeometry
 

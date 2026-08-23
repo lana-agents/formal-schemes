@@ -63,8 +63,14 @@ each case rather than guessed.
   topologically-finite-type module. That is worth paying to avoid a duplicated argument. (The
   lemma is a pure `IsScalarTower` fact and arguably belongs in an early module rather than that
   one; relocating it is a follow-up.)
-* The ideal-of-definition transport is *not* reused; see `locallyRingedSpaceMap_transport` below for
-  the measurement and the reason.
+* The ideal-of-definition transport `FormalSpectrum.eqToHom_comp_locallyRingedSpaceMap` is reused.
+  Until issue 876 it was not: it lived in `FormalSchemes.TateFibreProductHom`, above the Tate
+  self-product tower, and importing it cost **15** modules — among them
+  `TateSelfProductAdicOverBase`, `TateXGluedIso` and `TateOverlapChartIso`, the region issues 636
+  and 737 document as the tree's memory hazard — so this file carried a private copy of it
+  instead. 876 moved the lemma to `FormalSchemes.SpfFunctorial`, which was already in this file's
+  closure, so it now costs nothing and the copy is gone. The call site takes it at `h.symm` and
+  `.symm`s the result, which is the transport in the other orientation.
 
 ## Main definitions and results
 
@@ -123,27 +129,6 @@ def chartToBase (i : ULift.{u} (Fin 3)) :
 
 /-! ### Identification with the basic-open chart -/
 
-/-- **A morphism of formal spectra transports along an equality of ideals of definition.**
-
-This duplicates `FormalSpectrum.eqToHom_comp_locallyRingedSpaceMap`
-(`FormalSchemes.TateFibreProductHom`), which is general but sits above the Tate self-product tower.
-Importing it was measured: it adds **15** modules to this file's closure, among them
-`TateSelfProductAdicOverBase`, `TateXGluedIso` and `TateOverlapChartIso` — the region issues 636
-and 737 document as the tree's memory hazard — in exchange for a three-line `subst`. So it is
-repeated here instead, following the precedent `FormalSchemes.AwayCongrAlgebraMap` sets and states
-in its own docstring. Relocating the original to an early module is the right fix and is a
-follow-up, not something to do in passing.
-
-This is the one helper of the three that is duplicated rather than reused; the module docstring
-records why the other two are not. -/
-private theorem locallyRingedSpaceMap_transport {S T : Type u} [CommRing S] [CommRing T]
-    {K : Ideal S} {L L' : Ideal T} (h : L = L') (φ : S →+* T)
-    (hL : K ≤ L.comap φ) (hL' : K ≤ L'.comap φ) :
-    locallyRingedSpaceMap K L φ hL =
-      eqToHom (congrArg locallyRingedSpaceObj h) ≫ locallyRingedSpaceMap K L' φ hL' := by
-  subst h
-  rw [eqToHom_refl, Category.id_comp]
-
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The `i`-th chart, in the datum's ideal spelling, is the source of `basicOpenChart (I·A) (f i)`.
 The two spellings of its ideal of definition are `map_algebraMap_awayCompletion_eq`. -/
@@ -161,10 +146,11 @@ theorem chartToBase_eq (i : ULift.{u} (Fin 3)) :
     chartToBase I f i =
       eqToHom (chartObj_eq I f i) ≫ basicOpenChart (I.map (algebraMap R A)) (f i) := by
   rw [chartToBase, basicOpenChart,
-    locallyRingedSpaceMap_transport (map_algebraMap_awayCompletion_eq I (f i))
-      (algebraMap A (chartAlgebra I f i)) (le_comap_chartToBase I f i)
+    (eqToHom_comp_locallyRingedSpaceMap (map_algebraMap_awayCompletion_eq I (f i)).symm
+      (algebraMap A (chartAlgebra I f i))
       ((IsScalarTower.algebraMap_eq A (Localization.Away (f i)) (chartAlgebra I f i)) ▸
-        le_comap_awayCompletionHom (I.map (algebraMap R A)) (f i))]
+        le_comap_awayCompletionHom (I.map (algebraMap R A)) (f i))
+      (le_comap_chartToBase I f i)).symm]
   refine congrArg _ (locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_)
   exact IsScalarTower.algebraMap_eq A (Localization.Away (f i)) (chartAlgebra I f i)
 
