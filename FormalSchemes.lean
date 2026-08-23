@@ -47,6 +47,7 @@ import FormalSchemes.BasicOpenImmersionAssembly
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.BothDatumAdicOverBase
+import FormalSchemes.BothDatumFibreProductAdicOverBase
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
 import FormalSchemes.ClosedImmersionIso
