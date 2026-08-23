@@ -149,6 +149,7 @@ import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.GlueDataTopFiniteType
+import FormalSchemes.GlueHomToSpf
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.GlueMorphismsOpenImmersion
 import FormalSchemes.GlueOpenCoverFactorBoth
