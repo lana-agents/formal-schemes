@@ -92,6 +92,41 @@ theorem _root_.AlgebraicGeometry.IsTopologicallyFiniteType.isRelativelyTopFinite
     ⟨A, inferInstance, inferInstance, inferInstance, L, inferInstance, h, Iso.refl _, by
       simp [OpenCover.self]⟩⟩
 
+/-- **The relative predicate is invariant under isomorphism of the source**: if `f : X ⟶ Spf R` is
+tf-type and `e : X' ≅ X`, then `e.hom ≫ f : X' ⟶ Spf R` is tf-type.
+
+The relative analogue of `IsLocallyTopFiniteType.of_iso`
+(`FormalSchemes.GlobalTopFiniteType`), with the same proof — transport the cover along `e.inv` —
+plus the compatibility obligation, which is discharged by `e.inv_hom_id` and reuses the original
+cover's identification unchanged. -/
+theorem IsRelativelyTopFiniteType.of_iso {X X' : FormalScheme.{u}}
+    {f : X ⟶ FormalScheme.Spf I} (h : IsRelativelyTopFiniteType R I f) (e : X' ≅ X) :
+    IsRelativelyTopFiniteType R I (e.hom ≫ f) := by
+  obtain ⟨𝒰, h𝒰⟩ := h
+  have hinv : IsIso e.inv.toLRSHom :=
+    inferInstanceAs (IsIso (forgetToLocallyRingedSpace.map e.inv))
+  refine ⟨{
+    J := 𝒰.J
+    obj := 𝒰.obj
+    map := fun j => 𝒰.map j ≫ e.inv
+    f := fun x => 𝒰.f (e.hom.toLRSHom.base x)
+    covers := fun x => ?_
+    isOpenImmersion := fun j =>
+      inferInstanceAs (LocallyRingedSpace.IsOpenImmersion
+        ((𝒰.map j).toLRSHom ≫ e.inv.toLRSHom)) }, fun j => ?_⟩
+  · obtain ⟨y, hy⟩ := 𝒰.covers (e.hom.toLRSHom.base x)
+    refine ⟨y, ?_⟩
+    change e.inv.toLRSHom.base ((𝒰.map (𝒰.f (e.hom.toLRSHom.base x))).toLRSHom.base y) = x
+    rw [hy]
+    change (e.hom ≫ e.inv).toLRSHom.base x = x
+    rw [e.hom_inv_id]
+    rfl
+  · obtain ⟨A, _, _, _, L, _, hA, e', hcomp⟩ := h𝒰 j
+    refine ⟨A, inferInstance, inferInstance, inferInstance, L, inferInstance, hA, e', ?_⟩
+    rw [show (𝒰.map j ≫ e.inv) ≫ e.hom ≫ f = 𝒰.map j ≫ (e.inv ≫ e.hom) ≫ f by
+      simp only [Category.assoc], e.inv_hom_id, Category.id_comp]
+    exact hcomp
+
 /-- A relatively tf-type morphism `f : X ⟶ Spf R` has relatively tf-type source: its cover
 witnesses that `X` is locally tf-type over `(R, I)` (forgetting the morphism). So the relative
 notion refines the object-level `IsLocallyTopFiniteType`. -/
