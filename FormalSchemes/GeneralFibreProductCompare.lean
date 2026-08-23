@@ -3,9 +3,6 @@ import FormalSchemes.GeneralFibreProductLiftAdic
 import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 
 set_option linter.style.header false
-set_option linter.style.setOption false
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 
 /-!
 # The general fibre product is unique up to canonical isomorphism
