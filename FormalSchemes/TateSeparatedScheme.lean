@@ -1,6 +1,7 @@
 import FormalSchemes.GeneralSeparatedScheme
 import FormalSchemes.TateSeparatedTopFiniteType
 import FormalSchemes.TateSeparatedValue
+import FormalSchemes.TateTopFiniteType
 
 set_option linter.style.header false
 
@@ -50,12 +51,18 @@ one.
 
 `FormalSchemes.TateSeparatedTopFiniteType` paired separatedness with finite type by transporting
 the finite-type half *down* to the datum's glued object, because the separatedness half was only
-available there. With this file the pairing can be stated the other way round, at the model itself:
+available there. With this file the pairing is stated the other way round, at the model itself:
 `tateCurveModel_isRelativelyTopFiniteType` (`FormalSchemes.TateTopFiniteType`, issue 806) and
 `tateCurveModel_isSeparatedOverSpf` are two properties of the single term
-`tateCurveModel R I q hq hI`, and neither statement mentions a chart. Following the convention of
-`TateTopFiniteType` and `TateSeparatedTopFiniteType`, the finite-type half is cited by name rather
-than imported, so that this module stays a leaf.
+`tateCurveModel R I q hq hI`, and neither statement mentions a chart, a datum or a cocycle.
+`tateCurveModel_isSeparatedOverSpf_and_isRelativelyTopFiniteType` below is that pairing as one
+theorem.
+
+Stating it here costs nothing, because `TateTopFiniteType` was already in this module's transitive
+import closure through `TateSeparatedTopFiniteType`, which imports it directly; the import line
+above therefore adds a name, not a dependency. (An earlier revision of this docstring claimed the
+finite-type half was deliberately cited by name rather than imported "so that this module stays a
+leaf"; that was wrong — the dependency is there either way.)
 
 ## Main results
 
@@ -63,6 +70,9 @@ than imported, so that this module stays a leaf.
   separated over `Spf R`, along the datum's own structural morphism.
 * `AlgebraicGeometry.tateCurveModel_isSeparatedOverSpf`: **`𝔈_q` is separated over `Spf R`**, along
   `tateCurveModelStructMap`.
+* `AlgebraicGeometry.tateCurveModel_isSeparatedOverSpf_and_isRelativelyTopFiniteType`: **`𝔈_q` is a
+  separated formal scheme, topologically of finite type over `Spf R`** — both EGA properties of one
+  term, in one statement.
 
 ## References
 
@@ -111,6 +121,33 @@ theorem tateCurveModel_isSeparatedOverSpf (hq : q ∈ I) (hI : I.FG) :
   FormalScheme.isSeparatedOverSpf_of_iso hI (tateXGluedIsoLRS R I q R hq hI)
     (tateXGluedHom_comp_tateCurveModelStructMap R I q R hq hI)
     (tateCurveExposeX_isSeparatedOverSpf R I q R hq hI)
+
+/-- **The Tate curve formal model `𝔈_q` is a separated formal scheme, topologically of finite type
+over `Spf R`** (EGA I §10.13 and §10.15) — the two EGA properties of the single term
+`tateCurveModel R I q hq hI`, in a single statement that mentions no chart, no datum and no
+cocycle.
+
+The halves are `tateCurveModel_isSeparatedOverSpf` above and
+`tateCurveModel_isRelativelyTopFiniteType` (`FormalSchemes.TateTopFiniteType`, issue 806); the
+second is in scope here through this module's existing import closure, so the conjunction needs no
+new import.
+
+They read the structural morphism through different wrappers — `IsSeparatedOverSpf` takes the
+locally-ringed-space morphism `tateCurveModelStructMap`, `IsRelativelyTopFiniteType` its
+`FormalScheme.Hom.mk` — because the general separatedness API is stated at
+`LocallyRingedSpace` to match `fibreLiftAdic`. The two are the same morphism.
+
+`spf_isSeparatedOverSpf_and_isRelativelyTopFiniteType`
+(`FormalSchemes.AffineSeparatedTopFiniteType`) is the affine counterpart, where the same pairing is
+a general criterion rather than a statement about one object. -/
+theorem tateCurveModel_isSeparatedOverSpf_and_isRelativelyTopFiniteType
+    (hq : q ∈ I) (hI : I.FG) :
+    FormalScheme.IsSeparatedOverSpf hI (tateCurveModel R I q hq hI)
+        (tateCurveModelStructMap R I q hq hI) ∧
+      FormalScheme.IsRelativelyTopFiniteType R I
+        (FormalScheme.Hom.mk (tateCurveModelStructMap R I q hq hI)) :=
+  ⟨tateCurveModel_isSeparatedOverSpf R I q hq hI,
+    tateCurveModel_isRelativelyTopFiniteType R I q hq hI⟩
 
 end AlgebraicGeometry
 

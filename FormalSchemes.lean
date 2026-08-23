@@ -21,6 +21,7 @@ import FormalSchemes.AffineSeparated
 import FormalSchemes.AffineSeparatedInstance
 import FormalSchemes.AffineSeparatedIso
 import FormalSchemes.AffineSeparatedScheme
+import FormalSchemes.AffineSeparatedTopFiniteType
 import FormalSchemes.AffineSeparatedTopological
 import FormalSchemes.AffineSeparatedValue
 import FormalSchemes.AnnulusNontrivial
