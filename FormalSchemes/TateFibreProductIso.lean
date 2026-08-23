@@ -81,9 +81,17 @@ transparency**, and `rw` cannot build a motive across it.
    with the `congrArg` lambda type-ascribed), as `TateFibreProductHom.lean` and
    `TateSelfProductAdicOverBase.lean` already do.
 
-The hypotheses `hZ : LocallyFG` and `hs : TateFibreLiftContinuity` travel from `Φ` through to the
-isomorphism. They are the general `fibreLift` hypotheses, not a Tate-specific defect: discharging
-`hs` in general is issue 235c.
+**The isomorphism is unconditional** (issue 798). `Φ` used to carry the general `fibreLift`
+hypotheses `hZ : LocallyFG` and `hs` (abbreviated `TateFibreLiftContinuity`) and propagate them
+through every declaration here. `Φ` is now built from `fibreLiftAdic` (794) on #276's
+`tateSelfProductInv_adicOverBase` witness, which discharges both, so nothing below has a hypothesis
+beyond `hq` and `hI`.
+
+`ι_tateFibreProductHom` — the one lemma here with real content — did not change: its proof is
+`fibreLift_unique_adicOverBase` (518) fed the two projection laws and the base compatibility, and
+all three exist verbatim in the `Adic` spelling. Only the now-inlined `hleg` moved, to
+`tateFibreLegX_comp_xStructMap` in `TateFibreProductHom.lean`, where `fibreLiftAdic`'s `hbase`
+needs it anyway.
 
 ## References
 
@@ -373,9 +381,8 @@ abbrev tateProdIdx (c : ULift.{u} (Bool × Bool)) : ULift.{u} Bool × ULift.{u} 
 morphisms out of the affine `Spf(A ⊗̂_R A)` into the general fibre product with the same two
 projections, so `fibreLift_unique_adicOverBase` identifies them. -/
 theorem ι_tateFibreProductHom (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) (c : ULift.{u} (Bool × Bool)) :
-    (tateSelfProductFormalGlueDataInv R I q hq hI).ι c ≫ tateFibreProductHom R I q B hq hI hZ hs =
+    (c : ULift.{u} (Bool × Bool)) :
+    (tateSelfProductFormalGlueDataInv R I q hq hI).ι c ≫ tateFibreProductHom R I q B hq hI =
       (tateDiagonalDatum R I q B hq hI).formalGlueData.ι (tateProdIdx c) := by
   haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (annulusAlgebra R I q)
       (annulusAlgebra R I q)) :=
@@ -398,29 +405,24 @@ theorem ι_tateFibreProductHom (hq : q ∈ I) (hI : I.FG)
       (congrArg (fun g : (tateSelfProductInv R I q hq hI).toLocallyRingedSpace ⟶
           (tateDiagonalDatum R I q B hq hI).xGlued.toLocallyRingedSpace =>
             (tateSelfProductFormalGlueDataInv R I q hq hI).ι c ≫ g)
-        (tateFibreProductHom_comp_pr₁ R I q B hq hI hZ hs)).trans <|
+        (tateFibreProductHom_comp_pr₁ R I q B hq hI)).trans <|
         (ι_tateFibreLegX R I q B hq hI c).trans
           ((tateDiagonalDatum R I q B hq hI).ι_pr₁ _ _ _ (tateProdIdx c)).symm
   · exact (Category.assoc _ _ _).trans <|
       (congrArg (fun g : (tateSelfProductInv R I q hq hI).toLocallyRingedSpace ⟶
           (tateDiagonalDatum R I q B hq hI).yGlued.toLocallyRingedSpace =>
             (tateSelfProductFormalGlueDataInv R I q hq hI).ι c ≫ g)
-        (tateFibreProductHom_comp_pr₂ R I q B hq hI hZ hs)).trans <|
+        (tateFibreProductHom_comp_pr₂ R I q B hq hI)).trans <|
         (ι_tateFibreLegY R I q B hq hI c).trans
           ((tateDiagonalDatum R I q B hq hI).ι_pr₂ _ _ _ (tateProdIdx c)).symm
-  · have hleg : tateFibreLegX R I q B hq hI ≫ (tateDiagonalDatum R I q B hq hI).xStructMap =
-        tateSelfProductStructMap R I q hq hI :=
-      (Category.assoc _ _ _).trans
-        (congrArg (fun g : (tateCurveModel R I q hq hI).toLocallyRingedSpace ⟶
-            locallyRingedSpaceObj I => tateSelfProductPr₁ R I q hq hI ≫ g)
-          (tateXGluedInv_comp_tateDiagonalDatum_xStructMap R I q B hq hI))
-    exact (Category.assoc _ _ _).trans <|
+  · exact (Category.assoc _ _ _).trans <|
       (congrArg (fun g : (tateSelfProductInv R I q hq hI).toLocallyRingedSpace ⟶
           locallyRingedSpaceObj I =>
             (tateSelfProductFormalGlueDataInv R I q hq hI).ι c ≫ g)
         ((Category.assoc _ _ _).symm.trans <|
           (congrArg (· ≫ (tateDiagonalDatum R I q B hq hI).xStructMap)
-            (tateFibreProductHom_comp_pr₁ R I q B hq hI hZ hs)).trans hleg)).trans <|
+            (tateFibreProductHom_comp_pr₁ R I q B hq hI)).trans
+            (tateFibreLegX_comp_xStructMap R I q B hq hI))).trans <|
       (ι_tateSelfProductStructMap R I q hq hI c).trans
         (pr₁Chart_comp_annulusStructMap R I q (annulusAlgebra R I q) hI)
 
@@ -428,67 +430,55 @@ theorem ι_tateFibreProductHom (hq : q ∈ I) (hI : I.FG)
 /-! ### The two round trips -/
 
 /-- `Ψ ≫ Φ = 𝟙` on the general fibre product. -/
-theorem tateFibreProductPsi_comp_hom (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
-    tateFibreProductPsi R I q B hq hI ≫ tateFibreProductHom R I q B hq hI hZ hs = 𝟙 _ := by
+theorem tateFibreProductPsi_comp_hom (hq : q ∈ I) (hI : I.FG) :
+    tateFibreProductPsi R I q B hq hI ≫ tateFibreProductHom R I q B hq hI = 𝟙 _ := by
   refine FormalScheme.GlueData.hom_ext _ fun p => ?_
   exact (Category.assoc _ _ _).symm.trans <|
-    (congrArg (· ≫ tateFibreProductHom R I q B hq hI hZ hs)
+    (congrArg (· ≫ tateFibreProductHom R I q B hq hI)
       (ι_tateFibreProductPsi R I q B hq hI p)).trans <|
-      (ι_tateFibreProductHom R I q B hq hI hZ hs ⟨tateFibreIdx p⟩).trans
+      (ι_tateFibreProductHom R I q B hq hI ⟨tateFibreIdx p⟩).trans
         (Category.comp_id _).symm
 
 /-- `Φ ≫ Ψ = 𝟙` on the hand-built self fibre product. -/
-theorem tateFibreProductHom_comp_psi (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
-    tateFibreProductHom R I q B hq hI hZ hs ≫ tateFibreProductPsi R I q B hq hI = 𝟙 _ := by
+theorem tateFibreProductHom_comp_psi (hq : q ∈ I) (hI : I.FG) :
+    tateFibreProductHom R I q B hq hI ≫ tateFibreProductPsi R I q B hq hI = 𝟙 _ := by
   refine FormalScheme.GlueData.hom_ext _ fun c => ?_
   exact (Category.assoc _ _ _).symm.trans <|
     (congrArg (· ≫ tateFibreProductPsi R I q B hq hI)
-      (ι_tateFibreProductHom R I q B hq hI hZ hs c)).trans <|
+      (ι_tateFibreProductHom R I q B hq hI c)).trans <|
       (ι_tateFibreProductPsi R I q B hq hI (tateProdIdx c)).trans (Category.comp_id _).symm
 
 
 /-! ### The comparison isomorphism -/
 
 /-- **The two presentations of `𝔈_q ×_{Spf R} 𝔈_q` agree**, as locally ringed spaces. -/
-def tateFibreProductIsoLRS (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
+def tateFibreProductIsoLRS (hq : q ∈ I) (hI : I.FG) :
     (tateDiagonalDatum R I q B hq hI).generalFibreProduct.toLocallyRingedSpace ≅
       (tateSelfProductInv R I q hq hI).toLocallyRingedSpace where
   hom := tateFibreProductPsi R I q B hq hI
-  inv := tateFibreProductHom R I q B hq hI hZ hs
-  hom_inv_id := tateFibreProductPsi_comp_hom R I q B hq hI hZ hs
-  inv_hom_id := tateFibreProductHom_comp_psi R I q B hq hI hZ hs
+  inv := tateFibreProductHom R I q B hq hI
+  hom_inv_id := tateFibreProductPsi_comp_hom R I q B hq hI
+  inv_hom_id := tateFibreProductHom_comp_psi R I q B hq hI
 
 /-- **The Tate diagonal datum's general fibre product is the hand-built four-chart self fibre
 product** — the headline of brick 4b (issue 705c). -/
-def tateFibreProductIso (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
+def tateFibreProductIso (hq : q ∈ I) (hI : I.FG) :
     (tateDiagonalDatum R I q B hq hI).generalFibreProduct ≅ tateSelfProductInv R I q hq hI :=
   (Functor.FullyFaithful.ofFullyFaithful
     FormalScheme.forgetToLocallyRingedSpace).preimageIso
-      (tateFibreProductIsoLRS R I q B hq hI hZ hs)
+      (tateFibreProductIsoLRS R I q B hq hI)
 
 /-- The underlying morphism of the comparison isomorphism is `Ψ`. -/
-theorem forgetToLocallyRingedSpace_map_tateFibreProductIso_hom (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
-    FormalScheme.forgetToLocallyRingedSpace.map (tateFibreProductIso R I q B hq hI hZ hs).hom =
+theorem forgetToLocallyRingedSpace_map_tateFibreProductIso_hom (hq : q ∈ I) (hI : I.FG) :
+    FormalScheme.forgetToLocallyRingedSpace.map (tateFibreProductIso R I q B hq hI).hom =
       tateFibreProductPsi R I q B hq hI :=
   (Functor.FullyFaithful.ofFullyFaithful
     FormalScheme.forgetToLocallyRingedSpace).map_preimage _
 
 /-- The underlying morphism of the inverse comparison isomorphism is `Φ`. -/
-theorem forgetToLocallyRingedSpace_map_tateFibreProductIso_inv (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
-    FormalScheme.forgetToLocallyRingedSpace.map (tateFibreProductIso R I q B hq hI hZ hs).inv =
-      tateFibreProductHom R I q B hq hI hZ hs :=
+theorem forgetToLocallyRingedSpace_map_tateFibreProductIso_inv (hq : q ∈ I) (hI : I.FG) :
+    FormalScheme.forgetToLocallyRingedSpace.map (tateFibreProductIso R I q B hq hI).inv =
+      tateFibreProductHom R I q B hq hI :=
   (Functor.FullyFaithful.ofFullyFaithful
     FormalScheme.forgetToLocallyRingedSpace).map_preimage _
 
@@ -499,52 +489,46 @@ theorem forgetToLocallyRingedSpace_map_tateFibreProductIso_inv (hq : q ∈ I) (h
 `tateFibreProductIso_inv_comp_pr₂` this is the shape 706 consumes: the generic `pr₁` of the
 diagonal datum, read through the comparison, is the hand-built `tateSelfProductPr₁` followed by
 704's model comparison. -/
-theorem tateFibreProductIso_inv_comp_pr₁ (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
-    FormalScheme.forgetToLocallyRingedSpace.map (tateFibreProductIso R I q B hq hI hZ hs).inv ≫
+theorem tateFibreProductIso_inv_comp_pr₁ (hq : q ∈ I) (hI : I.FG) :
+    FormalScheme.forgetToLocallyRingedSpace.map (tateFibreProductIso R I q B hq hI).inv ≫
         (tateDiagonalDatum R I q B hq hI).pr₁
           (BothChartedFibreDatumXY.ofFactors_hV _ _ _ _ _ _ _ _)
           (BothChartedFibreDatumXY.ofFactors_hf _ _ _ _ _ _ _ _)
           (BothChartedFibreDatumXY.ofFactors_ht _ _ _ _ _ _ _ _) =
       tateFibreLegX R I q B hq hI := by
   rw [forgetToLocallyRingedSpace_map_tateFibreProductIso_inv]
-  exact tateFibreProductHom_comp_pr₁ R I q B hq hI hZ hs
+  exact tateFibreProductHom_comp_pr₁ R I q B hq hI
 
 /-- **The comparison isomorphism recovers the second projection.** -/
-theorem tateFibreProductIso_inv_comp_pr₂ (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) :
-    FormalScheme.forgetToLocallyRingedSpace.map (tateFibreProductIso R I q B hq hI hZ hs).inv ≫
+theorem tateFibreProductIso_inv_comp_pr₂ (hq : q ∈ I) (hI : I.FG) :
+    FormalScheme.forgetToLocallyRingedSpace.map (tateFibreProductIso R I q B hq hI).inv ≫
         (tateDiagonalDatum R I q B hq hI).pr₂
           (BothChartedFibreDatumXY.ofFactors_hV _ _ _ _ _ _ _ _)
           (BothChartedFibreDatumXY.ofFactors_hf _ _ _ _ _ _ _ _)
           (BothChartedFibreDatumXY.ofFactors_ht _ _ _ _ _ _ _ _) =
       tateFibreLegY R I q B hq hI := by
   rw [forgetToLocallyRingedSpace_map_tateFibreProductIso_inv]
-  exact tateFibreProductHom_comp_pr₂ R I q B hq hI hZ hs
+  exact tateFibreProductHom_comp_pr₂ R I q B hq hI
 
 /-- **The comparison isomorphism on the `p`-th product chart.** -/
 theorem ι_tateFibreProductIso_hom (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) (p : ULift.{u} Bool × ULift.{u} Bool) :
+    (p : ULift.{u} Bool × ULift.{u} Bool) :
     (tateDiagonalDatum R I q B hq hI).formalGlueData.ι p ≫
         FormalScheme.forgetToLocallyRingedSpace.map
-          (tateFibreProductIso R I q B hq hI hZ hs).hom =
+          (tateFibreProductIso R I q B hq hI).hom =
       (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨tateFibreIdx p⟩ := by
   rw [forgetToLocallyRingedSpace_map_tateFibreProductIso_hom]
   exact ι_tateFibreProductPsi R I q B hq hI p
 
 /-- **The inverse comparison isomorphism on the `c`-th Tate chart.** -/
 theorem ι_tateFibreProductIso_inv (hq : q ∈ I) (hI : I.FG)
-    (hZ : (tateSelfProductInv R I q hq hI).LocallyFG)
-    (hs : TateFibreLiftContinuity R I q B hq hI hZ) (c : ULift.{u} (Bool × Bool)) :
+    (c : ULift.{u} (Bool × Bool)) :
     (tateSelfProductFormalGlueDataInv R I q hq hI).ι c ≫
         FormalScheme.forgetToLocallyRingedSpace.map
-          (tateFibreProductIso R I q B hq hI hZ hs).inv =
+          (tateFibreProductIso R I q B hq hI).inv =
       (tateDiagonalDatum R I q B hq hI).formalGlueData.ι (tateProdIdx c) := by
   rw [forgetToLocallyRingedSpace_map_tateFibreProductIso_inv]
-  exact ι_tateFibreProductHom R I q B hq hI hZ hs c
+  exact ι_tateFibreProductHom R I q B hq hI c
 
 end AlgebraicGeometry
 
