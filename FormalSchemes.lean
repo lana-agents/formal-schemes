@@ -273,6 +273,7 @@ import FormalSchemes.ThreeChartCoverTransitions
 import FormalSchemes.ThreeChartDatum
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
+import FormalSchemes.TopFiniteTypeBasis
 import FormalSchemes.TwoPatchFibreProduct
 import FormalSchemes.TwoPatchFibreProductObject
 import FormalSchemes.TwoPatchFibreProductProjection
