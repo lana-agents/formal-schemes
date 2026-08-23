@@ -166,6 +166,7 @@ import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
 import FormalSchemes.RelativeTopFiniteType
+import FormalSchemes.RelativeTopFiniteTypeBasis
 import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
