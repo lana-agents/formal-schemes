@@ -70,6 +70,30 @@ theorem le_comap_awayCompletionHom :
     I ≤ (awayCompletionIdeal I f).comap (awayCompletionHom I f) :=
   Ideal.map_le_iff_le_comap.mp (map_awayCompletionHom I f).le
 
+/-- **The structural map of a completed localization is a map of algebras over any base.** If `A`
+is an `R`-algebra, then `A → A{1/g}^` precomposed with `R → A` is `R → A{1/g}^`.
+
+This is `IsScalarTower.algebraMap_eq R A (awayCompletion L g)` — the tower instance is already
+available and `awayCompletionHom L g` is the `A`-algebra structure map of `awayCompletion L g` on
+the nose. The lemma exists because callers meet the left-hand side spelled `awayCompletionHom`,
+which no Mathlib rewrite fires on; it is the bridge between the two spellings, not new content.
+
+Stated at an arbitrary ideal `L` of `A`, and here rather than in a downstream module, because it is
+the general form that every layer wants: it was previously declared **four** times — the general
+version in `FormalSchemes.RelativeTopFiniteTypeBasis`, out of reach of the gluing layer without
+importing the whole topologically-finite-type sub-tower, plus two instances of it re-proved in
+`FormalSchemes.CompletedTensorAwayInterchange` and
+`FormalSchemes.CompletedTensorAwayInterchangePrLeft`, and a pointwise fourth in the former under an
+unrelated name. Issue 881 consolidated them here, beside `awayCompletionHom` itself.
+
+The binders `R` and `A` deliberately shadow this file's section variables `R` and `I`: a
+declaration's own binders shadow section variables, which are then not auto-included, so the
+signature is exactly the form its six consumer modules pass. -/
+theorem awayCompletionHom_comp_algebraMap {R A : Type u} [CommRing R] [CommRing A] [Algebra R A]
+    {L : Ideal A} (g : A) :
+    (awayCompletionHom L g).comp (algebraMap R A) = algebraMap R (awayCompletion L g) :=
+  (IsScalarTower.algebraMap_eq R A (awayCompletion L g)).symm
+
 /-- The underlying continuous map `Spf R{1/f} → Spf R` of the affine basic-open chart. -/
 def basicOpenChartBase : FormalSpectrum (awayCompletionIdeal I f) → FormalSpectrum I :=
   map I (awayCompletionIdeal I f) (awayCompletionHom I f) (le_comap_awayCompletionHom I f)

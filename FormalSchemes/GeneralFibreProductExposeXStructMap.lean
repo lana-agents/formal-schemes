@@ -104,7 +104,7 @@ theorem xStructMap_naturality (i j : D.J) (h : i ≠ j) :
           Ideal.le_comap_map (le_comap_awayCompletionHom _ _))
         (awayCompletionTransition_le_comap (D.g i j) (D.g j i) (D.τ i j h)))]
   refine FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ ?_
-  rw [awayCompletionHom_comp_algebraMap_base, awayCompletionHom_comp_algebraMap_base]
+  rw [awayCompletionHom_comp_algebraMap, awayCompletionHom_comp_algebraMap]
   exact RingHom.ext fun r => ((D.τ i j h).symm.commutes r).symm
 
 /-- **The glued structural morphism of the exposed affine-charted `X`** `X ⟶ Spf R`, assembled from
