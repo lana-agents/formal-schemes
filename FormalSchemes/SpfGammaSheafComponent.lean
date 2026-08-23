@@ -28,9 +28,11 @@ localization map `R → R{1/f}`) to a general `φ`.
 It is the model-morphism half of step (b) of the converse of EGA I 10.4.6 (issue 157): it says
 the *reconstructed* morphism `Spf φ`, read on basic opens through the sections identifications, is
 `Spf` of the localized ring map, exactly the completed-localization map the ind-scheme description
-predicts. The remaining, harder half of step (b) — matching `f.c` on `D(g)` for an **arbitrary**
+predicts. The other, harder half of step (b) — matching `f.c` on `D(g)` for an **arbitrary**
 morphism `f` (via locality `f.prop` + the step-(a) base identification `base_toPrimeSpectrum_eq`) —
-is left as follow-up.
+is `FormalSpectrum.arbSheafComponent` (`FormalSchemes.SpfGammaSheafComponentArbCont`); the two are
+identified by `FormalSpectrum.arbSheafComponent_eq_modelSheafComponent`
+(`FormalSchemes.SpfGammaRoundTrip`), which is what closes the converse.
 
 ## Main results
 

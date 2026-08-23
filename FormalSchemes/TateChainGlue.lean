@@ -67,13 +67,14 @@ public rather than `private`. None of them mentions the glue transition `t`, so 
 the same statements for the inversion-glued chain (`FormalSchemes.TateChainInvGlue`) and for the
 freeness files, all of which cite them from here rather than re-deriving them (issue 621).
 
-## Remaining work (issue 208)
+## What comes next
 
-The glued structural morphism `T ⟶ Spf R` (assembling the per-patch `annulusStructMap` into a
-morphism over the base, exhibiting the chain as a formal scheme over `Spf R`) remains open: the
-in-repo gluing framework (`FormalSchemes.Gluing`) does not yet provide a morphism-gluing combinator
-(`GlueData.glueMorphisms` / `Multicoequalizer.desc`). Part 3 (issue 135, the `q^ℤ`-shift action on
-`T` and its proper discontinuity — inherited naming, see above) also follows.
+The glued structural morphism `T ⟶ Spf R` — assembling the per-patch `annulusStructMap` into a
+morphism over the base, exhibiting the chain as a formal scheme over `Spf R` — is
+`tateChainStructMap` (`FormalSchemes.TateChainStructMap`); the morphism-gluing combinator it runs
+on is `FormalScheme.GlueData.glueMorphisms` (`FormalSchemes.GlueMorphisms`). The `q^ℤ`-shift action
+on `T` and its proper discontinuity (inherited naming, see above) are in
+`FormalSchemes.TateAction`.
 
 ## References
 

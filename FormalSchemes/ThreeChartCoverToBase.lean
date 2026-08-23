@@ -27,10 +27,14 @@ Delivered: the morphism, its restriction law, and the fact that each chart maps 
 immersion** — `chartToBase i` is `basicOpenChart (I·A) (f i)` up to the ideal-of-definition
 transport of `map_algebraMap_awayCompletion_eq`, so its range is the basic open `D(f_i)`.
 
-**Not** delivered, and not attempted: that `gluedXToBase` is itself an open immersion, that its
-range is `D(f₀) ∪ D(f₁) ∪ D(f₂)`, and the resulting chart-free restatements of the two EGA
-properties. Those need the range of a glued morphism, which is genuine geometric content and its
-own issue; nothing here should be read as having established them.
+**Not** delivered here, and not attempted here: that `gluedXToBase` is itself an open immersion,
+that its range is `D(f₀) ∪ D(f₁) ∪ D(f₂)`, and the resulting chart-free restatements of the two EGA
+properties. Those need the range of a glued morphism, which is genuine geometric content, and they
+were carved as their own issues and delivered downstream — `range_gluedXToBase_base` and
+`isOpenImmersion_gluedXToBase` in `FormalSchemes.ThreeChartCoverOpenImmersion`, and the open formal
+subscheme `coverSubscheme` with the chart-free restatements in
+`FormalSchemes.ThreeChartCoverOpenSubscheme`. Nothing *here* should be read as having established
+them.
 
 ## Why the transition fixes `A`, and why that is the whole content
 

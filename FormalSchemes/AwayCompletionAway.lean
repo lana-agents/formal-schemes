@@ -25,9 +25,11 @@ in `R_g`), pushed through the completion functor `AdicCompletion.mapCompletion`.
 This is the algebraic bridge underlying the identification of the structure-sheaf sections of
 `Spf R` on `D(g)` with those of the chart `Spf R{1/f}` on the corresponding basic open — the
 reusable step towards upgrading `basicOpenChart` to a `LocallyRingedSpace.IsOpenImmersion`
-(issue 163). The remaining gap to the stalk comparison (relating the completion of the
+(issue 163). The further step to the stalk comparison (relating the completion of the
 *localization* `R_f{1/ḡ}` to the localization of the *completion* `(R{1/f})_ḡ`) is the
-completion-localization interchange and is left as follow-up.
+completion-localization interchange `AdicCompletion.awayCompletionInterchange`
+(`FormalSchemes.AwayCompletionInterchange`); the chart is an open immersion,
+`FormalSpectrum.isOpenImmersion_basicOpenChart` (`FormalSchemes.BasicOpenImmersionLRS`).
 
 ## Main definitions and results
 

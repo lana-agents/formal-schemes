@@ -29,11 +29,13 @@ tensor product (`inl`/`inr`/`lift`/`lift_inl`/`lift_inr`) and the merged functor
   two projections.
 
 **Scope.** This delivers the existence and commutativity halves of the fibre-product universal
-property. Full uniqueness of the mediating morphism *in the category of locally ringed spaces*
-requires the Spf–Γ adjunction (recognising an arbitrary locally-ringed-space morphism into
-`Spf (A ⊗̂_R B)` as `Spf` of a ring homomorphism, issue 96); among `Spf`-of-ring-map morphisms
-uniqueness is `CompletedTensorProduct.hom_ext`. Packaging as a `Limits.IsLimit` is left as a
-follow-up gated on issue 96.
+property. Among `Spf`-of-ring-map morphisms uniqueness is `CompletedTensorProduct.hom_ext`;
+uniqueness for an arbitrary locally-ringed-space morphism into `Spf (A ⊗̂_R B)` whose
+global-sections map is continuous is `CompletedTensorProduct.eq_fibreLift`
+(`FormalSchemes.AffineFibreProductLRS`), via the Spf–Γ round trip `FormalSpectrum.spfGammaEquiv`.
+The continuity restriction cannot be dropped, so there is no `Limits.IsLimit` here: that would
+assert the universal property for *every* object of `LocallyRingedSpace`, and it is false — see
+`FormalSchemes.AffineFibreProductLRS`'s docstring and the issue 156 counterexample.
 
 ## References
 

@@ -37,12 +37,15 @@ and the affine diagonal is cut out by the kernel of the surjection `∇`.
   formal spectrum `Spf A` is separated over `Spf R`.
 
 **Scope.** This delivers the categorical *separatedness* content (the diagonal is a monomorphism)
-and the ring-level surjectivity of the codiagonal. Upgrading `Δ_{A/R}` to a genuine *closed
-immersion of locally ringed spaces* — the full EGA I 10.15 statement — needs the surjective-`c`-
-component / sheaf-level closed-immersion infrastructure (the sheaf-level task also flagged for
-EGA I §10.14, cf. issue 163's `c_iso` work), recorded as a follow-up. The general separatedness of a
-non-affine `X ⟶ Y` needs the fibre product of general formal schemes over the affine cover
-(`FormalScheme.OpenCover`, issue 191).
+and the ring-level surjectivity of the codiagonal. The upgrade of `Δ_{A/R}` to a genuine *closed
+immersion of locally ringed spaces* — the full EGA I 10.15 statement — is
+`CompletedTensorProduct.diagonal_isClosedImmersion` (`FormalSchemes.ClosedImmersionSections`), and
+its packaging through the `FormalScheme.IsClosedImmersion` predicate is
+`CompletedTensorProduct.schemeDiagonal_isClosedImmersion` (`FormalSchemes.ClosedImmersionAffine`).
+Separatedness of a non-affine `X` over `Spf R` — which needs the fibre product of general formal
+schemes over the affine cover — is `BothChartedFibreDatumXY.IsSeparated`
+(`FormalSchemes.GeneralSeparated`), stated of the formal scheme itself as
+`FormalScheme.IsSeparatedOverSpf` (`FormalSchemes.GeneralSeparatedScheme`).
 
 ## References
 

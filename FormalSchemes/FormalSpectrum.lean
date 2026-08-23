@@ -18,8 +18,10 @@ canonical order- and homeomorphism with `Spec (R ⧸ I)` via
 *definition* of the topological space underlying `Spf R`, and record that it sits inside `Spec R`
 as the closed subspace of primes containing `I`.
 
-This file only builds the underlying topological space of `Spf R`; the structure sheaf of adically
-complete rings that makes it a locally ringed space is future work.
+This file only builds the underlying topological space of `Spf R`. The structure sheaf of adically
+complete rings is `FormalSpectrum.structureSheaf` (`FormalSchemes.StructureSheaf`), and the locally
+ringed space it makes `Spf R` into is `FormalSpectrum.locallyRingedSpaceObj`
+(`FormalSchemes.Spf`).
 
 ## Main definitions
 
@@ -224,8 +226,9 @@ so the induced map `Spf R = Spec (R ⧸ I) → Spec (R ⧸ I ^ n)` is a homeomor
 infinitesimal thickenings `Spec (R ⧸ I ^ n)` share the same underlying topological space,
 namely `Spf R`. This is the topological content of EGA I, 10.6.3: the formal spectrum is the
 colimit of the tower `Spec (R ⧸ I) ↪ Spec (R ⧸ I ^ 2) ↪ ⋯`, and topologically the tower is
-constant. The structure sheaf of `Spf R` (future work) will be the inverse limit of the
-structure sheaves of the thickenings, transported along these homeomorphisms.
+constant. The structure sheaf of `Spf R` is built on exactly this observation: it is the inverse
+limit of the structure sheaves of the thickenings, transported along these homeomorphisms
+(`FormalSpectrum.structureSheaf`, `FormalSchemes.StructureSheaf`).
 -/
 
 section Thickenings

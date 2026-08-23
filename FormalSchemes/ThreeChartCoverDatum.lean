@@ -24,10 +24,12 @@ transitions and their laws in `FormalSchemes.ThreeChartCoverTransitions`; this f
 them to the smart constructor `AffineChartedFibreDatumX.ofAlgebraData` and records that the six
 geometric triple-overlap fields are non-vacuous.
 
-The glued `X` is the open subscheme `D(f₀) ∪ D(f₁) ∪ D(f₂)` of `Spf A`, hence separated — which
-makes it the first candidate for a non-Tate concrete instance of
-`BothChartedFibreDatumXY.IsSeparated` (`FormalSchemes.GeneralSeparated`). Proving that
-separatedness is deliberately left to a follow-up.
+The glued `X` is the open subscheme `D(f₀) ∪ D(f₁) ∪ D(f₂)` of `Spf A`, hence separated — the
+first non-Tate concrete instance of `BothChartedFibreDatumXY.IsSeparated`
+(`FormalSchemes.GeneralSeparated`). That separatedness is `ThreeChartCover.datumX_isSeparated`
+(`FormalSchemes.ThreeChartCoverSeparated`), stated of the formal scheme as
+`datumX_isSeparatedOverSpf` (`FormalSchemes.ThreeChartCoverSeparatedScheme`) and chart-free as
+`coverSubscheme_isSeparatedOverSpf` (`FormalSchemes.ThreeChartCoverOpenSubscheme`).
 
 Note that `A` itself is **not** required to be an adic ring: only the chart algebras `A{1/f_i}`
 occur as charts, and a completed localization is adic for free.
