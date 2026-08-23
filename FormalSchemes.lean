@@ -276,6 +276,7 @@ import FormalSchemes.TateTransition
 import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
+import FormalSchemes.ThreeChartCoverAmbient
 import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
 import FormalSchemes.ThreeChartCoverSeparated
