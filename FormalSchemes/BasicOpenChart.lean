@@ -132,7 +132,7 @@ Proof: `awayCompletionHom_comp_algebraMap` turns `algebraMap R (A{1/g}^)` into
 identifies the inner half with `L`, and `map_awayCompletionHom` closes it. Every ingredient is in
 this file, which is why the statement belongs here.
 
-This fact was previously declared **seven** times across the tree, in six modules, none of which
+This fact was previously declared **seven** times across the tree, in five modules, none of which
 could reach the general version: it lived in `FormalSchemes.AwayTopFiniteType`, a topologically-
 finite-type module in the closure of none of its consumers — the same layering fault, and the same
 sub-tower, that issue 881 extracted `awayCompletionHom_comp_algebraMap` from. Issue 895

@@ -40,7 +40,7 @@ consumes.
   produces — is used throughout below. It used to be declared here as
   `FormalSpectrum.map_algebraMap_awayCompletion_eq`; issue 895 moved it to
   `FormalSchemes.BasicOpenChart`, where its ingredients are defined, after finding it had been
-  written out seven times across six modules.
+  written out seven times across five modules.
 * `FormalSpectrum.awayCompletionNestedAlgEquiv`, and its `g := f · g` specialisation
   `awayCompletionNestedMulAlgEquiv`: the same isomorphism with its target transported along that
   bridge — the form an affine-charted datum whose charts are `A i := A{1/f_i}` consumes, where the
