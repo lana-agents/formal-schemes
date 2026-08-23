@@ -279,6 +279,7 @@ import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
+import FormalSchemes.ThreeChartCoverOverBase
 import FormalSchemes.ThreeChartCoverSeparated
 import FormalSchemes.ThreeChartCoverSeparatedScheme
 import FormalSchemes.ThreeChartCoverToBase
