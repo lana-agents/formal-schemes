@@ -18,6 +18,10 @@ hence a closed topological embedding — and each stalk map is a ring isomorphis
 
 ## Main results
 
+* `FormalScheme.isIso_of_isIso_toLRSHom`: a morphism of formal schemes that is an isomorphism of
+  locally ringed spaces is an isomorphism of formal schemes.
+* `FormalScheme.isoOfLRSIso`: an isomorphism of the underlying locally ringed spaces packaged as an
+  isomorphism of formal schemes, with both legs `FormalScheme.Hom.mk` of the given ones.
 * `FormalScheme.isClosedImmersion_of_isIso`: an isomorphism `f : X ⟶ Y` is a closed immersion.
 * `FormalScheme.IsClosedImmersion.comp_iso`: a closed immersion followed by an isomorphism is a
   closed immersion.
@@ -45,6 +49,33 @@ itself an isomorphism (the forgetful functor to `LocallyRingedSpace` preserves i
 instance isIso_toLRSHom (f : X ⟶ Y) [IsIso f] : IsIso f.toLRSHom := by
   change IsIso (forgetToLocallyRingedSpace.map f)
   infer_instance
+
+/-- **The converse of `isIso_toLRSHom`**: a morphism of formal schemes whose underlying
+locally-ringed-space morphism is an isomorphism is itself an isomorphism, because formal schemes
+are a *full* subcategory of locally ringed spaces (`forgetToLocallyRingedSpace` is full and
+faithful, `FormalSchemes.FormalScheme`).
+
+This is what lets an isomorphism produced in `LocallyRingedSpace` — for instance the comparison
+isomorphism of two presentations of a fibre product — be used against predicates such as
+`IsClosedImmersion` that are stated for morphisms of formal schemes. -/
+theorem isIso_of_isIso_toLRSHom (f : X ⟶ Y) [IsIso f.toLRSHom] : IsIso f := by
+  have : IsIso (forgetToLocallyRingedSpace.map f) := ‹_›
+  exact isIso_of_fully_faithful forgetToLocallyRingedSpace f
+
+/-- **An isomorphism of the underlying locally ringed spaces is an isomorphism of formal schemes.**
+Both legs are `FormalScheme.Hom.mk` of the corresponding legs of `e`, so `(isoOfLRSIso e).hom` and
+`(isoOfLRSIso e).inv` have `e.hom` and `e.inv` as their underlying morphisms *definitionally* — the
+form needed whenever an identity of morphisms of formal schemes is to be proved from one of
+locally ringed spaces by `FormalScheme.Hom.ext'`.
+
+Deriving the isomorphism instead from `isIso_of_isIso_toLRSHom` and `asIso` does **not** give that:
+`(asIso (Hom.mk e.hom)).inv` is the inverse produced by `IsIso`, which is only propositionally
+`Hom.mk e.inv`. -/
+def isoOfLRSIso (e : X.toLocallyRingedSpace ≅ Y.toLocallyRingedSpace) : X ≅ Y where
+  hom := Hom.mk e.hom
+  inv := Hom.mk e.inv
+  hom_inv_id := Hom.ext' e.hom_inv_id
+  inv_hom_id := Hom.ext' e.inv_hom_id
 
 /-- **An isomorphism of formal schemes is a closed immersion.** Its base map is (the coercion of) a
 homeomorphism — hence a closed topological embedding — and each stalk map is a ring isomorphism,
