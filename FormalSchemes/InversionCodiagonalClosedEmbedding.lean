@@ -1,3 +1,4 @@
+import FormalSchemes.AwayCompletionSurjective
 import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.TateOverlapInversion
 
@@ -187,22 +188,15 @@ theorem localizedCodiagInvX_inr_overlapX (hI : I.FG) :
 set_option linter.unusedSectionVars false in
 /-- If a completion element `y : A{1/x}` and the image of a localization element `w : L = A[x⁻¹]`
 share their first thickening (`mk w = evalₐ 1 y`), then they differ by an element of the ideal of
-definition `annulusOverlapIdeal = I·A{1/x}` — the level-`1` step of successive approximation. -/
+definition `annulusOverlapIdeal = I·A{1/x}` — the level-`1` step of successive approximation. The
+Tate spelling of `FormalSpectrum.sub_algebraMap_mem_idealOfDefinition`. -/
 theorem sub_algebraMap_mem_annulusOverlapIdeal (hI : I.FG) (y : annulusOverlap R I q)
     (w : annulusLoc R I q)
     (hw : Ideal.Quotient.mk ((annulusLocIdeal R I q) ^ 1) w
       = AdicCompletion.evalₐ (annulusLocIdeal R I q) 1 y) :
-    y - algebraMap (annulusLoc R I q) (annulusOverlap R I q) w ∈ annulusOverlapIdeal R I q := by
-  have hgLS_of : algebraMap (annulusLoc R I q) (annulusOverlap R I q) w
-      = AdicCompletion.of (annulusLocIdeal R I q) (annulusLoc R I q) w := by
-    rw [AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply]
-  have hev : AdicCompletion.evalₐ (annulusLocIdeal R I q) 1
-      (y - algebraMap (annulusLoc R I q) (annulusOverlap R I q) w) = 0 := by
-    rw [map_sub, sub_eq_zero, hgLS_of, AdicCompletion.evalₐ_of, hw]
-  have hmem : y - algebraMap (annulusLoc R I q) (annulusOverlap R I q) w
-      ∈ RingHom.ker (AdicCompletion.evalₐ (annulusLocIdeal R I q) 1).toRingHom :=
-    RingHom.mem_ker.mpr hev
-  rwa [AdicCompletion.ker_evalₐ _ (hI.map _) 1, pow_one] at hmem
+    y - algebraMap (annulusLoc R I q) (annulusOverlap R I q) w ∈ annulusOverlapIdeal R I q :=
+  FormalSpectrum.sub_algebraMap_mem_idealOfDefinition (overlapX R I q) (annulusLocIdeal R I q)
+    (hI.map _) y w hw
 
 set_option linter.unusedSectionVars false in
 /-- `∇ᵢ` carries the ideal of definition of `A ⊗̂_R A` onto that of `A{1/x}` (`I·A{1/x}`). Same
@@ -217,30 +211,14 @@ theorem map_idealOfDefinition_localizedCodiagInvX (hI : I.FG) :
 
 set_option linter.unusedSectionVars false in
 /-- Any element `w` of the away-localization `L = A[x⁻¹]` is `(algebraMap A L r)·(x⁻¹)ⁿ` for the
-chosen numerator/exponent `(r, n) = sec x w`. -/
+chosen numerator/exponent `(r, n) = sec x w`. The Tate spelling of
+`FormalSpectrum.localizationAway_eq_sec`. -/
 theorem annulusLoc_eq_sec (w : annulusLoc R I q) :
     w = algebraMap (annulusAlgebra R I q) (annulusLoc R I q)
           (IsLocalization.Away.sec (overlapX R I q) w).1
         * IsLocalization.Away.invSelf (overlapX R I q)
-            ^ (IsLocalization.Away.sec (overlapX R I q) w).2 := by
-  have hpow : (algebraMap (annulusAlgebra R I q) (annulusLoc R I q)
-        (overlapX R I q ^ (IsLocalization.Away.sec (overlapX R I q) w).2))
-      * IsLocalization.Away.invSelf (overlapX R I q)
-          ^ (IsLocalization.Away.sec (overlapX R I q) w).2 = 1 := by
-    rw [map_pow, ← mul_pow, IsLocalization.Away.mul_invSelf, one_pow]
-  have hs := IsLocalization.Away.sec_spec (overlapX R I q) w
-  calc w = w * ((algebraMap (annulusAlgebra R I q) (annulusLoc R I q)
-              (overlapX R I q ^ (IsLocalization.Away.sec (overlapX R I q) w).2))
-            * IsLocalization.Away.invSelf (overlapX R I q)
-                ^ (IsLocalization.Away.sec (overlapX R I q) w).2) := by rw [hpow, mul_one]
-    _ = (w * algebraMap (annulusAlgebra R I q) (annulusLoc R I q)
-              (overlapX R I q ^ (IsLocalization.Away.sec (overlapX R I q) w).2))
-          * IsLocalization.Away.invSelf (overlapX R I q)
-              ^ (IsLocalization.Away.sec (overlapX R I q) w).2 := by ring
-    _ = algebraMap (annulusAlgebra R I q) (annulusLoc R I q)
-            (IsLocalization.Away.sec (overlapX R I q) w).1
-          * IsLocalization.Away.invSelf (overlapX R I q)
-              ^ (IsLocalization.Away.sec (overlapX R I q) w).2 := by rw [hs]
+            ^ (IsLocalization.Away.sec (overlapX R I q) w).2 :=
+  FormalSpectrum.localizationAway_eq_sec (overlapX R I q) w
 
 set_option linter.unusedSectionVars false in
 /-- The explicit lift of `w : L = A[x⁻¹]` through `∇ᵢ`: with `(r, n) = sec x w`, the element
@@ -261,44 +239,26 @@ set_option linter.unusedSectionVars false in
 /-- **The inversion localized codiagonal `∇ᵢ` is surjective.** Modulo the ideal of definition
 `A{1/x}` is the localization `Ā[x⁻¹]` of `Ā = A/I·A` at `x̄`; the image of `∇ᵢ` mod `I` contains
 `Ā` (via `inl`/`locX`) and the unit `x̄⁻¹` (via `inr`), so it is all of `Ā[x⁻¹]`. This lifts to
-surjectivity by
-`AdicCompletion.surjective_of_mk_map_comp_surjective` (successive approximation for complete adic
-rings). -/
+surjectivity by successive approximation for complete adic rings.
+
+That argument is `FormalSpectrum.surjective_of_algebraMap_mem_range'`
+(`FormalSchemes/AwayCompletionSurjective.lean`), and this theorem is an application of it: the two
+hypotheses are exactly `localizedCodiagInvX_inl_apply` and `localizedCodiagInvX_inr_overlapX`. Note
+that the *primed* form is the one needed — the target `A{1/x} = annulusOverlap` completes at
+`annulusLocIdeal = I·A[x⁻¹]`, the extension of the ideal of the **base** `R`, so it is not literally
+a `FormalSpectrum.awayCompletion` of an ideal of `A` (the two ideals agree only by `Ideal.map_map`,
+not definitionally). -/
 theorem localizedCodiagInvX_surjective (hI : I.FG) :
     Function.Surjective (localizedCodiagInvX R I q hI) := by
-  haveI hsc : IsAdicComplete
-      (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))
+  haveI : IsPrecomplete (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))
       (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
-    (isAdicRing R I (annulusAlgebra R I q) (annulusAlgebra R I q) hI).toIsAdicComplete
-  haveI htc : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
-    (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
-  -- `∇ᵢ` carries the ideal of definition onto that of `A{1/x}`
-  have hJ := map_idealOfDefinition_localizedCodiagInvX (R := R) (I := I) (q := q) hI
-  haveI hhaus : IsHausdorff
-      ((idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)).map
-        (localizedCodiagInvX R I q hI)) (annulusOverlap R I q) := by
-    rw [hJ]; infer_instance
-  refine surjective_of_mk_map_comp_surjective
-    (I := idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))
-    (f := localizedCodiagInvX R I q hI) ?_
-  -- surjectivity modulo the ideal of definition
-  intro ybar
-  obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective ybar
-  -- represent `evalₐ 1 y` by an element `w` of the localization `L = A[x⁻¹]`
-  obtain ⟨w, hw⟩ := Ideal.Quotient.mk_surjective
-    (AdicCompletion.evalₐ (annulusLocIdeal R I q) 1 y)
-  -- the witness `t = inl r · (inr x)ⁿ` (with `(r, n) = sec x w`) satisfies `∇ᵢ t = of w`
-  have hft := localizedCodiagInvX_sec_witness (R := R) (I := I) (q := q) hI w
-  set r := (IsLocalization.Away.sec (overlapX R I q) w).1 with hr
-  set n := (IsLocalization.Away.sec (overlapX R I q) w).2 with hn
-  refine ⟨inl R I _ _ r * (inr R I _ _ (overlapX R I q)) ^ n, ?_⟩
-  -- `y - ∇ᵢ t` has trivial first thickening, so lies in the ideal of definition
-  have hker : y - algebraMap (annulusLoc R I q) (annulusOverlap R I q) w
-      ∈ annulusOverlapIdeal R I q :=
-    sub_algebraMap_mem_annulusOverlapIdeal hI y w hw
-  rw [RingHom.coe_comp, Function.comp_apply, Ideal.Quotient.mk_eq_mk_iff_sub_mem, hJ, hft]
-  have hneg := neg_mem hker
-  rwa [neg_sub] at hneg
+    (isAdicRing R I (annulusAlgebra R I q) (annulusAlgebra R I q)
+      hI).toIsAdicComplete.toIsPrecomplete
+  exact FormalSpectrum.surjective_of_algebraMap_mem_range' (overlapX R I q)
+    (annulusLocIdeal R I q) (hI.map _) _ _
+    (map_idealOfDefinition_localizedCodiagInvX (R := R) (I := I) (q := q) hI)
+    (fun c => ⟨inl R I _ _ c, localizedCodiagInvX_inl_apply hI c⟩)
+    ⟨inr R I _ _ (overlapX R I q), localizedCodiagInvX_inr_overlapX hI⟩
 
 variable
   [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
