@@ -185,6 +185,7 @@ import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
 import FormalSchemes.Sections
 import FormalSchemes.Spf
+import FormalSchemes.SpfEquivalence
 import FormalSchemes.SpfFullyFaithful
 import FormalSchemes.SpfFunctorial
 import FormalSchemes.SpfGamma
