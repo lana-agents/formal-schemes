@@ -145,6 +145,7 @@ import FormalSchemes.GeneralSeparatedScheme
 import FormalSchemes.GeneralSeparatedTopological
 import FormalSchemes.GermValue
 import FormalSchemes.GlobalSectionsHom
+import FormalSchemes.GlobalSectionsHomGlue
 import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataImageInter
