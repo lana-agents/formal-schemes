@@ -39,7 +39,7 @@ exactly `spfHomEquiv`.
 * `AffineFormalSchemeCat`: the category of affine formal schemes and continuous morphisms.
 * `spfEquivFunctor : AdicRingCatFGᵒᵖ ⥤ AffineFormalSchemeCat`: the formal spectrum, corestricted.
 * `spfEquivFunctorFullyFaithful`: the `Functor.FullyFaithful` datum, from `spfHomEquiv` — the
-  packaging named as a follow-up in the scope note of `AdicRingCat.lean`.
+  packaging that `AdicRingCat.lean`'s scope note once named as a follow-up and now points at.
 * `spfEquivalence : AdicRingCatFGᵒᵖ ≌ AffineFormalSchemeCat`: **EGA I, 10.4.6**.
 * `AdicRingCat.isIso_of_isIso_spf`: `Spf` reflects isomorphisms — a continuous ring homomorphism
   whose `Spf` admits a *continuous* two-sided inverse is itself an isomorphism of adic rings.
@@ -161,7 +161,9 @@ def spfEquivFunctor : AdicRingCatFG.{u}ᵒᵖ ⥤ AffineFormalSchemeCat.{u} wher
 
 /-- **Full faithfulness of `Spf` onto the continuous morphisms** (EGA I, 10.4.6), as a
 `Functor.FullyFaithful` datum. The underlying bijection is `AdicRingCat.spfHomEquiv`; this is the
-packaging left as a follow-up in the scope note of `FormalSchemes/AdicRingCat.lean`. -/
+packaging that `FormalSchemes/AdicRingCat.lean`'s scope note once left as a follow-up, and that
+note now names this declaration instead — together with why it is stated over `AdicRingCatFG` and
+`AffineFormalSchemeCat` rather than over a subcategory of `FormalScheme`. -/
 def spfEquivFunctorFullyFaithful : spfEquivFunctor.{u}.FullyFaithful where
   preimage {X Y} f :=
     (ObjectProperty.homMk
