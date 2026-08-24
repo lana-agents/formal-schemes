@@ -174,6 +174,7 @@ import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.IndScheme
 import FormalSchemes.IndSchemeForward
 import FormalSchemes.IndSchemeLimit
+import FormalSchemes.IndSchemeLimitComponents
 import FormalSchemes.IndSchemeThickening
 import FormalSchemes.InversionCodiagonalClosedEmbedding
 import FormalSchemes.InversionCodiagonalClosedEmbeddingY
