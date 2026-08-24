@@ -1,6 +1,7 @@
 import FormalSchemes.ThickeningChartAffine
 import FormalSchemes.IndSchemeColimitEquiv
 import FormalSchemes.FormalLineWitness
+import FormalSchemes.TwoAdicDegeneracy
 
 set_option linter.style.header false
 
@@ -89,6 +90,9 @@ what will make two overlapping charts agree.
 * `FormalSpectrum.isAdicRing_awayCompletionIdeal`: `R{1/r}` is a complete adic ring for `I.FG`.
   Not previously named on the tree, although `AdicOnSections.lean` takes it as a hypothesis and
   `GeneralSeparatedChartCodiagonal.lean` re-derives it with `haveI` in eight places.
+* `FormalSpectrum.thickeningMap_comp_chartSpfHomAmbient_formalLine_properOpen`: the witness with
+  every degeneracy excluded — `I ≠ ⊥`, a chart that is neither `⊥` nor `⊤` at any level, and a
+  target open `U` that is neither `⊥` nor `⊤` (`openTwo_ne_top`, `openTwo_ne_bot`).
 
 ## Implementation notes
 
@@ -306,23 +310,28 @@ end Assemble
 
 section Witness
 
-/-! ### Non-vacuity, and the one degeneracy that cannot be removed yet
+/-! ### Non-vacuity
 
-Three degeneracies to rule out, and this section removes two of them.
+Three degeneracies to rule out, and this section removes all three.
 
 `[IsAdicRing I]` holds at `I = ⊥`, where every thickening is `Spec R` and the tower is constant;
-and `D(r)` may be `⊥` or `⊤`, where the chart decomposes nothing. Both are removed here by
-building on `FormalLineWitness.lean`'s formal affine line `ℤ⟦X⟧` at `r = 2`, where
+and `D(r)` may be `⊥` or `⊤`, where the chart decomposes nothing. Both are removed by building on
+`FormalLineWitness.lean`'s formal affine line `ℤ⟦X⟧` at `r = 2`, where
 `ThickeningChartAffine.lean` already proves the chart is neither `⊥` nor `⊤` **at every level of
 the tower** (`chartOpen_formalLine_ne_bot`, `chartOpen_formalLine_ne_top`).
 
-The third is `U = ⊤`, and it is the one this file cannot remove. A witness with a proper `U`
-needs an affine open of a *non-affine* `X` carrying a compatible family out of the thickenings,
-and nothing on this tree produces one yet: the only formal-scheme-shaped `X` available is
-`Spf R` itself, whose restriction to `D(s)` is `Spf R{1/s}` — an affine *formal* scheme, not the
-`Spec` of a ring, so it is not an admissible `e`. That is a real gap and it is the honest reason
-the witness below takes `U = ⊤`; the chart `D(2)` it runs on is genuinely proper regardless, so
-`chartInclusion`, `chartIsoLRS` and the tower square are all exercised non-trivially.
+The third is `U = ⊤`. It is removed in *A proper open of the target* below, and the reason it can
+be is that the affineness hypothesis is on `U`, **not** on `X`: an affine `X` has plenty of proper
+affine opens, so no non-affine `X` is needed. The witness there is `X := Spec ℤ` and
+`U := D(2) ⊆ Spec ℤ`, whose affine structure is Mathlib's `basicOpenIsoSpecAway`; `U` is proper
+and nonempty (`openTwo_ne_top`, `openTwo_ne_bot`), so `chartRestrict` genuinely restricts and `e`
+genuinely transports.
+
+What *is* out of reach on this tree is a **non-affine** `X`, and the reason is worth recording:
+the only formal-scheme-shaped `X` available is `Spf R` itself, whose restriction to `D(s)` is
+`Spf R{1/s}` — an affine *formal* scheme, not the `Spec` of a ring, so it is not an admissible
+`e`. That does not matter for non-vacuity, because the construction never looks at `X` outside
+`U`; it only means the witness cannot exhibit the *covering* situation the gluing row will face.
 -/
 
 open Polynomial
@@ -368,6 +377,96 @@ theorem thickeningMap_comp_chartSpfHomAmbient_formalLine (n : ℕ) :
     thickeningMap (awayCompletionIdeal formalLineIdeal 2) n ≫
         chartSpfHomAmbient formalLineIdeal witnessFamily.1 witnessFamily.2 ⊤ 2 witness_hr
           (polyXIdeal_fg.map _) ℤ witnessTarget.restrictTopIso =
+      (chartIsoLRS formalLineIdeal 2 (polyXIdeal_fg.map _) n).inv ≫
+        (Spec.locallyRingedSpaceObj (CommRingCat.of
+            (AdicCompletion polyXIdeal ℤ[X] ⧸ formalLineIdeal ^ (n + 1)))).ofRestrict
+          (chartOpen formalLineIdeal 2 n).isOpenEmbedding ≫ witnessFamily.1 n :=
+  thickeningMap_comp_chartSpfHomAmbient _ _ _ _ _ _ _ _ _ n
+
+/-! #### A proper open of the target
+
+`U = ⊤` above makes the affine hypothesis a hypothesis on all of `X` and leaves `chartRestrict`
+restricting nothing. It is not forced: affineness is required of `U`, not of `X`, so an affine `X`
+with a proper affine open already removes the degeneracy. Take `X := Spec ℤ` and
+`U := D(2) ⊆ Spec ℤ`.
+-/
+
+/-- `D(2) ⊆ Spec ℤ`. The `(Spec _).Opens` ascription is the one `ThickeningChartAffine.lean`'s
+implementation notes describe: without it `basicOpenIsoSpecAway` has nothing to coerce to a
+`Scheme`. -/
+private abbrev openTwo : (Spec (CommRingCat.of ℤ)).Opens := PrimeSpectrum.basicOpen (2 : ℤ)
+
+/-- `D(2) ⊆ Spec ℤ` is a **proper** open: the point `(2)` is not in it. -/
+theorem openTwo_ne_top : openTwo ≠ ⊤ := by
+  intro h
+  haveI := Int.span_two_isMaximal
+  have hmem : (⟨Ideal.span {(2 : ℤ)}, inferInstance⟩ : PrimeSpectrum ℤ) ∈ openTwo := by
+    rw [h]; trivial
+  exact hmem (Ideal.mem_span_singleton_self _)
+
+/-- …and a **nonempty** one: the generic point is in it. -/
+theorem openTwo_ne_bot : openTwo ≠ ⊥ := by
+  intro h
+  have hmem : (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum ℤ) ∈ openTwo := by
+    change (2 : ℤ) ∉ (⊥ : Ideal ℤ)
+    simp
+  rw [h] at hmem
+  exact hmem.elim
+
+/-- The level-`0` containment behind the refinement hypothesis: the chart `D(2̄)` of the level-`0`
+thickening lands in `(f 0) ⁻¹ D(2)`, because `f 0` is `Spec` of a ring map carrying `2` to `2`. -/
+private theorem chartOpen_le_thickeningChart_two :
+    chartOpen formalLineIdeal 2 0 ≤ thickeningChart formalLineIdeal witnessFamily.1 openTwo 0 :=
+  fun y hy => by
+    have hy' : Ideal.Quotient.mk (formalLineIdeal ^ (0 + 1))
+        (2 : AdicCompletion polyXIdeal ℤ[X]) ∉
+      (y : PrimeSpectrum (AdicCompletion polyXIdeal ℤ[X] ⧸ formalLineIdeal ^ (0 + 1))).asIdeal := hy
+    change ((Ideal.Quotient.mk (formalLineIdeal ^ (0 + 1))).comp
+        (Int.castRingHom (AdicCompletion polyXIdeal ℤ[X]))) 2 ∉
+      (y : PrimeSpectrum (AdicCompletion polyXIdeal ℤ[X] ⧸ formalLineIdeal ^ (0 + 1))).asIdeal
+    rwa [RingHom.comp_apply, map_ofNat]
+
+/-- **The refinement hypothesis, for a proper `U`**: `D(2) ⊆ |Spf ℤ⟦X⟧|` lands inside the preimage
+of `D(2) ⊆ Spec ℤ` under the common base map. Read at level `0` through
+`map_commonBase_obj_eq_thickeningChart`, where it is `chartOpen_le_thickeningChart_two`. -/
+private theorem witness_hr_two :
+    basicOpen formalLineIdeal 2 ≤
+      (Opens.map (commonBase formalLineIdeal witnessFamily.1)).obj openTwo := by
+  rw [map_commonBase_obj_eq_thickeningChart formalLineIdeal witnessFamily.1
+    witnessFamily.2 0 openTwo]
+  intro x hx
+  have h0 : (thickeningTopIso formalLineIdeal 0).hom x ∈
+      thickeningOpen formalLineIdeal 0 (basicOpen formalLineIdeal 2) := by
+    change (thickeningTopIso formalLineIdeal 0).inv
+      ((thickeningTopIso formalLineIdeal 0).hom x) ∈ basicOpen formalLineIdeal 2
+    rwa [inv_hom_apply]
+  rw [thickeningOpen_basicOpen] at h0
+  exact chartOpen_le_thickeningChart_two h0
+
+/-- `D(2) ⊆ Spec ℤ` is affine, namely `Spec ℤ[1/2]`. -/
+private def openTwoIsoSpec :
+    openTwo.toScheme ≅ Spec (CommRingCat.of (Localization.Away (2 : ℤ))) :=
+  basicOpenIsoSpecAway _
+
+/-- …and the same isomorphism in `LocallyRingedSpace`, which is the shape the affine data `e` is
+taken in. No transport: `Scheme.forgetToLocallyRingedSpace.obj ↑openTwo` and
+`witnessTarget.restrict openTwo.isOpenEmbedding` are the same object. -/
+private def openTwoIsoSpecLRS :
+    witnessTarget.restrict openTwo.isOpenEmbedding ≅
+      Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away (2 : ℤ))) :=
+  Scheme.forgetToLocallyRingedSpace.mapIso openTwoIsoSpec
+
+/-- **The construction runs with a proper open of the target**: a morphism
+`Spf ℤ⟦X⟧{1/2} ⟶ Spec ℤ` built from the chart `D(2)` of `|Spf ℤ⟦X⟧|` over the affine open
+`D(2) ⊆ Spec ℤ`, restricting on each thickening to the witness family read along the chart.
+
+Every degeneracy is excluded here at once: `I ≠ ⊥`, the chart is neither `⊥` nor `⊤` at any level
+(`chartOpen_formalLine_ne_bot`, `chartOpen_formalLine_ne_top`), and `U` is neither `⊥` nor `⊤`
+(`openTwo_ne_bot`, `openTwo_ne_top`). -/
+theorem thickeningMap_comp_chartSpfHomAmbient_formalLine_properOpen (n : ℕ) :
+    thickeningMap (awayCompletionIdeal formalLineIdeal 2) n ≫
+        chartSpfHomAmbient formalLineIdeal witnessFamily.1 witnessFamily.2 openTwo 2
+          witness_hr_two (polyXIdeal_fg.map _) (Localization.Away (2 : ℤ)) openTwoIsoSpecLRS =
       (chartIsoLRS formalLineIdeal 2 (polyXIdeal_fg.map _) n).inv ≫
         (Spec.locallyRingedSpaceObj (CommRingCat.of
             (AdicCompletion polyXIdeal ℤ[X] ⧸ formalLineIdeal ^ (n + 1)))).ofRestrict
