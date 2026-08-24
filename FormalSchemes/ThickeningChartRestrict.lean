@@ -53,14 +53,28 @@ was not previously in this subtree's closure.
   charts — this is what makes "the restricted family" a family over the *same* tower.
 * `FormalSpectrum.stepChartRestrict_comp_chartRestrict`: **the restricted family is again
   compatible.** This is the theorem.
-* `FormalSpectrum.range_ofRestrict`: the range of `Y|_V ⟶ Y` is `V`, in the spelling the
-  `lift` hypotheses take. Everything else in the file is an application of it.
+* `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`: the range of `Y|_V ⟶ Y` is `V`, in
+  the spelling the `lift` hypotheses take. Everything else in the file is an application of it.
 
 This is also the first file on umbrella 59 whose witness is **not** degenerate: the chart it cuts
 out of each thickening is a proper, non-empty open, which the one-point `|Spf ℤ^|` cannot
 exhibit. See the witness section.
 
 ## Implementation notes
+
+**Where a helper lemma goes.** Every module in this cluster opens with `namespace FormalSpectrum`,
+so a general lemma written at the top of a file silently acquires that namespace. Three consecutive
+pull requests did exactly that and each was flagged for it in review; the rule the sweep left
+behind is:
+
+> A declaration whose *statement* mentions no ring, no ideal and no spectrum does not belong in
+> `FormalSpectrum`. Put it where its own subject lives — `AlgebraicGeometry.LocallyRingedSpace`,
+> `AlgebraicGeometry.Scheme`, `TopologicalSpace.Opens`, `Int` — and it will be found by the next
+> person who needs it instead of being rewritten.
+
+`range_ofRestrict` above is the instance from this file. The test is mechanical enough to apply
+while writing: read the statement, not the motivation. `range_ofRestrict` exists *because* of the
+thickening charts, and says nothing about them.
 
 Three pieces of friction, all of the same kind: a term is definitionally what a lemma wants but
 not syntactically, so `rw` refuses while `exact` does not. None of them needs a transparency
@@ -98,14 +112,21 @@ open CategoryTheory AlgebraicGeometry TopologicalSpace
 
 universe u
 
-namespace FormalSpectrum
+namespace AlgebraicGeometry.LocallyRingedSpace
 
 /-- **The restriction of a locally ringed space to an open has that open as its range.** A
 restatement of `Opens.set_range_inclusion'` in the spelling the `IsOpenImmersion.lift` hypotheses
-below actually take. -/
+below actually take.
+
+It lives in `AlgebraicGeometry.LocallyRingedSpace` rather than in `FormalSpectrum`: its statement
+mentions no ring, no ideal and no spectrum. See the implementation notes. -/
 theorem range_ofRestrict (Y : LocallyRingedSpace.{u}) (V : Opens Y.toTopCat) :
     Set.range (Y.ofRestrict V.isOpenEmbedding).base = (V : Set Y.toTopCat) :=
   Opens.set_range_inclusion' V
+
+end AlgebraicGeometry.LocallyRingedSpace
+
+namespace FormalSpectrum
 
 variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
 variable {X : LocallyRingedSpace.{u}}
@@ -153,7 +174,7 @@ theorem range_ofRestrict_comp_subset
         (thickeningChart I f U n).isOpenEmbedding ≫ f n).base) ⊆
       Set.range (X.ofRestrict U.isOpenEmbedding).base := by
   rintro z ⟨y, rfl⟩
-  rw [range_ofRestrict X U]
+  rw [X.range_ofRestrict U]
   exact y.2
 
 omit [TopologicalSpace R] [IsAdicRing I] in
@@ -221,7 +242,7 @@ theorem range_ofRestrict_comp_step_subset
       Set.range ((Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1 + 1)))).ofRestrict
         (thickeningChart I f U (n + 1)).isOpenEmbedding).base := by
   rintro z ⟨y, rfl⟩
-  rw [range_ofRestrict _ (thickeningChart I f U (n + 1))]
+  rw [LocallyRingedSpace.range_ofRestrict _ (thickeningChart I f U (n + 1))]
   refine (mem_thickeningChart I f U (n + 1) _).mpr ?_
   -- The goal's argument is the *composite* base map; `rw` cannot see the step map inside it, so
   -- state the split form and let `exact` close the gap definitionally.
