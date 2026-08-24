@@ -93,6 +93,7 @@ import FormalSchemes.CompletionBasicOpenOverlap
 import FormalSchemes.CompletionCompact
 import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.CompletionGlueTwoPatchCondition
+import FormalSchemes.CompletionLocallyFG
 import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionNestedBasicOpenMap
 import FormalSchemes.CompletionSheafComparison
@@ -246,6 +247,7 @@ import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
+import FormalSchemes.TateLocallyFG
 import FormalSchemes.TateMixedChartDescent
 import FormalSchemes.TateOverlap
 import FormalSchemes.TateOverlapChartIso
