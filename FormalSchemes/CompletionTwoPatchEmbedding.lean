@@ -61,9 +61,11 @@ as `Spec A` has a prime containing `a` but not `I`.
 
 That last statement is general rather than an instance on purpose. The concrete geometry in which
 the image is neither `∅` nor everything — `𝔸¹_ℚ` doubled along `D(X)` and completed at the point
-`1` on each chart — is already on master in `FormalSchemes/CompletionTwoPatchClosed.lean`'s
-witness section, together with the `ℚ[X]` scaffolding it needs. That scaffolding is `private` in
-three files already and this file deliberately does not make it four; see the scope note below.
+`1` on each chart — is in `FormalSchemes/CompletionTwoPatchClosed.lean`'s witness section, which
+exhibits both halves: the image contains the centre of the completion and misses the origin. The
+`ℚ[X]` scaffolding it runs on is `FormalSchemes/TwoPatchWitness.lean`, shared with
+`FormalSchemes/CompletionTwoPatchRange.lean`, `FormalSchemes/CompletionTwoPatchSupport.lean` and
+`FormalSchemes/SpecTwoPatchNonAffine.lean`; see the scope note below.
 
 ## Scope
 
@@ -73,12 +75,10 @@ sheaves on stalks, and `FormalSchemes/ClosedImmersion.lean`'s predicate is about
 *formal* schemes, whose target here is an honest scheme; that mismatch has to be resolved before
 the question can even be posed.
 
-**A shared `ℚ[X]` two-patch witness module is due and is not built here.** The private
-`wSpan`/`wFG`/`wOrigin`/`wOne` scaffolding and the "the origin is off `V(X − 1)`, by evaluation at
-`0`" argument now live in `FormalSchemes/CompletionTwoPatchRange.lean`,
-`FormalSchemes/CompletionTwoPatchSupport.lean` and
-`FormalSchemes/CompletionTwoPatchClosed.lean`. Extracting it edits three landed files and belongs
-in its own change.
+**No `ℚ[X]` witness is used here, deliberately.** `not_surjective_completionTwoPatchToScheme_base`
+states properness of the closed subset for an arbitrary two-patch datum, which is stronger than an
+instance would be, so this file needs nothing from `FormalSchemes/TwoPatchWitness.lean` and does
+not import it.
 
 Also out of scope: the arbitrary-index completion glue datum, the universal property of the
 completion, and the stalk half of 10.8.
