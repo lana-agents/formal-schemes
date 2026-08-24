@@ -288,8 +288,10 @@ Two degeneracies to rule out. `[IsAdicRing I]` holds at `I = ⊥`, where the tow
 The predecessors of this file could only rule out the second one on the *target* side, because
 `FormalSpectrum I` is `PrimeSpectrum (R ⧸ I)` and the tree's only adic witness was the `2`-adic
 integers, whose `|Spf ℤ^|` is a **one-point space**: every open of it is `⊥` or `⊤`, so no chart
-of it is proper. `FormalSchemes/FormalLineWitness.lean` removed that obstruction — for `ℤ⟦X⟧` the
-formal spectrum is `Spec ℤ`, with a two-piece cover `twoChart` neither member of which is `⊤`.
+of it is proper (proved as `FormalSpectrum.twoAdic_exists_eq_top` in
+`FormalSchemes/TwoAdicDegeneracy.lean`). `FormalSchemes/FormalLineWitness.lean` removed that
+obstruction — for `ℤ⟦X⟧` the formal spectrum is `Spec ℤ`, with a two-piece cover `twoChart`
+neither member of which is `⊤`.
 
 So the witness here is the tautological family (the thickening morphisms, compatible by
 `thickeningMap_comp`) at `U = twoChart b`, and the chart it cuts out of each thickening is a

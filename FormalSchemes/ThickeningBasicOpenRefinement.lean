@@ -145,7 +145,9 @@ covers; the witness below therefore uses a genuine two-piece cover of the target
 `PrimeSpectrum (R ⧸ I)`, and `ℤ^ ⧸ 2ℤ^ = 𝔽₂`, so `|Spf ℤ^|` is a **one-point space**: the
 refinement it produces is a single basic open equal to `⊤`, whatever cover of the target it starts
 from. That is a fact about the `2`-adic witness below, not about the theorems, which quantify over
-all `X` and all covers.
+all `X` and all covers. It is proved as `FormalSpectrum.twoAdic_exists_eq_top` in
+`FormalSchemes/TwoAdicDegeneracy.lean`, and applied to this file's conclusion in
+`FormalSchemes/ThickeningNonDegenerateWitness.lean`.
 
 A genuinely multi-piece refinement needs an adic ring whose `R ⧸ I` has **more than one prime
 ideal** — equivalently, whose `Spec` is not a point. (Not "whose `R ⧸ I` is non-local": a DVR is
