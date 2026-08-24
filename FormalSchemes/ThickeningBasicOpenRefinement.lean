@@ -141,12 +141,21 @@ satisfied by the one-member family `U = ⊤`, which would make the statements sa
 covers; the witness below therefore uses a genuine two-piece cover of the target,
 `Spec ℤ = D(2) ∪ D(3)`, with neither member equal to `⊤`.
 
-**What cannot be done here.** `FormalSpectrum I` is *defined* as `PrimeSpectrum (R ⧸ I)`, and
-`ℤ^ ⧸ 2ℤ^ = 𝔽₂`, so `|Spf ℤ^|` is a **one-point space**: the refinement it produces is a single
-basic open equal to `⊤`, whatever cover of the target it starts from. That is a fact about the only
-adic witness on the tree, not about the theorems, which quantify over all `X` and all covers. A
-genuinely multi-piece refinement needs an adic ring whose `R ⧸ I` is not local; issue 1031 is that
-witness (`ℤ[X]` completed at `(2)`, residue ring `𝔽₂[X]`) and is not yet on the tree.
+**What cannot be done at the witness used here.** `FormalSpectrum I` is *defined* as
+`PrimeSpectrum (R ⧸ I)`, and `ℤ^ ⧸ 2ℤ^ = 𝔽₂`, so `|Spf ℤ^|` is a **one-point space**: the
+refinement it produces is a single basic open equal to `⊤`, whatever cover of the target it starts
+from. That is a fact about the `2`-adic witness below, not about the theorems, which quantify over
+all `X` and all covers.
+
+A genuinely multi-piece refinement needs an adic ring whose `R ⧸ I` has **more than one prime
+ideal** — equivalently, whose `Spec` is not a point. (Not "whose `R ⧸ I` is non-local": a DVR is
+local and has two primes, so locality is the wrong criterion.) Such a ring is now on the tree:
+`FormalSchemes/FormalLineWitness.lean` completes `ℤ[X]` at **`(X)`**, i.e. `ℤ⟦X⟧`, whose residue
+ring is `ℤ`, and provides `homeoSpecInt`, `twoChart`, `iSup_twoChart`, `twoChart_ne_top` and
+`nontrivial_formalSpectrum`. Note which ideal: `(X)`, not `(2)` — the `(2)` route would give
+residue ring `𝔽₂[X]`, but it needs `Prime (2 : ℤ)`, which is not in this project's Mathlib import
+closure. Re-running the witness below at `ℤ⟦X⟧`, where the refinement really is multi-piece, is
+issue 1038; it is a statement change and needs a new import, so it is not done here.
 
 The cover below mirrors the private witness of `ThickeningCoverPullback.lean`. It is duplicated
 rather than shared because that one is `private`; if a third module needs `Spec ℤ = D(2) ∪ D(3)` it
