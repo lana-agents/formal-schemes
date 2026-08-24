@@ -100,6 +100,7 @@ import FormalSchemes.CompletionSheafComparison
 import FormalSchemes.CompletionToSpec
 import FormalSchemes.CompletionTwoPatchClosed
 import FormalSchemes.CompletionTwoPatchDoubled
+import FormalSchemes.CompletionTwoPatchEmbedding
 import FormalSchemes.CompletionTwoPatchRange
 import FormalSchemes.CompletionTwoPatchSupport
 import FormalSchemes.CompletionTwoPatchToScheme
