@@ -26,7 +26,8 @@ opens `D(r)` (`ThickeningBasicOpenRefinement.lean`), restricting the compatible 
 (`IndSchemeColimitEquiv.lean`) on each chart. That last step is for the ring `R{1/r}`, so it needs
 the thickenings of `R{1/r}` to be the localized thickenings of `R` — as an isomorphism of *towers*,
 not just level by level. That is `awayCompletionResidueEquivPow` together with
-`residueAwayMap_comp_equivPow`.
+`residueAwayMap_comp_equivPow`, over a codomain that `residueAwayMap_refl` and
+`residueAwayMap_comp_residueAwayMap` establish is a tower in the first place.
 
 Nothing in this file is geometry: no morphism of locally ringed spaces appears, and there is no
 `IsAdicRing` hypothesis. The only hypothesis is `hI : I.FG`, exactly as in the level-`1` case
@@ -40,9 +41,12 @@ Nothing in this file is geometry: no morphism of locally ringed spaces appears, 
   `awayCompletionResidueEquivPow_comp_quotientMap`: what it does to elements coming from `R`, in
   applied and composed form. Cite these rather than unfolding the `RingEquiv`.
 * `FormalSpectrum.residueAwayMap`: the transition map `(R ⧸ Iᵐ)_f̄ →+* (R ⧸ Iⁿ)_f̄` of the
-  localized tower, for `n ≤ m`.
+  localized tower, for `n ≤ m`, with `residueAwayMap_refl` and
+  `residueAwayMap_comp_residueAwayMap` saying that it is functorial — i.e. that
+  `n ↦ (R ⧸ Iⁿ)_f̄` is a tower.
 * `FormalSpectrum.residueAwayMap_comp_equivPow`: **the tower square commutes.** This is the
-  theorem; the identifications above are levelwise and this is what makes them a map of towers.
+  theorem; the identifications above are levelwise, and this together with the two functoriality
+  lemmas is what makes them a map of towers.
 * `FormalSpectrum.residueAwayMap_comp_equivPow_step`: the same for consecutive levels, stated
   against `stepRingHom (awayCompletionIdeal I f) n`, which is the spelling the thickening tower of
   `R{1/f}` actually uses.
@@ -179,6 +183,29 @@ theorem residueAwayMap_algebraMap {m n : ℕ} (h : n ≤ m) (x : R) :
       algebraMap (R ⧸ I ^ n) _ (Ideal.Quotient.mk (I ^ n) x) := by
   rw [residueAwayMap, IsLocalization.map_eq, Ideal.Quotient.factor_mk]
 
+/-- **The localized tower is a tower**, part one: the transition map at `n ≤ n` is the identity.
+
+Both this and `residueAwayMap_comp_residueAwayMap` are needed for `residueAwayMap_comp_equivPow`
+below to deserve the name *map of towers*: that theorem says a square commutes, and it is these
+two that say the codomain of `awayCompletionResidueEquivPow` is a tower at all. -/
+theorem residueAwayMap_refl (n : ℕ) : residueAwayMap I f (le_refl n) = RingHom.id _ := by
+  refine IsLocalization.ringHom_ext (Submonoid.powers (Ideal.Quotient.mk (I ^ n) f)) ?_
+  refine Ideal.Quotient.ringHom_ext (RingHom.ext fun r => ?_)
+  simp only [RingHom.comp_apply, RingHom.id_apply]
+  rw [residueAwayMap_algebraMap]
+
+/-- **The localized tower is a tower**, part two: the transition maps compose.
+
+Both sides are maps out of a localization of a quotient, so `IsLocalization.ringHom_ext` and
+`Ideal.Quotient.ringHom_ext` reduce the goal to elements of `R`, where all three transition maps
+are `residueAwayMap_algebraMap`. -/
+theorem residueAwayMap_comp_residueAwayMap {k n m : ℕ} (h₁ : k ≤ n) (h₂ : n ≤ m) :
+    (residueAwayMap I f h₁).comp (residueAwayMap I f h₂) = residueAwayMap I f (h₁.trans h₂) := by
+  refine IsLocalization.ringHom_ext (Submonoid.powers (Ideal.Quotient.mk (I ^ m) f)) ?_
+  refine Ideal.Quotient.ringHom_ext (RingHom.ext fun r => ?_)
+  simp only [RingHom.comp_apply]
+  rw [residueAwayMap_algebraMap, residueAwayMap_algebraMap, residueAwayMap_algebraMap]
+
 /-- **The identifications are a map of towers.** The square
 
 ```
@@ -225,21 +252,66 @@ section Witness
 /-! ### Non-vacuity
 
 The only hypothesis is `hI : I.FG`, which holds at `I = ⊥` — where every thickening is `R` itself
-and the statements say nothing. The example below discharges it at `I = (2) ⊆ ℤ`, which is neither
-`⊥` nor `⊤`, with `f = 3`, which is neither a unit nor nilpotent modulo `I`, so `(ℤ ⧸ 2ⁿ)_3̄` is a
-nonzero ring. No adic hypothesis and no witness module are involved: nothing in this file mentions
-`IsAdicRing`. -/
+and the statements say nothing. The witness below discharges it at `I = (6) ⊆ ℤ`, which is neither
+`⊥` nor `⊤`, with `f = 2`. No adic hypothesis and no witness module are involved: nothing in this
+file mentions `IsAdicRing`.
 
-private theorem fg_twoIdeal : (Ideal.span {(2 : ℤ)}).FG :=
+**Why `(6)` and not `(2)`.** For the *residue-side* localization `(R ⧸ Iⁿ)_f̄` to be a proper
+localization rather than an isomorphism, `f` has to be a non-unit modulo `I`; for it to be nonzero,
+`f` must not be nilpotent there. Over `ℤ` at `I = (2)` **no such `f` exists**: `ℤ ⧸ 2ⁿ` is a local
+ring, so every element is a unit or lies in the maximal ideal and is therefore nilpotent — an odd
+`f` gives an isomorphism and an even one gives the zero ring. `ℤ ⧸ 6` is not local, and `2` is
+neither a unit nor nilpotent in it; both facts are proved below rather than asserted, since a
+non-vacuity claim is the one statement in a file that the build does not otherwise check.
+
+Note that the *completion*-side localization is non-degenerate for either choice, since neither `2`
+nor `3` is a unit in `ℤ`; it is only the residue side that `(2)` degenerates. -/
+
+private theorem fg_sixIdeal : (Ideal.span {(6 : ℤ)}).FG :=
   Submodule.fg_span (Set.finite_singleton _)
 
-/-- The tower square, at a concrete ideal that is neither `⊥` nor `⊤`. -/
+/-- `2` is **not a unit** modulo `6`: it kills `3`, which is nonzero. -/
+private theorem not_isUnit_two_mod_six :
+    ¬ IsUnit (Ideal.Quotient.mk (Ideal.span {(6 : ℤ)}) 2) := by
+  intro hu
+  have h3 : Ideal.Quotient.mk (Ideal.span {(6 : ℤ)}) 3 = 0 := by
+    refine hu.mul_left_cancel ?_
+    rw [mul_zero, ← map_mul, Ideal.Quotient.eq_zero_iff_mem]
+    exact Ideal.mem_span_singleton.mpr ⟨1, by ring⟩
+  rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at h3
+  obtain ⟨c, hc⟩ := h3
+  omega
+
+/-- `2` is **not nilpotent** modulo `6`: `2 ^ k ≡ 0` would force `3 ∣ 2 ^ k`.
+
+`Prime (3 : ℤ)` is not in this project's Mathlib import closure, so the divisibility is refuted
+over `ℕ` through `Nat.Coprime` instead; that needs no new import. -/
+private theorem not_isNilpotent_two_mod_six :
+    ¬ IsNilpotent (Ideal.Quotient.mk (Ideal.span {(6 : ℤ)}) 2) := by
+  rintro ⟨k, hk⟩
+  rw [← map_pow, Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton] at hk
+  have h3 : (3 : ℤ) ∣ 2 ^ k := dvd_trans ⟨2, by ring⟩ hk
+  have hn : (3 : ℕ) ∣ 2 ^ k := by
+    have hcast : ((3 : ℕ) : ℤ) ∣ ((2 ^ k : ℕ) : ℤ) := by push_cast; exact h3
+    exact_mod_cast hcast
+  have hc : Nat.Coprime 3 (2 ^ k) := Nat.Coprime.pow_right k (by decide)
+  simpa using hc.eq_one_of_dvd hn
+
+/-- The tower square, at an ideal that is neither `⊥` nor `⊤` and an `f` that is neither a unit nor
+nilpotent modulo it (`not_isUnit_two_mod_six`, `not_isNilpotent_two_mod_six`). -/
 example (n : ℕ) :
-    (residueAwayMap (Ideal.span {(2 : ℤ)}) 3 (Nat.le_succ (n + 1))).comp
-        (awayCompletionResidueEquivPow (Ideal.span {(2 : ℤ)}) 3 fg_twoIdeal (n + 1 + 1)).toRingHom =
-      (awayCompletionResidueEquivPow (Ideal.span {(2 : ℤ)}) 3 fg_twoIdeal (n + 1)).toRingHom.comp
-        (stepRingHom (awayCompletionIdeal (Ideal.span {(2 : ℤ)}) 3) n).hom :=
-  residueAwayMap_comp_equivPow_step (Ideal.span {(2 : ℤ)}) 3 fg_twoIdeal n
+    (residueAwayMap (Ideal.span {(6 : ℤ)}) 2 (Nat.le_succ (n + 1))).comp
+        (awayCompletionResidueEquivPow (Ideal.span {(6 : ℤ)}) 2 fg_sixIdeal (n + 1 + 1)).toRingHom =
+      (awayCompletionResidueEquivPow (Ideal.span {(6 : ℤ)}) 2 fg_sixIdeal (n + 1)).toRingHom.comp
+        (stepRingHom (awayCompletionIdeal (Ideal.span {(6 : ℤ)}) 2) n).hom :=
+  residueAwayMap_comp_equivPow_step (Ideal.span {(6 : ℤ)}) 2 fg_sixIdeal n
+
+/-- The localized tower really is a tower, at the same witness. -/
+example (n : ℕ) :
+    (residueAwayMap (Ideal.span {(6 : ℤ)}) 2 (Nat.le_succ n)).comp
+        (residueAwayMap (Ideal.span {(6 : ℤ)}) 2 (Nat.le_succ (n + 1))) =
+      residueAwayMap (Ideal.span {(6 : ℤ)}) 2 ((Nat.le_succ n).trans (Nat.le_succ (n + 1))) :=
+  residueAwayMap_comp_residueAwayMap (Ideal.span {(6 : ℤ)}) 2 _ _
 
 end Witness
 
