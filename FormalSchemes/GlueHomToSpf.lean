@@ -1,0 +1,324 @@
+import FormalSchemes.GlobalSectionsHom
+import FormalSchemes.OpenCoverGlueMorphisms
+import FormalSchemes.OpenImmersionSourceFormalScheme
+
+set_option linter.style.header false
+
+/-!
+# Gluing a morphism into a formal spectrum out of a homomorphism on global sections
+
+`FormalSchemes/GlobalSectionsHom.lean` (issue 920) takes the **faithfulness** half of
+EGA I, 10.4.6 over a non-affine source: a morphism `X ⟶ Spf R` is determined by the induced
+`FormalSpectrum.globalSectionsHom`, the ring homomorphism `R →+* Γ(X, 𝒪_X)`. This file takes the
+first step of the **fullness** half, in the other direction: out of a homomorphism
+`ψ : R →+* Γ(X, 𝒪_X)` it builds an actual morphism `X ⟶ Spf R`.
+
+The construction is the expected one. On each affine chart, `ψ` restricts to a homomorphism into
+the chart's ring, and `FormalSpectrum.locallyRingedSpaceMap` turns that into a morphism
+`Spf A_x ⟶ Spf R`. The chart morphisms are then glued by
+`AlgebraicGeometry.FormalScheme.OpenCover.glueMorphisms`, whose hypothesis is agreement on the
+pairwise overlaps `𝒰.obj i ×_X 𝒰.obj j`. Those overlaps are **not affine**, so the affine
+uniqueness statement does not apply to them directly; what discharges the hypothesis is issue 920's
+own `hom_ext_of_globalSectionsHom`, run one level down on an affine cover of the overlap. That the
+overlap is again a formal scheme, and a locally finitely generated one, is
+`AlgebraicGeometry.FormalScheme.OpenCover.overlapFormalScheme` and
+`overlapFormalScheme_locallyFG` (`FormalSchemes.OpenImmersionSourceFormalScheme`).
+
+## Scope: what is proved about the glued morphism, and what is not
+
+The glued morphism is characterised **chart by chart**: `cmap_comp_glueHomOfGlobalSectionsHom`
+says it restricts to the given family, and `comp_globalSectionsHom_glueHomOfGlobalSectionsHom`
+says that after restricting to any chart it induces `ψ`.
+
+It is **not** proved here that `globalSectionsHom I X f = ψ` on the nose. That is a genuinely
+different step: passing from per-chart agreement to global agreement is injectivity of
+`Γ(X, ⊤) → ∏ Γ(U_i, ⊤)`, i.e. the sheaf axiom for the cover, together with an identification of
+`(𝒰.cmap i).c` at `⊤` with restriction to `U_i` followed by the open-immersion comparison
+isomorphism. Neither ingredient is used anywhere below, and stating a per-chart result honestly is
+better than packaging a bijection that is not proved.
+
+The continuity hypotheses are inherited, not incidental. `FormalSpectrum.spfGammaEquiv` inverts
+`Spf` only on the continuity-restricted subtype — continuity of the global-sections map is not
+automatic for a morphism of locally ringed spaces between formal spectra — so both the
+construction of the chart morphisms and the overlap comparison need it, chart by chart. See the
+scope note of `FormalSchemes.GlobalSectionsHom` for the same point on the faithfulness side.
+
+## Main definitions and results
+
+* `AlgebraicGeometry.FormalScheme.chartHom`: the homomorphism `R →+* A_x` that restricting `ψ` to
+  the chart at `x` amounts to.
+* `AlgebraicGeometry.FormalScheme.chartMap`: the resulting morphism `Spf A_x ⟶ Spf R`, and
+  `globalSectionsHom_chartMap`: its global-sections homomorphism is that restriction of `ψ`.
+* `AlgebraicGeometry.FormalScheme.OpenCover.pullback_fst_comp_eq_snd_comp`: **the overlap
+  agreement**, the hypothesis of `glueMorphisms`, for a family of morphisms that all restrict a
+  common `ψ`.
+* `AlgebraicGeometry.FormalScheme.OpenCover.glueHomOfGlobalSectionsHom`: the glued morphism, with
+  `cmap_comp_glueHomOfGlobalSectionsHom` and
+  `comp_globalSectionsHom_glueHomOfGlobalSectionsHom`.
+* `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart`: a chosen finitely generated affine chart
+  on an overlap. The affine charts of the overlaps are *supplied* to the constructions above rather
+  than chosen internally, for the reason `OpenCover.ofAffineCharts` exists at all: the continuity
+  hypotheses have to be able to name them. `overlapChart` is available for a caller who has nothing
+  better to supply.
+* `AlgebraicGeometry.FormalScheme.ofAffineCharts_obj_locallyFG` and
+  `AlgebraicGeometry.FormalScheme.chartOverlap`: the two pieces of vocabulary the assembly below
+  needs — every piece of `OpenCover.ofAffineCharts` is locally finitely generated, and the overlap
+  of two of them is a formal scheme.
+* `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom`: the whole construction over an arbitrary
+  supplied family of affine charts, together with `chart_comp_homOfGlobalSectionsHom` and
+  `comp_globalSectionsHom_homOfGlobalSectionsHom`.
+* `AlgebraicGeometry.FormalScheme.hom_ext_of_chart_comp`: the matching uniqueness statement — a
+  morphism into `Spf R` is determined by its restrictions to the charts. This is *not* a weakening
+  of `hom_ext_of_globalSectionsHom`: that one compares global-sections homomorphisms and needs
+  continuity, this one compares the restrictions themselves and needs none.
+
+## References
+
+* [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4 (10.4.6).
+-/
+
+noncomputable section
+
+universe u
+
+open CategoryTheory Opposite TopologicalSpace AlgebraicGeometry CategoryTheory.Limits
+open FormalSpectrum
+
+namespace AlgebraicGeometry.FormalScheme
+
+section ChartMap
+
+variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
+variable {X : FormalScheme.{u}} (charts : ∀ x : X, AffineChart X x)
+variable (ψ : R →+* X.presheaf.obj (op (⊤ : Opens X)))
+
+/-- **The chart-restriction of `ψ`, read as a homomorphism of rings.** Restricting
+`ψ : R →+* Γ(X, 𝒪_X)` along the chart at `x` lands in `Γ(Spf A_x)`, which is `A_x` by
+`FormalSpectrum.globalSectionsEquiv` (EGA I, 10.1.3).
+
+This does not mention `I`: the ideal of definition involved is the chart's. -/
+def chartHom (x : X) : R →+* (charts x).R :=
+  (globalSectionsEquiv (charts x).I).toRingHom.comp
+    (((charts x).map.c.app (op (⊤ : Opens X))).hom.comp ψ)
+
+/-- **The morphism of formal spectra a chart-restriction of `ψ` induces**, given that the
+restriction is continuous at that chart. -/
+def chartMap (x : X) (h : I ≤ (charts x).I.comap (chartHom charts ψ x)) :
+    (FormalScheme.Spf (charts x).I).toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
+  locallyRingedSpaceMap I (charts x).I (chartHom charts ψ x) h
+
+/-- **`chartMap` induces the chart-restriction of `ψ` on global sections.** This is what makes the
+family of chart morphisms a family of restrictions of one global object, which is in turn what
+makes them agree on overlaps (`OpenCover.pullback_fst_comp_eq_snd_comp`). -/
+theorem globalSectionsHom_chartMap (x : X)
+    (h : I ≤ (charts x).I.comap (chartHom charts ψ x)) :
+    globalSectionsHom I (FormalScheme.Spf (charts x).I).toLocallyRingedSpace
+        (chartMap I charts ψ x h) =
+      ((charts x).map.c.app (op (⊤ : Opens X))).hom.comp ψ := by
+  have h1 : globalSectionsMap I (charts x).I (chartMap I charts ψ x h) = chartHom charts ψ x :=
+    globalSectionsMap_locallyRingedSpaceMap I (charts x).I _ h
+  -- On an affine source `globalSectionsMap` is `globalSectionsHom` read through `Γ(Spf A) ≃+* A`,
+  -- so `h1` becomes an equation with a common `globalSectionsEquiv` factor on the left.
+  rw [globalSectionsMap_eq_globalSectionsHom] at h1
+  refine RingHom.ext fun r => (globalSectionsEquiv (charts x).I).injective ?_
+  exact congrArg (fun φ : R →+* (charts x).R => φ r) h1
+
+end ChartMap
+
+namespace OpenCover
+
+variable {X : FormalScheme.{u}} (𝒰 : X.OpenCover)
+
+/-- **A chosen finitely generated affine chart on the `(i, j)` overlap** of a cover whose `i`-th
+piece is locally finitely generated. The overlap is again a locally finitely generated formal
+scheme (`overlapFormalScheme_locallyFG`), so `LocallyFG.chart` applies to it. -/
+def overlapChart (i j : 𝒰.J) (hi : (𝒰.obj i).LocallyFG)
+    (x : 𝒰.overlapFormalScheme i j hi) : AffineChart (𝒰.overlapFormalScheme i j hi) x :=
+  (𝒰.overlapFormalScheme_locallyFG i j hi).chart x
+
+/-- The ideal of definition of `overlapChart` is finitely generated. -/
+theorem overlapChart_fg (i j : 𝒰.J) (hi : (𝒰.obj i).LocallyFG)
+    (x : 𝒰.overlapFormalScheme i j hi) : (𝒰.overlapChart i j hi x).I.FG :=
+  (𝒰.overlapFormalScheme_locallyFG i j hi).fg_chart x
+
+variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
+variable (k : ∀ l, (𝒰.obj l).toLocallyRingedSpace ⟶ locallyRingedSpaceObj I)
+variable (ψ : R →+* X.presheaf.obj (op (⊤ : Opens X)))
+
+/-- **Agreement on an overlap.** Two members of a family of morphisms into `Spf R` that both
+restrict the same `ψ : R →+* Γ(X, 𝒪_X)` agree on their overlap — the hypothesis
+`OpenCover.glueMorphisms` asks for.
+
+The overlap is not affine, so this is not the affine uniqueness statement; it is
+`FormalSpectrum.hom_ext_of_globalSectionsHom` (issue 920) applied to the overlap, which is itself a
+formal scheme, with a supplied affine cover of it. The continuity hypotheses `hf`/`hg` are on that
+cover, and are the same genuine side condition as everywhere else on this line. -/
+theorem pullback_fst_comp_eq_snd_comp (i j : 𝒰.J) (hi : (𝒰.obj i).LocallyFG)
+    (charts : ∀ x : 𝒰.overlapFormalScheme i j hi,
+      AffineChart (𝒰.overlapFormalScheme i j hi) x)
+    (hcfg : ∀ x, (charts x).I.FG)
+    (hki : globalSectionsHom I (𝒰.obj i).toLocallyRingedSpace (k i) =
+      ((𝒰.cmap i).c.app (op (⊤ : Opens X))).hom.comp ψ)
+    (hkj : globalSectionsHom I (𝒰.obj j).toLocallyRingedSpace (k j) =
+      ((𝒰.cmap j).c.app (op (⊤ : Opens X))).hom.comp ψ)
+    (hf : ∀ x, I ≤ (charts x).I.comap (globalSectionsMap I (charts x).I
+      ((charts x).map ≫ pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ k i)))
+    (hg : ∀ x, I ≤ (charts x).I.comap (globalSectionsMap I (charts x).I
+      ((charts x).map ≫ pullback.snd (𝒰.cmap i) (𝒰.cmap j) ≫ k j))) (hI : I.FG) :
+    pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ k i =
+      pullback.snd (𝒰.cmap i) (𝒰.cmap j) ≫ k j := by
+  -- The comparison has to be stated over the pullback, not over `overlapFormalScheme … `: the two
+  -- are definitionally equal, but `rw` matches at `instances` transparency and will not unfold the
+  -- latter, so rewriting inside the goal produced by `hom_ext_of_globalSectionsHom` fails.
+  have key : globalSectionsHom I (pullback (𝒰.cmap i) (𝒰.cmap j))
+        (pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ k i) =
+      globalSectionsHom I (pullback (𝒰.cmap i) (𝒰.cmap j))
+        (pullback.snd (𝒰.cmap i) (𝒰.cmap j) ≫ k j) := by
+    rw [globalSectionsHom_comp, globalSectionsHom_comp, hki, hkj]
+    -- Both sides are `ψ` restricted along a leg of the pullback square followed by a cover map;
+    -- the `c`-component of the composite is the composite of the components, definitionally.
+    change (((pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ 𝒰.cmap i).c.app
+        (op (⊤ : Opens X))).hom).comp ψ =
+      (((pullback.snd (𝒰.cmap i) (𝒰.cmap j) ≫ 𝒰.cmap j).c.app
+        (op (⊤ : Opens X))).hom).comp ψ
+    rw [pullback.condition]
+  exact hom_ext_of_globalSectionsHom (X := 𝒰.overlapFormalScheme i j hi) I charts hcfg hI
+    _ _ hf hg key
+
+variable (hI : I.FG) (hlfg : ∀ l, (𝒰.obj l).LocallyFG)
+variable (ocharts : ∀ i j, ∀ x : 𝒰.overlapFormalScheme i j (hlfg i),
+    AffineChart (𝒰.overlapFormalScheme i j (hlfg i)) x)
+variable (hofg : ∀ i j x, (ocharts i j x).I.FG)
+variable (hk : ∀ l, globalSectionsHom I (𝒰.obj l).toLocallyRingedSpace (k l) =
+    ((𝒰.cmap l).c.app (op (⊤ : Opens X))).hom.comp ψ)
+variable (hf : ∀ i j, ∀ x : 𝒰.overlapFormalScheme i j (hlfg i),
+    I ≤ (ocharts i j x).I.comap
+      (globalSectionsMap I (ocharts i j x).I
+        ((ocharts i j x).map ≫ pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ k i)))
+variable (hg : ∀ i j, ∀ x : 𝒰.overlapFormalScheme i j (hlfg i),
+    I ≤ (ocharts i j x).I.comap
+      (globalSectionsMap I (ocharts i j x).I
+        ((ocharts i j x).map ≫ pullback.snd (𝒰.cmap i) (𝒰.cmap j) ≫ k j)))
+
+/-- **The morphism `X ⟶ Spf R` glued from a family of chart morphisms restricting a common
+`ψ : R →+* Γ(X, 𝒪_X)`.** The overlap agreement `glueMorphisms` requires is
+`pullback_fst_comp_eq_snd_comp`. -/
+def glueHomOfGlobalSectionsHom : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
+  𝒰.glueMorphisms k fun i j =>
+    𝒰.pullback_fst_comp_eq_snd_comp I k ψ i j (hlfg i) (ocharts i j)
+      (hofg i j) (hk i) (hk j) (hf i j) (hg i j) hI
+
+/-- The glued morphism restricts to the family it was glued from. -/
+theorem cmap_comp_glueHomOfGlobalSectionsHom (i : 𝒰.J) :
+    𝒰.cmap i ≫ 𝒰.glueHomOfGlobalSectionsHom I k ψ hI hlfg ocharts hofg hk hf hg = k i :=
+  𝒰.map_glueMorphisms k _ i
+
+/-- **The glued morphism induces `ψ` on every chart.** This is the per-chart statement; whether it
+upgrades to `globalSectionsHom I X (glueHomOfGlobalSectionsHom …) = ψ` is the sheaf-axiom step this
+file deliberately does not take — see the scope note in the module docstring. -/
+theorem comp_globalSectionsHom_glueHomOfGlobalSectionsHom (i : 𝒰.J) :
+    ((𝒰.cmap i).c.app (op (⊤ : Opens X))).hom.comp
+        (globalSectionsHom I X.toLocallyRingedSpace
+          (𝒰.glueHomOfGlobalSectionsHom I k ψ hI hlfg ocharts hofg hk hf hg)) =
+      ((𝒰.cmap i).c.app (op (⊤ : Opens X))).hom.comp ψ := by
+  -- Writing the instance of `globalSectionsHom_comp` out by hand makes the backwards rewrite
+  -- syntactic; the general lemma's `⊤` sits at `LocallyRingedSpace` and does not match the goal's.
+  have h1 : globalSectionsHom I (𝒰.obj i).toLocallyRingedSpace
+      (𝒰.cmap i ≫ 𝒰.glueHomOfGlobalSectionsHom I k ψ hI hlfg ocharts hofg hk hf hg) =
+      ((𝒰.cmap i).c.app (op (⊤ : Opens X))).hom.comp
+        (globalSectionsHom I X.toLocallyRingedSpace
+          (𝒰.glueHomOfGlobalSectionsHom I k ψ hI hlfg ocharts hofg hk hf hg)) :=
+    globalSectionsHom_comp I (𝒰.cmap i) _
+  rw [← h1, 𝒰.cmap_comp_glueHomOfGlobalSectionsHom I k ψ hI hlfg ocharts hofg hk hf hg i, hk i]
+
+end OpenCover
+
+section OfAffineCharts
+
+/-- **Every piece of `OpenCover.ofAffineCharts` is locally finitely generated** when the charts
+have finitely generated ideals of definition: the piece is `Spf` of such a ring. This is what the
+overlaps of that cover need in order to be formal schemes, so it appears in the type of every
+hypothesis below and must not be `private`. -/
+theorem ofAffineCharts_obj_locallyFG {X : FormalScheme.{u}} (charts : ∀ x : X, AffineChart X x)
+    (hfg : ∀ x, (charts x).I.FG) (x : X) :
+    ((OpenCover.ofAffineCharts charts).obj x).LocallyFG :=
+  locallyFG_Spf (hfg x)
+
+open OpenCover
+
+variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
+variable {X : FormalScheme.{u}} (charts : ∀ x : X, AffineChart X x)
+variable (hfg : ∀ x, (charts x).I.FG)
+variable (ψ : R →+* X.presheaf.obj (op (⊤ : Opens X)))
+variable (hcont : ∀ x, I ≤ (charts x).I.comap (chartHom charts ψ x))
+variable (hI : I.FG)
+
+/-- Shorthand for the `(i, j)` overlap of the cover by the supplied charts. Every hypothesis of
+`homOfGlobalSectionsHom` quantifies over its points. -/
+abbrev chartOverlap (i j : X) : FormalScheme.{u} :=
+  (ofAffineCharts charts).overlapFormalScheme i j (ofAffineCharts_obj_locallyFG charts hfg i)
+
+/-- **The morphism `X ⟶ Spf R` induced by `ψ : R →+* Γ(X, 𝒪_X)`**, over a supplied family of
+affine charts with finitely generated ideals of definition, and a supplied family of affine charts
+on their overlaps.
+
+The continuity hypotheses are the honest content of the construction: `hcont` says each
+chart-restriction of `ψ` is continuous, and `hf`/`hg` say the two restrictions being compared on
+each overlap are continuous on the supplied cover of that overlap. None of them is automatic; see
+the module docstring. -/
+def homOfGlobalSectionsHom
+    (ocharts : ∀ i j, ∀ x : chartOverlap charts hfg i j,
+      AffineChart (chartOverlap charts hfg i j) x)
+    (hofg : ∀ i j x, (ocharts i j x).I.FG)
+    (hf : ∀ i j, ∀ x : chartOverlap charts hfg i j,
+      I ≤ (ocharts i j x).I.comap (globalSectionsMap I (ocharts i j x).I
+        ((ocharts i j x).map ≫
+          pullback.fst ((ofAffineCharts charts).cmap i) ((ofAffineCharts charts).cmap j) ≫
+            chartMap I charts ψ i (hcont i))))
+    (hg : ∀ i j, ∀ x : chartOverlap charts hfg i j,
+      I ≤ (ocharts i j x).I.comap (globalSectionsMap I (ocharts i j x).I
+        ((ocharts i j x).map ≫
+          pullback.snd ((ofAffineCharts charts).cmap i) ((ofAffineCharts charts).cmap j) ≫
+            chartMap I charts ψ j (hcont j)))) :
+    X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
+  (ofAffineCharts charts).glueHomOfGlobalSectionsHom I
+    (fun y => chartMap I charts ψ y (hcont y)) ψ hI (ofAffineCharts_obj_locallyFG charts hfg)
+    ocharts hofg (fun y => globalSectionsHom_chartMap I charts ψ y (hcont y)) hf hg
+
+/-- The induced morphism restricts, on the chart at `x`, to the morphism of formal spectra that the
+chart-restriction of `ψ` induces. -/
+theorem chart_comp_homOfGlobalSectionsHom (ocharts) (hofg) (hf) (hg) (x : X) :
+    (charts x).map ≫ homOfGlobalSectionsHom I charts hfg ψ hcont hI ocharts hofg hf hg =
+      chartMap I charts ψ x (hcont x) :=
+  (ofAffineCharts charts).cmap_comp_glueHomOfGlobalSectionsHom I
+    (fun y => chartMap I charts ψ y (hcont y)) ψ hI (ofAffineCharts_obj_locallyFG charts hfg)
+    ocharts hofg (fun y => globalSectionsHom_chartMap I charts ψ y (hcont y)) hf hg x
+
+/-- **The induced morphism induces `ψ` on every chart.** The global statement
+`globalSectionsHom I X (homOfGlobalSectionsHom …) = ψ` is not proved here — see the module
+docstring for what it would take. -/
+theorem comp_globalSectionsHom_homOfGlobalSectionsHom (ocharts) (hofg) (hf) (hg) (x : X) :
+    ((charts x).map.c.app (op (⊤ : Opens X))).hom.comp
+        (globalSectionsHom I X.toLocallyRingedSpace
+          (homOfGlobalSectionsHom I charts hfg ψ hcont hI ocharts hofg hf hg)) =
+      ((charts x).map.c.app (op (⊤ : Opens X))).hom.comp ψ :=
+  (ofAffineCharts charts).comp_globalSectionsHom_glueHomOfGlobalSectionsHom I
+    (fun y => chartMap I charts ψ y (hcont y)) ψ hI (ofAffineCharts_obj_locallyFG charts hfg)
+    ocharts hofg (fun y => globalSectionsHom_chartMap I charts ψ y (hcont y)) hf hg x
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **A morphism into a formal spectrum is determined by its restrictions to the charts.**
+
+This is not a weakening of `FormalSpectrum.hom_ext_of_globalSectionsHom`: that compares the induced
+homomorphisms `R →+* Γ(X, 𝒪_X)` and needs the per-chart continuity condition, while this compares
+the restricted morphisms themselves and needs no side condition at all. It is the uniqueness
+counterpart of `homOfGlobalSectionsHom`. -/
+theorem hom_ext_of_chart_comp (f g : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I)
+    (h : ∀ x : X, (charts x).map ≫ f = (charts x).map ≫ g) : f = g :=
+  (OpenCover.ofAffineCharts charts).hom_ext f g h
+
+end OfAffineCharts
+
+end AlgebraicGeometry.FormalScheme
+
+end
