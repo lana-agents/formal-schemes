@@ -32,7 +32,7 @@ correspondence between morphisms into a formal spectrum and continuous ring homo
   homomorphism is recovered from the induced morphism of formal schemes by taking global sections
   (`FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap`, the `Γ ∘ Spf = id` half).
 
-## Scope: why not (yet) *fully* faithful
+## Scope: why this functor is not *fully* faithful
 
 For ordinary schemes `Spec` is fully faithful onto *all* scheme morphisms. The formal-spectrum
 functor is **not** full onto arbitrary morphisms of formal schemes: an abstract morphism of
@@ -41,9 +41,15 @@ carry the ideal of definition into that of the target), because the structure sh
 no ambient topology. The precise bijection — the full EGA I, 10.4.6 statement — is
 `FormalSpectrum.spfGammaEquiv`, stated over the continuity-restricted subtypes on *both* sides;
 `AdicRingCat.spfHomEquiv` (`FormalSchemes.SpfFullyFaithful`) is that bijection transported to this
-file's `spfFunctor`. Packaging it as a `CategoryTheory.Functor.FullyFaithful` datum for a
-subcategory of `FormalScheme` cut out by the continuity property is left as follow-up; this file
-records the functor and its faithfulness.
+file's `spfFunctor`. That bijection *is* packaged as a `CategoryTheory.Functor.FullyFaithful`
+datum, by `spfEquivFunctorFullyFaithful`, and as the equivalence `spfEquivalence`
+(both `FormalSchemes.SpfEquivalence`) — but **not** over a subcategory of `FormalScheme` cut out by
+the continuity property, and that is not an omission: continuity of `f : Spf S ⟶ Spf R` reads
+`I ≤ J.comap (globalSectionsMap I J f)`, which mentions the ideals of definition of *both* rings,
+data that an object of `FormalScheme` does not carry. It is stated instead over `AdicRingCatFG`,
+whose objects are adic rings with a finitely generated ideal of definition (the finite generation
+coming from `spfHomEquiv`), and `AffineFormalSchemeCat`, whose morphisms carry the continuity
+witness as a field. This file records the functor and its faithfulness.
 
 ## References
 

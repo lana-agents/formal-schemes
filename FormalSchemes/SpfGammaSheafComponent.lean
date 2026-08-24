@@ -30,9 +30,11 @@ the *reconstructed* morphism `Spf φ`, read on basic opens through the sections 
 `Spf` of the localized ring map, exactly the completed-localization map the ind-scheme description
 predicts. The other, harder half of step (b) — matching `f.c` on `D(g)` for an **arbitrary**
 morphism `f` (via locality `f.prop` + the step-(a) base identification `base_toPrimeSpectrum_eq`) —
-is `FormalSpectrum.arbSheafComponent` (`FormalSchemes.SpfGammaSheafComponentArbCont`); the two are
-identified by `FormalSpectrum.arbSheafComponent_eq_modelSheafComponent`
-(`FormalSchemes.SpfGammaRoundTrip`), which is what closes the converse.
+is `FormalSpectrum.arbSheafComponent` (`FormalSchemes.SpfGammaSheafComponentArb`), computed as a
+completed localization by `FormalSpectrum.arbSheafComponent_eq_mapCompletion`
+(`FormalSchemes.SpfGammaSheafComponentArbCont`); the two are identified by
+`FormalSpectrum.arbSheafComponent_eq_modelSheafComponent` (`FormalSchemes.SpfGammaRoundTrip`),
+which is what closes the converse.
 
 ## Main results
 
