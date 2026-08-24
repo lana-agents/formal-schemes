@@ -313,6 +313,7 @@ import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningBasicOpenRefinement
 import FormalSchemes.ThickeningChartAffine
 import FormalSchemes.ThickeningChartRestrict
+import FormalSchemes.ThickeningChartSpfHom
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.ThickeningCommonBase
 import FormalSchemes.ThickeningCoverPullback
