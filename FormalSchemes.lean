@@ -91,6 +91,7 @@ import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.CompletionBasicOpenOverlap
 import FormalSchemes.CompletionGlueTwoPatch
+import FormalSchemes.CompletionGlueTwoPatchCondition
 import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionNestedBasicOpenMap
 import FormalSchemes.CompletionSheafComparison
