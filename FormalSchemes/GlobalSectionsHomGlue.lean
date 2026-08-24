@@ -11,7 +11,7 @@ set_option linter.style.header false
 note says plainly what was missing, namely the global statement
 `FormalSpectrum.globalSectionsHom I X f = ψ`, and names the two ingredients it would need. This
 file supplies them and takes that step, completing the fullness half of EGA I, 10.4.6 over a
-non-affine source.
+non-affine source — in the continuity-restricted form the scope note below explains.
 
 ## The step
 
@@ -26,9 +26,13 @@ into `OpenCover.eq_of_chart_c_app_eq`:
 * For an open immersion `f`, the component `f.c.app (op ⊤)` sees exactly the restriction to the
   range of `f`. That is naturality of `f.c` along `range f ≤ ⊤` together with
   `PresheafedSpace.IsOpenImmersion.c_iso` at `⊤`, which says the component **over the range** is an
-  isomorphism, hence injective. This is
-  `AlgebraicGeometry.LocallyRingedSpace.restrict_eq_of_c_app_top_eq` below. Note it is *not*
-  injectivity of `f.c.app (op ⊤)` itself, which is false — one chart does not see all of `X`.
+  isomorphism, hence injective. Note it is *not* injectivity of `f.c.app (op ⊤)` itself, which is
+  false — one chart does not see all of `X`.
+
+  Being an open immersion is not what the argument uses, only invertibility of the component over
+  the open in question, so `AlgebraicGeometry.LocallyRingedSpace.restrict_eq_of_c_app_top_eq` below
+  takes that invertibility as a hypothesis and never mentions open immersions; `c_iso` discharges it
+  at the call site.
 
 ## Scope: the `∃!` is over the continuous morphisms, and that is not a packaging artefact
 
