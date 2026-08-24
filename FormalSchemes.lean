@@ -92,6 +92,7 @@ import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.CompletionBasicOpenOverlap
 import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.CompletionNestedBasicOpen
+import FormalSchemes.CompletionNestedBasicOpenMap
 import FormalSchemes.CompletionSheafComparison
 import FormalSchemes.CompletionToSpec
 import FormalSchemes.CoproductOpenImmersion
