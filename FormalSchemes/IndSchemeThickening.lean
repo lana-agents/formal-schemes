@@ -1,5 +1,6 @@
 import FormalSchemes.IndSchemeForward
 import FormalSchemes.Completion
+import FormalSchemes.TwoAdicWitness
 
 set_option linter.style.header false
 
@@ -215,12 +216,7 @@ theorem hom_ext_thickeningMap
 
 section Nonvacuity
 
-/-- The `2`-adic integers, with their ideal of definition, form a complete adic ring. -/
-private theorem isAdicRing_twoAdicInt :
-    IsAdicRing (AdicCompletion.idealOfDefinition (Ideal.span {(2 : ℤ)})) :=
-  AdicCompletion.isAdicRing_map _ (Submodule.fg_span (Set.finite_singleton _))
-
-attribute [local instance] isAdicRing_twoAdicInt
+attribute [local instance] isAdicRing_twoAdicIdeal
 
 /-- **The statements above are not vacuous, and not only for discrete rings.** The `2`-adic
 integers `ℤ^` are a complete adic ring whose thickenings `Spec (ℤ^ ⧸ (2)ⁿ⁺¹)` are finite, hence

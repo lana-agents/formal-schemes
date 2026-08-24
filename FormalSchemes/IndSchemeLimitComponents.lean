@@ -162,12 +162,7 @@ theorem thickeningMap_comp_eq_limit_π
 
 section Nonvacuity
 
-/-- The `2`-adic integers, with their ideal of definition, form a complete adic ring. -/
-private theorem isAdicRing_twoAdicInt :
-    IsAdicRing (AdicCompletion.idealOfDefinition (Ideal.span {(2 : ℤ)})) :=
-  AdicCompletion.isAdicRing_map _ (Submodule.fg_span (Set.finite_singleton _))
-
-attribute [local instance] isAdicRing_twoAdicInt
+attribute [local instance] isAdicRing_twoAdicIdeal
 
 /-- **The statements above are not vacuous, and not only for discrete rings.** At `R = ℤ^` the
 `2`-adic integers, with `I = (2)·ℤ^`, the tower is `ℤ ⧸ 2ⁿ` and the thickenings are genuinely
