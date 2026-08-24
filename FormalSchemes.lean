@@ -175,6 +175,7 @@ import FormalSchemes.Gluing
 import FormalSchemes.GraphCodiagonalClosedEmbedding
 import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.IndScheme
+import FormalSchemes.IndSchemeColimitEquiv
 import FormalSchemes.IndSchemeExistence
 import FormalSchemes.IndSchemeExistenceGeometric
 import FormalSchemes.IndSchemeForward
