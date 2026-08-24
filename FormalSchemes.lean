@@ -309,6 +309,7 @@ import FormalSchemes.TateTwoPatchCompact
 import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.ThickeningCommonBase
+import FormalSchemes.ThickeningCoverPullback
 import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
