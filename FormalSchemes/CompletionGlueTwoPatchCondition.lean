@@ -29,7 +29,9 @@ This file supplies that relation and the descent principle it unlocks.
 The four unfolding lemmas `completionTwoPatchFormalGlueData_f_false_true` and friends are stated
 publicly rather than kept private, because they are the dictionary between the constructed glue
 data and the completion vocabulary, and anything else reasoning about `completionTwoPatch` needs
-the same translation.
+the same translation. The two index disequalities `cgcNe` and `cgcNe'` are public for the same
+reason: they occur in the right-hand sides of those four lemmas, so a downstream file that can only
+`rw` with them but not restate them has half a dictionary.
 
 ## The `⟨false⟩ = A`, `⟨true⟩ = B` convention
 
@@ -41,6 +43,7 @@ only the `₀`-orientations pay for the `ofGlueData'` unfolding.
 
 ## Main definitions and results
 
+* `cgcNe`, `cgcNe'`: the two indices of the datum are distinct, with the index type ascribed.
 * `completionTwoPatchFormalGlueData_f_false_true` and its three siblings: the constructed glue
   maps and transitions in terms of `formalCompletion.basicOpenImmersion` and
   `completionGlueLRSIso`.
@@ -73,10 +76,10 @@ variable {A B : Type u} [CommRing A] [CommRing B] (I : Ideal A) (hI : I.FG) (a :
 /-- The two indices of the two-patch datum are distinct. Stated with the index type ascribed: the
 `dite`s of `CategoryTheory.GlueData'.f'` live at `ULift Bool`, and `dif_neg` will not fire against
 a disequality elaborated at `Bool`. -/
-private theorem cgcNe : ¬ @Eq (ULift.{u} Bool) ⟨false⟩ ⟨true⟩ := by simp
+theorem cgcNe : ¬ @Eq (ULift.{u} Bool) ⟨false⟩ ⟨true⟩ := by simp
 
 /-- The two indices of the two-patch datum are distinct, the other way round. -/
-private theorem cgcNe' : ¬ @Eq (ULift.{u} Bool) ⟨true⟩ ⟨false⟩ := by simp
+theorem cgcNe' : ¬ @Eq (ULift.{u} Bool) ⟨true⟩ ⟨false⟩ := by simp
 
 /-- **The `A`-side glue map of the two-patch completion datum** is the `A`-side basic-open
 completion immersion, up to the transport `GlueData.ofGlueData'` inserts because its `V` is a
