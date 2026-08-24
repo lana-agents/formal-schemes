@@ -314,6 +314,7 @@ import FormalSchemes.ThickeningChartRestrict
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.ThickeningCommonBase
 import FormalSchemes.ThickeningCoverPullback
+import FormalSchemes.ThickeningNonDegenerateWitness
 import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
