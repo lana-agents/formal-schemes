@@ -42,8 +42,8 @@ identifiers there — and every module below keeps its `X : LocallyRingedSpace.{
 unchanged.
 
 That costs nothing, because the bridge is definitional, and both halves of it are theorems here
-rather than assertions: `forgetToLocallyRingedSpace_obj_Spec` and
-`forgetToLocallyRingedSpace_map_Spec_map` are `rfl`. So `chartIsoLRS` and
+rather than assertions: `Scheme.forgetToLocallyRingedSpace_obj_Spec` and
+`Scheme.forgetToLocallyRingedSpace_map_Spec_map` are `rfl`. So `chartIsoLRS` and
 `chartStepLRS_comp_chartIsoLRS` restate the scheme-level results in the layer the `Thickening*`
 modules are actually stated about, with no transport.
 
@@ -91,6 +91,10 @@ error message names both spellings of the same object.
 supply it. The purely topological results (`chartOpen_le_thickeningChart`, `chartOpen_ne_top`,
 `chartOpen_ne_bot`) do not need it.
 
+The two `rfl` bridges are stated in `AlgebraicGeometry.Scheme`, not in `FormalSpectrum`: their
+statements are about Mathlib's `Scheme.forgetToLocallyRingedSpace` and mention nothing of this
+project. See `ThickeningChartRestrict.lean`'s implementation notes for the rule.
+
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.6 (10.6.10).
@@ -102,6 +106,21 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry TopologicalSpace
 
 universe u
+
+namespace AlgebraicGeometry.Scheme
+
+/-- The forgetful functor to `LocallyRingedSpace` takes `Spec` to `Spec.locallyRingedSpaceObj` —
+definitionally, which is half of what makes the scheme-level results usable one layer down. -/
+theorem forgetToLocallyRingedSpace_obj_Spec (A : CommRingCat.{u}) :
+    Scheme.forgetToLocallyRingedSpace.obj (Spec A) = Spec.locallyRingedSpaceObj A :=
+  rfl
+
+/-- …and it takes `Spec.map` to `Spec.locallyRingedSpaceMap`, which is the other half. -/
+theorem forgetToLocallyRingedSpace_map_Spec_map {A B : CommRingCat.{u}} (φ : A ⟶ B) :
+    Scheme.forgetToLocallyRingedSpace.map (Spec.map φ) = Spec.locallyRingedSpaceMap φ :=
+  rfl
+
+end AlgebraicGeometry.Scheme
 
 namespace FormalSpectrum
 
@@ -234,17 +253,6 @@ theorem chartStep_comp_chartIsoSpec (hI : I.FG) (n : ℕ) :
     Category.assoc, Category.assoc, chartIsoSpec_inv_comp_ι,
     (Iso.inv_comp_eq _).mp (chartIsoSpec_inv_comp_ι I r hI n), Category.assoc,
     ← Spec.map_comp, ← Spec.map_comp, stepRingHom_comp_chartRingMap]
-
-/-- The forgetful functor to `LocallyRingedSpace` takes `Spec` to `Spec.locallyRingedSpaceObj` —
-definitionally, which is half of what makes the scheme-level results usable one layer down. -/
-theorem forgetToLocallyRingedSpace_obj_Spec (A : CommRingCat.{u}) :
-    Scheme.forgetToLocallyRingedSpace.obj (Spec A) = Spec.locallyRingedSpaceObj A :=
-  rfl
-
-/-- …and it takes `Spec.map` to `Spec.locallyRingedSpaceMap`, which is the other half. -/
-theorem forgetToLocallyRingedSpace_map_Spec_map {A B : CommRingCat.{u}} (φ : A ⟶ B) :
-    Scheme.forgetToLocallyRingedSpace.map (Spec.map φ) = Spec.locallyRingedSpaceMap φ :=
-  rfl
 
 /-- The same identification in `LocallyRingedSpace`, which is the layer every `Thickening*` module
 is stated about. No transport: `Scheme.forgetToLocallyRingedSpace.obj (Spec A)` and

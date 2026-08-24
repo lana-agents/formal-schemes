@@ -77,12 +77,15 @@ noncomputable section
 
 open CategoryTheory AlgebraicGeometry TopologicalSpace Polynomial
 
-namespace FormalSpectrum
+namespace TopologicalSpace.Opens
 
 /-- **A cover with no member equal to `⊤` needs at least two members.** Stated for an arbitrary
 family of opens of a nonempty space; the empty `Finset` is ruled out by `⊥ ≠ ⊤` and a singleton by
-the hypothesis itself. -/
-private theorem two_le_card_of_iSup_eq_top {α : Type*} [TopologicalSpace α] [Nonempty α]
+the hypothesis itself.
+
+Purely topological — no ring, no ideal, no spectrum — so it sits here beside
+`Opens.exists_eq_top_of_subsingleton`, which is the statement it is the counterpart of. -/
+theorem two_le_card_of_iSup_eq_top {α : Type*} [TopologicalSpace α] [Nonempty α]
     {ι : Type*} {V : ι → Opens α} {s : Finset ι} (hs : (⨆ x ∈ s, V x) = ⊤)
     (hne : ∀ x, V x ≠ ⊤) : 2 ≤ s.card := by
   rcases Finset.eq_empty_or_nonempty s with rfl | ⟨y, hy⟩
@@ -95,6 +98,10 @@ private theorem two_le_card_of_iSup_eq_top {α : Type*} [TopologicalSpace α] [N
     rw [← hs]
     refine iSup_le fun x => iSup_le fun hx => ?_
     rw [Finset.mem_singleton.mp (hx₀ hx)]
+
+end TopologicalSpace.Opens
+
+namespace FormalSpectrum
 
 attribute [local instance] isAdicRing_formalLineIdeal
 
@@ -146,9 +153,9 @@ theorem exists_refinement_ne_top :
   exact eq_top_iff.mpr (hx ▸ hle x)
 
 /-- **At least two basic opens are needed.** `exists_finite_basicOpen_refinement` instantiated at
-`ℤ⟦X⟧`, sharpened by `two_le_card_of_iSup_eq_top`: the finite refinement covers, no member of it is
-`⊤`, and therefore it has at least two members. A statement of this shape is unavailable at the
-`2`-adic witness, where the refinement is always the single open `⊤`. -/
+`ℤ⟦X⟧`, sharpened by `Opens.two_le_card_of_iSup_eq_top`: the finite refinement covers, no member
+of it is `⊤`, and therefore it has at least two members. A statement of this shape is unavailable
+at the `2`-adic witness, where the refinement is always the single open `⊤`. -/
 theorem exists_finite_refinement_two_le_card :
     ∃ (r : FormalSpectrum formalLineIdeal → AdicCompletion polyXIdeal ℤ[X])
       (idx : FormalSpectrum formalLineIdeal → Bool)
@@ -162,7 +169,7 @@ theorem exists_finite_refinement_two_le_card :
       twoChart iSup_twoChart
   have hne : ∀ x, basicOpen formalLineIdeal (r x) ≠ ⊤ :=
     fun x hx => pulled_ne_top (idx x) (eq_top_iff.mpr (hx ▸ hle x))
-  exact ⟨r, idx, s, hcov, hle, hne, two_le_card_of_iSup_eq_top hcov hne⟩
+  exact ⟨r, idx, s, hcov, hle, hne, Opens.two_le_card_of_iSup_eq_top hcov hne⟩
 
 /-! ### The `2`-adic side of the contrast
 

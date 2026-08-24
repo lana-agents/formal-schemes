@@ -31,6 +31,7 @@ imports nothing from either.
 
 ## Main results
 
+* `Int.span_two_isMaximal`: `(2) ⊆ ℤ` is maximal. A fact about `ℤ`; see the implementation notes.
 * `TopologicalSpace.Opens.exists_eq_top_of_subsingleton`: a cover of a nonempty subsingleton space
   has a member equal to `⊤`. No formal-schemes content; see the implementation notes.
 * `FormalSpectrum.subsingleton_twoAdic`, `FormalSpectrum.nonempty_twoAdic`: `|Spf ℤ^|` is a
@@ -40,15 +41,17 @@ imports nothing from either.
 
 ## Implementation notes
 
-`exists_eq_top_of_subsingleton` is stated in the `TopologicalSpace.Opens` namespace, not in
-`FormalSpectrum`: it mentions no ring, no ideal and no spectrum, and two general lemmas of the same
-shape landing in the `FormalSpectrum` namespace were flagged in review on this tree in the two
-preceding pull requests. Nothing here relocates those two — that is a separate sweep.
+`exists_eq_top_of_subsingleton` is stated in the `TopologicalSpace.Opens` namespace and
+`span_two_isMaximal` in `Int`, neither in `FormalSpectrum`: their statements mention no ring, no
+ideal and no spectrum, and no formal spectrum respectively. `ThickeningChartRestrict.lean`'s
+implementation notes record the rule and why the enclosing `namespace FormalSpectrum` of every
+module in this project makes it easy to get wrong.
 
-`span_two_isMaximal` and `isAdicRing_twoAdicIdeal` are activated with
-`attribute [local instance]`, so neither escapes this file. A global `IsMaximal (Ideal.span {2})`
-would sit in the way of unrelated instance searches, and `TwoAdicWitness.lean`'s implementation
-notes give the same reason for the adic instance.
+`Int.span_two_isMaximal` and `isAdicRing_twoAdicIdeal` are activated with
+`attribute [local instance]`, so neither escapes this file — moving the first out of
+`FormalSpectrum` does not change that, since it is a `theorem` and not an `instance`. A global
+`IsMaximal (Ideal.span {2})` would sit in the way of unrelated instance searches, and
+`TwoAdicWitness.lean`'s implementation notes give the same reason for the adic instance.
 
 The `Field (ℤ ⧸ (2))` instance must be introduced with `letI`, **not** `haveI`. `Field` is a data
 class, `haveI` makes the instance opaque, and the `Unique (PrimeSpectrum R)` instance for a field
@@ -84,20 +87,26 @@ theorem exists_eq_top_of_subsingleton {α : Type*} [TopologicalSpace α] [Subsin
 
 end TopologicalSpace.Opens
 
-namespace FormalSpectrum
-
-attribute [local instance] isAdicRing_twoAdicIdeal
+namespace Int
 
 /-- `(2) ⊆ ℤ` is a maximal ideal, so `ℤ ⧸ (2)` is a field. This is the one fact the module needs
 from `Mathlib.RingTheory.Ideal.Int`; `norm_num` is what turns that file's
-`Ideal.span {(2 : ℕ) : ℤ}` spelling into the `Ideal.span {(2 : ℤ)}` this project uses. -/
+`Ideal.span {(2 : ℕ) : ℤ}` spelling into the `Ideal.span {(2 : ℤ)}` this project uses.
+
+A fact about `ℤ` and nothing else, so it lives in `Int` rather than in `FormalSpectrum`. It is
+deliberately **not** an instance — see the implementation notes. -/
 theorem span_two_isMaximal : (Ideal.span {(2 : ℤ)}).IsMaximal := by
   haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
   have h := Int.ideal_span_isMaximal_of_prime 2
   norm_num at h
   exact h
 
-attribute [local instance] span_two_isMaximal
+end Int
+
+namespace FormalSpectrum
+
+attribute [local instance] isAdicRing_twoAdicIdeal
+attribute [local instance] Int.span_two_isMaximal
 
 /-- **`|Spf ℤ^|` has at most one point.** `FormalSpectrum twoAdicIdeal` is by definition
 `PrimeSpectrum (ℤ^ ⧸ 2ℤ^)`, and `AdicCompletion.quotientEquiv` identifies that residue ring with
