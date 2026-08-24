@@ -39,6 +39,8 @@ of the merged general-diagonal (487) and closed-immersion (492) infrastructure.
 
 * `BothChartedFibreDatumXY.schemeDiagonal'`: the general diagonal `Δ' : X ⟶ X ×_{Spf R} X` as a
   `FormalScheme.Hom`.
+* `BothChartedFibreDatumXY.schemeDiagonal'_comp_pr₁` and `schemeDiagonal'_comp_pr₂`: it is a
+  section of both projections, and hence `isSplitMono_schemeDiagonal'` and `mono_schemeDiagonal'`.
 * `BothChartedFibreDatumXY.IsSeparated`: `X` is separated over `Spf R`, i.e. `schemeDiagonal'` is a
   `FormalScheme.IsClosedImmersion`.
 * `BothChartedFibreDatumXY.isSeparated_of_diagonal_cover`: separatedness is local on the target of
@@ -89,6 +91,45 @@ so its base map and stalk maps are exactly those of `diagonal'`. -/
 def schemeDiagonal' :
     (diagonalDatum DX σX hστX hσcX).xGlued ⟶ (diagonalDatum DX σX hστX hσcX).generalFibreProduct :=
   FormalScheme.Hom.mk (diagonal' DX σX hστX hσcX)
+
+/-- **The scheme-level diagonal is a section of the first projection**: `Δ' ≫ pr₁ = 𝟙_X`, as
+morphisms of formal schemes. This is `diagonal'_comp_pr₁` transported along `FormalScheme.Hom.ext'`:
+composition and identities in `FormalScheme` are `Hom.mk` of the corresponding locally-ringed-space
+data, so the two statements have the same underlying content. -/
+theorem schemeDiagonal'_comp_pr₁ :
+    schemeDiagonal' DX σX hστX hσcX ≫ FormalScheme.Hom.mk ((diagonalDatum DX σX hστX hσcX).pr₁
+        (ofFactors_hV DX DX σX σX hστX hστX hσcX hσcX)
+        (ofFactors_hf DX DX σX σX hστX hστX hσcX hσcX)
+        (ofFactors_ht DX DX σX σX hστX hστX hσcX hσcX)) =
+      𝟙 (diagonalDatum DX σX hστX hσcX).xGlued :=
+  FormalScheme.Hom.ext' (diagonal'_comp_pr₁ DX σX hστX hσcX)
+
+/-- **The scheme-level diagonal is a section of the second projection**: `Δ' ≫ pr₂ = 𝟙_X`, as
+morphisms of formal schemes. -/
+theorem schemeDiagonal'_comp_pr₂ :
+    schemeDiagonal' DX σX hστX hσcX ≫ FormalScheme.Hom.mk ((diagonalDatum DX σX hστX hσcX).pr₂
+        (ofFactors_hV DX DX σX σX hστX hστX hσcX hσcX)
+        (ofFactors_hf DX DX σX σX hστX hστX hσcX hσcX)
+        (ofFactors_ht DX DX σX σX hστX hστX hσcX hσcX)) =
+      𝟙 (diagonalDatum DX σX hστX hσcX).xGlued :=
+  FormalScheme.Hom.ext' (diagonal'_comp_pr₂ DX σX hστX hσcX)
+
+/-- **The scheme-level general diagonal is a split monomorphism**, with the first projection as a
+retraction. Together with `FormalScheme.IsClosedImmersion` this is why separatedness is a purely
+*topological* condition on `Δ'` (issue 549): the embedding half of a closed immersion is free. -/
+theorem isSplitMono_schemeDiagonal' : IsSplitMono (schemeDiagonal' DX σX hστX hσcX) :=
+  IsSplitMono.mk' ⟨FormalScheme.Hom.mk ((diagonalDatum DX σX hστX hσcX).pr₁
+      (ofFactors_hV DX DX σX σX hστX hστX hσcX hσcX)
+      (ofFactors_hf DX DX σX σX hστX hστX hσcX hσcX)
+      (ofFactors_ht DX DX σX σX hστX hστX hσcX hσcX)),
+    schemeDiagonal'_comp_pr₁ DX σX hστX hσcX⟩
+
+/-- **The scheme-level general diagonal is a monomorphism**, unconditionally — no continuity
+hypothesis. Immediate from `isSplitMono_schemeDiagonal'`; alternatively from `mono_diagonal'`
+through `FormalScheme.forgetToLocallyRingedSpace`, which is faithful. -/
+theorem mono_schemeDiagonal' : Mono (schemeDiagonal' DX σX hστX hσcX) :=
+  haveI := isSplitMono_schemeDiagonal' DX σX hστX hσcX
+  inferInstance
 
 /-- **`X` is separated over `Spf R`** (EGA I §10.15), stated categorically: the scheme-level general
 diagonal `Δ' : X ⟶ X ×_{Spf R} X` is a closed immersion of formal schemes. -/
