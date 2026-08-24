@@ -83,8 +83,7 @@ theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : FormalGroupAlgebra R I M) :
       x ∈ ((I.map (algebraMap R (AddMonoidAlgebra R M))) ^ m • ⊤ :
         Submodule (AddMonoidAlgebra R M) (FormalGroupAlgebra R I M)) := by
   rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (AddMonoidAlgebra R M))) m x,
-    idealOfDefinition, Ideal.smul_top_eq_map, Submodule.restrictScalars_mem,
-    Algebra.algebraMap_self, Ideal.map_id]
+    idealOfDefinition, Ideal.mem_smul_top_self_iff]
 
 /-- The **group-like element** `[g]` of `R⟨M⟩` attached to `g : M`. -/
 def X (g : M) : FormalGroupAlgebra R I M :=

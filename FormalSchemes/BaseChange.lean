@@ -53,8 +53,7 @@ theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : RestrictedPowerSeries R I n
       x ∈ ((I.map (algebraMap R (MvPolynomial (Fin n) R))) ^ m • ⊤ :
         Submodule (MvPolynomial (Fin n) R) (RestrictedPowerSeries R I n)) := by
   rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (MvPolynomial (Fin n) R))) m x,
-    idealOfDefinition, Ideal.smul_top_eq_map, Submodule.restrictScalars_mem,
-    Algebra.algebraMap_self, Ideal.map_id]
+    idealOfDefinition, Ideal.mem_smul_top_self_iff]
 
 /-- The completion map `R[X] → R{X₁, …, Xₙ}` on a polynomial is the algebra structure map. -/
 theorem algebraMap_MvPolynomial_apply (p : MvPolynomial (Fin n) R) :
