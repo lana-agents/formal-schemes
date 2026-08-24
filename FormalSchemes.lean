@@ -308,6 +308,7 @@ import FormalSchemes.TateTopFiniteType
 import FormalSchemes.TateTransition
 import FormalSchemes.TateTwoPatchCompact
 import FormalSchemes.TateXGluedIso
+import FormalSchemes.ThickeningBasicOpenRefinement
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.ThickeningCommonBase
 import FormalSchemes.ThickeningCoverPullback
