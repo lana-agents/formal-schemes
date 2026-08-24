@@ -465,44 +465,31 @@ section Witness
 
 open Polynomial
 
-/-- The origin of `𝔸¹_ℚ`. -/
-private def wOrigin : PrimeSpectrum (ℚ[X]) :=
-  ⟨Ideal.span {(X : ℚ[X])}, (Ideal.span_singleton_prime X_ne_zero).mpr prime_X⟩
-
-/-- The point `1` of `𝔸¹_ℚ`, the centre of the completion. -/
-private def wOne : PrimeSpectrum (ℚ[X]) :=
-  ⟨Ideal.span {(X - C (1 : ℚ))},
-    (Ideal.span_singleton_prime (prime_X_sub_C (1 : ℚ)).ne_zero).mpr (prime_X_sub_C (1 : ℚ))⟩
-
-private theorem wFG : (Ideal.span {(X - C (1 : ℚ))}).FG :=
-  Submodule.fg_span (Set.finite_singleton _)
-
-
-private abbrev wSpan : Ideal ℚ[X] := Ideal.span {(X - C (1 : ℚ))}
-
-private abbrev wPre : Set (PrimeSpectrum ℚ[X]) :=
+/-- The `A`-chart preimage of the image of `X_{/Y} ⟶ X`, for the standing witness. The geometry —
+the ideal `(X - 1)`, the origin and the centre `1` — is shared with
+`FormalSchemes/CompletionTwoPatchRange.lean` and `FormalSchemes/CompletionTwoPatchClosed.lean`
+and lives in `FormalSchemes/TwoPatchWitness.lean`. -/
+private def wPre : Set (PrimeSpectrum ℚ[X]) :=
   ⇑(specTwoPatchι₀ (X : ℚ[X]) X (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base ⁻¹'
-    Set.range ⇑(completionTwoPatchToScheme wSpan wFG (X : ℚ[X]) wSpan wFG (X : ℚ[X])
+    Set.range ⇑(completionTwoPatchToScheme twoPatchWitnessIdeal twoPatchWitnessIdeal_fg
+      (X : ℚ[X]) twoPatchWitnessIdeal twoPatchWitnessIdeal_fg (X : ℚ[X])
       (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)).base
 
-private theorem wPre_eq : wPre = PrimeSpectrum.zeroLocus (wSpan : Set ℚ[X]) :=
-  preimage_range_completionTwoPatchToScheme_base_ι₀ wSpan wFG (X : ℚ[X]) wSpan wFG (X : ℚ[X])
+private theorem wPre_eq :
+    wPre = PrimeSpectrum.zeroLocus (twoPatchWitnessIdeal : Set ℚ[X]) :=
+  preimage_range_completionTwoPatchToScheme_base_ι₀ twoPatchWitnessIdeal twoPatchWitnessIdeal_fg
+    (X : ℚ[X]) twoPatchWitnessIdeal twoPatchWitnessIdeal_fg (X : ℚ[X])
     (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)
 
 /-- **The chart preimage contains the centre of the completion.** -/
-example : wOne ∈ wPre := by
+example : twoPatchWitnessOne ∈ wPre := by
   rw [wPre_eq]
-  exact (PrimeSpectrum.mem_zeroLocus _ _).mpr Set.Subset.rfl
+  exact twoPatchWitnessOne_mem_zeroLocus
 
 /-- **The chart preimage is a proper subset**: the origin of the first chart is outside it. -/
-example : wOrigin ∉ wPre := by
+example : twoPatchWitnessOrigin ∉ wPre := by
   rw [wPre_eq]
-  intro hmem
-  obtain ⟨q, hq⟩ : (X : ℚ[X]) ∣ X - C (1 : ℚ) :=
-    Ideal.mem_span_singleton.mp
-      ((PrimeSpectrum.mem_zeroLocus _ _).mp hmem (Ideal.mem_span_singleton_self _))
-  have := congrArg (Polynomial.eval (0 : ℚ)) hq
-  simp at this
+  exact twoPatchWitnessOrigin_notMem_zeroLocus
 
 end Witness
 

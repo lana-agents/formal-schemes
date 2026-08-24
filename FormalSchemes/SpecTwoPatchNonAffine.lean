@@ -1,5 +1,6 @@
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.SpecTwoPatchScheme
+import FormalSchemes.TwoPatchWitness
 import Mathlib.AlgebraicGeometry.Morphisms.Separated
 
 set_option linter.style.header false
@@ -276,17 +277,15 @@ section AffineLineDoubledOrigin
 
 open Polynomial
 
-/-- The origin of `ℚ[X]`, as a point of `Spec ℚ[X]`. -/
-private def originQX : PrimeSpectrum (ℚ[X]) :=
-  ⟨Ideal.span {(X : ℚ[X])}, (Ideal.span_singleton_prime X_ne_zero).mpr prime_X⟩
-
-/-- **The two halves of the doubled origin really are two points** of the doubled affine line. -/
+/-- **The two halves of the doubled origin really are two points** of the doubled affine line. The
+origin is `twoPatchWitnessOrigin` (`FormalSchemes/TwoPatchWitness.lean`), shared with the
+completion-side witnesses so that they are visibly the same point. -/
 example : (specTwoPatchSchemeι₀ (X : ℚ[X]) X (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base
-      originQX ≠
+      twoPatchWitnessOrigin ≠
     (specTwoPatchSchemeι₁ (X : ℚ[X]) X (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base
-      originQX :=
+      twoPatchWitnessOrigin :=
   specTwoPatchSchemeι₀_base_ne_specTwoPatchSchemeι₁_base (X : ℚ[X])
-    (Ideal.mem_span_singleton_self _)
+    X_mem_twoPatchWitnessOrigin
 
 /-- **The affine line with a doubled origin is not separated.** -/
 example : ¬ (specDouble (X : ℚ[X])).IsSeparated :=
