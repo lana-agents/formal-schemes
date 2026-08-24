@@ -311,6 +311,7 @@ import FormalSchemes.TateTransition
 import FormalSchemes.TateTwoPatchCompact
 import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningBasicOpenRefinement
+import FormalSchemes.ThickeningChartAffine
 import FormalSchemes.ThickeningChartRestrict
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.ThickeningCommonBase
