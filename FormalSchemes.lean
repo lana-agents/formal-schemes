@@ -90,6 +90,7 @@ import FormalSchemes.Completion
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.CompletionBasicOpenOverlap
+import FormalSchemes.CompletionCompact
 import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.CompletionGlueTwoPatchCondition
 import FormalSchemes.CompletionNestedBasicOpen
@@ -154,6 +155,7 @@ import FormalSchemes.GlobalSectionsHom
 import FormalSchemes.GlobalSectionsHomGlue
 import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
+import FormalSchemes.GlueDataCompact
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.GlueHomToSpf
@@ -289,6 +291,7 @@ import FormalSchemes.TateTensorOverlapSummandAffine
 import FormalSchemes.TateTensorOverlapSummandAffineBoth
 import FormalSchemes.TateTopFiniteType
 import FormalSchemes.TateTransition
+import FormalSchemes.TateTwoPatchCompact
 import FormalSchemes.TateXGluedIso
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.Thickenings
