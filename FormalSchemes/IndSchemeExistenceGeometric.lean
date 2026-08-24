@@ -169,30 +169,22 @@ where every thickening is `Spec R`. The `2`-adic integers rule that out. -/
 
 section Witness
 
-private theorem isAdicRing_twoAdicInt :
-    IsAdicRing (AdicCompletion.idealOfDefinition (Ideal.span {(2 : ℤ)})) :=
-  AdicCompletion.isAdicRing_map _ (Submodule.fg_span (Set.finite_singleton _))
-
-attribute [local instance] isAdicRing_twoAdicInt
-
-/-- The ideal of definition of the `2`-adic integers. -/
-private abbrev twoI : Ideal (AdicCompletion (Ideal.span {(2 : ℤ)}) ℤ) :=
-  AdicCompletion.idealOfDefinition (Ideal.span {(2 : ℤ)})
+attribute [local instance] isAdicRing_twoAdicIdeal
 
 /-- **There is a unique `Spf ℤ₂ ⟶ Spec ℤ` restricting on the `n`-th thickening to `Spec` of the
 reduction of `ℤ → ℤ₂` modulo `2 ^ (n + 1)`.** The family is supplied explicitly, as the docstring
 of `existsUnique_thickeningMap_comp_of_specHom` warns. -/
-example : ∃! g : locallyRingedSpaceObj twoI ⟶
+example : ∃! g : locallyRingedSpaceObj twoAdicIdeal ⟶
       Spec.locallyRingedSpaceObj (CommRingCat.of ℤ),
-    ∀ n : ℕ, thickeningMap twoI n ≫ g =
+    ∀ n : ℕ, thickeningMap twoAdicIdeal n ≫ g =
       Spec.locallyRingedSpaceMap (CommRingCat.ofHom
-        ((Ideal.Quotient.mk (twoI ^ (n + 1))).comp
+        ((Ideal.Quotient.mk (twoAdicIdeal ^ (n + 1))).comp
           (algebraMap ℤ (AdicCompletion (Ideal.span {(2 : ℤ)}) ℤ)))) :=
-  existsUnique_thickeningMap_comp_of_specHom twoI ℤ
+  existsUnique_thickeningMap_comp_of_specHom twoAdicIdeal ℤ
     (fun n => Spec.locallyRingedSpaceMap (CommRingCat.ofHom
-      ((Ideal.Quotient.mk (twoI ^ (n + 1))).comp
+      ((Ideal.Quotient.mk (twoAdicIdeal ^ (n + 1))).comp
         (algebraMap ℤ (AdicCompletion (Ideal.span {(2 : ℤ)}) ℤ)))))
-    (specMap_mk_comp_compatible twoI ℤ _)
+    (specMap_mk_comp_compatible twoAdicIdeal ℤ _)
 
 end Witness
 

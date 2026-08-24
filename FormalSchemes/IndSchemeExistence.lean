@@ -183,37 +183,29 @@ that `[IsAdicRing I]` might only ever be instantiated at `I = ⊥`, where all th
 
 section Witness
 
-private theorem isAdicRing_twoAdicInt :
-    IsAdicRing (AdicCompletion.idealOfDefinition (Ideal.span {(2 : ℤ)})) :=
-  AdicCompletion.isAdicRing_map _ (Submodule.fg_span (Set.finite_singleton _))
-
-attribute [local instance] isAdicRing_twoAdicInt
-
-/-- The ideal of definition of the `2`-adic integers. -/
-private abbrev twoI : Ideal (AdicCompletion (Ideal.span {(2 : ℤ)}) ℤ) :=
-  AdicCompletion.idealOfDefinition (Ideal.span {(2 : ℤ)})
+attribute [local instance] isAdicRing_twoAdicIdeal
 
 /-- **The lift of the reductions of `ℤ → ℤ₂` is `ℤ → ℤ₂` itself.** -/
-example : liftOfTower twoI ℤ
-      (fun n => (Ideal.Quotient.mk (twoI ^ n)).comp
+example : liftOfTower twoAdicIdeal ℤ
+      (fun n => (Ideal.Quotient.mk (twoAdicIdeal ^ n)).comp
         (algebraMap ℤ (AdicCompletion (Ideal.span {(2 : ℤ)}) ℤ)))
-      (factorPow_comp_mk_comp twoI ℤ _) =
+      (factorPow_comp_mk_comp twoAdicIdeal ℤ _) =
     (algebraMap ℤ (AdicCompletion (Ideal.span {(2 : ℤ)}) ℤ)) :=
-  liftOfTower_mk_comp twoI ℤ _
+  liftOfTower_mk_comp twoAdicIdeal ℤ _
 
 /-- **There is a unique `Spf ℤ₂ ⟶ Spec ℤ` restricting to the given family on every thickening.**
 Note that the family is supplied explicitly: higher-order unification cannot solve `?φ (n + 1)`
 against the expression in the statement. -/
-example : ∃! g : locallyRingedSpaceObj twoI ⟶
+example : ∃! g : locallyRingedSpaceObj twoAdicIdeal ⟶
       Spec.locallyRingedSpaceObj (CommRingCat.of ℤ),
-    ∀ n : ℕ, thickeningMap twoI n ≫ g =
+    ∀ n : ℕ, thickeningMap twoAdicIdeal n ≫ g =
       Spec.locallyRingedSpaceMap (CommRingCat.ofHom
-        ((Ideal.Quotient.mk (twoI ^ (n + 1))).comp
+        ((Ideal.Quotient.mk (twoAdicIdeal ^ (n + 1))).comp
           (algebraMap ℤ (AdicCompletion (Ideal.span {(2 : ℤ)}) ℤ)))) :=
-  existsUnique_thickeningMap_comp twoI ℤ
-    (fun n => (Ideal.Quotient.mk (twoI ^ n)).comp
+  existsUnique_thickeningMap_comp twoAdicIdeal ℤ
+    (fun n => (Ideal.Quotient.mk (twoAdicIdeal ^ n)).comp
       (algebraMap ℤ (AdicCompletion (Ideal.span {(2 : ℤ)}) ℤ)))
-    (factorPow_comp_mk_comp twoI ℤ _)
+    (factorPow_comp_mk_comp twoAdicIdeal ℤ _)
 
 end Witness
 
