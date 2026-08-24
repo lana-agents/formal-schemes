@@ -94,6 +94,7 @@ import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionSheafComparison
 import FormalSchemes.CompletionToSpec
+import FormalSchemes.CompletionTwoPatchToScheme
 import FormalSchemes.CoproductOpenImmersion
 import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.DiagonalPreimageGraph
