@@ -98,6 +98,7 @@ import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionNestedBasicOpenMap
 import FormalSchemes.CompletionSheafComparison
 import FormalSchemes.CompletionToSpec
+import FormalSchemes.CompletionTwoPatchClosed
 import FormalSchemes.CompletionTwoPatchDoubled
 import FormalSchemes.CompletionTwoPatchRange
 import FormalSchemes.CompletionTwoPatchSupport
