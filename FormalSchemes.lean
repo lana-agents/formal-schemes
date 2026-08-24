@@ -193,6 +193,7 @@ import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
 import FormalSchemes.Sections
+import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.Spf
 import FormalSchemes.SpfEquivalence
 import FormalSchemes.SpfFullyFaithful
