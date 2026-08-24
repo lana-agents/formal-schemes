@@ -48,6 +48,8 @@ the gluing row. This file removes the part of that comparison which is *not* abo
 * `FormalSpectrum.chartSpfHomAmbient_uniq`: the restriction rule characterises the morphism.
 * `FormalSpectrum.hom_ext_thickeningMap_formalLine`: the general `hom_ext` at a witness whose
   target is not the `Spec` of a ring.
+* `FormalSpectrum.chartSpfHomAmbient_congr_formalLine`: `chartSpfHomAmbient_congr` at the two
+  affine charts of `Spec ℤ` that `ThickeningChartSpfHom.lean` carries over `r = 2`.
 
 ## References
 
@@ -121,25 +123,34 @@ The source is `Spf ℤ⟦X⟧{1/2}`, the away completion at `r = 2` of `FormalLi
 affine line. That is the ring for which `ThickeningChartAffine.lean` proves the chart `D(2)` is
 neither `⊥` nor `⊤` at every level of the tower (`chartOpen_formalLine_ne_bot`,
 `chartOpen_formalLine_ne_top`), so the tower of thickenings being quantified over is not the
-constant one and `|Spf ℤ⟦X⟧{1/2}|` is not a point. The `2`-adic witness of `TwoAdicWitness.lean`
+constant one. Those two lemmas say nonempty and proper, and that is all they are cited for here;
+`|Spf ℤ⟦X⟧{1/2}|` is in fact `D(2) ⊆ Spec ℤ` and so has infinitely many points, but nothing on the
+tree states that and this section does not need it. The `2`-adic witness of `TwoAdicWitness.lean`
 would prove nothing here: `|Spf ℤ^|` is a one-point space (`TwoAdicDegeneracy.lean`).
 
-`chartSpfHomAmbient_congr` itself is **not** instantiated at a witness, and the reason is worth
-stating rather than leaving to inference: exercising it non-trivially needs *two different* affine
-charts over one `r`, and the tree produces exactly one — `X = Spec ℤ` with `U = ⊤`, the chart
-`ThickeningChartSpfHom.lean`'s own witness section uses (and keeps `private`). Its hypotheses are
-satisfiable, which that section establishes; what is unavailable is a second chart to compare with.
-The same gap — no non-affine `X` carrying a compatible family — is the one that module documents.
+`chartSpfHomAmbient_congr` needs more than satisfiable hypotheses to be exercised: it needs *two
+different* affine charts over one `r`, or it compares a morphism with itself.
+`ThickeningChartSpfHom.lean` carries exactly such a pair, over `X = Spec ℤ` with the one family
+and the one `r = 2` — `U = ⊤` with `B = ℤ`, and `U = D(2)` with `B = ℤ[1/2]`.
+`chartSpfHomAmbient_congr_formalLine` identifies the two morphisms they produce. Nothing in that
+identification is definitional: the two are built from a proper open and an improper one, from
+two non-isomorphic rings, and from isomorphisms assembled in different ways
+(`LocallyRingedSpace.restrictTopIso` against `basicOpenIsoSpecAway` pushed through
+`Scheme.forgetToLocallyRingedSpace`).
+
+What remains genuinely out of reach is a **non-affine** `X` carrying a compatible family, which is
+the gap `ThickeningChartSpfHom.lean` documents. It does not bear on non-vacuity of anything proved
+here — the construction never looks at `X` outside `U` — but it does mean no witness on this tree
+exhibits the *covering* situation the gluing row will face, where the charts come from different
+affine opens of an `X` that is not itself affine.
 -/
 
 open Polynomial
 
 attribute [local instance] isAdicRing_formalLineIdeal
 
-private theorem isAdicRing_awayCompletionIdeal_formalLine :
-    IsAdicRing (awayCompletionIdeal formalLineIdeal 2) :=
-  isAdicRing_awayCompletionIdeal _ _ (polyXIdeal_fg.map _)
-
+-- `ThickeningChartSpfHom.lean` names this; it is `local` there, so it has to be re-activated
+-- rather than re-derived.
 attribute [local instance] isAdicRing_awayCompletionIdeal_formalLine
 
 /-- **The general `hom_ext` at a non-affine target.** Morphisms `Spf ℤ⟦X⟧{1/2} ⟶ Spf ℤ⟦X⟧` are
@@ -153,6 +164,21 @@ theorem hom_ext_thickeningMap_formalLine
   -- the affine-target lemma cannot be applied: the target is not of the form `Spec B`
   fail_if_success exact hom_ext_thickeningMap _ _ g₁ g₂ h
   exact hom_ext_thickeningMap_lrs g₁ g₂ h
+
+/-- **`chartSpfHomAmbient_congr` at two genuinely different charts.** The morphism
+`Spf ℤ⟦X⟧{1/2} ⟶ Spec ℤ` built over the affine open `⊤ = Spec ℤ` and the one built over the proper
+affine open `D(2) = Spec ℤ[1/2]` are the same morphism.
+
+The two sides share only the family and `r = 2`: the opens are `⊤` and a proper one
+(`openTwo_ne_top`), the rings are `ℤ` and `ℤ[1/2]`, and the affine identifications are
+`LocallyRingedSpace.restrictTopIso` and `basicOpenIsoSpecAway` read through
+`Scheme.forgetToLocallyRingedSpace`. So this is not `rfl`, and the equality is the theorem's. -/
+theorem chartSpfHomAmbient_congr_formalLine :
+    chartSpfHomAmbient formalLineIdeal witnessFamily.1 witnessFamily.2 ⊤ 2 witness_hr
+        (polyXIdeal_fg.map _) ℤ witnessTarget.restrictTopIso =
+      chartSpfHomAmbient formalLineIdeal witnessFamily.1 witnessFamily.2 openTwo 2
+        witness_hr_two (polyXIdeal_fg.map _) (Localization.Away (2 : ℤ)) openTwoIsoSpecLRS :=
+  chartSpfHomAmbient_congr _ _ _ 2 (polyXIdeal_fg.map _) _ _ _ _ _ _ _ _
 
 end Witness
 
