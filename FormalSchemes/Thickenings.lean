@@ -165,8 +165,9 @@ The canonical morphisms are compatible with the closed immersions of the thicken
 another, i.e. they form a cocone over the tower (EGA I, 10.6.3). We state the two components
 separately: the underlying continuous maps compose correctly, and so do the maps of structure
 sheaves. Packaging these into a single equation of morphisms of presheafed spaces requires
-transporting the sheaf component along the equality of base maps (an `eqToHom` conjugation),
-which is not needed for the applications.
+transporting the sheaf component along the equality of base maps (an `eqToHom` conjugation); that
+is done in `FormalSchemes/ThickeningCocone.lean`, as `thickeningMap_comp`, and it is what the
+colimit bijection of `FormalSchemes/IndSchemeColimitEquiv.lean` needs.
 -/
 
 /-- Cocone condition on spaces: the transition map of the tower, followed by the thickening
