@@ -1,5 +1,6 @@
 import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.CompletionGlueTwoPatch
+import FormalSchemes.CompletionGlueTwoPatchCondition
 import FormalSchemes.GlueMorphisms
 
 set_option linter.style.header false
@@ -29,9 +30,12 @@ overlaps, the affine chart inclusions `Spec (A → A_a)` as the inclusions, and 
 transition. As there, the `t'`, `t_fac` and `cocycle` fields are vacuous because no triple of
 `Bool`-indices is pairwise distinct.
 
-The morphism is `FormalScheme.GlueData.glueMorphisms` applied to the two per-chart morphisms
-`formalCompletion.toSpec A I ≫ ι₀` and `formalCompletion.toSpec B J ≫ ι₁`. Its overlap obligation
-is precisely what `FormalSchemes/CompletionBasicOpenMap.lean` was built to supply: on each side
+The morphism is `AlgebraicGeometry.completionTwoPatchDesc`
+(`FormalSchemes/CompletionGlueTwoPatchCondition.lean`) applied to the two per-chart morphisms
+`formalCompletion.toSpec A I ≫ ι₀` and `formalCompletion.toSpec B J ≫ ι₁`; that is where the
+`GlueData.ofGlueData'` bookkeeping of the completion datum lives, discharged once for every
+compatible pair, so this file carries none of it. Its overlap obligation is precisely what
+`FormalSchemes/CompletionBasicOpenMap.lean` was built to supply: on each side
 `formalCompletion.basicOpenImmersion_comp_toSpec` turns the chart inclusion followed by `toSpec`
 into `toSpec` on the overlap followed by `Spec` of the localization, and
 `formalCompletion.map_comp_toSpec` does the same for the transition isomorphism, which is
@@ -59,7 +63,8 @@ recorded here as `specTwoPatch_glue`.
   the two per-chart morphisms `X_{/Y}|_{chart} ⟶ X` agree over `D(a) ≅ D(b)`.
 * `AlgebraicGeometry.completionTwoPatchToScheme`: the glued morphism, with
   `AlgebraicGeometry.completionTwoPatchι₀_comp_toScheme` / `..ι₁..` characterising it chart by
-  chart and `AlgebraicGeometry.completionTwoPatch_hom_ext` for uniqueness.
+  chart, `AlgebraicGeometry.completionTwoPatch_hom_ext` for uniqueness and
+  `AlgebraicGeometry.completionTwoPatchToScheme_eq_desc` exhibiting it as a descent.
 
 ## Scope
 
@@ -346,85 +351,44 @@ theorem completionTwoPatch_overlapCompat₁ :
           (formalCompletion.toSpec A I hI ≫ specTwoPatchι₀ a b θ) := by
   rw [completionTwoPatch_overlapCompat₀ I hI a J hJ b θ hθ, Iso.inv_hom_id_assoc]
 
-/-- The per-chart family of morphisms into the glued scheme, the input to `glueMorphisms`. -/
-private def cpK (i : ULift.{u} Bool) :
-    (completionTwoPatchFormalGlueData I hI a J hJ b θ
-      hθ).toLocallyRingedSpaceGlueData.toGlueData.U i ⟶ specTwoPatch a b θ :=
-  match i with
-  | ⟨false⟩ => formalCompletion.toSpec A I hI ≫ specTwoPatchι₀ a b θ
-  | ⟨true⟩ => formalCompletion.toSpec B J hJ ≫ specTwoPatchι₁ a b θ
-
-private theorem cpK_false : cpK I hI a J hJ b θ hθ ⟨false⟩ =
-    formalCompletion.toSpec A I hI ≫ specTwoPatchι₀ a b θ := rfl
-
-private theorem cpK_true : cpK I hI a J hJ b θ hθ ⟨true⟩ =
-    formalCompletion.toSpec B J hJ ≫ specTwoPatchι₁ a b θ := rfl
-
-private theorem cpGD_f₀ :
-    (completionTwoPatchFormalGlueData I hI a J hJ b θ
-      hθ).toLocallyRingedSpaceGlueData.toGlueData.f ⟨false⟩ ⟨true⟩ =
-      eqToHom (dif_neg spNe) ≫ (formalCompletion.basicOpenImmersion I hI a).toLRSHom :=
-  dif_neg spNe
-
-private theorem cpGD_f₁ :
-    (completionTwoPatchFormalGlueData I hI a J hJ b θ
-      hθ).toLocallyRingedSpaceGlueData.toGlueData.f ⟨true⟩ ⟨false⟩ =
-      eqToHom (dif_neg spNe') ≫ (formalCompletion.basicOpenImmersion J hJ b).toLRSHom :=
-  dif_neg spNe'
-
-private theorem cpGD_t₀ :
-    (completionTwoPatchFormalGlueData I hI a J hJ b θ
-      hθ).toLocallyRingedSpaceGlueData.toGlueData.t ⟨false⟩ ⟨true⟩ =
-      eqToHom (dif_neg spNe) ≫ (completionGlueLRSIso I hI a J hJ b θ hθ).hom ≫
-        eqToHom (dif_neg spNe').symm :=
-  dif_neg spNe
-
-private theorem cpGD_t₁ :
-    (completionTwoPatchFormalGlueData I hI a J hJ b θ
-      hθ).toLocallyRingedSpaceGlueData.toGlueData.t ⟨true⟩ ⟨false⟩ =
-      eqToHom (dif_neg spNe') ≫ (completionGlueLRSIso I hI a J hJ b θ hθ).inv ≫
-        eqToHom (dif_neg spNe).symm :=
-  dif_neg spNe'
-
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The same transparency requirement as in `specTwoPatch_glue` above.
 /-- **The canonical morphism from the glued completion to the glued scheme** (EGA I, 10.8):
 `X_{/Y} ⟶ X` for the two-chart scheme `X = Spec A ∪_{D(a) ≅ D(b)} Spec B` completed along the
-closed subset glued from `V(I)` and `V(J)`. It is glued from the two affine
-`formalCompletion.toSpec`s by `FormalScheme.GlueData.glueMorphisms`; the overlap obligation is
-`completionTwoPatch_overlapCompat₀` / `..₁`, and on the diagonal both sides collapse because
-`t i i` is the identity. -/
+closed subset glued from `V(I)` and `V(J)`. It is the descent
+(`AlgebraicGeometry.completionTwoPatchDesc`) of the two affine `formalCompletion.toSpec`s along the
+overlap compatibility `completionTwoPatch_overlapCompat₀`. -/
 def completionTwoPatchToScheme :
     (completionTwoPatch I hI a J hJ b θ hθ).toLocallyRingedSpace ⟶ specTwoPatch a b θ :=
-  (completionTwoPatchFormalGlueData I hI a J hJ b θ hθ).glueMorphisms
-    (cpK I hI a J hJ b θ hθ) (by
-      intro i j
-      by_cases hij : i = j
-      · subst hij
-        simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-      · rcases i with ⟨_ | _⟩ <;> rcases j with ⟨_ | _⟩
-        · exact absurd rfl hij
-        · rw [cpGD_f₀, cpGD_t₀, cpGD_f₁, cpK_false, cpK_true]
-          simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-          exact congrArg _ (completionTwoPatch_overlapCompat₀ I hI a J hJ b θ hθ)
-        · rw [cpGD_f₁, cpGD_t₁, cpGD_f₀, cpK_false, cpK_true]
-          simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-          exact congrArg _ (completionTwoPatch_overlapCompat₁ I hI a J hJ b θ hθ)
-        · exact absurd rfl hij)
+  completionTwoPatchDesc I hI a J hJ b θ hθ
+    (formalCompletion.toSpec A I hI ≫ specTwoPatchι₀ a b θ)
+    (formalCompletion.toSpec B J hJ ≫ specTwoPatchι₁ a b θ)
+    (completionTwoPatch_overlapCompat₀ I hI a J hJ b θ hθ)
+
+/-- **The canonical morphism is a descent**, definitionally. Stated so that the general results
+about `completionTwoPatchDesc` — in particular
+`AlgebraicGeometry.completionTwoPatchDesc_unique` — can be applied to it by rewriting rather than
+by unfolding a `def`. -/
+theorem completionTwoPatchToScheme_eq_desc :
+    completionTwoPatchToScheme I hI a J hJ b θ hθ =
+      completionTwoPatchDesc I hI a J hJ b θ hθ
+        (formalCompletion.toSpec A I hI ≫ specTwoPatchι₀ a b θ)
+        (formalCompletion.toSpec B J hJ ≫ specTwoPatchι₁ a b θ)
+        (completionTwoPatch_overlapCompat₀ I hI a J hJ b θ hθ) :=
+  rfl
 
 /-- **The glued morphism restricts to the `A`-chart's `toSpec`.** Together with its `B`-side twin
 this characterises `completionTwoPatchToScheme` chart by chart. -/
 theorem completionTwoPatchι₀_comp_toScheme :
     completionTwoPatchι₀ I hI a J hJ b θ hθ ≫ completionTwoPatchToScheme I hI a J hJ b θ hθ =
       formalCompletion.toSpec A I hI ≫ specTwoPatchι₀ a b θ :=
-  (completionTwoPatchFormalGlueData I hI a J hJ b θ hθ).ι_glueMorphisms _ _ ⟨false⟩
+  completionTwoPatchι₀_comp_desc I hI a J hJ b θ hθ _ _
+    (completionTwoPatch_overlapCompat₀ I hI a J hJ b θ hθ)
 
 /-- **The glued morphism restricts to the `B`-chart's `toSpec`.** -/
 theorem completionTwoPatchι₁_comp_toScheme :
     completionTwoPatchι₁ I hI a J hJ b θ hθ ≫ completionTwoPatchToScheme I hI a J hJ b θ hθ =
       formalCompletion.toSpec B J hJ ≫ specTwoPatchι₁ a b θ :=
-  (completionTwoPatchFormalGlueData I hI a J hJ b θ hθ).ι_glueMorphisms _ _ ⟨true⟩
+  completionTwoPatchι₁_comp_desc I hI a J hJ b θ hθ _ _
+    (completionTwoPatch_overlapCompat₀ I hI a J hJ b θ hθ)
 
 /-- **Uniqueness**: a morphism out of the glued completion is determined by its restrictions to
 the two charts. With the two lemmas above this says `completionTwoPatchToScheme` is the *only*
