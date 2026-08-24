@@ -53,13 +53,15 @@ space on the nose.
 
 ## Scope
 
-`specTwoPatchScheme` is a scheme glued from two affine charts. Whether it is *non-affine* is a
-different question and is not addressed here: the only witness this development instantiates the
-construction at is `A = B = R`, `a = b = f`, `θ = RingEquiv.refl`, which glues `Spec R` to itself
-along `D(f)` — geometrically a doubled scheme, and genuinely non-affine for e.g. `R = k[t]`,
-`f = t`, but nothing here proves that. Likewise nothing here claims `completionTwoPatch` is *the*
-completion of `specTwoPatchScheme` in any sense beyond the morphism, and nothing here is separated:
-the doubled line is not, so no `IsSeparated` statement could hold at this generality.
+`specTwoPatchScheme` is a scheme glued from two affine charts, and this file does not decide
+whether it is affine. That question is settled downstream, in
+`FormalSchemes.SpecTwoPatchNonAffine`: at `A = B`, `a = b`, `θ = RingEquiv.refl` — the doubled
+`Spec A`, which glues `Spec A` to itself along `D(a)` — the glued scheme is **neither separated
+nor affine**, as soon as `A` is a domain and `a` a non-zero non-unit; the concrete witness there is
+the affine line over `ℚ` with a doubled origin. That is also why no `IsSeparated` statement is
+attempted here: none could hold at this generality. Likewise nothing here claims
+`completionTwoPatch` is *the* completion of `specTwoPatchScheme` in any sense beyond the
+morphism.
 
 ## References
 
