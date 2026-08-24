@@ -52,6 +52,7 @@ import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
+import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.ChartedDatumGlueOpenImmersion
 import FormalSchemes.ChartedDatumTopFiniteType
@@ -317,6 +318,7 @@ import FormalSchemes.ThickeningChartSpfHom
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.ThickeningCommonBase
 import FormalSchemes.ThickeningCoverPullback
+import FormalSchemes.ThickeningHomExt
 import FormalSchemes.ThickeningNonDegenerateWitness
 import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
