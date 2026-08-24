@@ -325,3 +325,4 @@ import FormalSchemes.TwoPatchFibreProductObject
 import FormalSchemes.TwoPatchFibreProductProjection
 import FormalSchemes.TwoPatchFibreProductProjectionLeft
 import FormalSchemes.TwoPatchFibreProductProjectionLeftInv
+import FormalSchemes.TwoPatchWitness

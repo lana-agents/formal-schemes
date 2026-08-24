@@ -1,5 +1,6 @@
 import FormalSchemes.CompletionTwoPatchToScheme
 import FormalSchemes.SpecTwoPatchNonAffine
+import FormalSchemes.TwoPatchWitness
 
 set_option linter.style.header false
 
@@ -168,33 +169,18 @@ section Witness
 
 open Polynomial
 
-/-- The origin of `𝔸¹_ℚ`, as a point of `Spec ℚ[X]`. -/
-private def originQX : PrimeSpectrum (ℚ[X]) :=
-  ⟨Ideal.span {(X : ℚ[X])}, (Ideal.span_singleton_prime X_ne_zero).mpr prime_X⟩
-
-private theorem span_X_sub_C_fg : (Ideal.span {(X - C (1 : ℚ))}).FG :=
-  Submodule.fg_span (Set.finite_singleton _)
-
-/-- The origin does not lie on `V(X - 1)`: evaluating a putative factorisation at `0` gives
-`-1 = 0` in `ℚ`. -/
-private theorem originQX_notMem_zeroLocus :
-    originQX ∉
-      PrimeSpectrum.zeroLocus ((Ideal.span {(X - C (1 : ℚ))} : Ideal ℚ[X]) : Set ℚ[X]) := by
-  intro hmem
-  have hdvd : (X : ℚ[X]) ∣ X - C (1 : ℚ) :=
-    Ideal.mem_span_singleton.mp (hmem (Ideal.mem_span_singleton_self _))
-  obtain ⟨q, hq⟩ := hdvd
-  have := congrArg (Polynomial.eval (0 : ℚ)) hq
-  simp at this
-
-/-- **The completion is a proper part of the glued scheme**, concretely. -/
+/-- **The completion is a proper part of the glued scheme**, concretely. The scaffolding — the
+ideal `(X - 1)`, the origin, and the fact that the origin is off `V(X - 1)` — is shared with
+`FormalSchemes/CompletionTwoPatchSupport.lean` and `FormalSchemes/CompletionTwoPatchClosed.lean`
+and lives in `FormalSchemes/TwoPatchWitness.lean`. -/
 example : (specTwoPatchι₀ (X : ℚ[X]) X (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base
-      originQX ∉
-    Set.range ⇑(completionTwoPatchToScheme (Ideal.span {(X - C (1 : ℚ))}) span_X_sub_C_fg
-      (X : ℚ[X]) (Ideal.span {(X - C (1 : ℚ))}) span_X_sub_C_fg (X : ℚ[X])
+      twoPatchWitnessOrigin ∉
+    Set.range ⇑(completionTwoPatchToScheme twoPatchWitnessIdeal twoPatchWitnessIdeal_fg
+      (X : ℚ[X]) twoPatchWitnessIdeal twoPatchWitnessIdeal_fg (X : ℚ[X])
       (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)).base :=
-  notMem_range_completionTwoPatchToScheme_base _ span_X_sub_C_fg _ _ span_X_sub_C_fg _ _ _
-    (Ideal.mem_span_singleton_self _) originQX_notMem_zeroLocus
+  notMem_range_completionTwoPatchToScheme_base _ twoPatchWitnessIdeal_fg _ _
+    twoPatchWitnessIdeal_fg _ _ _ X_mem_twoPatchWitnessOrigin
+    twoPatchWitnessOrigin_notMem_zeroLocus
 
 end Witness
 

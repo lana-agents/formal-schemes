@@ -143,50 +143,34 @@ section Witness
 
 open Polynomial
 
-private abbrev wSpan : Ideal ℚ[X] := Ideal.span {(X - C (1 : ℚ))}
-
-private theorem wFG : wSpan.FG := Submodule.fg_span (Set.finite_singleton _)
-
-/-- The image of the canonical morphism, for the doubled `𝔸¹_ℚ` completed at `1`. -/
-private abbrev wRange := Set.range ⇑(completionTwoPatchToScheme wSpan wFG (X : ℚ[X]) wSpan wFG
+/-- The image of the canonical morphism, for the doubled `𝔸¹_ℚ` completed at `1`. The geometry —
+the ideal `(X - 1)`, the origin and the centre `1` — is shared with
+`FormalSchemes/CompletionTwoPatchRange.lean` and `FormalSchemes/CompletionTwoPatchSupport.lean`
+and lives in `FormalSchemes/TwoPatchWitness.lean`. -/
+private abbrev wRange := Set.range ⇑(completionTwoPatchToScheme twoPatchWitnessIdeal
+  twoPatchWitnessIdeal_fg (X : ℚ[X]) twoPatchWitnessIdeal twoPatchWitnessIdeal_fg
   (X : ℚ[X]) (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)).base
-
-/-- The origin of `𝔸¹_ℚ`. -/
-private def wOrigin : PrimeSpectrum (ℚ[X]) :=
-  ⟨Ideal.span {(X : ℚ[X])}, (Ideal.span_singleton_prime X_ne_zero).mpr prime_X⟩
-
-/-- The point `1` of `𝔸¹_ℚ`, the centre of the completion. -/
-private def wOne : PrimeSpectrum (ℚ[X]) :=
-  ⟨wSpan, (Ideal.span_singleton_prime (prime_X_sub_C (1 : ℚ)).ne_zero).mpr (prime_X_sub_C (1 : ℚ))⟩
-
-/-- The origin does not lie on `V(X - 1)`: evaluating a putative factorisation at `0` gives
-`-1 = 0` in `ℚ`. -/
-private theorem wOrigin_notMem_zeroLocus :
-    wOrigin ∉ PrimeSpectrum.zeroLocus (wSpan : Set ℚ[X]) := by
-  intro hmem
-  obtain ⟨q, hq⟩ : (X : ℚ[X]) ∣ X - C (1 : ℚ) :=
-    Ideal.mem_span_singleton.mp
-      ((PrimeSpectrum.mem_zeroLocus _ _).mp hmem (Ideal.mem_span_singleton_self _))
-  have := congrArg (Polynomial.eval (0 : ℚ)) hq
-  simp at this
 
 /-- **The image is closed**, concretely. -/
 example : IsClosed wRange :=
-  isClosed_range_completionTwoPatchToScheme_base wSpan wFG (X : ℚ[X]) wSpan wFG (X : ℚ[X])
+  isClosed_range_completionTwoPatchToScheme_base twoPatchWitnessIdeal twoPatchWitnessIdeal_fg
+    (X : ℚ[X]) twoPatchWitnessIdeal twoPatchWitnessIdeal_fg (X : ℚ[X])
     (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)
 
 /-- **The image is not empty**: it contains the centre of the completion. -/
 example : (specTwoPatchι₀ (X : ℚ[X]) X
-    (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base wOne ∈ wRange :=
-  (Set.ext_iff.mp (preimage_range_completionTwoPatchToScheme_base_ι₀ wSpan wFG (X : ℚ[X]) wSpan
-    wFG (X : ℚ[X]) (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)) wOne).mpr
-    ((PrimeSpectrum.mem_zeroLocus _ _).mpr Set.Subset.rfl)
+    (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base twoPatchWitnessOne ∈ wRange :=
+  (Set.ext_iff.mp (preimage_range_completionTwoPatchToScheme_base_ι₀ twoPatchWitnessIdeal
+    twoPatchWitnessIdeal_fg (X : ℚ[X]) twoPatchWitnessIdeal twoPatchWitnessIdeal_fg (X : ℚ[X])
+    (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)) twoPatchWitnessOne).mpr
+    twoPatchWitnessOne_mem_zeroLocus
 
 /-- **The image is not everything**: the origin of the first chart lies outside it. -/
 example : (specTwoPatchι₀ (X : ℚ[X]) X
-    (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base wOrigin ∉ wRange :=
-  notMem_range_completionTwoPatchToScheme_base _ wFG _ _ wFG _ _ _
-    (Ideal.mem_span_singleton_self _) wOrigin_notMem_zeroLocus
+    (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base twoPatchWitnessOrigin ∉ wRange :=
+  notMem_range_completionTwoPatchToScheme_base _ twoPatchWitnessIdeal_fg _ _
+    twoPatchWitnessIdeal_fg _ _ _ X_mem_twoPatchWitnessOrigin
+    twoPatchWitnessOrigin_notMem_zeroLocus
 
 end Witness
 
