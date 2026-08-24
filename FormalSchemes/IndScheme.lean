@@ -45,13 +45,20 @@ adjunction on schemes, and `R ≃ lim_n R ⧸ Iⁿ⁺¹` is completeness of `R`,
 * `FormalSpectrum.commRingHomEquiv`: the auxiliary identification of category homomorphisms
   `B ⟶ Γ(Spf R)` with ring homomorphisms `B →+* R` through `globalSectionsEquiv`.
 
+Two immediate refinements of `specHomEquiv` live in files that import this one:
+
+* `FormalSpectrum.specHomEquiv_apply` (`FormalSchemes/IndSchemeForward.lean`) computes the
+  forward direction, putting it in `simp`-normal form through the sheaf component
+  `f.c.app (op ⊤)` (mirroring `FormalSpectrum.globalSectionsMap_apply`).
+* `FormalSpectrum.specHomLimitEquiv` (`FormalSchemes/IndSchemeLimit.lean`) repackages the
+  right-hand side as a genuine limit `lim_n Hom(Spec (R ⧸ Iⁿ), Spec B)` over the thickenings,
+  making the displayed equivalence above an honest categorical statement.
+
 ## Remaining follow-up
 
 Left to future work: the general (non-affine target) mapping-out property
-`Hom_{LRS}(Spf R, X) ≃ ...` for an arbitrary locally ringed space / scheme `X`; the explicit
-categorical repackaging of the right-hand side as a genuine `lim_n Hom(Spec (R ⧸ Iⁿ⁺¹), -)`; and a
-`simp`-normal forward computation rule expressing `specHomEquiv` through the sheaf component
-`f.c.app (op ⊤)` (mirroring `FormalSpectrum.globalSectionsMap_apply`).
+`Hom_{LRS}(Spf R, X) ≃ ...` for an arbitrary locally ringed space / scheme `X`. The limit
+repackaging is stated for each ring `B` separately; its naturality in `B` is not packaged.
 
 ## References
 
