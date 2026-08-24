@@ -173,6 +173,7 @@ import FormalSchemes.Gluing
 import FormalSchemes.GraphCodiagonalClosedEmbedding
 import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.IndScheme
+import FormalSchemes.IndSchemeExistence
 import FormalSchemes.IndSchemeForward
 import FormalSchemes.IndSchemeLimit
 import FormalSchemes.IndSchemeLimitComponents
