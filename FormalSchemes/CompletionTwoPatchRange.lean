@@ -33,23 +33,16 @@ range = ι₀ '' V(I) ∪ ι₁ '' V(J)
 ```
 
 (`range_completionTwoPatchToScheme_base`), off joint surjectivity of the two completion charts and
-the affine range lemma on each. Two non-degeneracy statements come with it, and neither is
-optional — without them the displayed equality is compatible both with the range being everything
-and with `completionTwoPatch` being secretly a single chart:
+the affine range lemma on each. Note that the compatibility hypothesis `hθ` plays no part in the
+proof: it is what makes the two glued objects exist, not what computes this image.
 
-* the image is a **proper** subset: a prime of `A` containing `a` but not containing `I` gives a
-  point of `specTwoPatch` outside it (`notMem_range_completionTwoPatchToScheme_base`), and the
-  affine line over `ℚ` completed along the point `1` is a concrete instance;
-* the glued completion really is glued from **two** pieces: its charts meet only over their
-  overlap (`completionTwoPatchι₀_base_notMem_range_completionTwoPatchι₁`), so a point outside the
-  overlap has two distinct images — the *doubled formal point*, the completion-side analogue of
-  `specTwoPatchSchemeι₀_base_ne_specTwoPatchSchemeι₁_base` in
-  `FormalSchemes.SpecTwoPatchNonAffine`.
-
-Along the way, `range_basicOpenImmersion_eq_empty` records that the overlap chart of the glued
-completion is *empty* as soon as `a ∈ I`: if the gluing locus `D(a)` misses the closed subset
-`V(I)`, the glued formal completion is the disjoint union of the two affine ones. That is what
-makes the doubled formal point cheap to exhibit.
+The equality is worth little on its own — it is compatible with the image being *everything*, in
+which case it says nothing about completion at all. So
+`notMem_range_completionTwoPatchToScheme_base` comes with it: a prime of `A` containing `a` but not
+containing `I` maps to a point of `specTwoPatch` the completion does not reach, so the image is a
+**proper** subset. Concretely,
+doubling `𝔸¹_ℚ` along `D(X)` and completing along the point `1` on each chart, the origin of the
+first chart is outside the completion.
 
 ## Scope
 
@@ -63,10 +56,13 @@ cover and reduces to
 whose middle equality is the first place the compatibility hypothesis `hθ` would actually be used:
 a prime of `V(J) ∩ D(b)` corresponds under `θ` to one of `V(I·A_a) = V(I) ∩ D(a)`. That transport
 — from `hθ`, an equality of ideals in the localizations, to a statement about primes — does not
-exist in this development, and none of the results below need it: the proof of
-`range_completionTwoPatchToScheme_base` never mentions `hθ`. Injectivity of the base map is
-likewise left open; its mixed-chart case needs the converse of
-`completionTwoPatchι₀_base_notMem_range_completionTwoPatchι₁`, which is a separate compatibility.
+exist in this development. Injectivity of the base map is likewise left open; its mixed-chart case
+needs a converse to the overlap analysis of `FormalSchemes.CompletionTwoPatchDoubled`, namely that
+a point of `Spf A^` lying over `D(a)` is in the overlap chart.
+
+That the glued completion is *genuinely* glued — its two charts meet only over `D(â)`, so a point
+outside the overlap is doubled — is `FormalSchemes.CompletionTwoPatchDoubled` and is deliberately
+not repeated here.
 
 ## Main results
 
@@ -75,11 +71,6 @@ likewise left open; its mixed-chart case needs the converse of
 * `AlgebraicGeometry.range_completionTwoPatchToScheme_base`: **the image is the glued closed
   subset.**
 * `AlgebraicGeometry.notMem_range_completionTwoPatchToScheme_base`: **and it is a proper subset.**
-* `AlgebraicGeometry.range_completionTwoPatchFormalGlueData_f_false_true` and
-  `AlgebraicGeometry.completionTwoPatchι₀_base_notMem_range_completionTwoPatchι₁`: the two charts
-  of the glued completion meet only over the overlap.
-* `formalCompletion.basicOpen_awayPoint_eq_bot` and
-  `formalCompletion.range_basicOpenImmersion_eq_empty`: the overlap chart is empty when `a ∈ I`.
 
 ## References
 
@@ -89,41 +80,9 @@ likewise left open; its mixed-chart case needs the converse of
 
 noncomputable section
 
-open CategoryTheory AlgebraicGeometry
+open CategoryTheory
 
 universe u
-
-namespace formalCompletion
-
-variable {R : Type u} [CommRing R] (I : Ideal R) (f : R)
-
-/-- **An element of the ideal has empty basic open in the formal spectrum.** The residue of
-`awayPoint I f = algebraMap R R^ f` modulo the ideal of definition is `0` precisely because
-`f` lies in the kernel of `formalCompletion.residueMap`, which is `I`. -/
-theorem basicOpen_awayPoint_eq_bot (hI : I.FG) (hf : f ∈ I) :
-    FormalSpectrum.basicOpen (AdicCompletion.idealOfDefinition I)
-      (AdicCompletion.awayPoint I f) = ⊥ := by
-  have h0 : Ideal.Quotient.mk (AdicCompletion.idealOfDefinition I)
-      (AdicCompletion.awayPoint I f) = 0 := by
-    have h : residueMap R I f = 0 := by
-      rw [← RingHom.mem_ker, ker_residueMap R I hI]
-      exact hf
-    exact h
-  change PrimeSpectrum.basicOpen (Ideal.Quotient.mk (AdicCompletion.idealOfDefinition I)
-    (AdicCompletion.awayPoint I f)) = ⊥
-  rw [h0]
-  exact PrimeSpectrum.basicOpen_zero
-
-/-- **If the basic open `D(f)` misses the closed subset `V(I)`, the basic-open chart of the
-completion is empty.** Its range is `D(f̂)` (`range_basicOpenImmersion`), and `f ∈ I` makes `f̂`
-residually zero. Geometrically: completing along `V(I)` sees nothing of `D(f)`. -/
-theorem range_basicOpenImmersion_eq_empty (hI : I.FG) (hf : f ∈ I) :
-    Set.range (basicOpenImmersion I hI f).toLRSHom.base = ∅ := by
-  rw [range_basicOpenImmersion, basicOpen_awayPoint_eq_bot I f hI hf]
-  simp
-  rfl
-
-end formalCompletion
 
 namespace AlgebraicGeometry
 
@@ -200,75 +159,18 @@ theorem notMem_range_completionTwoPatchToScheme_base {p : PrimeSpectrum A} (hp :
   · exact specTwoPatchι₀_base_notMem_range_specTwoPatchι₁ a b θ p
       (notMem_range_specAwayMap a hp) ⟨q, hqe⟩
 
-/-! ### The glued completion is glued from two pieces -/
+/-! ### A concrete witness
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The same transparency requirement as `completionTwoPatch_glue_condition₀` in
--- `FormalSchemes.CompletionGlueTwoPatchCondition`: the datum's index type reduces to `ULift Bool`
--- only past `instances` transparency, so the rewrite below is otherwise rejected as ill-typed.
-/-- **The `A`-side overlap inclusion of the completion glue datum is the basic-open chart.** Its
-range on underlying spaces is that of `formalCompletion.basicOpenImmersion`; the `eqToHom` that
-`GlueData.ofGlueData'` inserts is invisible to a range. -/
-theorem range_completionTwoPatchFormalGlueData_f_false_true :
-    Set.range ((completionTwoPatchFormalGlueData I hI a J hJ b θ
-        hθ).toLocallyRingedSpaceGlueData.toGlueData.f ⟨false⟩ ⟨true⟩).base =
-      Set.range (formalCompletion.basicOpenImmersion I hI a).toLRSHom.base := by
-  rw [completionTwoPatchFormalGlueData_f_false_true,
-    LocallyRingedSpace.range_eqToHom_comp_base]
-  rfl
+Doubling `𝔸¹_ℚ` along `D(X)` and completing along the point `1` on each chart. The *origin* of the
+first chart then lies outside the completion, so the image really is a proper subset. -/
 
-/-- **The two charts of the glued completion meet only over the overlap.** A point of `Spf A^`
-outside the basic-open chart `D(â)` maps into `completionTwoPatch` outside the range of the
-`B`-chart. This is the completion-side analogue of
-`specTwoPatchι₀_base_notMem_range_specTwoPatchι₁`, and together with
-`completionTwoPatch_jointly_surjective` it pins the gluing down: it happens along `D(â) ≅ D(b̂)`
-and nowhere else. -/
-theorem completionTwoPatchι₀_base_notMem_range_completionTwoPatchι₁
-    (x : (formalCompletion A I hI).toLocallyRingedSpace)
-    (hx : x ∉ Set.range (formalCompletion.basicOpenImmersion I hI a).toLRSHom.base) :
-    (completionTwoPatchι₀ I hI a J hJ b θ hθ).base x ∉
-      Set.range (completionTwoPatchι₁ I hI a J hJ b θ hθ).base := by
-  rintro ⟨y, hy⟩
-  obtain ⟨w, hw⟩ := (completionTwoPatchFormalGlueData I hI a J hJ b θ
-      hθ).toLocallyRingedSpaceGlueData.range_ι_inter_subset ⟨false⟩ ⟨true⟩
-    (⟨⟨x, rfl⟩, ⟨y, hy⟩⟩ :
-      (completionTwoPatchι₀ I hI a J hJ b θ hθ).base x ∈
-        Set.range (completionTwoPatchι₀ I hI a J hJ b θ hθ).base ∩
-          Set.range (completionTwoPatchι₁ I hI a J hJ b θ hθ).base)
-  refine hx ?_
-  rw [← range_completionTwoPatchFormalGlueData_f_false_true I hI a J hJ b θ hθ]
-  exact ⟨w, (completionTwoPatchι₀_isOpenImmersion I hI a J hJ b θ hθ).base_open.injective hw⟩
-
-/-- **The doubled formal point.** When the gluing element lies in the ideal one completes along,
-the overlap of the glued completion is empty (`formalCompletion.range_basicOpenImmersion_eq_empty`)
-and hence *every* point of the `A`-chart has two distinct images in `completionTwoPatch`. So the
-glued formal completion is not a single chart in disguise. -/
-theorem completionTwoPatchι₀_base_ne_completionTwoPatchι₁_base (ha : a ∈ I)
-    (x : (formalCompletion A I hI).toLocallyRingedSpace) :
-    (completionTwoPatchι₀ I hI a I hI a (RingEquiv.refl (Localization.Away a))
-        (Ideal.map_id _)).base x ≠
-      (completionTwoPatchι₁ I hI a I hI a (RingEquiv.refl (Localization.Away a))
-        (Ideal.map_id _)).base x := fun h =>
-  completionTwoPatchι₀_base_notMem_range_completionTwoPatchι₁ I hI a I hI a _ _ x
-    (by rw [formalCompletion.range_basicOpenImmersion_eq_empty I a hI ha]; exact Set.notMem_empty x)
-    ⟨x, h.symm⟩
-
-/-! ### Two concrete witnesses
-
-Both take `A = B = ℚ[X]`, so that the ambient glued scheme is a doubling of the affine line over
-`ℚ`, and both are non-degeneracy checks on the results above rather than new mathematics. -/
-
-section Witnesses
+section Witness
 
 open Polynomial
 
 /-- The origin of `𝔸¹_ℚ`, as a point of `Spec ℚ[X]`. -/
 private def originQX : PrimeSpectrum (ℚ[X]) :=
   ⟨Ideal.span {(X : ℚ[X])}, (Ideal.span_singleton_prime X_ne_zero).mpr prime_X⟩
-
-private theorem span_X_fg : (Ideal.span {(X : ℚ[X])}).FG :=
-  Submodule.fg_span (Set.finite_singleton _)
 
 private theorem span_X_sub_C_fg : (Ideal.span {(X - C (1 : ℚ))}).FG :=
   Submodule.fg_span (Set.finite_singleton _)
@@ -285,9 +187,7 @@ private theorem originQX_notMem_zeroLocus :
   have := congrArg (Polynomial.eval (0 : ℚ)) hq
   simp at this
 
-/-- **The completion is a proper part of the glued scheme**, concretely: doubling `𝔸¹_ℚ` along
-`D(X)` and completing along the point `1` on each chart, the origin of the first chart is a point
-of the glued scheme that the formal completion does not reach. -/
+/-- **The completion is a proper part of the glued scheme**, concretely. -/
 example : (specTwoPatchι₀ (X : ℚ[X]) X (RingEquiv.refl (Localization.Away (X : ℚ[X])))).base
       originQX ∉
     Set.range ⇑(completionTwoPatchToScheme (Ideal.span {(X - C (1 : ℚ))}) span_X_sub_C_fg
@@ -296,19 +196,6 @@ example : (specTwoPatchι₀ (X : ℚ[X]) X (RingEquiv.refl (Localization.Away (
   notMem_range_completionTwoPatchToScheme_base _ span_X_sub_C_fg _ _ span_X_sub_C_fg _ _ _
     (Ideal.mem_span_singleton_self _) originQX_notMem_zeroLocus
 
-/-- **The glued completion really has two charts**, concretely: doubling `𝔸¹_ℚ` along `D(X)` and
-completing along the origin `V(X)` — where the gluing locus misses the closed subset entirely —
-every point of the first chart is doubled. -/
-example (x : (formalCompletion ℚ[X] (Ideal.span {(X : ℚ[X])}) span_X_fg).toLocallyRingedSpace) :
-    (completionTwoPatchι₀ (Ideal.span {(X : ℚ[X])}) span_X_fg (X : ℚ[X])
-        (Ideal.span {(X : ℚ[X])}) span_X_fg (X : ℚ[X])
-        (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)).base x ≠
-      (completionTwoPatchι₁ (Ideal.span {(X : ℚ[X])}) span_X_fg (X : ℚ[X])
-        (Ideal.span {(X : ℚ[X])}) span_X_fg (X : ℚ[X])
-        (RingEquiv.refl (Localization.Away (X : ℚ[X]))) (Ideal.map_id _)).base x :=
-  completionTwoPatchι₀_base_ne_completionTwoPatchι₁_base _ span_X_fg _
-    (Ideal.mem_span_singleton_self _) x
-
-end Witnesses
+end Witness
 
 end AlgebraicGeometry
