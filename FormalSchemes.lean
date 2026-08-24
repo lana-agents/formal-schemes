@@ -91,6 +91,7 @@ import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletionBasicOpenOverlap
 import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionSheafComparison
+import FormalSchemes.CompletionToSpec
 import FormalSchemes.CoproductOpenImmersion
 import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.DiagonalPreimageGraph
