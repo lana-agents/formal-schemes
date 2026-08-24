@@ -1,3 +1,4 @@
+import FormalSchemes.AdicHausdorff
 import FormalSchemes.SpfMap
 import FormalSchemes.Sections
 
@@ -122,59 +123,46 @@ theorem globalSectionsMap_locallyRingedSpaceMap :
   set s := (globalSectionsEquiv I).symm r with hs
   set t := ((locallyRingedSpaceMap I J φ hφ).c.app
     (op (⊤ : Opens (FormalSpectrum I)))).hom s with ht
-  refine (IsHausdorff.eq_iff_smodEq (I := J)).mpr fun n => ?_
-  rw [SModEq.sub_mem]
-  have hmem : ∀ (m : ℕ) (z : S), z ∈ (J ^ m • ⊤ : Submodule S S) ↔ z ∈ J ^ m := by
-    intro m z
-    rw [Ideal.smul_top_eq_map (J ^ m), Submodule.restrictScalars_mem, Algebra.algebraMap_self,
-      Ideal.map_id]
-  refine (hmem n _).mpr (Ideal.Quotient.eq.mp ?_)
+  refine IsHausdorff.eq_of_mk_pow_succ_eq J fun n => ?_
   -- it suffices to compare the level-`n` components
-  cases n with
-  | zero =>
-    have htop : (J ^ 0 : Ideal S) = ⊤ := by rw [pow_zero]; exact Ideal.one_eq_top
-    refine Ideal.Quotient.eq.mpr ?_
-    rw [htop]
-    trivial
-  | succ n =>
-    rw [mk_globalSectionsEquiv J n t]
-    -- the level-`n` component of the image section
-    have hπ : ((limit.π (structureSheafFunctor J) ⟨n⟩).hom.app
-        (op (⊤ : Opens (FormalSpectrum J)))).hom t =
-        ((levelSheafHom I J φ hφ n).hom.app (op (⊤ : Opens (FormalSpectrum I)))).hom
-          (((limit.π (structureSheafFunctor I) ⟨n⟩).hom.app
-            (op (⊤ : Opens (FormalSpectrum I)))).hom s) := by
-      have h := DFunLike.congr_fun (congrArg (fun (α : structureSheaf I ⟶
-        (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).obj (thickeningSheaf J n)) =>
-          (α.hom.app (op (⊤ : Opens (FormalSpectrum I)))).hom) (mapSheafHom_π I J φ hφ n)) s
-      exact h
-    rw [hπ]
-    -- the level-`n` component of `s` is the residue of `r`
-    have hs' : ((limit.π (structureSheafFunctor I) ⟨n⟩).hom.app
-        (op (⊤ : Opens (FormalSpectrum I)))).hom s =
-        (topLevelEquiv I n).symm (Ideal.Quotient.mk (I ^ (n + 1)) r) := by
-      have h := mk_globalSectionsEquiv I n s
-      rw [hs, RingEquiv.apply_symm_apply] at h
-      rw [h, RingEquiv.symm_apply_apply]
-    rw [hs', topLevelEquiv_symm_apply,
-      levelSheafHom_hom_app I J φ hφ n (⊤ : Opens (FormalSpectrum I))]
-    -- and `comap` of the level map sends it to the residue of `φ r`
-    have hval : (CommRingCat.ofHom (StructureSheaf.comap (levelRingHom I J φ hφ n)
-        (thickeningOpen I n ⊤) (thickeningOpen J n ((Opens.map (mapTop I J φ hφ)).obj ⊤))
-        (thickeningOpen_map_le I J φ hφ n ⊤))).hom
-        (algebraMap (R ⧸ I ^ (n + 1))
-          ((thickeningSheaf I n).presheaf.obj (op (⊤ : Opens (FormalSpectrum I))))
-          (Ideal.Quotient.mk (I ^ (n + 1)) r)) =
-        algebraMap (S ⧸ J ^ (n + 1))
-          ((thickeningSheaf J n).presheaf.obj
-            (op ((Opens.map (mapTop I J φ hφ)).obj (⊤ : Opens (FormalSpectrum I)))))
-          (Ideal.Quotient.mk (J ^ (n + 1)) (φ r)) := by
-      have hc := comap_algebraMap (levelRingHom I J φ hφ n) (thickeningOpen I n ⊤)
-        (thickeningOpen J n ((Opens.map (mapTop I J φ hφ)).obj ⊤))
-        (thickeningOpen_map_le I J φ hφ n ⊤) (Ideal.Quotient.mk (I ^ (n + 1)) r)
-      rw [levelRingHom_mk] at hc
-      exact hc
-    exact Eq.trans (congrArg (topLevelEquiv J n) hval) (topLevelEquiv_algebraMap J n _)
+  rw [mk_globalSectionsEquiv J n t]
+  -- the level-`n` component of the image section
+  have hπ : ((limit.π (structureSheafFunctor J) ⟨n⟩).hom.app
+      (op (⊤ : Opens (FormalSpectrum J)))).hom t =
+      ((levelSheafHom I J φ hφ n).hom.app (op (⊤ : Opens (FormalSpectrum I)))).hom
+        (((limit.π (structureSheafFunctor I) ⟨n⟩).hom.app
+          (op (⊤ : Opens (FormalSpectrum I)))).hom s) := by
+    have h := DFunLike.congr_fun (congrArg (fun (α : structureSheaf I ⟶
+      (TopCat.Sheaf.pushforward CommRingCat (mapTop I J φ hφ)).obj (thickeningSheaf J n)) =>
+        (α.hom.app (op (⊤ : Opens (FormalSpectrum I)))).hom) (mapSheafHom_π I J φ hφ n)) s
+    exact h
+  rw [hπ]
+  -- the level-`n` component of `s` is the residue of `r`
+  have hs' : ((limit.π (structureSheafFunctor I) ⟨n⟩).hom.app
+      (op (⊤ : Opens (FormalSpectrum I)))).hom s =
+      (topLevelEquiv I n).symm (Ideal.Quotient.mk (I ^ (n + 1)) r) := by
+    have h := mk_globalSectionsEquiv I n s
+    rw [hs, RingEquiv.apply_symm_apply] at h
+    rw [h, RingEquiv.symm_apply_apply]
+  rw [hs', topLevelEquiv_symm_apply,
+    levelSheafHom_hom_app I J φ hφ n (⊤ : Opens (FormalSpectrum I))]
+  -- and `comap` of the level map sends it to the residue of `φ r`
+  have hval : (CommRingCat.ofHom (StructureSheaf.comap (levelRingHom I J φ hφ n)
+      (thickeningOpen I n ⊤) (thickeningOpen J n ((Opens.map (mapTop I J φ hφ)).obj ⊤))
+      (thickeningOpen_map_le I J φ hφ n ⊤))).hom
+      (algebraMap (R ⧸ I ^ (n + 1))
+        ((thickeningSheaf I n).presheaf.obj (op (⊤ : Opens (FormalSpectrum I))))
+        (Ideal.Quotient.mk (I ^ (n + 1)) r)) =
+      algebraMap (S ⧸ J ^ (n + 1))
+        ((thickeningSheaf J n).presheaf.obj
+          (op ((Opens.map (mapTop I J φ hφ)).obj (⊤ : Opens (FormalSpectrum I)))))
+        (Ideal.Quotient.mk (J ^ (n + 1)) (φ r)) := by
+    have hc := comap_algebraMap (levelRingHom I J φ hφ n) (thickeningOpen I n ⊤)
+      (thickeningOpen J n ((Opens.map (mapTop I J φ hφ)).obj ⊤))
+      (thickeningOpen_map_le I J φ hφ n ⊤) (Ideal.Quotient.mk (I ^ (n + 1)) r)
+    rw [levelRingHom_mk] at hc
+    exact hc
+  exact Eq.trans (congrArg (topLevelEquiv J n) hval) (topLevelEquiv_algebraMap J n _)
 
 end Map
 

@@ -140,14 +140,8 @@ theorem liftOfTower_mk_comp (ψ : B →+* R) :
     liftOfTower I B (fun n => (Ideal.Quotient.mk (I ^ n)).comp ψ)
         (factorPow_comp_mk_comp I B ψ) = ψ := by
   refine RingHom.ext fun b => ?_
-  refine (IsHausdorff.eq_iff_smodEq (I := I)).mpr fun n => ?_
-  rw [SModEq.sub_mem]
-  have hmem : ∀ (m : ℕ) (z : R), z ∈ (I ^ m • ⊤ : Submodule R R) ↔ z ∈ I ^ m := by
-    intro m z
-    rw [Ideal.smul_top_eq_map (I ^ m), Submodule.restrictScalars_mem, Algebra.algebraMap_self,
-      Ideal.map_id]
-  refine (hmem n _).mpr (Ideal.Quotient.eq.mp ?_)
-  exact mk_liftOfTower I B _ (factorPow_comp_mk_comp I B ψ) n b
+  exact IsHausdorff.eq_of_mk_pow_eq I fun n =>
+    mk_liftOfTower I B _ (factorPow_comp_mk_comp I B ψ) n b
 
 /-- **The existence half of the colimit property** (EGA I, 10.6.7): a compatible family of
 morphisms out of the infinitesimal thickenings of `Spf R` comes from a **unique** morphism out of

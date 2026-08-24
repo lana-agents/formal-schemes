@@ -74,8 +74,7 @@ theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : RestrictedLaurentSeries R I
       x ∈ ((I.map (algebraMap R (LaurentPolynomial R))) ^ m • ⊤ :
         Submodule (LaurentPolynomial R) (RestrictedLaurentSeries R I)) := by
   rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (LaurentPolynomial R))) m x,
-    idealOfDefinition, Ideal.smul_top_eq_map, Submodule.restrictScalars_mem,
-    Algebra.algebraMap_self, Ideal.map_id]
+    idealOfDefinition, Ideal.mem_smul_top_self_iff]
 
 /-- The image of the Laurent variable `T ^ n` in the restricted Laurent series ring. -/
 def X (n : ℤ) : RestrictedLaurentSeries R I :=

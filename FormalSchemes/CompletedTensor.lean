@@ -173,7 +173,7 @@ theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : CompletedTensorProduct R I 
       x ∈ ((I.map (algebraMap R (A ⊗[R] B))) ^ m • ⊤ :
         Submodule (A ⊗[R] B) (CompletedTensorProduct R I A B)) := by
   rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (A ⊗[R] B))) m x, idealOfDefinition,
-    Ideal.smul_top_eq_map, Submodule.restrictScalars_mem, Algebra.algebraMap_self, Ideal.map_id]
+    Ideal.mem_smul_top_self_iff]
 
 variable {S : Type u} [CommRing S] (L : Ideal S) [IsAdicComplete L S]
 

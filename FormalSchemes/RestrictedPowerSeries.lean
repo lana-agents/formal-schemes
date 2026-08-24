@@ -1,3 +1,4 @@
+import FormalSchemes.AdicHausdorff
 import FormalSchemes.FormalScheme
 import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.RingTheory.AdicCompletion.RingHom
@@ -66,9 +67,8 @@ variable {B : Type u} [CommRing B] {A : Type u} [CommRing A] [Algebra B A] (K : 
 theorem Ideal.mem_map_pow_iff_mem_smul_top (n : ℕ) (x : A) :
     x ∈ ((K.map (algebraMap B A)) ^ n • ⊤ : Submodule A A) ↔
       x ∈ (K ^ n • ⊤ : Submodule B A) := by
-  rw [Ideal.smul_top_eq_map (K ^ n), Submodule.restrictScalars_mem,
-    Ideal.smul_top_eq_map ((K.map (algebraMap B A)) ^ n), Submodule.restrictScalars_mem,
-    Algebra.algebraMap_self, Ideal.map_id, ← Ideal.map_pow]
+  rw [Ideal.mem_smul_top_self_iff, Ideal.smul_top_eq_map (K ^ n), Submodule.restrictScalars_mem,
+    ← Ideal.map_pow]
 
 /-- Adic completeness transfers from the `B`-module structure to the `A`-ring structure: if a
 `B`-algebra `A` is `K`-adically complete as a `B`-module, it is complete for the extended
@@ -257,13 +257,7 @@ theorem evalHom_of (p : MvPolynomial (Fin n) R) :
       (evalHom R I n L hIL s (AdicCompletion.of _ _ p)) =
       Ideal.Quotient.mk (L ^ m) (MvPolynomial.aeval s p) := fun m => by
     rw [mk_evalHom, evalLevel_of]
-  have hmem : ∀ (m : ℕ) (z : S), z ∈ (L ^ m • ⊤ : Submodule S S) ↔ z ∈ L ^ m := by
-    intro m z
-    rw [Ideal.smul_top_eq_map (L ^ m), Submodule.restrictScalars_mem, Algebra.algebraMap_self,
-      Ideal.map_id]
-  refine (IsHausdorff.eq_iff_smodEq (I := L)).mpr fun m => ?_
-  rw [SModEq.sub_mem]
-  exact (hmem m _).mpr (Ideal.Quotient.eq.mp (h m))
+  exact IsHausdorff.eq_of_mk_pow_eq L h
 
 end Eval
 

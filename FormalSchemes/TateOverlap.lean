@@ -256,7 +256,7 @@ theorem mem_overlapIdeal_pow_iff (m : ℕ) (x : annulusOverlap R I q) :
   rw [← Ideal.mem_map_pow_iff_mem_smul_top (annulusLocIdeal R I q) m x]
   change x ∈ ((annulusLocIdeal R I q).map
       (algebraMap (annulusLoc R I q) (annulusOverlap R I q))) ^ m ↔ _
-  rw [Ideal.smul_top_eq_map, Submodule.restrictScalars_mem, Algebra.algebraMap_self, Ideal.map_id]
+  rw [Ideal.mem_smul_top_self_iff]
 
 /-- Continuity of the forward map, in the module-filtration form consumed downstream. -/
 theorem overlapHom_cont (m : ℕ) (x : annulusOverlap R I q)

@@ -1,4 +1,5 @@
 import FormalSchemes.AdicCompletionLimit
+import FormalSchemes.AdicHausdorff
 import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.RingTheory.AdicCompletion.RingHom
 
@@ -80,18 +81,8 @@ theorem mk_extendRingHom (m : ℕ) (x : AdicCompletion K B) :
 
 /-- The continuous extension restricts to `ψ` on `B`. -/
 theorem extendRingHom_of (b : B) :
-    extendRingHom K L ψ hψ (AdicCompletion.of K B b) = ψ b := by
-  have h : ∀ m : ℕ, Ideal.Quotient.mk (L ^ m)
-      (extendRingHom K L ψ hψ (AdicCompletion.of K B b)) =
-      Ideal.Quotient.mk (L ^ m) (ψ b) := fun m => by
-    rw [mk_extendRingHom, extendLevel_of]
-  have hmem : ∀ (m : ℕ) (z : S), z ∈ (L ^ m • ⊤ : Submodule S S) ↔ z ∈ L ^ m := by
-    intro m z
-    rw [Ideal.smul_top_eq_map (L ^ m), Submodule.restrictScalars_mem, Algebra.algebraMap_self,
-      Ideal.map_id]
-  refine (IsHausdorff.eq_iff_smodEq (I := L)).mpr fun m => ?_
-  rw [SModEq.sub_mem]
-  exact (hmem m _).mpr (Ideal.Quotient.eq.mp (h m))
+    extendRingHom K L ψ hψ (AdicCompletion.of K B b) = ψ b :=
+  IsHausdorff.eq_of_mk_pow_eq L fun m => by rw [mk_extendRingHom, extendLevel_of]
 
 /-- The continuous extension maps the powers of the filtration into the powers of `L`
 (continuity of `extendRingHom`), for `K` finitely generated. -/
@@ -136,13 +127,7 @@ theorem hom_ext_of_continuous (hK : K.FG) {F G : AdicCompletion K B →+* S}
       ring
     rw [hdecomp]
     exact sub_mem hFx hGx
-  have hmem : ∀ (m : ℕ) (z : S), z ∈ (L ^ m • ⊤ : Submodule S S) ↔ z ∈ L ^ m := by
-    intro m z
-    rw [Ideal.smul_top_eq_map (L ^ m), Submodule.restrictScalars_mem, Algebra.algebraMap_self,
-      Ideal.map_id]
-  refine (IsHausdorff.eq_iff_smodEq (I := L)).mpr fun m => ?_
-  rw [SModEq.sub_mem]
-  exact (hmem m _).mpr (key m)
+  exact IsHausdorff.eq_of_mk_pow_eq L fun m => Ideal.Quotient.eq.mpr (key m)
 
 end AdicCompletion
 

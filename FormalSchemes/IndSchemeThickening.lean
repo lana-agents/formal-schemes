@@ -201,18 +201,7 @@ theorem hom_ext_thickeningMap
     exact DFunLike.congr_fun (congrArg CommRingCat.Hom.hom
       (Quiver.Hom.op_inj (Spec.toLocallyRingedSpace.map_injective hspec.symm))) b
   -- Hausdorffness of the `I`-adic topology on `R` upgrades that to equality
-  refine (IsHausdorff.eq_iff_smodEq (I := I)).mpr fun n => ?_
-  rw [SModEq.sub_mem]
-  have hmem : ∀ (m : ℕ) (z : R), z ∈ (I ^ m • ⊤ : Submodule R R) ↔ z ∈ I ^ m := by
-    intro m z
-    rw [Ideal.smul_top_eq_map (I ^ m), Submodule.restrictScalars_mem, Algebra.algebraMap_self,
-      Ideal.map_id]
-  refine (hmem n _).mpr (Ideal.Quotient.eq.mp ?_)
-  cases n with
-  | zero =>
-    have htop : (I ^ 0 : Ideal R) = ⊤ := by rw [pow_zero]; exact Ideal.one_eq_top
-    exact Ideal.Quotient.eq.mpr (by rw [htop]; trivial)
-  | succ m => exact hmod m
+  exact IsHausdorff.eq_of_mk_pow_succ_eq I hmod
 
 section Nonvacuity
 

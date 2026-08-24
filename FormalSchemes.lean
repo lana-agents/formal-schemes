@@ -5,6 +5,7 @@ import FormalSchemes.AdicCompletionCongrLevel
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.AdicCompletionSplitAway
 import FormalSchemes.AdicExtend
+import FormalSchemes.AdicHausdorff
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicOnSections
 import FormalSchemes.AdicOnSectionsDescent
