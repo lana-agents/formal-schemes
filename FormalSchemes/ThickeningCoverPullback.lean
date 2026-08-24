@@ -45,7 +45,10 @@ degenerates no matter which cover of the target is chosen, because `|Spf R| ≅ 
 `ℤ^ ⧸ 2ℤ^ = 𝔽₂` — the source is a one-point space, so every open cover of it has a member equal to
 `⊤`. That is a fact about the witness, not about the theorem; the theorem quantifies over all `X`
 and all covers, and the non-degeneracy that is available is on the hypothesis side, which is what is
-exhibited.
+exhibited. The degeneracy is proved as `FormalSpectrum.twoAdic_exists_eq_top` in
+`FormalSchemes/TwoAdicDegeneracy.lean`, and this file's `iSup_map_commonBase_obj_eq_top` is
+instantiated at the `2`-adic witness against it in
+`FormalSchemes/ThickeningNonDegenerateWitness.lean`.
 
 A witness with a genuinely multi-piece pulled-back cover needs an adic ring whose `R ⧸ I` has
 **more than one prime ideal** — equivalently, whose `Spec` is not a point. (Not "whose `R ⧸ I` is

@@ -15,7 +15,9 @@ It cannot rule out anything topological. `FormalSpectrum I` is *defined* as
 `PrimeSpectrum (R ⧸ I)` (`FormalSchemes/FormalSpectrum.lean`), and `ℤ^ ⧸ 2ℤ^` is `𝔽₂`, so
 `|Spf ℤ^|` is a **one-point space**. Every open cover of a point has a member equal to `⊤`, so a
 theorem about *decomposing* `|Spf R|` — covers, charts, gluing, the remaining programme of EGA I
-10.6.10 — is indistinguishable at that witness from the same theorem with `|Spf R|` a point.
+10.6.10 — is indistinguishable at that witness from the same theorem with `|Spf R|` a point. That
+degeneracy is proved, not merely asserted: see `FormalSpectrum.twoAdic_exists_eq_top` in
+`FormalSchemes/TwoAdicDegeneracy.lean`.
 
 This file supplies a witness where that does not happen: the **formal affine line over `ℤ`**,
 `ℤ[X]` completed at `(X)`, i.e. `ℤ⟦X⟧` with its ideal of definition. Its residue ring is `ℤ`, so
