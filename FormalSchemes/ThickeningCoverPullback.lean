@@ -45,8 +45,17 @@ degenerates no matter which cover of the target is chosen, because `|Spf R| ≅ 
 `ℤ^ ⧸ 2ℤ^ = 𝔽₂` — the source is a one-point space, so every open cover of it has a member equal to
 `⊤`. That is a fact about the witness, not about the theorem; the theorem quantifies over all `X`
 and all covers, and the non-degeneracy that is available is on the hypothesis side, which is what is
-exhibited. A witness with a genuinely multi-piece pulled-back cover needs an adic ring whose
-`R ⧸ I` is not local, and no such witness exists on this tree yet.
+exhibited.
+
+A witness with a genuinely multi-piece pulled-back cover needs an adic ring whose `R ⧸ I` has
+**more than one prime ideal** — equivalently, whose `Spec` is not a point. (Not "whose `R ⧸ I` is
+non-local": a DVR is local and has two primes, so locality is the wrong criterion.)
+`FormalSchemes/FormalLineWitness.lean` supplies such a ring: `ℤ[X]` completed at `(X)`, i.e.
+`ℤ⟦X⟧`, whose residue ring is `ℤ`, with `FormalSpectrum.homeoSpecInt : FormalSpectrum
+formalLineIdeal ≃ₜ PrimeSpectrum ℤ` and an explicit two-piece cover (`FormalSpectrum.twoChart`,
+`iSup_twoChart`, `twoChart_ne_top`). Re-running the witness below at that ring — where the
+*pulled-back* cover really is two-piece — is issue 1038; it is a statement change and needs a new
+import, so it is not done here.
 
 ## Main results
 
