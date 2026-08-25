@@ -96,7 +96,7 @@ theorem exists_affineChart_subset_adicOverBase (X : FormalScheme.{u})
   obtain ⟨v, ⟨g, rfl⟩, hx₀v, hvsub⟩ :=
     (isTopologicalBasis_basicOpen I₀).exists_subset_of_mem_open hmem hopen
   haveI hJadic : IsAdicRing (FormalSpectrum.awayCompletionIdeal I₀ g) :=
-    AdicCompletion.isAdicRing_map (I₀.map (algebraMap S₀ (Localization.Away g))) (hI₀fg.map _)
+    FormalSpectrum.isAdicRing_awayCompletionIdeal I₀ g hI₀fg
   haveI hoi : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart I₀ g) :=
     FormalSpectrum.isOpenImmersion_basicOpenChart I₀ g hI₀fg
   have hJfg : (FormalSpectrum.awayCompletionIdeal I₀ g).FG := by

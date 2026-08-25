@@ -366,7 +366,7 @@ theorem fibreLift_overlapOf
     (charts c).J _ _ pf hpfOI (charts c).fg v with hlbc
   set gv := lbc.g with hgv
   haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal (charts c).J gv) :=
-    AdicCompletion.isAdicRing_map _ ((charts c).fg.map _)
+    FormalSpectrum.isAdicRing_awayCompletionIdeal (charts c).J gv (charts c).fg
   set w := LocallyRingedSpace.IsOpenImmersion.lift pf
     (FormalSpectrum.basicOpenChart (charts c).J gv) lbc.hsub with hw
   change w ≫ (pf ≫ D.fibreLiftPieceOf a b charts hcomm hs c) =

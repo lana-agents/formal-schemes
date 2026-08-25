@@ -121,7 +121,7 @@ def liftedBasicCover (V : FormalScheme.{u})
   J := V
   obj v :=
     letI : IsAdicRing (FormalSpectrum.awayCompletionIdeal J (liftedBasicChart pf hJ v).g) :=
-      AdicCompletion.isAdicRing_map _ (hJ.map _)
+      FormalSpectrum.isAdicRing_awayCompletionIdeal J (liftedBasicChart pf hJ v).g hJ
     FormalScheme.Spf (FormalSpectrum.awayCompletionIdeal J (liftedBasicChart pf hJ v).g)
   map v := FormalScheme.Hom.mk
     (LocallyRingedSpace.IsOpenImmersion.lift pf (basicOpenChart J (liftedBasicChart pf hJ v).g)

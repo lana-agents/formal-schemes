@@ -201,7 +201,7 @@ def chartCodiagonal (i j : DX.J) (h : i ≠ j) :
   letI := DX.commRing; letI := DX.algebra
   haveI : IsAdicComplete (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
       (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-    (AdicCompletion.isAdicRing_map _ ((hI.map _).map _)).toIsAdicComplete
+    (isAdicRing_awayCompletionIdeal _ _ (hI.map _)).toIsAdicComplete
   CompletedTensorProduct.lift (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
     (map_algebraMap_awayCompletion_eq I (DX.g i j)).le
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h)
@@ -216,7 +216,7 @@ theorem chartCodiagonal_comp_inl (i j : DX.J) (h : i ≠ j) :
   letI := DX.commRing; letI := DX.algebra
   haveI : IsAdicComplete (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
       (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-    (AdicCompletion.isAdicRing_map _ ((hI.map _).map _)).toIsAdicComplete
+    (isAdicRing_awayCompletionIdeal _ _ (hI.map _)).toIsAdicComplete
   exact RingHom.ext fun a => CompletedTensorProduct.lift_inl _
     (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ a
 
@@ -231,7 +231,7 @@ theorem chartCodiagonal_comp_inr (i j : DX.J) (h : i ≠ j) :
   letI := DX.commRing; letI := DX.algebra
   haveI : IsAdicComplete (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
       (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-    (AdicCompletion.isAdicRing_map _ ((hI.map _).map _)).toIsAdicComplete
+    (isAdicRing_awayCompletionIdeal _ _ (hI.map _)).toIsAdicComplete
   exact RingHom.ext fun a => CompletedTensorProduct.lift_inr _
     (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ a
 
@@ -247,7 +247,7 @@ def chartCodiagonalMap (i j : DX.J) (h : i ≠ j) :
       locallyRingedSpaceObj (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
   letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-    AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
     CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
   CompletedTensorProduct.fibreLift (map_algebraMap_awayCompletion_eq I (DX.g i j)).le
@@ -263,7 +263,7 @@ theorem chartCodiagonalMap_comp_fibrePr₁ (i j : DX.J) (h : i ≠ j) :
       basicOpenChart (I.map (algebraMap R (DX.A i))) (DX.g i j) := by
   letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-    AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
     CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
   exact CompletedTensorProduct.fibreLift_comp_pr₁ _ _ _ hI
@@ -279,9 +279,9 @@ theorem chartCodiagonalMap_comp_fibrePr₂ (i j : DX.J) (h : i ≠ j) :
         basicOpenChart (I.map (algebraMap R (DX.A j))) (DX.g j i) := by
   letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-    AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A j))) (DX.g j i)) :=
-    AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
     CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
   refine (CompletedTensorProduct.fibreLift_comp_pr₂ _ _ _ hI).trans ?_
@@ -453,9 +453,9 @@ theorem overlapChart_comp_diagonal' (i j : DX.J) (h : i ≠ j) :
         (diagonalDatum DX σX hστX hσcX).formalGlueData.ι (i, j) := by
   letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-    AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A j))) (DX.g j i)) :=
-    AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
     CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
   exact chartLift_comp_diagonal' DX σX hστX hσcX (DX.fg_awayCompletionIdeal i j)
@@ -584,9 +584,9 @@ theorem preimage_range_diagonal'_eq_range_chartCodiagonalMap (i j : DX.J) (h : i
       Set.range ⇑(DX.chartCodiagonalMap i j h).base := by
   letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-    AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A j))) (DX.g j i)) :=
-    AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   exact preimage_range_diagonal'_eq_range_fibreLift DX σX hστX hσcX
     (DX.fg_awayCompletionIdeal i j) (map_algebraMap_awayCompletion_eq I (DX.g i j)).le i j
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h) _ rfl
@@ -649,7 +649,7 @@ theorem isSeparated_of_chartCodiagonal_surjective
         (AlgHom.id R (DX.A i)) hI)
       (CompletedTensorProduct.codiagonal_surjective)).isClosed_range
   · haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-      AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+      isAdicRing_awayCompletionIdeal _ _ (hI.map _)
     rw [preimage_range_diagonal'_eq_range_chartCodiagonalMap DX σX hστX hσcX i j hij]
     exact (FormalSpectrum.isClosedEmbedding_map_of_surjective
       (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j))

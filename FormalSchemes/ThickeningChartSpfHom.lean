@@ -87,9 +87,6 @@ what will make two overlapping charts agree.
   computation rule and its uniqueness.
 * `FormalSpectrum.thickeningMap_comp_chartSpfHomAmbient`: the chart-free restriction rule quoted
   above.
-* `FormalSpectrum.isAdicRing_awayCompletionIdeal`: `R{1/r}` is a complete adic ring for `I.FG`.
-  Not previously named on the tree, although `AdicOnSections.lean` takes it as a hypothesis and
-  `GeneralSeparatedChartCodiagonal.lean` re-derives it with `haveI` in eight places.
 * `FormalSpectrum.thickeningMap_comp_chartSpfHomAmbient_formalLine_properOpen`: the witness with
   every degeneracy excluded — `I ≠ ⊥`, a chart that is neither `⊥` nor `⊤` at any level, and a
   target open `U` that is neither `⊥` nor `⊤` (`openTwo_ne_top`, `openTwo_ne_bot`).
@@ -105,8 +102,10 @@ left `openTwo_ne_top` and `openTwo_ne_bot` unspellable downstream.
 `IsAdicRing (awayCompletionIdeal I r)` enters the assembly section as an **instance hypothesis**,
 not as something derived inside the proofs, because it appears in the *type* of `chartSpfHom`
 (`locallyRingedSpaceObj (awayCompletionIdeal I r)` needs it). This is the shape
-`AdicOnSections.lean` already uses; `isAdicRing_awayCompletionIdeal` is what a consumer
-discharges it with, given `I.FG`.
+`AdicOnSections.lean` already uses; `FormalSpectrum.isAdicRing_awayCompletionIdeal`
+(`FormalSchemes/BasicOpenChart.lean`) is what a consumer discharges it with, given `I.FG`. That
+lemma was first named here, by issue 1062, and issue 1065 moved it down to the module that defines
+`awayCompletionIdeal` so that the files below this one could use it too.
 
 Two declarations need `backward.isDefEq.respectTransparency false`. Both mix the two spellings of
 one object: `chartStep` and `chartIsoLRS` are stated about `Spec (CommRingCat.of _)` (the `Scheme`,
@@ -161,14 +160,6 @@ namespace FormalSpectrum
 
 variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
 variable {X : LocallyRingedSpace.{u}}
-
-omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **`R{1/r}` is a complete adic ring** for `I` finitely generated, with `I·R{1/r}` as ideal of
-definition — so `Spf R{1/r}` is an affine formal scheme and the affine-target colimit property
-applies to it. -/
-theorem isAdicRing_awayCompletionIdeal (r : R) (hI : I.FG) :
-    IsAdicRing (awayCompletionIdeal I r) :=
-  AdicCompletion.isAdicRing_map _ (hI.map _)
 
 variable (f : ∀ n : ℕ, Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1))) ⟶ X)
     (hf : ∀ n : ℕ, Spec.locallyRingedSpaceMap (stepRingHom I n) ≫ f (n + 1) = f n)
