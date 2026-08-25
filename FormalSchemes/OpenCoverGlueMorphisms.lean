@@ -293,6 +293,18 @@ theorem map_glueMorphisms {Y : LocallyRingedSpace.{u}} (k : ∀ i, (𝒰.obj i).
   rw [glueMorphisms, ← 𝒰.ι_fromGlued i, Category.assoc, IsIso.hom_inv_id_assoc]
   exact 𝒰.gluedCover.ι_glueMorphisms _ _ i
 
+/-- **The round trip**: gluing the cover maps themselves gives back the identity of `X`. Their
+compatibility is `pullback.condition`, so this takes no hypothesis.
+
+Stated because it is the only check on this file that `glueMorphisms` is not off by a transport —
+`map_glueMorphisms` pins each restriction, but an equation between two morphisms out of `X` is what
+would catch a stray `inv fromGlued`. `FormalSchemes/FormalLineTwoChartCover.lean` instantiates it at
+a cover with two distinct pieces and a nonempty overlap, which is what makes the instance say
+something: over a one-piece cover the hypothesis of `glueMorphisms` is a tautology. -/
+theorem glueMorphisms_cmap :
+    𝒰.glueMorphisms 𝒰.cmap (fun _ _ => pullback.condition) = 𝟙 X.toLocallyRingedSpace :=
+  𝒰.hom_ext _ _ fun j => by rw [map_glueMorphisms, Category.comp_id]
+
 end AlgebraicGeometry.FormalScheme.OpenCover
 
 end
