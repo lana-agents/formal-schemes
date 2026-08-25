@@ -196,6 +196,7 @@ import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.LocalizationSplitOfNilpotentMul
 import FormalSchemes.LocallyFG
+import FormalSchemes.LocallyRingedSpaceHomExt
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.OpenCoverHomExt
@@ -216,6 +217,7 @@ import FormalSchemes.Sections
 import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.Spf
+import FormalSchemes.SpfBasicOpenCover
 import FormalSchemes.SpfEquivalence
 import FormalSchemes.SpfFullyFaithful
 import FormalSchemes.SpfFunctorial
@@ -229,6 +231,7 @@ import FormalSchemes.SpfGammaSheafComponentArbComp
 import FormalSchemes.SpfGammaSheafComponentArbCont
 import FormalSchemes.SpfGammaSheafComponentArbOf
 import FormalSchemes.SpfGammaSheafComponentFunctor
+import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
