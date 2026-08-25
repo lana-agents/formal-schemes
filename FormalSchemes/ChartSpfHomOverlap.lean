@@ -33,11 +33,12 @@ of *ring maps*, and nothing related the two. Two bridges close the gap:
 * `FormalSchemes/ThickeningMapNatural.lean`: `thickeningMap` is natural in the adic ring, so
   restricting a leg to a thickening is `Spec` of the induced map of thickenings followed by a
   thickening morphism.
-* `chartRingMap_eq_levelRingHom` below: the ring map `R ⧸ Iⁿ⁺¹ ⟶ R{1/r} ⧸ (I·R{1/r})ⁿ⁺¹` that
-  `ThickeningChartAffine.lean` reads the chart inclusion through **is** the level-`n` descent of the
-  structural map `R → R{1/r}`. This is the ring-theoretic core of the file and everything else about
-  the three localizations `r`, `s`, `r·s` follows from `levelRingHom_comp` plus
-  `awayCompletionMulHomLeft_comp_awayCompletionHom`, which is already on the tree.
+* `chartRingMap_eq_levelRingHom` (`ThickeningChartAffine.lean`): the ring map
+  `R ⧸ Iⁿ⁺¹ ⟶ R{1/r} ⧸ (I·R{1/r})ⁿ⁺¹` through which that file reads the chart inclusion **is** the
+  level-`n` descent of the structural map `R → R{1/r}`. That is the ring-theoretic core of this
+  file's argument, and everything else about the three localizations `r`, `s`, `r·s` follows from
+  it by `levelRingHom_comp` plus `awayCompletionMulHomLeft_comp_awayCompletionHom`, which is
+  already on the tree.
 
 With those, the proof is three rewrites: `hom_ext_thickeningMap_lrs` reduces to the thickenings,
 naturality moves each leg across, `thickeningMap_comp_chartSpfHomAmbient` deletes the affine chart,
@@ -56,11 +57,8 @@ condition on triple overlaps is needed for gluing *morphisms*, as opposed to glu
 
 ## Main results
 
-* `FormalSpectrum.chartRingMap_eq_levelRingHom`: the chart ring map is the level-`n` descent of
-  `R → R{1/r}`.
-* `FormalSpectrum.chartIsoLRS_inv_comp_ofRestrict`: read through the chart identification, the
-  chart embedding into the `n`-th thickening is `Spec (chartRingMap …)`. The
-  `LocallyRingedSpace` reading of `chartIsoSpec_inv_comp_ι`.
+* `FormalSpectrum.chartRingMap_comp_levelRingHom_left` and `…_right`: the chart ring maps at `r`
+  and at `s` differ from the one at `r·s` by the corresponding leg.
 * `FormalSpectrum.chartIsoLRS_inv_comp_ofRestrict_further_left` and `…_right`: the chart of
   `D(r·s)` maps to the charts of `D(r)` and `D(s)` over `Spec (R ⧸ Iⁿ⁺¹)`.
 * `FormalSpectrum.chartSpfHomAmbient_overlap`: **the theorem.**
@@ -84,42 +82,18 @@ universe u
 namespace FormalSpectrum
 
 /-!
-### The chart ring map is a level map
+### The chart ring maps at `r`, `s` and `r·s`
 
 `chartRingMap I r hI n` is built in `ThickeningChartAffine.lean` as the structure map of a
 localization followed by the inverse of issue 1043's identification, which is not a shape any
-functoriality lemma can be applied to. It is in fact `levelRingHom` of the structural map
-`R → R{1/r}`, and once that is known, the three-element bookkeeping below is `levelRingHom_comp`.
+functoriality lemma can be applied to. That same file's `chartRingMap_eq_levelRingHom` says it is
+`levelRingHom` of the structural map `R → R{1/r}`, and once that is known the three-element
+bookkeeping below is `levelRingHom_comp`.
 -/
 
 section ChartRingMap
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (r s : R)
-
-/-- Two equal ring homomorphisms induce the same map of thickenings. The two continuity hypotheses
-are proofs of propositions, so only the homomorphisms have to agree. -/
-theorem levelRingHom_congr {S : Type u} [CommRing S] (J : Ideal S) (φ₁ φ₂ : R →+* S)
-    (h₁ : I ≤ J.comap φ₁) (h₂ : I ≤ J.comap φ₂) (h : φ₁ = φ₂) (n : ℕ) :
-    levelRingHom I J φ₁ h₁ n = levelRingHom I J φ₂ h₂ n := by
-  subst h
-  rfl
-
-/-- **The chart ring map is the level-`n` descent of the structural map `R → R{1/r}`.** The
-ring-theoretic core of this file: it is what lets the three localizations at `r`, `s` and `r·s` be
-compared by `levelRingHom_comp` rather than by unfolding `awayCompletionResidueEquivPow` three
-times.
-
-Both sides send the class of `x : R` to the class of its image in `R{1/r}`; on the left that is
-`awayCompletionResidueEquivPow_symm_algebraMap`, on the right `levelRingHom_mk`. -/
-theorem chartRingMap_eq_levelRingHom (hI : I.FG) (n : ℕ) :
-    chartRingMap I r hI n =
-      CommRingCat.ofHom (levelRingHom I (awayCompletionIdeal I r) (awayCompletionHom I r)
-        (le_comap_awayCompletionHom I r) n) := by
-  refine CommRingCat.hom_ext (Ideal.Quotient.ringHom_ext (RingHom.ext fun x => ?_))
-  simp only [RingHom.comp_apply, CommRingCat.hom_ofHom, levelRingHom_mk]
-  change (chartRingIso I r hI n).inv.hom
-      (algebraMap (R ⧸ I ^ (n + 1)) (residueAway I r (n + 1)) (Ideal.Quotient.mk _ x)) = _
-  exact awayCompletionResidueEquivPow_symm_algebraMap I r hI (n + 1) x
 
 /-- **The chart ring maps at `r` and at `r·s` differ by the left leg**, on the `n`-th thickenings.
 Both sides are the level-`n` descent of `R → R{1/(r·s)}`, because
@@ -162,19 +136,9 @@ theorem chartRingMap_comp_levelRingHom_right (hI : I.FG) (n : ℕ) :
 `(chartIsoLRS I r hI n).inv ≫ (Spec _).ofRestrict (chartOpen I r n).isOpenEmbedding ≫ f n`, so that
 composite — the chart of `D(r)`, identified with the `n`-th thickening of `R{1/r}` and embedded into
 the `n`-th thickening of `R` — is what the overlap comparison has to move around. It is `Spec` of
-`chartRingMap`, which is the whole reason the previous section exists.
+`chartRingMap`, by `chartIsoLRS_inv_comp_ofRestrict` (`ThickeningChartAffine.lean`), which is the
+whole reason the previous section exists.
 -/
-
-/-- The `LocallyRingedSpace` reading of `chartIsoSpec_inv_comp_ι`: the chart embedding is
-`Spec (chartRingMap …)`. No transport — `Scheme.forgetToLocallyRingedSpace` takes `Spec.map` to
-`Spec.locallyRingedSpaceMap` and `Scheme.Opens.ι` to `ofRestrict`, both definitionally. -/
-theorem chartIsoLRS_inv_comp_ofRestrict (hI : I.FG) (n : ℕ) :
-    (chartIsoLRS I r hI n).inv ≫
-        (Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1)))).ofRestrict
-          (chartOpen I r n).isOpenEmbedding =
-      Spec.locallyRingedSpaceMap (chartRingMap I r hI n) :=
-  (Scheme.forgetToLocallyRingedSpace.map_comp _ _).symm.trans
-    (congrArg Scheme.forgetToLocallyRingedSpace.map (chartIsoSpec_inv_comp_ι I r hI n))
 
 /-- **The left leg on the `n`-th thickening**: the chart of `D(r·s)`, pushed into the chart of
 `D(r)` by `Spec` of the map of thickenings induced by `A{1/r} → A{1/(r·s)}`, embeds into

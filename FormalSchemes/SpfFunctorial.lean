@@ -15,6 +15,7 @@ towards exhibiting it as a (contravariant) functor on adic rings and continuous 
 
 * `levelRingHom_id`/`levelRingHom_comp`: the induced maps of thickenings `R ⧸ Iⁿ⁺¹ → S ⧸ Jⁿ⁺¹`
   respect identity and composition.
+* `levelRingHom_congr`: they depend only on the ring homomorphism, not on the continuity proof.
 * `mapTop_id`/`mapTop_comp`: the underlying continuous maps `Spf S → Spf R` respect identity and
   composition (contravariantly).
 * `locallyRingedSpaceMap_congr`: the induced morphism of locally ringed spaces depends only on the
@@ -174,6 +175,24 @@ theorem levelRingHom_comp (φ : R →+* S) (ψ : S →+* T) (hIJ : I ≤ J.comap
       (levelRingHom J K ψ hJK n).comp (levelRingHom I J φ hIJ n) := by
   refine Ideal.Quotient.ringHom_ext (RingHom.ext fun x => ?_)
   simp [levelRingHom_mk]
+
+-- The binders are written out rather than taken from this section's `variable` block, whose order
+-- is `{R S T}` before `(I J K)` and would therefore permute `{S}`/`[CommRing S]` ahead of `(I)`.
+-- Keeping them local preserves the signature this theorem had at its previous home; do not
+-- "tidy" them away without checking `#check @levelRingHom_congr` first.
+/-- Two equal ring homomorphisms induce the same map of thickenings. The two continuity hypotheses
+are proofs of propositions, so only the homomorphisms have to agree.
+
+Moved here from `FormalSchemes/ChartSpfHomOverlap.lean`, where it was declared far above its
+subject: it is a general fact about `levelRingHom` with no chart, no localization and no overlap
+in it, and it belongs beside `levelRingHom_comp`, which is the same kind of statement about the
+same function. -/
+theorem levelRingHom_congr {R : Type u} [CommRing R] (I : Ideal R) {S : Type u} [CommRing S]
+    (J : Ideal S) (φ₁ φ₂ : R →+* S)
+    (h₁ : I ≤ J.comap φ₁) (h₂ : I ≤ J.comap φ₂) (h : φ₁ = φ₂) (n : ℕ) :
+    levelRingHom I J φ₁ h₁ n = levelRingHom I J φ₂ h₂ n := by
+  subst h
+  rfl
 
 end LevelMaps
 

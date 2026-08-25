@@ -62,8 +62,12 @@ modules are actually stated about, with no transport.
 * `FormalSpectrum.chartOpen_le_thickeningChart`: the variance alignment — a basic open of
   `|Spf R|` refining the pulled-back cover lands, at every level, inside
   `ThickeningChartRestrict.lean`'s chart.
+* `FormalSpectrum.chartRingMap_eq_levelRingHom`: the chart ring map is the level-`n` descent of
+  the structural map `R → R{1/r}`, which is what makes it reachable by `levelRingHom_comp`.
 * `FormalSpectrum.stepRingHom_comp_chartRingMap`: the identification is a map of towers at ring
   level.
+* `FormalSpectrum.chartIsoLRS_inv_comp_ofRestrict`: the `LocallyRingedSpace` reading of
+  `chartIsoSpec_inv_comp_ι`.
 * `FormalSpectrum.chartStep_comp_chartIsoSpec` and `FormalSpectrum.chartStepLRS_comp_chartIsoLRS`:
   **the payoff** — the charts of the tower of `Spf R` over `D(r)`, *with their transition maps*,
   are the tower of `Spf R{1/r}`.
@@ -189,6 +193,29 @@ def chartRingMap (hI : I.FG) (n : ℕ) :
       CommRingCat.of (awayCompletion I r ⧸ (awayCompletionIdeal I r) ^ (n + 1)) :=
   residueAwayAlgebraMap I r (n + 1) ≫ (chartRingIso I r hI n).inv
 
+/-- **The chart ring map is the level-`n` descent of the structural map `R → R{1/r}`.**
+`chartRingMap` is built just above as the structure map of a localization followed by the inverse
+of issue 1043's identification, which is not a shape any functoriality lemma can be applied to;
+this says it is `levelRingHom` of `awayCompletionHom`, and once that is known the bookkeeping for
+several localizations at once is `levelRingHom_comp`.
+
+Both sides send the class of `x : R` to the class of its image in `R{1/r}`; on the left that is
+`awayCompletionResidueEquivPow_symm_algebraMap`, on the right `levelRingHom_mk`.
+
+Moved here from `FormalSchemes/ChartSpfHomOverlap.lean`, which proved it about `chartRingMap`
+without being the file that defines `chartRingMap`. Its consumers there — the comparison of the
+three localizations at `r`, `s` and `r·s` — keep working unchanged; see
+`chartRingMap_comp_levelRingHom_left`/`_right` in that file. -/
+theorem chartRingMap_eq_levelRingHom (hI : I.FG) (n : ℕ) :
+    chartRingMap I r hI n =
+      CommRingCat.ofHom (levelRingHom I (awayCompletionIdeal I r) (awayCompletionHom I r)
+        (le_comap_awayCompletionHom I r) n) := by
+  refine CommRingCat.hom_ext (Ideal.Quotient.ringHom_ext (RingHom.ext fun x => ?_))
+  simp only [RingHom.comp_apply, CommRingCat.hom_ofHom, levelRingHom_mk]
+  change (chartRingIso I r hI n).inv.hom
+      (algebraMap (R ⧸ I ^ (n + 1)) (residueAway I r (n + 1)) (Ideal.Quotient.mk _ x)) = _
+  exact awayCompletionResidueEquivPow_symm_algebraMap I r hI (n + 1) x
+
 /-- The residue tower's transition map is compatible with the structure maps to the localizations.
 This is `residueAwayMap_algebraMap` (issue 1043) turned into an equation of ring maps, and it is
 the only computation in this file that touches elements. -/
@@ -262,6 +289,22 @@ def chartIsoLRS (hI : I.FG) (n : ℕ) :
       Spec.locallyRingedSpaceObj
         (CommRingCat.of (awayCompletion I r ⧸ (awayCompletionIdeal I r) ^ (n + 1))) :=
   Scheme.forgetToLocallyRingedSpace.mapIso (chartIsoSpec I r hI n)
+
+/-- The `LocallyRingedSpace` reading of `chartIsoSpec_inv_comp_ι`: the chart embedding is
+`Spec (chartRingMap …)`. No transport — `Scheme.forgetToLocallyRingedSpace` takes `Spec.map` to
+`Spec.locallyRingedSpaceMap` and `Scheme.Opens.ι` to `ofRestrict`, both definitionally.
+
+Moved here from `FormalSchemes/ChartSpfHomOverlap.lean`. It is the `LocallyRingedSpace` twin of
+`chartIsoSpec_inv_comp_ι` above and cites nothing beyond it, so it belongs in the file that
+defines `chartIsoLRS` — the same argument the two `forgetToLocallyRingedSpace` bridges at the top
+of this file are already an instance of. -/
+theorem chartIsoLRS_inv_comp_ofRestrict (hI : I.FG) (n : ℕ) :
+    (chartIsoLRS I r hI n).inv ≫
+        (Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1)))).ofRestrict
+          (chartOpen I r n).isOpenEmbedding =
+      Spec.locallyRingedSpaceMap (chartRingMap I r hI n) :=
+  (Scheme.forgetToLocallyRingedSpace.map_comp _ _).symm.trans
+    (congrArg Scheme.forgetToLocallyRingedSpace.map (chartIsoSpec_inv_comp_ι I r hI n))
 
 /-- **The tower square, in `LocallyRingedSpace`.** The image of `chartStep_comp_chartIsoSpec`
 under `Scheme.forgetToLocallyRingedSpace`, whose action on `Spec.map` is
