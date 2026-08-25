@@ -1,9 +1,7 @@
+import FormalSchemes.LocallyRingedSpaceHomExt
 import FormalSchemes.OpenCover
 
 set_option linter.style.header false
-set_option linter.style.setOption false
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 
 /-!
 # Uniqueness of morphisms out of an open cover of a formal scheme
@@ -29,18 +27,33 @@ that read as a statement about the tree, and stayed on the page after
 `OpenCoverGlueMorphisms.lean` landed. Do not restore that reading; if you are checking whether a
 declaration exists, grep for it.
 
+The mathematics of the uniqueness half is not here either. It is
+`AlgebraicGeometry.LocallyRingedSpace.hom_ext_of_jointly_surjective`
+(`FormalSchemes/LocallyRingedSpaceHomExt.lean`), which says the same thing for a *bare* locally
+ringed space covered by open immersions; what this file adds is the reading of it at a
+`FormalScheme.OpenCover`, and `exists_preimage`, which is that reading's covering hypothesis.
+
 ## Route
 
 Equality of locally ringed space morphisms is local on the source and detected on base points and
 on stalks. Since the cover maps are open immersions, their stalk maps are isomorphisms, so the
 data of `g₁`/`g₂` on each stalk `𝒪_{X,x}` is pinned down by the corresponding stalk of the piece
-covering `x`. Concretely we reduce to `SheafedSpace.hom_stalk_ext`: the base maps agree because the
-ranges of the cover maps exhaust `X`, and the stalk maps agree after cancelling the (iso) stalk map
-of the covering open immersion, using `LocallyRingedSpace.stalkMap_comp`.
+covering `x`. That argument — reduce to `SheafedSpace.hom_stalk_ext`, get the base maps from
+joint surjectivity, cancel the (iso) stalk map of the covering open immersion — used to be written
+out here. It is now written out once, in `LocallyRingedSpaceHomExt.lean`, and `hom_ext` is an
+application of it.
+
+Two things followed from the reroute and are worth knowing before editing this file. The local
+`IsIso ((𝒰.map j).toLRSHom.stalkMap y)` instance is gone: it existed because the old proof needed
+the stalk iso through the `FormalScheme.Hom` wrapper, and the general lemma gets it from Mathlib's
+`LocallyRingedSpace.IsOpenImmersion.stalk_iso` instead. So are the file-scope
+`maxHeartbeats 3200000` and `synthInstance.maxHeartbeats 1000000`, which the term proof does not
+need. If you replace `hom_ext`'s proof with anything larger, expect to need them back.
 
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4, §10.7.
+* `FormalSchemes/LocallyRingedSpaceHomExt.lean` — the general statement this file specialises.
 * Mathlib `AlgebraicGeometry.Scheme.Cover.hom_ext`, `SheafedSpace.hom_stalk_ext`.
 -/
 
@@ -61,48 +74,20 @@ theorem exists_preimage (x : X.toLocallyRingedSpace) :
       (𝒰.map j).toLRSHom.base y = x :=
   ⟨𝒰.f x, (𝒰.covers x).choose, (𝒰.covers x).choose_spec⟩
 
-/-- The stalk map of a cover map is an isomorphism (it is an open immersion of locally ringed
-spaces). -/
-instance isIso_map_stalkMap (j : 𝒰.J) (y : (𝒰.obj j).toLocallyRingedSpace) :
-    IsIso ((𝒰.map j).toLRSHom.stalkMap y) :=
-  inferInstanceAs (IsIso ((𝒰.map j).toLRSHom.toShHom.hom.stalkMap y))
-
 /-- **Uniqueness of morphisms out of an open cover.** Two morphisms `g₁ g₂ : X ⟶ Y` out of a formal
 scheme `X` that agree after restriction along every map of an open cover `𝒰` are equal; the cover
-maps are jointly epimorphic. -/
+maps are jointly epimorphic.
+
+This is `LocallyRingedSpace.hom_ext_of_jointly_surjective` at a `FormalScheme.OpenCover`: the cover
+maps are open immersions of locally ringed spaces and `exists_preimage` is exactly its joint
+surjectivity hypothesis. Nothing about formal schemes enters the argument, which is why the general
+form is stated on Mathlib alone. -/
 theorem hom_ext {Y : LocallyRingedSpace.{u}}
     (g₁ g₂ : X.toLocallyRingedSpace ⟶ Y)
     (h : ∀ j, (𝒰.map j).toLRSHom ≫ g₁ = (𝒰.map j).toLRSHom ≫ g₂) :
-    g₁ = g₂ := by
-  -- Base maps agree, pointwise, because the cover exhausts `X`.
-  have hbase_pt : ∀ x : X.toLocallyRingedSpace, g₁.base x = g₂.base x := by
-    intro x
-    obtain ⟨j, y, rfl⟩ := 𝒰.exists_preimage x
-    have hj := congrArg (fun φ : (𝒰.obj j).toLocallyRingedSpace ⟶ Y => φ.base y) (h j)
-    simpa only [LocallyRingedSpace.comp_base, TopCat.comp_app] using hj
-  have hbase : g₁.base = g₂.base := by
-    apply ConcreteCategory.hom_ext
-    exact hbase_pt
-  -- Reduce to `SheafedSpace.hom_stalk_ext`.
-  apply LocallyRingedSpace.forgetToSheafedSpace.map_injective
-  refine SheafedSpace.hom_stalk_ext _ _ hbase (fun x => ?_)
-  -- Stalk maps agree, after cancelling the (iso) stalk map of the covering open immersion.
-  obtain ⟨j, y, rfl⟩ := 𝒰.exists_preimage x
-  -- The goal is stated with `PresheafedSpace` stalk maps of `forgetToSheafedSpace.map gᵢ`, which
-  -- are definitionally the `LocallyRingedSpace` stalk maps of `gᵢ`. We therefore prove the
-  -- equality in `LocallyRingedSpace` terms and transport it across the defeq with `exact`.
-  have key : g₁.stalkMap ((𝒰.map j).toLRSHom.base y) =
-      (Y.presheaf.stalkCongr (hbase ▸ rfl)).hom ≫ g₂.stalkMap ((𝒰.map j).toLRSHom.base y) := by
-    -- Cancel the (iso) stalk map of the covering open immersion on the right, assemble both sides
-    -- into stalk maps of `(𝒰.map j).toLRSHom ≫ gᵢ`, then compare using `stalkMap_congr_hom` and the
-    -- hypothesis `h j`.
-    rw [← cancel_mono ((𝒰.map j).toLRSHom.stalkMap y), Category.assoc,
-      ← LocallyRingedSpace.stalkMap_comp, ← LocallyRingedSpace.stalkMap_comp,
-      LocallyRingedSpace.stalkMap_congr_hom _ _ (h j) y, TopCat.Presheaf.stalkCongr_hom]
-    -- The two `stalkSpecializes` factors record the same specialization (equal points), so agree by
-    -- proof irrelevance.
-    rfl
-  exact key
+    g₁ = g₂ :=
+  LocallyRingedSpace.hom_ext_of_jointly_surjective (fun j => (𝒰.map j).toLRSHom)
+    𝒰.exists_preimage h
 
 end AlgebraicGeometry.FormalScheme.OpenCover
 
