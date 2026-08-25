@@ -94,6 +94,12 @@ what will make two overlapping charts agree.
   every degeneracy excluded — `I ≠ ⊥`, a chart that is neither `⊥` nor `⊤` at any level, and a
   target open `U` that is neither `⊥` nor `⊤` (`openTwo_ne_top`, `openTwo_ne_bot`).
 
+The data of the witness section — `witnessTarget`, `witnessFamily`, `witness_hr`, `openTwo`,
+`witness_hr_two`, `openTwoIsoSpecLRS` — is **public**, because the two charts it carries over the
+one `r = 2` are the only pair on the tree that differ, and `ChartSpfHomIndep.lean` needs both of
+them to exercise `chartSpfHomAmbient_congr` non-trivially. It was private until then, which also
+left `openTwo_ne_top` and `openTwo_ne_bot` unspellable downstream.
+
 ## Implementation notes
 
 `IsAdicRing (awayCompletionIdeal I r)` enters the assembly section as an **instance hypothesis**,
@@ -339,24 +345,26 @@ open Polynomial
 attribute [local instance] isAdicRing_formalLineIdeal
 
 /-- The affine target of the witness, `Spec ℤ`. -/
-private abbrev witnessTarget : LocallyRingedSpace.{0} :=
+abbrev witnessTarget : LocallyRingedSpace.{0} :=
   Spec.locallyRingedSpaceObj (CommRingCat.of ℤ)
 
 /-- The witness family: the reductions of the structure map `ℤ → ℤ⟦X⟧`, compatible by
 `specFamily`. -/
-private def witnessFamily : ThickeningFamily formalLineIdeal ℤ :=
+def witnessFamily : ThickeningFamily formalLineIdeal ℤ :=
   specFamily formalLineIdeal ℤ (Int.castRingHom (AdicCompletion polyXIdeal ℤ[X]))
 
 /-- `ℤ⟦X⟧{1/2}` is a complete adic ring, activated as a local instance so that
 `Spf ℤ⟦X⟧{1/2}` can be spelled at all. Local, because `I.FG` is not synthesizable in general and a
 global instance of this shape would be looked at by every unrelated search. -/
-private theorem isAdicRing_awayCompletionIdeal_formalLine :
+theorem isAdicRing_awayCompletionIdeal_formalLine :
     IsAdicRing (awayCompletionIdeal formalLineIdeal 2) :=
   isAdicRing_awayCompletionIdeal _ _ (polyXIdeal_fg.map _)
 
 attribute [local instance] isAdicRing_awayCompletionIdeal_formalLine
 
-private theorem witness_hr :
+/-- The refinement hypothesis at `U = ⊤`, where it is vacuous. Compare `witness_hr_two`, which
+is the same hypothesis for a proper `U` and is not. -/
+theorem witness_hr :
     basicOpen formalLineIdeal 2 ≤
       (Opens.map (commonBase formalLineIdeal witnessFamily.1)).obj ⊤ := by
   simp
@@ -394,7 +402,7 @@ with a proper affine open already removes the degeneracy. Take `X := Spec ℤ` a
 /-- `D(2) ⊆ Spec ℤ`. The `(Spec _).Opens` ascription is the one `ThickeningChartAffine.lean`'s
 implementation notes describe: without it `basicOpenIsoSpecAway` has nothing to coerce to a
 `Scheme`. -/
-private abbrev openTwo : (Spec (CommRingCat.of ℤ)).Opens := PrimeSpectrum.basicOpen (2 : ℤ)
+abbrev openTwo : (Spec (CommRingCat.of ℤ)).Opens := PrimeSpectrum.basicOpen (2 : ℤ)
 
 /-- `D(2) ⊆ Spec ℤ` is a **proper** open: the point `(2)` is not in it. -/
 theorem openTwo_ne_top : openTwo ≠ ⊤ := by
@@ -429,7 +437,7 @@ private theorem chartOpen_le_thickeningChart_two :
 /-- **The refinement hypothesis, for a proper `U`**: `D(2) ⊆ |Spf ℤ⟦X⟧|` lands inside the preimage
 of `D(2) ⊆ Spec ℤ` under the common base map. Read at level `0` through
 `map_commonBase_obj_eq_thickeningChart`, where it is `chartOpen_le_thickeningChart_two`. -/
-private theorem witness_hr_two :
+theorem witness_hr_two :
     basicOpen formalLineIdeal 2 ≤
       (Opens.map (commonBase formalLineIdeal witnessFamily.1)).obj openTwo := by
   rw [map_commonBase_obj_eq_thickeningChart formalLineIdeal witnessFamily.1
@@ -451,7 +459,7 @@ private def openTwoIsoSpec :
 /-- …and the same isomorphism in `LocallyRingedSpace`, which is the shape the affine data `e` is
 taken in. No transport: `Scheme.forgetToLocallyRingedSpace.obj ↑openTwo` and
 `witnessTarget.restrict openTwo.isOpenEmbedding` are the same object. -/
-private def openTwoIsoSpecLRS :
+def openTwoIsoSpecLRS :
     witnessTarget.restrict openTwo.isOpenEmbedding ≅
       Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away (2 : ℤ))) :=
   Scheme.forgetToLocallyRingedSpace.mapIso openTwoIsoSpec
