@@ -79,7 +79,7 @@ theorem exists_affineChart_subset (X : FormalScheme.{u}) (hX : X.LocallyFG) (x :
     (isTopologicalBasis_basicOpen I).exists_subset_of_mem_open hmem hopen
   -- the away completion `R{1/g}` is a finitely-generated adic ring
   haveI hJadic : IsAdicRing (FormalSpectrum.awayCompletionIdeal I g) :=
-    AdicCompletion.isAdicRing_map (I.map (algebraMap R (Localization.Away g))) (hIfg.map _)
+    FormalSpectrum.isAdicRing_awayCompletionIdeal I g hIfg
   haveI hoi : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart I g) :=
     FormalSpectrum.isOpenImmersion_basicOpenChart I g hIfg
   have hJfg : (FormalSpectrum.awayCompletionIdeal I g).FG := by

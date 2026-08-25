@@ -34,6 +34,8 @@ feeding `SheafedSpace.IsOpenImmersion.of_stalk_iso`, is proved in
 * `FormalSpectrum.isOpenEmbedding_basicOpenChartBase`: it is an open topological embedding.
 * `FormalSpectrum.awayCompletionHom_comp_algebraMap`: the structural map `A → A{1/g}^` of a
   completed localization is a map of `R`-algebras.
+* `FormalSpectrum.isAdicRing_awayCompletionIdeal`: `R{1/f}` is a complete adic ring whenever `I`
+  is finitely generated.
 * `FormalSpectrum.map_algebraMap_awayCompletion`, its `rfl` case
   `FormalSpectrum.map_algebraMap_awayCompletion_eq`, and
   `FormalSpectrum.awayCompletionIdeal_eq_map_algebraMap`: the ideal-convention bookkeeping —
@@ -80,6 +82,21 @@ theorem map_awayCompletionHom :
 theorem le_comap_awayCompletionHom :
     I ≤ (awayCompletionIdeal I f).comap (awayCompletionHom I f) :=
   Ideal.map_le_iff_le_comap.mp (map_awayCompletionHom I f).le
+
+/-- **`R{1/f}` is a complete adic ring** for `I` finitely generated, with `I·R{1/f}` as ideal of
+definition — so `Spf R{1/f}` is an affine formal scheme and the affine-target colimit property
+applies to it.
+
+This is `AdicCompletion.isAdicRing_map` at the localization, and it is *not* an instance: it needs
+`I.FG`, which is not synthesizable, so the modules that build on the chart carry
+`[IsAdicRing (awayCompletionIdeal I f)]` as a hypothesis (`FormalSchemes/AdicOnSections.lean`) and
+their consumers discharge it with this lemma. It lives here, next to `awayCompletionIdeal`
+itself, for the reason recorded above for the ideal-convention lemmas: every consumer already
+imports this module. Issue 1062 first named it in `FormalSchemes/ThickeningChartSpfHom.lean`,
+which is too high in the hierarchy for the files that had been writing the one-liner out inline;
+issue 1065 moved it here and routed those eighteen sites through it. -/
+theorem isAdicRing_awayCompletionIdeal (hI : I.FG) : IsAdicRing (awayCompletionIdeal I f) :=
+  AdicCompletion.isAdicRing_map _ (hI.map _)
 
 /-- **The structural map of a completed localization is a map of algebras over any base.** If `A`
 is an `R`-algebra, then `A → A{1/g}^` precomposed with `R → A` is `R → A{1/g}^`.

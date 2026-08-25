@@ -139,7 +139,7 @@ theorem IsLocallyTopFiniteType.nonempty_tfTypeChart {X : FormalScheme.{u}}
     (FormalSpectrum.isTopologicalBasis_basicOpen L).exists_subset_of_mem_open hmem hopen
   have hLfg : L.FG := IsTopologicallyFiniteType.fg hL hI
   haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal L g) :=
-    AdicCompletion.isAdicRing_map (L.map (algebraMap A (Localization.Away g))) (hLfg.map _)
+    FormalSpectrum.isAdicRing_awayCompletionIdeal L g hLfg
   haveI : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart L g) :=
     FormalSpectrum.isOpenImmersion_basicOpenChart L g hLfg
   have hrange : Set.range (FormalSpectrum.basicOpenChart L g).base =
