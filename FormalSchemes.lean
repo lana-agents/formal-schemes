@@ -114,6 +114,7 @@ import FormalSchemes.DiagonalPreimageGraph
 import FormalSchemes.EmptyLocallyRingedSpace
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalGroupAlgebraHopf
+import FormalSchemes.FormalLineTwoChartCover
 import FormalSchemes.FormalLineWitness
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum

@@ -19,8 +19,15 @@ the uniqueness clause of the general fibre-product universal property (EGA I §1
 
 This file delivers only `OpenCover.hom_ext` (the uniqueness / joint-epi statement); it independently
 unblocks the uniqueness brick of the fibre-product universal property. The *construction* of a
-morphism out of an open cover from compatible local data (`OpenCover.glueMorphisms`) is a separate,
-heavier deliverable and is not included here.
+morphism out of an open cover from compatible local data is the separate, heavier half, and it is
+`FormalSchemes/OpenCoverGlueMorphisms.lean` — `OpenCover.glueMorphisms` together with its
+computation rule `map_glueMorphisms`. That module imports this one, so the two together are descent
+for morphisms of formal schemes: existence there, uniqueness here.
+
+This paragraph used to say the construction was *not written*, which was a statement about this file
+that read as a statement about the tree, and stayed on the page after
+`OpenCoverGlueMorphisms.lean` landed. Do not restore that reading; if you are checking whether a
+declaration exists, grep for it.
 
 ## Route
 
