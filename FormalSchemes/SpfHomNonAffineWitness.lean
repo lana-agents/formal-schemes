@@ -30,8 +30,8 @@ existsUnique_hom_thickeningMap_nonAffine :
 
 exercises the covering situation on **both** sides at once: `|Spf ℤ⟦X⟧| ≃ Spec ℤ` is covered by two
 proper basic opens (the source-side non-degeneracy `SpfHomOfFamily.lean` already had), and the
-target is covered by two affine opens neither of which is the whole space, of a space that is
-provably not a spectrum.
+target is covered by two distinct affine opens — one of them proper, see Scope — of a space that
+is provably not a spectrum.
 
 ## Why the family goes through one chart
 
@@ -98,7 +98,8 @@ abbrev nonAffineTarget : LocallyRingedSpace.{0} :=
 
 /-- **The target is not affine.** `SpecTwoPatchNonAffine.lean` at `A = ℤ[X]`, `a = X`: `ℤ[X]` is a
 domain and `X` is a non-zero non-unit, so the doubled `Spec ℤ[X]` is not separated, hence not the
-spectrum of a ring. -/
+spectrum of a ring. Stated of the `Scheme`, `IsAffine` being a predicate on schemes;
+`nonAffineTarget` is its underlying locally ringed space by definition. -/
 theorem not_isAffine_nonAffineTarget : ¬ IsAffine (specDouble (X : ℤ[X])) :=
   not_isAffine_specDouble_of_not_isUnit (X : ℤ[X]) X_ne_zero not_isUnit_X
 
@@ -211,8 +212,9 @@ theorem nonAffineFamily_compat (n : ℕ) :
 
 /-- **EGA I, 10.6.10 at a target that is not affine.** `Spf ℤ⟦X⟧` is the colimit of its
 infinitesimal thickenings as a functor into the affine line over `ℤ` with a doubled origin — a
-locally ringed space that is covered by two proper affine opens and is provably not the spectrum
-of a ring (`not_isAffine_nonAffineTarget`).
+locally ringed space that is covered by two distinct affine opens (`nonAffineOpen_ne`), one of
+them proper (`nonAffineOpen_true_ne_top`), and is provably not the spectrum of a ring
+(`not_isAffine_nonAffineTarget`).
 
 Nothing but the cover of the target is supplied: the basic opens of `|Spf ℤ⟦X⟧|`, the index map and
 the refinement containments are produced inside by `exists_basicOpen_refinement`, exactly as in
