@@ -260,13 +260,14 @@ Everything the general theorem quantifies over is non-degenerate there:
   different coordinate rings `ℤ[1/2]`, `ℤ[1/3]` (`openTwo_ne_top`, `openThree_ne_top` and their
   `_ne_bot` companions). In particular `U = ⊤` is excluded on both sides.
 
-What remains missing is the same gap four rows on this umbrella have now recorded, and it is
-unchanged by this row: **`X` is affine in every witness on the tree.** No non-affine `X` carrying
-a compatible family exists. It does not bear on non-vacuity of anything proved here — the
-construction never looks at `X` outside the chart opens, and the gluing above happens on the
-*source*, where the two-piece cover is genuinely two-piece — but a witness whose affine opens come
-from an `X` that is not itself affine would exercise the covering situation on both sides at once.
-Producing one is a separate row.
+The `X` of this witness is affine, and for a while that was true of every witness on the tree —
+four rows on this umbrella recorded it as an open gap. It is closed in
+`FormalSchemes/SpfHomNonAffineWitness.lean`, which runs `existsUnique_hom_thickeningMap` at the
+affine line over `ℤ` with a doubled origin, covered by its two charts: a target that
+`FormalSchemes/SpecTwoPatchNonAffine.lean` proves is **not affine**. It never bore on non-vacuity
+of anything proved here — the construction never looks at `X` outside the chart opens, and the
+gluing above happens on the *source*, where the two-piece cover is genuinely two-piece — but that
+witness exercises the covering situation on both sides at once.
 -/
 
 section Witness

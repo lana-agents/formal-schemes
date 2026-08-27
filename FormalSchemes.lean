@@ -231,6 +231,7 @@ import FormalSchemes.SpfGammaSheafComponentArbComp
 import FormalSchemes.SpfGammaSheafComponentArbCont
 import FormalSchemes.SpfGammaSheafComponentArbOf
 import FormalSchemes.SpfGammaSheafComponentFunctor
+import FormalSchemes.SpfHomNonAffineWitness
 import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
