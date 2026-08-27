@@ -35,12 +35,15 @@ scheme supplies them from its own affine cover, as `existsUnique_hom_thickeningM
 ## Why the cover appears in the definition and not in the object
 
 `thickeningRestrictionEquivLRS` takes the cover data as arguments, because the inverse map is
-built by gluing over a cover. It does **not** depend on them:
-`thickeningRestrictionEquivLRS_symm_eq` says two arbitrary sets of cover data give the same
-inverse, and the forward map `restrictToThickeningsLRS` does not mention the cover at all. So the
-general universal property is canonical, and the cover is scaffolding — which is the fact a reader
-needs before citing this file, since an `Equiv` that secretly depended on a chosen cover would not
-be a universal property at all.
+built by gluing over a cover. It does **not** depend on them, and not merely pointwise:
+`thickeningRestrictionEquivLRS_eq_of_cover` says two arbitrary sets of cover data give the *same
+`Equiv`*. That is not an extra argument about the inverse — the forward map
+`restrictToThickeningsLRS` does not mention the cover at all, and an `Equiv` is determined by its
+forward map, so the whole structure is pinned by a field the cover never enters.
+`thickeningRestrictionEquivLRS_symm_eq` is the pointwise reading of the same fact, and is the form
+downstream will cite. So the general universal property is canonical, and the cover is
+scaffolding — which is the fact a reader needs before citing this file, since an `Equiv` that
+secretly depended on a chosen cover would not be a universal property at all.
 
 ## `ThickeningFamilyLRS` is not a duplicate of `ThickeningFamily`
 
@@ -81,8 +84,9 @@ row.
 * `FormalSpectrum.thickeningRestrictionEquivLRS_apply` and
   `FormalSpectrum.thickeningMap_comp_thickeningRestrictionEquivLRS_symm`: the two computation
   rules, which downstream should cite rather than unfolding the `Equiv`.
-* `FormalSpectrum.thickeningRestrictionEquivLRS_symm_eq`: **the inverse does not depend on the
-  cover.**
+* `FormalSpectrum.thickeningRestrictionEquivLRS_eq_of_cover`: **the bijection does not depend on
+  the cover**, as an equality of `Equiv`s, with
+  `FormalSpectrum.thickeningRestrictionEquivLRS_symm_eq` its pointwise reading on the inverse.
 * `FormalSpectrum.thickeningFamily_eq_thickeningFamilyLRS` and
   `FormalSpectrum.thickeningRestrictionEquivLRS_eq_thickeningRestrictionEquiv`: the affine case is
   an instance of this one, not a parallel construction.
@@ -151,6 +155,7 @@ the compatible families. This is umbrella 97's headline shape for a general targ
 `existsUnique_hom_thickeningMap` repackaged — both directions come out of that `∃!`.
 
 The cover data `U`, `hU`, `B`, `e` is needed to construct the inverse and cannot influence it; see
+`thickeningRestrictionEquivLRS_eq_of_cover` and its pointwise form
 `thickeningRestrictionEquivLRS_symm_eq`.
 
 Note that `ExistsUnique` unfolds to `∃ x, p x ∧ ∀ y, p y → y = x`, so the uniqueness clause proves
@@ -177,13 +182,30 @@ theorem thickeningMap_comp_thickeningRestrictionEquivLRS_symm (f : ThickeningFam
   (existsUnique_hom_thickeningMap I f.1 f.2 hI U hU B e).choose_spec.1 n
 
 /-- **The bijection does not depend on the cover.** Two arbitrary choices of cover data — different
-index types, different opens, different affine identifications — invert a compatible family to the
-same morphism, because `existsUnique_hom_thickeningMap`'s uniqueness clause pins it down from the
-restrictions alone.
+index types, different opens, different affine identifications — give the *same* `Equiv`, not
+merely equivalences agreeing on each family.
+
+The reason is worth stating, because it makes the statement free: `toFun` is
+`restrictToThickeningsLRS I X`, which mentions none of `hI`, `U`, `hU`, `B`, `e`, so the two
+`Equiv`s have syntactically identical forward maps; and an `Equiv` is determined by its forward
+map (`Equiv.coe_fn_injective`). Nothing about the inverse has to be argued.
 
 This is what makes `thickeningRestrictionEquivLRS` a universal property rather than an artefact of
-a chosen cover; the forward direction needs no such statement, since `restrictToThickeningsLRS`
-never mentions the cover. -/
+a chosen cover. -/
+theorem thickeningRestrictionEquivLRS_eq_of_cover {ι' : Type u} (U' : ι' → Opens X.toTopCat)
+    (hU' : ⨆ i, U' i = ⊤) (B' : ι' → Type u) [∀ i, CommRing (B' i)]
+    (e' : ∀ i, X.restrict (U' i).isOpenEmbedding ≅
+      Spec.locallyRingedSpaceObj (CommRingCat.of (B' i))) :
+    thickeningRestrictionEquivLRS I X hI U hU B e =
+      thickeningRestrictionEquivLRS I X hI U' hU' B' e' :=
+  Equiv.coe_fn_injective rfl
+
+/-- **The inverse does not depend on the cover**: the pointwise reading of
+`thickeningRestrictionEquivLRS_eq_of_cover`, and the form downstream will cite, since a consumer
+usually has a family in hand rather than the two `Equiv`s.
+
+Independently of the argument above, this also follows from `existsUnique_hom_thickeningMap`'s
+uniqueness clause, which pins the glued morphism down from its restrictions alone. -/
 theorem thickeningRestrictionEquivLRS_symm_eq {ι' : Type u} (U' : ι' → Opens X.toTopCat)
     (hU' : ⨆ i, U' i = ⊤) (B' : ι' → Type u) [∀ i, CommRing (B' i)]
     (e' : ∀ i, X.restrict (U' i).isOpenEmbedding ≅
@@ -191,8 +213,8 @@ theorem thickeningRestrictionEquivLRS_symm_eq {ι' : Type u} (U' : ι' → Opens
     (f : ThickeningFamilyLRS I X) :
     (thickeningRestrictionEquivLRS I X hI U hU B e).symm f =
       (thickeningRestrictionEquivLRS I X hI U' hU' B' e').symm f :=
-  ((existsUnique_hom_thickeningMap I f.1 f.2 hI U hU B e).choose_spec.2 _
-    (thickeningMap_comp_thickeningRestrictionEquivLRS_symm I X hI U' hU' B' e' f)).symm
+  congrArg (fun q : (locallyRingedSpaceObj I ⟶ X) ≃ ThickeningFamilyLRS I X => q.symm f)
+    (thickeningRestrictionEquivLRS_eq_of_cover I X hI U hU B e U' hU' B' e')
 
 end Cover
 
