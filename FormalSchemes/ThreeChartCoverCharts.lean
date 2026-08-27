@@ -30,7 +30,9 @@ corresponding statement downstairs on `A`; it rests on the naturality square of
 
 Note that `A` itself is **not** required to be an adic ring: only the chart algebras `A{1/f_i}`
 occur as charts, and a completed localization is adic for free
-(`AdicCompletion.isAdicRing_map`, packaged here as `chartIsAdicRing`).
+(`FormalSpectrum.isAdicRing_awayCompletionIdeal`, packaged here as `chartIsAdicRing`, which states
+it at the datum's own ideal spelling `I.map (algebraMap R (A{1/f_i}))` rather than at the folded
+`awayCompletionIdeal`).
 
 ## Cost note — read this before touching anything in this file
 
@@ -106,7 +108,7 @@ complete for the extension of its ideal, and the datum's ideal spelling
 theorem chartIsAdicRing (hI : I.FG) (i : ULift.{u} (Fin 3)) :
     IsAdicRing (I.map (algebraMap R (chartAlgebra I f i))) := by
   rw [map_algebraMap_awayCompletion_eq]
-  exact AdicCompletion.isAdicRing_map _ ((hI.map (algebraMap R A)).map _)
+  exact FormalSpectrum.isAdicRing_awayCompletionIdeal _ _ (hI.map (algebraMap R A))
 
 /-! ### Units -/
 

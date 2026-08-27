@@ -132,7 +132,7 @@ def basicOpenImmersion :
         (I.map (algebraMap R (Localization.Away f))) (hI.map _) ⟶
       formalCompletion R I hI :=
   haveI := AdicCompletion.isAdicRing_map I hI
-  haveI := AdicCompletion.isAdicRing_map (I.map (algebraMap R (Localization.Away f))) (hI.map _)
+  haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I f hI
   FormalScheme.Hom.mk
     ((locCompletionChartIso I hI f).hom ≫
       basicOpenChart (idealOfDefinition I) (awayPoint I f))

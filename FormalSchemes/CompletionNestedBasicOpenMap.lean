@@ -146,12 +146,11 @@ theorem nestedBasicOpenImmersion_eq_map (hI : I.FG)
         (hI.map (algebraMap R (Localization.Away g)))
         (IsLocalization.Away.lift (S := Localization.Away f) f hfg)
         (le_of_eq (by rw [Ideal.map_map, IsLocalization.Away.lift_comp])) := by
-  haveI := AdicCompletion.isAdicRing_map (I.map (algebraMap R (Localization.Away f))) (hI.map _)
-  haveI := AdicCompletion.isAdicRing_map (I.map (algebraMap R (Localization.Away g))) (hI.map _)
-  haveI := AdicCompletion.isAdicRing_map
-    ((I.map (algebraMap R (Localization.Away f))).map
-      (algebraMap (Localization.Away f)
-        (Localization.Away (algebraMap R (Localization.Away f) g)))) ((hI.map _).map _)
+  haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I f hI
+  haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I g hI
+  haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal
+    (I.map (algebraMap R (Localization.Away f))) (algebraMap R (Localization.Away f) g)
+    (hI.map _)
   set ψ := (awayAwayLocEquiv f g hfg).symm.toRingEquiv.toRingHom
   -- the ideal-transport witness for `ψ`, re-derived from the `have` inside
   -- `awayCompletionAwayEquiv`'s own proof

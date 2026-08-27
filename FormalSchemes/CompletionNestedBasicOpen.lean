@@ -167,8 +167,8 @@ def nestedBasicOpenImmersion (hI : I.FG)
         (I.map (algebraMap R (Localization.Away g))) (hI.map _) ⟶
       formalCompletion (Localization.Away f)
         (I.map (algebraMap R (Localization.Away f))) (hI.map _) :=
-  haveI := AdicCompletion.isAdicRing_map (I.map (algebraMap R (Localization.Away g))) (hI.map _)
-  haveI := AdicCompletion.isAdicRing_map (I.map (algebraMap R (Localization.Away f))) (hI.map _)
+  haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I g hI
+  haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I f hI
   -- inline the raw `locCompletionChartIso.hom ≫ basicOpenChart` legs of `basicOpenImmersion`
   -- (rather than its `.toLRSHom`) so every intermediate object is presented as
   -- `locallyRingedSpaceObj`, matching `nestedChartIso`'s target syntactically (cf.
