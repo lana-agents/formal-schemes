@@ -26,7 +26,9 @@ glued scheme (`specTwoPatchSchemeι₀_base_ne_specTwoPatchSchemeι₁_base`). T
 origin, and it is the first statement in this development that distinguishes the glued object from
 a single chart. The input is `LocallyRingedSpace.GlueData.range_ι_inter_subset`
 (`FormalSchemes.GlueDataImageInter`) together with the identification of the glue datum's overlap
-inclusion with `Spec` of the localization map, `range_specTwoPatchLRSGlueData_f_false_true`.
+inclusion with `Spec` of the localization map, `range_specTwoPatchLRSGlueData_f_false_true`. Both
+statements are available in either index order; the `B`-side mirrors carry the primed index
+distinctness `spidxNe'` and are otherwise line-for-line the same proofs.
 
 **Hence not separated, hence not affine.** Write `specDouble a` for `specTwoPatchScheme a a
 (RingEquiv.refl _)`. The two charts `specTwoPatchSchemeι₀`, `specTwoPatchSchemeι₁` are then two
@@ -58,11 +60,16 @@ is not required for the conclusion.
 
 ## Main results
 
-* `AlgebraicGeometry.range_specTwoPatchLRSGlueData_f_false_true`: the `A`-side overlap inclusion of
-  the two-patch glue datum has the same range as `Spec` of `A → A_a`, i.e. `D(a)`.
-* `AlgebraicGeometry.specTwoPatchι₀_base_notMem_range_specTwoPatchι₁`: **the charts meet only over
-  the overlap**, at the level of locally ringed spaces, for arbitrary `A`, `B`, `θ`.
-* `AlgebraicGeometry.specTwoPatchSchemeι₀_base_notMem_range_specTwoPatchSchemeι₁` and
+* `AlgebraicGeometry.range_specTwoPatchLRSGlueData_f_false_true` and
+  `AlgebraicGeometry.range_specTwoPatchLRSGlueData_f_true_false`: the two overlap inclusions of the
+  two-patch glue datum have the same ranges as `Spec` of `A → A_a` and of `B → B_b`, i.e. `D(a)`
+  and `D(b)`.
+* `AlgebraicGeometry.specTwoPatchι₀_base_notMem_range_specTwoPatchι₁` and
+  `AlgebraicGeometry.specTwoPatchι₁_base_notMem_range_specTwoPatchι₀`: **the charts meet only over
+  the overlap**, at the level of locally ringed spaces, for arbitrary `A`, `B`, `θ`, from either
+  side.
+* `AlgebraicGeometry.specTwoPatchSchemeι₀_base_notMem_range_specTwoPatchSchemeι₁`,
+  `AlgebraicGeometry.specTwoPatchSchemeι₁_base_notMem_range_specTwoPatchSchemeι₀` and
   `..._base_ne_specTwoPatchSchemeι₁_base`: the same at the level of schemes, and **the doubled
   point**.
 * `AlgebraicGeometry.specDouble`: `Spec A` doubled along `D(a)`.
@@ -100,6 +107,9 @@ variable {A B : Type u} [CommRing A] [CommRing B] (a : A) (b : B)
 /-- The two indices of the two-patch glue datum are distinct. -/
 private theorem spidxNe : ¬ @Eq (ULift.{u} Bool) ⟨false⟩ ⟨true⟩ := by simp
 
+/-- …and in the other order, for the `B`-side statements. -/
+private theorem spidxNe' : ¬ @Eq (ULift.{u} Bool) ⟨true⟩ ⟨false⟩ := by simp
+
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- The same transparency requirement as `specTwoPatch_glue` in
@@ -117,6 +127,25 @@ theorem range_specTwoPatchLRSGlueData_f_false_true :
       eqToHom (dif_neg spidxNe) ≫
         Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap A (Localization.Away a))) :=
     dif_neg spidxNe
+  rw [h, LocallyRingedSpace.range_eqToHom_comp_base]
+  rfl
+
+set_option linter.style.setOption false in
+set_option backward.isDefEq.respectTransparency false in
+-- The transparency requirement is the same one `range_specTwoPatchLRSGlueData_f_false_true` needs,
+-- and for the same reason: the glue datum is a `def`, so its index type does not reduce to
+-- `ULift Bool` at `instances` transparency.
+/-- **The `B`-side overlap inclusion of the two-patch glue datum is the localization chart.**
+The mirror of `range_specTwoPatchLRSGlueData_f_false_true` with the two indices exchanged: the
+range of `f ⟨true⟩ ⟨false⟩` on underlying spaces is that of `Spec` of `B → B_b`, namely `D(b)`. -/
+theorem range_specTwoPatchLRSGlueData_f_true_false :
+    Set.range ((specTwoPatchLRSGlueData a b θ).toGlueData.f ⟨true⟩ ⟨false⟩).base =
+      Set.range (Spec.locallyRingedSpaceMap
+        (CommRingCat.ofHom (algebraMap B (Localization.Away b)))).base := by
+  have h : (specTwoPatchLRSGlueData a b θ).toGlueData.f ⟨true⟩ ⟨false⟩ =
+      eqToHom (dif_neg spidxNe') ≫
+        Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap B (Localization.Away b))) :=
+    dif_neg spidxNe'
   rw [h, LocallyRingedSpace.range_eqToHom_comp_base]
   rfl
 
@@ -138,6 +167,23 @@ theorem specTwoPatchι₀_base_notMem_range_specTwoPatchι₁ (x : PrimeSpectrum
   rw [← range_specTwoPatchLRSGlueData_f_false_true a b θ]
   exact ⟨w, (specTwoPatchι₀_isOpenImmersion a b θ).base_open.injective hw⟩
 
+/-- **…and from the other side**: a point of `Spec B` outside `D(b)` maps into
+`specTwoPatch a b θ` outside the range of the `A`-chart. The mirror of
+`specTwoPatchι₀_base_notMem_range_specTwoPatchι₁`, proved the same way from
+`range_specTwoPatchLRSGlueData_f_true_false`. -/
+theorem specTwoPatchι₁_base_notMem_range_specTwoPatchι₀ (x : PrimeSpectrum B)
+    (hx : x ∉ Set.range (Spec.locallyRingedSpaceMap
+      (CommRingCat.ofHom (algebraMap B (Localization.Away b)))).base) :
+    (specTwoPatchι₁ a b θ).base x ∉ Set.range (specTwoPatchι₀ a b θ).base := by
+  rintro ⟨y, hy⟩
+  obtain ⟨w, hw⟩ := (specTwoPatchLRSGlueData a b θ).range_ι_inter_subset ⟨true⟩ ⟨false⟩
+    (⟨⟨x, rfl⟩, ⟨y, hy⟩⟩ :
+      (specTwoPatchι₁ a b θ).base x ∈
+        Set.range (specTwoPatchι₁ a b θ).base ∩ Set.range (specTwoPatchι₀ a b θ).base)
+  refine hx ?_
+  rw [← range_specTwoPatchLRSGlueData_f_true_false a b θ]
+  exact ⟨w, (specTwoPatchι₁_isOpenImmersion a b θ).base_open.injective hw⟩
+
 /-- The range of `Spec A_a ⟶ Spec A` is the basic open `D(a)`, so a prime containing `a` is not in
 it. -/
 theorem notMem_range_specAwayMap {x : PrimeSpectrum A} (hx : a ∈ x.asIdeal) :
@@ -154,6 +200,15 @@ theorem specTwoPatchSchemeι₀_base_notMem_range_specTwoPatchSchemeι₁ {x : P
     (hx : a ∈ x.asIdeal) :
     (specTwoPatchSchemeι₀ a b θ).base x ∉ Set.range (specTwoPatchSchemeι₁ a b θ).base :=
   specTwoPatchι₀_base_notMem_range_specTwoPatchι₁ a b θ x (notMem_range_specAwayMap a hx)
+
+/-- **The two charts of the glued scheme meet only over the overlap**, from the other side: a prime
+of `B` containing `b` maps outside the range of the `A`-chart. The mirror of
+`specTwoPatchSchemeι₀_base_notMem_range_specTwoPatchSchemeι₁`; `notMem_range_specAwayMap` is
+symmetric in the data and applies unchanged at `b`. -/
+theorem specTwoPatchSchemeι₁_base_notMem_range_specTwoPatchSchemeι₀ {x : PrimeSpectrum B}
+    (hx : b ∈ x.asIdeal) :
+    (specTwoPatchSchemeι₁ a b θ).base x ∉ Set.range (specTwoPatchSchemeι₀ a b θ).base :=
+  specTwoPatchι₁_base_notMem_range_specTwoPatchι₀ a b θ x (notMem_range_specAwayMap b hx)
 
 /-- **Neither chart is surjective** once there is a prime of `A` containing `a`: the `B`-chart
 misses the image of such a prime. -/
