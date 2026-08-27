@@ -129,7 +129,7 @@ theorem basicOpenImmersion_eq_map :
       formalCompletion.map hI (hI.map (algebraMap R (Localization.Away f)))
         (algebraMap R (Localization.Away f)) (le_of_eq rfl) := by
   haveI := AdicCompletion.isAdicRing_map I hI
-  haveI := AdicCompletion.isAdicRing_map (I.map (algebraMap R (Localization.Away f))) (hI.map _)
+  haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I f hI
   apply FormalScheme.Hom.ext'
   have hcomp := interchangeBackward_comp_awayCompletionHom I f hI
   have hIK : idealOfDefinition I ≤

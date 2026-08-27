@@ -385,7 +385,7 @@ theorem isAdicRing_locX (hI : I.FG) : IsAdicRing (I.map (algebraMap R
     (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)))) := by
   rw [← CompletedTensorAwayInterchange.idealOfDef_Achart_eq (A := annulusAlgebra R I q) I
     (overlapX R I q)]
-  exact AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+  exact FormalSpectrum.isAdicRing_awayCompletionIdeal _ _ (hI.map _)
 
 omit [IsNoetherianRing R] in
 /-- Localized adic-ring instance for the `y`-chart `A{1/y}`. -/
@@ -393,7 +393,7 @@ theorem isAdicRing_locY (hI : I.FG) : IsAdicRing (I.map (algebraMap R
     (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)))) := by
   rw [← CompletedTensorAwayInterchange.idealOfDef_Achart_eq (A := annulusAlgebra R I q) I
     (overlapY R I q)]
-  exact AdicCompletion.isAdicRing_map _ ((hI.map _).map _)
+  exact FormalSpectrum.isAdicRing_awayCompletionIdeal _ _ (hI.map _)
 
 omit [IsNoetherianRing R] in
 /-- The ideal-convention bridge intertwines the two `x`-chart structural completion maps in the
