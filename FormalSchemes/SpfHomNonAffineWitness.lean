@@ -1,5 +1,6 @@
 import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpecTwoPatchNonAffine
+import FormalSchemes.IndSchemeColimitEquivLRS
 
 set_option linter.style.header false
 
@@ -57,6 +58,12 @@ is a genuine choice, and it is the doubled origin that makes the two choices dif
   family.
 * `FormalSpectrum.existsUnique_hom_thickeningMap_nonAffine`: **the capstone at a non-affine
   target.**
+* `FormalSpectrum.thickeningRestrictionEquivNonAffine`: **the same statement as a bijection**
+  `(Spf ℤ⟦X⟧ ⟶ nonAffineTarget) ≃ ThickeningFamilyLRS formalLineIdeal nonAffineTarget`, from
+  `FormalSchemes/IndSchemeColimitEquivLRS.lean`.
+* `FormalSpectrum.nonAffineFamilyLRS`, `FormalSpectrum.spfHomNonAffine` and
+  `FormalSpectrum.thickeningMap_comp_spfHomNonAffine`: the family as a `ThickeningFamilyLRS`, the
+  morphism the bijection produces from it, and its computation rule.
 
 ## Scope
 
@@ -67,9 +74,12 @@ tree, and adding it means a second range computation for the glue datum's `f ⟨
 `SpecTwoPatchNonAffine.lean`. That is a separate row; nothing here depends on it, because
 `nonAffineOpen_ne` already rules out the one-piece reading of the cover.
 
-Nothing here computes the glued morphism. `SpfHomOfFamily.lean`'s `spfHomOfFamily` needs the
-source-side chart data spelled out; the `∃!` form is what makes the point about the target, and the
-morphism it asserts is unique.
+`spfHomNonAffine` **names** the glued morphism but does not compute it: it is the bijection's
+inverse applied to the family, so unfolding it reaches `Classical.choose` on the `∃!`, not a
+formula. `SpfHomOfFamily.lean`'s `spfHomOfFamily` — which does spell the construction out — needs
+the source-side chart data supplied by hand, and none of that is required to make the point about
+the target. `thickeningMap_comp_spfHomNonAffine` is the only handle on the morphism, and it is the
+one downstream would want anyway.
 
 ## References
 
@@ -225,6 +235,47 @@ theorem existsUnique_hom_thickeningMap_nonAffine :
       ∀ n : ℕ, thickeningMap formalLineIdeal n ≫ g = nonAffineFamily n :=
   existsUnique_hom_thickeningMap formalLineIdeal nonAffineFamily nonAffineFamily_compat
     (polyXIdeal_fg.map _) nonAffineOpen iSup_nonAffineOpen nonAffineChartRing nonAffineChartIso
+
+/-! ### …and as a bijection -/
+
+/-- The compatible family of the section above, packaged as a `ThickeningFamilyLRS` — the subtype
+the bijection is stated against. -/
+def nonAffineFamilyLRS : ThickeningFamilyLRS formalLineIdeal nonAffineTarget :=
+  ⟨nonAffineFamily, nonAffineFamily_compat⟩
+
+/-- **EGA I, 10.6.10 as a bijection at a target that is not affine.** Restriction to the
+infinitesimal thickenings is an `Equiv`
+
+```
+(Spf ℤ⟦X⟧ ⟶ specDouble (X : ℤ[X]))  ≃  ThickeningFamilyLRS formalLineIdeal (specDouble (X : ℤ[X]))
+```
+
+and the target is provably not the spectrum of a ring (`not_isAffine_nonAffineTarget`). This is the
+strongest form the colimit property takes on this tree: `existsUnique_hom_thickeningMap_nonAffine`
+gives one morphism per family, whereas this says the two sides *are* the same set — the shape
+umbrella 97 asks for — at a target no affine argument can reach.
+
+By `thickeningRestrictionEquivLRS_eq_of_cover` the two-chart cover fed in here is scaffolding: any
+other affine cover of the doubled line gives the same `Equiv`. -/
+def thickeningRestrictionEquivNonAffine :
+    (locallyRingedSpaceObj formalLineIdeal ⟶ nonAffineTarget) ≃
+      ThickeningFamilyLRS formalLineIdeal nonAffineTarget :=
+  thickeningRestrictionEquivLRS formalLineIdeal nonAffineTarget (polyXIdeal_fg.map _)
+    nonAffineOpen iSup_nonAffineOpen nonAffineChartRing nonAffineChartIso
+
+/-- The morphism `Spf ℤ⟦X⟧ ⟶ specDouble (X : ℤ[X])` glued from the reduction family, obtained by
+inverting the bijection rather than by invoking `Classical.choose` on the `∃!`. -/
+def spfHomNonAffine : locallyRingedSpaceObj formalLineIdeal ⟶ nonAffineTarget :=
+  thickeningRestrictionEquivNonAffine.symm nonAffineFamilyLRS
+
+/-- **The computation rule for the glued morphism**: it restricts on the `n`-th thickening to the
+`n`-th member of the family. Together with injectivity of the `Equiv` this is the whole content of
+`existsUnique_hom_thickeningMap_nonAffine`, now in a form that can be rewritten with. -/
+theorem thickeningMap_comp_spfHomNonAffine (n : ℕ) :
+    thickeningMap formalLineIdeal n ≫ spfHomNonAffine = nonAffineFamily n :=
+  thickeningMap_comp_thickeningRestrictionEquivLRS_symm formalLineIdeal nonAffineTarget
+    (polyXIdeal_fg.map _) nonAffineOpen iSup_nonAffineOpen nonAffineChartRing nonAffineChartIso
+    nonAffineFamilyLRS n
 
 end NonAffineWitness
 
