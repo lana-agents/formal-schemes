@@ -138,11 +138,12 @@ two non-isomorphic rings, and from isomorphisms assembled in different ways
 (`LocallyRingedSpace.restrictTopIso` against `basicOpenIsoSpecAway` pushed through
 `Scheme.forgetToLocallyRingedSpace`).
 
-What remains genuinely out of reach is a **non-affine** `X` carrying a compatible family, which is
-the gap `ThickeningChartSpfHom.lean` documents. It does not bear on non-vacuity of anything proved
-here — the construction never looks at `X` outside `U` — but it does mean no witness on this tree
-exhibits the *covering* situation the gluing row will face, where the charts come from different
-affine opens of an `X` that is not itself affine.
+What this file's witness does not exhibit is a **non-affine** `X` carrying a compatible family. It
+does not bear on non-vacuity of anything proved here — the construction never looks at `X` outside
+`U` — and it is not missing from the tree: `FormalSchemes/SpfHomNonAffineWitness.lean` carries a
+compatible family into the affine line over `ℤ` with a doubled origin, which is the *covering*
+situation the gluing row faces, with the charts coming from two affine opens of an `X` that is not
+itself affine.
 -/
 
 open Polynomial

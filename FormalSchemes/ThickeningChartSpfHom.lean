@@ -324,11 +324,13 @@ affine opens, so no non-affine `X` is needed. The witness there is `X := Spec �
 and nonempty (`openTwo_ne_top`, `openTwo_ne_bot`), so `chartRestrict` genuinely restricts and `e`
 genuinely transports.
 
-What *is* out of reach on this tree is a **non-affine** `X`, and the reason is worth recording:
-the only formal-scheme-shaped `X` available is `Spf R` itself, whose restriction to `D(s)` is
-`Spf R{1/s}` — an affine *formal* scheme, not the `Spec` of a ring, so it is not an admissible
-`e`. That does not matter for non-vacuity, because the construction never looks at `X` outside
-`U`; it only means the witness cannot exhibit the *covering* situation the gluing row will face.
+What this file's witness does not exhibit is a **non-affine** `X`. That does not matter for
+non-vacuity, because the construction never looks at `X` outside `U`; it only means the witness
+here cannot exhibit the *covering* situation the gluing row faces. One that does is
+`FormalSchemes/SpfHomNonAffineWitness.lean`, which runs the capstone at the affine line over `ℤ`
+with a doubled origin — a non-affine target obtained by gluing two copies of `Spec ℤ[X]`
+(`FormalSchemes/SpecTwoPatchNonAffine.lean`), so the non-affine `X` comes from an ordinary scheme
+and not from anything formal-scheme-shaped.
 -/
 
 open Polynomial
