@@ -55,7 +55,10 @@ obtained from `Ideal.map_map` and `θ.symm ∘ θ = id`.
 mapping `Spec A_a` into the glued scheme agree. Its `ι₁` twin is a two-line consequence, obtained
 by composing with `specGlueIso.inv` rather than by redoing the `eqToHom` bookkeeping. From it,
 `preimage_range_specTwoPatchι₁ : ι₀⁻¹(range ι₁) = D(a)` upgrades
-`FormalSchemes/SpecTwoPatchNonAffine.lean`'s one-directional statement to an equality.
+`FormalSchemes/SpecTwoPatchNonAffine.lean`'s one-directional statement to an equality. The two
+`B`-side facts that step also needs — `range_specTwoPatchLRSGlueData_f_true_false` and
+`specTwoPatchι₁_base_notMem_range_specTwoPatchι₀` — live in that file too, beside the `A`-side
+statements they mirror.
 
 ## Scope
 
@@ -225,39 +228,6 @@ theorem specTwoPatchι₀_base_comap_algebraMap (y : PrimeSpectrum (Localization
   simp only [LocallyRingedSpace.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp,
     Function.comp_apply] at h
   exact h
-
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
-/-- **The `B`-side overlap inclusion of the glue datum is the affine chart inclusion**, on ranges.
-The mirror of `range_specTwoPatchLRSGlueData_f_false_true`
-(`FormalSchemes/SpecTwoPatchNonAffine.lean`); the `eqToHom` inserted by `GlueData.ofGlueData'` is
-invisible to a range. -/
-theorem range_specTwoPatchLRSGlueData_f_true_false :
-    Set.range ((specTwoPatchLRSGlueData a b θ).toGlueData.f ⟨true⟩ ⟨false⟩).base =
-      Set.range (Spec.locallyRingedSpaceMap
-        (CommRingCat.ofHom (algebraMap B (Localization.Away b)))).base := by
-  have h : (specTwoPatchLRSGlueData a b θ).toGlueData.f ⟨true⟩ ⟨false⟩ =
-      eqToHom (dif_neg spIdxNe') ≫ Spec.locallyRingedSpaceMap
-        (CommRingCat.ofHom (algebraMap B (Localization.Away b))) :=
-    dif_neg spIdxNe'
-  rw [h, LocallyRingedSpace.range_eqToHom_comp_base]
-  rfl
-
-/-- **The charts meet at most over the overlap**, from the `B` side: a prime of `B` outside `D(b)`
-maps into the glued scheme outside the `A`-chart. The mirror of
-`specTwoPatchι₀_base_notMem_range_specTwoPatchι₁`. -/
-theorem specTwoPatchι₁_base_notMem_range_specTwoPatchι₀ (y : PrimeSpectrum B)
-    (hy : y ∉ Set.range ⇑(Spec.locallyRingedSpaceMap
-      (CommRingCat.ofHom (algebraMap B (Localization.Away b)))).base) :
-    (specTwoPatchι₁ a b θ).base y ∉ Set.range ⇑(specTwoPatchι₀ a b θ).base := by
-  rintro ⟨x, hx⟩
-  obtain ⟨w, hw⟩ := (specTwoPatchLRSGlueData a b θ).range_ι_inter_subset ⟨true⟩ ⟨false⟩
-    (⟨⟨y, rfl⟩, ⟨x, hx⟩⟩ :
-      (specTwoPatchι₁ a b θ).base y ∈
-        Set.range ⇑(specTwoPatchι₁ a b θ).base ∩ Set.range ⇑(specTwoPatchι₀ a b θ).base)
-  refine hy ?_
-  rw [← range_specTwoPatchLRSGlueData_f_true_false a b θ]
-  exact ⟨w, (specTwoPatchι₁_isOpenImmersion a b θ).base_open.injective hw⟩
 
 /-- **The glue condition from the `B` side.** Compose `specAwayMap_comp_specTwoPatchι₀` with
 `specGlueIso.inv`; there is no need to redo the `eqToHom` bookkeeping. -/

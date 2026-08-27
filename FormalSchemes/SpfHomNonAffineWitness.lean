@@ -31,8 +31,8 @@ existsUnique_hom_thickeningMap_nonAffine :
 
 exercises the covering situation on **both** sides at once: `|Spf ℤ⟦X⟧| ≃ Spec ℤ` is covered by two
 proper basic opens (the source-side non-degeneracy `SpfHomOfFamily.lean` already had), and the
-target is covered by two distinct affine opens — one of them proper, see Scope — of a space that
-is provably not a spectrum.
+target is covered by two distinct affine opens, each of them proper, of a space that is provably
+not a spectrum.
 
 ## Why the family goes through one chart
 
@@ -52,8 +52,8 @@ is a genuine choice, and it is the doubled origin that makes the two choices dif
   `FormalSpectrum.nonAffineChartIso`: the two-chart affine open cover of the target, with
   `FormalSpectrum.iSup_nonAffineOpen`.
 * `FormalSpectrum.nonAffineOpen_ne`, `FormalSpectrum.nonAffineOpen_true_ne_top`,
-  `FormalSpectrum.nonAffineOpen_ne_bot`: the cover is genuinely two-piece and neither piece is
-  empty.
+  `FormalSpectrum.nonAffineOpen_false_ne_top`, `FormalSpectrum.nonAffineOpen_ne_bot`: the cover is
+  genuinely two-piece, each piece is a proper open, and neither piece is empty.
 * `FormalSpectrum.nonAffineFamily`, `FormalSpectrum.nonAffineFamily_compat`: the compatible
   family.
 * `FormalSpectrum.existsUnique_hom_thickeningMap_nonAffine`: **the capstone at a non-affine
@@ -67,12 +67,14 @@ is a genuine choice, and it is the doubled origin that makes the two choices dif
 
 ## Scope
 
-`nonAffineOpen_true_ne_top` is stated for the `B`-chart only. Properness of the `A`-chart's range
-is just as true and is proved the same way, but the input it needs — the mirror of
-`specTwoPatchι₀_base_notMem_range_specTwoPatchι₁` with the two indices exchanged — is not on the
-tree, and adding it means a second range computation for the glue datum's `f ⟨true⟩ ⟨false⟩` in
-`SpecTwoPatchNonAffine.lean`. That is a separate row; nothing here depends on it, because
-`nonAffineOpen_ne` already rules out the one-piece reading of the cover.
+Both charts are proper opens: `nonAffineOpen_true_ne_top` for the `B`-chart and
+`nonAffineOpen_false_ne_top` for the `A`-chart. The second reads off
+`specTwoPatchSchemeι₁_base_notMem_range_specTwoPatchSchemeι₀`, the index-exchanged mirror of the
+statement the first uses; it and the range computation for the glue datum's `f ⟨true⟩ ⟨false⟩` it
+rests on are both in `SpecTwoPatchNonAffine.lean`, beside the `A`-side statements they mirror.
+Neither properness statement is load-bearing here — `nonAffineOpen_ne` already rules out the
+one-piece reading of the cover — but a witness whose non-degeneracy is established on one side
+only invites the reader to wonder about the other.
 
 `spfHomNonAffine` **names** the glued morphism but does not compute it: it is the bijection's
 inverse applied to the family, so unfolding it reaches `Classical.choose` on the `∃!`, not a
@@ -170,6 +172,16 @@ theorem nonAffineOpen_true_ne_top : nonAffineOpen true ≠ ⊤ := by
   have hmem : (specTwoPatchSchemeι₀ (X : ℤ[X]) X (RingEquiv.refl _)).base originInt ∈
       nonAffineOpen true := by rw [h]; trivial
   exact specTwoPatchSchemeι₀_base_notMem_range_specTwoPatchSchemeι₁ (X : ℤ[X]) X
+    (RingEquiv.refl _) X_mem_originInt hmem
+
+/-- **The `A`-chart is a proper open** of the target: it misses the `B`-chart's copy of the doubled
+origin. The mirror of `nonAffineOpen_true_ne_top`, on the input this row supplied to
+`SpecTwoPatchNonAffine.lean`. -/
+theorem nonAffineOpen_false_ne_top : nonAffineOpen false ≠ ⊤ := by
+  intro h
+  have hmem : (specTwoPatchSchemeι₁ (X : ℤ[X]) X (RingEquiv.refl _)).base originInt ∈
+      nonAffineOpen false := by rw [h]; trivial
+  exact specTwoPatchSchemeι₁_base_notMem_range_specTwoPatchSchemeι₀ (X : ℤ[X]) X
     (RingEquiv.refl _) X_mem_originInt hmem
 
 /-- **Neither piece is empty**: each contains the image of the origin under its own chart. -/
