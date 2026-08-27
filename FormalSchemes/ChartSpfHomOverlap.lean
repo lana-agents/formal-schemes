@@ -242,11 +242,12 @@ Four degeneracies could make the theorem above say nothing, and this section rem
   This is the one `ThickeningChartSpfHom.lean` could only remove on one side, because until this
   file there was no second `r` in play.
 
-What is **not** removed, and remains the one genuinely open gap of this cluster: `X` is still
-affine. No non-affine `X` carrying a compatible family exists on the tree. It does not affect
-non-vacuity of anything proved here — the construction never looks at `X` outside `U ∪ U'` — but a
-witness in which the two affine opens come from an `X` that is not itself affine is still absent,
-and that is what a full gluing witness will need.
+What is **not** removed here: the `X` of this file's witness is still affine. That is a property
+of the witness and not a gap in the tree — `FormalSchemes/SpfHomNonAffineWitness.lean` runs the
+capstone at the affine line over `ℤ` with a doubled origin, a target that
+`FormalSchemes/SpecTwoPatchNonAffine.lean` proves is **not affine**, with its two charts as the
+affine open cover. It never affected non-vacuity of anything proved here either — the construction
+never looks at `X` outside `U ∪ U'`.
 -/
 
 section Witness

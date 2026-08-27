@@ -40,7 +40,9 @@ This file is the fifth step. It has three parts.
 2. **The gluing.** `chartHom_pullback_compat` converts `chartSpfHomAmbient_overlap`, which is
    stated along the two *legs* of the overlap, into the *pullback* form `glueMorphisms` takes;
    the bridge is `basicOpenChartOverlapIso_inv_comp_furtherLeft`/`_furtherRight`, which
-   `BasicOpenChartOverlapLegs.lean` proved for exactly this and which had no consumer until now.
+   `BasicOpenChartOverlapLegs.lean` proved for exactly this. The `Left` half already has a
+   consumer in the same shape: `GeneralFibreProductExposeXAlgebraData.lean` rewrites a
+   `pullback.fst` by it in its `hfst` step.
    `spfHomOfFamily` is then `OpenCover.glueMorphisms` of the chart morphisms.
 3. **The computation rule**, `thickeningMap_comp_spfHomOfFamily`, which is the part that makes
    this a theorem rather than a definition — see below. Uniqueness is free from
@@ -133,8 +135,11 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 `glueMorphisms` takes. This is `chartSpfHomAmbient_overlap` — stated along the two *legs*
 `Spf R{1/(r i · r j)} ⟶ Spf R{1/r i}`, `⟶ Spf R{1/r j}` — transported to the two pullback
 projections by the leg identifications of `BasicOpenChartOverlapLegs.lean`, which were built for
-exactly this and had no consumer until now. The transport is a cancellation of an isomorphism, not
-a transport of a statement across one. -/
+exactly this. The manoeuvre has a worked precedent one file away —
+`GeneralFibreProductExposeXAlgebraData.lean` rewrites `pullback.fst` by
+`basicOpenChartOverlapIso_inv_comp_furtherLeft` in its `hfst` step — and it is the `Right` half
+that is used here for the first time. The transport is a cancellation of an isomorphism, not a
+transport of a statement across one. -/
 theorem chartHom_pullback_compat (i j : ι) :
     letI := isOpenImmersion_basicOpenChart I (r i) hI
     letI := isOpenImmersion_basicOpenChart I (r j) hI
@@ -256,9 +261,11 @@ Everything the general theorem quantifies over is non-degenerate there:
   (`basicOpen_formalLine_overlap_ne_bot`, `chartOpen_formalLine_overlap_ne_top`,
   `ChartSpfHomOverlap.lean`) — so the compatibility hypothesis discharged by
   `chartHom_pullback_compat` is a condition over a nonempty formal scheme, not a vacuous one;
-* the two affine opens of the target are **different and proper**: `D(2)`, `D(3) ⊆ Spec ℤ`, with
-  different coordinate rings `ℤ[1/2]`, `ℤ[1/3]` (`openTwo_ne_top`, `openThree_ne_top` and their
-  `_ne_bot` companions). In particular `U = ⊤` is excluded on both sides.
+* the two affine opens of the target are **different and proper**: `D(2)`, `D(3) ⊆ Spec ℤ` are
+  distinct opens (`formalLineOpen_ne`, the target-side counterpart of `twoChart_ne`), each is
+  proper and nonempty (`openTwo_ne_top`, `openThree_ne_top` and their `_ne_bot` companions), and
+  their coordinate rings `ℤ[1/2]`, `ℤ[1/3]` are different rings. In particular `U = ⊤` is
+  excluded on both sides.
 
 The `X` of this witness is affine, and for a while that was true of every witness on the tree —
 four rows on this umbrella recorded it as an open gap. It is closed in
@@ -295,6 +302,25 @@ theorem iSup_basicOpen_formalLineElem :
 /-- The two affine opens `D(2)`, `D(3)` of the target `Spec ℤ`. -/
 def formalLineOpen : Bool → Opens witnessTarget.toTopCat :=
   fun b => if b then openTwo else openThree
+
+/-- **The two affine opens of the target are distinct.** The prime `(2) ⊆ ℤ` lies outside `D(2)`
+and inside `D(3)`, since `2 ∤ 3`. This is the target-side counterpart of `twoChart_ne`
+(`FormalSchemes/FormalLineTwoChartCover.lean`), which says the same of the two opens of the
+*source*: without it the non-vacuity claim below would be reading distinctness off the two
+coordinate rings, which is not the same statement. -/
+theorem formalLineOpen_ne : formalLineOpen true ≠ formalLineOpen false := by
+  haveI := Int.span_two_isMaximal
+  have hnot : (⟨Ideal.span {(2 : ℤ)}, inferInstance⟩ : PrimeSpectrum ℤ) ∉ formalLineOpen true := by
+    rw [formalLineOpen, if_pos rfl]
+    exact fun hc => hc (Ideal.mem_span_singleton_self _)
+  have hmem : (⟨Ideal.span {(2 : ℤ)}, inferInstance⟩ : PrimeSpectrum ℤ) ∈ formalLineOpen false := by
+    rw [formalLineOpen, if_neg (by simp)]
+    intro hc
+    have h23 : (2 : ℤ) ∣ 3 := Ideal.mem_span_singleton.mp hc
+    norm_num at h23
+  intro h
+  rw [h] at hnot
+  exact hnot hmem
 
 /-- Their coordinate rings, `ℤ[1/2]` and `ℤ[1/3]` — genuinely different rings, which is what makes
 the two chart morphisms being glued unrelated except through the family. -/

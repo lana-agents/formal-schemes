@@ -56,9 +56,16 @@ Two immediate refinements of `specHomEquiv` live in files that import this one:
 
 ## Remaining follow-up
 
-Left to future work: the general (non-affine target) mapping-out property
-`Hom_{LRS}(Spf R, X) ≃ ...` for an arbitrary locally ringed space / scheme `X`. The limit
-repackaging is stated for each ring `B` separately; its naturality in `B` is not packaged.
+The general (non-affine target) mapping-out property is no longer future work:
+`FormalSchemes/SpfHomOfFamily.lean` proves `FormalSpectrum.existsUnique_hom_thickeningMap`, which
+is EGA I 10.6.10 for any locally ringed space `X` carrying an affine open cover;
+`FormalSchemes/IndSchemeColimitEquivLRS.lean` packages it as
+`FormalSpectrum.thickeningRestrictionEquivLRS`, the general-target counterpart of
+`FormalSchemes/IndSchemeColimitEquiv.lean`'s `thickeningRestrictionEquiv`; and
+`FormalSchemes/SpfHomNonAffineWitness.lean` runs it at a target that is provably not affine.
+
+Left to future work: the limit repackaging is stated for each ring `B` separately, and its
+naturality in `B` is not packaged.
 
 ## References
 
