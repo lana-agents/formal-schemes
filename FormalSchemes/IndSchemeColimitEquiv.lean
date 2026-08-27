@@ -61,11 +61,17 @@ to have the same source; with it, it is recognisably the same object seen throug
 
 ## Scope
 
-Affine targets only. The general statement `Hom(Spf R, X) ≃ lim Hom(Spec (R ⧸ I ^ (n + 1)), X)` for
-an arbitrary scheme `X` is umbrella 97's headline item and is genuinely open. Reconciling
-`thickeningRestrictionEquiv` with `specHomLimitEquiv` (`FormalSchemes/IndSchemeLimit.lean`) as an
-equality of limit cones — a subtype of families versus a `CategoryTheory.limit` — is a real
-follow-up and is deliberately not attempted here.
+Affine targets only — in *this* file. Both of the things this section used to describe as open have
+since landed, in modules that import this one, and are named here so that the restriction above is
+not read as a statement about the tree:
+
+* the general target, `thickeningRestrictionEquivLRS`
+  (`FormalSchemes/IndSchemeColimitEquivLRS.lean`), which is EGA I 10.6.10 for any locally ringed
+  space `X` carrying an affine open cover;
+* the reconciliation with `specHomLimitEquiv` (`FormalSchemes/IndSchemeLimit.lean`) — a subtype of
+  families versus a `CategoryTheory.limit` — which is `thickeningFamilyLimitEquiv`
+  (`FormalSchemes/IndSchemeFamilyLimit.lean`) for an affine target and `spfHomLimitEquivLRS`
+  (`FormalSchemes/IndSchemeFamilyLimitLRS.lean`) for a general one.
 
 ## References
 
