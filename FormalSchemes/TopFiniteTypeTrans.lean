@@ -1,5 +1,4 @@
 import FormalSchemes.AwayTopFiniteType
-import FormalSchemes.TopFiniteTypeBaseChange
 
 set_option linter.style.header false
 
@@ -27,7 +26,7 @@ file short. Given a presentation `ψ : R{X₁, …, Xₙ} ↠ A` carrying the id
 * the coordinates `Y_j`, for the remaining `m`;
 
 so it *is* the composite of the first two arrows, with the intermediate ring never named. Its
-surjectivity is `AdicCompletion.surjective_of_mk_map_comp_surjective` — a continuous map into a
+surjectivity is `surjective_of_mk_map_comp_surjective` — a continuous map into a
 complete adic ring which is surjective modulo the ideal of definition is surjective — and modulo
 the ideal of definition every element is represented by a polynomial in `A[Y₁, …, Y_m]`, which lies
 in the range because the range is a subring containing the image of `A` (here `ψ`'s surjectivity
