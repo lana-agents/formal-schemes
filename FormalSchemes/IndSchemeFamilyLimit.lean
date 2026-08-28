@@ -171,8 +171,10 @@ theorem limit_π_thickeningFamilyLimitEquiv_specFamily (ψ : B →+* R) (n : ℕ
 
 /-! ### A concrete witness
 
-`[IsAdicRing I]` holds vacuously at `I = ⊥`, where every thickening is `Spec R` and both
-presentations collapse. The shared `2`-adic witness rules that out. -/
+`[IsAdicRing I]` does **not** exclude `I = ⊥`; at `⊥` it degenerates to discreteness of `R`
+(`is_bot_adic_iff`; see `FormalSchemes/AdicRing.lean`), and there every thickening is `Spec R`
+and both presentations collapse. The shared `2`-adic witness rules that out, by
+`FormalSpectrum.twoAdicIdeal_ne_bot`. -/
 
 section Nonvacuity
 

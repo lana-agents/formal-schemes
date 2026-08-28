@@ -162,9 +162,12 @@ section Nonvacuity
 
 /-! ### Non-vacuity
 
-`[IsAdicRing I]` holds vacuously at `I = ⊥`, where every thickening is `Spec R` itself and the
-bijection says nothing. The shared `2`-adic witness (`FormalSchemes/TwoAdicWitness.lean`) exhibits
-it away from `⊥`. -/
+`[IsAdicRing I]` does **not** exclude `I = ⊥`; at `⊥` it degenerates to discreteness of `R`
+(`is_bot_adic_iff`, which is the whole content of `instIsAdicRingBotOfDiscreteTopology`,
+`FormalSchemes/AdicRing.lean`), and there every thickening is `Spec R` itself and the bijection
+says nothing. The shared `2`-adic witness exhibits it away from `⊥`, and that is now a theorem
+rather than a claim: `FormalSpectrum.twoAdicIdeal_ne_bot`
+(`FormalSchemes/TwoAdicWitness.lean`). -/
 
 attribute [local instance] isAdicRing_twoAdicIdeal
 

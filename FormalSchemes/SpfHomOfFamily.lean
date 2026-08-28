@@ -256,6 +256,8 @@ The construction above is run end to end at `FormalLineWitness.lean`'s formal af
 `ℤ⟦X⟧ = ℤ[X]^{(X)}`, whose formal spectrum is `Spec ℤ`, with the two-piece cover `D(2)`, `D(3)`.
 Everything the general theorem quantifies over is non-degenerate there:
 
+* the ideal is not `⊥`: `formalLineIdeal ≠ ⊥` (`formalLineIdeal_ne_bot`,
+  `FormalLineWitness.lean`), so the tower of thickenings `Spec (ℤ⟦X⟧ ⧸ Iⁿ⁺¹)` is not constant;
 * the space is not a point: `|Spf ℤ⟦X⟧| ≃ₜ Spec ℤ` (`homeoSpecInt`) has at least two points,
   namely the primes above `2` and above `3` (`nontrivial_formalSpectrum`, `FormalLineWitness.lean`)
   — which is exactly what the `2`-adic witness makes false, and the reason this one exists;
@@ -287,9 +289,12 @@ carried by `spfHomFormalLine` below, which calls `spfHomOfFamily` directly with 
 `iSup_basicOpen_formalLineElem` and `formalLine_hr` supplied by hand; the target-side half is
 carried by the non-affine witness.
 
-One degeneracy the list above does **not** exclude is `I = ⊥`, at which `IsAdicRing`
-(`FormalSchemes/AdicRing.lean`) holds vacuously and every thickening is `Spec R`. The bullets
-establish non-degeneracy of the two covers and of the space, not of the ideal itself.
+The first bullet is the youngest, and it is worth saying why. `[IsAdicRing I]` does **not**
+exclude `I = ⊥`: at `⊥` the class degenerates to discreteness of `R` (`is_bot_adic_iff`, the whole
+content of `instIsAdicRingBotOfDiscreteTopology`, `FormalSchemes/AdicRing.lean`), and every
+thickening `Spec (R ⧸ Iⁿ⁺¹)` is `Spec R`. For a while the list above established non-degeneracy of
+the two covers and of the space but *not* of the ideal, and said so. `formalLineIdeal_ne_bot`
+closes that, so the whole list now names theorems.
 -/
 
 section Witness
