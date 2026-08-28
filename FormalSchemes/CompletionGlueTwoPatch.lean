@@ -33,10 +33,12 @@ gluing.
 
 Because the index type has only **two** elements, no triple `(i, j, k)` of indices can be pairwise
 distinct, so the `t'`, `t_fac` and `cocycle` fields of a `CategoryTheory.GlueData'` are vacuous
-(`cpBool_not_pairwise_distinct`). That is what makes this slice tractable ahead of the general
-(arbitrary index) completion glue datum, whose cocycle condition carries real content and needs the
-triple overlaps. The same device carries the Tate two-patch prototype
-(`FormalSchemes/TateGlueTwoPatch.lean`), whose shape this file mirrors.
+(`cpBool_not_pairwise_distinct`). That is what made this slice tractable first, and the same device
+carries the Tate two-patch prototype (`FormalSchemes/TateGlueTwoPatch.lean`), whose shape this file
+mirrors. Those three fields are discharged by genuine proofs, at an arbitrary index type, in
+`FormalSchemes/CompletionBasicOpenGlue.lean`, over a single affine — the first *completion* glue
+datum on this tree whose cocycle condition has content. (`FormalSchemes/ThreeChartDatum.lean`
+discharges the analogous fields of an `AffineChartedFibreDatumX` on `ULift (Fin 3)`.)
 
 ## Main definitions and results
 
@@ -62,14 +64,15 @@ triple overlaps. The same device carries the Tate two-patch prototype
 
 ## What this is a slice of
 
-The general completion glue datum — an arbitrary affine cover of an arbitrary scheme, completed
-along a closed subset — is the rest of EGA I, 10.8, and needs the triple-overlap `t'` this slice
-sidesteps; the overlap-as-fibre-product identifications it will consume are
-`formalCompletion.basicOpenOverlapIso` and its two chart compatibilities
-(`FormalSchemes/CompletionBasicOpenOverlap.lean`). The morphism from the glued completion to the
-glued scheme, generalising `formalCompletion.toSpec`
-(`FormalSchemes/CompletionToSpec.lean`), needs the glued target first and is likewise not built
-here.
+The triple-overlap `t'` this slice sidesteps is built, at an arbitrary index type and by an actual
+cocycle proof, in `FormalSchemes/CompletionBasicOpenGlue.lean`; it consumes exactly the
+overlap-as-fibre-product identifications `formalCompletion.basicOpenOverlapIso` and its two chart
+compatibilities (`FormalSchemes/CompletionBasicOpenOverlap.lean`). What that file does not carry is
+the second ring and the overlap identification `θ` of this one, so the two together — an arbitrary
+affine cover of an arbitrary scheme, completed along a closed subset — remain the rest of EGA I,
+10.8. The morphism from the glued completion to the glued scheme, generalising
+`formalCompletion.toSpec` (`FormalSchemes/CompletionToSpec.lean`), needs the glued target first and
+is likewise not built here.
 
 ## References
 

@@ -73,9 +73,11 @@ The glued object is a `LocallyRingedSpace`, not an `AlgebraicGeometry.Scheme`: t
 Mathlib API. Nothing here claims that `completionTwoPatchToScheme` is universal, or identifies
 `completionTwoPatch` with a completion of `specTwoPatch` in any sense stronger than the morphism
 below — the affine case of that (the universal property of `toSpec`) is not on master either. The
-arbitrary-index version of all of this needs the triple-overlap `t'` that the two-patch slice
-sidesteps, and its overlap-as-fibre-product input is
-`formalCompletion.basicOpenOverlapIso` (`FormalSchemes/CompletionBasicOpenOverlap.lean`).
+arbitrary-index version of all of this needs a triple-overlap `t'`, which the two-patch slice
+sidesteps; that `t'` is built, from the overlap-as-fibre-product input
+`formalCompletion.basicOpenOverlapIso` (`FormalSchemes/CompletionBasicOpenOverlap.lean`), in
+`FormalSchemes/CompletionBasicOpenGlue.lean`. What is still missing for the arbitrary-index
+morphism is the glued *target*, not the cocycle.
 
 ## References
 
