@@ -86,12 +86,18 @@ universe u
 
 namespace AlgebraicGeometry.PresheafedSpace
 
+/-- Two successive transports of a section along equalities of opens compose to the transport
+along the composite equality. Proved by `subst`, which is available because the three opens are
+universally quantified here; the statements that use it have them fixed. -/
 theorem map_eqToHom_trans_apply {Z : TopCat.{u}} (F : (Opens Z)ᵒᵖ ⥤ CommRingCat.{u})
     {A B C : Opens Z} (p : A = B) (q : B = C) (x : ToType (F.obj (op A))) :
     (F.map (eqToHom (congrArg op q))) ((F.map (eqToHom (congrArg op p))) x) =
       (F.map (eqToHom (congrArg op (p.trans q)))) x := by
   subst p; subst q; simp
 
+/-- **A comparison map commutes with a transport of the open.** Moving a section of the target
+from `A` to an equal open `B` and then pulling it back along `α` is pulling it back and then
+moving it, along the preimage of the same equality. Also a `subst`. -/
 theorem c_app_map_eqToHom {Z Zg : PresheafedSpace.{u} CommRingCat.{u}} (α : Z ⟶ Zg)
     {A B : Opens Zg.carrier} (hAB : A = B) (y : ToType (Zg.presheaf.obj (op A))) :
     (α.c.app (op B)) ((Zg.presheaf.map (eqToHom (congrArg op hAB))) y) =
@@ -107,6 +113,10 @@ section Sigma
 
 variable {G : Type u} (X : LocallyRingedSpace.{u}) [Limits.HasCoproduct fun _ : G => X]
 
+/-- **The coproduct's comparison isomorphism.** `∐_{g : G} X` in `LocallyRingedSpace` is no more
+definitionally the coproduct of the underlying presheafed spaces than the coequalizer was, for the
+same reason: the instance that wins resolution is the one from `instHasColimits`. Both forgetful
+functors preserve the coproduct, so the two `preservesColimitIso`s assemble into one comparison. -/
 def sigmaIsoPresheafedSpace :
     (∐ fun _ : G => X).toPresheafedSpace ≅ ∐ fun _ : G => X.toPresheafedSpace :=
   SheafedSpace.forgetToPresheafedSpace.mapIso
@@ -117,6 +127,7 @@ def sigmaIsoPresheafedSpace :
 set_option linter.style.setOption false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
+/-- **The comparison isomorphism carries the coproduct legs to the coproduct legs.** -/
 theorem ι_comp_sigmaIsoPresheafedSpace_hom (g : G) :
     (Sigma.ι (fun _ : G => X) g).toShHom.hom ≫ (sigmaIsoPresheafedSpace X).hom =
       Sigma.ι (fun _ : G => X.toPresheafedSpace) g := by
@@ -128,6 +139,8 @@ theorem ι_comp_sigmaIsoPresheafedSpace_hom (g : G) :
 
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
+/-- **Every open of the coproduct is the comparison isomorphism's image of one downstairs**, which
+is what lets `obtain ⟨U', rfl⟩` put a goal about sections into the shape the transport wants. -/
 theorem exists_map_sigmaIso_hom_base_obj (U : Opens (∐ fun _ : G => X).toTopCat) :
     ∃ U' : Opens (∐ fun _ : G => X.toPresheafedSpace).carrier,
       (Opens.map (sigmaIsoPresheafedSpace X).hom.base).obj U' = U :=
@@ -136,6 +149,8 @@ theorem exists_map_sigmaIso_hom_base_obj (U : Opens (∐ fun _ : G => X).toTopCa
       (sigmaIsoPresheafedSpace X).hom_inv_id]
     simp⟩
 
+/-- Pulling an open back along the `g`-th leg upstairs and along the comparison isomorphism agrees
+with pulling it back along the `g`-th leg downstairs. -/
 theorem ι_preimage_sigmaIso (g : G)
     (U' : Opens (∐ fun _ : G => X.toPresheafedSpace).carrier) :
     (Opens.map (Sigma.ι (fun _ : G => X) g).toShHom.hom.base).obj
@@ -146,6 +161,11 @@ theorem ι_preimage_sigmaIso (g : G)
 set_option linter.style.setOption false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
+/-- **A section of a coproduct of locally ringed spaces is determined by its pullbacks along the
+legs.** `AlgebraicGeometry.PresheafedSpace.colimit_section_ext` transported along
+`sigmaIsoPresheafedSpace`; it applies to the presheafed-space coproduct verbatim, `Discrete G`
+being a small category. This is what turns the single coequalizer condition into the family of
+conditions indexed by `G`. -/
 theorem sigma_section_ext (U : Opens (∐ fun _ : G => X).toTopCat)
     (s t : ToType ((∐ fun _ : G => X).presheaf.obj (op U)))
     (h : ∀ g : G, ((Sigma.ι (fun _ : G => X) g).toShHom.hom.c.app (op U)) s =
@@ -179,17 +199,24 @@ section Action
 variable {G : Type u} {X : LocallyRingedSpace.{u}} [Limits.HasCoproduct fun _ : G => X]
 variable (W : Opens X.toTopCat)
 
+/-- The `g`-th leg followed by the right leg of the action coequalizer is the identity, read on
+the underlying presheafed spaces. -/
 theorem ι_comp_actionQuotientRight_toShHom (g : G) :
     (Sigma.ι (fun _ : G => X) g).toShHom.hom ≫ (actionQuotientRight G X).toShHom.hom =
       𝟙 X.toPresheafedSpace :=
   congrArg (fun m : X ⟶ X => m.toShHom.hom) (ι_actionQuotientRight (X := X) g)
 
+/-- Consequently the right leg's preimage of `W`, pulled back along the `g`-th coproduct leg, is
+`W` again. -/
 theorem preimage_actionQuotientRight (g : G) :
     (Opens.map (Sigma.ι (fun _ : G => X) g).toShHom.hom.base).obj
         ((Opens.map (actionQuotientRight G X).toShHom.hom.base).obj W) = W := by
   rw [← Opens.map_comp_obj, ← PresheafedSpace.comp_base, ι_comp_actionQuotientRight_toShHom]
   simp
 
+/-- **Pulling a section back along the right leg and then along the `g`-th coproduct leg returns
+the section**, up to the transport of opens. This is where the `𝟙` of `ι_actionQuotientRight`
+collapses. -/
 theorem ι_c_app_actionQuotientRight (g : G) (s : ToType (X.presheaf.obj (op W))) :
     ((Sigma.ι (fun _ : G => X) g).toShHom.hom.c.app
         (op ((Opens.map (actionQuotientRight G X).toShHom.hom.base).obj W)))
@@ -203,17 +230,23 @@ theorem ι_c_app_actionQuotientRight (g : G) (s : ToType (X.presheaf.obj (op W))
 
 variable [Monoid G] (a : G →* Aut X)
 
+/-- The `g`-th leg followed by the left leg of the action coequalizer is `a g`, read on the
+underlying presheafed spaces. -/
 theorem ι_comp_actionQuotientLeft_toShHom (g : G) :
     (Sigma.ι (fun _ : G => X) g).toShHom.hom ≫ (actionQuotientLeft a).toShHom.hom =
       (a g).hom.toShHom.hom :=
   congrArg (fun m : X ⟶ X => m.toShHom.hom) (ι_actionQuotientLeft a g)
 
+/-- Consequently the left leg's preimage of `W`, pulled back along the `g`-th coproduct leg, is
+the preimage of `W` under `a g`. -/
 theorem preimage_actionQuotientLeft (g : G) :
     (Opens.map (Sigma.ι (fun _ : G => X) g).toShHom.hom.base).obj
         ((Opens.map (actionQuotientLeft a).toShHom.hom.base).obj W) =
       (Opens.map (a g).hom.toShHom.hom.base).obj W := by
   rw [← Opens.map_comp_obj, ← PresheafedSpace.comp_base, ι_comp_actionQuotientLeft_toShHom]
 
+/-- **Pulling a section back along the left leg and then along the `g`-th coproduct leg is pulling
+it back along `a g`**, up to the transport of opens. -/
 theorem ι_c_app_actionQuotientLeft (g : G) (s : ToType (X.presheaf.obj (op W))) :
     ((Sigma.ι (fun _ : G => X) g).toShHom.hom.c.app
         (op ((Opens.map (actionQuotientLeft a).toShHom.hom.base).obj W)))
@@ -236,6 +269,10 @@ theorem eq_preimage_of_preimage_actionQuotient_eq
 
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
+/-- **The two pullbacks of `s` agree exactly when `s` is invariant under every `a g`.** The `←`
+direction is `sigma_section_ext` — a section of the coproduct is determined by its pullbacks along
+the legs — and the `→` direction is those pullbacks read off one at a time. This is the step that
+turns the coequalizer's single condition into the family the geometry wants. -/
 theorem c_app_actionQuotientLeft_eq_iff
     (h : (Opens.map (actionQuotientRight G X).toShHom.hom.base).obj W =
       (Opens.map (actionQuotientLeft a).toShHom.hom.base).obj W)
@@ -270,6 +307,8 @@ theorem c_app_actionQuotientLeft_eq_iff
   · exact fun heq g => (key g).mp (congrArg _ heq)
   · exact fun hinv => sigma_section_ext X _ _ _ fun g => (key g).mpr (hinv g)
 
+/-- A morphism equal to the identity acts on sections as the transport of the open. Used to see
+that every section is invariant under the trivial action. -/
 theorem c_app_eq_of_eq_id {φ : X ⟶ X} (hφ : φ = 𝟙 X)
     (hW : W = (Opens.map φ.toShHom.hom.base).obj W) (s : ToType (X.presheaf.obj (op W))) :
     (φ.toShHom.hom.c.app (op W)) s = (X.presheaf.map (eqToHom (congrArg op hW))) s := by
@@ -288,6 +327,9 @@ variable {G : Type u} [Monoid G] {X : LocallyRingedSpace.{u}} (a : G →* Aut X)
 variable [Limits.HasCoproduct fun _ : G => X]
   [Limits.HasCoequalizer (actionQuotientLeft a) (actionQuotientRight G X)]
 
+/-- **The preimage of an open of the quotient is stable under the action**, which is what lets the
+invariance equation below be stated at all. It is not an extra hypothesis: it is the coequalizer
+condition pulled back along the `g`-th coproduct leg. -/
 theorem preimage_actionQuotientπ_eq (V : Opens (actionQuotient a).toTopCat) (g : G) :
     (Opens.map (actionQuotientπ a).toShHom.hom.base).obj V =
       (Opens.map (a g).hom.toShHom.hom.base).obj
@@ -295,6 +337,14 @@ theorem preimage_actionQuotientπ_eq (V : Opens (actionQuotient a).toTopCat) (g 
   LocallyRingedSpace.eq_preimage_of_preimage_actionQuotient_eq _ a
     (LocallyRingedSpace.preimage_coequalizer_π_eq _ _ V) g
 
+/-- **The sections of an action quotient are exactly the invariant sections.** A section of `X`
+over `π⁻¹ V` is the pullback of a section of `X / G` over `V` if and only if it is invariant under
+every `a g`.
+
+This is `AlgebraicGeometry.LocallyRingedSpace.exists_c_app_eq_iff_c_app_eq` — the coequalizer
+description — composed with `c_app_actionQuotientLeft_eq_iff`, which converts "equalised by the two
+legs" into the family of invariance conditions. No hypothesis on the action is used; freeness and
+proper discontinuity enter only at the stalk lemma downstream. -/
 theorem exists_actionQuotientπ_c_app_eq_iff_forall (V : Opens (actionQuotient a).toTopCat)
     (s : ToType (X.presheaf.obj (op ((Opens.map (actionQuotientπ a).toShHom.hom.base).obj V)))) :
     (∃ t, ((actionQuotientπ a).toShHom.hom.c.app (op V)) t = s) ↔
@@ -306,6 +356,14 @@ theorem exists_actionQuotientπ_c_app_eq_iff_forall (V : Opens (actionQuotient a
     (LocallyRingedSpace.c_app_actionQuotientLeft_eq_iff _ a
       (LocallyRingedSpace.preimage_coequalizer_π_eq _ _ V) s)
 
+/-- **Non-vacuity: on the trivial action, every section is invariant and `π` is an isomorphism on
+sections.** That is the right answer, the quotient by the trivial action being `X` itself, and it
+is reached here through the invariance description rather than assumed.
+
+The same conclusion is reachable independently, the two legs of the trivial action being equal, via
+`AlgebraicGeometry.LocallyRingedSpace.bijective_coequalizer_self_π_c_app`. No comparison of the two
+routes is stated, because both conclude the same `Prop` and so are equal by proof irrelevance, so
+a lemma asserting they agree would be a duplicate under a new name. -/
 theorem bijective_actionQuotientπ_c_app_one
     [Limits.HasCoequalizer (actionQuotientLeft (1 : G →* Aut X)) (actionQuotientRight G X)]
     (V : Opens (actionQuotient (1 : G →* Aut X)).toTopCat) :
