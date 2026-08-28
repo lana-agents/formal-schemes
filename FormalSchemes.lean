@@ -4,6 +4,7 @@ import FormalSchemes.ActionQuotientCarrier
 import FormalSchemes.ActionQuotientColimit
 import FormalSchemes.ActionQuotientFormalScheme
 import FormalSchemes.ActionQuotientFunctor
+import FormalSchemes.ActionQuotientSections
 import FormalSchemes.ActionQuotientTop
 import FormalSchemes.ActionQuotientType
 import FormalSchemes.AdicCompletionAwayTrans
