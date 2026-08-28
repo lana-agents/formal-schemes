@@ -1,3 +1,4 @@
+import FormalSchemes.ActionDiscontinuous
 import FormalSchemes.ActionQuotient
 import FormalSchemes.ActionQuotientCarrier
 import FormalSchemes.ActionQuotientColimit
