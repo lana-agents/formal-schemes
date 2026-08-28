@@ -36,9 +36,16 @@ The universal property is phrased as the explicit mediating-morphism + uniquenes
 as a `CategoryTheory.Limits.IsColimit`. Categorically these agree: `π` is a colimit cocone of the
 action functor `CategoryTheory.SingleObj G ⥤ C` (equivalently the joint coequalizer of the family
 `{(a g).hom, 𝟙 X}`), and for `C = Type` this colimit is the orbit quotient
-(`CategoryTheory.Limits.Types.colimitEquivQuotient`). The explicit form is chosen because colimits
-of this shape are not available off the shelf in the target categories (`LocallyRingedSpace`,
-`FormalScheme`), and it is exactly the data a hand-built quotient supplies.
+(`CategoryTheory.Limits.Types.colimitEquivQuotient`). The explicit form is chosen because it is
+exactly the data a hand-built quotient supplies, and because `FormalScheme` has no colimit API on
+this tree.
+
+It is **not** chosen because the colimit is unavailable. `LocallyRingedSpace` has all small
+colimits, so the coequalizer presentation *is* available there — it is built in
+`FormalSchemes.ActionQuotientColimit`, whose `isActionQuotient_actionQuotientπ` produces a value of
+the structure below for every action of a small monoid. An earlier version of this note asserted
+the opposite for both target categories; it was wrong about `LocallyRingedSpace`, which is the
+category the Tate `q^{2ℤ}`-action actually lives in.
 
 ## References
 
