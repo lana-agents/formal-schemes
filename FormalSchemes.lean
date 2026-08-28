@@ -1,4 +1,5 @@
 import FormalSchemes.ActionQuotient
+import FormalSchemes.ActionQuotientColimit
 import FormalSchemes.AdicCompletionAwayTrans
 import FormalSchemes.AdicCompletionCongrIdealAlg
 import FormalSchemes.AdicCompletionCongrLevel
@@ -281,6 +282,7 @@ import FormalSchemes.TateOverlapInversionIso
 import FormalSchemes.TateOverlapSummandAffine
 import FormalSchemes.TateOverlapTransitionAlg
 import FormalSchemes.TateOverlapTransitionIso
+import FormalSchemes.TateQuotientColimit
 import FormalSchemes.TateQuotientMap
 import FormalSchemes.TateSelfProductAdicOverBase
 import FormalSchemes.TateSelfProductBothOverlap

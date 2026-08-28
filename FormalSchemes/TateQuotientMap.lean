@@ -36,7 +36,11 @@ project has twice lost weeks to a prescribed route that was mathematically false
 * **The 1-gon is not expressible here.** `CategoryTheory.GlueData'` declares
   `V : ∀ i j, i ≠ j → C`, so a one-object glue datum has no overlaps at all and its glued object is
   the patch itself. Two charts is the minimum, and `T_inv/⟨σ⟩` therefore has no model in this
-  framework.
+  framework. That is a statement about *presentations*, not about existence: the quotient locally
+  ringed space `T_inv/⟨σ⟩` does exist, as a coequalizer
+  (`AlgebraicGeometry.LocallyRingedSpace.exists_isActionQuotient` in
+  `FormalSchemes.TateQuotientColimit`); what a glue datum would buy, and no one has, is a proof
+  that it is a formal scheme.
 
 The construction below confirms the count independently: `π` is invariant under `σ²`
 (`tateQuotientPi_isActionInvariant`) precisely because the parity of `n` is unchanged by
