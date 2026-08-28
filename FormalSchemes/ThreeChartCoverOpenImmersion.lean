@@ -129,6 +129,7 @@ theorem range_overlapChart_comp_chartToBase (hI : I.FG) (i j : ULift.{u} (Fin 3)
 
 variable (B : Type u) [CommRing B] [Algebra R B]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The range of the cover map is the union of the three basic opens.** -/
 theorem range_gluedXToBase_base (hI : I.FG) :
     Set.range (gluedXToBase I f B hI).base =
@@ -137,6 +138,7 @@ theorem range_gluedXToBase_base (hI : I.FG) :
   ((datumX I f B hI).range_glueChartMorphisms _ _).trans
     (Set.iUnion_congr fun i => range_chartToBase_base I f hI i)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The range of the cover map is `D(f₀) ∪ D(f₁) ∪ D(f₂)`**, spelled as a three-fold supremum of
 opens rather than an indexed union over `ULift (Fin 3)`. -/
 theorem range_gluedXToBase_base_sup (hI : I.FG) :
@@ -158,6 +160,7 @@ theorem range_gluedXToBase_base_sup (hI : I.FG) :
   · rintro ((h | h) | h)
     exacts [⟨⟨0⟩, h⟩, ⟨⟨1⟩, h⟩, ⟨⟨2⟩, h⟩]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The three-chart cover maps to `Spf A` by an open immersion.** With
 `range_gluedXToBase_base_sup` this says that `gluedX` is the open formal subscheme
 `D(f₀) ∪ D(f₁) ∪ D(f₂)` of `Spf A`.
@@ -172,6 +175,7 @@ theorem isOpenImmersion_gluedXToBase (hI : I.FG) :
 
 /-! ### When the three basic opens cover -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **If the three basic opens cover `Spf A`, the cover map is an isomorphism.** An open immersion
 whose range is everything is surjective on points, hence an isomorphism of locally ringed spaces
 (`LocallyRingedSpace.IsOpenImmersion.to_iso`). -/
@@ -191,6 +195,7 @@ section Adic
 
 variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **If the three basic opens cover `Spf A`, then `gluedX ≅ Spf A` as formal schemes.** The
 locally-ringed-space isomorphism `isIso_gluedXToBase` lifted along the fully faithful forgetful
 functor, as in `oneChartXGluedIso`. -/

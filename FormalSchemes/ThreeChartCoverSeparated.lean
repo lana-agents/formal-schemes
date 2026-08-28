@@ -142,6 +142,7 @@ variable (f : ULift.{u} (Fin 3) → A)
 
 /-! #### The chart identifications fix the base -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The nested chart identification fixes the image of `A`.** Proved through the top-level
 `chartOverlapEquiv_apply`, so that the kernel never delta-unfolds `chartOverlapEquiv` inside a
 statement about the doubly nested completion — see the cost note of
@@ -154,6 +155,7 @@ theorem chartOverlapEquiv_algebraMap (hI : I.FG) (i j : ULift.{u} (Fin 3)) (a : 
   (chartOverlapEquiv_apply I f hI i j _).trans
     (awayCompletionNestedAlgEquiv_algebraMap I hI (f i) (f i * f j) (isUnit_self_mul f i j) a)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The inverse nested chart identification fixes the image of `A`. -/
 theorem chartOverlapEquiv_symm_algebraMap (hI : I.FG) (i j : ULift.{u} (Fin 3)) (a : A) :
     (chartOverlapEquiv I f hI i j).symm
@@ -162,6 +164,7 @@ theorem chartOverlapEquiv_symm_algebraMap (hI : I.FG) (i j : ULift.{u} (Fin 3)) 
       algebraMap A (awayCompletion (I.map (algebraMap R A)) (f i * f j)) a :=
   (AlgEquiv.symm_apply_eq _).mpr (chartOverlapEquiv_algebraMap I f hI i j a).symm
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The open cover's chart transition fixes the image of `A`.** Both legs of `tau` — the nested
 chart identification and 594's comparison isomorphism downstairs — do, and this is what lets the
 inverse of `f_j` supplied by the `j`-th chart be paired against `f_j` read in the `i`-th. -/
