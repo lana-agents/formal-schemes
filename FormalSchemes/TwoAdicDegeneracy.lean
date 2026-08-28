@@ -8,7 +8,8 @@ set_option linter.style.header false
 
 `FormalSchemes/TwoAdicWitness.lean` supplies the standing `2`-adic witness `ℤ^` with its ideal of
 definition `(2)·ℤ^`, and it is exactly what the ind-scheme layer needs: the tower `ℤ ⧸ 2ⁿ` is
-genuinely infinite, so `[IsAdicRing I]` is visibly not instantiated only at `I = ⊥`.
+genuinely infinite, so `[IsAdicRing I]` is not instantiated only at `I = ⊥`. That is a theorem,
+`FormalSpectrum.twoAdicIdeal_ne_bot`, and not merely visible.
 
 On the **conclusion** side of the umbrella-59 results, though, that same witness degenerates, and
 the modules there say so in prose:

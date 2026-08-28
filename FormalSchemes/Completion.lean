@@ -24,6 +24,8 @@ subscheme one completes along, as it must be.
 
 * `AdicCompletion.idealOfDefinition I`: the ideal of definition `I·R^` of the completion.
 * `AdicCompletion.ker_evalₐ`: `ker (evalₐ I n) = (I·R^) ^ n` for finitely generated `I`.
+* `AdicCompletion.idealOfDefinition_ne_bot`: `I·R^ ≠ ⊥` whenever some `x ∈ I` misses some
+  power `I ^ n`. What the adic witnesses need, and not the same statement as `I ≠ ⊥`.
 * `AdicCompletion.quotientEquivPow`: `R^ ⧸ (I·R^) ^ n ≃+* R ⧸ I ^ n`.
 * `AdicCompletion.mapCompletion f hf hJ`: the ring map `R^ →+* S^` induced on completions by
   `f : R →+* S` with `I.map f ≤ J`, with functor laws `mapCompletion_id`, `mapCompletion_comp`.
@@ -53,6 +55,28 @@ variable {R : Type u} [CommRing R] (I : Ideal R)
 /-- The ideal of definition `I·R^` of the `I`-adic completion of `R`. -/
 abbrev idealOfDefinition : Ideal (AdicCompletion I R) :=
   I.map (algebraMap R (AdicCompletion I R))
+
+/-- **The ideal of definition is nonzero as soon as `I` has an element that survives some
+power.** Concretely: if `x ∈ I` and `x ∉ I ^ n` for a single `n`, then `I·R^ ≠ ⊥`.
+
+This is the statement the adic witnesses need, and it is *not* the statement `I ≠ ⊥` about the
+base ring: `idealOfDefinition I` is an ideal of `AdicCompletion I R`, so `I ≠ ⊥` says nothing
+about it directly — a nonzero `I` could in principle die in the completion.
+
+The proof is that `evalₐ I n` is an `R`-**algebra** map, so `AlgHom.commutes` identifies its
+composite with `R → R^` as reduction mod `I ^ n` on the nose. An `x ∈ I` whose image in `R^`
+were `0` would therefore already lie in every `I ^ n`. No finite generation is needed. -/
+theorem idealOfDefinition_ne_bot {x : R} (hxI : x ∈ I) {n : ℕ} (hx : x ∉ I ^ n) :
+    idealOfDefinition I ≠ ⊥ := by
+  intro hbot
+  have hmem : algebraMap R (AdicCompletion I R) x ∈ idealOfDefinition I :=
+    Ideal.mem_map_of_mem _ hxI
+  rw [hbot, Ideal.mem_bot] at hmem
+  refine hx ?_
+  have h : algebraMap R (R ⧸ I ^ n) x = 0 := by
+    rw [← AlgHom.commutes (evalₐ I n) x, hmem]
+    exact _root_.map_zero _
+  rwa [Ideal.Quotient.algebraMap_eq, Ideal.Quotient.eq_zero_iff_mem] at h
 
 /-- The powers of the ideal of definition of the completion are exactly the kernels of the
 evaluation maps to the thickenings, for `I` finitely generated. -/

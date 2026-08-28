@@ -8,8 +8,9 @@ set_option linter.style.header false
 
 `FormalSchemes/TwoAdicWitness.lean` gave the tree its first adic witness, the `2`-adic integers
 `twoAdicIdeal = (2)·ℤ^`. It rules out what it was built to rule out — `I = ⊥`, where the tower
-`R ⧸ Iⁿ⁺¹` is constant and the whole ind-scheme layer says nothing — and it stays the right
-witness for that.
+`R ⧸ Iⁿ⁺¹` is constant and the whole ind-scheme layer says nothing (`twoAdicIdeal_ne_bot`) — and
+it stays the right witness for that. The witness here is nonzero for the same reason,
+`formalLineIdeal_ne_bot` below.
 
 It cannot rule out anything topological. `FormalSpectrum I` is *defined* as
 `PrimeSpectrum (R ⧸ I)` (`FormalSchemes/FormalSpectrum.lean`), and `ℤ^ ⧸ 2ℤ^` is `𝔽₂`, so
@@ -99,6 +100,21 @@ abbrev formalLineIdeal : Ideal (AdicCompletion polyXIdeal ℤ[X]) :=
 instance — see the module docstring of `FormalSchemes/TwoAdicWitness.lean`. -/
 theorem isAdicRing_formalLineIdeal : IsAdicRing formalLineIdeal :=
   AdicCompletion.isAdicRing_map _ polyXIdeal_fg
+
+/-- **The formal-line witness also rules out `I = ⊥`:** `formalLineIdeal ≠ ⊥`.
+
+As in `TwoAdicWitness.lean`, the statement is about the ideal of definition of `ℤ⟦X⟧`, not about
+`(X) ⊆ ℤ[X]`; the latter is nonzero for trivial reasons that say nothing about the completion.
+`AdicCompletion.idealOfDefinition_ne_bot` reduces it to `X ∉ (X)² = (X²)`, which is a degree
+count. -/
+theorem formalLineIdeal_ne_bot : formalLineIdeal ≠ ⊥ :=
+  AdicCompletion.idealOfDefinition_ne_bot _ (Ideal.mem_span_singleton_self (X : ℤ[X]))
+    (n := 2) <| by
+      rw [Ideal.span_singleton_pow, Ideal.mem_span_singleton]
+      intro hdvd
+      have h := Polynomial.degree_le_of_dvd hdvd (X_ne_zero (R := ℤ))
+      rw [degree_X, degree_X_pow] at h
+      norm_num at h
 
 /-- `(X) = (X - C 0)`, the form `Polynomial.quotientSpanXSubCAlgEquiv` expects. -/
 theorem polyXIdeal_eq : polyXIdeal = Ideal.span {(X : ℤ[X]) - C (0 : ℤ)} := by

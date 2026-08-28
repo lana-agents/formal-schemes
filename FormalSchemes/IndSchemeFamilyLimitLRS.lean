@@ -415,10 +415,12 @@ end Affine
 
 /-! ### A concrete witness
 
-`[IsAdicRing I]` holds vacuously at `I = ⊥`, and a cover of `X` by affine opens is satisfied by the
-one-piece cover of an affine `X`; neither degeneracy is present below. The witness is
-`Spf ℤ⟦X⟧ ⟶ Spec ℤ` with `Spec ℤ` covered by `D(2)` and `D(3)`, the instantiation
-`FormalSchemes/SpfHomOfFamily.lean` supplies for the `∃!` form. -/
+`[IsAdicRing I]` does **not** exclude `I = ⊥` — at `⊥` it degenerates to discreteness of `R`
+(`is_bot_adic_iff`; see `FormalSchemes/AdicRing.lean`) and every thickening is `Spec R` — and a
+cover of `X` by affine opens is satisfied by the one-piece cover of an affine `X`. Neither
+degeneracy is present below. The witness is `Spf ℤ⟦X⟧ ⟶ Spec ℤ` with `Spec ℤ` covered by `D(2)`
+and `D(3)`, the instantiation `FormalSchemes/SpfHomOfFamily.lean` supplies for the `∃!` form, and
+its ideal is nonzero by `FormalSpectrum.formalLineIdeal_ne_bot`. -/
 
 section Nonvacuity
 
