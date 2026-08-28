@@ -19,10 +19,11 @@ applies to them.
 
 It has consumers on unrelated branches of the development — the glued formal *completion* of
 `FormalSchemes/CompletionGlueTwoPatch.lean` and the glued formal Tate annulus of
-`FormalSchemes/TateGlueTwoPatch.lean`, neither of which imports the other — and it will apply
-unchanged to the arbitrary-index completion glue datum when that exists, since nothing below is
-special to a two-element index. Putting it in any one of those leaves would put it out of reach of
-the others.
+`FormalSchemes/TateGlueTwoPatch.lean`, neither of which imports the other — and it applies
+unchanged to the arbitrary-index completion glue datum of
+`FormalSchemes/CompletionBasicOpenGlue.lean` whenever that datum's index type is finite, since
+nothing below is special to a two-element index. Putting it in any one of those leaves would put
+it out of reach of the others.
 
 ## Main results
 
