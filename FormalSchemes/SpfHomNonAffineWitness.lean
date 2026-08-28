@@ -29,10 +29,20 @@ existsUnique_hom_thickeningMap_nonAffine :
   ∃! g : Spf ℤ⟦X⟧ ⟶ specDouble (X : ℤ[X]), ∀ n, thickeningMap n ≫ g = nonAffineFamily n
 ```
 
-exercises the covering situation on **both** sides at once: `|Spf ℤ⟦X⟧| ≃ Spec ℤ` is covered by two
-proper basic opens (the source-side non-degeneracy `SpfHomOfFamily.lean` already had), and the
-target is covered by two distinct affine opens, each of them proper, of a space that is provably
-not a spectrum.
+supplies what no earlier witness on this tree did: a **target** covered by two distinct affine
+opens (`nonAffineOpen_ne`), each of them proper (`nonAffineOpen_true_ne_top`,
+`nonAffineOpen_false_ne_top`), of a space that is provably not a spectrum.
+
+It does not also exercise the *source* side, and neither does its affine predecessor
+`existsUnique_hom_thickeningMap_formalLine`. Both go through `existsUnique_hom_thickeningMap`,
+which takes a cover of the target and nothing else: the basic opens of `|Spf ℤ⟦X⟧|`, the index map
+and the refinement containments are chosen inside it by `exists_basicOpen_refinement`, and since
+`nonAffineFamily` factors through one chart by construction, the constant choice is admissible —
+so the source cover in this instantiation may well be a single piece. The declaration that does
+supply a two-piece source cover is `spfHomFormalLine` (`FormalSchemes/SpfHomOfFamily.lean`), which
+calls `spfHomOfFamily` directly with the hand-supplied `formalLineElem`,
+`iSup_basicOpen_formalLineElem` and `formalLine_hr`. **Together** the two witnesses exercise the
+covering situation on both sides at once; neither does alone.
 
 ## Why the family goes through one chart
 
@@ -234,9 +244,9 @@ theorem nonAffineFamily_compat (n : ℕ) :
 
 /-- **EGA I, 10.6.10 at a target that is not affine.** `Spf ℤ⟦X⟧` is the colimit of its
 infinitesimal thickenings as a functor into the affine line over `ℤ` with a doubled origin — a
-locally ringed space that is covered by two distinct affine opens (`nonAffineOpen_ne`), one of
-them proper (`nonAffineOpen_true_ne_top`), and is provably not the spectrum of a ring
-(`not_isAffine_nonAffineTarget`).
+locally ringed space that is covered by two distinct affine opens (`nonAffineOpen_ne`), each of
+them proper (`nonAffineOpen_true_ne_top`, `nonAffineOpen_false_ne_top`), and is provably not the
+spectrum of a ring (`not_isAffine_nonAffineTarget`).
 
 Nothing but the cover of the target is supplied: the basic opens of `|Spf ℤ⟦X⟧|`, the index map and
 the refinement containments are produced inside by `exists_basicOpen_refinement`, exactly as in
@@ -275,8 +285,14 @@ def thickeningRestrictionEquivNonAffine :
   thickeningRestrictionEquivLRS formalLineIdeal nonAffineTarget (polyXIdeal_fg.map _)
     nonAffineOpen iSup_nonAffineOpen nonAffineChartRing nonAffineChartIso
 
-/-- The morphism `Spf ℤ⟦X⟧ ⟶ specDouble (X : ℤ[X])` glued from the reduction family, obtained by
-inverting the bijection rather than by invoking `Classical.choose` on the `∃!`. -/
+/-- The morphism `Spf ℤ⟦X⟧ ⟶ specDouble (X : ℤ[X])` glued from the reduction family, spelled as
+the inverse of `thickeningRestrictionEquivNonAffine`.
+
+That is a matter of spelling, not of content. `thickeningRestrictionEquivLRS`'s `invFun` field is
+`(existsUnique_hom_thickeningMap …).choose`, so this morphism **is** `Classical.choose` on the `∃!`
+of `existsUnique_hom_thickeningMap_nonAffine` — as the Scope section above says. What the `Equiv`
+spelling buys is that `thickeningMap_comp_spfHomNonAffine` and uniqueness come out of the `Equiv`'s
+own rules rather than out of `choose_spec` by hand. -/
 def spfHomNonAffine : locallyRingedSpaceObj formalLineIdeal ⟶ nonAffineTarget :=
   thickeningRestrictionEquivNonAffine.symm nonAffineFamilyLRS
 
