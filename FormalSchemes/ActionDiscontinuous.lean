@@ -24,7 +24,7 @@ stated directly.
 
 `IsProperlyDiscontinuousOn a U` says every nontrivial translate of `U` misses `U`; the action is
 `IsFreeProperlyDiscontinuous` when every point has such an open neighbourhood. One condition
-packages both halves — freeness is `isFreeProperlyDiscontinuous_free` below, and is immediate:
+packages both halves — freeness is `eq_one_of_isProperlyDiscontinuousOn` below, and is immediate:
 a `g` fixing a point of such a `U` would put `(a g) '' U` and `U` both around that point.
 
 The reason to prefer it to a transported `ProperlyDiscontinuousSMul` is measured, not aesthetic: the
