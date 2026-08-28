@@ -136,10 +136,10 @@ section Witness
 Two degeneracies to rule out, and — as in `ThickeningCoverPullback.lean` — only one of them can be.
 
 `[IsAdicRing I]` holds at `I = ⊥`, where the tower is constant; the shared `2`-adic witness
-(`FormalSchemes/TwoAdicWitness.lean`) rules that out. And the hypothesis `⨆ i, U i = ⊤` is
-satisfied by the one-member family `U = ⊤`, which would make the statements say nothing about
-covers; the witness below therefore uses a genuine two-piece cover of the target,
-`Spec ℤ = D(2) ∪ D(3)`, with neither member equal to `⊤`.
+rules that out, by `FormalSpectrum.twoAdicIdeal_ne_bot` (`FormalSchemes/TwoAdicWitness.lean`). And
+the hypothesis `⨆ i, U i = ⊤` is satisfied by the one-member family `U = ⊤`, which would make the
+statements say nothing about covers; the witness below therefore uses a genuine two-piece cover of
+the target, `Spec ℤ = D(2) ∪ D(3)`, with neither member equal to `⊤`.
 
 **What cannot be done at the witness used here.** `FormalSpectrum I` is *defined* as
 `PrimeSpectrum (R ⧸ I)`, and `ℤ^ ⧸ 2ℤ^ = 𝔽₂`, so `|Spf ℤ^|` is a **one-point space**: the

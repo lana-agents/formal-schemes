@@ -34,8 +34,9 @@ Both results are equations, so the risk is not that they are unprovable but that
 instantiated trivially. Two separate degeneracies to rule out, and only one of them can be:
 
 * `[IsAdicRing I]` holds at `I = ⊥`, where the tower is constant. The shared `2`-adic witness
-  (`FormalSchemes/TwoAdicWitness.lean`) rules that out, and the `example` below instantiates
-  `map_commonBase_obj_eq` at a **nonzero** level, where its two sides are not syntactically equal.
+  rules that out, by `FormalSpectrum.twoAdicIdeal_ne_bot` (`FormalSchemes/TwoAdicWitness.lean`),
+  and the `example` below instantiates `map_commonBase_obj_eq` at a **nonzero** level, where its
+  two sides are not syntactically equal.
 * A "cover" with a single member `U = ⊤` satisfies `iSup_map_commonBase_obj_eq_top` trivially. The
   witness here is therefore a genuine two-piece cover of the target: `Spec ℤ = D(2) ∪ D(3)`, with
   `D(2) ≠ ⊤` and `D(3) ≠ ⊤` both proved.

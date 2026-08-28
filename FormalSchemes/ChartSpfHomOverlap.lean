@@ -226,7 +226,8 @@ end Overlap
 Four degeneracies could make the theorem above say nothing, and this section removes all four.
 
 * `I = ⊥`, where every thickening is `Spec R` and the tower is constant. Excluded by taking
-  `FormalLineWitness.lean`'s formal affine line `ℤ⟦X⟧`, whose `|Spf|` is `Spec ℤ`.
+  `FormalLineWitness.lean`'s formal affine line `ℤ⟦X⟧`, whose `|Spf|` is `Spec ℤ` and whose ideal
+  of definition is nonzero (`FormalSpectrum.formalLineIdeal_ne_bot`).
 * `r = s`, where the two legs coincide and the statement compares a morphism with itself. Excluded
   by `r = 2`, `s = 3`; and these are not merely distinct, they are the two elements
   `FormalLineWitness.lean` proves *cover* `|Spf ℤ⟦X⟧|` (`iSup_twoChart`), so this witness exercises

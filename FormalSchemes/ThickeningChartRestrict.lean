@@ -304,7 +304,10 @@ section Witness
 /-! ### A concrete witness — the first **proper** chart on this tree
 
 Two degeneracies to rule out. `[IsAdicRing I]` holds at `I = ⊥`, where the tower is constant; and
-`U = ⊤`, where `X|_U` is `X` and every statement above is a restatement of its own hypothesis.
+`U = ⊤`, where `X|_U` is `X` and every statement above is a restatement of its own hypothesis. The
+witness below removes the first because its ideal of definition is nonzero
+(`FormalSpectrum.formalLineIdeal_ne_bot`, `FormalSchemes/FormalLineWitness.lean`); the rest of this
+section is about the second, which is the harder one.
 
 The predecessors of this file could only rule out the second one on the *target* side, because
 `FormalSpectrum I` is `PrimeSpectrum (R ⧸ I)` and the tree's only adic witness was the `2`-adic

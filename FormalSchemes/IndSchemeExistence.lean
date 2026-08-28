@@ -172,7 +172,8 @@ theorem existsUnique_thickeningMap_comp (φ : ∀ n : ℕ, B →+* R ⧸ I ^ n)
 
 Every statement above is an equation or an `∃!`, so the vacuity risk is not the usual one. It is
 that `[IsAdicRing I]` might only ever be instantiated at `I = ⊥`, where all the thickenings are
-`Spec R` and the whole file degenerates. The `2`-adic integers rule that out: the tower is
+`Spec R` and the whole file degenerates. The `2`-adic integers rule that out — the ideal is nonzero
+by `FormalSpectrum.twoAdicIdeal_ne_bot` (`FormalSchemes/TwoAdicWitness.lean`) — so the tower is
 `ℤ ⧸ 2ⁿ`, genuinely infinite, and the thickenings are smaller than `Spf ℤ^` as ringed spaces. -/
 
 section Witness
