@@ -64,8 +64,17 @@ is EGA I 10.6.10 for any locally ringed space `X` carrying an affine open cover;
 `FormalSchemes/IndSchemeColimitEquiv.lean`'s `thickeningRestrictionEquiv`; and
 `FormalSchemes/SpfHomNonAffineWitness.lean` runs it at a target that is provably not affine.
 
-Left to future work: the limit repackaging is stated for each ring `B` separately, and its
-naturality in `B` is not packaged.
+Neither is the limit form. `FormalSchemes/IndSchemeFamilyLimitLRS.lean` proves
+`FormalSpectrum.spfHomLimitEquivLRS`, which is `(Spf R ⟶ X) ≃ lim_n Hom(Spec (R ⧸ Iⁿ), X)` for the
+same general `X`, with `FormalSpectrum.limit_π_spfHomLimitEquivLRS` as its component rule (that
+file states the index shift it involves; do not read the two conventions as identical). So the
+repackaging `FormalSpectrum.specHomLimitEquiv` performs one ring `B` at a time is no longer the
+only one available.
+
+Left to future work: **naturality**, which is packaged nowhere. `specHomLimitEquiv` is stated for
+each ring `B` separately and is not natural in `B`; `spfHomLimitEquivLRS` is stated for each
+locally ringed space `X` separately and is not natural in `X`, as that file's own Scope section
+records.
 
 ## References
 
