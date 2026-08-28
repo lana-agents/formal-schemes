@@ -222,6 +222,7 @@ import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.RelativeTopFiniteTypeBasis
+import FormalSchemes.RelativeTopFiniteTypeTrans
 import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
@@ -331,6 +332,7 @@ import FormalSchemes.TateTensorOverlapChartIsoBoth
 import FormalSchemes.TateTensorOverlapSummandAffine
 import FormalSchemes.TateTensorOverlapSummandAffineBoth
 import FormalSchemes.TateTopFiniteType
+import FormalSchemes.TateTopFiniteTypeTrans
 import FormalSchemes.TateTransition
 import FormalSchemes.TateTwoPatchCompact
 import FormalSchemes.TateXGluedIso
