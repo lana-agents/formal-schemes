@@ -103,10 +103,16 @@ distinct, which is a statement about *that* cover and not about the one chosen h
 
 ## Scope
 
-Naturality in `X` is not proved here: `spfHomLimitEquivScheme` is stated one scheme at a time, and
-whether the two sides assemble into isomorphic functors on `Schemeᵒᵖ` is a separate question with
-a separate obstruction (the cover is chosen per object, so functoriality is not automatic from
-these definitions). It is not claimed to be impossible; it is simply not done here.
+Naturality in `X` is not proved *here*, but it is proved: `FormalSchemes/SpfHomSchemeNatural.lean`
+makes both sides functors on `Scheme.{u}` — covariantly, not on `Schemeᵒᵖ` — and assembles the
+family of equivalences below into `FormalSpectrum.spfHomLimitNatIso`.
+
+The per-point `Classical.choice` in `schemeCoverNhds` is **not** an obstruction to that, and the
+reason is `spfHomLimitEquivScheme_eq` below: the equivalence is equal, as an `Equiv`, to the
+cover-carrying one for *every* cover, so no cover can occur in the forward map and the naturality
+square is checked on the forward map alone.
+
+Naturality in `R` and in `I` is packaged nowhere.
 
 ## References
 

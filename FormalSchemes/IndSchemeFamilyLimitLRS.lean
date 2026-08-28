@@ -88,13 +88,17 @@ all three affine presentations — `specHomLimitEquiv`, `thickeningFamilyLimitEq
 
 ## Scope
 
-Naturality in `X` is not packaged: the equivalence is stated for each locally ringed space
-separately, exactly as `IndScheme.lean` records for the affine version's naturality in `B`.
+Naturality in `X` is not available at this generality: the equivalence takes cover data as an
+argument, so it is stated for each locally ringed space *and each cover* separately and there is
+no functor for it to be natural between. At a scheme target the cover is discharged and the
+naturality does exist — `FormalSchemes/SpfHomSchemeNatural.lean` proves
+`FormalSpectrum.spfHomLimitNatIso`, whose component at `X` is
+`FormalSchemes/SpfHomScheme.lean`'s `spfHomLimitEquivScheme`. Naturality in `B` of the affine
+`specHomLimitEquiv` remains unpackaged, as `IndScheme.lean` records.
 
-An `IsColimit` for the tower of thickenings is still not available, for the reason
-`FormalSchemes/IndSchemeColimitEquivLRS.lean` gives: `existsUnique_hom_thickeningMap` is stated
-only for targets carrying affine cover data, while `IsColimit` quantifies over arbitrary cocones.
-Restricted to schemes it should follow; that is a separate row.
+An `IsColimit` for the tower of thickenings is a different statement and is still not available;
+`FormalSchemes/IndSchemeColimitEquivLRS.lean` sets out why narrowing the target to schemes does
+not produce one, and why corepresentability on `Scheme` is what the narrowing actually gives.
 
 ## Main definitions and results
 

@@ -71,10 +71,19 @@ file states the index shift it involves; do not read the two conventions as iden
 repackaging `FormalSpectrum.specHomLimitEquiv` performs one ring `B` at a time is no longer the
 only one available.
 
-Left to future work: **naturality**, which is packaged nowhere. `specHomLimitEquiv` is stated for
-each ring `B` separately and is not natural in `B`; `spfHomLimitEquivLRS` is stated for each
-locally ringed space `X` separately and is not natural in `X`, as that file's own Scope section
-records.
+For an `X : Scheme` the cover leaves the statement altogether. `FormalSchemes/SpfHomScheme.lean`
+proves `FormalSpectrum.spfHomLimitEquivScheme`, the same equivalence with the four cover arguments
+discharged from the `local_affine` field, so that nothing but `I`, `hI : I.FG` and `X` appears in
+it; `FormalSpectrum.spfHomLimitEquivScheme_eq` says it *equals* `spfHomLimitEquivLRS` for every
+choice of cover data, so it is not a second equivalence. And
+`FormalSchemes/SpfHomSchemeNatural.lean` makes both sides functors on `Scheme.{u}` and proves
+`FormalSpectrum.spfHomLimitNatIso`: EGA I 10.6.7 as the statement that `Spf R` **corepresents**
+`X ↦ lim_n Hom(Spec (R ⧸ Iⁿ), X)`.
+
+Left to future work: **naturality in `B`** of `FormalSpectrum.specHomLimitEquiv`, which is stated
+for each ring `B` separately, and naturality in `R` or in `I`, which is packaged nowhere. At a
+general locally ringed space there is nothing to package: `spfHomLimitEquivLRS` takes cover data
+as an argument, so no family of bijections exists to be natural until the target is a scheme.
 
 ## References
 
