@@ -179,6 +179,7 @@ theorem range_chartToBase_base (hI : I.FG) (i : ULift.{u} (Fin 3)) :
 
 /-! ### The glued morphism -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The double-overlap compatibility square.** The `(i,j)`-overlap chart followed by the `i`-th
 chart's map to `Spf A` equals the transition followed by the `(j,i)`-overlap chart and the `j`-th
 chart's map — the datum `glueChartMorphisms` consumes.
@@ -220,6 +221,7 @@ theorem chartToBase_naturality (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
 
 variable (B : Type u) [CommRing B] [Algebra R B]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The three-chart open cover maps to `Spf A`** — the morphism `gluedX ⟶ Spf A` gluing the
 three basic-open charts, via `AffineChartedFibreDatumX.glueChartMorphisms`.
 
@@ -232,6 +234,7 @@ def gluedXToBase (hI : I.FG) :
   (datumX I f B hI).glueChartMorphisms (fun i => chartToBase I f i)
     (fun i j _ => chartToBase_naturality I f hI i j)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The glued morphism restricts to the `i`-th basic-open chart.** -/
 @[reassoc (attr := simp)]
 theorem ι_gluedXToBase (hI : I.FG) (i : ULift.{u} (Fin 3)) :

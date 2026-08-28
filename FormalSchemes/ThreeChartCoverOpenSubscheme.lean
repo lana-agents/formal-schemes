@@ -149,6 +149,7 @@ def coverSubschemeStructHom (hI : I.FG) :
 
 variable (B : Type u) [CommRing B] [Algebra R B]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **`gluedXToBase` is an open immersion, at the `FormalScheme.Spf` spelling of its target.**
 
 `isOpenImmersion_gluedXToBase` (issue 864) states this with target `locallyRingedSpaceObj (I·A)`,
@@ -172,6 +173,7 @@ def gluedXIsoCoverSubscheme (hI : I.FG) : gluedX I f B hI ≅ coverSubscheme I f
     (ambient_locallyFG I hI) (coverOpen I f) (gluedX I f B hI) (gluedXToBase I f B hI)
     (range_gluedXToBase_base_sup I f B hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The comparison is an isomorphism over `Spf A`**: composed with the inclusion it is the cover
 map `gluedXToBase`. -/
 @[reassoc]
@@ -186,6 +188,7 @@ theorem gluedXIsoCoverSubscheme_hom_comp (hI : I.FG) :
         (ambient_locallyFG I hI) (coverOpen I f) (gluedXToBase I f B hI)
         (range_gluedXToBase_base_sup I f B hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The same triangle for the inverse, which is the direction the transports below consume. -/
 @[reassoc]
 theorem gluedXIsoCoverSubscheme_inv_comp (hI : I.FG) :
@@ -199,6 +202,7 @@ theorem gluedXIsoCoverSubscheme_inv_comp (hI : I.FG) :
         (ambient_locallyFG I hI) (coverOpen I f) (gluedXToBase I f B hI)
         (range_gluedXToBase_base_sup I f B hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The comparison is an isomorphism over `Spf R`.** This is the obligation both transports below
 consume, and it is `gluedXToBase_comp_ambientStructMap` (issue 862) after the triangle over
 `Spf A`. -/
@@ -285,6 +289,7 @@ theorem coverSubschemeIsoSpf_hom (hI : I.FG) (hcov : coverOpen I f = ⊤) :
     (coverSubschemeIsoSpf I f hI hcov).hom = FormalScheme.Hom.mk (coverSubschemeι I f hI) :=
   FormalScheme.restrictOpenCongrTop_hom _ (ambient_locallyFG I hI) hcov
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `gluedXIsoSpf` is `preimageIso` of `asIso gluedXToBase`, so its underlying morphism is
 `gluedXToBase`. -/
 theorem gluedXIsoSpf_hom_toLRSHom (hI : I.FG)
@@ -295,6 +300,7 @@ theorem gluedXIsoSpf_hom_toLRSHom (hI : I.FG)
   (Functor.FullyFaithful.ofFullyFaithful
     FormalScheme.forgetToLocallyRingedSpace).map_preimage _
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **`gluedXIsoSpf` is the degenerate case of `gluedXIsoCoverSubscheme`.**
 
 Note that `hcov`, stated in `ThreeChartCoverOpenImmersion`'s spelling as an equality of a triple

@@ -1,5 +1,6 @@
 import FormalSchemes.AffineSeparatedIso
 import FormalSchemes.CompletionBasicOpenGlue
+import FormalSchemes.ThreeChartCoverOpenImmersion
 
 set_option linter.style.header false
 
@@ -37,19 +38,32 @@ That answers the question this file was written for. The charted line's ideal is
 the base ring `R` while the completion line's is `AdicCompletion.idealOfDefinition`; those look
 different, and they are not.
 
-## What this does **not** say
+## The gluing, not only the objects
 
 The one-chart datum has a vacuous overlap structure — `ULift Unit` has no two distinct indices — so
-`completionXDatum` exercises none of the cocycle machinery. It identifies the two lines' *objects*,
-not their gluing. The statement that would exercise the cocycle is the three-chart one: at
+`completionXDatum` exercises none of the cocycle machinery, and on its own it identifies the two
+lines' *objects* rather than their gluing. `threeChartCoverGluedXIsoCompletion` closes that gap: at
 `A := R^` and three elements `f₀, f₁, f₂ ∈ R^` whose basic opens cover, `ThreeChartCover.gluedX`
-should be `formalCompletion R I hI` too, by `ThreeChartCover.gluedXIsoSpf`. It is not stated here,
-and the obstruction is recorded rather than guessed: `gluedXIsoSpf` carries `[TopologicalSpace R]`
-and `[IsAdicRing I]` on the **base**, inherited through `gluedXToBase` and `chartToBase_naturality`
-from `ThreeChartCover.tau_symm_algebraMap` (`FormalSchemes/ThreeChartCoverSeparated.lean`), and a
-base that is already a complete adic ring is the case in which `R^` is not a completion of
-anything. Whether those binders are removable is a hypothesis-weakening sweep over three files, not
-a fact about completions.
+**is** `formalCompletion R I hI`, and `ThreeChartCover.datumX_xt'_eq` pins that datum's `xt'` to
+the derived transition at every pairwise-distinct triple, so the identification runs through a real
+triple overlap.
+
+An earlier version of this section recorded the three-chart statement as blocked: `gluedXIsoSpf`
+carried `[TopologicalSpace R]` and `[IsAdicRing I]` on the **base**, and a base that is already a
+complete adic ring is the case in which `R^` is not a completion of anything. Those binders were
+ambient-`variable` inclusion — the same defect `oneChartXGluedIso` had one level up — and are now
+`omit`ted at eighteen declarations across five `ThreeChartCover*` files. Eleven of those lie on the
+path from `ThreeChartCover.tau_symm_algebraMap` to `gluedXIsoSpf`; the other seven are downstream
+consumers that `linter.unusedSectionVars` flagged once the binders stopped arriving from below. No
+proof changed.
+
+## What this still does **not** say
+
+Both statements below present a *single* `Spf` — of `R^` in one case, of `R^` again in the other —
+so the chart algebras are all localizations of one ring. The genuinely different-rings case of
+EGA I 10.8, an arbitrary affine cover of an arbitrary scheme, is a further step; and
+`AffineChartedFibreDatumX` completes along `V(I)` pulled back from a single base ring `R`, which is
+a real restriction rather than a gap — see the frontier note on issue 60.
 
 ## Main definitions and results
 
@@ -62,6 +76,10 @@ a fact about completions.
 * `AlgebraicGeometry.completionBasicOpenGluedIsoXGlued`: the same for the arbitrary-index
   basic-open glued completion — `completionBasicOpenGlued I hI f ≅ (completionXDatum I hI).xGlued`
   when the `f i` generate the unit ideal.
+* `AlgebraicGeometry.threeChartCoverGluedXIsoCompletion`: **the connection at a non-vacuous
+  datum** — the three-chart basic-open cover of `Spf (I·R^)` glues to `formalCompletion R I hI`.
+* `AlgebraicGeometry.threeChartCoverGluedXIsoCompletionOne`: that its covering hypothesis is
+  satisfiable over every `(R, I)` with `I.FG`.
 
 ## References
 
@@ -111,6 +129,48 @@ def completionXDatumGluedIso :
     (completionXDatum I hI).xGlued ≅ formalCompletion R I hI :=
   letI := AdicCompletion.isAdicRing_map I hI
   oneChartXGluedIso hI
+
+/-! ### At a datum with a genuine triple overlap -/
+
+section ThreeChart
+
+variable (f : ULift.{u} (Fin 3) → AdicCompletion I R)
+
+/-- **The three-chart cover of the formal completion glues back to it.** `ThreeChartCover.datumX`
+presents `Spf (I·R^)` by three basic opens `D(f₀)`, `D(f₁)`, `D(f₂)`; when those cover, the glued
+object is `formalCompletion R I hI` on the nose — the right-hand side of
+`ThreeChartCover.gluedXIsoSpf` at `A := R^` *is* the completion, by `formalCompletion_eq_Spf_map`,
+so no `eqToHom` appears.
+
+This is `completionXDatumGluedIso` at a datum that is not vacuous: `ULift (Fin 3)` has
+pairwise-distinct triples, and `ThreeChartCover.datumX_xt'_eq` (concretely
+`ThreeChartCover.datumX_xt'_zero_one_two`) identifies the datum's `xt'` there with the transition
+derived from `sigma`, not with `False.elim`. So the two lines agree through a real triple overlap
+and not only on objects.
+
+The base-change factor is `B := R` — the datum's `B` records which affine base the fibre product
+is taken over and plays no part in `xGlued`. -/
+def threeChartCoverGluedXIsoCompletion
+    (hcov : basicOpen (I.map (algebraMap R (AdicCompletion I R))) (f ⟨0⟩) ⊔
+      basicOpen (I.map (algebraMap R (AdicCompletion I R))) (f ⟨1⟩) ⊔
+      basicOpen (I.map (algebraMap R (AdicCompletion I R))) (f ⟨2⟩) = ⊤) :
+    ThreeChartCover.gluedX I f R hI ≅ formalCompletion R I hI :=
+  letI := AdicCompletion.isAdicRing_map I hI
+  ThreeChartCover.gluedXIsoSpf I f R hI hcov
+
+/-- **The covering hypothesis is satisfiable**, so the theorem above is not vacuous: taking
+`f₀ = f₁ = f₂ = 1` covers `Spf (I·R^)` by `basicOpen_one`, for every `(R, I)` with `I` finitely
+generated. The three charts are then `R^{1/1}^`, and `ThreeChartCover.datumX_xt'_eq` still pins
+`xt'` to the derived transition at `0, 1, 2` — the datum is degenerate in its *elements*, not in
+its overlap structure. -/
+def threeChartCoverGluedXIsoCompletionOne :
+    ThreeChartCover.gluedX I (fun _ : ULift.{u} (Fin 3) => (1 : AdicCompletion I R)) R hI ≅
+      formalCompletion R I hI :=
+  threeChartCoverGluedXIsoCompletion I hI _ (by
+    letI := AdicCompletion.isAdicRing_map I hI
+    simp [basicOpen_one])
+
+end ThreeChart
 
 variable {ι : Type u} (f : ι → R)
 

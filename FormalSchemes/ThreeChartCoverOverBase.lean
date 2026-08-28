@@ -149,6 +149,7 @@ theorem chartToBase_comp_ambientStructMap (i : ULift.{u} (Fin 3)) :
 
 variable (B : Type u) [CommRing B] [Algebra R B]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The cover map `gluedX ⟶ Spf A` is a morphism over `Spf R`**: composing it with
 `Spf A ⟶ Spf R` recovers the datum's own structural morphism.
 
