@@ -76,11 +76,24 @@ because `R ⧸ I⁰` is the zero ring (`subsingleton_quotient_pow_zero`,
 initial by `LocallyRingedSpace.isInitialOfIsEmpty`
 (`FormalSchemes/EmptyLocallyRingedSpace.lean`).
 
-Not attempted anywhere yet: naturality of these equivalences in `X`, and a
-`CategoryTheory.Limits.IsColimit` for the tower of thickenings. The latter does not follow from
-what is here, because `existsUnique_hom_thickeningMap` is not stated for *every* locally ringed
-space `X` — only for those carrying the cover data above — while `IsColimit` quantifies over
-arbitrary cocones. Restricted to schemes it should follow; that is a separate row.
+Naturality of these equivalences in `X` cannot be stated at this generality: the bijection takes
+cover data as an argument and a bare locally ringed space carries none, so there is no family of
+bijections to be natural. Narrow the target to a scheme and it exists —
+`FormalSchemes/SpfHomSchemeNatural.lean` proves `FormalSpectrum.spfHomLimitNatIso` on
+`Scheme.{u}`, whose components are the cover-free equivalences of
+`FormalSchemes/SpfHomScheme.lean`.
+
+A `CategoryTheory.Limits.IsColimit` for the tower of thickenings is **not** what that narrowing
+delivers, and it is not an unproved corollary of it either. `IsColimit t` quantifies over cocones
+whose vertex is an *arbitrary* object of the ambient category, so restricting the diagram to
+schemes — which the tower of thickenings already satisfies, each `Spec (R ⧸ Iⁿ)` being affine —
+does not weaken that quantifier; and an `IsColimit` **in** `Scheme` is unavailable for a different
+reason, that the vertex would have to be an object of `Scheme` and nothing on this tree equips
+`Spf R` with a `Scheme` structure. What "restricted to schemes" names is **corepresentability on
+`Scheme`**, which is `spfHomLimitNatIso`, with `existsUnique_hom_thickeningMap_scheme`
+(`FormalSchemes/SpfHomScheme.lean`) as its elementary form. An `IsColimit` in
+`LocallyRingedSpace` is neither proved nor refuted anywhere: it would need this file's theorem for
+targets carrying no cover data at all.
 
 ## Main definitions and results
 
