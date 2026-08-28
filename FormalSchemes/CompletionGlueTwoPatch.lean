@@ -70,12 +70,24 @@ discharges the analogous fields of an `AffineChartedFibreDatumX` on `ULift (Fin 
 The triple-overlap `t'` this slice sidesteps is built, at an arbitrary index type and by an actual
 cocycle proof, in `FormalSchemes/CompletionBasicOpenGlue.lean`; it consumes exactly the
 overlap-as-fibre-product identifications `formalCompletion.basicOpenOverlapIso` and its two chart
-compatibilities (`FormalSchemes/CompletionBasicOpenOverlap.lean`). What that file does not carry is
-the second ring and the overlap identification `θ` of this one, so the two together — an arbitrary
-affine cover of an arbitrary scheme, completed along a closed subset — remain the rest of EGA I,
-10.8. The morphism from the glued completion to the glued scheme, generalising
-`formalCompletion.toSpec` (`FormalSchemes/CompletionToSpec.lean`), needs the glued target first and
-is likewise not built here.
+compatibilities (`FormalSchemes/CompletionBasicOpenOverlap.lean`).
+
+This paragraph used to continue *"what that file does not carry is the second ring and the overlap
+identification `θ` of this one, so the two together — an arbitrary affine cover of an arbitrary
+scheme, completed along a closed subset — remain the rest of EGA I, 10.8."* **The formal-scheme
+half of that is already built, under a name from a different subject area.**
+`AffineChartedFibreDatumX` (`FormalSchemes/GeneralFibreProductExposeX.lean`) glues adic charts
+`Spf (A i)` at an arbitrary index, with chart algebras that genuinely differ and transitions
+`τ i j : A_i{1/g_ij} ≃ₐ[R] A_j{1/g_ji}` — `τ` *is* the `θ` of this file — over a real triple
+cocycle; its glued object is `AffineChartedFibreDatumX.xGlued`, and
+`FormalSchemes/CompletionAsChartedGlued.lean` proves that the completion line's objects are
+`xGlued`s.
+
+What is genuinely still missing for EGA I 10.8 at an arbitrary index is the glued *scheme* and the
+morphism `X_{/Y} ⟶ X` — the arbitrary-index analogue of `specTwoPatch` and
+`completionTwoPatchToScheme` (`FormalSchemes/CompletionTwoPatchToScheme.lean`), generalising
+`formalCompletion.toSpec` (`FormalSchemes/CompletionToSpec.lean`). That needs the glued target
+first and is not built here.
 
 ## References
 

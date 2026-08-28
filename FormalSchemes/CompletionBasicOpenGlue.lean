@@ -111,10 +111,16 @@ morphism is `OpenCover.glueMorphisms` applied to the chart inclusions, and the t
 
 One thing is deliberately not here.
 
-* **Different charts at an arbitrary index** — an arbitrary affine cover of an arbitrary scheme,
-  completed along a closed subset — which is the rest of EGA I, 10.8. This file supplies the
-  triple-overlap bookkeeping that case needs; what it does not supply is the second ring and the
-  overlap identification `θ` that `FormalSchemes/CompletionGlueTwoPatch.lean` carries.
+* **The glued scheme and the morphism `X_{/Y} ⟶ X` at an arbitrary index** — the arbitrary-index
+  analogue of `completionTwoPatchToScheme` (`FormalSchemes/CompletionTwoPatchToScheme.lean`),
+  which is the rest of EGA I, 10.8 for a general affine cover.
+
+  This bullet used to say instead that the missing piece was "the second ring and the overlap
+  identification `θ`" of `FormalSchemes/CompletionGlueTwoPatch.lean`. That was wrong: the
+  arbitrary-index, different-rings glued **formal scheme** is `AffineChartedFibreDatumX.xGlued`
+  (`FormalSchemes/GeneralFibreProductExposeX.lean`), whose transitions `τ i j` are exactly that
+  `θ`, and `FormalSchemes/CompletionAsChartedGlued.lean` identifies `completionBasicOpenGlued` with
+  one. The object was never the obstruction; the morphism down to a glued scheme is.
 
 ## References
 

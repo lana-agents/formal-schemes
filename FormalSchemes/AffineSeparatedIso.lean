@@ -62,9 +62,14 @@ variable [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A] [TopologicalSpace A]
 variable [IsAdicRing (I.map (algebraMap R A))]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The one-chart glued object `xGlued` of `Spf A` is `Spf A`.** The one-element index has a
 single chart which already covers `xGlued`, so its inclusion `ι default` is an isomorphism; the
-fully faithful forgetful functor lifts it to a `FormalScheme` iso. -/
+fully faithful forgetful functor lifts it to a `FormalScheme` iso.
+
+The base `R` carries no topology and no adic hypothesis here: only the chart algebra `A` has to be
+an adic ring. That matters for `FormalSchemes/CompletionAsChartedGlued.lean`, which instantiates
+this at `A := R^` over a base `R` that is not complete. -/
 def oneChartXGluedIso :
     (oneChartExposeXDatum R I hI A).xGlued ≅ FormalScheme.Spf (I.map (algebraMap R A)) := by
   let d : (oneChartExposeXDatum R I hI A).xFormalGlueData.toLocallyRingedSpaceGlueData.J := ⟨⟨⟩⟩
