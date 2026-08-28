@@ -355,6 +355,7 @@ import FormalSchemes.ThreeChartDatum
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
 import FormalSchemes.TopFiniteTypeBasis
+import FormalSchemes.TopFiniteTypeTrans
 import FormalSchemes.TwoAdicDegeneracy
 import FormalSchemes.TwoAdicWitness
 import FormalSchemes.TwoPatchFibreProduct
