@@ -253,7 +253,9 @@ The construction above is run end to end at `FormalLineWitness.lean`'s formal af
 `ℤ⟦X⟧ = ℤ[X]^{(X)}`, whose formal spectrum is `Spec ℤ`, with the two-piece cover `D(2)`, `D(3)`.
 Everything the general theorem quantifies over is non-degenerate there:
 
-* `I ≠ ⊥`, and `|Spf ℤ⟦X⟧|` is infinite (`FormalLineWitness.lean`);
+* the space is not a point: `|Spf ℤ⟦X⟧| ≃ₜ Spec ℤ` (`homeoSpecInt`) has at least two points,
+  namely the primes above `2` and above `3` (`nontrivial_formalSpectrum`, `FormalLineWitness.lean`)
+  — which is exactly what the `2`-adic witness makes false, and the reason this one exists;
 * the cover has **two distinct pieces** (`twoChart_ne`, `FormalLineTwoChartCover.lean`), they
   genuinely cover (`iSup_twoChart`), and neither is the whole space (`twoChart_ne_top`);
 * the pieces **overlap**: `D(2) ⊓ D(3) ≠ ⊥` (`twoChart_inf_ne_bot`), `D(2·3)` is neither `⊥` nor
@@ -273,8 +275,18 @@ four rows on this umbrella recorded it as an open gap. It is closed in
 affine line over `ℤ` with a doubled origin, covered by its two charts: a target that
 `FormalSchemes/SpecTwoPatchNonAffine.lean` proves is **not affine**. It never bore on non-vacuity
 of anything proved here — the construction never looks at `X` outside the chart opens, and the
-gluing above happens on the *source*, where the two-piece cover is genuinely two-piece — but that
-witness exercises the covering situation on both sides at once.
+gluing above happens on the *source*, where the two-piece cover is genuinely two-piece — but
+**together** the two witnesses exercise the covering situation on both sides at once. Neither does
+alone: `existsUnique_hom_thickeningMap_formalLine` and `existsUnique_hom_thickeningMap_nonAffine`
+both take a cover of the target only, and obtain their source data inside from
+`exists_basicOpen_refinement`, so in each of them it may be a single piece. The source-side half is
+carried by `spfHomFormalLine` below, which calls `spfHomOfFamily` directly with `formalLineElem`,
+`iSup_basicOpen_formalLineElem` and `formalLine_hr` supplied by hand; the target-side half is
+carried by the non-affine witness.
+
+One degeneracy the list above does **not** exclude is `I = ⊥`, at which `IsAdicRing`
+(`FormalSchemes/AdicRing.lean`) holds vacuously and every thickening is `Spec R`. The bullets
+establish non-degeneracy of the two covers and of the space, not of the ideal itself.
 -/
 
 section Witness
