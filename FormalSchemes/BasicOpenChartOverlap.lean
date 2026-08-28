@@ -33,8 +33,17 @@ so its geometric triple-overlap field `xt'` is a morphism
 `pullback (basicOpenChart (I·A_i) (g i j)) (basicOpenChart (I·A_i) (g i k)) ⟶ …`.
 Instantiating `basicOpenChartOverlapIso` at `I·A_i`, `g i j`, `g i k` presents that pullback as the
 affine chart `Spf (A_i{1/(g_ij · g_ik)})`, which is the first thing any construction of `xt'`
-needs — on master the field has only ever been discharged by vacuity, since both existing datum
-values have at most two charts.
+needs — and that is how every non-vacuous `xt'` on this tree is in fact built.
+`AffineChartedFibreDatumX.xAlgDataT'`
+(`FormalSchemes/GeneralFibreProductExposeXAlgebraData.lean`) is precisely the composite of
+`(basicOpenChartOverlapIso (I·A_i) (g i j) (g i k)).inv`, the transported single-overlap map
+`awayCompletionTransition σ`, and `(basicOpenChartOverlapIso (I·A_j) (g j k) (g j i)).hom`; the
+smart constructor `AffineChartedFibreDatumX.ofAlgebraData` feeds it to the datum's `xt'` field.
+Two datum values on master have a pairwise distinct triple of indices and so reach it with real
+content: `ThreeChart.datumX` (`FormalSchemes/ThreeChartDatum.lean`) and `ThreeChartCover.datumX`
+(`FormalSchemes/ThreeChartCoverDatum.lean`), both on `ULift (Fin 3)` — the second being a single
+`Spf A` covered by three basic opens, which is exactly this file's situation. That `xt'` is
+genuinely `xAlgDataT'` rather than `False.elim` there is the theorem `ThreeChart.datumX_xt'_eq`.
 
 ## References
 
