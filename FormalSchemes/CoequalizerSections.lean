@@ -52,6 +52,9 @@ Transporting to spaces is then the four-line rewrite chain that Mathlib itself p
   geometric argument wants.
 * `AlgebraicGeometry.PresheafedSpace.injective_coequalizer_π_c_app`,
   `AlgebraicGeometry.SheafedSpace.injective_coequalizer_π_c_app`: the injectivity half.
+* `AlgebraicGeometry.PresheafedSpace.colimit_section_ext`: a section of a colimit of presheafed
+  spaces is determined by its pullbacks along the legs — general in the diagram shape, and the
+  tool the *coproduct* case needs.
 
 ## What this does not do
 
@@ -79,8 +82,10 @@ run, and saying so is cheaper than a statement whose proof is asserted.
 It also does not identify the equalised sections geometrically. For a quotient by a group action,
 `f` and `g` are `CategoryTheory.actionQuotientLeft` and `actionQuotientRight`, whose common source
 is the coproduct `∐_{g : G} X`; turning "equalised" into "invariant under every `a g`" needs the
-sections of that coproduct to be detected by the coproduct legs, which is a second componentwise
-limit — over a discrete index — and is not here. Nor is the step after it, that a separating open
+sections of that coproduct to be detected by the coproduct legs. That step *is* here, as
+`colimit_section_ext`; what is not here is the identification of each leg's pullback with the
+action of the corresponding `a g`, which is a statement about `actionQuotientLeft`/`Right` and
+belongs with them. Nor is the step after it, that a separating open
 carries the invariant sections isomorphically, which is where the disjointness of the translates
 finally enters.
 
@@ -198,6 +203,38 @@ theorem mono_coequalizer_π_c_app {X Y : PresheafedSpace C} (f g : X ⟶ Y)
   exact mono_comp' inferInstance (mono_π_op_one (Limits.limit.isLimit _))
 
 end Mono
+
+section ColimitExt
+
+/-- **A section of a colimit of presheafed spaces is determined by its pullbacks along the legs.**
+
+General in the diagram shape, and the exact tool the *coproduct* case wants: to compare two
+sections of `∐ᵢ Xᵢ` it is enough to compare them on each summand. It is
+`Concrete.limit_ext` for the componentwise limit, moved across
+`colimitPresheafObjIsoComponentwiseLimit` — which is injective because it is an isomorphism.
+
+For a coequalizer this is weaker than `injective_coequalizer_π_c_app` (two legs rather than one),
+so it is stated here for the shapes where there is no single mono leg. -/
+theorem colimit_section_ext {J : Type u} [SmallCategory J]
+    (F : J ⥤ PresheafedSpace.{u, u + 1, u} CommRingCat.{u}) [Limits.HasColimit F]
+    (U : Opens (Limits.colimit F).carrier)
+    (s t : ToType ((Limits.colimit F).presheaf.obj (op U)))
+    (h : ∀ j, ((Limits.colimit.ι F j).c.app (op U)) s = ((Limits.colimit.ι F j).c.app (op U)) t) :
+    s = t := by
+  have hiso : Function.Injective ((colimitPresheafObjIsoComponentwiseLimit F U).hom) :=
+    (ConcreteCategory.bijective_of_isIso _).1
+  apply hiso
+  refine Limits.Concrete.limit_ext _ _ _ fun j => ?_
+  obtain ⟨j⟩ := j
+  have a := ConcreteCategory.congr_hom
+    (colimitPresheafObjIsoComponentwiseLimit_hom_π F U j) s
+  have b := ConcreteCategory.congr_hom
+    (colimitPresheafObjIsoComponentwiseLimit_hom_π F U j) t
+  simp only [ConcreteCategory.comp_apply] at a b
+  rw [a, b]
+  exact h j
+
+end ColimitExt
 
 section Sections
 
