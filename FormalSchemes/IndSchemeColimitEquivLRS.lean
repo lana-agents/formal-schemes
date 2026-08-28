@@ -56,23 +56,25 @@ the new `Equiv` **is** the old one, for any cover data whatsoever.
 
 ## Scope
 
-Not attempted here: the `limit` form of EGA I 10.6.7, `(Spf R ⟶ X) ≃ lim_n Hom(Spec (R ⧸ Iⁿ), X)`.
-The affine case gets it from `specHomLimitEquiv` (`FormalSchemes/IndSchemeLimit.lean`), which is
-built on the ring-side bijection `specHomEquiv` and on `R = lim_n R ⧸ Iⁿ` in `CommRingCat`; a
-general `X` has no ring side, so the limit has to be compared with `ThickeningFamilyLRS` directly,
-through `CategoryTheory.Limits.Types.limitEquivSections`. Two things are then needed that the
-affine route never has to state: the successor-only compatibility of a `ThickeningFamilyLRS`
-promoted to every morphism of `ℕᵒᵖ`, and the level-`0` leg `Hom(Spec (R ⧸ I⁰), X)` shown to be a
-subsingleton. Neither is missing mathematics — `R ⧸ I⁰` is the zero ring
-(`subsingleton_quotient_pow_zero`, `FormalSchemes/IndSchemeLimitComponents.lean`), so its `Spec` is
-empty, and Mathlib carries `LocallyRingedSpace.emptyIsInitial` and `Scheme.isInitialOfIsEmpty` —
-but no bridge from those to this tower exists here. That is a separate row.
+The `limit` form of EGA I 10.6.7, `(Spf R ⟶ X) ≃ lim_n Hom(Spec (R ⧸ Iⁿ), X)`, is not in this file
+but is on the tree: `spfHomLimitEquivLRS`, in `FormalSchemes/IndSchemeFamilyLimitLRS.lean`, which
+imports this one. The affine case gets it from `specHomLimitEquiv`
+(`FormalSchemes/IndSchemeLimit.lean`), built on the ring-side bijection `specHomEquiv` and on
+`R = lim_n R ⧸ Iⁿ` in `CommRingCat`; a general `X` has no ring side, so that file compares the
+limit with `ThickeningFamilyLRS` directly, through
+`CategoryTheory.Limits.Types.limitEquivSections`. Two things it has to state that the affine route
+never does: the successor-only compatibility of a `ThickeningFamilyLRS` promoted to every morphism
+of `ℕᵒᵖ`, and the level-`0` leg `Hom(Spec (R ⧸ I⁰), X)` shown to be a subsingleton — the latter
+because `R ⧸ I⁰` is the zero ring (`subsingleton_quotient_pow_zero`,
+`FormalSchemes/IndSchemeLimitComponents.lean`), so `Spec (R ⧸ I⁰)` has empty carrier and is
+initial by `LocallyRingedSpace.isInitialOfIsEmpty`
+(`FormalSchemes/EmptyLocallyRingedSpace.lean`).
 
-Likewise not attempted: a `CategoryTheory.Limits.IsColimit` for the tower of thickenings. It does
-not follow from what is here, because `existsUnique_hom_thickeningMap` is not stated for *every*
-locally ringed space `X` — only for those carrying the cover data above — while `IsColimit`
-quantifies over arbitrary cocones. Restricted to schemes it should follow; that too is a separate
-row.
+Not attempted anywhere yet: naturality of these equivalences in `X`, and a
+`CategoryTheory.Limits.IsColimit` for the tower of thickenings. The latter does not follow from
+what is here, because `existsUnique_hom_thickeningMap` is not stated for *every* locally ringed
+space `X` — only for those carrying the cover data above — while `IsColimit` quantifies over
+arbitrary cocones. Restricted to schemes it should follow; that is a separate row.
 
 ## Main definitions and results
 
@@ -152,8 +154,9 @@ carrying an affine open cover: restriction to the thickenings is a bijection fro
 the compatible families. This is umbrella 97's headline shape for a general target, and it is
 `existsUnique_hom_thickeningMap` repackaged — both directions come out of that `∃!`.
 
-The cover data `U`, `hU`, `B`, `e` is needed to construct the inverse and cannot influence it; see
-`thickeningRestrictionEquivLRS_symm_eq`.
+The cover data `U`, `hU`, `B`, `e` is needed to construct the inverse and cannot influence it: see
+`thickeningRestrictionEquivLRS_eq_of_cover`, which says two arbitrary choices give the *same*
+`Equiv`, with `thickeningRestrictionEquivLRS_symm_eq` its pointwise corollary on the inverse.
 
 Note that `ExistsUnique` unfolds to `∃ x, p x ∧ ∀ y, p y → y = x`, so the uniqueness clause proves
 `g = choose` and the round trip on the left needs the symmetric form. -/

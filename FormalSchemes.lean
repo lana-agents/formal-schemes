@@ -185,6 +185,7 @@ import FormalSchemes.IndSchemeColimitEquivLRS
 import FormalSchemes.IndSchemeExistence
 import FormalSchemes.IndSchemeExistenceGeometric
 import FormalSchemes.IndSchemeFamilyLimit
+import FormalSchemes.IndSchemeFamilyLimitLRS
 import FormalSchemes.IndSchemeForward
 import FormalSchemes.IndSchemeLimit
 import FormalSchemes.IndSchemeLimitComponents
