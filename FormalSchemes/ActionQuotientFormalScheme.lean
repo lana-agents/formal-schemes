@@ -20,7 +20,7 @@ discontinuous action is a formal scheme, and the assembly is a dozen lines.
 
 ## Why the hypothesis is stated as an open immersion rather than as a stalk isomorphism
 
-Both forms are provided. `isOpenImmersionRestrict` is the shape
+Both forms are provided. `formalSchemeOfIsOpenImmersionRestrict` is the shape
 `LocallyRingedSpace.IsOpenImmersion.of_stalk_iso` produces and the shape the local criterion
 consumes; `formalSchemeOfStalkIso` takes the stalk hypothesis directly and calls `of_stalk_iso`
 itself, so a future proof of the stalk lemma plugs into it with nothing in between.
