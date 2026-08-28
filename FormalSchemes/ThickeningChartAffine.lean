@@ -394,10 +394,12 @@ section Witness
 /-! ### Non-vacuity
 
 Everything above holds at `I = ⊥`, where every thickening is `R` itself, and at an `r` whose
-`D(r)` is `⊥` or `⊤`, where the chart says nothing about decomposing anything. The `2`-adic
-witness of `TwoAdicWitness.lean` cannot discharge the second: `|Spf ℤ^| = PrimeSpectrum 𝔽₂` is a
-one-point space, so every open of it is `⊥` or `⊤` — that is
-`FormalSpectrum.twoAdic_exists_eq_top` in `FormalSchemes/TwoAdicDegeneracy.lean`.
+`D(r)` is `⊥` or `⊤`, where the chart says nothing about decomposing anything. The witness below
+discharges the first by `FormalSpectrum.formalLineIdeal_ne_bot`
+(`FormalSchemes/FormalLineWitness.lean`). The `2`-adic witness of `TwoAdicWitness.lean` cannot
+discharge the second: `|Spf ℤ^| = PrimeSpectrum 𝔽₂` is a one-point space, so every open of it is
+`⊥` or `⊤` — that is `FormalSpectrum.twoAdic_exists_eq_top` in
+`FormalSchemes/TwoAdicDegeneracy.lean`.
 
 So the witness here is `FormalLineWitness.lean`'s formal affine line `ℤ⟦X⟧`, whose residue ring is
 `ℤ` and whose `|Spf|` is `Spec ℤ`. At `r = 2` the chart is proper (`twoChart_ne_top`) and nonempty

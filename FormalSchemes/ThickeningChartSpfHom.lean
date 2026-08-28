@@ -318,9 +318,10 @@ Three degeneracies to rule out, and this section removes all three.
 
 `[IsAdicRing I]` holds at `I = ⊥`, where every thickening is `Spec R` and the tower is constant;
 and `D(r)` may be `⊥` or `⊤`, where the chart decomposes nothing. Both are removed by building on
-`FormalLineWitness.lean`'s formal affine line `ℤ⟦X⟧` at `r = 2`, where
-`ThickeningChartAffine.lean` already proves the chart is neither `⊥` nor `⊤` **at every level of
-the tower** (`chartOpen_formalLine_ne_bot`, `chartOpen_formalLine_ne_top`).
+`FormalLineWitness.lean`'s formal affine line `ℤ⟦X⟧` at `r = 2`: the first by
+`FormalSpectrum.formalLineIdeal_ne_bot`, the second because `ThickeningChartAffine.lean` already
+proves the chart is neither `⊥` nor `⊤` **at every level of the tower**
+(`chartOpen_formalLine_ne_bot`, `chartOpen_formalLine_ne_top`).
 
 The third is `U = ⊤`. It is removed in *A proper open of the target* below, and the reason it can
 be is that the affineness hypothesis is on `U`, **not** on `X`: an affine `X` has plenty of proper

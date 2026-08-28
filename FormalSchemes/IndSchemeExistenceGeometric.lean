@@ -165,7 +165,8 @@ theorem specMap_mk_comp_compatible (ψ : B →+* R) (n : ℕ) :
 
 As in `FormalSchemes/IndSchemeExistence.lean`, the risk is not that the statements are vacuous —
 they are equations and an `∃!` — but that `[IsAdicRing I]` is only ever instantiated at `I = ⊥`,
-where every thickening is `Spec R`. The `2`-adic integers rule that out. -/
+where every thickening is `Spec R`. The `2`-adic integers rule that out, by
+`FormalSpectrum.twoAdicIdeal_ne_bot` (`FormalSchemes/TwoAdicWitness.lean`). -/
 
 section Witness
 

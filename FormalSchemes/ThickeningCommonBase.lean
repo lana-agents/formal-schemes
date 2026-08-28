@@ -142,10 +142,11 @@ theorem commonBase_comp_thickeningMap (g : locallyRingedSpaceObj I ⟶ X) (n : �
 
 The statements above are equations, so the risk of vacuity is not that they are unprovable but
 that `[IsAdicRing I]` is only ever instantiated at `I = ⊥`, where every thickening is `Spec R`
-and the tower is constant. The `2`-adic integers rule that out. The family used is the tautological
-one — the thickening morphisms themselves, compatible by `thickeningMap_comp` — whose common base
-map is the identity of `|Spf ℤ^|`, which is the only value it could have and is worth pinning
-down. -/
+and the tower is constant. The `2`-adic integers rule that out, by
+`FormalSpectrum.twoAdicIdeal_ne_bot` (`FormalSchemes/TwoAdicWitness.lean`). The family used is the
+tautological one — the thickening morphisms themselves, compatible by `thickeningMap_comp` — whose
+common base map is the identity of `|Spf ℤ^|`, which is the only value it could have and is worth
+pinning down. -/
 
 section Nonvacuity
 
