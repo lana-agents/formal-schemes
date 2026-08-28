@@ -91,6 +91,7 @@ import FormalSchemes.CompletedTensorMapSpf
 import FormalSchemes.CompletedTensorMapSpfIso
 import FormalSchemes.CompletedTensorMapSpfPr
 import FormalSchemes.Completion
+import FormalSchemes.CompletionAsChartedGlued
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletionBasicOpenGlue
 import FormalSchemes.CompletionBasicOpenMap
