@@ -120,6 +120,11 @@ predicate: `X` is a bare `LocallyRingedSpace`, so `IsAffineOpen` is not availabl
 `X` to `Scheme` would undo the decision issue 1047 took. Carrying the iso costs nothing, because
 an affine cover is what produced it in the first place.
 
+That decision stands, and it does not cost the scheme case anything.
+`FormalSchemes/SpfHomScheme.lean` obtains the data from `Scheme.local_affine` in a corollary layer
+*above* the general statements, so the results reached from here apply to a scheme with no cover
+argument at the call site while nothing in this file is narrowed.
+
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.6 (10.6.10).

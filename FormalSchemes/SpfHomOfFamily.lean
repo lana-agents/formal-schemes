@@ -230,7 +230,10 @@ family of morphisms `Spec (R ⧸ Iⁿ⁺¹) ⟶ X` comes from a unique morphism 
 The hypotheses on `X` are exactly: it is a locally ringed space, and it carries a cover by opens
 `U i` each *equipped* with an identification `X|_{U i} ≅ Spec (B i)`. The identifications are data
 rather than a property because `X` is a bare locally ringed space, so `IsAffineOpen` is not
-available; a scheme supplies them from its own affine cover.
+available; a scheme supplies them from its own affine cover, and
+`FormalSchemes/SpfHomScheme.lean` does exactly that — `existsUnique_hom_thickeningMap_scheme`
+is this theorem with `U`, `hU`, `B` and `e` read off `Scheme.local_affine`, leaving `hI` as the
+only hypothesis.
 
 The proof supplies the gluing data of `spfHomOfFamily` from `exists_basicOpen_refinement`: one
 basic open `D(r x)` through each point of `|Spf R|`, chosen inside the pullback of some `U i`. -/

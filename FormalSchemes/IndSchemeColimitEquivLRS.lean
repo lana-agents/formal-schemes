@@ -28,9 +28,15 @@ as `FormalSpectrum.thickeningRestrictionEquivLRS`.
 
 `X` is a locally ringed space carrying a family of opens `U i` with `⨆ i, U i = ⊤`, each
 *equipped* with an identification `X|_{U i} ≅ Spec (B i)`. The identifications are data and not a
-property because `X` is a bare locally ringed space, so `IsAffineOpen` is not available to it; a
-scheme supplies them from its own affine cover, as `existsUnique_hom_thickeningMap_formalLine`
-(`FormalSchemes/SpfHomOfFamily.lean`) does for `Spec ℤ` covered by `D(2)` and `D(3)`.
+property because `X` is a bare locally ringed space, so `IsAffineOpen` is not available to it.
+
+A caller can always supply them by hand, as `existsUnique_hom_thickeningMap_formalLine`
+(`FormalSchemes/SpfHomOfFamily.lean`) does for `Spec ℤ` covered by `D(2)` and `D(3)` — that is a
+locally ringed space with a cover exhibited, not a scheme being asked for its own. For an actual
+`X : Scheme` the data need not be supplied at all: it is the `local_affine` field, and
+`thickeningRestrictionEquivScheme` (`FormalSchemes/SpfHomScheme.lean`) is this bijection with the
+four arguments discharged from it. `thickeningRestrictionEquivScheme_eq` says the two agree for
+every cover, so nothing here is superseded.
 
 ## Why the cover appears in the definition and not in the object
 
