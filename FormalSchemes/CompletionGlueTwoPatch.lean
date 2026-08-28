@@ -25,7 +25,10 @@ affine charts together with an identification of their overlap:
   closed subset*.
 
 Gluing the basic-open completions of a single affine `Spec A` back together only re-presents
-`formalCompletion A I`; two *different* charts glued along a common basic open is the first
+`formalCompletion A I` — no longer an assertion: `AlgebraicGeometry.completionBasicOpenGluedIso`
+(`FormalSchemes/CompletionBasicOpenGlue.lean`) proves it, for an arbitrary index type, whenever the
+chosen elements generate the unit ideal. Two *different* charts glued along a common basic open is
+the first
 non-vacuous case, and it is exactly the chart-overlap situation
 `FormalSchemes/CompletionNestedBasicOpen.lean` was built for — the overlaps of the affine charts of
 a completion are again affine, sidestepping the non-affine-overlap obstruction to the general

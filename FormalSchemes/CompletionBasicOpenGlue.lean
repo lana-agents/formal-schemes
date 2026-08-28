@@ -1,6 +1,7 @@
 import FormalSchemes.CompletionBasicOpenOverlap
 import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.Gluing
+import FormalSchemes.OpenCoverGlueMorphisms
 
 set_option linter.style.header false
 
@@ -76,22 +77,40 @@ and those come from the universal property of a localization:
 * `AlgebraicGeometry.completionBasicOpenToCompletion`: the canonical morphism from the glued object
   to `Spf R^`, and `AlgebraicGeometry.completionBasicOpenι_comp_toCompletion`, which says it
   restricts to the basic-open immersion on each chart.
+* `FormalSpectrum.exists_mem_basicOpen_of_span_eq_top` and
+  `FormalSpectrum.iSup_basicOpen_eq_top_of_span_eq_top`: the covering hypothesis, derived from
+  `Ideal.span (Set.range f) = ⊤`.
+* `AlgebraicGeometry.basicOpenCompletionCover`: the basic-open completions as a
+  `FormalScheme.OpenCover` of `Spf R^`, under that hypothesis.
+* `AlgebraicGeometry.completionBasicOpenι_pullback_comp`: the chart inclusions into the glued
+  object agree on the fibre-product overlaps — the descent datum for the inverse morphism.
+* `AlgebraicGeometry.completionFromCompletionBasicOpen`: the inverse morphism, and
+  `AlgebraicGeometry.isIso_completionBasicOpenToCompletion`.
+* `AlgebraicGeometry.completionBasicOpenGluedIso`: **the glued object *is* `formalCompletion R I`**,
+  as an isomorphism of formal schemes, with `completionBasicOpenι_comp_gluedIso` and
+  `basicOpenImmersion_comp_gluedIso_inv` pinning it on each chart.
 
 ## What this is a slice of
 
 Gluing the basic opens of a single affine `Spec R` back together only re-presents
-`formalCompletion R I`. That is the point of taking this case first: it is the smallest situation
-in which the cocycle condition has content, and it comes with a checkable conclusion. Two things
-are deliberately not here.
+`formalCompletion R I`, and that is now proved here (`completionBasicOpenGluedIso`) rather than
+merely intended: it is the smallest situation in which the cocycle condition has content, and it
+comes with the checkable conclusion that makes the cocycle proof falsifiable.
 
-* **That `completionBasicOpenToCompletion` is an isomorphism** when the `f i` generate the unit
-  ideal. The comparison morphism is built here; that it is invertible is not. Mathlib's route to
-  a statement of this shape is `AlgebraicGeometry.Scheme.OpenCover.fromGlued` together with
-  `isOpenMap_fromGlued`, `fromGlued_injective` and `instance : IsIso 𝒰.fromGlued`
-  (`Mathlib/AlgebraicGeometry/Gluing.lean`), and every one of those is stated for `Scheme`, keyed
-  on `Scheme.OpenCover`. `Spf R^` is not a scheme, so they do not apply and a
-  `LocallyRingedSpace`-level replication of `Gluing.lean:262-423` is needed. That is issue 1123,
-  which starts from `completionBasicOpenToCompletion` rather than from nothing.
+An earlier version of this section said that proving the comparison invertible needed a
+`LocallyRingedSpace`-level replication of `Mathlib/AlgebraicGeometry/Gluing.lean:262-423`, on the
+ground that Mathlib's `Scheme.OpenCover.fromGlued` chain is keyed on `Scheme.OpenCover` throughout
+and `Spf R^` is not a scheme. The premise about Mathlib is correct and the conclusion did not
+follow: **this tree already carries that chain**, at exactly this generality, in
+`FormalSchemes/OpenCoverGlueMorphisms.lean` — `FormalScheme.OpenCover.fromGlued` with
+`fromGlued_base_surjective`, `fromGlued_base_injective`, `fromGlued_base_isOpenMap`,
+`isOpenImmersion_fromGlued` and `instance isIso_fromGlued`, whose module docstring says outright
+that it mirrors `Scheme.OpenCover.glueMorphisms`. Nothing had to be replicated; the inverse
+morphism is `OpenCover.glueMorphisms` applied to the chart inclusions, and the two round trips are
+`Multicoequalizer.hom_ext` and `OpenCover.hom_ext`.
+
+One thing is deliberately not here.
+
 * **Different charts at an arbitrary index** — an arbitrary affine cover of an arbitrary scheme,
   completed along a closed subset — which is the rest of EGA I, 10.8. This file supplies the
   triple-overlap bookkeeping that case needs; what it does not supply is the second ring and the
@@ -108,6 +127,53 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry
 
 universe u
+
+/-! ### The covering hypothesis
+
+The glued object is compared with `formalCompletion R I` only when the `f i` really do cover, and
+the shape the comparison needs is a *pointwise* one: every point of `Spf R^` lies in one of the
+basic opens `D(f i)`. That form is deliberately not derived by rewriting with
+`PrimeSpectrum.iSup_basicOpen_eq_top_iff` — `Opens (FormalSpectrum I)` and
+`Opens (PrimeSpectrum (R ⧸ I))` are definitionally equal but carry syntactically different topology
+instances, and `FormalSchemes/FormalLineWitness.lean` records that `rw` with a `PrimeSpectrum`
+lemma against a `FormalSpectrum` goal fails under `instances` transparency. The argument below is
+elementary and avoids the question: if no basic open contained the point, its prime would contain
+the span, hence be `⊤`.
+-/
+
+namespace FormalSpectrum
+
+variable {B : Type u} [CommRing B] (K : Ideal B)
+
+/-- **The covering hypothesis, pointwise, from a generating family.** If the `r i` generate the
+unit ideal then every point of `Spf B` lies in one of the basic opens `D(r i)`. -/
+theorem exists_mem_basicOpen_of_span_eq_top {κ : Type*} (r : κ → B)
+    (h : Ideal.span (Set.range r) = ⊤) (x : FormalSpectrum K) :
+    ∃ i, x ∈ basicOpen K (r i) := by
+  by_contra hx
+  have hmem : ∀ i, Ideal.Quotient.mk K (r i) ∈ x.asIdeal := by
+    intro i
+    by_contra hi
+    exact hx ⟨i, hi⟩
+  have hle : Ideal.span (Set.range fun i => Ideal.Quotient.mk K (r i)) ≤
+      x.asIdeal := by
+    rw [Ideal.span_le]
+    rintro _ ⟨i, rfl⟩
+    exact hmem i
+  refine x.isPrime.ne_top (top_le_iff.mp ?_)
+  refine le_trans (le_of_eq ?_) hle
+  rw [← Ideal.map_top (Ideal.Quotient.mk K), ← h, Ideal.map_span, ← Set.range_comp]
+  rfl
+
+/-- **The covering hypothesis in `iSup` form**, which is what `FormalSchemes/SpfBasicOpenCover.lean`
+and the chart machinery are stated against. -/
+theorem iSup_basicOpen_eq_top_of_span_eq_top {κ : Type*} (r : κ → B)
+    (h : Ideal.span (Set.range r) = ⊤) :
+    (⨆ i, basicOpen K (r i)) = ⊤ :=
+  eq_top_iff.mpr fun x _ =>
+    TopologicalSpace.Opens.mem_iSup.mpr (exists_mem_basicOpen_of_span_eq_top K r h x)
+
+end FormalSpectrum
 
 namespace AlgebraicGeometry
 
@@ -436,6 +502,261 @@ theorem completionBasicOpenι_comp_toCompletion (i : ι) :
     completionBasicOpenι I hI f i ≫ completionBasicOpenToCompletion I hI f =
       (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom :=
   Multicoequalizer.π_desc _ _ _ _ _
+
+
+
+
+/-! ### The two presentations of a double overlap
+
+`completionBasicOpenGlueData'` presents the overlap of the `i`-th and `j`-th charts as
+`Spf ((R_{f i})_{f j})^` — a basic open *of the chart ring*, which is what made the cocycle cheap.
+`formalCompletion.basicOpenOverlapIso` presents it as `Spf (R_{f i · f j})^`, a basic open of the
+*base* ring, and that is the presentation in which it is the fibre product of the two chart
+immersions into `Spf R^`. Both are localizations of `R` away from `f i · f j`, so the comparison is
+`IsLocalization.Away.lift`, exactly as `cbTau` and `cbSigma` were; the lemmas below identify the
+two projections of the fibre product with the two glue maps of the datum.
+-/
+
+/-- The double-overlap ring `(R_{f i})_{f j}` is a localization of `R` away from `f i · f j`. -/
+private theorem cbIsAway2 (i j : ι) : IsLocalization.Away (f i * f j) (cbT f i j) :=
+  inferInstance
+
+/-- **The comparison of the two presentations of a double overlap**, from the chart-ring
+presentation to the base-ring one: `(R_{f i})_{f j} →+* R_{f i · f j}`. -/
+private def cbNu (i j : ι) : cbT f i j →+* Localization.Away (f i * f j) :=
+  haveI := cbIsAway2 f i j
+  IsLocalization.Away.lift (S := cbT f i j) (f i * f j)
+    (IsLocalization.Away.algebraMap_isUnit (S := Localization.Away (f i * f j)) (f i * f j))
+
+private theorem cbNu_comp (i j : ι) :
+    (cbNu f i j).comp (algebraMap R (cbT f i j)) =
+      algebraMap R (Localization.Away (f i * f j)) :=
+  haveI := cbIsAway2 f i j
+  IsLocalization.Away.lift_comp _ _
+
+/-- The same comparison from the *other* chart's presentation: `(R_{f j})_{f i} →+* R_{f i · f j}`.
+A separate declaration rather than `cbNu f j i`, whose target is `R_{f j · f i}` — a different type
+even though the two elements are equal. -/
+private def cbNu' (i j : ι) : cbT f j i →+* Localization.Away (f i * f j) :=
+  haveI := cbAwayCongr (A := cbT f j i) (p := f j * f i) (q := f i * f j) (mul_comm _ _)
+    (cbIsAway2 f j i)
+  IsLocalization.Away.lift (S := cbT f j i) (f i * f j)
+    (IsLocalization.Away.algebraMap_isUnit (S := Localization.Away (f i * f j)) (f i * f j))
+
+private theorem cbNu'_comp (i j : ι) :
+    (cbNu' f i j).comp (algebraMap R (cbT f j i)) =
+      algebraMap R (Localization.Away (f i * f j)) :=
+  haveI := cbAwayCongr (A := cbT f j i) (p := f j * f i) (q := f i * f j) (mul_comm _ _)
+    (cbIsAway2 f j i)
+  IsLocalization.Away.lift_comp _ _
+
+private theorem cbNu_ideal (i j : ι) :
+    ((cbK I f i).map (algebraMap (cbS f i) (cbT f i j))).map (cbNu f i j) ≤
+      I.map (algebraMap R (Localization.Away (f i * f j))) :=
+  le_of_eq (by rw [← cbIdeal_eq I f i (cbg f i j), Ideal.map_map, cbNu_comp])
+
+private theorem cbNu'_ideal (i j : ι) :
+    ((cbK I f j).map (algebraMap (cbS f j) (cbT f j i))).map (cbNu' f i j) ≤
+      I.map (algebraMap R (Localization.Away (f i * f j))) :=
+  le_of_eq (by rw [← cbIdeal_eq I f j (cbg f j i), Ideal.map_map, cbNu'_comp])
+
+/-- The double overlap in its base-ring presentation, `Spf (R_{f i · f j})^`. -/
+private abbrev cbA (i j : ι) : LocallyRingedSpace.{u} :=
+  (formalCompletion (Localization.Away (f i * f j))
+    (I.map (algebraMap R (Localization.Away (f i * f j)))) (hI.map _)).toLocallyRingedSpace
+
+/-- The comparison morphism `Spf (R_{f i · f j})^ ⟶ Spf ((R_{f i})_{f j})^`. -/
+private def cbNu_map (i j : ι) : cbA I hI f i j ⟶ cbV I hI f i j :=
+  (formalCompletion.map ((hI.map _).map _) (hI.map _) (cbNu f i j) (cbNu_ideal I f i j)).toLRSHom
+
+/-- The comparison morphism `Spf (R_{f i · f j})^ ⟶ Spf ((R_{f j})_{f i})^`. -/
+private def cbNu'_map (i j : ι) : cbA I hI f i j ⟶ cbV I hI f j i :=
+  (formalCompletion.map ((hI.map _).map _) (hI.map _) (cbNu' f i j) (cbNu'_ideal I f i j)).toLRSHom
+
+private theorem cbNu_map_comp (i j : ι) :
+    cbNu_map I hI f i j ≫ cbV_toW I hI f i j =
+      (formalCompletion.basicOpenImmersion I hI (f i * f j)).toLRSHom := by
+  rw [cbV_toW_eq, formalCompletion.basicOpenImmersion_eq_map I hI (f i * f j)]
+  exact congrArg FormalScheme.Hom.toLRSHom
+    (cbMapOverR I hI ((hI.map _).map _) (hI.map _)
+      (le_of_eq (cbIdeal_eq I f i (cbg f i j))) (le_of_eq rfl)
+      (cbNu f i j) (cbNu_ideal I f i j) (cbNu_comp f i j))
+
+private theorem cbNu'_map_comp (i j : ι) :
+    cbNu'_map I hI f i j ≫ cbV_toW I hI f j i =
+      (formalCompletion.basicOpenImmersion I hI (f i * f j)).toLRSHom := by
+  rw [cbV_toW_eq, formalCompletion.basicOpenImmersion_eq_map I hI (f i * f j)]
+  exact congrArg FormalScheme.Hom.toLRSHom
+    (cbMapOverR I hI ((hI.map _).map _) (hI.map _)
+      (le_of_eq (cbIdeal_eq I f j (cbg f j i))) (le_of_eq rfl)
+      (cbNu' f i j) (cbNu'_ideal I f i j) (cbNu'_comp f i j))
+
+/-- The transition of the glue datum is the comparison of the two chart-ring presentations. -/
+private theorem cbNu_map_comp_cbT_map (i j : ι) :
+    cbNu_map I hI f i j ≫ cbT_map I hI f i j = cbNu'_map I hI f i j := by
+  rw [← cancel_mono (cbV_toW I hI f j i), Category.assoc, cbT_map_comp, cbNu_map_comp,
+    cbNu'_map_comp]
+
+
+/-! ### The fibre-product projections are the glue maps -/
+
+private theorem cbOverlap_fst (i j : ι) :
+    (formalCompletion.basicOpenOverlapIso I hI (f i) (f j)).hom ≫
+        pullback.fst (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom
+          (formalCompletion.basicOpenImmersion I hI (f j)).toLRSHom =
+      cbNu_map I hI f i j ≫ cbFf I hI f i j := by
+  rw [← cancel_mono (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom,
+    Category.assoc, Category.assoc, formalCompletion.basicOpenOverlapIso_hom_fst_comp]
+  exact (cbNu_map_comp I hI f i j).symm
+
+private theorem cbOverlap_snd (i j : ι) :
+    (formalCompletion.basicOpenOverlapIso I hI (f i) (f j)).hom ≫
+        pullback.snd (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom
+          (formalCompletion.basicOpenImmersion I hI (f j)).toLRSHom =
+      cbNu'_map I hI f i j ≫ cbFf I hI f j i := by
+  rw [← cancel_mono (formalCompletion.basicOpenImmersion I hI (f j)).toLRSHom,
+    Category.assoc, Category.assoc, formalCompletion.basicOpenOverlapIso_hom_snd_comp]
+  exact (cbNu'_map_comp I hI f i j).symm
+
+private theorem cbGlueι (i j : ι) (hij : i ≠ j) :
+    cbFf I hI f i j ≫ completionBasicOpenι I hI f i =
+      cbT_map I hI f i j ≫ cbFf I hI f j i ≫ completionBasicOpenι I hI f j := by
+  have h := ((completionBasicOpenLRSGlueData I hI f).toGlueData.glue_condition i j).symm
+  simp only [completionBasicOpenLRSGlueData, CategoryTheory.GlueData.ofGlueData',
+    CategoryTheory.GlueData'.f', completionBasicOpenGlueData', dif_neg hij,
+    dif_neg (Ne.symm hij), Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp] at h
+  exact (cancel_epi _).mp h
+
+
+/-! ### The comparison is an isomorphism
+
+Under the covering hypothesis the glued object *is* `formalCompletion R I`. The route is not a
+`LocallyRingedSpace`-level replication of Mathlib's `Scheme.OpenCover.fromGlued` chain: that chain
+is already on this tree, at exactly this generality, in
+`FormalSchemes/OpenCoverGlueMorphisms.lean` (`FormalScheme.OpenCover.fromGlued`, and the
+`IsIso` instance for it). What is built here is the inverse morphism, by gluing the chart
+inclusions `completionBasicOpenι` along the basic-open cover of `Spf R^`; the two round trips are
+then `Multicoequalizer.hom_ext` on one side and `OpenCover.hom_ext` on the other.
+-/
+
+/-- **The chart inclusions into the glued object agree on the fibre-product overlaps.** This is the
+descent datum that `FormalScheme.OpenCover.glueMorphisms` consumes. Off the diagonal it is the
+glue condition of `completionBasicOpenGlueData'`, transported along the identification of the
+overlap's two presentations; on the diagonal the two projections of the fibre product of a
+monomorphism with itself agree, so there is nothing to prove. -/
+theorem completionBasicOpenι_pullback_comp (i j : ι) :
+    pullback.fst (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom
+          (formalCompletion.basicOpenImmersion I hI (f j)).toLRSHom ≫
+        completionBasicOpenι I hI f i =
+      pullback.snd (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom
+          (formalCompletion.basicOpenImmersion I hI (f j)).toLRSHom ≫
+        completionBasicOpenι I hI f j := by
+  rcases eq_or_ne i j with rfl | hij
+  · rw [(cancel_mono (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom).mp
+      pullback.condition]
+  · rw [← cancel_epi (formalCompletion.basicOpenOverlapIso I hI (f i) (f j)).hom,
+      ← Category.assoc, ← Category.assoc, cbOverlap_fst, cbOverlap_snd, Category.assoc,
+      Category.assoc, cbGlueι I hI f i j hij, ← cbNu_map_comp_cbT_map, Category.assoc]
+
+/-- The images of the `f i` in the completion generate the unit ideal, if the `f i` do. -/
+private theorem cbSpanAway (hcov : Ideal.span (Set.range f) = ⊤) :
+    Ideal.span (Set.range fun i => AdicCompletion.awayPoint I (f i)) = ⊤ := by
+  rw [← Ideal.map_top (algebraMap R (AdicCompletion I R)), ← hcov, Ideal.map_span,
+    ← Set.range_comp]
+  rfl
+
+set_option linter.style.setOption false in
+-- The `covers` field compares a point of `(formalCompletion R I hI).toPresheafedSpace` with a
+-- point of `FormalSpectrum (idealOfDefinition I)`; the two are `rfl` but not at `instances`
+-- transparency, as `FormalSchemes/SpfBasicOpenCover.lean` records for the same field.
+set_option backward.isDefEq.respectTransparency false in
+/-- **The basic-open completions cover `Spf R^`** when the `f i` generate the unit ideal: the
+`i`-th piece is `Spf (R_{f i})^`, included by `formalCompletion.basicOpenImmersion`. -/
+def basicOpenCompletionCover (hcov : Ideal.span (Set.range f) = ⊤) :
+    FormalScheme.OpenCover (formalCompletion R I hI) where
+  J := ι
+  obj i := formalCompletion (cbS f i) (cbK I f i) (hI.map _)
+  map i := formalCompletion.basicOpenImmersion I hI (f i)
+  f x := (FormalSpectrum.exists_mem_basicOpen_of_span_eq_top _ _ (cbSpanAway I f hcov) x).choose
+  covers x :=
+    (formalCompletion.range_basicOpenImmersion I hI _).ge
+      (FormalSpectrum.exists_mem_basicOpen_of_span_eq_top _ _ (cbSpanAway I f hcov) x).choose_spec
+  isOpenImmersion _ := inferInstance
+
+@[simp]
+theorem basicOpenCompletionCover_cmap (hcov : Ideal.span (Set.range f) = ⊤) (i : ι) :
+    (basicOpenCompletionCover I hI f hcov).cmap i =
+      (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom :=
+  rfl
+
+
+/-- **The inverse of the comparison morphism.** The chart inclusions `completionBasicOpenι` agree
+on the fibre-product overlaps (`completionBasicOpenι_pullback_comp`), so they descend along the
+basic-open cover of `Spf R^` to a single morphism into the glued object. -/
+def completionFromCompletionBasicOpen (hcov : Ideal.span (Set.range f) = ⊤) :
+    cbW I hI ⟶ (completionBasicOpenGlued I hI f).toLocallyRingedSpace :=
+  (basicOpenCompletionCover I hI f hcov).glueMorphisms (completionBasicOpenι I hI f)
+    (completionBasicOpenι_pullback_comp I hI f)
+
+@[reassoc (attr := simp)]
+theorem basicOpenImmersion_comp_completionFrom (hcov : Ideal.span (Set.range f) = ⊤) (i : ι) :
+    (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom ≫
+        completionFromCompletionBasicOpen I hI f hcov = completionBasicOpenι I hI f i :=
+  (basicOpenCompletionCover I hI f hcov).map_glueMorphisms _ _ i
+
+theorem completionBasicOpenToCompletion_comp_from (hcov : Ideal.span (Set.range f) = ⊤) :
+    completionBasicOpenToCompletion I hI f ≫ completionFromCompletionBasicOpen I hI f hcov =
+      𝟙 (completionBasicOpenGlued I hI f).toLocallyRingedSpace := by
+  refine Multicoequalizer.hom_ext _ _ _ fun i => Eq.trans ?_ (Category.comp_id _).symm
+  exact (completionBasicOpenι_comp_toCompletion_assoc I hI f i _).trans
+    (basicOpenImmersion_comp_completionFrom I hI f hcov i)
+
+theorem completionFrom_comp_toCompletion (hcov : Ideal.span (Set.range f) = ⊤) :
+    completionFromCompletionBasicOpen I hI f hcov ≫ completionBasicOpenToCompletion I hI f =
+      𝟙 (cbW I hI) := by
+  refine (basicOpenCompletionCover I hI f hcov).hom_ext _ _
+    fun i => Eq.trans ?_ (Category.comp_id _).symm
+  exact (basicOpenImmersion_comp_completionFrom_assoc I hI f hcov i _).trans
+    (completionBasicOpenι_comp_toCompletion I hI f i)
+
+/-- **The glued basic-open completion is `formalCompletion R I`** (EGA I, 10.8): when the `f i`
+generate the unit ideal, the canonical comparison is an isomorphism. This is the correctness check
+on the cocycle: gluing the completions of the basic opens of one affine re-presents the completion
+of that affine and nothing else. -/
+theorem isIso_completionBasicOpenToCompletion (hcov : Ideal.span (Set.range f) = ⊤) :
+    IsIso (completionBasicOpenToCompletion I hI f) :=
+  ⟨completionFromCompletionBasicOpen I hI f hcov,
+    completionBasicOpenToCompletion_comp_from I hI f hcov,
+    completionFrom_comp_toCompletion I hI f hcov⟩
+
+/-- **The isomorphism of formal schemes** `completionBasicOpenGlued ≅ formalCompletion R I`.
+`FormalScheme.forgetToLocallyRingedSpace` is fully faithful, so this is
+`isIso_completionBasicOpenToCompletion` repackaged; it is stated because a consumer wants the
+formal-scheme isomorphism, not an `IsIso` on underlying spaces. -/
+def completionBasicOpenGluedIso (hcov : Ideal.span (Set.range f) = ⊤) :
+    completionBasicOpenGlued I hI f ≅ formalCompletion R I hI where
+  hom := FormalScheme.Hom.mk (completionBasicOpenToCompletion I hI f)
+  inv := FormalScheme.Hom.mk (completionFromCompletionBasicOpen I hI f hcov)
+  hom_inv_id := FormalScheme.Hom.ext' (completionBasicOpenToCompletion_comp_from I hI f hcov)
+  inv_hom_id := FormalScheme.Hom.ext' (completionFrom_comp_toCompletion I hI f hcov)
+
+/-- **The isomorphism is compatible with the charts**: on the `i`-th patch it is the basic-open
+completion immersion. Without this the isomorphism above would say only that the two objects are
+abstractly isomorphic. -/
+@[simp]
+theorem completionBasicOpenι_comp_gluedIso (hcov : Ideal.span (Set.range f) = ⊤) (i : ι) :
+    completionBasicOpenι I hI f i ≫ (completionBasicOpenGluedIso I hI f hcov).hom.toLRSHom =
+      (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom :=
+  completionBasicOpenι_comp_toCompletion I hI f i
+
+/-- The inverse of the isomorphism restricted to the `i`-th basic open is the `i`-th chart. -/
+@[simp]
+theorem basicOpenImmersion_comp_gluedIso_inv (hcov : Ideal.span (Set.range f) = ⊤) (i : ι) :
+    (formalCompletion.basicOpenImmersion I hI (f i)).toLRSHom ≫
+        (completionBasicOpenGluedIso I hI f hcov).inv.toLRSHom =
+      completionBasicOpenι I hI f i :=
+  basicOpenImmersion_comp_completionFrom I hI f hcov i
 
 end AlgebraicGeometry
 
