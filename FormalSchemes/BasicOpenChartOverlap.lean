@@ -40,10 +40,10 @@ needs — and that is how every non-vacuous `xt'` on this tree is in fact built.
 `awayCompletionTransition σ`, and `(basicOpenChartOverlapIso (I·A_j) (g j k) (g j i)).hom`; the
 smart constructor `AffineChartedFibreDatumX.ofAlgebraData` feeds it to the datum's `xt'` field.
 Two datum values on master have a pairwise distinct triple of indices and so reach it with real
-content: `ThreeChartDatum.datumX` and `ThreeChartCoverDatum.datumX`, both on `ULift (Fin 3)` — the
-second being a single `Spf A` covered by three basic opens, which is exactly this file's situation.
-That `xt'` is genuinely `xAlgDataT'` rather than `False.elim` there is the theorem
-`ThreeChartDatum.datumX_xt'_eq`.
+content: `ThreeChart.datumX` (`FormalSchemes/ThreeChartDatum.lean`) and `ThreeChartCover.datumX`
+(`FormalSchemes/ThreeChartCoverDatum.lean`), both on `ULift (Fin 3)` — the second being a single
+`Spf A` covered by three basic opens, which is exactly this file's situation. That `xt'` is
+genuinely `xAlgDataT'` rather than `False.elim` there is the theorem `ThreeChart.datumX_xt'_eq`.
 
 ## References
 
