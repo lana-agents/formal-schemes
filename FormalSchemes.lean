@@ -1,5 +1,9 @@
 import FormalSchemes.ActionQuotient
+import FormalSchemes.ActionQuotientCarrier
 import FormalSchemes.ActionQuotientColimit
+import FormalSchemes.ActionQuotientFunctor
+import FormalSchemes.ActionQuotientTop
+import FormalSchemes.ActionQuotientType
 import FormalSchemes.AdicCompletionAwayTrans
 import FormalSchemes.AdicCompletionCongrIdealAlg
 import FormalSchemes.AdicCompletionCongrLevel
