@@ -1,6 +1,7 @@
 import FormalSchemes.ActionDiscontinuous
 import FormalSchemes.ActionInvariantExtension
 import FormalSchemes.ActionQuotient
+import FormalSchemes.ActionQuotientChartAt
 import FormalSchemes.ActionQuotientCarrier
 import FormalSchemes.ActionQuotientColimit
 import FormalSchemes.ActionQuotientFormalScheme
