@@ -6,14 +6,14 @@ import FormalSchemes.TateInvPeriodNodePoint
 set_option linter.style.header false
 
 /-!
-# Charts of `T_inv/⟨σ⟩`, and the single orbit that is left
+# Charts of `T_inv/⟨σ⟩`, and the node locus that is left
 
 `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`
 (`FormalSchemes.TateInvPeriodNodePoint`) closes `LocallyRingedSpace.freeActionQuotientFormalScheme`
 as a route to the period-`q` quotient `T_inv/⟨σ⟩`. Closing a *sufficient* criterion is not a
 negative answer, and this file measures how much of the question survives it.
 
-The answer is: one orbit. Combining
+The answer is: the node locus of a single patch. Combining
 
 * `tateInvOverlap_isProperlyDiscontinuousOn` (`FormalSchemes.TateInvOverlapDiscontinuous`) — the
   overlap `W_i = U_i ∩ U_{i+1}` separates `σ`, and

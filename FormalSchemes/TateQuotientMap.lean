@@ -51,9 +51,10 @@ project has twice lost weeks to a prescribed route that was mathematically false
   branches through it are exchanged by `σ` and each lies in every neighbourhood of the node. So the
   `σ²` choice is not explained by `GlueData'` — that account is stale, the criterion needs no glue
   datum — but by the geometry of the special fibre. **Whether `T_inv/⟨σ⟩` is a formal scheme is
-  still open, but it is now open at exactly one orbit**: the criterion is sufficient, not
-  necessary, and nothing proved here is a negative statement about the quotient itself. What has
-  been measured since is that the failure is concentrated at the nodes and nowhere else —
+  still open, but it is now open only at the node locus of a single patch**: the criterion is
+  sufficient, not necessary, and nothing proved here is a negative statement about the quotient
+  itself. What has been measured since is that the failure is concentrated at the nodes and
+  nowhere else —
   `AlgebraicGeometry.tateInvOverlap_isProperlyDiscontinuousOn`
   (`FormalSchemes.TateInvOverlapDiscontinuous`) shows the *overlap* `U_n ∩ U_{n+1}` does separate
   `σ`, even though no neighbourhood of a node does, and
