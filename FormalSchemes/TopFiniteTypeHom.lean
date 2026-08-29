@@ -15,11 +15,19 @@ form a neighbourhood basis, so it does not depend on the covers it was born with
 
 EGA's condition is "an affine cover `{V_i}` of `Y`, and for each `i` an affine cover of
 `f⁻¹(V_i)` by `Spf` of algebras of finite type over `V_i`". The preimage never has to be *formed*:
-the condition is equivalent to the preimage-free "a cover `𝒰` of `X` each of whose charts
-factors through some chart of `Y`", and a factorisation is a composite. So
-`IsTopFiniteTypeHom` needs only `FormalScheme.OpenCover` and `Category.comp`, and in particular
-none of the fibre-product layer that `FormalSchemes.RelativeTopFiniteType`'s "remaining follow-up"
-paragraph anticipated.
+what is taken as the definition here is the preimage-free "a cover `𝒰` of `X` each of whose charts
+factors through some chart of `Y`", and a factorisation is a composite. So `IsTopFiniteTypeHom`
+needs only `FormalScheme.OpenCover` and `Category.comp`, and in particular none of the
+fibre-product layer that `FormalSchemes.RelativeTopFiniteType`'s "remaining follow-up" paragraph
+anticipated.
+
+**Only one direction of that rephrasing is free**, and the docstring should not claim more than
+the file proves. EGA's form gives this one immediately: take the union over `i` of the affine
+covers of `f⁻¹(V_i)`. The converse — from a chart of `X` lying over `V_{i(j)}`, produce an affine
+neighbourhood of a point of `f⁻¹(V_i)` that is tf-type over `V_i` — needs a neighbourhood basic in
+`V_i` and in `V_{i(j)}` at once, which is exactly the absent lemma recorded under "What is *not*
+proved" below. So the two forms are not proved equivalent on this tree, and the same gap blocks
+that equivalence and the composition law.
 
 `FormalScheme.OpenCover` (`FormalSchemes.OpenCover`) is index-type-polymorphic with a per-index
 `obj`, so the charts of `𝒱` may sit over *different* base rings; the base ring is quantified
@@ -84,10 +92,13 @@ of the first.
   refinement below runs on), `FormalSpectrum.range_basicOpenChart_base_inter`
   (`FormalSchemes.BasicOpenChartOverlap`: two basic opens *of the same* `Spf` meet in a third), and
   `FormalSpectrum.exists_basicOpen_le_map_commonBase`
-  (`FormalSchemes.ThickeningBasicOpenRefinement`). The two-chart statement is absent:
-  `git grep -nE "affine_inter|affineInter" -- FormalSchemes/` and
-  `git grep -nE "basicOpen_basicOpen" -- FormalSchemes/` both return rc=1, the latter being the
-  name of Mathlib's own key ingredient `basicOpen_basicOpen_is_basicOpen`.
+  (`FormalSchemes.ThickeningBasicOpenRefinement`). The two-chart statement is absent: with
+  `E=':!FormalSchemes/TopFiniteTypeHom.lean'`, both
+  `git grep -nE "affine_inter|affineInter" -- FormalSchemes/ "$E"` and
+  `git grep -nE "basicOpen_basicOpen" -- FormalSchemes/ "$E"` return rc=1, the second pattern
+  being the name of Mathlib's own key ingredient `basicOpen_basicOpen_is_basicOpen`. The
+  pathspec exclusion is not cosmetic: without it both patterns match this very paragraph, so the
+  greps as first written stopped reproducing the moment the file landed.
 * **Conservativity**, i.e. that at `Y = FormalScheme.Spf I` the general notion implies the
   base-affine one. Unchanged by this file: it needs an *arbitrary* affine open of `Spf I` to be
   tf-type over `(R, I)`, of which the tree has only the basic-open case
