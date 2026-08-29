@@ -303,6 +303,7 @@ import FormalSchemes.TateGraphCodiagonalXLift
 import FormalSchemes.TateInvOverlapDiscontinuous
 import FormalSchemes.TateInvPeriodNodePoint
 import FormalSchemes.TateInvPeriodNotDiscontinuous
+import FormalSchemes.TateInvPeriodQuotientCharts
 import FormalSchemes.TateLocallyFG
 import FormalSchemes.TateMixedChartDescent
 import FormalSchemes.TateOverlap
