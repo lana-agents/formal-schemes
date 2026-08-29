@@ -62,8 +62,8 @@ sheaf-theoretic transport available at all, and once through
   `FormalSpectrum.ringedSpaceBasicOpen_eq`: `FormalSpectrum.basicOpen` *is* the
   `RingedSpace.basicOpen` of the corresponding global section. This is the bridge that lets
   Mathlib's `RingedSpace`/`LocallyRingedSpace` basic-open API act on `Spf`.
-* `FormalSpectrum.range_basicOpenChart_comp`: the range of a refined chart is the image of the
-  basic open.
+* `FormalSpectrum.range_basicOpenChart_comp`, `FormalSpectrum.range_basicOpenChart_one_comp`: the
+  range of a refined chart is the image of the basic open, and refining at `1` changes nothing.
 * `FormalSpectrum.exists_basicOpenChart_le_affine_inter`: **the main result**, the range equality.
 * `FormalSpectrum.exists_basicOpenChart_inter_iso`: the same, packaged as an isomorphism *over*
   `X`, with both factorisations — the form a consumer wants.
@@ -89,9 +89,13 @@ sheaf-theoretic transport available at all, and once through
 * **Anything about the *sections* of the common refinement.** The output is a range equality and
   the isomorphism it induces; `A{1/g}^` and `A'{1/g'}^` are not identified as algebras, and
   neither `FormalSpectrum.awayCompletionNestedAlgEquiv` nor
-  `FormalSpectrum.awayCompletionAwayEquiv` is used —
+  `FormalSpectrum.awayCompletionAwayEquiv` is used. With
+  `E=':!FormalSchemes/TwoChartBasicOpen.lean'`,
   `git grep -nE "NestedAlgEquiv|awayCompletionAwayEquiv" -- FormalSchemes/TwoChartBasicOpen.lean
-  FormalSchemes/BasicOpenChartImage.lean` returns rc=1.
+  FormalSchemes/BasicOpenChartImage.lean "$E"` returns rc=1. The exclusion is needed because the
+  two sentences above name both identifiers, so without it the grep returns rc=0 matching only
+  this paragraph; it is there for no other reason, and in particular
+  `FormalSchemes/BasicOpenChartImage.lean` is *not* excluded.
 
 ## One measurement that changed the route
 
@@ -313,24 +317,37 @@ theorem exists_basicOpenChart_inter_iso {X : LocallyRingedSpace.{u}}
 ### Non-vacuity
 
 The hypotheses of the main theorem are satisfiable, in a degenerate and in a genuinely two-chart
-way. Both are theorems rather than probes: the second in particular is the situation of a two-chart
-cover such as `FormalSchemes/FormalLineTwoChartCover.lean`, whose two charts are basic-open charts
-of one `Spf` with *different* source rings.
+way. Both are theorems rather than probes, and both are *applications* of
+`exists_basicOpenChart_le_affine_inter` rather than restatements of it — a non-vacuity witness
+whose own conclusion is closed by `rfl` would establish nothing. The second is the situation of a
+two-chart cover such as `FormalSchemes/FormalLineTwoChartCover.lean`, whose two charts are
+basic-open charts of one `Spf` with *different* source rings.
 -/
 
-/-- **Non-vacuity, degenerate case.** When the two charts coincide, `g = g' = 1` already witnesses
-the conclusion of `exists_basicOpenChart_le_affine_inter`: the refined chart at `1` is the whole
-chart, so the two ranges are equal on the nose and contain every point of the range of `m`. -/
-theorem exists_basicOpenChart_le_affine_inter_self {X : LocallyRingedSpace.{u}} (hL : L.FG)
+/-- The refinement of a chart at `1` is the chart itself: `D(1) = ⊤`, so `Spf A{1/1}^ ⟶ Spf A ⟶ X`
+has the same range as `m`. This is what makes the degenerate case below degenerate. -/
+theorem range_basicOpenChart_one_comp {X : LocallyRingedSpace.{u}} (hL : L.FG)
+    (m : locallyRingedSpaceObj L ⟶ X) :
+    Set.range (basicOpenChart L 1 ≫ m).base = Set.range m.base := by
+  rw [range_basicOpenChart_comp hL m 1, basicOpen_one]
+  exact Set.image_univ
+
+/-- **Non-vacuity, degenerate case.** The main theorem applied to a chart and *itself*: all of its
+hypotheses are simultaneously satisfiable, at `m' = m`, and what it returns there is a genuine
+range equality between two refinements of the one chart. Note that this is an *instance* of
+`exists_basicOpenChart_le_affine_inter` rather than a restatement — the equality asserted has two
+distinct sides, `g` and `g'`, and is not closed by `rfl`.
+
+Nothing forces `g = g' = 1` here: the theorem chooses its own witnesses, and by
+`range_basicOpenChart_one_comp` the choice `g = g' = 1` would also do. -/
+theorem exists_basicOpenChart_le_affine_inter_self {X : LocallyRingedSpace.{u}}
+    [TopologicalSpace A] [IsAdicRing L] (hL : L.FG)
     (m : locallyRingedSpaceObj L ⟶ X) [LocallyRingedSpace.IsOpenImmersion m]
     (x : X) (hx : x ∈ Set.range m.base) :
-    ∃ g : A, Set.range (basicOpenChart L g ≫ m).base
-        = Set.range (basicOpenChart L g ≫ m).base ∧
-      x ∈ Set.range (basicOpenChart L g ≫ m).base := by
-  refine ⟨1, rfl, ?_⟩
-  rw [range_basicOpenChart_comp hL m 1, basicOpen_one]
-  obtain ⟨z, hz⟩ := hx
-  exact ⟨z, trivial, hz⟩
+    ∃ g g' : A, Set.range (basicOpenChart L g ≫ m).base
+        = Set.range (basicOpenChart L g' ≫ m).base ∧
+      x ∈ Set.range (basicOpenChart L g ≫ m).base :=
+  exists_basicOpenChart_le_affine_inter hL hL m m x hx hx
 
 /-- **Non-vacuity, two genuinely different charts.** Two basic-open charts `Spf A{1/t}^ ⟶ Spf A`
 and `Spf A{1/t'}^ ⟶ Spf A` of one formal spectrum are open immersions from formal spectra of
