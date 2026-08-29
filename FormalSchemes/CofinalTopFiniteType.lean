@@ -144,9 +144,10 @@ of its ideal of definition.** `AlgebraicGeometry.IsTopologicallyFiniteType.self`
 `k = 1`; the general case is `IsTopologicallyFiniteType.pow`, and the extension
 `Ideal.map (algebraMap R R)` collapses because the structural map is the identity.
 
-Note the namespace: the predicate and most of its API are root-level, but
-`AlgebraicGeometry.IsTopologicallyFiniteType.self` sits inside `AlgebraicGeometry`
-(`FormalSchemes.AwayTopFiniteType`), as do `IsTopologicallyFiniteType.structHom` and `.trans`. The
+Note the namespace: the predicate and most of its API are root-level — including
+`IsTopologicallyFiniteType.trans` (`FormalSchemes.TopFiniteTypeTrans`) and everything added here —
+but `AlgebraicGeometry.IsTopologicallyFiniteType.self` (`FormalSchemes.AwayTopFiniteType`) and
+`AlgebraicGeometry.IsTopologicallyFiniteType.structHom` sit inside `AlgebraicGeometry`. The
 qualifications in this file are therefore not uniform, and that is not a typo.
 
 An application rather than a restatement: the hypothesis mentions `I` and the conclusion mentions
