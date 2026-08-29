@@ -334,6 +334,7 @@ import FormalSchemes.TateTensorOverlapChartIsoBoth
 import FormalSchemes.TateTensorOverlapSummandAffine
 import FormalSchemes.TateTensorOverlapSummandAffineBoth
 import FormalSchemes.TateTopFiniteType
+import FormalSchemes.TateTopFiniteTypeHom
 import FormalSchemes.TateTopFiniteTypeTrans
 import FormalSchemes.TateTransition
 import FormalSchemes.TateTwoPatchCompact
@@ -363,6 +364,7 @@ import FormalSchemes.ThreeChartDatum
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
 import FormalSchemes.TopFiniteTypeBasis
+import FormalSchemes.TopFiniteTypeHom
 import FormalSchemes.TopFiniteTypeTrans
 import FormalSchemes.TwoAdicDegeneracy
 import FormalSchemes.TwoAdicWitness
