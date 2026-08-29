@@ -69,8 +69,8 @@ variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I) (hI : I.FG)
 
 set_option maxHeartbeats 1600000 in
--- The four-case unfolding of the glue datum `ofGlueData'` produces a large term; raise the budget,
--- exactly as `tateChainInv_glueMorphisms_compat` does.
+-- The four-case unfolding of `CategoryTheory.GlueData.ofGlueData'` gives a large term; raise the
+-- budget, exactly as `tateChainInv_glueMorphisms_compat` does.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The glue condition of the inversion-glued chain, read on the two charts.** For consecutive
 indices `j = i + 1`, the `x`-chart of the patch `U_i` and the `y`-chart of the patch `U_j` have the

@@ -33,24 +33,28 @@ project has twice lost weeks to a prescribed route that was mathematically false
   `U_{n+1}` along a `𝔾ₘ`; so each index contributes one `ℙ¹` and one node. `tateCurveGlueData'`
   glues `U₀` to `U₁` along **both** `D(x₀) ≅ D(y₁)` and `D(y₀) ≅ D(x₁)`, hence has two components
   and two nodes — the Néron **2-gon**, i.e. two shift-steps' worth of chain.
-* **The 1-gon is not expressible here — and it is now known to be unreachable, not merely
-  unpresentable.** `CategoryTheory.GlueData'` declares `V : ∀ i j, i ≠ j → C`, so a one-object glue
-  datum has no overlaps at all and its glued object is the patch itself. Two charts is the minimum,
-  and `T_inv/⟨σ⟩` therefore has no model in *that* framework. This file used to stop there, calling
-  it a statement about presentations rather than about existence, with the quotient locally ringed
+* **The 1-gon is not expressible here, and the one route past that is now closed too.**
+  `CategoryTheory.GlueData'` declares `V : ∀ i j, i ≠ j → C`, so a one-object glue datum has no
+  overlaps at all and its glued object is the patch itself. Two charts is the minimum, and
+  `T_inv/⟨σ⟩` therefore has no model in *that* framework. This file used to stop there, calling it
+  a statement about presentations rather than about existence, with the quotient locally ringed
   space existing as a coequalizer
   (`AlgebraicGeometry.LocallyRingedSpace.exists_isActionQuotient` in
-  `FormalSchemes.TateQuotientColimit`) and the formal-scheme question open. Both halves have since
-  been settled, in opposite directions.
+  `FormalSchemes.TateQuotientColimit`) and the formal-scheme question open. What has changed is
+  that the tree now has a *sufficient* criterion for that question,
   `AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme`
-  (`FormalSchemes.FreeActionQuotientFormalScheme`) makes the quotient a formal scheme with no glue
-  datum anywhere in sight — but only for a **free, properly discontinuous** action, and
+  (`FormalSchemes.FreeActionQuotientFormalScheme`), which makes the quotient a formal scheme with
+  no glue datum anywhere in sight — but only for a **free, properly discontinuous** action, and
   `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`
   (`FormalSchemes.TateInvPeriodNodePoint`) shows that `σ` is **not** one, whenever `I ≠ ⊤`: a node
   of the special fibre has no separating neighbourhood, because the generic points of the two
   branches through it are exchanged by `σ` and each lies in every neighbourhood of the node. So the
-  `σ²` presentation is forced by the geometry, not by `GlueData'`, and the period-`q` curve `E_q`
-  is a rigid-analytic object rather than a formal one.
+  `σ²` choice is not explained by `GlueData'` — that account is stale, the criterion needs no glue
+  datum — but by the geometry of the special fibre. **Whether `T_inv/⟨σ⟩` is a formal scheme is
+  still open**: the criterion is sufficient, not necessary, and nothing proved here is a negative
+  statement about the quotient itself. In the literature the period-`q` curve `E_q` is formed on
+  the rigid generic fibre (Bosch, §9; issue 70), which is evidence for a dead end on the formal
+  side, not a proof of one.
 
 The construction below confirms the count independently: `π` is invariant under `σ²`
 (`tateQuotientPi_isActionInvariant`) precisely because the parity of `n` is unchanged by

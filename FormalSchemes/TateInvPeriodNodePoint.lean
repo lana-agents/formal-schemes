@@ -68,21 +68,6 @@ universe u
 
 namespace AlgebraicGeometry
 
-/-- **`PrimeSpectrum` form of `FormalSpectrum.map_comp`**, stated over abstract rings: the comaps of
-two quotient maps compose to the comap of the quotient map of the composite. Kept abstract on
-purpose — instantiating it is a substitution, whereas proving it in place at the Tate completion
-types makes the kernel unfold `AdicCompletion.congrIdealₐ`. -/
-theorem PrimeSpectrum.comap_quotientMap_comp {A B C : Type u} [CommRing A] [CommRing B]
-    [CommRing C] {IA : Ideal A} {IB : Ideal B} {IC : Ideal C} (φ : A →+* B) (ψ : B →+* C)
-    (h1 : IA ≤ IB.comap φ) (h2 : IB ≤ IC.comap ψ) (h3 : IA ≤ IC.comap (ψ.comp φ))
-    (p : PrimeSpectrum (C ⧸ IC)) :
-    _root_.PrimeSpectrum.comap (Ideal.quotientMap IB φ h1)
-        (_root_.PrimeSpectrum.comap (Ideal.quotientMap IC ψ h2) p) =
-      _root_.PrimeSpectrum.comap (Ideal.quotientMap IC (ψ.comp φ) h3) p := by
-  rw [← _root_.PrimeSpectrum.comap_comp_apply]
-  congr 1
-  exact (Ideal.Quotient.ringHom_ext (RingHom.ext fun x => by simp [Ideal.quotientMap_mk])).symm
-
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R) (hI : I.FG)
 
 /-! ### The transported `y`-chart -/
@@ -551,12 +536,15 @@ theorem not_isFreeProperlyDiscontinuous_tateInvPeriodAction_of_prime :
           (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
           (annulusTransitionedChartY R I q hI) (annulusTransitionedChartY_le_comap R I q hI))
           (annulusOverlapGenericPoint R I q hI 𝔭 h𝔭) := by
+      -- `FormalSpectrum.map_comp` is stated over abstract rings, so instantiating it here is a
+      -- substitution and the kernel never revisits the Tate completion types; proving the same
+      -- identity in place would make it unfold `AdicCompletion.congrIdealₐ`.
       rw [annulusChartTransitionInvSpf_hom_eq]
-      exact PrimeSpectrum.comap_quotientMap_comp
+      exact (congrFun (FormalSpectrum.map_comp _ _ _
         (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q))
         (annulusChartTransitionInvAlg R I q hI).symm.toRingHom
         (le_comap_awayCompletionHom _ _) (annulusChartTransitionInvAlg_symm_le_comap R I q hI)
-        (annulusTransitionedChartY_le_comap R I q hI) _
+        (annulusTransitionedChartY_le_comap R I q hI)) _).symm
     rw [h]
     exact annulusTransitionedChartY_genericPoint_specializes R I q hI 𝔭 h𝔭 hq
 

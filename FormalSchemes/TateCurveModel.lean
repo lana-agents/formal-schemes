@@ -50,8 +50,8 @@ object was not a Tate curve at all, so the earlier naming was not right either �
 wrong. The construction is deliberately left as it is: re-parameterising by a square root of `q`
 would change the signature of every Tate declaration in the tree for no mathematical gain.
 
-**The `σ²` object is forced, not a shortcut.** One might expect the period-`q` model `T_inv/⟨σ⟩` to
-be available too, now that
+**The `σ²` object is what the quotient criterion reaches, and `σ` is not.** One might expect the
+period-`q` model `T_inv/⟨σ⟩` to be available too, now that
 `AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme` builds quotients with no glue
 datum at all. It is not: that theorem needs a **free, properly discontinuous** action, and
 `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`
@@ -60,7 +60,8 @@ special fibre has no separating neighbourhood: `σ` exchanges the two branches t
 branch's generic point lies in *every* neighbourhood of the node. The square action escapes this
 because `σ²` moves a patch clear of its neighbours
 (`AlgebraicGeometry.tateInvPeriodSq_isFreeProperlyDiscontinuous`). So `E_q` is not reachable as a
-formal model by this route at all; it lives on the rigid generic fibre.
+formal model *by this route*. Whether some other route reaches it is open — that criterion is
+sufficient, not necessary — and in the literature `E_q` is formed on the rigid generic fibre.
 
 Consequence for the quotient presentation (issue 224): `𝔈_q = T_inv/⟨σ²⟩`, so the acting map is
 `n ↦ tateInvShiftAut ^ (2 * n)`, **not** `tateInvPeriodAction`.
