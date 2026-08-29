@@ -16,6 +16,8 @@ underlying `Spf R` is intrinsic, EGA I, §10.3, in particular 10.3.6.
 
 ## Main results
 
+* `IsAdic.isTopologicalRing`: the ambient topology of an ideal of definition is a ring topology.
+  This is what discharges the `[IsTopologicalRing R]` instance argument of the next result.
 * `IsAdic.of_le_of_pow_le`: two cofinal ideals define the same adic topology — if `I` is an ideal
   of definition, `I ≤ J`, and some power `J ^ n ≤ I`, then `J` is again an ideal of definition.
   This is the elementary comparison underlying everything below.
@@ -41,6 +43,19 @@ open TopologicalSpace Topology
 variable {R : Type*} [CommRing R] [TopologicalSpace R] {I J : Ideal R}
 
 namespace IsAdic
+
+/-- **The ambient topology of an ideal of definition is a ring topology.** If the topology on `R`
+is the `I`-adic one (`IsAdic I`), then `R` is a topological ring — the `I`-adic topology is
+nonarchimedean, hence a ring topology.
+
+Stated here rather than downstream because `IsAdic.of_le_of_pow_le` below takes
+`[IsTopologicalRing R]` as an instance argument, so without this lemma the file's own main
+comparison theorem cannot be applied to a bare `IsAdic` hypothesis. -/
+theorem isTopologicalRing {R : Type*} [CommRing R] [inst : TopologicalSpace R]
+    {I : Ideal R} (hI : IsAdic I) : IsTopologicalRing R := by
+  have h : inst = I.adicTopology := hI
+  rw [h]
+  exact (Ideal.nonarchimedean I).toIsTopologicalRing
 
 /-- The topology underlying an ideal of definition is a linear topology. -/
 theorem isLinearTopology (hI : IsAdic I) : IsLinearTopology R R := by

@@ -35,7 +35,6 @@ The work is in exhibiting `K = I * J` as an ideal of definition (`IsAdicRing K`)
 
 * `IsHausdorff.of_le`, `IsPrecomplete.of_cofinal`: cofinality transfer of the adic-completeness
   components (general commutative-algebra lemmas; candidates for Mathlib / an earlier file).
-* `IsAdic.isTopologicalRing`: the ambient topology of an ideal of definition is a ring topology.
 * `FormalSpectrum.generalCofinalSpfIso`: the isomorphism `Spf_I R ≅ Spf_J R` for two arbitrary
   ideals of definition `I`, `J`.
 
@@ -83,15 +82,6 @@ theorem IsPrecomplete.of_cofinal {K I : Ideal R} (hKI : K ≤ I) {c : ℕ} (hc :
     exact h1.trans h2
 
 end CompletenessTransfer
-
-/-- **The ambient topology of an ideal of definition is a ring topology.** If the topology on `R`
-is the `I`-adic one (`IsAdic I`), then `R` is a topological ring — the `I`-adic topology is
-nonarchimedean, hence a ring topology. -/
-theorem IsAdic.isTopologicalRing {R : Type u} [CommRing R] [inst : TopologicalSpace R]
-    {I : Ideal R} (hI : IsAdic I) : IsTopologicalRing R := by
-  have h : inst = I.adicTopology := hI
-  rw [h]
-  exact (Ideal.nonarchimedean I).toIsTopologicalRing
 
 namespace FormalSpectrum
 
