@@ -42,6 +42,7 @@ import FormalSchemes.AnnulusNontrivial
 import FormalSchemes.AnnulusOverlapProper
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
+import FormalSchemes.AwayBaseChangeTopFiniteType
 import FormalSchemes.AwayCompletionAway
 import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.AwayCompletionInterchange
