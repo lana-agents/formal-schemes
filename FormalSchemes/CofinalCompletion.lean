@@ -26,6 +26,7 @@ definition of `R`, the ideals `I · R_f`, `J · R_f` are cofinal in `R_f`
   `AdicCompletion K S →+* AdicCompletion L S` induced by a containment `K ^ b ≤ L`, from
   the universal property of the completion applied to the factor maps
   `S ⧸ K ^ ((b + 1) * n) →+* S ⧸ L ^ n`.
+* `AdicCompletion.cofinalHom_of`: the comparison map fixes the structure map `AdicCompletion.of`.
 * `AdicCompletion.cofinalRingEquiv hb ha`: the ring isomorphism
   `AdicCompletion K S ≃+* AdicCompletion L S` for cofinal `K`, `L`.
 * `AdicCompletion.nonempty_cofinalRingEquiv_map`: two ideals of definition `I`, `J` of a
@@ -96,6 +97,18 @@ def cofinalHom (hb : K ^ b ≤ L) : AdicCompletion K S →+* AdicCompletion L S 
 theorem evalₐ_cofinalHom (hb : K ^ b ≤ L) (n : ℕ) (x : AdicCompletion K S) :
     evalₐ L n (cofinalHom hb x) = cofinalLevel hb n x :=
   evalₐ_liftRingHom L _ _ n x
+
+/-- **The cofinal comparison map fixes the completion structure map.** If `K ^ b ≤ L`, the induced
+map `cofinalHom hb : AdicCompletion K S →+* AdicCompletion L S` sends `of K S x` to `of L S x`:
+level by level both sides are the residue `Ideal.Quotient.mk (L ^ n) x`.
+
+Stated here, beside `cofinalHom` itself, rather than in a downstream naturality file: it is the
+statement that `cofinalHom` is a map *under* `S`, which is what makes it an algebra map over any
+base of `S` (`FormalSchemes.CofinalCompletionAlg`). -/
+theorem cofinalHom_of (hb : K ^ b ≤ L) (x : S) :
+    cofinalHom hb (of K S x) = of L S x := by
+  refine AdicCompletion.ext_evalₐ fun n => ?_
+  rw [evalₐ_cofinalHom, cofinalLevel_apply, evalₐ_of, Ideal.Quotient.factor_mk, evalₐ_of]
 
 /-- The two cofinal comparison maps for `K ^ b ≤ L` and `L ^ a ≤ K` are mutually inverse:
 composing them collapses, on each level, to an evaluation of the same completion via

@@ -84,12 +84,15 @@ import FormalSchemes.ClosedImmersionSubscheme
 import FormalSchemes.ClosedImmersionTargetLocal
 import FormalSchemes.CoequalizerSections
 import FormalSchemes.CofinalCompletion
+import FormalSchemes.CofinalCompletionAlg
 import FormalSchemes.CofinalCompletionFunctorial
+import FormalSchemes.CofinalIdeal
 import FormalSchemes.CofinalSheafComparison
 import FormalSchemes.CofinalSheafComparisonBasis
 import FormalSchemes.CofinalSheafComparisonGeneral
 import FormalSchemes.CofinalSheafComparisonIso
 import FormalSchemes.CofinalSheafComparisonNaturality
+import FormalSchemes.CofinalTopFiniteType
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
@@ -260,6 +263,7 @@ import FormalSchemes.SpfHomNonAffineWitness
 import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpfHomScheme
 import FormalSchemes.SpfHomSchemeNatural
+import FormalSchemes.SpfIsoIdealRecovery
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections

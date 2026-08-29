@@ -41,8 +41,6 @@ iterated localizations. Only the `f = 1`, i.e. `⊤ → D(g)`, case is settled h
 
 ## Main results
 
-* `AdicCompletion.cofinalHom_of`: the cofinal comparison map fixes the completion structure map
-  `AdicCompletion.of`.
 * `FormalSpectrum.cofinalHom_comp_awayCompletionHom`: the ring-level crux — `cofinalHom` intertwines
   the source and target completed-localization structure maps `awayCompletionHom I g`,
   `awayCompletionHom J g`.
@@ -59,19 +57,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry TopologicalSpace Opposite
 
 universe u
-
-namespace AdicCompletion
-
-/-- **The cofinal comparison map fixes the completion structure map.** If `K ^ b ≤ L`, the induced
-map `cofinalHom hb : AdicCompletion K S →+* AdicCompletion L S` sends `of K S x` to `of L S x`:
-level by level both sides are the residue `Ideal.Quotient.mk (L ^ n) x`. -/
-theorem cofinalHom_of {S : Type u} [CommRing S] {K L : Ideal S} {b : ℕ}
-    (hb : K ^ b ≤ L) (x : S) :
-    AdicCompletion.cofinalHom hb (AdicCompletion.of K S x) = AdicCompletion.of L S x := by
-  refine AdicCompletion.ext_evalₐ fun n => ?_
-  rw [evalₐ_cofinalHom, cofinalLevel_apply, evalₐ_of, Ideal.Quotient.factor_mk, evalₐ_of]
-
-end AdicCompletion
 
 namespace FormalSpectrum
 
