@@ -16,16 +16,23 @@ theory has the right hypotheses.
 
 This file answers it, **conditionally on one hypothesis and on nothing else**.
 
-## What is assumed, and it is not proved here
+## What is assumed here, and where it is discharged
 
 `TateStalkIsoHypothesis` below is the statement that over a separating open `U` of `T_inv` the
-stalk maps of `T_inv|_U ⟶ T_inv / ⟨σ²⟩` are isomorphisms. It is **an unproved hypothesis**, and
-every result below carries it as an explicit argument. Every statement Mathlib makes about the
-stalk maps of a locally ringed space coequalizer says they are *local homomorphisms* — that is
-what makes the coequalizer a locally ringed space at all — and none says they are isomorphisms;
+stalk maps of `T_inv|_U ⟶ T_inv / ⟨σ²⟩` are isomorphisms. It is a hypothesis **of this file** —
+every result below carries it as an explicit argument — and it is not proved here, because nothing
+Mathlib says about the stalk maps of a locally ringed space coequalizer gives it: those statements
+say the maps are *local homomorphisms*, which is what makes the coequalizer a locally ringed space
+at all, and none says they are isomorphisms;
 `AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.coequalizer_π_stalk_isLocalHom` is the
-representative one. Nothing here should be read as saying the Tate quotient is unconditionally
-recovered from the general criterion.
+representative one.
+
+It is a **theorem** one module further on: `AlgebraicGeometry.tateStalkIsoHypothesis`
+(`FormalSchemes.TateActionQuotientStalk`), an instance of the general stalk lemma
+`AlgebraicGeometry.LocallyRingedSpace.isIso_stalkMap_ofRestrict_comp`. So the unconditional forms
+of everything below exist — `AlgebraicGeometry.tateQuotientFormalScheme` and
+`AlgebraicGeometry.tateQuotientIsoTateCurveModel` — and a caller should reach for those rather
+than for the hypothesis-carrying versions here.
 
 ## What is proved
 

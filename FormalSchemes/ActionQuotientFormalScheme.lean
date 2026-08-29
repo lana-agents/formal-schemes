@@ -11,8 +11,10 @@ set_option linter.style.header false
 properly discontinuous action quotient is a local isomorphism": over a separating open `U`, the map
 `π.base` restricts to an open embedding. By
 `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.of_stalk_iso` the remaining half is that the
-stalk maps of `X.ofRestrict ≫ π` are isomorphisms, and that is a statement about the structure
-sheaf of a coequalizer which nothing on this tree or in Mathlib has.
+stalk maps of `X.ofRestrict ≫ π` are isomorphisms, a statement about the structure sheaf of a
+coequalizer that Mathlib does not have. On this tree it is now proved, in
+`FormalSchemes.ActionQuotientStalk` and `FormalSchemes.FreeActionQuotientFormalScheme`, which sit
+*above* this file and feed the theorems below.
 
 This file assembles **everything else**. It shows that the stalk half is the *only* thing left:
 given it, the quotient of a locally finitely-generated formal scheme by a free, properly
@@ -23,7 +25,8 @@ discontinuous action is a formal scheme, and the assembly is a dozen lines.
 Both forms are provided. `formalSchemeOfIsOpenImmersionRestrict` is the shape
 `LocallyRingedSpace.IsOpenImmersion.of_stalk_iso` produces and the shape the local criterion
 consumes; `formalSchemeOfStalkIso` takes the stalk hypothesis directly and calls `of_stalk_iso`
-itself, so a future proof of the stalk lemma plugs into it with nothing in between.
+itself, so the stalk lemma plugs into it with nothing in between — which is exactly how
+`AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme` consumes it.
 
 ## Where `LocallyFG` comes from, and that it is not removable
 
@@ -43,7 +46,7 @@ entry point, `FormalScheme.exists_affineChart_subset`, carries the same hypothes
 * `AlgebraicGeometry.LocallyRingedSpace.formalSchemeOfIsOpenImmersionRestrict`: the quotient is a
   formal scheme, given that the projection restricts to an open immersion over separating opens.
 * `AlgebraicGeometry.LocallyRingedSpace.formalSchemeOfStalkIso`: the same, phrased with the stalk
-  hypothesis, which is the one remaining unknown.
+  hypothesis, which `FormalSchemes.FreeActionQuotientFormalScheme` discharges.
 
 ## References
 

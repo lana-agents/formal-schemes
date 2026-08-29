@@ -33,9 +33,10 @@ were not, the generic quotient would be about a different object than the hand-b
 whole route would need restating. It is the orbit space, and **no** hypothesis on the action is
 used — not freeness, not proper discontinuity, not finiteness of a fundamental domain.
 
-What remains open is unchanged: those hypotheses have to enter when one asks for the *structure
-sheaf* of the quotient to be locally that of a formal scheme, i.e. for `actionQuotientπ` to be a
-local isomorphism onto its image. This file says nothing about that.
+Those hypotheses have to enter when one asks for the *structure sheaf* of the quotient to be
+locally that of a formal scheme, i.e. for `actionQuotientπ` to be a local isomorphism onto its
+image. This file says nothing about that; `FormalSchemes.ActionQuotientStalk` and
+`FormalSchemes.FreeActionQuotientFormalScheme` do.
 
 ## Main definitions
 

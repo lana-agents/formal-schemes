@@ -1,4 +1,5 @@
 import FormalSchemes.ActionDiscontinuous
+import FormalSchemes.ActionInvariantExtension
 import FormalSchemes.ActionQuotient
 import FormalSchemes.ActionQuotientCarrier
 import FormalSchemes.ActionQuotientColimit
@@ -6,8 +7,11 @@ import FormalSchemes.ActionQuotientFormalScheme
 import FormalSchemes.ActionQuotientFunctor
 import FormalSchemes.ActionQuotientInvariantSections
 import FormalSchemes.ActionQuotientSections
+import FormalSchemes.ActionQuotientSeparatingSections
+import FormalSchemes.ActionQuotientStalk
 import FormalSchemes.ActionQuotientTop
 import FormalSchemes.ActionQuotientType
+import FormalSchemes.ActionTranslates
 import FormalSchemes.AdicCompletionAwayTrans
 import FormalSchemes.AdicCompletionCongrIdealAlg
 import FormalSchemes.AdicCompletionCongrLevel
@@ -123,6 +127,7 @@ import FormalSchemes.CompletionTwoPatchToScheme
 import FormalSchemes.CoproductOpenImmersion
 import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.DiagonalPreimageGraph
+import FormalSchemes.DisjointGluing
 import FormalSchemes.EmptyLocallyRingedSpace
 import FormalSchemes.FormalGm
 import FormalSchemes.FormalGroupAlgebraHopf
@@ -131,6 +136,7 @@ import FormalSchemes.FormalLineWitness
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
 import FormalSchemes.FormalTorus
+import FormalSchemes.FreeActionQuotientFormalScheme
 import FormalSchemes.GeneralDiagonal
 import FormalSchemes.GeneralDiagonalUnconditional
 import FormalSchemes.GeneralDiagonalUnconditionalAdic
@@ -257,6 +263,7 @@ import FormalSchemes.TateAction
 import FormalSchemes.TateActionInv
 import FormalSchemes.TateActionQuotient
 import FormalSchemes.TateActionQuotientFormalScheme
+import FormalSchemes.TateActionQuotientStalk
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateAwaySplit
 import FormalSchemes.TateChainGlue

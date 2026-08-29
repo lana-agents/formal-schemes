@@ -37,11 +37,15 @@ coequalizer, compatibly with the two projections. Two consequences, in opposite 
 
 * the generic construction reproduces the object that was built patch by patch — the two agree, so
   the coequalizer is not some larger sheaf-theoretic artefact; and
-* conversely, this is the one case on the tree where the generic quotient of a formal scheme's
-  underlying locally ringed space **is** a formal scheme
-  (`AlgebraicGeometry.exists_formalScheme_iso_tateActionQuotient`). The general statement — a free,
-  properly discontinuous action has a formal-scheme quotient — is still open, and this is its
-  first instance.
+* conversely, this was the first case on the tree where the generic quotient of a formal scheme's
+  underlying locally ringed space was shown to **be** a formal scheme
+  (`AlgebraicGeometry.exists_formalScheme_iso_tateActionQuotient`), and at the time it was proved
+  here it was the only one. The general statement — a free, properly discontinuous action has a
+  formal-scheme quotient — is now a theorem,
+  `AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme` in
+  `FormalSchemes.FreeActionQuotientFormalScheme`, and
+  `AlgebraicGeometry.tateQuotientFormalScheme` (`FormalSchemes.TateActionQuotientStalk`) recovers
+  this case from it.
 
 ## Main results
 
