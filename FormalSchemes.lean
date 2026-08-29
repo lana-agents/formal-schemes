@@ -55,6 +55,7 @@ import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
 import FormalSchemes.BasicOpenChartComponent
+import FormalSchemes.BasicOpenChartImage
 import FormalSchemes.BasicOpenChartOverlap
 import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.BasicOpenCoverVanishing
@@ -375,6 +376,7 @@ import FormalSchemes.TopFiniteTypeHom
 import FormalSchemes.TopFiniteTypeTrans
 import FormalSchemes.TwoAdicDegeneracy
 import FormalSchemes.TwoAdicWitness
+import FormalSchemes.TwoChartBasicOpen
 import FormalSchemes.TwoPatchFibreProduct
 import FormalSchemes.TwoPatchFibreProductObject
 import FormalSchemes.TwoPatchFibreProductProjection
