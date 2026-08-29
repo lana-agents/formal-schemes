@@ -51,7 +51,6 @@ to `X|_U ⟶ X / G`, which is the shape `formalSchemeOfStalkIso` consumes.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.6.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
-* [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
 noncomputable section

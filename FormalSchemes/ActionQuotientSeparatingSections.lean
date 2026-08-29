@@ -23,7 +23,8 @@ That is the section-level form of "`π` is a local isomorphism", and taking the 
 
 * `CategoryTheory.quotientImage`: the image of `V` in the quotient, as an open.
 * `CategoryTheory.isInvariantSection_actionQuotientπ_c_app`: a pullback along `π` is invariant.
-* `CategoryTheory.bijective_restrict_actionQuotientπ_c_app`: the bijection.
+* `CategoryTheory.restrictPullback`: the map `u ↦ (π^* u)|_V`.
+* `CategoryTheory.bijective_restrictPullback`: it is a bijection.
 
 ## References
 

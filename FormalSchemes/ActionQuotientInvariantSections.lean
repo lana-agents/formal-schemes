@@ -65,12 +65,13 @@ agree.
 
 ## What this does not do
 
-It does not prove the stalk lemma. What remains of it is the *geometric* step and nothing else:
-over an open `U` on which the action is properly discontinuous, `π⁻¹ (π '' V')` is the disjoint
-union of the translates `(a g)(V')`, so an invariant section is freely determined by its
-restriction to `V'`, and the colimit over `V` of the invariant sections is `X`'s stalk. That is
-where `AlgebraicGeometry.LocallyRingedSpace.IsProperlyDiscontinuousOn` enters, and it is the only
-part of the argument that is not bookkeeping about comparison isomorphisms.
+It does not prove the stalk lemma. What it leaves is the *geometric* step and nothing else: over an
+open `U` on which the action is properly discontinuous, `π⁻¹ (π '' V')` is the disjoint union of
+the translates `(a g)(V')`, so an invariant section is freely determined by its restriction to
+`V'`, and the colimit over `V` of the invariant sections is `X`'s stalk. That is where
+`AlgebraicGeometry.LocallyRingedSpace.IsProperlyDiscontinuousOn` enters, and it is the only part of
+the argument that is not bookkeeping about comparison isomorphisms. That step is taken in
+`FormalSchemes.ActionInvariantExtension` and `FormalSchemes.ActionQuotientStalk`.
 
 ## References
 

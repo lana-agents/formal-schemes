@@ -34,8 +34,8 @@ downstream statement.
   group elements.
 * `AlgebraicGeometry.LocallyRingedSpace.disjoint_translate`: for `V ≤ U` with `U` separating, the
   translates `(a g)⁻¹ V` are pairwise disjoint.
-* `AlgebraicGeometry.LocallyRingedSpace.injOn_imageOpen`: `π.base` is a bijection from `V` onto
-  `π '' V`.
+* `AlgebraicGeometry.LocallyRingedSpace.bijOn_base_imageOpen`: `π.base` is a bijection from `V`
+  onto `π '' V`.
 
 ## References
 

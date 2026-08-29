@@ -38,7 +38,10 @@ identifies `𝔈_q` with the coequalizer built here.
 
 What that does **not** settle is whether the quotient is again a formal scheme. The coequalizer
 exists for every action, free or not; being a formal scheme is a separate statement about the
-projection being a local isomorphism, and nothing here proves it.
+projection being a local isomorphism, and nothing *here* proves it. It is proved, for free and
+properly discontinuous actions, in
+`FormalSchemes.FreeActionQuotientFormalScheme`
+(`AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme`).
 
 ## Main definitions
 

@@ -23,8 +23,11 @@ map and `V ↦ V ⊓ U` shrinks any neighbourhood into `U`.
 
 * `CategoryTheory.bijective_stalkMap_actionQuotientπ`, `isIso_stalkMap_actionQuotientπ`: the stalk
   maps of the coequalizer projection are isomorphisms over a separating open.
-* `CategoryTheory.isIso_stalkMap_of_isProperlyDiscontinuousOn`: the same for *any* projection
-  exhibiting the quotient, by transport along `IsActionQuotient.isoActionQuotient`.
+
+The transport to *any* projection exhibiting the quotient, along
+`CategoryTheory.IsActionQuotient.isoActionQuotient`, is one module further on:
+`AlgebraicGeometry.LocallyRingedSpace.isIso_stalkMap_of_isProperlyDiscontinuousOn` in
+`FormalSchemes.FreeActionQuotientFormalScheme`.
 
 ## References
 

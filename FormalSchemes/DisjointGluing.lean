@@ -26,10 +26,9 @@ given section on each piece with no compatibility to check.
   disjoint family of opens is compatible.
 * `TopCat.Sheaf.existsUnique_gluing_of_disjoint`, `existsUnique_gluing_of_disjoint'`: hence it has
   a unique gluing.
-* `TopCat.Sheaf.eq_of_locally_eq_of_disjoint`: the uniqueness half, in the form used downstream —
-  two sections over the supremum of a disjoint family agreeing on each piece are equal. (This one
-  needs no disjointness and is `TopCat.Sheaf.eq_of_locally_eq'`; it is restated here only so that
-  the two halves are found together.)
+The uniqueness half — two sections over the supremum of the family agreeing on each piece are
+equal — is *not* restated here: it needs no disjointness and is already
+`TopCat.Sheaf.eq_of_locally_eq'`, which downstream callers use directly.
 -/
 
 universe u v
