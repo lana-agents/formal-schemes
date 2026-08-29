@@ -79,7 +79,7 @@ variable {Q : LocallyRingedSpace.{u}} {π : (tateChainInv R I q hq hI).toLocally
 
 /-- **The quotient has an affine formal chart at the image of every overlap point.** The overlap
 `W_i` separates `σ` (`tateInvOverlap_isProperlyDiscontinuousOn`), and that is all the pointwise
-criterion needs; the chain is `LocallyFG` by `tateChainInv_locallyFG`. -/
+criterion needs; the chain is `FormalScheme.LocallyFG` by `tateChainInv_locallyFG`. -/
 theorem hasAffineChartAt_of_mem_tateInvOverlap
     (h : IsActionQuotient (tateInvPeriodAction R I q hq hI) π) {i : ULift.{u} ℤ}
     {x : (tateChainInv R I q hq hI).toLocallyRingedSpace}

@@ -61,7 +61,11 @@ branch's generic point lies in *every* neighbourhood of the node. The square act
 because `σ²` moves a patch clear of its neighbours
 (`AlgebraicGeometry.tateInvPeriodSq_isFreeProperlyDiscontinuous`). So `E_q` is not reachable as a
 formal model *by this route*. Whether some other route reaches it is open — that criterion is
-sufficient, not necessary — and in the literature `E_q` is formed on the rigid generic fibre.
+sufficient, not necessary — but the question is now localised:
+`AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChart`
+(`FormalSchemes.TateInvPeriodQuotientCharts`) makes `T_inv/⟨σ⟩` a formal scheme as soon as the
+images of a *single* patch's node locus carry affine charts, every other point of the quotient
+having one already. In the literature `E_q` is formed on the rigid generic fibre.
 
 Consequence for the quotient presentation (issue 224): `𝔈_q = T_inv/⟨σ²⟩`, so the acting map is
 `n ↦ tateInvShiftAut ^ (2 * n)`, **not** `tateInvPeriodAction`.

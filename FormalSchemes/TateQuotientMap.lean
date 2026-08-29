@@ -51,10 +51,18 @@ project has twice lost weeks to a prescribed route that was mathematically false
   branches through it are exchanged by `σ` and each lies in every neighbourhood of the node. So the
   `σ²` choice is not explained by `GlueData'` — that account is stale, the criterion needs no glue
   datum — but by the geometry of the special fibre. **Whether `T_inv/⟨σ⟩` is a formal scheme is
-  still open**: the criterion is sufficient, not necessary, and nothing proved here is a negative
-  statement about the quotient itself. In the literature the period-`q` curve `E_q` is formed on
-  the rigid generic fibre (Bosch, §9; issue 70), which is evidence for a dead end on the formal
-  side, not a proof of one.
+  still open, but it is now open at exactly one orbit**: the criterion is sufficient, not
+  necessary, and nothing proved here is a negative statement about the quotient itself. What has
+  been measured since is that the failure is concentrated at the nodes and nowhere else —
+  `AlgebraicGeometry.tateInvOverlap_isProperlyDiscontinuousOn`
+  (`FormalSchemes.TateInvOverlapDiscontinuous`) shows the *overlap* `U_n ∩ U_{n+1}` does separate
+  `σ`, even though no neighbourhood of a node does, and
+  `AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChart`
+  (`FormalSchemes.TateInvPeriodQuotientCharts`) turns that into affine charts of the quotient at
+  every point except the images of a single patch's node locus. In the literature the period-`q`
+  curve `E_q` is formed on the rigid generic fibre (Bosch, §9; issue 70); on the special fibre the
+  expected quotient is the Néron 1-gon, which is a scheme, so the one remaining hypothesis is
+  expected to hold — expected, not proved.
 
 The construction below confirms the count independently: `π` is invariant under `σ²`
 (`tateQuotientPi_isActionInvariant`) precisely because the parity of `n` is unchanged by
