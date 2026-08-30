@@ -321,6 +321,7 @@ import FormalSchemes.TateInvGlobalCoeff
 import FormalSchemes.TateInvGlobalNormalForm
 import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvGlobalSections
+import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
 import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartRing
