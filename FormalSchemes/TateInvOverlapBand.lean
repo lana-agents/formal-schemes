@@ -64,8 +64,10 @@ automatic, so the quantifier runs over `j - i = ±1` alone.
 
   Neither *morphism* mentions `T_inv` or its glue datum. The **open** they are read over,
   `AlgebraicGeometry.tateInvPatchSaturateOpens`, still does: it is defined as the preimage under
-  `ι ⟨0⟩` of a saturation inside the chain, and no chain-free description of it is on the tree. So
-  what is eliminated here is the glue datum from the two *legs*, not from the statement.
+  `ι ⟨0⟩` of a saturation inside the chain. So what is eliminated *here* is the glue datum from the
+  two *legs*, not from the statement. A chain-free description of that open is supplied separately
+  by `AlgebraicGeometry.tateInvPatchSaturateOpens_eq_tateInvChartSaturateOpens`
+  (`FormalSchemes.TateInvPatchSaturateCharts`); it does not change the definition.
 * `AlgebraicGeometry.exists_tateInvConstFamily_iff_adjacent` and
   `AlgebraicGeometry.exists_tateInvShiftAut_zpow_invariant_of_adjacent`: the two consequences of
   `FormalSchemes.TateInvNodeChartOverlap` restated over the reduced quantifier.
@@ -466,7 +468,10 @@ This answers, for the chain, the question `FormalSchemes.TateInvNodeChartOverlap
 *which two maps, and over which open* — and the answer names only `annulusOverlapChart`,
 `annulusOverlapChartY` and the `𝔾m`-inversion transition
 `annulusChartTransitionInvSpf`. Neither of the two morphisms mentions `T_inv` or its glue datum;
-the open they are read over, `tateInvPatchSaturateOpens`, is still defined through `ι ⟨0⟩`. -/
+the open they are read over, `tateInvPatchSaturateOpens`, is still *defined* through `ι ⟨0⟩` —
+though it is equal to a set built from the two charts alone, by
+`AlgebraicGeometry.tateInvPatchSaturateOpens_eq_tateInvChartSaturateOpens`
+(`FormalSchemes.TateInvPatchSaturateCharts`). -/
 theorem isTateInvOverlapCompatible_iff_charts (hS : IsOpen S)
     (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
       (op (tateInvPatchSaturateOpens hq hI hS))) :

@@ -321,6 +321,7 @@ import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeLocus
 import FormalSchemes.TateInvOverlapBand
 import FormalSchemes.TateInvOverlapDiscontinuous
+import FormalSchemes.TateInvPatchSaturateCharts
 import FormalSchemes.TateInvPeriodNodePoint
 import FormalSchemes.TateInvPeriodNotDiscontinuous
 import FormalSchemes.TateInvPeriodQuotientCharts
