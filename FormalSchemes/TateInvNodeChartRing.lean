@@ -353,11 +353,17 @@ theorem tateInvPatchSaturate_univ :
 
 include hq hI in
 omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
-/-- **The chart locus is a proper open of the model patch** whenever `Spf R` is nonempty, by
-`tateInvNodeLocus_nonempty` (`FormalSchemes.TateInvNodeLocus`). So the opens `S` this file's
-collapse is stated over are not all `Set.univ`, and
-`injective_c_app_tateInvSaturate` says something at `S` that
-`injective_globalSectionsToAnnulus` does not. -/
+/-- **The chart locus is a proper open of the model patch** whenever `Spf R` is nonempty. It is
+the complement form of `tateInvNodeLocus_nonempty` (`FormalSchemes.TateInvNodeLocus`), since
+`tateInvNodeLocus` is by definition `(tateInvChartLocus R I q)ᶜ`. So the opens `S` this file's
+collapse is stated over are not all `Set.univ`.
+
+That on its own does **not** separate `injective_c_app_tateInvSaturate` from
+`injective_globalSectionsToAnnulus`: for that the *image* `π '' tateInvSaturate S` would have to
+be a proper open of `Q` too, which does not follow from `S ≠ Set.univ` — the saturation of a
+proper open can meet every patch. At `S = tateInvChartLocus R I q` the tree already has it,
+`AlgebraicGeometry.exists_notMem_image_base_tateInvSaturate_chartLocus`
+(`FormalSchemes.TateInvNodeLocus`), under the same `I ≠ ⊤`. -/
 theorem tateInvChartLocus_ne_univ (hItop : I ≠ ⊤) :
     tateInvChartLocus R I q ≠ Set.univ := by
   obtain ⟨z, hz⟩ := tateInvNodeLocus_nonempty R I q hq hI hItop
