@@ -48,7 +48,9 @@ points and nowhere else.
 `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`
 (`FormalSchemes.TateInvPeriodNodePoint`) still stands in the way of the only route the tree has
 for producing one: `LocallyRingedSpace.hasAffineChartAt_of_isProperlyDiscontinuousOn` needs a
-separating open, and the shift has none at every point. In particular
+separating open, and that route is not available at every point — *some* point of the chain has no
+separating open neighbourhood, and the witness the proof of that theorem supplies is a node. In
+particular
 `bijOn_base_ι_tateInvNodeLocus` is **not** an open immersion statement and must not be read as
 one — it is a bijection of sets, promoted to a homeomorphism of spaces, with no claim about
 structure sheaves. The chart still has to come from invariant sections
@@ -271,9 +273,13 @@ theorem eq_of_base_ι_eq_of_mem_tateInvNodeLocus
 
 /-- **The projection is injective on the node locus of a patch**, the case `m = n` of
 `eq_of_base_ι_eq_of_mem_tateInvNodeLocus`. Note this is not an instance of
-`LocallyRingedSpace.injOn_base_of_isProperlyDiscontinuousOn`: the node locus is not a separating
-open, and by `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction` no
-neighbourhood of it is. -/
+`LocallyRingedSpace.injOn_base_of_isProperlyDiscontinuousOn`: the node locus is closed, not open,
+so it is not a separating open. And
+`AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction` is weaker than it may
+read — it negates a `∀`, so it says only that *some* point of the chain has no separating open
+neighbourhood — so it does not on its own rule out a separating neighbourhood of this set. The
+injectivity is proved directly from
+`eq_of_base_ι_eq_of_mem_tateInvNodeLocus` instead. -/
 theorem injOn_base_ι_tateInvNodeLocus
     (h : IsActionQuotient (tateInvPeriodAction R I q hq hI) π) (m : ULift.{u} ℤ) :
     Set.InjOn (fun z => π.base (((tateChainInvFormalGlueData R I q hq hI).ι m).base z))
