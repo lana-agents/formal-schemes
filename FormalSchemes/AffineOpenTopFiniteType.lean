@@ -51,9 +51,12 @@ cofinality**. It is not derivable on this tree, and it is not an oversight:
   cofinal, so it does not refute this form, and for an isomorphism the statement is a theorem,
   `FormalSpectrum.isCofinal_map_spfIsoRingEquiv` (`FormalSchemes.SpfIsoIdealRecovery`).
 * The tree has nothing of the shape "an open immersion of formal spectra is adic up to
-  cofinality":
-  `git grep -nE "IsCofinal.*globalSectionsMap|globalSectionsMap.*IsCofinal" -- FormalSchemes/`
-  returns `rc = 1`, measured on `2ec245a`, `rc` taken from a redirect rather than through a pipe.
+  cofinality", and two things that should not be mistaken for it:
+  `FormalSpectrum.isCofinal_map_spfIsoRingEquiv`, which is the statement for an *isomorphism* —
+  where the comparison is invisible on global sections — and
+  `FormalSpectrum.exists_algEquiv_isCofinal_of_iso_over` (`FormalSchemes.SpfIsoOverBase`), which
+  is that statement relativised over a base. Neither says anything about an immersion that is not
+  an isomorphism, and that gap is exactly the hypothesis above.
 
 So conservativity's residue is now exactly one statement about open immersions, with no algebra
 left in it. It is a statement about the structure sheaf of `Spf I` on an affine open — that the
