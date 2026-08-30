@@ -90,7 +90,9 @@ equality away and leaves an equation between the charts. The corresponding cance
 The two chart conditions are stated through `annulusChartTransitionInvSpf`, the
 `𝔾m`-inversion transition as a morphism of formal spectra. Reading them in the *coordinates* of
 `FormalSchemes.TateChartTransitionInvAlgEq` — which is what would decide whether the condition is
-a genuine restriction — is not done here.
+a genuine restriction — is not done here. It is done at `S = Set.univ` in
+`FormalSchemes.TateInvGlobalProperness`, where the condition **is** a genuine restriction as soon
+as `I ≠ ⊤`; at a general `S` it remains open.
 
 What *is* done elsewhere: `AlgebraicGeometry.tateInvChartAnnulusSubring`
 (`FormalSchemes.TateInvChartAnnulusRing`) packages the two conditions as an infimum of two

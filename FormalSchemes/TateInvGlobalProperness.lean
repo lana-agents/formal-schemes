@@ -16,10 +16,10 @@ coordinate `x`.
 
 ## The computation
 
-Read `A{1/x}` in `Ĝm` coordinates through `RestrictedLaurentSeries.overlapEquiv`
-(`FormalSchemes.TateOverlap`), which sends `x ↦ X` and `y ↦ q·X⁻¹`. The `𝔾m`-inversion transition
-`AlgebraicGeometry.annulusChartTransitionInvAlg` becomes `RestrictedLaurentSeries.rlsInv`,
-`X ↦ X⁻¹`. So on the coordinate `x`:
+Read `A{1/x}` in `Ĝm` coordinates through `overlapEquiv`
+(`FormalSchemes.TateOverlap`), which sends `x ↦ X` and `y ↦ q·X⁻¹`. The
+`𝔾m`-inversion transition `AlgebraicGeometry.annulusChartTransitionInvAlg`
+becomes `RestrictedLaurentSeries.rlsInv`, `X ↦ X⁻¹`. So on the coordinate `x`:
 
 * the `x`-chart leg reads as `X`;
 * the transition-then-`y`-chart leg reads as `rlsInv (q·X⁻¹) = q·X`.
@@ -27,6 +27,12 @@ Read `A{1/x}` in `Ĝm` coordinates through `RestrictedLaurentSeries.overlapEquiv
 That is `tateInvGlobalLegYX_overlapX`: **the two forward legs differ on `x` by exactly the Tate
 parameter**, `tateInvGlobalLegYX hI x = tateInvGlobalLegX (q·x)`. `tateInvGlobalLegXY_overlapY` is
 the mirror on `y`, read through the `y`-side coordinate `annulusOverlapEquivY`.
+
+**The names in this cluster are not uniformly namespaced.** `overlapEquiv`, `overlapX`,
+`overlapY`, `annulusFlip`, `annulusOverlapTransition`, `annulusOverlapInversion` and
+`overlapEquiv_annulusY` are at the **root** namespace; `annulusIdealOfDefinition`,
+`annulusChartTransitionInvAlg` and everything named `tateInvGlobal…` are under
+`AlgebraicGeometry`. Audit, do not assume.
 
 Since `X` is a unit, `tateInvGlobalLegX = tateInvGlobalLegYX` forces `q = 1` in `R{X, X⁻¹}` and
 hence, by `RestrictedLaurentSeries.algebraMap_injective`, in `R`. With `q ∈ I` that is `I = ⊤`.
@@ -39,14 +45,18 @@ hence, by `RestrictedLaurentSeries.algebraMap_injective`, in `R`. With `q ∈ I`
 * `AlgebraicGeometry.tateInvGlobalLegYX_overlapX` and
   `AlgebraicGeometry.tateInvGlobalLegXY_overlapY`: the two pairs of legs differ by `q` on the two
   coordinates.
-* `AlgebraicGeometry.eq_top_of_tateInvGlobalSubring_eq_top`: if the subring is all of `A` then
-  `I = ⊤`.
-* **`AlgebraicGeometry.tateInvGlobalSubring_ne_top`**: for `I ≠ ⊤` the subring is proper, and
-  `AlgebraicGeometry.exists_notMem_tateInvGlobalSubring` exhibits the coordinate `x` as an element
-  outside it.
+* `AlgebraicGeometry.eq_one_of_overlapX_mem_tateInvGlobalSubring`: if the coordinate `x` lies in
+  the subring then `q = 1`.
+* `AlgebraicGeometry.notMem_tateInvGlobalSubring_overlapX`: so for `I ≠ ⊤` the coordinate `x` is
+  **not** in it — an explicit element of `A` outside `Γ (T_inv/⟨σ⟩)`.
+* **`AlgebraicGeometry.tateInvGlobalSubring_ne_top`**: hence for `I ≠ ⊤` the subring is proper;
+  `AlgebraicGeometry.exists_notMem_tateInvGlobalSubring` is its existential form.
 * `AlgebraicGeometry.tateInvChartAnnulusSubring_univ_ne_top`: the same statement for
   `AlgebraicGeometry.tateInvChartAnnulusSubring` at `S = Set.univ`, i.e. **issue 1250's goal 2, in
   the affirmative, at the one `S` where it has an answer.**
+* `AlgebraicGeometry.tateInvGlobalSectionsRingEquiv_ne_overlapX`: no global section of the
+  quotient has `x` as its value, so the injection of
+  `AlgebraicGeometry.injective_globalSectionsToAnnulus` is not onto.
 
 ## What is *not* proved
 
@@ -172,7 +182,7 @@ theorem annulusChartOverlapAlgY_annulusChartTransitionInvAlg (hI : I.FG)
 /-! ### The coordinate swap and the inversion, on the structural maps -/
 
 /-- The inverse flip transition intertwines the two structural maps through the coordinate swap:
-`RingEquiv.symm_apply_eq` on `AlgebraicGeometry.annulusOverlapTransition_algebraMap_annulus`. -/
+`RingEquiv.symm_apply_eq` on `annulusOverlapTransition_algebraMap_annulus`. -/
 theorem annulusOverlapTransition_symm_algebraMap_annulus (hI : I.FG) (a : annulusAlgebra R I q) :
     (annulusOverlapTransition R I q hI).symm
         (algebraMap (annulusAlgebra R I q) (annulusOverlapY R I q) a) =
@@ -219,8 +229,8 @@ theorem overlapEquiv_algebraMap_annulusAlgebra (hI : I.FG) (r : R) :
     overlapEquiv_algebraMap_base]
 
 /-- The overlap isomorphism sends the structural image of the coordinate `y` to `q·X⁻¹`: the
-`overlapY` spelling of `AlgebraicGeometry.overlapEquiv_annulusY`, which is stated at
-`annulusMk (annulusY)`. The two are the same term, but `AlgebraicGeometry.overlapY` occurs inside
+`overlapY` spelling of `overlapEquiv_annulusY`, which is stated at
+`annulusMk (annulusY)`. The two are the same term, but `overlapY` occurs inside
 types below, so rewriting it is motive-incorrect and this restatement is what the rewrites need. -/
 theorem overlapEquiv_algebraMap_overlapY (hI : I.FG) :
     overlapEquiv R I q hI (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)
@@ -276,7 +286,7 @@ theorem tateInvGlobalLegYX_overlapX (hI : I.FG) :
 /-! ### The `y`-side coordinate, and the mirror on `y` -/
 
 /-- **The `y`-overlap in `Ĝm` coordinates**: the flip transition back to the `x`-overlap followed
-by `RestrictedLaurentSeries.overlapEquiv`. It sends the coordinate `y` to `X`. -/
+by `overlapEquiv`. It sends the coordinate `y` to `X`. -/
 def annulusOverlapEquivY (hI : I.FG) :
     annulusOverlapY R I q ≃+* RestrictedLaurentSeries R I :=
   (annulusOverlapTransition R I q hI).symm.trans (overlapEquiv R I q hI)
@@ -295,7 +305,7 @@ theorem annulusOverlapEquivY_algebraMap (hI : I.FG) (a : annulusAlgebra R I q) :
 
 /-- The `y`-side coordinate reads the `𝔾m`-inversion transition as
 `RestrictedLaurentSeries.rlsInv`, by
-`AlgebraicGeometry.annulusOverlapInversion_annulusOverlapInvX`. -/
+`annulusOverlapInversion_annulusOverlapInvX`. -/
 theorem annulusOverlapEquivY_annulusOverlapInversion (hI : I.FG) (z : annulusOverlap R I q) :
     annulusOverlapEquivY R I q hI (annulusOverlapInversion R I q hI z) =
       rlsInv R I hI (overlapEquiv R I q hI z) := by

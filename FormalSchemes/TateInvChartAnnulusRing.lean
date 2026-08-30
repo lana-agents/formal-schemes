@@ -52,17 +52,20 @@ are the two annulus overlap charts and the `𝔾m`-inversion transition.
 
 ## What is *not* proved
 
-**Whether the chart ring is proper at `S = Set.univ`.** `tateInvChartAnnulusSubring_eq_top_iff`
+**Whether the chart ring is proper at a general `S`.** `tateInvChartAnnulusSubring_eq_top_iff`
 reduces that question to the equality of two named ring homomorphisms, which is strictly better
 posed than `FormalSchemes.TateInvQuotientChartRing` left it — there the condition was an `⨅` over
 `ℤ × ℤ` and the legs were glue-datum morphisms — but it does not answer it. Answering it needs the
 four legs read in the coordinates of `FormalSchemes.TateChartTransitionInvAlgEq`, which is not
 done here. It **is** done at `S = Set.univ`, in `FormalSchemes.TateInvGlobalSections`, where the
 ambient open collapses to `⊤` and the four legs become `FormalSpectrum.awayCompletionHom` and
-`AlgebraicGeometry.annulusChartTransitionInvAlg`; that file does not decide properness either.
+`AlgebraicGeometry.annulusChartTransitionInvAlg`. **And there the answer is now known**:
+`AlgebraicGeometry.tateInvChartAnnulusSubring_univ_ne_top`
+(`FormalSchemes.TateInvGlobalProperness`) says the chart ring is proper at `S = Set.univ` whenever
+`I ≠ ⊤`, because the two forward legs differ on the coordinate `x` by the Tate parameter.
 `AlgebraicGeometry.isTateInvOverlapCompatible_one` and the membership of `0` are
 non-vacuity, not an answer; and `tateInvChartAnnulusSubring_empty_eq_top` shows the question has no
-`S`-free answer, so it must be asked at a named `S`.
+`S`-free answer, so it must be asked at a named `S` — at `S = ∅` the answer is the opposite one.
 
 **Nor whether the chart ring is larger than the base.** That is a *different* question —
 1223's goal 3 asks for an element of the chart ring outside the image of `Γ (Spf R, ·)`, which is
