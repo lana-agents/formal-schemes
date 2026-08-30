@@ -317,6 +317,7 @@ import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
 import FormalSchemes.TateInvChartAnnulusRing
+import FormalSchemes.TateInvGlobalCoeff
 import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvGlobalSections
 import FormalSchemes.TateInvNodeChartGlue
