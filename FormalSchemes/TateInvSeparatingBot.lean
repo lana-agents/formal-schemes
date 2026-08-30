@@ -19,10 +19,22 @@ non-vacuity.** This file removes that doubt, for the whole family `I = ⊥`, `q 
 IsTateInvCoordSeparating R ⊥ 0 Submodule.fg_bot
 ```
 
-with no further hypothesis — `IsAdicComplete (⊥ : Ideal R) R` is automatic, `(⊥ : Ideal R).FG`
-is `Submodule.fg_bot`, and `q = 0` is forced by `q ∈ ⊥`, so this is the *only* shape a discrete
-base can take and the whole of it is covered. `AlgebraicGeometry.isTateInvCoordSeparating_int` is
-the instance at `R = ℤ`, the tree's standing non-vacuity witness.
+with no further hypothesis — `IsAdicComplete (⊥ : Ideal R) R` is automatic and `(⊥ : Ideal R).FG`
+is `Submodule.fg_bot`. Nothing is lost by fixing `q = 0`: the cluster's standing hypothesis is
+`q ∈ I`, and `AlgebraicGeometry.eq_zero_of_mem_bot` says that forces `q = 0`, so the statement
+above covers **every** `(R, ⊥, q)` the chain is defined for.
+`AlgebraicGeometry.isTateInvCoordSeparating_int` is the instance at `R = ℤ`, the tree's standing
+non-vacuity witness.
+
+## Main results
+
+* `AlgebraicGeometry.bijective_polydiscOfBot` — the polydisc over a discrete base is the
+  polynomial ring.
+* `AlgebraicGeometry.coeff_tateInvBotCoordX`, `AlgebraicGeometry.coeff_tateInvBotCoordY` — a
+  coefficient of the image is a coefficient of the polynomial.
+* `AlgebraicGeometry.mem_span_X_mul_X_of_coord_eq_zero` — a polynomial killed by both maps is
+  divisible by `x·y`.
+* **`AlgebraicGeometry.isTateInvCoordSeparating_bot`**, **`…_int`** — the separation property.
 
 ## Why the discrete case is a genuine computation and not a degeneracy
 
@@ -35,11 +47,13 @@ two coordinate maps are the two evaluations
 φ ∘ flip⁻¹ :  x ↦ 0,  y ↦ X
 ```
 
-into `R{X, X⁻¹}`. Separation is then exactly the statement that a polynomial killed by both
-`y ↦ 0` and `x ↦ 0` lies in `(x·y)` — which is **false for the individual maps** and is the
-reason the hypothesis is stated jointly. `AlgebraicGeometry.not_injective_tateInvGlobalCoord_zero`
-already records that `φ` alone is not injective at `q = 0`, so this file is proving something
-that map cannot give.
+into `R{X, X⁻¹}`. Separation then follows from the statement that a polynomial killed by both
+`y ↦ 0` and `x ↦ 0` lies in `(x·y)`, which is what
+`AlgebraicGeometry.mem_span_X_mul_X_of_coord_eq_zero` proves. **The joint hypothesis is doing
+real work here**, and that is not a guess:
+`AlgebraicGeometry.not_injective_tateInvGlobalCoord_zero_int` states that
+`tateInvGlobalCoord ℤ ⊥ 0` is not injective, so at this very base no argument about the first
+map alone could reach the same conclusion.
 
 The proof reads a coefficient of the image off a coefficient of the polynomial
 (`AlgebraicGeometry.coeff_tateInvBotCoordX`, `AlgebraicGeometry.coeff_tateInvBotCoordY`), which
@@ -74,6 +88,14 @@ universe u
 namespace AlgebraicGeometry
 
 variable (R : Type u) [CommRing R]
+
+/-! ### The discrete base fixes the Tate parameter -/
+
+/-- **A discrete base forces `q = 0`.** The cluster's standing hypothesis on the Tate parameter
+is `q ∈ I`, so at `I = ⊥` there is exactly one parameter to consider and
+`AlgebraicGeometry.isTateInvCoordSeparating_bot` covers all of them. -/
+theorem eq_zero_of_mem_bot {q : R} (hq : q ∈ (⊥ : Ideal R)) : q = 0 :=
+  Ideal.mem_bot.mp hq
 
 /-! ### The polydisc over a discrete base is the polynomial ring -/
 
