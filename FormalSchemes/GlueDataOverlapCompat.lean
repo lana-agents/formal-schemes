@@ -246,8 +246,8 @@ property of `GlueData.ιSectionIso` used below.
 
 It is immediate from the definition — the `Iso` is a transport followed by the inverse of
 `(D.ι i).c.app`, so composing with that `c`-component again cancels — but the transport has to be
-recognised as `AlgebraicGeometry.LocallyRingedSpace.presheaf.map` of an `eqToHom` first, which is
-what the `hmap` step does. -/
+recognised as a `CategoryTheory.Functor.map` of an `eqToHom` first, which is what the `hmap` step
+does. -/
 theorem GlueData.c_app_ιSectionIso_hom (W : Opens (D.gluedFormalScheme).toLocallyRingedSpace)
     (i : D.toLocallyRingedSpaceGlueData.J)
     (x : (D.toLocallyRingedSpaceGlueData.U i).presheaf.obj
@@ -278,10 +278,12 @@ theorem GlueData.c_app_ιSectionIso_hom (W : Opens (D.gluedFormalScheme).toLocal
 (`AlgebraicGeometry.PresheafedSpace.c_app_map_eqToHom`). The three transports they leave behind are
 collapsed in one step by `presheaf_map_three_apply`.
 
-Every step is chained with `Eq.trans` and `congrArg` rather than `rw`: the glued space's presheaf
-appears here through `AlgebraicGeometry.FormalScheme.presheaf` and in the hypotheses through
-`AlgebraicGeometry.LocallyRingedSpace.presheaf`, which print identically and are definitionally
-equal but are not syntactically equal, so `rw` reports that it cannot find the pattern. -/
+Every step is chained with `Eq.trans` and `congrArg` rather than `rw`: the goal reaches the glued
+space's `AlgebraicGeometry.PresheafedSpace.presheaf` through
+`AlgebraicGeometry.FormalScheme.GlueData.gluedFormalScheme` and the hypotheses reach it through
+that formal scheme's underlying locally ringed space. The two spellings print identically and are
+definitionally equal but are not syntactically equal, so `rw` reports that it cannot find the
+pattern. -/
 theorem GlueData.c_app_f_comp_ι_restrict_left
     (W : Opens (D.gluedFormalScheme).toLocallyRingedSpace)
     (i j : D.toLocallyRingedSpaceGlueData.J)
