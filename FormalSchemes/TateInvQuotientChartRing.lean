@@ -59,10 +59,13 @@ patch it produces is named, not merely asserted to exist: `tateInvPatchSection`.
 
 ## What is *not* proved
 
-**The condition still quantifies over all pairs of indices.** Cutting `∀ i j` down to the diagonal
-and the adjacent pairs, and naming the two legs through `annulusOverlapChart`,
-`annulusOverlapChartY` and the `𝔾m`-inversion transition, is untouched here — see
-`FormalSchemes.TateInvNodeChartOverlap`'s "What is left", which is unaffected by this file.
+**The condition still quantifies over all pairs of indices, in this file's spelling of it.**
+Cutting `∀ i j` down to the diagonal and the adjacent pairs, and naming the two legs through
+`annulusOverlapChart`, `annulusOverlapChartY` and the `𝔾m`-inversion transition, is untouched
+here. It is done in `FormalSchemes.TateInvOverlapBand`, and
+`AlgebraicGeometry.tateInvChartSubring_eq_tateInvChartAnnulusSubring`
+(`FormalSchemes.TateInvChartAnnulusRing`) carries the result to the subring below: the same ring
+is an infimum of exactly **two** `RingHom.eqLocus`s, in which no glue-datum morphism occurs.
 
 **Nothing here says the quotient is a formal scheme.**
 `AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChart`
@@ -72,7 +75,10 @@ structure on this ring and an open immersion out of its formal spectrum. A ring 
 **No element of the subring is exhibited beyond `0` and `1`**, which are in it because it is a
 `Subring`. Whether it is strictly smaller than `Γ (Spf A, tateInvPatchSaturate S)` — equivalently,
 whether the overlap condition is a genuine restriction — is not decided here; the condition is at
-least not *definitionally* trivial, since it is not closed by `rfl`.
+least not *definitionally* trivial, since it is not closed by `rfl`. Nor is it an `S`-free
+question: `AlgebraicGeometry.tateInvChartAnnulusSubring_empty_eq_top`
+(`FormalSchemes.TateInvChartAnnulusRing`) shows the subring is everything at `S = ∅`, the ambient
+ring there being the zero ring.
 
 ## References
 

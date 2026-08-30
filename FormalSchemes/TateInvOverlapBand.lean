@@ -86,10 +86,15 @@ equality away and leaves an equation between the charts. The corresponding cance
 ## What is left
 
 The two chart conditions are stated through `annulusChartTransitionInvSpf`, the
-`𝔾m`-inversion transition as a morphism of formal spectra. Reading them as a statement about the
-*rings* — the equalizer description of `Γ (T_inv/⟨σ⟩, π V)` that issue 1223's goal 2 asks for —
-needs the ring-level form of that transition (`FormalSchemes.TateChartTransitionInvAlgEq`) and is
-not done here.
+`𝔾m`-inversion transition as a morphism of formal spectra. Reading them in the *coordinates* of
+`FormalSchemes.TateChartTransitionInvAlgEq` — which is what would decide whether the condition is
+a genuine restriction — is not done here.
+
+What *is* done elsewhere: `AlgebraicGeometry.tateInvChartAnnulusSubring`
+(`FormalSchemes.TateInvChartAnnulusRing`) packages the two conditions as an infimum of two
+`RingHom.eqLocus`s and identifies it with `AlgebraicGeometry.tateInvChartSubring`, the equalizer
+description of `Γ (T_inv/⟨σ⟩, V)` that `FormalSchemes.TateInvQuotientChartRing` built over the
+unreduced condition.
 
 Nothing here descends to the quotient `T_inv/⟨σ⟩`; that is
 `FormalSchemes.TateInvQuotientSections`.
