@@ -15,7 +15,7 @@ argument, and this file isolates exactly what it costs.
 `IsPrecomplete J S` quantifies over the powers `J ^ n` of the ideal `J` itself. For
 `J = K.comap S.subtype` that is the **power filtration of the contracted ideal**, not the
 **induced filtration** `(K ^ n).comap S.subtype`. Only one containment between them is free,
-and it is `Ideal.pow_comap_subtype_le_comap_pow` below:
+and it is Mathlib's `Ideal.le_comap_pow`, at `φ = S.subtype`:
 
 ```
 (K.comap S.subtype) ^ n ≤ (K ^ n).comap S.subtype
@@ -101,24 +101,10 @@ theorem smodEq_pow_iff_sub_mem {K : Ideal A} {n : ℕ} {x y : A} :
     x ≡ y [SMOD (K ^ n • ⊤ : Submodule A A)] ↔ x - y ∈ K ^ n := by
   rw [SModEq.sub_mem, Ideal.mem_smul_top_self_iff]
 
-/-- **The free containment between the two filtrations**: the power filtration of a contracted
-ideal is finer than the contraction of the power filtration. This is the direction
-`AlgebraicGeometry.isHausdorff_comap_subtype` uses, and the *only* one available without a
-hypothesis; see this file's module docstring. -/
-theorem pow_comap_le_comap_pow {C : Type u} [CommRing C] (K : Ideal A) (φ : C →+* A) (n : ℕ) :
-    (K.comap φ) ^ n ≤ (K ^ n).comap φ := by
-  rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
-  exact pow_le_pow_left' Ideal.map_comap_le n
-
-/-- The subring case of `Ideal.pow_comap_le_comap_pow`, which is the one this file uses. -/
-theorem pow_comap_subtype_le_comap_pow (K : Ideal A) (S : Subring A) (n : ℕ) :
-    (K.comap S.subtype) ^ n ≤ (K ^ n).comap S.subtype :=
-  pow_comap_le_comap_pow K S.subtype n
-
 end Ideal
 
 /-- **Hausdorffness pulls back along an injective ring homomorphism.** An element of every power
-of `K.comap φ` has image in every power of `K` by `Ideal.pow_comap_le_comap_pow`, so its image
+of `K.comap φ` has image in every power of `K` by `Ideal.le_comap_pow`, so its image
 vanishes and injectivity finishes. `AlgebraicGeometry.isHausdorff_comap_subtype`
 (`FormalSchemes.TateInvNodeChartAmbient`) is this at `φ = S.subtype`; the form here is what a
 transport along a ring isomorphism needs. -/
@@ -130,7 +116,7 @@ theorem isHausdorff_comap {A C : Type u} [CommRing A] [CommRing C] (φ : C →+*
       have h1 : x ∈ (K.comap φ) ^ n := by
         have h := hx n
         rwa [SModEq.zero, Ideal.mem_smul_top_self_iff] at h
-      exact Ideal.pow_comap_le_comap_pow K φ n h1
+      exact Ideal.le_comap_pow φ n h1
     have hzero : φ x = 0 :=
       hK.haus _ fun n => by rw [SModEq.zero, Ideal.mem_smul_top_self_iff]; exact hval n
     exact hinj (hzero.trans (map_zero φ).symm)
@@ -156,7 +142,7 @@ def IsInducedPrecomplete (S : Subring A) (K : Ideal A) : Prop :=
 
 /-- **The filtration bridge**: the induced filtration is cofinal with the power filtration of the
 contracted ideal. The reverse containment is free
-(`Ideal.pow_comap_subtype_le_comap_pow`), so this is exactly the missing half. -/
+(`Ideal.le_comap_pow`), so this is exactly the missing half. -/
 def HasCofinalInducedFiltration (S : Subring A) (K : Ideal A) : Prop :=
   ∀ n : ℕ, ∃ m : ℕ, (K ^ m).comap S.subtype ≤ (K.comap S.subtype) ^ n
 
@@ -234,7 +220,7 @@ theorem isPrecomplete_comap_subtype {S : Subring A} {K : Ideal A} (hip : S.IsInd
       have h2 : f n - f m ∈ (K.comap S.subtype) ^ m := by
         have h3 := neg_mem h
         rwa [neg_sub] at h3
-      exact Ideal.pow_comap_subtype_le_comap_pow K S m h2
+      exact Ideal.le_comap_pow S.subtype m h2
     obtain ⟨L, hL⟩ := hip f hfA
     refine ⟨L, fun n => ?_⟩
     rw [Ideal.smodEq_pow_iff_sub_mem]
