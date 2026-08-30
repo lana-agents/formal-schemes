@@ -28,16 +28,19 @@ each basic open `D(f * g) ⊆ D(f)` is a ring isomorphism.
   isomorphism), the `c_iso`-on-basic-opens fact underlying the open-immersion property.
 * `FormalSpectrum.chartComponentEquiv`: the `c`-component packaged as a `RingEquiv`.
 
-## Remaining follow-up (issue 163)
+## What this file feeds
 
-The full `LocallyRingedSpace.IsOpenImmersion (basicOpenChart I f)` remains: transport
-`bijective_chartComponent` (through the `sectionsBasicOpenEquiv` conjugation and the `eqToHom`
-restriction, all isomorphisms) to `IsIso ((basicOpenChart I f).c.app (op (basicOpen I (f * g))))`
-for the covering basis `{D(f * g)}` of `D(f)` (`isUnit_algebraMap_away_left` supplies the `hfg`
-hypothesis), then `TopCat.Sheaf.isIso_iff_isIso_basis` on that basis gives
-`PresheafedSpace.IsOpenImmersion` (via its `c_iso` field, with the base open embedding
-`isOpenEmbedding_basicOpenChartBase`), and finally `SheafedSpace`/`LocallyRingedSpace` packaging
-with range `basicOpen I f` (`range_basicOpenChartBase`).
+The full `LocallyRingedSpace.IsOpenImmersion (basicOpenChart I f)` is
+`FormalSpectrum.isOpenImmersion_basicOpenChart` (`FormalSchemes.BasicOpenImmersionLRS`); it does
+not remain. That file transports `bijective_chartComponent` (through the `sectionsBasicOpenEquiv`
+conjugation and the `eqToHom` restriction, all isomorphisms) to
+`IsIso ((basicOpenChart I f).c.app (op (basicOpen I g)))` — `FormalSpectrum.isIso_c_app_basicOpen`,
+with `isUnit_algebraMap_away_left` supplying the `hfg` hypothesis for the covering basis
+`{D(f * g)}` of `D(f)` — then runs `TopCat.Sheaf.isIso_iff_isIso_basis` on that basis to obtain
+the `c_iso` field (`FormalSpectrum.isIso_c_app_functor_obj`, via the pullback comparison
+`FormalSpectrum.pullbackStructureSheafHom`), with the base open embedding
+`isOpenEmbedding_basicOpenChartBase` and range `basicOpen I f`
+(`FormalSpectrum.range_basicOpenChart_base`).
 -/
 
 noncomputable section

@@ -6,9 +6,10 @@ set_option linter.style.header false
 # Sheaf-side level reading of the affine basic-open chart (issue 163)
 
 For an adic ring `(R, I)` with `I.FG` and `f : R`, the affine basic-open chart
-`FormalSpectrum.basicOpenChart I f : Spf R{1/f} ⟶ Spf R` (`BasicOpenImmersion.lean`) is expected
-to be a `LocallyRingedSpace.IsOpenImmersion`. The underlying base map is already an open embedding
-onto `D(f)` (`isOpenEmbedding_basicOpenChartBase`, `range_basicOpenChartBase`); the remaining
+`FormalSpectrum.basicOpenChart I f : Spf R{1/f} ⟶ Spf R` (`BasicOpenImmersion.lean`) **is** a
+`LocallyRingedSpace.IsOpenImmersion` — `FormalSpectrum.isOpenImmersion_basicOpenChart`
+(`FormalSchemes.BasicOpenImmersionLRS`). The underlying base map is an open embedding
+onto `D(f)` (`isOpenEmbedding_basicOpenChartBase`, `range_basicOpenChartBase`); the other
 ingredient is the `c_iso` field, i.e. that the sheaf component is an isomorphism on the basis of
 basic opens `D(g) ⊆ D(f)`.
 
@@ -28,18 +29,22 @@ chase of `globalSectionsMap_locallyRingedSpaceMap` (`SpfGamma.lean`).
 * `FormalSpectrum.evalₐ_chartComponent`: its level-`k + 1` evaluation, as the
   `basicOpenLevelEquiv`-conjugation of `comap (levelRingHom …)`.
 
-## Remaining follow-up (issue 163 `c_iso` assembly)
+## What this file feeds
 
-Matching `evalₐ_chartComponent` (the sheaf side, here) against the merged
+Matching `evalₐ_chartComponent` (the sheaf side, here) against
 `FormalSpectrum.evalₐ_awayCompletionChartEquiv` (the ring side, `BasicOpenImmersion.lean`) — i.e.
 identifying the two level-`k + 1` ring maps `R_g ⧸ (I·R_g)^{k+1} → R_f{ḡ} ⧸ (…)^{k+1}` via
 `IsLocalization.ringHom_ext` on `Submonoid.powers (Ideal.Quotient.mk (I^{k+1}) g)` (the source is
 a localization-away of `R ⧸ I^{k+1}`, `isLocalization_away_basicOpen_sections`), agreeing on the
 `algebraMap` image by `comap_algebraMap` / `levelRingHom_mk` / `basicOpenLevelEquiv_algebraMap_mk`
-— gives `chartComponent = awayCompletionChartEquiv` by `AdicCompletion.ext_evalₐ`. That upgrades
-the chart's `c`-component to an isomorphism on each basic open `D(f * g)`, whence
-`TopCat.Sheaf.isIso_iff_isIso_basis` on the basis of basic opens below `D(f)` yields
-`PresheafedSpace.IsOpenImmersion` and then `LocallyRingedSpace.IsOpenImmersion`.
+— gives `chartComponent = awayCompletionChartEquiv` by `AdicCompletion.ext_evalₐ`. **That is done**,
+in `FormalSchemes.BasicOpenImmersionAssembly`:
+`FormalSpectrum.chartComponent_eq_awayCompletionChartEquiv` and
+`FormalSpectrum.bijective_chartComponent`, which give the chart's `c`-component as an isomorphism
+on each basic open `D(f * g)`. The `TopCat.Sheaf.isIso_iff_isIso_basis` step on the basis of basic
+opens below `D(f)`, yielding `PresheafedSpace.IsOpenImmersion` and then
+`LocallyRingedSpace.IsOpenImmersion`, is `FormalSchemes.BasicOpenImmersionLRS`'s
+`FormalSpectrum.isOpenImmersion_basicOpenChart`.
 -/
 
 noncomputable section

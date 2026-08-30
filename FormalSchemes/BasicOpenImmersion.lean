@@ -6,10 +6,11 @@ set_option linter.style.header false
 # Towards the open immersion property of the affine basic-open chart
 
 For an adic ring `(R, I)` with `I.FG` and `f : R`, the affine basic-open chart
-`Spf R{1/f} ⟶ Spf R` (`FormalSchemes/BasicOpenChart.lean`) is expected to be a
-`LocallyRingedSpace.IsOpenImmersion`. The underlying map is an open topological embedding with
+`Spf R{1/f} ⟶ Spf R` (`FormalSchemes/BasicOpenChart.lean`) **is** a
+`LocallyRingedSpace.IsOpenImmersion`: `FormalSpectrum.isOpenImmersion_basicOpenChart`
+(`FormalSchemes.BasicOpenImmersionLRS`). The underlying map is an open topological embedding with
 range `D(f)` (`FormalSpectrum.isOpenEmbedding_basicOpenChartBase`,
-`FormalSpectrum.range_basicOpenChartBase`); the remaining ingredient is the `c_iso` field, i.e.
+`FormalSpectrum.range_basicOpenChartBase`); the other ingredient is the `c_iso` field, i.e.
 the sheaf component of the chart is an isomorphism on the basis of basic opens `D(g) ⊆ D(f)`.
 
 This file packages the chart as a named morphism and develops the **level-`n` (`evalₐ`) behaviour
@@ -40,19 +41,24 @@ computes `evalₐ n (awayCompletionChartEquiv …)` as a composite of two `Ideal
   forward map, the localization-transitivity isomorphism, and their composite the chart's
   `c`-component, each as an `Ideal.quotientMap`.
 
-## Remaining follow-up (issue 163 sheaf-level `c_iso`)
+## What this file feeds
 
-The full `LocallyRingedSpace.IsOpenImmersion` still needs the **sheaf-side matching**: identify the
-chart's sheaf component on a basic open `D(g) ⊆ D(f)` — read through
-`FormalSpectrum.sectionsBasicOpenEquiv` on both sides (target open via `map_preimage_basicOpen`) —
-with `awayCompletionChartEquiv`, by `AdicCompletion.ext_evalₐ`, matching at each level `n` the
-`basicOpenLevelEquiv`-conjugation of `levelSheafHom`/`comap (levelRingHom …)` (via
-`mapSheafHom_hom_app_pi` + `eval_sectionsBasicOpenEquiv` in `BasicOpenChartComponent.lean`)
-against the composite quotient map computed here (`evalₐ_awayCompletionChartEquiv`). After that,
-`TopCat.Sheaf.isIso_iff_isIso_basis` on the basis of basic opens below `D(f)` (using
-`isUnit_algebraMap_away_left` for the covering opens `D(f * g)`) upgrades `basicOpenChart` to a
-`PresheafedSpace.IsOpenImmersion`, then `SheafedSpace`/`LocallyRingedSpace` packaging with range
-`basicOpen I f` (`range_basicOpenChartBase`).
+The **sheaf-side matching** that `evalₐ_awayCompletionChartEquiv` was computed for has been
+carried out; it is no longer future work. The chart's sheaf component on a basic open
+`D(g) ⊆ D(f)`, read through `FormalSpectrum.sectionsBasicOpenEquiv` on both sides (target open via
+`map_preimage_basicOpen`), is `FormalSpectrum.chartComponent`, and its level-`n` value is
+`FormalSpectrum.evalₐ_chartComponent` — the `basicOpenLevelEquiv`-conjugation of
+`levelSheafHom`/`comap (levelRingHom …)`, obtained from `mapSheafHom_hom_app_pi` and
+`eval_sectionsBasicOpenEquiv` in `FormalSchemes.BasicOpenChartComponent` — both in
+`FormalSchemes.BasicOpenImmersionSheaf`. Matching it level by level against the composite quotient
+map computed here, via `AdicCompletion.ext_evalₐ`, is
+`FormalSpectrum.chartComponent_eq_awayCompletionChartEquiv`, with
+`FormalSpectrum.bijective_chartComponent` and `FormalSpectrum.chartComponentEquiv`, in
+`FormalSchemes.BasicOpenImmersionAssembly`. Finally `TopCat.Sheaf.isIso_iff_isIso_basis` on the
+basis of basic opens below `D(f)` (using `isUnit_algebraMap_away_left` for the covering opens
+`D(f * g)`) is run in `FormalSchemes.BasicOpenImmersionLRS`, giving
+`FormalSpectrum.isOpenImmersion_basicOpenChart`, with range
+`FormalSpectrum.range_basicOpenChart_base`.
 -/
 
 noncomputable section
@@ -137,8 +143,9 @@ variable {R : Type u} [CommRing R] (I : Ideal R) (f g : R)
 /-- The affine basic-open chart `Spf R{1/f} ⟶ Spf R`, as a morphism of locally ringed spaces:
 the map of formal spectra induced by the structural ring map `R → R{1/f}`. Its underlying map is
 `basicOpenChartBase I f`, an open topological embedding with range `D(f)`
-(`isOpenEmbedding_basicOpenChartBase`, `range_basicOpenChartBase`). The eventual goal of issue 163
-is to upgrade this to a `LocallyRingedSpace.IsOpenImmersion`. -/
+(`isOpenEmbedding_basicOpenChartBase`, `range_basicOpenChartBase`). It **is** a
+`LocallyRingedSpace.IsOpenImmersion`: `isOpenImmersion_basicOpenChart`
+(`FormalSchemes.BasicOpenImmersionLRS`). -/
 def basicOpenChart : locallyRingedSpaceObj (awayCompletionIdeal I f) ⟶ locallyRingedSpaceObj I :=
   locallyRingedSpaceMap I (awayCompletionIdeal I f) (awayCompletionHom I f)
     (le_comap_awayCompletionHom I f)
