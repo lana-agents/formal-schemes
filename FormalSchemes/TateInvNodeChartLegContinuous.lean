@@ -176,7 +176,8 @@ theorem annulusOverlapInversionAlg_toRingHom (hI : I.FG) :
   RingHom.ext fun _ => rfl
 
 /-- The underlying ring hom of the `R`-algebra inversion chart transition, unfolded as the
-composite `(congrIdeal _).symm ∘ annulusOverlapInversion ∘ (congrIdeal _)`. The forward mirror of
+composite `(AdicCompletion.congrIdeal _).symm ∘ annulusOverlapInversion ∘
+(AdicCompletion.congrIdeal _)`. The forward mirror of
 `AlgebraicGeometry.annulusChartTransitionInvAlg_symm_toRingHom_eq`; it is stated
 left-associated because that is the association
 `FormalSpectrum.le_comap_comp` produces. -/
@@ -308,7 +309,7 @@ theorem le_comap_globalSectionsMap_transitionInv_inv_comp_chart
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `x`-chart leg is adically continuous.** It is the `.c.app` of
-`AlgebraicGeometry.annulusOverlapChart` at the chart's domain, precomposed with
+`annulusOverlapChart` (root namespace) at the chart's domain, precomposed with
 `AlgebraicGeometry.tateInvNodeChartAmbientEquiv`'s inverse, so
 `FormalSpectrum.sectionsComponent_mem_pow` applies with the adicity witness
 `AlgebraicGeometry.le_comap_globalSectionsMap_annulusOverlapChart`. -/
