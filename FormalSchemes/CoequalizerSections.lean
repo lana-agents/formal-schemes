@@ -221,7 +221,8 @@ shape a group action produces is `Discrete G` for the acting group `G`, which ha
 in the same universe as the space it acts on — `AlgebraicGeometry.tateInvPeriodAction` acts by
 `Multiplicative ℤ` on a space over an arbitrary `R : Type u`. The three `Limits` instance arguments
 are exactly what `SmallCategory J` used to supply silently; the proof is unchanged by the
-generalisation, because `CategoryTheory.Limits.colimitPresheafObjIsoComponentwiseLimit` and
+generalisation, because
+`AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit` and
 `AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit_hom_π` are already
 polymorphic in the shape. -/
 theorem colimit_section_ext {J : Type w} [Category.{v} J]

@@ -111,7 +111,7 @@ is the saturation back again (`AlgebraicGeometry.preimage_image_base_tateInvSatu
 makes them available at a node, where
 `AlgebraicGeometry.LocallyRingedSpace.IsProperlyDiscontinuousOn` is not.
 
-The `AlgebraicGeometry.LocallyRingedSpace.IsActionQuotient` witness is
+The `CategoryTheory.IsActionQuotient` witness is
 `CategoryTheory.isActionQuotient_actionQuotientπ`
 (`FormalSchemes.ActionQuotientColimit`), so this is an instantiation at a named quotient with
 every hypothesis discharged, not a restatement. -/
@@ -160,7 +160,7 @@ The three ingredients: `AlgebraicGeometry.existsUnique_tateInvConstFamily`
 `exists_actionQuotientπ_c_app_eq_of_const` descends `g`; and uniqueness is
 `AlgebraicGeometry.LocallyRingedSpace.injective_coequalizer_π_c_app`
 (`FormalSchemes.ActionQuotientSections`) — a section of the quotient is determined by its pullback
-along `π`, which is what `AlgebraicGeometry.LocallyRingedSpace.IsActionQuotient.injective_c_app`
+along `π`, which is what `CategoryTheory.IsActionQuotient.injective_c_app`
 (`FormalSchemes.ActionQuotientSectionInjective`) generalises to an arbitrary presentation.
 
 Compatibility is the hypothesis of the sheaf axiom on the cover of `π⁻¹ V` by the patch images and
