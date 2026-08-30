@@ -28,17 +28,19 @@ plumbing that lets one read the chart's `c`-component on basic opens level by le
   plumbing; specialised to the affine basic-open chart it is the first half of the sheaf-level
   `c_iso` assembly (issue 163) and mirrors the value-chase reduction of `globalSectionsMap`.
 
-## Remaining follow-up (issue 163 sheaf-level `c_iso`)
+## What this file feeds
 
 Composing `mapSheafHom_hom_app_pi` (level-`n` reduction) with `eval_sectionsBasicOpenEquiv` on
 both source and target reduces the chart's `c`-component on a basic open `D(g) ⊆ D(f)` to a
-level-`n` identity of `comap (levelRingHom …)` maps between localizations of quotients. Matching
-that against the already-merged algebraic isomorphism `awayCompletionChartEquiv`
-(`R{1/g} ≃+* R{1/f}{1/ḡ}`, `AwayCompletionInterchange.lean`) — i.e. proving the two agree at every
-level via `AdicCompletion.ext_evalₐ` — is the remaining algebraic bookkeeping, after which
-`TopCat.Sheaf.isIso_iff_isIso_basis` (restricted to the basis of basic opens below `D(f)`)
-upgrades the chart to a `PresheafedSpace.IsOpenImmersion` (then `SheafedSpace`/`LocallyRingedSpace`
-via `of_stalk_iso`'s packaging or directly through `c_iso`).
+level-`n` identity of `comap (levelRingHom …)` maps between localizations of quotients. That is
+done in `FormalSchemes.BasicOpenImmersionSheaf`, as `FormalSpectrum.chartComponent` and
+`FormalSpectrum.evalₐ_chartComponent`. Matching it against the algebraic isomorphism
+`awayCompletionChartEquiv` (`R{1/g} ≃+* R{1/f}{1/ḡ}`, `AwayCompletionInterchange.lean`) — i.e.
+proving the two agree at every level via `AdicCompletion.ext_evalₐ` — is **no longer remaining**:
+it is `FormalSpectrum.chartComponent_eq_awayCompletionChartEquiv`
+(`FormalSchemes.BasicOpenImmersionAssembly`). The `TopCat.Sheaf.isIso_iff_isIso_basis` step on the
+basis of basic opens below `D(f)` is then run in `FormalSchemes.BasicOpenImmersionLRS`, whose
+`FormalSpectrum.isOpenImmersion_basicOpenChart` is the endpoint.
 
 ## References
 
