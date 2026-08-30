@@ -110,4 +110,153 @@ theorem map_base_tateInvPatchSaturateOpens_univ {X : LocallyRingedSpace.{u}}
       = ⊤ := by
   rw [tateInvPatchSaturateOpens_univ]; rfl
 
+/-! ### The four legs at `S = Set.univ`, as ring maps of `A` -/
+
+section GlobalCollapse
+
+variable [IsAdicRing (annulusIdealOfDefinition R I q)]
+
+/-- **The patch's sections at `S = Set.univ` are `A` itself.** -/
+def tateInvGlobalPatchEquiv (hq : q ∈ I) (hI : I.FG) :
+    ((FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+        isOpen_univ)) : Type u) ≃+* annulusAlgebra R I q :=
+  FormalSpectrum.sectionsEquivOfEqTop _ tateInvPatchSaturateOpens_univ
+
+section X
+
+variable [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))]
+
+/-- **The `x`-overlap's sections over the open both forward legs are read on are `A{1/x}`.** -/
+def tateInvGlobalXEquiv (hq : q ∈ I) (hI : I.FG) :
+    ((FormalSpectrum.locallyRingedSpaceObj (awayCompletionIdeal
+      (annulusIdealOfDefinition R I q) (overlapX R I q))).presheaf.obj
+      (op ((Opens.map (annulusOverlapChart R I q).base).obj
+        (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+          isOpen_univ))) : Type u) ≃+*
+      awayCompletion (annulusIdealOfDefinition R I q) (overlapX R I q) :=
+  FormalSpectrum.sectionsEquivOfEqTop _ (map_base_tateInvPatchSaturateOpens_univ _)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **A forward leg is its global-sections map.** `f` is left abstract: instantiating it is
+substitution and does not re-elaborate, whereas stating this at
+`(annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q` directly makes the
+kernel's defeq check on this cluster time out. -/
+theorem tateInvGlobalXEquiv_c_app (hq : q ∈ I) (hI : I.FG)
+    (f : FormalSpectrum.locallyRingedSpaceObj (awayCompletionIdeal
+        (annulusIdealOfDefinition R I q) (overlapX R I q)) ⟶
+      FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q))
+    (hf : (Opens.map f.base).obj
+        (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI isOpen_univ) =
+      (Opens.map (annulusOverlapChart R I q).base).obj
+        (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI isOpen_univ))
+    (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+        isOpen_univ))) :
+    tateInvGlobalXEquiv hq hI
+        (((FormalSpectrum.locallyRingedSpaceObj (awayCompletionIdeal
+          (annulusIdealOfDefinition R I q) (overlapX R I q))).presheaf.map
+            (eqToHom (congrArg op hf))).hom ((f.c.app (op (tateInvPatchSaturateOpens hq hI
+              (S := Set.univ) isOpen_univ))).hom s)) =
+      FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _ f
+        (tateInvGlobalPatchEquiv hq hI s) :=
+  (FormalSpectrum.globalSectionsMap_sectionsEquivOfEqTop (annulusIdealOfDefinition R I q) _ f
+    tateInvPatchSaturateOpens_univ (map_base_tateInvPatchSaturateOpens_univ _) hf s).symm
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The `x`-chart leg is `Γ` of the `x`-chart.** -/
+theorem tateInvGlobalXEquiv_tateInvChartLegX (hq : q ∈ I) (hI : I.FG)
+    (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+        isOpen_univ))) :
+    tateInvGlobalXEquiv hq hI (tateInvChartLegX (hq := hq) (hI := hI) isOpen_univ s) =
+      FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _
+        (annulusOverlapChart R I q) (tateInvGlobalPatchEquiv hq hI s) := by
+  refine Eq.trans ?_ (tateInvGlobalXEquiv_c_app hq hI (annulusOverlapChart R I q) rfl s)
+  congr 1
+  simp only [tateInvChartLegX, eqToHom_refl, CategoryTheory.Functor.map_id]
+  rfl
+
+/-- **The transition-then-`y`-chart leg is `Γ` of that composite.** -/
+theorem tateInvGlobalXEquiv_tateInvChartLegYX (hq : q ∈ I) (hI : I.FG)
+    (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+        isOpen_univ))) :
+    tateInvGlobalXEquiv hq hI (tateInvChartLegYX (hq := hq) (hI := hI) isOpen_univ s) =
+      FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _
+        ((annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q)
+        (tateInvGlobalPatchEquiv hq hI s) :=
+  tateInvGlobalXEquiv_c_app hq hI _
+    (map_annulusOverlapChartY_tateInvPatchSaturateOpens (hq := hq) (hI := hI) isOpen_univ) s
+
+end X
+
+section Y
+
+variable [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))]
+
+/-- **The `y`-overlap's sections over the open both backward legs are read on are `A{1/y}`.** -/
+def tateInvGlobalYEquiv (hq : q ∈ I) (hI : I.FG) :
+    ((FormalSpectrum.locallyRingedSpaceObj (awayCompletionIdeal
+      (annulusIdealOfDefinition R I q) (overlapY R I q))).presheaf.obj
+      (op ((Opens.map (annulusOverlapChartY R I q).base).obj
+        (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+          isOpen_univ))) : Type u) ≃+*
+      awayCompletion (annulusIdealOfDefinition R I q) (overlapY R I q) :=
+  FormalSpectrum.sectionsEquivOfEqTop _ (map_base_tateInvPatchSaturateOpens_univ _)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **A backward leg is its global-sections map.** The mirror of
+`tateInvGlobalXEquiv_c_app`, and abstract in `f` for the same reason. -/
+theorem tateInvGlobalYEquiv_c_app (hq : q ∈ I) (hI : I.FG)
+    (f : FormalSpectrum.locallyRingedSpaceObj (awayCompletionIdeal
+        (annulusIdealOfDefinition R I q) (overlapY R I q)) ⟶
+      FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q))
+    (hf : (Opens.map f.base).obj
+        (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI isOpen_univ) =
+      (Opens.map (annulusOverlapChartY R I q).base).obj
+        (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI isOpen_univ))
+    (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+        isOpen_univ))) :
+    tateInvGlobalYEquiv hq hI
+        (((FormalSpectrum.locallyRingedSpaceObj (awayCompletionIdeal
+          (annulusIdealOfDefinition R I q) (overlapY R I q))).presheaf.map
+            (eqToHom (congrArg op hf))).hom ((f.c.app (op (tateInvPatchSaturateOpens hq hI
+              (S := Set.univ) isOpen_univ))).hom s)) =
+      FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _ f
+        (tateInvGlobalPatchEquiv hq hI s) :=
+  (FormalSpectrum.globalSectionsMap_sectionsEquivOfEqTop (annulusIdealOfDefinition R I q) _ f
+    tateInvPatchSaturateOpens_univ (map_base_tateInvPatchSaturateOpens_univ _) hf s).symm
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The `y`-chart leg is `Γ` of the `y`-chart.** -/
+theorem tateInvGlobalYEquiv_tateInvChartLegY (hq : q ∈ I) (hI : I.FG)
+    (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+        isOpen_univ))) :
+    tateInvGlobalYEquiv hq hI (tateInvChartLegY (hq := hq) (hI := hI) isOpen_univ s) =
+      FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _
+        (annulusOverlapChartY R I q) (tateInvGlobalPatchEquiv hq hI s) := by
+  refine Eq.trans ?_ (tateInvGlobalYEquiv_c_app hq hI (annulusOverlapChartY R I q) rfl s)
+  congr 1
+  simp only [tateInvChartLegY, eqToHom_refl, CategoryTheory.Functor.map_id]
+  rfl
+
+/-- **The inverse-transition-then-`x`-chart leg is `Γ` of that composite.** -/
+theorem tateInvGlobalYEquiv_tateInvChartLegXY (hq : q ∈ I) (hI : I.FG)
+    (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+        isOpen_univ))) :
+    tateInvGlobalYEquiv hq hI (tateInvChartLegXY (hq := hq) (hI := hI) isOpen_univ s) =
+      FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _
+        ((annulusChartTransitionInvSpf R I q hI).inv ≫ annulusOverlapChart R I q)
+        (tateInvGlobalPatchEquiv hq hI s) :=
+  tateInvGlobalYEquiv_c_app hq hI _
+    (map_annulusOverlapChart_tateInvPatchSaturateOpens (hq := hq) (hI := hI) isOpen_univ) s
+
+end Y
+
+end GlobalCollapse
+
 end AlgebraicGeometry
