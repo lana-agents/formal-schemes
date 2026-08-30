@@ -47,6 +47,10 @@ quotients.
 * **`RestrictedPowerSeries.ext_coeff`**: a restricted power series is determined by its
   coefficients, with `RestrictedPowerSeries.coeff_eq_zero_iff` and
   `RestrictedPowerSeries.eq_zero_of_coeff_eq_zero`.
+* `RestrictedPowerSeries.isHausdorff_map`, `RestrictedPowerSeries.of_injective` and
+  `RestrictedPowerSeries.algebraMap_injective`: the polynomial ring, and hence the base, embeds in
+  `R{X₁, …, Xₙ}`. These are the first consequences of the extensionality principle, and neither
+  the polynomial ring's Hausdorffness for `I·R[X]` nor either injectivity was on the tree before.
 
 ## What is new here, relative to the one-variable file
 
@@ -447,6 +451,44 @@ theorem ext_coeff {z w : RestrictedPowerSeries R I n}
   rw [← sub_eq_zero]
   refine eq_zero_of_coeff_eq_zero I n fun d => ?_
   rw [map_sub, h d, sub_self]
+
+/-! ### Consequences: the polynomial ring embeds in its completion -/
+
+/-- **`R[X₁, …, Xₙ]` is Hausdorff for the extended ideal**, whenever the base is `I`-adically
+complete. An element of every step of the filtration has every coefficient in every `I ^ m`, so
+every coefficient vanishes. This is not available from
+`AdicCompletion.isAdicComplete`-style results, which are about the completion rather than about
+the polynomial ring itself. -/
+theorem isHausdorff_map :
+    IsHausdorff (I.map (algebraMap R (MvPolynomial (Fin n) R))) (MvPolynomial (Fin n) R) where
+  haus' p hp := by
+    refine MvPolynomial.ext p 0 fun d => ?_
+    rw [MvPolynomial.coeff_zero]
+    refine (inferInstance : IsHausdorff I R).haus _ fun m => ?_
+    rw [SModEq.zero, Ideal.mem_smul_top_self_iff]
+    have h := hp m
+    rw [SModEq.zero, Ideal.mem_map_pow_iff_mem_smul_top] at h
+    have hd := MvPolynomial.lcoeff_mem_of_mem_smul_top h d
+    rwa [MvPolynomial.lcoeff_apply] at hd
+
+/-- **The polynomial ring embeds in the restricted power series ring.** Two polynomials with the
+same image have the same coefficients by `RestrictedPowerSeries.coeff_of`. -/
+theorem of_injective : Function.Injective
+    (AdicCompletion.of (I.map (algebraMap R (MvPolynomial (Fin n) R)))
+      (MvPolynomial (Fin n) R)) := by
+  intro p q hpq
+  refine MvPolynomial.ext p q fun d => ?_
+  have h := congrArg (coeff I n d) hpq
+  rwa [coeff_of, coeff_of] at h
+
+/-- **The base embeds in the restricted power series ring**, the several-variable analogue of
+`RestrictedLaurentSeries.algebraMap_injective_of_isAdicComplete`. Read off at the coefficient of
+the constant monomial. -/
+theorem algebraMap_injective :
+    Function.Injective (algebraMap R (RestrictedPowerSeries R I n)) := by
+  intro r s hrs
+  have h := congrArg (coeff I n 0) hrs
+  rwa [coeff_algebraMap, coeff_algebraMap, if_pos rfl, if_pos rfl] at h
 
 end Complete
 
