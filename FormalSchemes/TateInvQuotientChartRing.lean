@@ -81,7 +81,10 @@ whether the overlap condition is a genuine restriction — is not decided here; 
 least not *definitionally* trivial, since it is not closed by `rfl`. Nor is it an `S`-free
 question: `AlgebraicGeometry.tateInvChartAnnulusSubring_empty_eq_top`
 (`FormalSchemes.TateInvChartAnnulusRing`) shows the subring is everything at `S = ∅`, the ambient
-ring there being the zero ring.
+ring there being the zero ring, while
+`AlgebraicGeometry.tateInvChartAnnulusSubring_univ_ne_top`
+(`FormalSchemes.TateInvGlobalProperness`) shows it is a *proper* subring at `S = Set.univ` for
+`I ≠ ⊤`. At a general `S` it is still undecided.
 
 ## References
 

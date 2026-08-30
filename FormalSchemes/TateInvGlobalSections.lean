@@ -61,12 +61,15 @@ definition no locally ringed space, no glue datum and no presheaf occurs.
 ## What is *not* proved
 
 **Whether the subring is proper, or whether it is bigger than `R`.** These are two different
-questions and neither is settled here.
+questions and neither is settled here; the first is settled elsewhere.
 
 * *Proper*, i.e. smaller than `A`: that is `tateInvChartAnnulusSubring_eq_top_iff`
   (`FormalSchemes.TateInvChartAnnulusRing`) at `S = Set.univ`, and this file turns it into the
   question whether `tateInvGlobalLegX = tateInvGlobalLegYX` and
   `tateInvGlobalLegY = tateInvGlobalLegXY` as ring maps of `A`. It does not answer it.
+  **`FormalSchemes.TateInvGlobalProperness` does**: the two forward legs differ on the coordinate
+  `x` by exactly the Tate parameter, so `AlgebraicGeometry.tateInvGlobalSubring_ne_top` holds for
+  `I ≠ ⊤`, with `overlapX` itself the element of `A` outside the subring.
 * *Bigger than the base*, i.e. containing an element outside the image of `Γ (Spf R, ·)`: that is
   issue 1223's goal 3. `algebraMap_mem_tateInvGlobalSubring` is its trivial half — the image is
   contained — and its converse is not proved here. Deligne–Rapoport's 1-gon being proper predicts
