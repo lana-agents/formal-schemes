@@ -2,6 +2,7 @@ import FormalSchemes.ActionDiscontinuous
 import FormalSchemes.ActionInvariantExtension
 import FormalSchemes.ActionQuotient
 import FormalSchemes.ActionQuotientCarrier
+import FormalSchemes.ActionQuotientChartAt
 import FormalSchemes.ActionQuotientColimit
 import FormalSchemes.ActionQuotientFormalScheme
 import FormalSchemes.ActionQuotientFunctor
@@ -299,8 +300,10 @@ import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
+import FormalSchemes.TateInvOverlapDiscontinuous
 import FormalSchemes.TateInvPeriodNodePoint
 import FormalSchemes.TateInvPeriodNotDiscontinuous
+import FormalSchemes.TateInvPeriodQuotientCharts
 import FormalSchemes.TateLocallyFG
 import FormalSchemes.TateMixedChartDescent
 import FormalSchemes.TateOverlap
