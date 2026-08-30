@@ -89,8 +89,11 @@ one new coordinate computation in this file, proved by the route of
   `AlgebraicGeometry.tateInvNodeLocus_nonempty`.
 * **`AlgebraicGeometry.tateInvChartSaturate_tateInvNodeChartLocus`**: the domain is its own
   saturation. Hence `AlgebraicGeometry.tateInvPatchSaturate_tateInvNodeChartLocus` and its `Opens`
-  form: the chart ring's ambient open is `D(x + y − 1)` itself, the first `S` on this tree for
-  which the ambient open is the `S` one started from.
+  form: the chart ring's ambient open is `D(x + y − 1)` itself. It is the first *proper nonempty*
+  `S` on this tree for which the ambient open is the `S` one started from; the two trivial ones,
+  `AlgebraicGeometry.tateInvPatchSaturate_univ` (`FormalSchemes.TateInvNodeChartRing`) and
+  `AlgebraicGeometry.tateInvPatchSaturate_empty` (`FormalSchemes.TateInvChartAnnulusRing`), were
+  already on the tree.
 * **`AlgebraicGeometry.tateInvSaturate_tateInvNodeChartLocus_ne_univ`** and
   **`AlgebraicGeometry.image_base_tateInvSaturate_tateInvNodeChartLocus_ne_univ`**: the
   `σ`-invariant open of the chain, and its image in the quotient, are **proper**. This is what a
@@ -753,8 +756,11 @@ theorem tateInvNaiveChartLocus_ne_univ (hItop : I ≠ ⊤) :
 
 /-- **The node chart's candidate ring**: `AlgebraicGeometry.tateInvChartAnnulusSubring` at the
 chosen domain. By `tateInvPatchSaturateOpens_tateInvNodeChartLocus` the ambient ring is
-`Γ (Spf A, D(x + y − 1))` itself — the first `S` on this tree at which the chart ring's ambient
-open is the `S` one started from. -/
+`Γ (Spf A, D(x + y − 1))` itself — the first *proper nonempty* `S` on this tree at which the chart
+ring's ambient open is the `S` one started from (`AlgebraicGeometry.tateInvPatchSaturate_univ` and
+`AlgebraicGeometry.tateInvPatchSaturate_empty` are the two trivial ones that were already there).
+`AlgebraicGeometry.tateInvNodeChartAwaySubring` (`FormalSchemes.TateInvNodeChartAmbient`) is this
+same ring displayed inside `A{1/(x + y − 1)}`. -/
 def tateInvNodeChartSubring :
     Subring ((FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
       (op (tateInvPatchSaturateOpens hq hI (isOpen_tateInvNodeChartLocus R I q)))) :=
