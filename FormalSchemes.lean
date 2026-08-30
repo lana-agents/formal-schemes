@@ -254,6 +254,7 @@ import FormalSchemes.RelativeTopFiniteTypeTrans
 import FormalSchemes.RestrictedLaurentCoeff
 import FormalSchemes.RestrictedLaurentCoeffInv
 import FormalSchemes.RestrictedPowerSeries
+import FormalSchemes.RestrictedPowerSeriesCoeff
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
 import FormalSchemes.Sections
@@ -290,6 +291,7 @@ import FormalSchemes.TateActionQuotient
 import FormalSchemes.TateActionQuotientFormalScheme
 import FormalSchemes.TateActionQuotientStalk
 import FormalSchemes.TateAnnulus
+import FormalSchemes.TateAnnulusCoeff
 import FormalSchemes.TateAwaySplit
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainInvGlue
