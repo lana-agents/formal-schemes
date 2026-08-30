@@ -53,13 +53,20 @@ This file makes that identification and draws the two consequences that are free
   that the subring is closed in `A{1/(x + y − 1)}`. Those three are the residue of item (i) of
   this cluster's standing residue, and the reason they are not free is that a subring of a
   complete ring is complete only when it is closed.
-* **`tateInvNodeChartAmbientHom` is not an open immersion, and must not be read as one.** Its
-  range is the right set, but the map is not injective: `π` identifies a point of `D(x)` inside
-  the model patch with its partner in `D(y)` under the `𝔾m`-inversion transition, and both lie in
-  `D(x + y − 1)`. That non-injectivity is the whole content of the node — it is the Néron
-  1-gon's two glued points — and it is exactly why the chart must be built from the invariant
-  subring rather than from this morphism. Nothing here says the morphism factors through
-  `Spf` of the subring; no such factorisation is constructed.
+* **`tateInvNodeChartAmbientHom` is not *shown* to be an open immersion, and must not be read as
+  one.** Its range is the right set and nothing more: nothing here says the morphism factors
+  through `Spf` of the subring, and no such factorisation is constructed. It is moreover
+  **expected to fail injectivity**, which is why the chart must be built from the invariant
+  subring rather than from this morphism — `π` should identify a point of `D(x)` in the model
+  patch with its partner in `D(y)` under the `𝔾m`-inversion transition, both of which lie in
+  `D(x + y − 1)` because
+  `AlgebraicGeometry.preimage_transitionHom_comp_chartY_tateInvNodeChartLocus` and
+  `AlgebraicGeometry.preimage_transitionInv_comp_chart_tateInvNodeChartLocus`
+  (`FormalSchemes.TateInvNodeChartDomain`) say the transition matches the part of the domain the
+  `x`-chart sees with the part the `y`-chart sees; that failure would be the Néron 1-gon's two
+  glued points. **None of that is proved here**, and no two distinct points of the chain with the
+  same image are exhibited. A successor who wants it should land it as a theorem from those two
+  preimage lemmas rather than cite this paragraph.
 * **Nothing here says the subring is nonzero, proper, or larger than the image of `R`.** At a
   general `S` the tree names no element of the chart ring beyond `0` and `1`
   (`FormalSchemes.TateInvQuotientChartRing`'s module docstring), and this file adds none.
@@ -212,8 +219,9 @@ variable {π : (tateChainInv R I q hq hI).toLocallyRingedSpace ⟶ Q}
 /-- **The morphism `Spf A{1/(x + y − 1)} ⟶ Q`**: the basic-open chart of the chosen domain,
 followed by the patch inclusion `ι ⟨0⟩` and the quotient projection.
 
-**This is not an open immersion and must not be read as one** — see
-`range_tateInvNodeChartAmbientHom` and this file's module docstring. -/
+**This is not shown to be an open immersion and must not be read as one** — its range is
+computed and nothing else is; see `range_tateInvNodeChartAmbientHom` and this file's module
+docstring. -/
 def tateInvNodeChartAmbientHom :
     (FormalSpectrum.locallyRingedSpaceObj (awayCompletionIdeal
       (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q))) ⟶ Q :=
