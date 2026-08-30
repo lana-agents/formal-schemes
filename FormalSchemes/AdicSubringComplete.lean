@@ -53,6 +53,13 @@ hypothesis set rather than an unconditional theorem:
 * `RingHom.mem_eqLocus_of_mul_mem`: an equalizer subring is saturated for multiplication by any
   `c` in it whose image is left-regular — the source of the previous item's hypothesis.
 
+`isHausdorff_comap` generalises `AlgebraicGeometry.isHausdorff_comap_subtype` from a subring
+inclusion to any injective ring homomorphism, which is what a transport along a ring isomorphism
+needs. Three further transport lemmas along a ring isomorphism — `Subring.mem_map_ringEquiv`,
+`Subring.map_ringEquiv_inf` and `Subring.map_ringEquiv_eqLocus` — are proved as well: they are
+what lets a subring cut out by an equalizer on one side of an isomorphism be recognised as one on
+the other.
+
 Finally, the closedness half for the shape the Tate cluster meets it in:
 
 * `RingHom.mem_eqLocus_of_forall_sub_mem_pow` and `RingHom.isAdicallyClosed_eqLocus`: the
@@ -92,16 +99,39 @@ theorem smodEq_pow_iff_sub_mem {K : Ideal A} {n : ℕ} {x y : A} :
     x ≡ y [SMOD (K ^ n • ⊤ : Submodule A A)] ↔ x - y ∈ K ^ n := by
   rw [SModEq.sub_mem, Ideal.mem_smul_top_self_iff]
 
-/-- **The free containment between the two filtrations on a subring**: the power filtration of the
-contracted ideal is finer than the induced filtration. This is the direction
+/-- **The free containment between the two filtrations**: the power filtration of a contracted
+ideal is finer than the contraction of the power filtration. This is the direction
 `AlgebraicGeometry.isHausdorff_comap_subtype` uses, and the *only* one available without a
 hypothesis; see this file's module docstring. -/
-theorem pow_comap_subtype_le_comap_pow (K : Ideal A) (S : Subring A) (n : ℕ) :
-    (K.comap S.subtype) ^ n ≤ (K ^ n).comap S.subtype := by
+theorem pow_comap_le_comap_pow {C : Type u} [CommRing C] (K : Ideal A) (φ : C →+* A) (n : ℕ) :
+    (K.comap φ) ^ n ≤ (K ^ n).comap φ := by
   rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
   exact pow_le_pow_left' Ideal.map_comap_le n
 
+/-- The subring case of `Ideal.pow_comap_le_comap_pow`, which is the one this file uses. -/
+theorem pow_comap_subtype_le_comap_pow (K : Ideal A) (S : Subring A) (n : ℕ) :
+    (K.comap S.subtype) ^ n ≤ (K ^ n).comap S.subtype :=
+  pow_comap_le_comap_pow K S.subtype n
+
 end Ideal
+
+/-- **Hausdorffness pulls back along an injective ring homomorphism.** An element of every power
+of `K.comap φ` has image in every power of `K` by `Ideal.pow_comap_le_comap_pow`, so its image
+vanishes and injectivity finishes. `AlgebraicGeometry.isHausdorff_comap_subtype`
+(`FormalSchemes.TateInvNodeChartAmbient`) is this at `φ = S.subtype`; the form here is what a
+transport along a ring isomorphism needs. -/
+theorem isHausdorff_comap {A C : Type u} [CommRing A] [CommRing C] (φ : C →+* A) (K : Ideal A)
+    (hinj : Function.Injective φ) (hK : IsHausdorff K A) : IsHausdorff (K.comap φ) C where
+  haus' x hx := by
+    have hval : ∀ n : ℕ, φ x ∈ K ^ n := by
+      intro n
+      have h1 : x ∈ (K.comap φ) ^ n := by
+        have h := hx n
+        rwa [SModEq.zero, Ideal.mem_smul_top_self_iff] at h
+      exact Ideal.pow_comap_le_comap_pow K φ n h1
+    have hzero : φ x = 0 :=
+      hK.haus _ fun n => by rw [SModEq.zero, Ideal.mem_smul_top_self_iff]; exact hval n
+    exact hinj (hzero.trans (map_zero φ).symm)
 
 namespace Subring
 
@@ -127,6 +157,33 @@ contracted ideal. The reverse containment is free
 (`Ideal.pow_comap_subtype_le_comap_pow`), so this is exactly the missing half. -/
 def HasCofinalInducedFiltration (S : Subring A) (K : Ideal A) : Prop :=
   ∀ n : ℕ, ∃ m : ℕ, (K ^ m).comap S.subtype ≤ (K.comap S.subtype) ^ n
+
+/-- **Membership in the image of a subring under a ring isomorphism** is membership of the
+preimage. `Subring.mem_map` produces an existential; over an isomorphism the witness is forced. -/
+theorem mem_map_ringEquiv {B : Type u} [CommRing B] (e : A ≃+* B) (T : Subring A) {x : B} :
+    x ∈ Subring.map e.toRingHom T ↔ e.symm x ∈ T := by
+  constructor
+  · rintro ⟨a, ha, rfl⟩
+    simpa using ha
+  · exact fun h => ⟨e.symm x, h, by simp⟩
+
+/-- **A ring isomorphism carries an intersection of subrings to the intersection of the images.**
+-/
+theorem map_ringEquiv_inf {B : Type u} [CommRing B] (e : A ≃+* B) (T₁ T₂ : Subring A) :
+    Subring.map e.toRingHom (T₁ ⊓ T₂) =
+      Subring.map e.toRingHom T₁ ⊓ Subring.map e.toRingHom T₂ := by
+  ext x
+  simp only [mem_map_ringEquiv, Subring.mem_inf]
+
+/-- **A ring isomorphism carries an equalizer subring to the equalizer of the precomposed maps.**
+-/
+theorem map_ringEquiv_eqLocus {B C : Type u} [CommRing B] [CommRing C] (e : A ≃+* B)
+    (f g : A →+* C) : Subring.map e.toRingHom (f.eqLocus g) =
+      (f.comp e.symm.toRingHom).eqLocus (g.comp e.symm.toRingHom) := by
+  refine SetLike.ext fun x => ?_
+  rw [mem_map_ringEquiv]
+  simp only [RingHom.mem_eqLocus, RingHom.coe_comp, Function.comp_apply,
+    RingEquiv.toRingHom_eq_coe, RingHom.coe_coe]
 
 /-- **An intersection of two adically closed subrings is adically closed.** -/
 theorem IsAdicallyClosed.inf {S T : Subring A} {K : Ideal A} (hS : S.IsAdicallyClosed K)
