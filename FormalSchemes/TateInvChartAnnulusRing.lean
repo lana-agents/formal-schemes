@@ -57,7 +57,10 @@ reduces that question to the equality of two named ring homomorphisms, which is 
 posed than `FormalSchemes.TateInvQuotientChartRing` left it — there the condition was an `⨅` over
 `ℤ × ℤ` and the legs were glue-datum morphisms — but it does not answer it. Answering it needs the
 four legs read in the coordinates of `FormalSchemes.TateChartTransitionInvAlgEq`, which is not
-done here. `AlgebraicGeometry.isTateInvOverlapCompatible_one` and the membership of `0` are
+done here. It **is** done at `S = Set.univ`, in `FormalSchemes.TateInvGlobalSections`, where the
+ambient open collapses to `⊤` and the four legs become `FormalSpectrum.awayCompletionHom` and
+`AlgebraicGeometry.annulusChartTransitionInvAlg`; that file does not decide properness either.
+`AlgebraicGeometry.isTateInvOverlapCompatible_one` and the membership of `0` are
 non-vacuity, not an answer; and `tateInvChartAnnulusSubring_empty_eq_top` shows the question has no
 `S`-free answer, so it must be asked at a named `S`.
 
