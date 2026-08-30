@@ -50,20 +50,25 @@ much of the closedness half as the tree currently supports.
 
 ## What is *not* proved
 
-* **`AlgebraicGeometry.IsTateInvNodeChartLegContinuous` is not proved for the node chart's legs,
-  and it is not exhibited as false either.** It is stated here as a `Prop` so that the conditional
-  results have a single named hypothesis. The obstruction is isolated: the legs are `.c.app`s of
-  morphisms of formal spectra, and both of this file's identifications of a section ring — the
+* **`AlgebraicGeometry.IsTateInvNodeChartLegContinuous` is not proved *in this file*.** It is
+  stated here as a `Prop` so that the conditional results have a single named hypothesis. It is
+  proved unconditionally one file later, by
+  `AlgebraicGeometry.isTateInvNodeChartLegContinuous_tateInv`
+  (`FormalSchemes.TateInvNodeChartLegContinuous`), so every result below stated with it as a
+  hypothesis has an unconditional form there.
+
+  The obstruction this file recorded — that both of its identifications of a section ring, the
   ambient one through `AlgebraicGeometry.tateInvNodeChartAmbientEquiv` and the target ones through
-  `AlgebraicGeometry.tateInvNodeChartTargetEquivX` — go through
+  `AlgebraicGeometry.tateInvNodeChartTargetEquivX`, go through
   `FormalSpectrum.sectionsBasicOpenEquiv`, which `FormalSchemes.Sections` states as a bare
-  `RingEquiv`. What a proof of leg continuity would need is that it carries
-  `FormalSpectrum.awayCompletionIdeal` to the extension of `annulusIdealOfDefinition` along
-  `A → Γ(D(f))` — which would follow from its being a map of `A`-algebras, though not conversely
-  — and no declaration on this tree states either. The nearest handle is
-  `FormalSpectrum.eval_sectionsBasicOpenEquiv` (`FormalSchemes.BasicOpenChartComponent`), the
-  level-`n` computation rule for this very equivalence, stated with `AdicCompletion.evalₐ`; a
-  successor should start there rather than from `FormalSchemes.Sections`.
+  `RingEquiv` — **turned out not to be on the route**. The ideal of definition of `Γ(U)` is the
+  extension of the base ideal along the structural map for *any* open `U`, so those
+  identifications name the two ideals rather than carry the argument; see
+  `FormalSchemes.AdicOnOpenSections`. **`FormalSpectrum.sectionsBasicOpenEquiv` is still not known
+  to be a map of `A`-algebras**, and nothing downstream settles it either way; a successor on that
+  question should start from `FormalSpectrum.eval_sectionsBasicOpenEquiv`
+  (`FormalSchemes.BasicOpenChartComponent`), the level-`n` computation rule for this very
+  equivalence, stated with `AdicCompletion.evalₐ`, rather than from `FormalSchemes.Sections`.
 * **`Subring.HasCofinalInducedFiltration` is not proved for this subring**, and no `(A, K, S)` at
   which it fails is exhibited. `FormalSchemes.AdicSubringComplete` proves two sufficient
   conditions for it; neither is checked here.
@@ -259,7 +264,9 @@ is required to carry the `n`-th power of the ambient ring's ideal of definition 
 power of the target's, in the `RingHom`-level spelling of "continuous" that
 `RingHom.mem_eqLocus_of_forall_sub_mem_pow` (`FormalSchemes.AdicSubringComplete`) consumes.
 
-**This is not proved for the node chart's legs**; see this file's module docstring. -/
+**This is not proved in this file**; `AlgebraicGeometry.isTateInvNodeChartLegContinuous_tateInv`
+(`FormalSchemes.TateInvNodeChartLegContinuous`) proves it with no hypothesis beyond the ones this
+`Prop` already carries. -/
 def IsTateInvNodeChartLegContinuous : Prop :=
   (∀ (m : ℕ) {v : awayCompletion (annulusIdealOfDefinition R I q)
       (annulusNodeChartCoord R I q)},

@@ -26,9 +26,13 @@ maps by naturality of `w.c` along `U ⊆ ⊤`. The `sectionsBasicOpenEquiv`-shap
 then needed only to *name* the ideals in the spelling `IsTateInvNodeChartLegContinuous` uses, and
 `FormalSpectrum.comap_awayCompletionIdeal_sectionsEquivOfEqBasicOpen` does that translation once.
 
-So the input from `FormalSchemes.AdicOnBasicOpenSections` that this file consumes is
-`FormalSpectrum.map_sectionsBasicOpenHom` — the *ideal* consequence, the one #441's docstring
-already flags as strictly weaker than the `AlgHom` statement — and not any algebra structure.
+No algebra structure is consumed anywhere. What this file actually uses from
+`FormalSchemes.AdicOnBasicOpenSections` is
+`FormalSpectrum.sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom`, which is
+`FormalSpectrum.awayCompletionHom_eq_restrict` restated with the composite named; the *ideal*
+consequence `FormalSpectrum.map_sectionsBasicOpenHom` — the one flagged there as strictly weaker
+than the `AlgHom` statement — enters one file back, in
+`FormalSpectrum.sectionsOpenIdeal_basicOpen`.
 
 ## What is proved here
 
