@@ -34,7 +34,8 @@ non-vacuity witness.
   coefficient of the image is a coefficient of the polynomial.
 * `AlgebraicGeometry.mem_span_X_mul_X_of_coord_eq_zero` — a polynomial killed by both maps is
   divisible by `x·y`.
-* **`AlgebraicGeometry.isTateInvCoordSeparating_bot`**, **`…_int`** — the separation property.
+* **`AlgebraicGeometry.isTateInvCoordSeparating_bot`** and
+  **`AlgebraicGeometry.isTateInvCoordSeparating_int`** — the separation property.
 
 ## Why the discrete case is a genuine computation and not a degeneracy
 
