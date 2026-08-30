@@ -141,4 +141,149 @@ theorem tateInvBotCoordY_C (r : R) :
     ((annulusFlip R ⊥ 0 Submodule.fg_bot).symm (algebraMap R (annulusAlgebra R ⊥ 0) r)) = _
   rw [AlgEquiv.commutes, tateInvGlobalCoord_algebraMap]
 
+/-! ### Reading a coefficient of the image off a coefficient of the polynomial -/
+
+/-- A monomial of `R[x, y]` in the two variables explicitly. -/
+theorem monomial_eq_C_mul_X_pow (d : Fin 2 →₀ ℕ) (c : R) :
+    (monomial d c : MvPolynomial (Fin 2) R) = C c * (X 0 ^ d 0 * X 1 ^ d 1) := by
+  rw [MvPolynomial.monomial_eq]
+  congr 1
+  rw [Finsupp.prod_fintype _ _ fun i => pow_zero (X i)]
+  exact Fin.prod_univ_two fun i => X i ^ d i
+
+/-- A two-variable exponent is `Finsupp.single 0 k` exactly when it has `x`-degree `k` and
+no `y`. -/
+theorem eq_single_zero_iff {d : Fin 2 →₀ ℕ} {k : ℕ} :
+    d = Finsupp.single (0 : Fin 2) k ↔ d 0 = k ∧ d 1 = 0 := by
+  refine ⟨fun h => ⟨?_, ?_⟩, fun h => ?_⟩
+  · simpa using congrArg (fun f => f (0 : Fin 2)) h
+  · simpa using congrArg (fun f => f (1 : Fin 2)) h
+  · refine Finsupp.ext (Fin.forall_fin_two.mpr ⟨?_, ?_⟩) <;> simp [h.1, h.2]
+
+/-- A two-variable exponent is `Finsupp.single 1 k` exactly when it has `y`-degree `k` and
+no `x`. -/
+theorem eq_single_one_iff {d : Fin 2 →₀ ℕ} {k : ℕ} :
+    d = Finsupp.single (1 : Fin 2) k ↔ d 1 = k ∧ d 0 = 0 := by
+  refine ⟨fun h => ⟨?_, ?_⟩, fun h => ?_⟩
+  · simpa using congrArg (fun f => f (1 : Fin 2)) h
+  · simpa using congrArg (fun f => f (0 : Fin 2)) h
+  · refine Finsupp.ext (Fin.forall_fin_two.mpr ⟨?_, ?_⟩) <;> simp [h.1, h.2]
+
+/-- **The `k`-th coefficient of the `x`-chart image is the coefficient of `xᵏ`.** The map kills
+every monomial involving `y`, and carries `xᵏ` to the variable `X ^ k`. -/
+theorem coeff_tateInvBotCoordX (p : MvPolynomial (Fin 2) R) (k : ℕ) :
+    RestrictedLaurentSeries.coeff (⊥ : Ideal R) (k : ℤ) (tateInvBotCoordX R p) =
+      MvPolynomial.coeff (Finsupp.single 0 k) p := by
+  induction p using MvPolynomial.induction_on' with
+  | monomial d c =>
+    have himg : tateInvBotCoordX R (monomial d c) =
+        algebraMap R (RestrictedLaurentSeries R ⊥) c *
+          (RestrictedLaurentSeries.X R ⊥ 1 ^ d 0 *
+            (0 : RestrictedLaurentSeries R ⊥) ^ d 1) := by
+      rw [monomial_eq_C_mul_X_pow, map_mul, map_mul, map_pow, map_pow, tateInvBotCoordX_C,
+        tateInvBotCoordX_X_zero, tateInvBotCoordX_X_one]
+    rw [himg, MvPolynomial.coeff_monomial]
+    by_cases hd : d 1 = 0
+    · rw [hd, pow_zero, mul_one, RestrictedLaurentSeries.X_pow, mul_one,
+        RestrictedLaurentSeries.coeff_algebraMap_mul, RestrictedLaurentSeries.coeff_X]
+      by_cases hk : k = d 0
+      · rw [if_pos (eq_single_zero_iff.mpr ⟨hk.symm, hd⟩), if_pos (by exact_mod_cast hk),
+          mul_one]
+      · rw [if_neg fun h => hk (eq_single_zero_iff.mp h).1.symm,
+          if_neg (by exact_mod_cast hk), mul_zero]
+    · rw [zero_pow hd, mul_zero, mul_zero, map_zero,
+        if_neg fun h => hd (eq_single_zero_iff.mp h).2]
+  | add p q hp hq => rw [map_add, map_add, MvPolynomial.coeff_add, hp, hq]
+
+/-- **The `k`-th coefficient of the flipped image is the coefficient of `yᵏ`.** -/
+theorem coeff_tateInvBotCoordY (p : MvPolynomial (Fin 2) R) (k : ℕ) :
+    RestrictedLaurentSeries.coeff (⊥ : Ideal R) (k : ℤ) (tateInvBotCoordY R p) =
+      MvPolynomial.coeff (Finsupp.single 1 k) p := by
+  induction p using MvPolynomial.induction_on' with
+  | monomial d c =>
+    have himg : tateInvBotCoordY R (monomial d c) =
+        algebraMap R (RestrictedLaurentSeries R ⊥) c *
+          ((0 : RestrictedLaurentSeries R ⊥) ^ d 0 *
+            RestrictedLaurentSeries.X R ⊥ 1 ^ d 1) := by
+      rw [monomial_eq_C_mul_X_pow, map_mul, map_mul, map_pow, map_pow, tateInvBotCoordY_C,
+        tateInvBotCoordY_X_zero, tateInvBotCoordY_X_one]
+    rw [himg, MvPolynomial.coeff_monomial]
+    by_cases hd : d 0 = 0
+    · rw [hd, pow_zero, one_mul, RestrictedLaurentSeries.X_pow, mul_one,
+        RestrictedLaurentSeries.coeff_algebraMap_mul, RestrictedLaurentSeries.coeff_X]
+      by_cases hk : k = d 1
+      · rw [if_pos (eq_single_one_iff.mpr ⟨hk.symm, hd⟩), if_pos (by exact_mod_cast hk),
+          mul_one]
+      · rw [if_neg fun h => hk (eq_single_one_iff.mp h).1.symm,
+          if_neg (by exact_mod_cast hk), mul_zero]
+    · rw [zero_pow hd, zero_mul, mul_zero, map_zero,
+        if_neg fun h => hd (eq_single_one_iff.mp h).2]
+  | add p q hp hq => rw [map_add, map_add, MvPolynomial.coeff_add, hp, hq]
+
+/-! ### The separation property over a discrete base -/
+
+/-- `x·y` as a monomial, so that `MvPolynomial.mem_ideal_span_monomial_image` applies to the
+ideal it spans. -/
+theorem X_mul_X_eq_monomial :
+    (X 0 * X 1 : MvPolynomial (Fin 2) R) =
+      monomial (Finsupp.single (0 : Fin 2) 1 + Finsupp.single (1 : Fin 2) 1) 1 := by
+  rw [show (X 0 : MvPolynomial (Fin 2) R) = X 0 ^ 1 from (pow_one _).symm,
+    show (X 1 : MvPolynomial (Fin 2) R) = X 1 ^ 1 from (pow_one _).symm,
+    MvPolynomial.X_pow_eq_monomial, MvPolynomial.X_pow_eq_monomial, monomial_mul, mul_one]
+
+/-- **A polynomial killed by both evaluations is divisible by `x·y`.** Every exponent in its
+support has positive degree in each variable — otherwise it is a `Finsupp.single` and the
+corresponding coefficient is one of the vanishing ones — so
+`MvPolynomial.mem_ideal_span_monomial_image` applies. -/
+theorem mem_span_X_mul_X_of_coord_eq_zero {p : MvPolynomial (Fin 2) R}
+    (hx : tateInvBotCoordX R p = 0) (hy : tateInvBotCoordY R p = 0) :
+    p ∈ Ideal.span {(X 0 * X 1 : MvPolynomial (Fin 2) R)} := by
+  have hsingle : ∀ d ∈ p.support,
+      Finsupp.single (0 : Fin 2) 1 + Finsupp.single (1 : Fin 2) 1 ≤ d := by
+    intro d hd
+    have hne : MvPolynomial.coeff d p ≠ 0 := MvPolynomial.mem_support_iff.mp hd
+    have h0 : d 0 ≠ 0 := by
+      intro h
+      refine hne ?_
+      rw [eq_single_one_iff.mpr ⟨rfl, h⟩, ← coeff_tateInvBotCoordY p (d 1), hy, map_zero]
+    have h1 : d 1 ≠ 0 := by
+      intro h
+      refine hne ?_
+      rw [eq_single_zero_iff.mpr ⟨rfl, h⟩, ← coeff_tateInvBotCoordX p (d 0), hx, map_zero]
+    refine Finsupp.le_def.mpr (Fin.forall_fin_two.mpr ⟨?_, ?_⟩) <;> simp <;> omega
+  have himg : ({(X 0 * X 1 : MvPolynomial (Fin 2) R)} : Set (MvPolynomial (Fin 2) R)) =
+      (fun s => monomial s (1 : R)) ''
+        {Finsupp.single (0 : Fin 2) 1 + Finsupp.single (1 : Fin 2) 1} := by
+    rw [Set.image_singleton, X_mul_X_eq_monomial]
+  rw [himg]
+  exact MvPolynomial.mem_ideal_span_monomial_image.mpr fun d hd =>
+    ⟨_, rfl, hsingle d hd⟩
+
+/-- **The separation property holds over every discrete base.** At `I = ⊥` the Tate parameter is
+forced to be `0`, the polydisc is the polynomial ring `R[x, y]`, and the two coordinate maps are
+the evaluations `y ↦ 0` and `x ↦ 0`; a polynomial killed by both has every monomial divisible by
+`x·y`, which is exactly the presentation ideal.
+
+This is the **non-vacuity witness** for the whole conditional cluster of
+`FormalSchemes.TateInvGlobalNormalForm`: `AlgebraicGeometry.tateInvGlobalSubringEquivBase` and
+`AlgebraicGeometry.tateInvPeriodQuotientGlobalSectionsEquivBase` are statements about a
+hypothesis that some `(R, I, q)` satisfies. It does **not** make them unconditional. -/
+theorem isTateInvCoordSeparating_bot (R : Type u) [CommRing R] :
+    IsTateInvCoordSeparating R ⊥ 0 Submodule.fg_bot := by
+  intro a hx hy
+  obtain ⟨w, rfl⟩ := annulusMk_surjective R ⊥ 0 a
+  obtain ⟨p, rfl⟩ := (bijective_polydiscOfBot R).surjective w
+  have hmem := mem_span_X_mul_X_of_coord_eq_zero (R := R) (p := p) hx hy
+  obtain ⟨g, rfl⟩ := Ideal.mem_span_singleton'.mp hmem
+  rw [map_mul, map_mul]
+  refine mul_eq_zero_of_right _ ?_
+  refine (Ideal.Quotient.eq_zero_iff_mem).mpr (Ideal.subset_span ?_)
+  rw [Set.mem_singleton_iff, annulusRel, map_zero, sub_zero]
+  rfl
+
+/-- **Non-vacuity at the tree's standing witness** `R = ℤ`, `I = ⊥`, `q = 0`. -/
+theorem isTateInvCoordSeparating_int :
+    IsTateInvCoordSeparating ℤ ⊥ 0 Submodule.fg_bot :=
+  isTateInvCoordSeparating_bot ℤ
+
 end AlgebraicGeometry
