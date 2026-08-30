@@ -30,6 +30,7 @@ import FormalSchemes.AdicOverBaseChart
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AdicRingCat
+import FormalSchemes.AdicSubringComplete
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductLRS
