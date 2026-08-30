@@ -77,8 +77,12 @@ submodule `K ^ n • ⊤` of `A` as a `B`-module. This is the ideal-side counter
 one removes the `• ⊤` on the extended side, which is the form the ring-theoretic consumers of
 adicity want.
 
-Every `mem_idealOfDefinition_pow_iff` on this tree is an instance of it, at a different
-`(B, A, K)`. -/
+Seven declarations on this tree are instances of it, at seven different `(B, A, K)`: the five
+called `mem_idealOfDefinition_pow_iff`, in `FormalSchemes.Completion`,
+`FormalSchemes.BaseChange`, `FormalSchemes.FormalGm`, `FormalSchemes.FormalTorus` and
+`FormalSchemes.CompletedTensor`; `mem_overlapIdeal_pow_iff` (`FormalSchemes.TateOverlap`, root
+namespace); and `FormalSpectrum.mem_awayCompletionIdeal_pow_iff`
+(`FormalSchemes.AdicOnBasicOpenSections`). -/
 theorem Ideal.mem_map_pow_iff_mem_pow_smul_top (n : ℕ) (x : A) :
     x ∈ (K.map (algebraMap B A)) ^ n ↔ x ∈ (K ^ n • ⊤ : Submodule B A) := by
   rw [← Ideal.mem_map_pow_iff_mem_smul_top, Ideal.mem_smul_top_self_iff]
