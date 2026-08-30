@@ -44,6 +44,16 @@ Every comparison of sections living on two different opens goes through
 exactly because those opens are universally quantified there and not in the statements that use
 them.
 
+## The acting group's universe
+
+`G` lives in its own universe, unrelated to the space's. That is not idle generality: an action is
+given by a monoid hom `G →* Aut X`, and the group that matters here —
+`AlgebraicGeometry.tateInvPeriodAction`'s `Multiplicative ℤ` — is in `Type 0` while the space it
+acts on is over a base ring in an arbitrary `Type u`. The price is that the three instances
+`SmallCategory (Discrete G)` used to supply are now hypotheses, introduced immediately before the
+extensionality statement that needs them; all three are synthesisable at `Discrete G` for a `G` in
+`Type 0`, so a consumer does not see them.
+
 ## Main results
 
 * `AlgebraicGeometry.LocallyRingedSpace.sigmaIsoPresheafedSpace`,
@@ -83,7 +93,7 @@ noncomputable section
 
 open CategoryTheory CategoryTheory.Limits Opposite TopologicalSpace
 
-universe u
+universe w u
 
 namespace AlgebraicGeometry.PresheafedSpace
 
@@ -112,7 +122,12 @@ namespace AlgebraicGeometry.LocallyRingedSpace
 
 section Sigma
 
-variable {G : Type u} (X : LocallyRingedSpace.{u}) [Limits.HasCoproduct fun _ : G => X]
+variable {G : Type w} (X : LocallyRingedSpace.{u}) [Limits.HasCoproduct fun _ : G => X]
+variable [Limits.HasCoproduct fun _ : G => X.toPresheafedSpace]
+variable [Limits.PreservesColimit (Discrete.functor fun _ : G => X)
+  LocallyRingedSpace.forgetToSheafedSpace]
+variable [Limits.PreservesColimit ((Discrete.functor fun _ : G => X) ⋙
+  LocallyRingedSpace.forgetToSheafedSpace) SheafedSpace.forgetToPresheafedSpace]
 
 /-- **The coproduct's comparison isomorphism.** `∐_{g : G} X` in `LocallyRingedSpace` is no more
 definitionally the coproduct of the underlying presheafed spaces than the coequalizer was, for the
@@ -159,6 +174,13 @@ theorem ι_preimage_sigmaIso (g : G)
       (Opens.map (Sigma.ι (fun _ : G => X.toPresheafedSpace) g).base).obj U' := by
   rw [← Opens.map_comp_obj, ← PresheafedSpace.comp_base, ι_comp_sigmaIsoPresheafedSpace_hom]
 
+-- Introduced here rather than at the top of the section: these are what `SmallCategory (Discrete
+-- G)` used to supply when `G` shared the space's universe, and only the extensionality statement
+-- and its consumers need them.
+variable [Limits.HasColimitsOfShape (Discrete G) TopCat.{u}]
+variable [∀ Z : TopCat.{u}, Limits.HasLimitsOfShape (Discrete G)ᵒᵖ (Z.Presheaf CommRingCat.{u})]
+variable [Limits.HasLimitsOfShape (Discrete G)ᵒᵖ CommRingCat.{u}]
+
 set_option linter.style.setOption false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
@@ -197,7 +219,7 @@ end Sigma
 
 section Action
 
-variable {G : Type u} {X : LocallyRingedSpace.{u}} [Limits.HasCoproduct fun _ : G => X]
+variable {G : Type w} {X : LocallyRingedSpace.{u}} [Limits.HasCoproduct fun _ : G => X]
 variable (W : Opens X.toTopCat)
 
 /-- The `g`-th leg followed by the right leg of the action coequalizer is the identity, read on
@@ -268,6 +290,20 @@ theorem eq_preimage_of_preimage_actionQuotient_eq
     ((congrArg (Opens.map (Sigma.ι (fun _ : G => X) g).toShHom.hom.base).obj h).trans
       (preimage_actionQuotientLeft W a g))
 
+section Ext
+
+-- Introduced here rather than at the top of the section: these are what `SmallCategory (Discrete
+-- G)` used to supply when `G` shared the space's universe, and only the extensionality statement
+-- and its consumers need them.
+variable [Limits.HasCoproduct fun _ : G => X.toPresheafedSpace]
+variable [Limits.PreservesColimit (Discrete.functor fun _ : G => X)
+  LocallyRingedSpace.forgetToSheafedSpace]
+variable [Limits.PreservesColimit ((Discrete.functor fun _ : G => X) ⋙
+  LocallyRingedSpace.forgetToSheafedSpace) SheafedSpace.forgetToPresheafedSpace]
+variable [Limits.HasColimitsOfShape (Discrete G) TopCat.{u}]
+variable [∀ Z : TopCat.{u}, Limits.HasLimitsOfShape (Discrete G)ᵒᵖ (Z.Presheaf CommRingCat.{u})]
+variable [Limits.HasLimitsOfShape (Discrete G)ᵒᵖ CommRingCat.{u}]
+
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The two pullbacks of `s` agree exactly when `s` is invariant under every `a g`.** The `←`
@@ -308,6 +344,8 @@ theorem c_app_actionQuotientLeft_eq_iff
   · exact fun heq g => (key g).mp (congrArg _ heq)
   · exact fun hinv => sigma_section_ext X _ _ _ fun g => (key g).mpr (hinv g)
 
+end Ext
+
 /-- A morphism equal to the identity acts on sections as the transport of the open. Used to see
 that every section is invariant under the trivial action. -/
 theorem c_app_eq_of_eq_id {φ : X ⟶ X} (hφ : φ = 𝟙 X)
@@ -324,7 +362,7 @@ namespace CategoryTheory
 
 open AlgebraicGeometry
 
-variable {G : Type u} [Monoid G] {X : LocallyRingedSpace.{u}} (a : G →* Aut X)
+variable {G : Type w} [Monoid G] {X : LocallyRingedSpace.{u}} (a : G →* Aut X)
 variable [Limits.HasCoproduct fun _ : G => X]
   [Limits.HasCoequalizer (actionQuotientLeft a) (actionQuotientRight G X)]
 
@@ -337,6 +375,19 @@ theorem preimage_actionQuotientπ_eq (V : Opens (actionQuotient a).toTopCat) (g 
         ((Opens.map (actionQuotientπ a).toShHom.hom.base).obj V) :=
   LocallyRingedSpace.eq_preimage_of_preimage_actionQuotient_eq _ a
     (LocallyRingedSpace.preimage_coequalizer_π_eq _ _ V) g
+
+-- Introduced here rather than at the top of the section: these are what `SmallCategory (Discrete
+-- G)` used to supply when `G` shared the space's universe, and only the extensionality statement
+-- and its consumers need them.
+variable [Limits.HasCoproduct fun _ : G => X.toPresheafedSpace]
+variable [Limits.PreservesColimit (Discrete.functor fun _ : G => X)
+  AlgebraicGeometry.LocallyRingedSpace.forgetToSheafedSpace]
+variable [Limits.PreservesColimit ((Discrete.functor fun _ : G => X) ⋙
+  AlgebraicGeometry.LocallyRingedSpace.forgetToSheafedSpace)
+  AlgebraicGeometry.SheafedSpace.forgetToPresheafedSpace]
+variable [Limits.HasColimitsOfShape (Discrete G) TopCat.{u}]
+variable [∀ Z : TopCat.{u}, Limits.HasLimitsOfShape (Discrete G)ᵒᵖ (Z.Presheaf CommRingCat.{u})]
+variable [Limits.HasLimitsOfShape (Discrete G)ᵒᵖ CommRingCat.{u}]
 
 /-- **The sections of an action quotient are exactly the invariant sections.** A section of `X`
 over `π⁻¹ V` is the pullback of a section of `X / G` over `V` if and only if it is invariant under
