@@ -8,9 +8,88 @@ set_option linter.style.header false
 /-!
 # `Γ (T_inv/⟨σ⟩)` as an explicit subring of `A = R{x, y}/(x·y − q)`
 
-PLACEHOLDER MODULE DOCSTRING
--/
+`AlgebraicGeometry.tateInvChartSubring` (`FormalSchemes.TateInvQuotientChartRing`) identifies
+`Γ (T_inv/⟨σ⟩, V)` with a subring of the model patch's sections over
+`AlgebraicGeometry.tateInvPatchSaturateOpens hq hI hS`, and
+`AlgebraicGeometry.tateInvChartAnnulusSubring` (`FormalSchemes.TateInvChartAnnulusRing`) cuts that
+subring out by **two** equations in the annulus charts rather than by a family indexed by every
+pair of patch indices. Both are still statements about sections of a structure sheaf over an open
+of `Spf A` that is defined through the chain.
 
+At `S = Set.univ` all of that collapses. `AlgebraicGeometry.tateInvPatchSaturateOpens_univ` makes
+the ambient open `⊤`, where `FormalSpectrum.globalSectionsEquiv` (EGA I 10.1.3) identifies the
+sections with `A` itself and `FormalSpectrum.globalSectionsMap` computes each of the four legs
+(EGA I 10.4.6). And `map_actionQuotientπ_top_eq` exhibits `V = ⊤`, so the ring being described is
+`Γ (T_inv/⟨σ⟩)` — the global sections of the period-`q` quotient.
+
+The result, `tateInvGlobalSectionsRingEquiv`, is a `RingEquiv` onto a `Subring` of `A` in whose
+definition no locally ringed space, no glue datum and no presheaf occurs.
+
+## What is here
+
+* `FormalSpectrum.sectionsEquivOfEqTop` and
+  `FormalSpectrum.globalSectionsMap_sectionsEquivOfEqTop`: sections over an open that happens to be
+  `⊤` are the ring, and a `c`-component read there is the global-sections map. The second is
+  general: it is stated for an arbitrary morphism of formal spectra and takes the identification of
+  the source open as a hypothesis, because the two forward legs are compared over one and the same
+  open of `Spf A{1/x}` that is not syntactically either chart's preimage.
+* `AlgebraicGeometry.mem_tateInvChartSubring_iff_charts`: membership in the chart ring is the pair
+  of chart conditions, **at every `S`**. This is `mem_tateInvChartSubring_iff` composed with
+  `isTateInvOverlapCompatible_iff_charts`; the two files that prove those landed on branches
+  neither of which saw the other, so neither states it.
+* `AlgebraicGeometry.tateInvSaturateOpens_univ`, `AlgebraicGeometry.map_actionQuotientπ_top_eq`,
+  `AlgebraicGeometry.map_base_tateInvPatchSaturateOpens_univ`: the three opens that are `⊤`.
+* `AlgebraicGeometry.tateInvGlobalLegX`, `AlgebraicGeometry.tateInvGlobalLegYX`,
+  `AlgebraicGeometry.tateInvGlobalLegY`, `AlgebraicGeometry.tateInvGlobalLegXY`: the four legs as
+  ring maps of `A`, built from `FormalSpectrum.awayCompletionHom` and
+  `AlgebraicGeometry.annulusChartTransitionInvAlg`.
+* `AlgebraicGeometry.tateInvGlobalSubring`, `AlgebraicGeometry.mem_tateInvGlobalSubring_iff`: the
+  subring they cut out, and its membership.
+* `AlgebraicGeometry.algebraMap_mem_tateInvGlobalSubring`: it contains the image of `R`.
+* `AlgebraicGeometry.tateInvGlobalXEquiv_tateInvChartLegX` and its three companions: each of
+  `AlgebraicGeometry.tateInvChartLegX`, `tateInvChartLegYX`, `tateInvChartLegY`, `tateInvChartLegXY`
+  is, at `S = Set.univ`, its own `FormalSpectrum.globalSectionsMap`.
+* `AlgebraicGeometry.globalSectionsMap_annulusOverlapChart` and its three companions: those four
+  global-sections maps are the four legs above.
+* `AlgebraicGeometry.mem_tateInvChartAnnulusSubring_iff_mem_tateInvGlobalSubring`: the two chart
+  conditions on a section are the two equations on the corresponding element of `A`.
+* **`AlgebraicGeometry.tateInvGlobalSectionsRingEquiv`**:
+  `Γ (T_inv/⟨σ⟩) ≃+* tateInvGlobalSubring hI`.
+
+## What is *not* proved
+
+**Whether the subring is proper, or whether it is bigger than `R`.** These are two different
+questions and neither is settled here.
+
+* *Proper*, i.e. smaller than `A`: that is `tateInvChartAnnulusSubring_eq_top_iff`
+  (`FormalSchemes.TateInvChartAnnulusRing`) at `S = Set.univ`, and this file turns it into the
+  question whether `tateInvGlobalLegX = tateInvGlobalLegYX` and
+  `tateInvGlobalLegY = tateInvGlobalLegXY` as ring maps of `A`. It does not answer it.
+* *Bigger than the base*, i.e. containing an element outside the image of `Γ (Spf R, ·)`: that is
+  issue 1223's goal 3. `algebraMap_mem_tateInvGlobalSubring` is its trivial half — the image is
+  contained — and its converse is not proved here. Deligne–Rapoport's 1-gon being proper predicts
+  that at `S = Set.univ` the answer is *no* and the subring is exactly the image of `R`; that is a
+  prediction about a nodal curve over a field, and this is a formal annulus over an adic ring.
+
+**Nothing here is a chart, and nothing here says the quotient is a formal scheme.**
+`AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChart`
+(`FormalSchemes.TateInvPeriodQuotientCharts`) needs an adic structure on a ring and an open
+immersion out of its formal spectrum, at an `S` that is a proper open. `Set.univ` is not that `S`,
+a ring is not a chart, and this file supplies neither.
+
+**Nothing here describes `tateInvPatchSaturateOpens hq hI hS` at a general `S`.** It is still by
+definition a preimage under `ι ⟨0⟩` of a saturation inside the chain. `Set.univ` is the one case
+where a chain-free description exists, and it exists because
+`AlgebraicGeometry.tateInvPatchSaturate_univ` says the set is everything.
+
+## References
+
+* [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1.3 (global sections of
+  `O_{Spf R}`), §10.4.6 (`Γ ∘ Spf = id`), §10.6.
+* [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
+* [Deligne–Rapoport, *Les schémas de modules de courbes elliptiques*], II.1 — the Néron `n`-gon;
+  the ring described here is the global functions on the 1-gon over the formal model.
+-/
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum TopologicalSpace
