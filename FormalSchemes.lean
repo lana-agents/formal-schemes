@@ -7,6 +7,7 @@ import FormalSchemes.ActionQuotientColimit
 import FormalSchemes.ActionQuotientFormalScheme
 import FormalSchemes.ActionQuotientFunctor
 import FormalSchemes.ActionQuotientInvariantSections
+import FormalSchemes.ActionQuotientSectionInjective
 import FormalSchemes.ActionQuotientSections
 import FormalSchemes.ActionQuotientSeparatingSections
 import FormalSchemes.ActionQuotientStalk
@@ -203,6 +204,7 @@ import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataCompact
 import FormalSchemes.GlueDataImageInter
+import FormalSchemes.GlueDataSectionExt
 import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.GlueHomToSpf
 import FormalSchemes.GlueMorphisms
@@ -309,6 +311,7 @@ import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
+import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeLocus
 import FormalSchemes.TateInvOverlapDiscontinuous
 import FormalSchemes.TateInvPeriodNodePoint
