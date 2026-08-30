@@ -94,6 +94,7 @@ import FormalSchemes.CofinalSheafComparisonBasis
 import FormalSchemes.CofinalSheafComparisonGeneral
 import FormalSchemes.CofinalSheafComparisonIso
 import FormalSchemes.CofinalSheafComparisonNaturality
+import FormalSchemes.CofinalStructMap
 import FormalSchemes.CofinalTopFiniteType
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
