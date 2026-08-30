@@ -84,16 +84,15 @@ end AlgebraicGeometry.LocallyRingedSpace
 namespace AlgebraicGeometry.PresheafedSpace.IsOpenImmersion
 
 /-- **Meeting an open with the range of an open immersion is the image of its preimage.** The
-rewrite that puts `W ⊓ (range f)` into the shape `PresheafedSpace.IsOpenImmersion.c_iso'` wants. -/
+rewrite that puts `W ⊓ (range f)` into the shape `PresheafedSpace.IsOpenImmersion.c_iso'` wants.
+
+`AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.opensFunctor` is an `abbrev` for
+`H.base_open.functor`, so Mathlib's `TopologicalSpace.Opens.functor_obj_map_obj` applies on the
+nose; only the order of the meet differs. -/
 theorem inf_opensFunctor_top {X Y : PresheafedSpace.{u} CommRingCat.{u}} (f : X ⟶ Y)
     [IsOpenImmersion f] (W : Opens Y) :
-    W ⊓ (opensFunctor f).obj ⊤ = (opensFunctor f).obj ((Opens.map f.base).obj W) := by
-  ext z
-  constructor
-  · rintro ⟨hzW, w, -, rfl⟩
-    exact ⟨w, hzW, rfl⟩
-  · rintro ⟨w, hw, rfl⟩
-    exact ⟨hw, w, trivial, rfl⟩
+    W ⊓ (opensFunctor f).obj ⊤ = (opensFunctor f).obj ((Opens.map f.base).obj W) :=
+  ((TopologicalSpace.Opens.functor_obj_map_obj _ W).trans (inf_comm _ _)).symm
 
 end AlgebraicGeometry.PresheafedSpace.IsOpenImmersion
 
