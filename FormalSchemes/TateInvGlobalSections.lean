@@ -469,8 +469,9 @@ theorem globalSectionsMap_annulusChartTransitionInvSpf_hom (hI : I.FG) :
 omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
   [IsAdicRing (annulusIdealOfDefinition R I q)] in
 /-- `Γ` of the inverse transition is the forward `R`-algebra avatar. Derived from the previous
-theorem by functoriality (`FormalSpectrum.globalSectionsMap_comp` and `_id`) rather than by
-re-running `annulusChartTransitionInvSpf_hom_eq`'s proof, which needs a raised heartbeat budget. -/
+theorem by functoriality (`FormalSpectrum.globalSectionsMap_comp` and
+`FormalSpectrum.globalSectionsMap_id`) rather than by re-running
+`annulusChartTransitionInvSpf_hom_eq`'s proof, which needs a raised heartbeat budget. -/
 theorem globalSectionsMap_annulusChartTransitionInvSpf_inv (hI : I.FG) :
     FormalSpectrum.globalSectionsMap _ _ (annulusChartTransitionInvSpf R I q hI).inv =
       (annulusChartTransitionInvAlg R I q hI).toRingHom := by
