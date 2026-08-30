@@ -251,6 +251,8 @@ import FormalSchemes.PullbackRangeLRS
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.RelativeTopFiniteTypeBasis
 import FormalSchemes.RelativeTopFiniteTypeTrans
+import FormalSchemes.RestrictedLaurentCoeff
+import FormalSchemes.RestrictedLaurentCoeffInv
 import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
@@ -315,6 +317,7 @@ import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
 import FormalSchemes.TateInvChartAnnulusRing
+import FormalSchemes.TateInvGlobalCoeff
 import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvGlobalSections
 import FormalSchemes.TateInvNodeChartGlue
