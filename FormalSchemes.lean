@@ -204,6 +204,7 @@ import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataCompact
 import FormalSchemes.GlueDataImageInter
+import FormalSchemes.GlueDataOverlapCompat
 import FormalSchemes.GlueDataSectionExt
 import FormalSchemes.GlueDataSectionGlue
 import FormalSchemes.GlueDataTopFiniteType
@@ -314,6 +315,7 @@ import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
 import FormalSchemes.TateInvNodeChartGlue
+import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeLocus
 import FormalSchemes.TateInvOverlapDiscontinuous
