@@ -203,6 +203,7 @@ import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataCompact
 import FormalSchemes.GlueDataImageInter
+import FormalSchemes.GlueDataSectionExt
 import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.GlueHomToSpf
 import FormalSchemes.GlueMorphisms
