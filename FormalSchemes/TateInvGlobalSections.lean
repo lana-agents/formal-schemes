@@ -45,7 +45,9 @@ definition no locally ringed space, no glue datum and no presheaf occurs.
   `AlgebraicGeometry.annulusChartTransitionInvAlg`.
 * `AlgebraicGeometry.tateInvGlobalSubring`, `AlgebraicGeometry.mem_tateInvGlobalSubring_iff`: the
   subring they cut out, and its membership.
-* `AlgebraicGeometry.algebraMap_mem_tateInvGlobalSubring`: it contains the image of `R`.
+* `AlgebraicGeometry.algebraMap_mem_tateInvGlobalSubring` and
+  `AlgebraicGeometry.symm_algebraMap_mem_tateInvChartAnnulusSubring`: it contains the image of `R`,
+  in the two spellings.
 * `AlgebraicGeometry.tateInvGlobalXEquiv_tateInvChartLegX` and its three companions: each of
   `AlgebraicGeometry.tateInvChartLegX`, `tateInvChartLegYX`, `tateInvChartLegY`, `tateInvChartLegXY`
   is, at `S = Set.univ`, its own `FormalSpectrum.globalSectionsMap`.
@@ -530,6 +532,20 @@ theorem mem_tateInvChartAnnulusSubring_iff_mem_tateInvGlobalSubring (hq : q ∈ 
   · rw [isTateInvChartCompatibleBackward_iff, ← (tateInvGlobalYEquiv hq hI).injective.eq_iff,
       tateInvGlobalYEquiv_tateInvChartLegY, tateInvGlobalYEquiv_tateInvChartLegXY,
       globalSectionsMap_annulusOverlapChartY, globalSectionsMap_transitionInv_inv_comp_chart]
+
+/-- **An element of the chart ring at `S = Set.univ`, exhibited.** The section of the model patch
+corresponding to `algebraMap R A r` satisfies both chart conditions. Together with
+`mem_tateInvChartAnnulusSubring_iff_mem_tateInvGlobalSubring` and
+`algebraMap_mem_tateInvGlobalSubring` this is the first element of
+`AlgebraicGeometry.tateInvChartAnnulusSubring` named beyond `0` and `1`, which
+`FormalSchemes.TateInvQuotientChartRing` recorded as missing.
+
+It is **not** an element outside the image of `Γ (Spf R, ·)`; it is exactly inside it. -/
+theorem symm_algebraMap_mem_tateInvChartAnnulusSubring (hq : q ∈ I) (hI : I.FG) (r : R) :
+    (tateInvGlobalPatchEquiv hq hI).symm (algebraMap R (annulusAlgebra R I q) r) ∈
+      tateInvChartAnnulusSubring (hq := hq) (hI := hI) (S := Set.univ) isOpen_univ :=
+  (mem_tateInvChartAnnulusSubring_iff_mem_tateInvGlobalSubring hq hI _).2
+    (by rw [RingEquiv.apply_symm_apply]; exact algebraMap_mem_tateInvGlobalSubring hI r)
 
 end XY
 
