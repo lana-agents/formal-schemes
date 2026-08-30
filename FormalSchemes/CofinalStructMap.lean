@@ -1,5 +1,6 @@
 import FormalSchemes.CofinalSheafComparisonGeneral
 import FormalSchemes.SpfFunctorial
+import FormalSchemes.SpfGammaFunctorial
 import FormalSchemes.TopFiniteType
 
 set_option linter.style.header false
@@ -48,6 +49,8 @@ one at the ideal `I * J`, which is where `FormalSpectrum.isAdicRing_mul` is need
 * `FormalSpectrum.generalCofinalSpfIso_eq`: that factorisation, as an equation.
 * `FormalSpectrum.structMap_comp_cofinalSpfIso_inv`: **the square, nested case.**
 * `FormalSpectrum.structMap_comp_generalCofinalSpfIso_inv`: **the square, general case.**
+* `FormalSpectrum.globalSectionsMap_generalCofinalSpfIso_hom`: the comparison is the identity on
+  global sections — the form in which an *abstract* isomorphism of two charts is compared with it.
 
 ## References
 
@@ -179,5 +182,42 @@ theorem structMap_comp_generalCofinalSpfIso_inv (hI : I.FG) (hJ : J.FG)
   rw [generalCofinalSpfIso_eq I J hI hJ, generalCofinalSpfIso_eq L M hL hM]
   simp only [Iso.trans_inv, Iso.symm_inv, ← hkI, ← hkL]
   rw [← Category.assoc, hJside, Category.assoc, key, Category.assoc]
+
+/-! ### Global sections of the comparison isomorphism -/
+
+variable (I J)
+
+/-- **The comparison morphism is `Spf` of the identity, so its global-sections map is the
+identity.** Immediate from `FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap`, since
+`FormalSpectrum.cofinalSpfIso`'s inverse *is* `locallyRingedSpaceMap` of `RingHom.id`. -/
+theorem globalSectionsMap_cofinalSpfIso_inv (hIJ : I ≤ J) (hI : I.FG) (hJ : J.FG) :
+    globalSectionsMap I J (cofinalSpfIso I J hIJ hI hJ).inv = RingHom.id R :=
+  globalSectionsMap_locallyRingedSpaceMap I J (RingHom.id R) (le_comap_id_of_le I J hIJ)
+
+/-- The same for the forward direction, by functoriality of global sections: the two composites
+are the identity morphism, whose global-sections map is `RingHom.id`. -/
+theorem globalSectionsMap_cofinalSpfIso_hom (hIJ : I ≤ J) (hI : I.FG) (hJ : J.FG) :
+    globalSectionsMap J I (cofinalSpfIso I J hIJ hI hJ).hom = RingHom.id R := by
+  have h := globalSectionsMap_comp I J I (cofinalSpfIso I J hIJ hI hJ).hom
+    (cofinalSpfIso I J hIJ hI hJ).inv
+  rw [(cofinalSpfIso I J hIJ hI hJ).hom_inv_id, globalSectionsMap_id,
+    globalSectionsMap_cofinalSpfIso_inv] at h
+  simpa using h.symm
+
+/-- **The ideal-independence isomorphism is invisible on global sections.** Both formal spectra
+have the same ring of global sections, and the comparison induces the identity on it.
+
+This is what identifies an *abstract* isomorphism of formal spectra with the comparison up to
+`Spf` of a ring isomorphism: by `FormalSpectrum.locallyRingedSpaceMap_globalSectionsMap`, a
+morphism of formal spectra with continuous global-sections map is `Spf` of that map, so composing
+with the comparison changes nothing but the ideal. -/
+theorem globalSectionsMap_generalCofinalSpfIso_hom (hI : I.FG) (hJ : J.FG) :
+    globalSectionsMap J I (generalCofinalSpfIso I J hI hJ).hom = RingHom.id R := by
+  haveI := isAdicRing_mul I J
+  rw [generalCofinalSpfIso_eq I J hI hJ]
+  simp only [Iso.trans_hom, Iso.symm_hom]
+  rw [globalSectionsMap_comp, globalSectionsMap_cofinalSpfIso_inv,
+    globalSectionsMap_cofinalSpfIso_hom]
+  simp
 
 end FormalSpectrum
