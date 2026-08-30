@@ -25,6 +25,7 @@ import FormalSchemes.AdicExtend
 import FormalSchemes.AdicHausdorff
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicOnBasicOpenSections
+import FormalSchemes.AdicOnOpenSections
 import FormalSchemes.AdicOnSections
 import FormalSchemes.AdicOnSectionsDescent
 import FormalSchemes.AdicOverBaseChart
