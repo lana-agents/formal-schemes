@@ -96,7 +96,10 @@ What *is* done elsewhere: `AlgebraicGeometry.tateInvChartAnnulusSubring`
 (`FormalSchemes.TateInvChartAnnulusRing`) packages the two conditions as an infimum of two
 `RingHom.eqLocus`s and identifies it with `AlgebraicGeometry.tateInvChartSubring`, the equalizer
 description of `Γ (T_inv/⟨σ⟩, V)` that `FormalSchemes.TateInvQuotientChartRing` built over the
-unreduced condition.
+unreduced condition. At `S = Set.univ`, `FormalSchemes.TateInvGlobalSections` then reads the two
+conditions in the coordinates named above: `AlgebraicGeometry.tateInvGlobalSectionsRingEquiv`
+identifies `Γ (T_inv/⟨σ⟩)` with a subring of `A` cut out by two equations between composites of
+`FormalSpectrum.awayCompletionHom` and `AlgebraicGeometry.annulusChartTransitionInvAlg`.
 
 Nothing here descends to the quotient `T_inv/⟨σ⟩`; that is
 `FormalSchemes.TateInvQuotientSections`.

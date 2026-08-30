@@ -72,8 +72,11 @@ is an infimum of exactly **two** `RingHom.eqLocus`s, in which no glue-datum morp
 (`FormalSchemes.TateInvPeriodQuotientCharts`) still needs a chart at a node image: an adic
 structure on this ring and an open immersion out of its formal spectrum. A ring is not a chart.
 
-**No element of the subring is exhibited beyond `0` and `1`**, which are in it because it is a
-`Subring`. Whether it is strictly smaller than `Γ (Spf A, tateInvPatchSaturate S)` — equivalently,
+**No element of the subring is exhibited here beyond `0` and `1`**, which are in it because it is
+a `Subring`. At `S = Set.univ` the image of the base ring is exhibited elsewhere, by
+`AlgebraicGeometry.symm_algebraMap_mem_tateInvChartAnnulusSubring`
+(`FormalSchemes.TateInvGlobalSections`); at a general `S` nothing beyond `0` and `1` is named.
+Whether the subring is strictly smaller than `Γ (Spf A, tateInvPatchSaturate S)` — equivalently,
 whether the overlap condition is a genuine restriction — is not decided here; the condition is at
 least not *definitionally* trivial, since it is not closed by `rfl`. Nor is it an `S`-free
 question: `AlgebraicGeometry.tateInvChartAnnulusSubring_empty_eq_top`
