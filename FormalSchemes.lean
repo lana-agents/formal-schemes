@@ -334,6 +334,7 @@ import FormalSchemes.TateInvPeriodQuotientCharts
 import FormalSchemes.TateInvQuotientChartRing
 import FormalSchemes.TateInvQuotientSections
 import FormalSchemes.TateInvSaturation
+import FormalSchemes.TateInvSeparatingKerClosed
 import FormalSchemes.TateLocallyFG
 import FormalSchemes.TateMixedChartDescent
 import FormalSchemes.TateOverlap
