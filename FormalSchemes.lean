@@ -25,6 +25,7 @@ import FormalSchemes.AdicExtend
 import FormalSchemes.AdicHausdorff
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicOnBasicOpenSections
+import FormalSchemes.AdicOnOpenSections
 import FormalSchemes.AdicOnSections
 import FormalSchemes.AdicOnSectionsDescent
 import FormalSchemes.AdicOverBaseChart
@@ -329,6 +330,7 @@ import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
+import FormalSchemes.TateInvNodeChartLegContinuous
 import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeLocus
