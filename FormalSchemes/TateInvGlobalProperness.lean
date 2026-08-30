@@ -66,12 +66,21 @@ hence, by `RestrictedLaurentSeries.algebraMap_injective`, in `R`. With `q ∈ I`
 of properness of the Néron 1-gon — is that `Γ (T_inv/⟨σ⟩) ≃+* R`, and
 `AlgebraicGeometry.algebraMap_mem_tateInvGlobalSubring` (`FormalSchemes.TateInvGlobalSections`) is
 its easy half. This file proves the subring is **smaller than `A`**, not that it is **as small as
-`R`**; the converse needs a coefficientwise argument in `R{X, X⁻¹}` and is not attempted.
+`R`**; the converse needs a coefficientwise argument in `R{X, X⁻¹}` and is not attempted here.
+It is carried out in `FormalSchemes.TateInvGlobalNormalForm` and
+`FormalSchemes.TateInvSeparatingDivision`, whose
+`AlgebraicGeometry.tateInvGlobalSubring_eq_range_of_noetherian` settles it **over a Noetherian
+base**; over a base that is not Noetherian it is still open, and
+`AlgebraicGeometry.isTateInvCoordSeparating_iff_adicKerClosed` says it is then exactly the
+question whether `(x·y − q)` is adically closed in `R{x, y}`. Nothing in this file needs
+`[IsNoetherianRing R]`, so the two statements are independent of each other.
 
-**Issue 1223's goal 3 is untouched.** That asks for an element of the chart ring *outside* the
-image of `Γ (Spf R, ·)`, i.e. that the ring is *bigger* than the base. Properness is that it is
-*smaller* than the patch's sections. Neither implies the other, and this file settles only the
-second, at `S = Set.univ`.
+**Issue 1223's goal 3 is untouched here.** That asks for an element of the chart ring *outside*
+the image of `Γ (Spf R, ·)`, i.e. that the ring is *bigger* than the base. Properness is that it
+is *smaller* than the patch's sections. Neither implies the other, and this file settles only the
+second, at `S = Set.univ`. The first is settled in the negative, over a Noetherian base, by
+`AlgebraicGeometry.exists_algebraMap_eq_of_mem_tateInvChartAnnulusSubring_univ`
+(`FormalSchemes.TateInvSeparatingDivision`): there is no such element.
 
 **Nothing here is a chart**, and nothing here says the quotient is a formal scheme. That is issue
 1197.
