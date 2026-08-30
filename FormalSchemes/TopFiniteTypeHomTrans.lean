@@ -48,8 +48,8 @@ not two. The route is the one `FormalSchemes.TopFiniteTypeHomComp` described:
    `IsTopologicallyFiniteType.awayCompletion_baseChange`
    (`FormalSchemes.AwayBaseChangeTopFiniteType`) makes `A{1/(c·A)}^` tf-type over the shrunk base
    `(R{1/c}^, I{1/c}^)`, and
-   `FormalSpectrum.basicOpenChart_comp_structMap` (`FormalSchemes.AwayChartStructMap`) is the
-   square that keeps the factorisation.
+   `FormalSpectrum.basicOpenChart_comp_structMap_baseChange`
+   (`FormalSchemes.AwayChartStructMap`) is the square that keeps the factorisation.
 5. **Feed the shared-chart law.** The data assembled at each point of `X` is a
    `AlgebraicGeometry.FormalScheme.TfTypeCompChart`, the covers built from a family of those
    satisfy `AlgebraicGeometry.FormalScheme.IsTfTypeTower`, and
@@ -185,11 +185,12 @@ and the point of the source chart lying over it, this assembles the composite ch
 
 The three squares it has to check, and where each comes from:
 
-* the source square is `FormalSpectrum.basicOpenChart_comp_structMap`
+* the source square is `FormalSpectrum.basicOpenChart_comp_structMap_baseChange`
   (`FormalSchemes.AwayChartStructMap`) followed by
   `FormalSpectrum.structMap_comp_generalCofinalSpfIso_inv` (`FormalSchemes.CofinalStructMap`) —
   the shrink of the `X`-chart, then the ideal alignment;
-* the target square is `FormalSpectrum.basicOpenChart_comp_structMap_base` followed by the
+* the target square is `AlgebraicGeometry.basicOpenChart_comp_structMap`
+  (`FormalSchemes.RelativeTopFiniteTypeBasis`, already on the tree) followed by the
   identification of the transported structural morphism, which is where `Spf`'s fullness onto
   continuous morphisms enters: `FormalSpectrum.locallyRingedSpaceMap_globalSectionsMap`
   identifies two morphisms of formal spectra whose global-sections maps agree, and they agree by
@@ -350,7 +351,7 @@ theorem nonempty_tfTypeCompChart_aux {f : X ⟶ Y} {g : Y ⟶ Z} {𝒲 : OpenCov
     exact ⟨v, (congrArg (fun z => m.toLRSHom.base z) hv).trans hx₀⟩
   · have hchart : bcL ≫ IsTopologicallyFiniteType.structHom hA =
         IsTopologicallyFiniteType.structHom hA₂ ≫ bcI :=
-      congrArg Hom.mk (FormalSpectrum.basicOpenChart_comp_structMap hIfg hA.map_eq c rfl
+      congrArg Hom.mk (FormalSpectrum.basicOpenChart_comp_structMap_baseChange hIfg hA.map_eq c rfl
         hA₂.map_eq)
     have hsq : IsTopologicallyFiniteType.structHom hA₂ ≫ κN.inv =
         κA.inv ≫ IsTopologicallyFiniteType.structHom hA₃ :=
@@ -378,7 +379,7 @@ theorem nonempty_tfTypeCompChart_aux {f : X ⟶ Y} {g : Y ⟶ Z} {𝒲 : OpenCov
   · have hεF : εF.hom ≫ (bcM ≫ t') = bcI ≫ t := congrArg Hom.mk hεhom
     have hchartM : bcM ≫ IsTopologicallyFiniteType.structHom hB =
         IsTopologicallyFiniteType.structHom hB₂ :=
-      congrArg Hom.mk (FormalSpectrum.basicOpenChart_comp_structMap_base hB.map_eq d hB₂.map_eq)
+      congrArg Hom.mk (basicOpenChart_comp_structMap d hB hB₂)
     have hΓLRS : (FormalSpectrum.generalCofinalSpfIso
           (K.map (algebraMap S (FormalSpectrum.awayCompletion I c)))
           (FormalSpectrum.awayCompletionIdeal I c) hMmidfg hJ₁fg).hom ≫

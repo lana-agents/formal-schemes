@@ -189,7 +189,7 @@ theorem structMap_comp_generalCofinalSpfIso_inv (hI : I.FG) (hJ : J.FG)
 variable (I J)
 
 /-- **The global-sections map of a structural morphism is the structure map of the algebra.**
-`AlgebraicGeometry.IsTopologicallyFiniteType.structMap` is `locallyRingedSpaceMap` of
+`IsTopologicallyFiniteType.structMap` is `locallyRingedSpaceMap` of
 `algebraMap`, so this is `FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap`; it earns a name
 because `rw` is syntactic and no rewrite fires on the `structMap` spelling. -/
 theorem globalSectionsMap_structMap {A : Type u} [CommRing A] [TopologicalSpace A] [Algebra R A]
