@@ -45,11 +45,15 @@ but a definition that elaborates is not a notion, and both of its justifying the
   the non-affine-target analogue of `AlgebraicGeometry.FormalScheme.RelTfTypeChart` and its
   neighbourhood-basis theorem does not exist.
 * **Conservativity** at `Y = Spf I` needs an *arbitrary* affine open of `Spf I` to be tf-type over
-  `(R, I)`. The tree has the basic-open case,
+  `(R, I)`. The adic analogue of the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and
+  each localisation `S_{gᵢ}` is of finite type over `R`, then so is `S`" — which this bullet used
+  to name as the missing ingredient — is, since issue 1202,
+  `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`
+  (`FormalSchemes.TopFiniteTypeAffineLocal`), on top of the basic-open case
   `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`
-  (`FormalSchemes.AwayTopFiniteType`), and nothing more; the general case is the adic analogue of
-  the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and each localisation `S_{gᵢ}` is of
-  finite type over `R`, then so is `S`".
+  (`FormalSchemes.AwayTopFiniteType`). What is still missing is the identification of the two
+  chart presentations of a basic open `D(f)` of an affine open `V`, which holds only up to an
+  equivalent ideal of definition.
 
 Nothing here should be read as saying EGA I 10.13 is finished.
 

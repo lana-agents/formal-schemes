@@ -113,8 +113,15 @@ of the first.
   (`FormalSchemes.TopFiniteTypeHomComp`).
 * **Conservativity**, i.e. that at `Y = FormalScheme.Spf I` the general notion implies the
   base-affine one. Unchanged by this file: it needs an *arbitrary* affine open of `Spf I` to be
-  tf-type over `(R, I)`, of which the tree has only the basic-open case
-  (`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`).
+  tf-type over `(R, I)`. The tree has the basic-open case
+  (`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`) and, since issue
+  1202, **affine-locality**: `IsTopologicallyFiniteType.of_span_awayCompletion`
+  (`FormalSchemes.TopFiniteTypeAffineLocal`) assembles an affine from a cover of it by tf-type
+  basic opens, with no finiteness and no quasi-compactness hypothesis. What is still missing is
+  the *chart identification* — that for a basic open `D(f) ⊆ V` of the ambient `Spf I` the chart
+  algebra of `D(f)` as a basic open of `V` is the same tf-type algebra as `R{1/f}^`, which by
+  `FormalSchemes.SpfIsoIdealRecovery` holds only up to an equivalent ideal of definition
+  (`FormalSchemes.CofinalTopFiniteType`).
 
 So `IsTopFiniteTypeHom` is landed with its neighbourhood basis and its reduction from the affine
 case, and EGA I 10.13's composition law holds for it only in the shared-middle-chart form of

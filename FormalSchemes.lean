@@ -383,10 +383,12 @@ import FormalSchemes.ThreeChartCoverTopFiniteType
 import FormalSchemes.ThreeChartCoverTransitions
 import FormalSchemes.ThreeChartDatum
 import FormalSchemes.TopFiniteType
+import FormalSchemes.TopFiniteTypeAffineLocal
 import FormalSchemes.TopFiniteTypeBaseChange
 import FormalSchemes.TopFiniteTypeBasis
 import FormalSchemes.TopFiniteTypeHom
 import FormalSchemes.TopFiniteTypeHomComp
+import FormalSchemes.TopFiniteTypeSpecialFibre
 import FormalSchemes.TopFiniteTypeTrans
 import FormalSchemes.TwoAdicDegeneracy
 import FormalSchemes.TwoAdicWitness

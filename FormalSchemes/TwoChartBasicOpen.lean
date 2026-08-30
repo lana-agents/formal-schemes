@@ -79,8 +79,11 @@ sheaf-theoretic transport available at all, and once through
   `git grep -nE "IsTopFiniteTypeHom\.trans" -- FormalSchemes/` returns rc=1 on this branch, with
   no pathspec exclusion: the pattern's escaped dot does not match this paragraph's own text.
 * **Conservativity's hard direction** — that an arbitrary affine open of `Spf I` is topologically
-  of finite type over `(R, I)`. Untouched; the tree still has only the basic-open case
-  `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`.
+  of finite type over `(R, I)`. Untouched here. The tree has the basic-open case
+  `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion` and, since issue 1202,
+  affine-locality `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`
+  (`FormalSchemes.TopFiniteTypeAffineLocal`); what is missing is the identification of the two
+  chart presentations of a basic open of an affine open.
 * **A `FormalScheme.Hom`-level restatement.** None is given, and none is needed: a consumer
   holding `m : FormalScheme.Spf L ⟶ X` applies the results below to `m.toLRSHom`, since
   `FormalScheme.Hom` is a one-field wrapper and `(f ≫ g).toLRSHom = f.toLRSHom ≫ g.toLRSHom`
