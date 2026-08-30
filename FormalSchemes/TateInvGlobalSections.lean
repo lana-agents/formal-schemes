@@ -110,7 +110,73 @@ theorem map_base_tateInvPatchSaturateOpens_univ {X : LocallyRingedSpace.{u}}
       = ⊤ := by
   rw [tateInvPatchSaturateOpens_univ]; rfl
 
-/-! ### The four legs at `S = Set.univ`, as ring maps of `A` -/
+/-! ### The four legs as ring maps of `A` -/
+
+/-- **The `x`-chart restriction of `A`**: `A → A{1/x}`. -/
+def tateInvGlobalLegX :
+    annulusAlgebra R I q →+* awayCompletion (annulusIdealOfDefinition R I q) (overlapX R I q) :=
+  awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
+
+/-- **The `y`-chart restriction of `A` followed by the `𝔾m`-inversion transition**:
+`A → A{1/y} → A{1/x}`. -/
+def tateInvGlobalLegYX (hI : I.FG) :
+    annulusAlgebra R I q →+* awayCompletion (annulusIdealOfDefinition R I q) (overlapX R I q) :=
+  (annulusChartTransitionInvAlg R I q hI).symm.toRingHom.comp
+    (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q))
+
+/-- **The `y`-chart restriction of `A`**: `A → A{1/y}`. -/
+def tateInvGlobalLegY :
+    annulusAlgebra R I q →+* awayCompletion (annulusIdealOfDefinition R I q) (overlapY R I q) :=
+  awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
+
+/-- **The `x`-chart restriction of `A` followed by the inverse `𝔾m`-inversion transition**:
+`A → A{1/x} → A{1/y}`. -/
+def tateInvGlobalLegXY (hI : I.FG) :
+    annulusAlgebra R I q →+* awayCompletion (annulusIdealOfDefinition R I q) (overlapY R I q) :=
+  (annulusChartTransitionInvAlg R I q hI).toRingHom.comp
+    (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q))
+
+/-- **The candidate ring, as a subring of `A` cut out by two equations.** No locally ringed space,
+no glue datum and no presheaf occurs: the four legs are `awayCompletionHom` and the ring-level
+`𝔾m`-inversion transition `AlgebraicGeometry.annulusChartTransitionInvAlg`. -/
+def tateInvGlobalSubring (hI : I.FG) : Subring (annulusAlgebra R I q) :=
+  RingHom.eqLocus (tateInvGlobalLegX (R := R) (I := I) (q := q)) (tateInvGlobalLegYX hI) ⊓
+    RingHom.eqLocus (tateInvGlobalLegY (R := R) (I := I) (q := q)) (tateInvGlobalLegXY hI)
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+/-- **Membership is the pair of equations.** `Subring.mem_inf` and `RingHom.mem_eqLocus`. -/
+theorem mem_tateInvGlobalSubring_iff (hI : I.FG) (a : annulusAlgebra R I q) :
+    a ∈ tateInvGlobalSubring hI ↔
+      tateInvGlobalLegX a = tateInvGlobalLegYX hI a ∧
+        tateInvGlobalLegY a = tateInvGlobalLegXY hI a := by
+  simp only [tateInvGlobalSubring, Subring.mem_inf, RingHom.mem_eqLocus]
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+/-- **Non-vacuity: the subring contains the image of the base ring.** All four legs are
+`R`-algebra homomorphisms — `FormalSpectrum.awayCompletionHom_comp_algebraMap` for the two chart
+restrictions, `AlgEquiv.commutes` for the transition — so they agree on `algebraMap R A`.
+
+This is *not* issue 1223's goal 3, which asks for an element of the ring **outside** this image;
+it is its trivial half, and the two must not be confused. -/
+theorem algebraMap_mem_tateInvGlobalSubring (hI : I.FG) (r : R) :
+    algebraMap R (annulusAlgebra R I q) r ∈ tateInvGlobalSubring hI := by
+  have hx : awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
+      (algebraMap R (annulusAlgebra R I q) r) =
+        algebraMap R (awayCompletion (annulusIdealOfDefinition R I q) (overlapX R I q)) r :=
+    congrArg (fun φ : R →+* _ => φ r)
+      (FormalSpectrum.awayCompletionHom_comp_algebraMap (R := R) (overlapX R I q))
+  have hy : awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
+      (algebraMap R (annulusAlgebra R I q) r) =
+        algebraMap R (awayCompletion (annulusIdealOfDefinition R I q) (overlapY R I q)) r :=
+    congrArg (fun φ : R →+* _ => φ r)
+      (FormalSpectrum.awayCompletionHom_comp_algebraMap (R := R) (overlapY R I q))
+  refine (mem_tateInvGlobalSubring_iff hI _).2 ⟨?_, ?_⟩ <;>
+    simp only [tateInvGlobalLegX, tateInvGlobalLegY, tateInvGlobalLegYX, tateInvGlobalLegXY,
+      RingHom.comp_apply, hx, hy]
+  · exact ((annulusChartTransitionInvAlg R I q hI).symm.commutes r).symm
+  · exact ((annulusChartTransitionInvAlg R I q hI).commutes r).symm
+
+/-! ### The four legs at `S = Set.univ`, computed -/
 
 section GlobalCollapse
 
