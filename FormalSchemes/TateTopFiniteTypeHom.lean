@@ -33,9 +33,19 @@ its finiteness data is the identity presentation
 (`AlgebraicGeometry.IsTopologicallyFiniteType.self`), so it says nothing about the tf-type
 condition. This one has a **non-affine source** and finiteness data that is not an identity — and
 a one-chart target, since it comes through the base-affine reduction, which uses
-`AlgebraicGeometry.FormalScheme.OpenCover.self`. **A witness with a multi-chart target cover and
-non-identity finiteness data does not yet exist on this tree**, and the reason is the composition
-gap recorded in `FormalSchemes.TopFiniteTypeHom`: the only route to one is a tower.
+`AlgebraicGeometry.FormalScheme.OpenCover.self`.
+
+A witness with a multi-chart target cover **and** non-identity finiteness data was for a long time
+unavailable, the reason being the composition gap recorded in `FormalSchemes.TopFiniteTypeHom`:
+the only route to one is a tower. That gap is closed —
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
+(`FormalSchemes.TopFiniteTypeHomTrans`) — and
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.comp_chartMap` is the general form of such a
+witness: any tf-type morphism into a chart of an affine cover, composed with that chart's
+inclusion, is witnessed against a target cover indexed by a sum, with the finiteness data of the
+first factor. Composing the morphism below with a chart inclusion is an instance of it; the
+instance is not landed here, since the tree has no non-affine formal scheme carrying `Spf I₀` as a
+named chart.
 
 ## References
 
