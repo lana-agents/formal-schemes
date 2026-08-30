@@ -46,6 +46,7 @@ import FormalSchemes.AnnulusSpecialFibre
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.AwayBaseChangeTopFiniteType
+import FormalSchemes.AwayChartStructMap
 import FormalSchemes.AwayCompletionAway
 import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.AwayCompletionInterchange
@@ -84,6 +85,7 @@ import FormalSchemes.ClosedImmersionStalk
 import FormalSchemes.ClosedImmersionSubscheme
 import FormalSchemes.ClosedImmersionTargetLocal
 import FormalSchemes.CoequalizerSections
+import FormalSchemes.CofinalAdicRing
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalCompletionAlg
 import FormalSchemes.CofinalCompletionFunctorial
@@ -93,6 +95,7 @@ import FormalSchemes.CofinalSheafComparisonBasis
 import FormalSchemes.CofinalSheafComparisonGeneral
 import FormalSchemes.CofinalSheafComparisonIso
 import FormalSchemes.CofinalSheafComparisonNaturality
+import FormalSchemes.CofinalStructMap
 import FormalSchemes.CofinalTopFiniteType
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
@@ -388,6 +391,7 @@ import FormalSchemes.TopFiniteTypeBaseChange
 import FormalSchemes.TopFiniteTypeBasis
 import FormalSchemes.TopFiniteTypeHom
 import FormalSchemes.TopFiniteTypeHomComp
+import FormalSchemes.TopFiniteTypeHomTrans
 import FormalSchemes.TopFiniteTypeSpecialFibre
 import FormalSchemes.TopFiniteTypeTrans
 import FormalSchemes.TwoAdicDegeneracy

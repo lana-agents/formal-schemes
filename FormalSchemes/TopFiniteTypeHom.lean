@@ -27,9 +27,13 @@ covers of `f⁻¹(V_i)`. The converse — from a chart of `X` lying over `V_{i(j
 neighbourhood of a point of `f⁻¹(V_i)` that is tf-type over `V_i` — needs a neighbourhood basic in
 `V_i` and in `V_{i(j)}` at once. That neighbourhood now exists,
 `FormalSpectrum.exists_basicOpenChart_le_affine_inter` (`FormalSchemes.TwoChartBasicOpen`), but it
-is returned as an equality of *ranges*, and re-reading a chart across it needs the ring-level
-identification recorded under "What is *not* proved" below. So the two forms are still not proved
-equivalent on this tree, and the same gap blocks that equivalence and the composition law.
+is returned as an equality of *ranges*, and re-reading a chart across it needs a ring-level
+identification. That identification now exists — up to cofinality of the ideals of definition,
+which is the strongest true form (`FormalSpectrum.isCofinal_map_spfIsoRingEquiv`,
+`FormalSchemes.SpfIsoIdealRecovery`), and enough for the composition law
+(`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`,
+`FormalSchemes.TopFiniteTypeHomTrans`). The two forms are still not proved equivalent on this
+tree; that is now a gap in what has been assembled, not in what is available.
 
 `FormalScheme.OpenCover` (`FormalSchemes.OpenCover`) is index-type-polymorphic with a per-index
 `obj`, so the charts of `𝒱` may sit over *different* base rings; the base ring is quantified
@@ -74,46 +78,28 @@ as a hypothesis.
   `IsTopFiniteTypeHom f` — **against the same cover of `Y`**, which is what makes the refinement
   usable for composition later.
 
-## What is *not* proved, and the precise lemma that blocks it
+## What is *not* proved
 
-Two things, and it is worth being exact about them because
-`FormalSchemes.RelativeTopFiniteTypeTrans` named both as blockers and this file removes only part
-of the first.
+One thing. `FormalSchemes.RelativeTopFiniteTypeTrans` named two blockers — composition and
+conservativity — and only the second is still open.
 
-* **Composition.** `f : X ⟶ Y`, `g : Y ⟶ Z`, both tf-type, gives two covers of `Y` — `𝒱` from
-  `f` and `𝒱'` from `g` — and they must be refined against each other. `exists_refinement`
-  refines the `X`-side against any cover *keeping the same `𝒱`*, so the `X`-side is not the
-  obstacle; the `Y`-side is.
-
-  **Both geometric ingredients of the `Y`-side refinement have since landed**, and this paragraph
-  no longer names either of them as missing. `FormalSpectrum.exists_basicOpenChart_le_affine_inter`
-  and `FormalSpectrum.exists_basicOpenChart_inter_iso` (`FormalSchemes.TwoChartBasicOpen`) are the
-  formal-scheme analogue of `AlgebraicGeometry.exists_basicOpen_le_affine_inter`: for two affine
-  charts of a formal scheme and a point of their intersection, a common refinement, returned as an
-  equality of ranges together with an isomorphism of the two refined charts commuting with their
-  inclusions. `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange`
-  (`FormalSchemes.AwayBaseChangeTopFiniteType`) then re-reads an `X`-chart tf-type over `(R, I)` as
-  tf-type over the shrunk base `(R{1/c}^, I{1/c}^)`.
-
-  **What still blocks the composition law is not geometric.** `IsTopFiniteTypeHomOn` factorises
-  through `AlgebraicGeometry.IsTopologicallyFiniteType.structHom`, which is `Spf` applied to an
-  `algebraMap`; so the refinement's isomorphism of *formal schemes* has to be `Spf` of a ring
-  isomorphism carrying one ideal of definition **onto** the other. `Spf` is full only onto the
-  *continuous* morphisms (`AdicRingCat.spfHomEquiv`, `FormalSchemes.SpfFullyFaithful`), and the
-  strict containment that notion demands is not an isomorphism invariant: two ideals of definition
-  inducing the same topology on a ring — `L` and `L ^ 2` — present the same formal spectrum. Two
-  affine charts of one formal scheme, arriving from two independent witnesses, are therefore
-  related on their overlap only up to equivalence of ideals of definition, while the predicate is
-  stated at a fixed ideal. Closing the gap means proving `IsTopologicallyFiniteType` invariant
-  under replacing the base ideal by an equivalent one, and recovering a ring isomorphism from an
-  isomorphism of formal spectra up to that equivalence; neither is on this tree.
-
-  The composition law **over a shared middle chart**, where the identification never has to be
-  manufactured, is `AlgebraicGeometry.FormalScheme.IsTfTypeTower.isTopFiniteTypeHomOn`
-  (`FormalSchemes.TopFiniteTypeHomComp`).
+* **Composition is proved.** `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
+  (`FormalSchemes.TopFiniteTypeHomTrans`) is EGA I 10.13's composition law with no hypothesis
+  relating the two witnesses. `IsTopFiniteTypeHom.exists_refinement` below is the `X`-side of it —
+  it refines any cover of `X` *keeping the same `𝒱`* — and the `Y`-side is the common refinement
+  of two affine charts (`FormalSpectrum.exists_basicOpenChart_inter_iso`,
+  `FormalSchemes.TwoChartBasicOpen`) followed by the transport of one witness onto the other's
+  ring. That transport is where the difficulty was: two affine charts of one formal scheme,
+  arriving from two independent witnesses, are related on their overlap only up to *cofinality* of
+  their ideals of definition — `L` against `L ^ 2` presents the same formal spectrum — while the
+  predicate is stated at a fixed ideal. `IsTopologicallyFiniteType.ofCofinal`
+  (`FormalSchemes.CofinalTopFiniteType`) and `IsAdicRing.of_isCofinal`
+  (`FormalSchemes.CofinalAdicRing`) supply the algebra, and
+  `FormalSpectrum.structMap_comp_generalCofinalSpfIso_inv` (`FormalSchemes.CofinalStructMap`) the
+  geometry: the ideal comparison commutes with structural morphisms.
 * **Conservativity**, i.e. that at `Y = FormalScheme.Spf I` the general notion implies the
-  base-affine one. Unchanged by this file: it needs an *arbitrary* affine open of `Spf I` to be
-  tf-type over `(R, I)`. The tree has the basic-open case
+  base-affine one. Unchanged by this file and by the composition law: it needs an *arbitrary*
+  affine open of `Spf I` to be tf-type over `(R, I)`. The tree has the basic-open case
   (`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`) and, since issue
   1202, **affine-locality**: `IsTopologicallyFiniteType.of_span_awayCompletion`
   (`FormalSchemes.TopFiniteTypeAffineLocal`) assembles an affine from a cover of it by tf-type
@@ -121,11 +107,13 @@ of the first.
   the *chart identification* — that for a basic open `D(f) ⊆ V` of the ambient `Spf I` the chart
   algebra of `D(f)` as a basic open of `V` is the same tf-type algebra as `R{1/f}^`, which by
   `FormalSchemes.SpfIsoIdealRecovery` holds only up to an equivalent ideal of definition
-  (`FormalSchemes.CofinalTopFiniteType`).
+  (`FormalSchemes.CofinalTopFiniteType`). That is the same slack the composition law above had to
+  absorb, and `FormalSchemes.CofinalStructMap` is how it was absorbed; nobody has yet run the
+  argument for conservativity.
 
-So `IsTopFiniteTypeHom` is landed with its neighbourhood basis and its reduction from the affine
-case, and EGA I 10.13's composition law holds for it only in the shared-middle-chart form of
-`FormalSchemes.TopFiniteTypeHomComp`. Nothing here should be read as saying §10.13 is finished.
+So `IsTopFiniteTypeHom` is landed with its neighbourhood basis, its reduction from the affine
+case, and EGA I 10.13's composition law. Conservativity is still open, so nothing here should be
+read as saying §10.13 is finished.
 
 ## References
 
@@ -313,8 +301,10 @@ taken to be the given one.
 
 Together with `IsRelativelyTopFiniteType.isTopFiniteTypeHom` this is the evidence that the
 predicate is not vacuous. The other half of the category-theoretic sanity check — that the
-composite of two tf-type morphisms is tf-type — is *not* proved here; see the module docstring for
-what blocks it, and `FormalSchemes.TopFiniteTypeHomComp` for the case that is available. -/
+composite of two tf-type morphisms is tf-type — is not proved *here*, but it is proved:
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
+(`FormalSchemes.TopFiniteTypeHomTrans`), over the shared-chart form of
+`FormalSchemes.TopFiniteTypeHomComp`. -/
 theorem isTopFiniteTypeHom_id (𝒰 : OpenCover X)
     (h𝒰 : ∀ j, ∃ (R : Type u) (_ : CommRing R) (_ : TopologicalSpace R) (I : Ideal R)
       (_ : IsAdicRing I) (_ : I.FG), Nonempty (𝒰.obj j ≅ FormalScheme.Spf I)) :
@@ -517,8 +507,12 @@ theorem OpenCover.ofTfTypeHomCharts_isTopFiniteTypeHomOn {𝒱 : OpenCover Y} (U
 finite type — over the same cover of `Y`.**
 
 The cover of `Y` is produced, not consumed, and it is the one the hypothesis supplied: the
-refinement moves only the `X`-side. That is what a composition law would need from this half, and
-it is why the statement returns `𝒱` rather than quantifying over it. The first conjunct is
+refinement moves only the `X`-side, and that is why the statement returns `𝒱` rather than
+quantifying over it. The composition law
+(`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`,
+`FormalSchemes.TopFiniteTypeHomTrans`) refines the `X`-side itself, one point at a time, rather
+than through this theorem — the shrink it needs is over a *refined* chart of `Y`, which is not a
+chart of `𝒱`. The first conjunct is
 `IsTopFiniteTypeHomOn` rather than `IsTopFiniteTypeHom`, so a caller gets the per-piece data and
 not just the predicate it already had. -/
 theorem IsTopFiniteTypeHom.exists_refinement {f : X ⟶ Y} (hf : IsTopFiniteTypeHom f)

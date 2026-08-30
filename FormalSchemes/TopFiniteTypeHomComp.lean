@@ -10,8 +10,9 @@ set_option linter.style.header false
 10.13's finite-type condition for a morphism `f : X ⟶ Y` of formal schemes at an arbitrary target.
 Its composition law — that `f ≫ g` is again topologically of finite type — is the half of the
 category-theoretic sanity check that file left open. This file proves the composition law **for a
-tower whose middle charts are shared**, and records precisely what separates that from the
-unconditional statement.
+tower whose middle charts are shared**, and records precisely what separated that from the
+unconditional statement — which `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
+(`FormalSchemes.TopFiniteTypeHomTrans`) has since supplied, by *constructing* the shared chart.
 
 ## What is proved
 
@@ -30,12 +31,11 @@ again topologically of finite type**. There the shared middle chart is available
 own identification of that chart is used on both sides, and the `f`-side algebra is
 `AlgebraicGeometry.IsTopologicallyFiniteType.self`.
 
-## What is *not* proved, and why it is not a bookkeeping gap
+## What this file does *not* prove, and what has since closed it
 
 The unconditional law — `IsTopFiniteTypeHom f → IsTopFiniteTypeHom g → IsTopFiniteTypeHom (f ≫ g)`
-— does **not** follow from this file by refining covers, and the obstruction is no longer the
-geometric one that `FormalSchemes.TopFiniteTypeHom`'s module docstring recorded when it landed.
-Both geometric ingredients now exist:
+— does not follow from this file by refining covers, and when this file landed the missing step
+was not geometric. Both geometric ingredients existed:
 
 * `FormalSpectrum.exists_basicOpenChart_inter_iso` (`FormalSchemes.TwoChartBasicOpen`) refines two
   affine charts of `Y` to a common basic open and returns an **isomorphism of the two refined
@@ -44,31 +44,28 @@ Both geometric ingredients now exist:
   (`FormalSchemes.AwayBaseChangeTopFiniteType`) re-reads an `X`-chart tf-type over `(R, I)` as
   tf-type over the shrunk base `(R{1/c}^, I{1/c}^)`.
 
-What they hand back is an isomorphism of *formal schemes* `Spf (I{1/c}^) ≅ Spf (M{1/d}^)`. What
-`IsTopFiniteTypeHomOn` consumes is a tower of *algebras*: its factorisation is through
-`AlgebraicGeometry.IsTopologicallyFiniteType.structHom`, which is `Spf` applied to an `algebraMap`.
-Turning the first into the second needs the isomorphism to be `Spf` of a ring isomorphism carrying
-one ideal of definition **onto** the other, and that is a genuine mathematical statement, not a
-transport:
+What they hand back is an isomorphism of *formal schemes* `Spf (I{1/c}^) ≅ Spf (M{1/d}^)`, while
+`IsTopFiniteTypeHomOn` consumes a tower of *algebras*. Turning the first into the second cannot ask
+the isomorphism to carry one ideal of definition **onto** the other: that containment is not an
+isomorphism invariant, since two ideals inducing the same topology — `L` and `L ^ 2` — present the
+same formal spectrum, and two affine charts of one formal scheme arriving from independent
+witnesses are related on their overlap by exactly that much and no more.
 
-* `Spf` is full only onto the *continuous* morphisms (`AdicRingCat.spfHomEquiv`,
-  `FormalSchemes.SpfFullyFaithful`), and the containment it demands is the strict
-  `R.ideal ≤ S.ideal.comap _`;
-* that containment is **not** an isomorphism invariant. Two ideals of definition that induce the
-  same topology on a ring — `L` and `L ^ 2`, say — present the same formal spectrum, so an
-  isomorphism `Spf J₁ ≅ Spf J₂` determines `J₁` and `J₂` only up to equivalence of the topologies
-  they define, never on the nose;
-* and two affine charts of one formal scheme, arriving as they do from two independent witnesses,
-  are related on their overlap by exactly that much and no more.
-
-So the remaining ingredient is the invariance of `IsTopologicallyFiniteType` under replacing the
-base ideal by an equivalent one, plus the recovery of a ring isomorphism from an isomorphism of
-formal spectra up to that equivalence. Neither is on this tree. Until they are, the composition law
-is available in the shared-chart form below, and `IsTfTypeTower` is the interface a future
-unconditional proof should produce.
+**The resolution is to take that seriously rather than to work around it.**
+`FormalSpectrum.isCofinal_map_spfIsoRingEquiv` (`FormalSchemes.SpfIsoIdealRecovery`) recovers the
+ring isomorphism together with the *cofinality* of the two ideals — the strongest true statement —
+`IsTopologicallyFiniteType.ofCofinal` (`FormalSchemes.CofinalTopFiniteType`) makes the predicate
+insensitive to that difference, `IsAdicRing.of_isCofinal` (`FormalSchemes.CofinalAdicRing`) keeps
+the middle chart a formal spectrum, and
+`FormalSpectrum.structMap_comp_generalCofinalSpfIso_inv` (`FormalSchemes.CofinalStructMap`) makes
+the comparison commute with the structural morphisms. With those,
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
+(`FormalSchemes.TopFiniteTypeHomTrans`) *constructs* the shared middle chart at each point and
+feeds `IsTfTypeTower` below. **This file's hypothesis is discharged, not weakened**:
+`IsTfTypeTower` is unchanged and is the interface the unconditional proof produces.
 
 The other blocker recorded in `FormalSchemes.TopFiniteTypeHom` — **conservativity**, that at
-`Y = Spf I` the general notion implies the base-affine one — is untouched here.
+`Y = Spf I` the general notion implies the base-affine one — is untouched, here and there.
 
 ## Main definitions and results
 
@@ -107,8 +104,11 @@ The point of the definition is the quantifier placement: the middle identificati
 `eY : 𝒱.obj i ≅ Spf M` is bound **once** and used in both equations. `IsTopFiniteTypeHomOn f 𝒱 𝒰`
 and `IsTopFiniteTypeHomOn g 𝒲 𝒱` each bind their own identification of a chart of `𝒱`
 existentially, and nothing identifies the two; supplying them as one datum is precisely the
-hypothesis this file's composition law adds, and the module docstring says why it cannot be
-manufactured. -/
+hypothesis this file's composition law adds. The module docstring says what it takes to
+manufacture it — a common refinement of the two charts and a transport of one witness across the
+resulting ring isomorphism, up to cofinality of the two ideals of definition — and
+`AlgebraicGeometry.FormalScheme.nonempty_tfTypeCompChart`
+(`FormalSchemes.TopFiniteTypeHomTrans`) does it. -/
 def IsTfTypeTower (f : X ⟶ Y) (g : Y ⟶ Z) (𝒲 : OpenCover Z) (𝒱 : OpenCover Y)
     (𝒰 : OpenCover X) : Prop :=
   ∀ j : 𝒰.J, ∃ (i : 𝒱.J) (k : 𝒲.J)
