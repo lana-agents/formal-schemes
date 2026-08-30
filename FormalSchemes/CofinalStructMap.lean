@@ -84,7 +84,7 @@ theorem isAdicRing_mul : IsAdicRing (I * J) := by
   have hIadic : IsAdic I := IsAdicRing.isAdic
   have hJadic : IsAdic J := IsAdicRing.isAdic
   haveI : IsTopologicalRing R := hIadic.isTopologicalRing
-  have hKI : (I * J : Ideal R) ≤ I := by rw [mul_comm]; exact Ideal.mul_le_left
+  have hKI : (I * J : Ideal R) ≤ I := Ideal.mul_le_right
   have hIcK : ∃ c : ℕ, I ^ (c + 1) ≤ I * J := by
     obtain ⟨m, hm⟩ := IsAdic.exists_pow_le hJadic hIadic
     refine ⟨m, ?_⟩
@@ -101,10 +101,6 @@ theorem isAdicRing_mul : IsAdicRing (I * J) := by
             toIsPrecomplete := IsPrecomplete.of_cofinal hKI hc }
   exact { isAdic := hK_adic }
 
-omit [TopologicalSpace R] [IsAdicRing I] [IsAdicRing J] in
-/-- `I * J ≤ I`, the containment `Ideal.mul_le_left` does not give directly. -/
-theorem mul_le_self_left : (I * J : Ideal R) ≤ I := by rw [mul_comm]; exact Ideal.mul_le_left
-
 /-- **The ideal-independence isomorphism factors through the product ideal.** True by `rfl`: the
 `have`s inside `FormalSpectrum.generalCofinalSpfIso`'s construction are all proofs of `Prop`s —
 including the `IsAdicRing (I * J)` instance, since `IsAdicRing` is a `Prop` class — so proof
@@ -112,7 +108,7 @@ irrelevance identifies them with the ones supplied here. -/
 theorem generalCofinalSpfIso_eq (hI : I.FG) (hJ : J.FG) :
     haveI := isAdicRing_mul I J
     generalCofinalSpfIso I J hI hJ =
-      (cofinalSpfIso (I * J) I (mul_le_self_left I J) (hI.mul hJ) hI).symm ≪≫
+      (cofinalSpfIso (I * J) I Ideal.mul_le_right (hI.mul hJ) hI).symm ≪≫
         cofinalSpfIso (I * J) J Ideal.mul_le_left (hI.mul hJ) hJ := rfl
 
 variable {I J}
@@ -166,9 +162,9 @@ theorem structMap_comp_generalCofinalSpfIso_inv (hI : I.FG) (hJ : J.FG)
   have hJside := structMap_comp_cofinalSpfIso_inv (I := I * J) (J := J) (L := L * M) (M := M)
     Ideal.mul_le_left (hI.mul hJ) hJ hKA hJM Ideal.mul_le_left (hL.mul hM) hM
   have hIside := structMap_comp_cofinalSpfIso_inv (I := I * J) (J := I) (L := L * M) (M := L)
-    (mul_le_self_left I J) (hI.mul hJ) hI hKA hIL (mul_le_self_left L M) (hL.mul hM) hL
-  set kI := cofinalSpfIso (I * J) I (mul_le_self_left I J) (hI.mul hJ) hI with hkI
-  set kL := cofinalSpfIso (L * M) L (mul_le_self_left L M) (hL.mul hM) hL with hkL
+    Ideal.mul_le_right (hI.mul hJ) hI hKA hIL Ideal.mul_le_right (hL.mul hM) hL
+  set kI := cofinalSpfIso (I * J) I Ideal.mul_le_right (hI.mul hJ) hI with hkI
+  set kL := cofinalSpfIso (L * M) L Ideal.mul_le_right (hL.mul hM) hL with hkL
   have key : IsTopologicallyFiniteType.structMap hKA ≫ kI.hom =
       kL.hom ≫ IsTopologicallyFiniteType.structMap hIL := by
     calc IsTopologicallyFiniteType.structMap hKA ≫ kI.hom
