@@ -47,8 +47,6 @@ attribute [instance] BasicTargetChart.commRingS BasicTargetChart.topS BasicTarge
   BasicTargetChart.adicL BasicTargetChart.isOpenImmersionMid
   BasicTargetChart.isOpenImmersionSrc
 
-set_option maxHeartbeats 1000000 in
-set_option synthInstance.maxHeartbeats 1000000 in
 /-- **A refined chart exists at every point.** -/
 theorem nonempty_basicTargetChart {f : X ⟶ FormalScheme.Spf I} (hI : I.FG)
     {𝒱 : OpenCover (FormalScheme.Spf I)} {𝒰 : OpenCover X}

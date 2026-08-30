@@ -79,8 +79,13 @@ sheaf-theoretic transport available at all, and once through
   `FormalSpectrum.exists_basicOpenChart_inter_iso` below together with the transport of one
   witness onto the other's ring up to cofinality of the two ideals of definition
   (`FormalSchemes.CofinalTopFiniteType`, `FormalSchemes.CofinalStructMap`).
-* **Conservativity's hard direction** — that an arbitrary affine open of `Spf I` is topologically
-  of finite type over `(R, I)`. Untouched here, but this file is what it runs on:
+* **That an arbitrary affine open of `Spf I` is topologically of finite type over `(R, I)`.**
+  Untouched here, and still open. It used to be called conservativity's hard direction and it is
+  not: `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.isRelativelyTopFiniteType_of_fg`
+  (`FormalSchemes.TargetBasicRefinement`) proves conservativity without it, by refining the cover
+  of the *target* — which it does with this file's
+  `FormalSpectrum.exists_basicOpenChart_le_affine_inter`, read against the identity of `Spf I`.
+  This file is what both of them run on:
   `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
   (`FormalSchemes.AffineOpenTopFiniteType`, issue 1207) applies
   `FormalSpectrum.exists_basicOpenChart_inter_iso` below at every point of the affine open, and

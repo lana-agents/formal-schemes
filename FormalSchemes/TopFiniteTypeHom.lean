@@ -64,7 +64,9 @@ as a hypothesis.
 ## Main results
 
 * `IsRelativelyTopFiniteType.isTopFiniteTypeHom`: the base-affine notion implies the general one.
-  This is the easy half of conservativity; see "What is not proved" below for the other half.
+  This is the easy half of conservativity; the other half is
+  `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.isRelativelyTopFiniteType_of_fg`
+  (`FormalSchemes.TargetBasicRefinement`), and it is not in this file.
 * `IsTopFiniteTypeHom.of_iso`, `IsTopFiniteTypeHom.comp_iso`: invariance under an isomorphism of
   the source and of the target.
 * `isTopFiniteTypeHomOn_id` and `isTopFiniteTypeHom_id`: **identities are topologically of finite
@@ -80,8 +82,8 @@ as a hypothesis.
 
 ## What is *not* proved
 
-One thing. `FormalSchemes.RelativeTopFiniteTypeTrans` named two blockers — composition and
-conservativity — and only the second is still open.
+Nothing of §10.13. `FormalSchemes.RelativeTopFiniteTypeTrans` named two blockers — composition and
+conservativity — and both are now closed, neither of them in this file.
 
 * **Composition is proved.** `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
   (`FormalSchemes.TopFiniteTypeHomTrans`) is EGA I 10.13's composition law with no hypothesis
@@ -97,9 +99,20 @@ conservativity — and only the second is still open.
   (`FormalSchemes.CofinalAdicRing`) supply the algebra, and
   `FormalSpectrum.structMap_comp_generalCofinalSpfIso_inv` (`FormalSchemes.CofinalStructMap`) the
   geometry: the ideal comparison commutes with structural morphisms.
-* **Conservativity**, i.e. that at `Y = FormalScheme.Spf I` the general notion implies the
-  base-affine one. Unchanged by this file and by the composition law. It needs an *arbitrary*
-  affine open of `Spf I` to be tf-type over `(R, I)`, and since issue 1207 that statement is
+* **Conservativity is proved**, i.e. at `Y = FormalScheme.Spf I` the general notion implies the
+  base-affine one, with no hypothesis beyond `I.FG`:
+  `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.isRelativelyTopFiniteType_of_fg`
+  (`FormalSchemes.TargetBasicRefinement`). Unchanged by this file and by the composition law, and
+  it does **not** go through an arbitrary affine open of `Spf I`. Since
+  `IsRelativelyTopFiniteType` asserts the *existence* of a cover, a witness may be refined before
+  it is consumed, and the refinement that works is on the **target** side: shrink each chart of
+  the cover of `Y` until its range is a basic open of `Spf I`, where the adicity below is free.
+  `IsTopFiniteTypeHom.exists_refinement` in this file is the `X`-side and does not do it — it
+  keeps `𝒱` fixed.
+
+  What that leaves untouched, and what is genuinely still open, is the statement conservativity
+  used to be reduced to: that an *arbitrary* affine open of `Spf I` is tf-type over `(R, I)`.
+  It is EGA I 10.12's own business rather than 10.13's. Since issue 1207 that statement is
   `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
   (`FormalSchemes.AffineOpenTopFiniteType`) — built from the basic-open case
   (`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`),
@@ -113,8 +126,10 @@ conservativity — and only the second is still open.
   slack the composition law above had to absorb.
 
 So `IsTopFiniteTypeHom` is landed with its neighbourhood basis, its reduction from the affine
-case, and EGA I 10.13's composition law. Conservativity is still open, so nothing here should be
-read as saying §10.13 is finished.
+case, EGA I 10.13's composition law, and — elsewhere — its converse. Nothing in *this* file should
+be read as supplying conservativity: it is proved in `FormalSchemes.TargetBasicRefinement`, out of
+`IsTopFiniteTypeHomOn` directly, and it uses neither `nonempty_tfTypeHomChart_of_cover` nor
+`IsTopFiniteTypeHom.exists_refinement` below — both of those work on the source side.
 
 ## References
 
@@ -172,8 +187,10 @@ topologically of finite type as a morphism.
 
 The target cover is the one-object self-cover `OpenCover.self` and the target identification is
 `Iso.refl`, so the two compatibility conditions differ by a `Category.id_comp`. This is the easy
-half of conservativity; the converse needs an arbitrary affine open of `Spf R` to be tf-type over
-`(R, I)`, which the tree does not have — see the module docstring. -/
+half of conservativity; the converse is
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.isRelativelyTopFiniteType_of_fg`
+(`FormalSchemes.TargetBasicRefinement`), which needs `I.FG` and nothing else, and the two together
+are `isRelativelyTopFiniteType_iff_isTopFiniteTypeHom_of_fg`. -/
 theorem IsRelativelyTopFiniteType.isTopFiniteTypeHom {f : X ⟶ FormalScheme.Spf I} (hI : I.FG)
     (h : IsRelativelyTopFiniteType R I f) : IsTopFiniteTypeHom f := by
   obtain ⟨𝒰, h𝒰⟩ := h

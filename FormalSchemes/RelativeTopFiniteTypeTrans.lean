@@ -21,9 +21,17 @@ X ⟶ Spf L ⟶ Spf I
 ```
 
 with the second arrow the structural morphism of a tf-type `(R, I)`-algebra `A` with ideal of
-definition `L`. `IsRelativelyTopFiniteType.comp_structHom` is exactly that, and it is **everything
-the notion admits**, not a special case of a general law being deferred: a composite
-`X ⟶ Y ⟶ Z` with `Y` and `Z` arbitrary formal schemes cannot even be *stated* with this predicate.
+definition `L`. `IsRelativelyTopFiniteType.comp_structHom` is exactly that, and it is everything
+this file can reach: a composite `X ⟶ Y ⟶ Z` with `Z` an arbitrary formal scheme cannot even be
+*stated* with this predicate.
+
+The **intermediate** `Y`, on the other hand, need not be affine, and the composite through an
+arbitrary one is now a theorem —
+`AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType.comp_isTopFiniteTypeHom`
+(`FormalSchemes.TargetBasicRefinement`). It is not provable here, and not by the argument below:
+its first factor is `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom`, which no amount of
+base-affine data produces, so it has to travel out to the general notion, compose there
+(`IsTopFiniteTypeHom.trans`) and come back — and coming back is conservativity.
 
 The bridge that makes it work is that `trans` and composition of structural morphisms agree:
 `structHom_trans` says the two structural morphisms compose to the structural morphism of the
@@ -52,8 +60,16 @@ two theorems that justify it, only the second is still open:
   (`FormalSchemes.TopFiniteTypeHom`) — both of those refine a cover of the *source* while keeping
   the cover of the target fixed, and the shrink the composition law needs is over a refined chart
   of `Y`, which is a chart of neither given cover.
-* **Conservativity** at `Y = Spf I` needs an *arbitrary* affine open of `Spf I` to be tf-type over
-  `(R, I)`. The adic analogue of the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and
+* **Conservativity** at `Y = Spf I` is proved, and this bullet no longer names a blocker either.
+  `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.isRelativelyTopFiniteType_of_fg`
+  (`FormalSchemes.TargetBasicRefinement`) has no hypothesis beyond `I.FG`. It does **not** go
+  through an arbitrary affine open of `Spf I`: a witness for the general notion may be refined on
+  the *target* side until every chart of the target cover has basic range, and at a basic range the
+  adicity is free (`FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart`,
+  `FormalSchemes.AdicCofinalOpenImmersion`).
+
+  What that route leaves untouched is the arbitrary affine open itself, which is EGA I 10.12's own
+  statement and is still open. The adic analogue of the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and
   each localisation `S_{gᵢ}` is of finite type over `R`, then so is `S`" — which this bullet used
   to name as the missing ingredient — is, since issue 1202,
   `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`
@@ -67,7 +83,8 @@ two theorems that justify it, only the second is still open:
   (`FormalSchemes.SpfIsoOverBase`). What is still missing is that hypothesis: that an affine open
   immersion of formal spectra is adic *up to cofinality*.
 
-Conservativity is still open, so nothing here should be read as saying EGA I 10.13 is finished.
+Both of §10.13's blockers are now closed, so this file's closing sentence no longer holds anything
+back; what remains open is EGA I 10.12, not 10.13.
 
 ## A namespace warning, because it is not a mistake to be fixed
 
