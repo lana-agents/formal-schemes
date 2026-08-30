@@ -52,8 +52,9 @@ Conservativity is no longer what this section is about:
 (`FormalSchemes.TargetBasicRefinement`) proves it with no hypothesis beyond `I.FG`, by refining the
 target cover instead of making an arbitrary affine open tf-type. That arbitrary affine open is
 still open, on its own terms (EGA I, 10.12), and after this file the missing step is **not** the
-chart identification. `FormalSpectrum.spfAlgEquivOfComm` (`FormalSchemes.SpfIsoOverBase`) supplies the
-`R`-algebra isomorphism between the two presentations of a basic open of an affine open, and this
+chart identification. `FormalSpectrum.spfAlgEquivOfComm` (`FormalSchemes.SpfIsoOverBase`) supplies
+the `R`-algebra isomorphism between the two presentations of a basic open of an affine open, and
+this
 file consumes an ideal known only up to cofinality. What is missing is the hypothesis
 `Ideal.IsCofinal L (I · A)` itself, for `A` the ring of an arbitrary affine open of `Spf I`: that
 an affine open immersion of formal spectra is **adic up to cofinality**. The on-the-nose form of

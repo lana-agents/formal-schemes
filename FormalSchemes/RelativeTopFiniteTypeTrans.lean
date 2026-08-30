@@ -69,8 +69,9 @@ two theorems that justify it, only the second is still open:
   `FormalSchemes.AdicCofinalOpenImmersion`).
 
   What that route leaves untouched is the arbitrary affine open itself, which is EGA I 10.12's own
-  statement and is still open. The adic analogue of the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and
-  each localisation `S_{gᵢ}` is of finite type over `R`, then so is `S`" — which this bullet used
+  statement and is still open. The adic analogue of the algebra theorem "if `g₁, …, gₙ` generate
+  the unit ideal and each localisation `S_{gᵢ}` is of finite type over `R`, then so is `S`" —
+  which this bullet used
   to name as the missing ingredient — is, since issue 1202,
   `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`
   (`FormalSchemes.TopFiniteTypeAffineLocal`), on top of the basic-open case

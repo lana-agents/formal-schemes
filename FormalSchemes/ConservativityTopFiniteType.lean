@@ -69,7 +69,8 @@ conservativity with **no hypothesis beyond `I.FG`**. Every theorem below that ca
 unconditional form. They are kept because they record where the hypothesis is spent — at the charts
 of `𝒱`, and nowhere else — which is the observation the refinement was built on.
 
-The refinement does not go through `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.exists_refinement`
+The refinement does not go through
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.exists_refinement`
 (`FormalSchemes.TopFiniteTypeHom`), which refines the cover of `X` *keeping `𝒱` fixed*: it shrinks
 each target chart against the identity of `Spf I` with
 `FormalSpectrum.exists_basicOpenChart_le_affine_inter` (`FormalSchemes.TwoChartBasicOpen`) and
