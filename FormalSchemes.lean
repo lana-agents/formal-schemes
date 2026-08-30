@@ -269,6 +269,7 @@ import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpfHomScheme
 import FormalSchemes.SpfHomSchemeNatural
 import FormalSchemes.SpfIsoIdealRecovery
+import FormalSchemes.SpfIsoOverBase
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
