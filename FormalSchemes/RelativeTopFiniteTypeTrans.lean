@@ -34,21 +34,24 @@ morphism identity, and a `Prop`-level restatement would be a duplicate under a n
 
 ## What is *not* proved, and what blocks it
 
-The general notion at a non-affine target — issue 62's item (1) — is **not** landed here, but it
-is landed: `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom` (`FormalSchemes.TopFiniteTypeHom`).
-Of the two theorems that justify it, only the second is still open:
+The general notion at a non-affine target — issue 62's item (1) — is landed, but not here:
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom` (`FormalSchemes.TopFiniteTypeHom`). Of the
+two theorems that justify it, only the second is still open:
 
 * **Composition at a non-affine target** is proved, and this bullet no longer names a blocker.
   `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
   (`FormalSchemes.TopFiniteTypeHomTrans`) is EGA I 10.13's composition law with no hypothesis
-  relating the two witnesses. It needs the covers of the middle formal scheme coming from the two
-  morphisms to be refined against each other, which
+  relating the two witnesses. What it needed was one *shared* affine chart of the middle formal
+  scheme, and it constructs one at each point: the two witnesses present a neighbourhood of a
+  point of `Y` as two unrelated formal spectra, which the proof refines to a common basic open
+  before transporting one witness onto the other's ring, up to cofinality of the two ideals of
+  definition. It does **not** run through
   `AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType.exists_refinement`
-  (`FormalSchemes.RelativeTopFiniteTypeBasis`) does only for `f : X ⟶ Spf I`; the non-affine
-  analogue of `AlgebraicGeometry.FormalScheme.RelTfTypeChart` and its neighbourhood-basis theorem
-  is `AlgebraicGeometry.FormalScheme.TfTypeHomChart` and
+  (`FormalSchemes.RelativeTopFiniteTypeBasis`) or through its non-affine analogue
   `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.exists_refinement`
-  (`FormalSchemes.TopFiniteTypeHom`).
+  (`FormalSchemes.TopFiniteTypeHom`) — both of those refine a cover of the *source* while keeping
+  the cover of the target fixed, and the shrink the composition law needs is over a refined chart
+  of `Y`, which is a chart of neither given cover.
 * **Conservativity** at `Y = Spf I` needs an *arbitrary* affine open of `Spf I` to be tf-type over
   `(R, I)`. The adic analogue of the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and
   each localisation `S_{gᵢ}` is of finite type over `R`, then so is `S`" — which this bullet used
