@@ -82,7 +82,7 @@ equality away and leaves an equation between the charts. The corresponding cance
 
 ## What is left
 
-The two chart conditions are stated through `AlgebraicGeometry.annulusChartTransitionInvSpf`, the
+The two chart conditions are stated through `annulusChartTransitionInvSpf`, the
 `𝔾m`-inversion transition as a morphism of formal spectra. Reading them as a statement about the
 *rings* — the equalizer description of `Γ (T_inv/⟨σ⟩, π V)` that issue 1223's goal 2 asks for —
 needs the ring-level form of that transition (`FormalSchemes.TateChartTransitionInvAlgEq`) and is
@@ -456,7 +456,7 @@ chart conditions: everything off the band is automatic
 This answers, for the chain, the question `FormalSchemes.TateInvNodeChartOverlap` left open —
 *which two maps, and over which open* — and the answer names only `annulusOverlapChart`,
 `annulusOverlapChartY` and the `𝔾m`-inversion transition
-`AlgebraicGeometry.annulusChartTransitionInvSpf`. Neither `T_inv` nor its glue datum occurs. -/
+`annulusChartTransitionInvSpf`. Neither `T_inv` nor its glue datum occurs. -/
 theorem isTateInvOverlapCompatible_iff_charts (hS : IsOpen S)
     (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
       (op (tateInvPatchSaturateOpens hq hI hS))) :
