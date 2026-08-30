@@ -45,10 +45,12 @@ hence, by `RestrictedLaurentSeries.algebraMap_injective`, in `R`. With `q ∈ I`
 * `AlgebraicGeometry.tateInvGlobalLegYX_overlapX` and
   `AlgebraicGeometry.tateInvGlobalLegXY_overlapY`: the two pairs of legs differ by `q` on the two
   coordinates.
-* `AlgebraicGeometry.eq_one_of_overlapX_mem_tateInvGlobalSubring`: if the coordinate `x` lies in
-  the subring then `q = 1`.
+* `AlgebraicGeometry.eq_one_of_tateInvGlobalLegX_overlapX_eq`: if the two forward legs agree on
+  the coordinate `x` then `q = 1`; hence
+  **`AlgebraicGeometry.tateInvGlobalLegX_ne_tateInvGlobalLegYX`** for `I ≠ ⊤`, and
+  `AlgebraicGeometry.tateInvGlobalLegY_ne_tateInvGlobalLegXY` for the backward pair.
 * `AlgebraicGeometry.notMem_tateInvGlobalSubring_overlapX`: so for `I ≠ ⊤` the coordinate `x` is
-  **not** in it — an explicit element of `A` outside `Γ (T_inv/⟨σ⟩)`.
+  **not** in the subring — an explicit element of `A` outside `Γ (T_inv/⟨σ⟩)`.
 * **`AlgebraicGeometry.tateInvGlobalSubring_ne_top`**: hence for `I ≠ ⊤` the subring is proper;
   `AlgebraicGeometry.exists_notMem_tateInvGlobalSubring` is its existential form.
 * `AlgebraicGeometry.tateInvChartAnnulusSubring_univ_ne_top`: the same statement for
@@ -349,36 +351,76 @@ variable {R : Type u} [CommRing R] {I : Ideal R} {q : R}
 variable [TopologicalSpace R] [IsAdicRing I]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **In `Ĝm` coordinates the forward condition on `x` reads `X = q·X`.** -/
-theorem overlapEquiv_eq_of_overlapX_mem_tateInvGlobalSubring (hI : I.FG)
-    (h : overlapX R I q ∈ tateInvGlobalSubring hI) :
+/-- **In `Ĝm` coordinates the forward condition on `x` reads `X = q·X`.** The hypothesis is the
+forward chart condition evaluated at the coordinate `x`, which is the first of the two equations
+cutting out `AlgebraicGeometry.tateInvGlobalSubring`. -/
+theorem overlapEquiv_eq_of_tateInvGlobalLegX_overlapX_eq (hI : I.FG)
+    (h : tateInvGlobalLegX (R := R) (I := I) (q := q) (overlapX R I q) =
+      tateInvGlobalLegYX (R := R) (I := I) (q := q) hI (overlapX R I q)) :
     algebraMap R (RestrictedLaurentSeries R I) 1 * X R I 1 =
       algebraMap R (RestrictedLaurentSeries R I) q * X R I 1 := by
-  have h1 := ((mem_tateInvGlobalSubring_iff hI _).1 h).1
-  rw [tateInvGlobalLegYX_overlapX] at h1
+  rw [tateInvGlobalLegYX_overlapX] at h
   have h2 := congrArg
-    (fun z => overlapEquiv R I q hI (annulusChartOverlapAlgX R I q z)) h1
+    (fun z => overlapEquiv R I q hI (annulusChartOverlapAlgX R I q z)) h
   simp only [annulusChartOverlapAlgX_tateInvGlobalLegX] at h2
   rw [overlapEquiv_overlapX, map_mul, map_mul, overlapEquiv_algebraMap_annulusAlgebra,
     overlapEquiv_overlapX] at h2
   rw [map_one, one_mul]
   exact h2
 
-/-- **If the coordinate `x` is a global section of the quotient then the Tate parameter is `1`.**
+/-- **If the two forward legs agree on the coordinate `x` then the Tate parameter is `1`.**
 `X` is a unit in `R{X, X⁻¹}`, so `X = q·X` cancels to `1 = q` there, and
-`RestrictedLaurentSeries.algebraMap_injective` brings that back to `R`. -/
-theorem eq_one_of_overlapX_mem_tateInvGlobalSubring (hI : I.FG)
-    (h : overlapX R I q ∈ tateInvGlobalSubring hI) : q = 1 :=
+`RestrictedLaurentSeries.algebraMap_injective` brings that equation back to `R`. -/
+theorem eq_one_of_tateInvGlobalLegX_overlapX_eq (hI : I.FG)
+    (h : tateInvGlobalLegX (R := R) (I := I) (q := q) (overlapX R I q) =
+      tateInvGlobalLegYX (R := R) (I := I) (q := q) hI (overlapX R I q)) : q = 1 :=
   (RestrictedLaurentSeries.algebraMap_injective
     ((isUnit_X R I 1).mul_right_cancel
-      (overlapEquiv_eq_of_overlapX_mem_tateInvGlobalSubring hI h))).symm
+      (overlapEquiv_eq_of_tateInvGlobalLegX_overlapX_eq hI h))).symm
+
+/-- **The two forward legs are different ring homomorphisms**, for `I ≠ ⊤` — the sharpest form of
+issue 1250's goal 2, and the reason every statement below holds. They already differ on the
+coordinate `x`. -/
+theorem tateInvGlobalLegX_ne_tateInvGlobalLegYX (hq : q ∈ I) (hI : I.FG) (hItop : I ≠ ⊤) :
+    tateInvGlobalLegX (R := R) (I := I) (q := q) ≠
+      tateInvGlobalLegYX (R := R) (I := I) (q := q) hI := fun h =>
+  hItop ((Ideal.eq_top_iff_one I).2
+    (eq_one_of_tateInvGlobalLegX_overlapX_eq hI (congrArg (fun φ => φ (overlapX R I q)) h) ▸ hq))
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **In `y`-side `Ĝm` coordinates the backward condition on `y` also reads `X = q·X`.** The mirror
+of `overlapEquiv_eq_of_tateInvGlobalLegX_overlapX_eq`. -/
+theorem annulusOverlapEquivY_eq_of_tateInvGlobalLegY_overlapY_eq (hI : I.FG)
+    (h : tateInvGlobalLegY (R := R) (I := I) (q := q) (overlapY R I q) =
+      tateInvGlobalLegXY (R := R) (I := I) (q := q) hI (overlapY R I q)) :
+    algebraMap R (RestrictedLaurentSeries R I) 1 * X R I 1 =
+      algebraMap R (RestrictedLaurentSeries R I) q * X R I 1 := by
+  rw [tateInvGlobalLegXY_overlapY] at h
+  have h2 := congrArg
+    (fun z => annulusOverlapEquivY R I q hI (annulusChartOverlapAlgY R I q z)) h
+  simp only [annulusChartOverlapAlgY_tateInvGlobalLegY] at h2
+  rw [annulusOverlapEquivY_algebraMap_overlapY, map_mul, map_mul,
+    annulusOverlapEquivY_algebraMap_annulusAlgebra, annulusOverlapEquivY_algebraMap_overlapY] at h2
+  rw [map_one, one_mul]
+  exact h2
+
+/-- **The two backward legs are different ring homomorphisms** for `I ≠ ⊤` — the mirror of
+`tateInvGlobalLegX_ne_tateInvGlobalLegYX`, so *both* halves of the overlap condition are genuine
+restrictions and not only the forward one. -/
+theorem tateInvGlobalLegY_ne_tateInvGlobalLegXY (hq : q ∈ I) (hI : I.FG) (hItop : I ≠ ⊤) :
+    tateInvGlobalLegY (R := R) (I := I) (q := q) ≠
+      tateInvGlobalLegXY (R := R) (I := I) (q := q) hI := fun h =>
+  hItop ((Ideal.eq_top_iff_one I).2
+    ((RestrictedLaurentSeries.algebraMap_injective ((isUnit_X R I 1).mul_right_cancel
+      (annulusOverlapEquivY_eq_of_tateInvGlobalLegY_overlapY_eq hI
+        (congrArg (fun φ => φ (overlapY R I q)) h)))).symm ▸ hq))
 
 /-- **The coordinate `x` is an explicit element of `A` outside `Γ (T_inv/⟨σ⟩)`**, whenever the
 ideal of definition is proper. With `q ∈ I`, `q = 1` would put `1` in `I`. -/
 theorem notMem_tateInvGlobalSubring_overlapX (hq : q ∈ I) (hI : I.FG) (hItop : I ≠ ⊤) :
     overlapX R I q ∉ tateInvGlobalSubring hI := fun h =>
   hItop ((Ideal.eq_top_iff_one I).2
-    (eq_one_of_overlapX_mem_tateInvGlobalSubring hI h ▸ hq))
+    (eq_one_of_tateInvGlobalLegX_overlapX_eq hI ((mem_tateInvGlobalSubring_iff hI _).1 h).1 ▸ hq))
 
 /-- **`Γ (T_inv/⟨σ⟩)` is a proper subring of `A = R{x, y}/(x·y − q)`**, for `I ≠ ⊤`: issue 1250's
 goal 2 at `S = Set.univ`, in the affirmative. The overlap condition is a genuine restriction. -/
