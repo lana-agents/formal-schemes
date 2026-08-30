@@ -20,13 +20,18 @@ are the two annulus overlap charts and the `𝔾m`-inversion transition.
 
 ## What is here
 
+* `RingHom.eqLocus_eq_top_iff`: a `RingHom.eqLocus` is `⊤` exactly when the two maps are equal.
+  Mathlib has `RingHom.eqLocus_same` but not this `iff`.
+* `AlgebraicGeometry.tateInvChartLegX`, `AlgebraicGeometry.tateInvChartLegYX`,
+  `AlgebraicGeometry.tateInvChartLegY`, `AlgebraicGeometry.tateInvChartLegXY`: the four legs of the
+  two chart conditions, as `RingHom`s, with
+  `AlgebraicGeometry.isTateInvChartCompatibleForward_iff` and
+  `AlgebraicGeometry.isTateInvChartCompatibleBackward_iff` identifying the conditions with
+  equations between them.
 * `AlgebraicGeometry.tateInvChartAnnulusSubring`: the `Subring` of
   `Γ (Spf A, tateInvPatchSaturateOpens hq hI hS)` cut out by the two chart conditions, as
   `RingHom.eqLocus … ⊓ RingHom.eqLocus …`. No glue datum, no `ι`, no overlap object of the chain
-  occurs in either leg.
-* `AlgebraicGeometry.mem_tateInvChartAnnulusSubring_iff`: membership is
-  `AlgebraicGeometry.IsTateInvChartCompatibleForward` and
-  `AlgebraicGeometry.IsTateInvChartCompatibleBackward` together.
+  occurs in any leg. `AlgebraicGeometry.mem_tateInvChartAnnulusSubring_iff` is its membership.
 * `AlgebraicGeometry.tateInvChartSubring_eq_tateInvChartAnnulusSubring`: **the two subrings are
   equal.** This is the statement `FormalSchemes.TateInvQuotientChartRing` names as missing.
 * `AlgebraicGeometry.tateInvChartAnnulusRingEquiv` and
@@ -34,25 +39,37 @@ are the two annulus overlap charts and the `𝔾m`-inversion transition.
   by transport of `AlgebraicGeometry.tateInvChartRingEquiv` along that equality. There is no new
   content in these two; they exist so that a consumer never has to mention
   `tateInvChartSubring`'s `⨅` again.
-* `AlgebraicGeometry.tateInvChartAnnulusSubring_eq_top_iff`: the subring is the whole of
-  `Γ (Spf A, tateInvPatchSaturateOpens hq hI hS)` exactly when the two chart legs agree as *ring
-  homomorphisms*. This is the reformulation that turns "is the subring proper?" into a question
-  about two maps and no sections.
+* `AlgebraicGeometry.tateInvSaturate_empty`, `AlgebraicGeometry.tateInvPatchSaturate_empty` and
+  the two `Opens` forms `AlgebraicGeometry.tateInvPatchSaturateOpens_empty`,
+  `AlgebraicGeometry.tateInvPatchSaturateOpens_univ`: the two extreme opens. The second pair is
+  the `Opens` shape of `AlgebraicGeometry.tateInvPatchSaturate_univ`
+  (`FormalSchemes.TateInvNodeChartRing`), which had only the `Set` form.
+* `AlgebraicGeometry.tateInvChartAnnulusSubring_empty_eq_top`: **at `S = ∅` the chart ring is not
+  proper**, the ambient ring being the zero ring.
+* `AlgebraicGeometry.tateInvChartAnnulusSubring_eq_top_iff` and
+  `AlgebraicGeometry.tateInvChartAnnulusSubring_ne_top_iff`: properness, restated as an equality
+  of ring homomorphisms and as the existence of a section failing a chart condition.
 
 ## What is *not* proved
 
-**Whether the subring is proper.** `tateInvChartAnnulusSubring_eq_top_iff` reduces that question
-to the equality of two named ring homomorphisms, which is strictly better posed than
-`FormalSchemes.TateInvQuotientChartRing` left it — there the condition was an `⨅` over `ℤ × ℤ` and
-the legs were glue-datum morphisms — but it does not answer it. Answering it needs the two legs
-read in the coordinates of `FormalSchemes.TateChartTransitionInvAlgEq`, which is not done here.
-`AlgebraicGeometry.isTateInvOverlapCompatible_one` and the membership of `0` are non-vacuity, not
-an answer.
+**Whether the chart ring is proper at `S = Set.univ`.** `tateInvChartAnnulusSubring_eq_top_iff`
+reduces that question to the equality of two named ring homomorphisms, which is strictly better
+posed than `FormalSchemes.TateInvQuotientChartRing` left it — there the condition was an `⨅` over
+`ℤ × ℤ` and the legs were glue-datum morphisms — but it does not answer it. Answering it needs the
+four legs read in the coordinates of `FormalSchemes.TateChartTransitionInvAlgEq`, which is not
+done here. `AlgebraicGeometry.isTateInvOverlapCompatible_one` and the membership of `0` are
+non-vacuity, not an answer; and `tateInvChartAnnulusSubring_empty_eq_top` shows the question has no
+`S`-free answer, so it must be asked at a named `S`.
+
+**Nor whether the chart ring is larger than the base.** That is a *different* question —
+1223's goal 3 asks for an element of the chart ring outside the image of `Γ (Spf R, ·)`, which is
+about the ring being big, where properness is about it being small. Neither is settled here.
 
 **The open is still described through the chain.**
 `AlgebraicGeometry.tateInvPatchSaturateOpens hq hI hS` is by definition the preimage under
 `ι ⟨0⟩` of a saturation inside `T_inv` (`FormalSchemes.TateInvNodeChartRing`). What the results
 below eliminate is the glue datum from the four **legs**, not from the open they are read over.
+The two extremes above are the only opens for which that description is evaluated here.
 
 **Nothing here produces a chart.** A ring is not a chart:
 `AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChart`
@@ -244,6 +261,67 @@ theorem exists_tateInvChartAnnulusRingEquiv (hS : IsOpen S) :
         tateInvChartAnnulusSubring (hq := hq) (hI := hI) hS) :=
   let ⟨V, hV⟩ := exists_preimage_eq_tateInvSaturateOpens (hq := hq) (hI := hI) hS
   ⟨V, hV, ⟨tateInvChartAnnulusRingEquiv V hS hV⟩⟩
+
+/-! ### The two extreme opens -/
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The saturation of the empty set is empty**: `tateInvSaturate` is a union of images. -/
+theorem tateInvSaturate_empty :
+    tateInvSaturate R I q hq hI (∅ : Set (FormalSpectrum.locallyRingedSpaceObj
+      (annulusIdealOfDefinition R I q))) = ∅ := by
+  ext x
+  refine ⟨fun h => ?_, fun h => h.elim⟩
+  obtain ⟨_, y, hy, _⟩ := (mem_tateInvSaturate_iff hq hI).1 h
+  exact absurd hy (Set.notMem_empty y)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The empty open sees nothing of the model patch.** `tateInvSaturate_empty` and
+`Set.preimage_empty`, in the shape `AlgebraicGeometry.tateInvPatchSaturate_univ`
+(`FormalSchemes.TateInvNodeChartRing`) has at the other extreme. -/
+theorem tateInvPatchSaturate_empty :
+    tateInvPatchSaturate (R := R) (I := I) (q := q) hq hI ∅ = ∅ := by
+  unfold tateInvPatchSaturate
+  rw [tateInvSaturate_empty]
+  exact Set.preimage_empty
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- The `Opens` form of `tateInvPatchSaturate_empty`. -/
+theorem tateInvPatchSaturateOpens_empty :
+    tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := ∅) hq hI isOpen_empty = ⊥ :=
+  Opens.ext tateInvPatchSaturate_empty
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- The `Opens` form of `AlgebraicGeometry.tateInvPatchSaturate_univ`
+(`FormalSchemes.TateInvNodeChartRing`): the whole patch saturates to the whole chain, so the open
+the chart ring is read over is `⊤`. -/
+theorem tateInvPatchSaturateOpens_univ :
+    tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI isOpen_univ = ⊤ :=
+  Opens.ext (tateInvPatchSaturate_univ hq hI)
+
+/-- **Over the empty open the chart ring is everything, because the ambient ring is the zero
+ring.** `Γ (Spf A, ⊥)` is terminal in `CommRingCat` by the sheaf axiom read on the empty cover
+(`TopCat.Sheaf.isTerminalOfEqEmpty`, `CommRingCat.subsingleton_of_isTerminal`), and a subsingleton
+has exactly one subring.
+
+**This is a negative measurement and stating it is the point.** "Is the chart ring a proper
+subring?" has no `S`-free answer: at `S = ∅` it is not proper, so any properness claim must name
+its `S`. The question worth asking is at `S = Set.univ`, where `tateInvPatchSaturateOpens_univ`
+makes the ambient ring `Γ (Spf A, ⊤)`; that case is **not** decided here. -/
+theorem tateInvChartAnnulusSubring_empty_eq_top :
+    tateInvChartAnnulusSubring (R := R) (I := I) (q := q) (hq := hq) (hI := hI) (S := ∅)
+      isOpen_empty = ⊤ := by
+  haveI : Subsingleton ((FormalSpectrum.locallyRingedSpaceObj
+      (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (S := ∅) hq hI isOpen_empty))) :=
+    CommRingCat.subsingleton_of_isTerminal
+      ((FormalSpectrum.locallyRingedSpaceObj
+        (annulusIdealOfDefinition R I q)).toSheafedSpace.sheaf.isTerminalOfEqEmpty
+          tateInvPatchSaturateOpens_empty)
+  rw [Subring.eq_top_iff']
+  intro x
+  have hx : x = 0 := Subsingleton.elim _ _
+  subst hx
+  exact zero_mem _
 
 /-! ### Properness, reduced to an equality of ring homomorphisms -/
 
