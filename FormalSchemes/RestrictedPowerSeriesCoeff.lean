@@ -12,8 +12,15 @@ coefficient, and there is no extensionality principle in those terms.** This fil
 for a base ring that is `I`-adically complete.
 
 It is the several-variable analogue of `FormalSchemes.RestrictedLaurentCoeff`, which does the
-same job for `R{X, X⁻¹}` in one variable, and it is written to be read against that file: every
-declaration below has a counterpart there, except the three noted under *What is new here*.
+same job for `R{X, X⁻¹}` in one variable, and it is written to be read against that file. Most
+declarations below have a counterpart there; **nine do not**, in three groups: the three genuinely
+new results under *What is new here*; the three consequences
+`RestrictedPowerSeries.isHausdorff_map`, `RestrictedPowerSeries.of_injective` and
+`RestrictedPowerSeries.algebraMap_injective`, which the *Main results* list already records as
+absent from the tree; and the three structural helpers `RestrictedPowerSeries.of_mul_eq_smul`,
+`RestrictedPowerSeries.of_mul_of` and `RestrictedPowerSeries.coeff_monomial`, which have no
+one-variable analogue because `FormalSchemes.RestrictedLaurentCoeff` never multiplies inside the
+completion.
 
 ## The construction
 
@@ -54,14 +61,17 @@ quotients.
 
 ## What is new here, relative to the one-variable file
 
-Three declarations have no counterpart in `FormalSchemes.RestrictedLaurentCoeff`.
+Of the nine declarations with no counterpart in `FormalSchemes.RestrictedLaurentCoeff`, these
+three carry results that file does not prove; the other six are the consequences and the
+structural helpers named above.
 
 * `RestrictedPowerSeries.mem_pow_smul_top_iff_coeff_mem`: the **converse** of continuity —
   membership in the `m`-th step of the filtration is exactly the statement that every coefficient
   lies in `I ^ m`. The one-variable file proves only the forward direction.
 * `RestrictedPowerSeries.eq_of_eq_on_polynomials`: **two continuous `R`-linear functionals that
-  agree on polynomials are equal.** `FormalSchemes.RestrictedLaurentCoeffInv`'s `coeff_rlsInv`
-  runs this argument inline; here it is a lemma, so a successor does not repeat it.
+  agree on polynomials are equal.** `FormalSchemes.RestrictedLaurentCoeffInv`'s
+  `RestrictedLaurentSeries.coeff_rlsInv` runs this argument inline; here it is a lemma, so a
+  successor does not repeat it.
 * `RestrictedPowerSeries.coeff_monomial_mul`: **multiplication by a monomial shifts the
   coefficients**, `coeff d (Xᵉ·c · z) = c · coeff (d − e) z` when `e ≤ d` and `0` otherwise. This
   is the rule an induction along `MvPolynomial.induction_on` needs and
