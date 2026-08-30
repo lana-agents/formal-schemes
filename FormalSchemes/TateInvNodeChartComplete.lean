@@ -25,15 +25,18 @@ much of the closedness half as the tree currently supports.
   `AlgebraicGeometry.tateInvChartAnnulusSubring`'s description across
   `AlgebraicGeometry.tateInvNodeChartAmbientEquiv`, so the four legs become four ring
   homomorphisms out of `A{1/(x + y − 1)}`:
-  `AlgebraicGeometry.tateInvNodeChartAwayLegX`, `…LegYX`, `…LegY`, `…LegXY`.
+  `AlgebraicGeometry.tateInvNodeChartAwayLegX`, `AlgebraicGeometry.tateInvNodeChartAwayLegYX`,
+  `AlgebraicGeometry.tateInvNodeChartAwayLegY`, `AlgebraicGeometry.tateInvNodeChartAwayLegXY`.
 * **Both leg targets are sections over a *basic* open, and both are Hausdorff.** This is the
   question 1284's goal 2 flagged as unknown, and the answer is yes:
   `AlgebraicGeometry.tateInvNodeChartTargetOpensX_eq_basicOpen` and its `y`-side mirror identify
   the target opens as `D` of the image of the chart coordinate, by the general
   `FormalSpectrum.preimage_basicOpen_basicOpenChart` (which is `rfl`). So each target is a
   twice-completed localization `A{1/x}{1/(x + y − 1)}` resp. `A{1/y}{1/(x + y − 1)}`
-  (`AlgebraicGeometry.tateInvNodeChartTargetEquivX`, `…Y`), it carries the ideal
-  `AlgebraicGeometry.tateInvNodeChartTargetIdealX`, `…Y`, and
+  (`AlgebraicGeometry.tateInvNodeChartTargetEquivX`,
+  `AlgebraicGeometry.tateInvNodeChartTargetEquivY`), it carries the ideal
+  `AlgebraicGeometry.tateInvNodeChartTargetIdealX` resp.
+  `AlgebraicGeometry.tateInvNodeChartTargetIdealY`, and
   `AlgebraicGeometry.isHausdorff_tateInvNodeChartTargetIdealX` and its mirror hold with no
   hypothesis beyond `I.FG`.
 * **Continuity of the four legs makes the chart ring adically closed**, and closedness alone
@@ -42,7 +45,8 @@ much of the closedness half as the tree currently supports.
   `AlgebraicGeometry.isInducedPrecomplete_tateInvNodeChartAwaySubring`.
 * **Adic completeness of `tateInvNodeChartAwayIdeal`, from closedness plus the filtration
   bridge**: `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal`, and its form starting
-  from leg continuity, `…_of_legContinuous`.
+  from leg continuity,
+  `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_legContinuous`.
 
 ## What is *not* proved
 
