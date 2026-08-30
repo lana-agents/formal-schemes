@@ -30,6 +30,7 @@ import FormalSchemes.AdicOverBaseChart
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AdicRingCat
+import FormalSchemes.AdicSubringComplete
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductLRS
@@ -324,6 +325,7 @@ import FormalSchemes.TateInvGlobalNormalForm
 import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvGlobalSections
 import FormalSchemes.TateInvNodeChartAmbient
+import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
 import FormalSchemes.TateInvNodeChartOverlap
