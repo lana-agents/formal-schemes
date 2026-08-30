@@ -17,10 +17,9 @@ Spf A{1/g}^  ⟶ Spf A  ⟶ X        Spf A'{1/g'}^ ⟶ Spf A' ⟶ X
 ```
 
 have **the same range**, and that range contains `x`. This is the formal-geometry analogue of
-`AlgebraicGeometry.exists_basicOpen_le_affine_inter`, and it is what
-`FormalSchemes/TopFiniteTypeHom.lean` records as the single missing lemma blocking EGA I 10.13's
-composition law at a non-affine target: it is what lets a chart known to be topologically of
-finite type over one chart of `Y` be re-read over another.
+`AlgebraicGeometry.exists_basicOpen_le_affine_inter`, and it is the `Y`-side geometry EGA I
+10.13's composition law at a non-affine target runs on: it is what lets a chart known to be
+topologically of finite type over one chart of `Y` be re-read over another.
 
 ## The statement is an equality of ranges, not an identification of algebras
 
@@ -74,10 +73,12 @@ sheaf-theoretic transport available at all, and once through
 ## What is *not* proved
 
 * **The composition law.** Wiring this lemma into a `trans` for
-  `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom` is not attempted here; that needs, in
-  addition, the `Y`-side refinement of two covers against each other.
-  `git grep -nE "IsTopFiniteTypeHom\.trans" -- FormalSchemes/` returns rc=1 on this branch, with
-  no pathspec exclusion: the pattern's escaped dot does not match this paragraph's own text.
+  `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom` is not done here. It has since been done
+  elsewhere: `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
+  (`FormalSchemes.TopFiniteTypeHomTrans`), which consumes
+  `FormalSpectrum.exists_basicOpenChart_inter_iso` below together with the transport of one
+  witness onto the other's ring up to cofinality of the two ideals of definition
+  (`FormalSchemes.CofinalTopFiniteType`, `FormalSchemes.CofinalStructMap`).
 * **Conservativity's hard direction** — that an arbitrary affine open of `Spf I` is topologically
   of finite type over `(R, I)`. Untouched here. The tree has the basic-open case
   `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion` and, since issue 1202,

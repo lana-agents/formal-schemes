@@ -34,16 +34,21 @@ morphism identity, and a `Prop`-level restatement would be a duplicate under a n
 
 ## What is *not* proved, and what blocks it
 
-The general notion at a non-affine target — issue 62's item (1) — is **not** landed here. Its
-definition elaborates (issue 62's 2026-08-28 comment carries it verbatim, and it still compiles),
-but a definition that elaborates is not a notion, and both of its justifying theorems are blocked:
+The general notion at a non-affine target — issue 62's item (1) — is **not** landed here, but it
+is landed: `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom` (`FormalSchemes.TopFiniteTypeHom`).
+Of the two theorems that justify it, only the second is still open:
 
-* **Composition at a non-affine target** needs the covers of the middle formal scheme coming from
-  the two morphisms to be refined against each other.
+* **Composition at a non-affine target** is proved, and this bullet no longer names a blocker.
+  `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
+  (`FormalSchemes.TopFiniteTypeHomTrans`) is EGA I 10.13's composition law with no hypothesis
+  relating the two witnesses. It needs the covers of the middle formal scheme coming from the two
+  morphisms to be refined against each other, which
   `AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType.exists_refinement`
-  (`FormalSchemes.RelativeTopFiniteTypeBasis`) does precisely this, but only for `f : X ⟶ Spf I`;
-  the non-affine-target analogue of `AlgebraicGeometry.FormalScheme.RelTfTypeChart` and its
-  neighbourhood-basis theorem does not exist.
+  (`FormalSchemes.RelativeTopFiniteTypeBasis`) does only for `f : X ⟶ Spf I`; the non-affine
+  analogue of `AlgebraicGeometry.FormalScheme.RelTfTypeChart` and its neighbourhood-basis theorem
+  is `AlgebraicGeometry.FormalScheme.TfTypeHomChart` and
+  `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.exists_refinement`
+  (`FormalSchemes.TopFiniteTypeHom`).
 * **Conservativity** at `Y = Spf I` needs an *arbitrary* affine open of `Spf I` to be tf-type over
   `(R, I)`. The adic analogue of the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and
   each localisation `S_{gᵢ}` is of finite type over `R`, then so is `S`" — which this bullet used
@@ -55,7 +60,7 @@ but a definition that elaborates is not a notion, and both of its justifying the
   chart presentations of a basic open `D(f)` of an affine open `V`, which holds only up to an
   equivalent ideal of definition.
 
-Nothing here should be read as saying EGA I 10.13 is finished.
+Conservativity is still open, so nothing here should be read as saying EGA I 10.13 is finished.
 
 ## A namespace warning, because it is not a mistake to be fixed
 
