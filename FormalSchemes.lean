@@ -7,6 +7,7 @@ import FormalSchemes.ActionQuotientColimit
 import FormalSchemes.ActionQuotientFormalScheme
 import FormalSchemes.ActionQuotientFunctor
 import FormalSchemes.ActionQuotientInvariantSections
+import FormalSchemes.ActionQuotientSectionInjective
 import FormalSchemes.ActionQuotientSections
 import FormalSchemes.ActionQuotientSeparatingSections
 import FormalSchemes.ActionQuotientStalk
