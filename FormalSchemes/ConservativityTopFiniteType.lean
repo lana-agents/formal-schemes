@@ -50,24 +50,36 @@ property is the single containment `J ≤ √(I · B)`, and
 `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` discharges it when the open is basic —
 which is what makes the unconditional cases below unconditional.
 
-## Where the residue now sits, and a route this file does *not* formalise
+## Where the residue now sits — and why this file's hypothesis is redundant
 
 `IsRelativelyTopFiniteType` asserts the *existence* of a cover, so a witness may be refined before
-it is used, and `IsTopFiniteTypeHomOn.isRelativelyTopFiniteType_of_basicOpen` needs the adicity
-hypothesis only at the charts of the *target* cover `𝒱` — where it is free as soon as their ranges
-are basic. So conservativity does not obviously need the property at an arbitrary affine open: it
-would follow from a refinement of a given witness `IsTopFiniteTypeHomOn f 𝒱 𝒰` to one whose target
-cover is by basic opens of `Spf I`.
+it is used, and `IsTopFiniteTypeHomOn.isRelativelyTopFiniteType` below needs the adicity hypothesis
+only at the charts of the *target* cover `𝒱` — where
+`IsTopFiniteTypeHomOn.isRelativelyTopFiniteType_of_basicOpen` makes it free as soon as their ranges
+are basic. So conservativity does not need the property at an arbitrary affine open: it is enough
+to refine a given witness `IsTopFiniteTypeHomOn f 𝒱 𝒰` to one whose target cover is by basic opens
+of `Spf I`.
 
-**That refinement is not on this tree and is not proved here.** The available refinement,
+**That refinement is now on the tree**, as
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.exists_basicTargetRefinement`
+(`FormalSchemes.TargetBasicRefinement`), and with it
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.isRelativelyTopFiniteType_of_fg` proves
+conservativity with **no hypothesis beyond `I.FG`**. Every theorem below that carries
+`IsAdicOpenImmersionProperty I` therefore has a redundant hypothesis, and a caller should use the
+unconditional form. They are kept because they record where the hypothesis is spent — at the charts
+of `𝒱`, and nowhere else — which is the observation the refinement was built on.
+
+The refinement does not go through
 `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.exists_refinement`
-(`FormalSchemes.TopFiniteTypeHom`), refines the cover of `X` *keeping `𝒱` fixed*, which is the
-opposite side. Carrying out the target-side refinement would need, per chart, the common basic
-open `FormalSpectrum.exists_basicOpenChart_inter_iso` (`FormalSchemes.TwoChartBasicOpen`), the
-preimage computation `FormalSpectrum.base_preimage_basicOpen`, and a base change of the chart
-algebra along `FormalSpectrum.awayCompletion` in the style of
-`FormalSchemes.AwayBaseChangeTopFiniteType`. **Nothing here should be read as a claim that that
-route closes; it is a sketch.**
+(`FormalSchemes.TopFiniteTypeHom`), which refines the cover of `X` *keeping `𝒱` fixed*: it shrinks
+each target chart against the identity of `Spf I` with
+`FormalSpectrum.exists_basicOpenChart_le_affine_inter` (`FormalSchemes.TwoChartBasicOpen`) and
+carries the source chart along by `FormalSpectrum.map_preimage_basicOpen` and
+`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange`
+(`FormalSchemes.AwayBaseChangeTopFiniteType`).
+
+`IsAdicOpenImmersionProperty I` itself — issue 1218's goal 2, EGA I 10.12 — is **not** settled by
+any of this and remains open.
 
 ## Main definitions
 
@@ -304,7 +316,11 @@ theorem IsAdicOpenImmersionProperty.isAdicAffineOpen (h : IsAdicOpenImmersionPro
 topologically of finite type over the base, given `IsAdicOpenImmersionProperty I`.
 
 The converse is `IsRelativelyTopFiniteType.isTopFiniteTypeHom` (`FormalSchemes.TopFiniteTypeHom`)
-and needs no hypothesis. -/
+and needs no hypothesis.
+
+**The hypothesis here is redundant.**
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.isRelativelyTopFiniteType_of_fg`
+(`FormalSchemes.TargetBasicRefinement`) has the same conclusion from `I.FG` alone; prefer it. -/
 theorem IsTopFiniteTypeHom.isRelativelyTopFiniteType {X : FormalScheme.{u}}
     {f : X ⟶ FormalScheme.Spf I} (hI : I.FG) (hadic : IsAdicOpenImmersionProperty I)
     (h : IsTopFiniteTypeHom f) : IsRelativelyTopFiniteType R I f := by
