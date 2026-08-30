@@ -104,15 +104,35 @@ theorem exists_actionQuotientπ_c_app_eq_iff_forall_zpow
 
 /-! ### Descent of a constant patch family -/
 
+/-- **The hypothesis `hV` below is satisfiable, for every open `S` of the model patch.** The image
+of the saturation is open (`AlgebraicGeometry.isOpen_image_base_tateInvSaturate`) and its preimage
+is the saturation back again (`AlgebraicGeometry.preimage_image_base_tateInvSaturate`), both
+`FormalSchemes.TateInvSaturation` and both with **no** hypothesis on the action — which is what
+makes them available at a node, where
+`AlgebraicGeometry.LocallyRingedSpace.IsProperlyDiscontinuousOn` is not.
+
+The `AlgebraicGeometry.LocallyRingedSpace.IsActionQuotient` witness is
+`CategoryTheory.isActionQuotient_actionQuotientπ`
+(`FormalSchemes.ActionQuotientColimit`), so this is an instantiation at a named quotient with
+every hypothesis discharged, not a restatement. -/
+theorem exists_preimage_eq_tateInvSaturateOpens (hS : IsOpen S) :
+    ∃ V : Opens (actionQuotient (tateInvPeriodAction R I q hq hI)).toTopCat,
+      (Opens.map (actionQuotientπ (tateInvPeriodAction R I q hq hI)).toShHom.hom.base).obj V =
+        tateInvSaturateOpens hq hI hS :=
+  ⟨⟨_, isOpen_image_base_tateInvSaturate hq hI (isActionQuotient_actionQuotientπ _) hS⟩,
+    Opens.ext (preimage_image_base_tateInvSaturate hq hI (isActionQuotient_actionQuotientπ _) S)⟩
+
 /-- **A section of the chain that is constant on the patches descends to the quotient.** The open
 `V` of the quotient is one whose preimage is the saturation of an open `S` of the model patch, and
 the section is one whose pullback to every patch is the same `s`.
 
 This is `AlgebraicGeometry.c_app_tateInvShiftAut_zpow_eq_of_const`
 (`FormalSchemes.TateInvNodeChartGlue`) fed to
-`exists_actionQuotientπ_c_app_eq_iff_forall_zpow`. The first was landed with nothing able to
-consume it, being exactly the invariance hypothesis of a theorem that did not apply at this
-action; this is the consumption. -/
+`CategoryTheory.exists_actionQuotientπ_c_app_eq_iff_forall`, with the group element reindexed by
+`Multiplicative.toAdd` at the point of use rather than through
+`exists_actionQuotientπ_c_app_eq_iff_forall_zpow` — the two are interchangeable here and the
+direct route is one step shorter. The invariance was landed with nothing able to consume it, being
+exactly the hypothesis of a theorem that did not apply at this action; this is the consumption. -/
 theorem exists_actionQuotientπ_c_app_eq_of_const (hS : IsOpen S)
     (V : Opens (actionQuotient (tateInvPeriodAction R I q hq hI)).toTopCat)
     (hV : (Opens.map (actionQuotientπ (tateInvPeriodAction R I q hq hI)).toShHom.hom.base).obj V =
