@@ -49,10 +49,13 @@ point-by-point form of the reduction did not give:
 
 Whether the missing charts exist. That is still open, and nothing here moves it:
 `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`
-(`FormalSchemes.TateInvPeriodNodePoint`) still says that no open of the chain containing a node
-maps injectively to the quotient, so the missing chart cannot be the image of one. What this file
-adds is that the chart has to be glued to an **open** already-charted locus, and that the set it
-has to cover is the image of a single saturation.
+(`FormalSchemes.TateInvPeriodNodePoint`) still says the `σ`-action is not free and properly
+discontinuous — some point of the chain has no separating open neighbourhood, and the witness
+its proof supplies is a node. So the route by which every chart below is produced, a separating
+open fed to `LocallyRingedSpace.hasAffineChartAt_of_isProperlyDiscontinuousOn`, is not available
+at every point, and the missing chart has to come from somewhere else. What this file adds is
+that the chart has to be glued to an **open** already-charted locus, and that the set it has to
+cover is the image of a single saturation.
 
 Also not proved, and deliberately: that the two sets of
 `image_base_tateInvSaturate_union_compl_eq_univ` are **disjoint**. Only that they cover. A chain
