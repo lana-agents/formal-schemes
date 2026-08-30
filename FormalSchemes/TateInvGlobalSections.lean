@@ -403,8 +403,61 @@ theorem globalSectionsMap_transitionInv_inv_comp_chart (hI : I.FG) :
     globalSectionsMap_annulusChartTransitionInvSpf_inv, globalSectionsMap_annulusOverlapChart]
   rfl
 
+/-! ### The subring, transported -/
+
+set_option maxHeartbeats 800000 in
+-- Each of the two `rw` chains re-elaborates a `c`-component over the collapsed open, and the two
+-- share one declaration's heartbeat budget.
+/-- **The two chart conditions at `S = Set.univ` are the two equations in `A`.** A section of the
+model patch over the whole patch satisfies
+`AlgebraicGeometry.IsTateInvChartCompatibleForward`/`Backward` exactly when the element of `A` it
+corresponds to lies in `tateInvGlobalSubring`. This is where the presheaf leaves the statement. -/
+theorem mem_tateInvChartAnnulusSubring_iff_mem_tateInvGlobalSubring (hq : q ∈ I) (hI : I.FG)
+    (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens (R := R) (I := I) (q := q) (S := Set.univ) hq hI
+        isOpen_univ))) :
+    s ∈ tateInvChartAnnulusSubring (hq := hq) (hI := hI) isOpen_univ ↔
+      tateInvGlobalPatchEquiv hq hI s ∈ tateInvGlobalSubring hI := by
+  rw [mem_tateInvChartAnnulusSubring_iff, mem_tateInvGlobalSubring_iff]
+  refine and_congr ?_ ?_
+  · rw [isTateInvChartCompatibleForward_iff, ← (tateInvGlobalXEquiv hq hI).injective.eq_iff,
+      tateInvGlobalXEquiv_tateInvChartLegX, tateInvGlobalXEquiv_tateInvChartLegYX,
+      globalSectionsMap_annulusOverlapChart, globalSectionsMap_transitionInv_comp_chartY]
+  · rw [isTateInvChartCompatibleBackward_iff, ← (tateInvGlobalYEquiv hq hI).injective.eq_iff,
+      tateInvGlobalYEquiv_tateInvChartLegY, tateInvGlobalYEquiv_tateInvChartLegXY,
+      globalSectionsMap_annulusOverlapChartY, globalSectionsMap_transitionInv_inv_comp_chart]
+
 end XY
 
 end GlobalCollapse
+
+/-! ### `Γ (T_inv/⟨σ⟩)` -/
+
+/-- **`Γ (T_inv/⟨σ⟩)` is the subring of `A = R{x, y}/(x·y − q)` cut out by two equations.**
+
+`V = ⊤` is exhibited, not assumed: `map_actionQuotientπ_top_eq` says the preimage of `⊤` under the
+quotient projection is the saturation of `Set.univ`, so
+`AlgebraicGeometry.tateInvChartAnnulusRingEquiv` (`FormalSchemes.TateInvChartAnnulusRing`) applies
+at `V = ⊤` and `S = Set.univ`, and
+`mem_tateInvChartAnnulusSubring_iff_mem_tateInvGlobalSubring` restricts the identification of the
+patch's sections with `A` to the two subrings.
+
+No locally ringed space, no glue datum and no presheaf occurs in `tateInvGlobalSubring`: its two
+equations are between composites of `FormalSpectrum.awayCompletionHom` and
+`AlgebraicGeometry.annulusChartTransitionInvAlg`. Nothing here says the quotient is a formal
+scheme, and nothing here is a chart. -/
+def tateInvGlobalSectionsRingEquiv (hq : q ∈ I) (hI : I.FG) :
+    ((actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj
+      (op (⊤ : Opens (actionQuotient (tateInvPeriodAction R I q hq hI)).toTopCat))) ≃+*
+      tateInvGlobalSubring (R := R) (I := I) (q := q) hI :=
+  haveI _hann : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+  haveI _hax : IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q)) :=
+    FormalSpectrum.isAdicRing_awayCompletionIdeal _ _ (annulusIdealOfDefinition_fg R I q hI)
+  haveI _hay : IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q)) :=
+    FormalSpectrum.isAdicRing_awayCompletionIdeal _ _ (annulusIdealOfDefinition_fg R I q hI)
+  (tateInvChartAnnulusRingEquiv (⊤ : Opens (actionQuotient
+      (tateInvPeriodAction R I q hq hI)).toTopCat) isOpen_univ map_actionQuotientπ_top_eq).trans
+    (RingEquiv.restrict (tateInvGlobalPatchEquiv hq hI) _ _
+      (mem_tateInvChartAnnulusSubring_iff_mem_tateInvGlobalSubring hq hI))
 
 end AlgebraicGeometry
