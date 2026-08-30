@@ -71,7 +71,10 @@ here.
   spaces is a step this tree has not taken. That is the harder of the two.
 
 Descent from the chain to the quotient `T_inv/⟨σ⟩` is a separate matter and is **not** touched
-here; see `FormalSchemes.TateInvNodeChartGlue`'s module docstring for what blocks it.
+here. It is done in `FormalSchemes.TateInvQuotientChartRing`, which composes the condition above
+with `AlgebraicGeometry.existsUnique_actionQuotientπ_c_app_eq_of_isCompatible`
+(`FormalSchemes.TateInvQuotientSections`) and reaches `AlgebraicGeometry.tateInvChartRingEquiv`.
+Neither of the two reductions above is needed for that, and neither is done there either.
 
 ## References
 

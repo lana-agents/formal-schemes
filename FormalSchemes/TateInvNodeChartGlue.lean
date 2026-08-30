@@ -55,11 +55,20 @@ and `AlgebraicGeometry.existsUnique_actionQuotientπ_c_app_eq_of_isCompatible` p
 with the gluing above: a compatible `s` on the model patch determines a unique section of the
 quotient.
 
-What is still open, and is not a universe question, is making the compatibility condition
-**concrete**. `TopCat.Presheaf.IsCompatible` for the transported constant family is a condition on
-opens of the chain; translating it into the chain's `𝔾m`-inversion transition on the overlap, and
-so exhibiting `Γ (T_inv/⟨σ⟩, π V)` as an equalizer over the single patch, is the piece neither
-this file nor `FormalSchemes.TateInvQuotientSections` touches.
+Making the compatibility condition **concrete** is the piece neither this file nor
+`FormalSchemes.TateInvQuotientSections` touches. `TopCat.Presheaf.IsCompatible` for the
+transported constant family is a condition on opens of the chain;
+`AlgebraicGeometry.IsTateInvOverlapCompatible` (`FormalSchemes.TateInvNodeChartOverlap`) reads it
+on the glue datum's own overlaps instead, and `AlgebraicGeometry.tateInvChartRingEquiv`
+(`FormalSchemes.TateInvQuotientChartRing`) exhibits `Γ (T_inv/⟨σ⟩, V)` as the subring of
+`Γ (Spf A, tateInvPatchSaturate S)` that condition cuts out. What is still open is translating the
+condition into the chain's `𝔾m`-inversion transition on the overlap, which would cut the
+quantification over all pairs of patch indices down to the adjacent ones.
+
+The converse of `c_app_tateInvShiftAut_zpow_eq_of_const` — that a `σ`-invariant section of the
+chain over a saturation *is* the constant family of a section of the model patch — is
+`AlgebraicGeometry.tateInvConstFamily_tateInvPatchSection`
+(`FormalSchemes.TateInvQuotientChartRing`), and its proof is the one below run backwards.
 
 ## References
 

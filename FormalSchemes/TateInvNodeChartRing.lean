@@ -42,11 +42,13 @@ Write `D` for `tateChainInvFormalGlueData`, `ι m` for its patch inclusions and
 * `AlgebraicGeometry.injective_c_app_tateInvSaturate`: the same at `V = π '' tateInvSaturate S`,
   where the target open is computed to be `tateInvPatchSaturate S`.
 
-**The surjectivity half is not proved and is not claimed.** Which sections of `Spf A` extend to the
-quotient is the existence half of the sheaf axiom on the cover `{ι m '' S}`, and it is what would
-turn the injection into the equalizer description. `FormalSchemes.GlueDataSectionExt` deliberately
-proves only separation; see its module docstring. So this file does not identify the ring — it
-locates it, inside a ring on one patch.
+**The surjectivity half is not proved here and is not claimed here.** Which sections of `Spf A`
+extend to the quotient is the existence half of the sheaf axiom on the cover `{ι m '' S}`, and it
+is what turns the injection into the equalizer description. `FormalSchemes.GlueDataSectionExt`
+deliberately proves only separation; see its module docstring. So this file does not identify the
+ring — it locates it, inside a ring on one patch. The identification is
+`AlgebraicGeometry.tateInvChartRingEquiv` (`FormalSchemes.TateInvQuotientChartRing`), over
+`tateInvPatchSaturate` below.
 
 ## The open that the saturation sees
 
@@ -156,8 +158,9 @@ does not matter, so `⟨0⟩` is taken as the representative.
 
 It contains `S` (`subset_tateInvPatchSaturate`) and is in general strictly larger: a point outside
 `S` lying in an overlap is carried into a neighbouring patch's copy of `S` by the transition. That
-extra part is exactly what the expected equalizer description of `Γ (Q, π V)` imposes a condition
-on. -/
+extra part is exactly what the equalizer description of `Γ (Q, π V)` imposes a condition on; that
+description is `AlgebraicGeometry.tateInvChartSubring`
+(`FormalSchemes.TateInvQuotientChartRing`), and it is stated over this open. -/
 def tateInvPatchSaturate
     (S : Set (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q))) :
     Set (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)) :=

@@ -38,14 +38,23 @@ transports on the two sides are `eqToHom` of two different *proofs* of the same 
 `AlgebraicGeometry.eq_map_tateInvShiftAut_zpow` on the other — and are equal by proof irrelevance,
 which is why `exists_actionQuotientπ_c_app_eq_of_const` closes without any transport bookkeeping.
 
-## What is *not* proved
+## What is *not* proved here
 
 The equalizer description of `Γ (T_inv/⟨σ⟩, π V)` as a subring of `Γ (Spf A, tateInvPatchSaturate
-S)`, and the ring isomorphism realising it. That is issue 1223's goal 2 and it stays there: this
-file supplies the descent the description needs and stops. In particular the compatibility
-hypothesis is still `TopCat.Presheaf.IsCompatible` for the transported constant family, on opens
-of the chain, and is not translated into the chain's `𝔾m`-inversion transition — see
-`FormalSchemes.GlueDataSectionGlue`'s "What this does not do".
+S)`, and the ring isomorphism realising it. This file supplies the descent the description needs
+and stops; the description itself is `AlgebraicGeometry.tateInvChartSubring` and
+`AlgebraicGeometry.tateInvChartRingEquiv` (`FormalSchemes.TateInvQuotientChartRing`), which is
+this file's `existsUnique_actionQuotientπ_c_app_eq_of_isCompatible` composed with the concrete
+form of the compatibility hypothesis and with a converse to
+`AlgebraicGeometry.c_app_tateInvShiftAut_zpow_eq_of_const` that was not on the tree when this file
+was written.
+
+The compatibility hypothesis here is still `TopCat.Presheaf.IsCompatible` for the transported
+constant family, on opens of the chain. Making it concrete is
+`AlgebraicGeometry.IsTateInvOverlapCompatible` (`FormalSchemes.TateInvNodeChartOverlap`); that
+condition still quantifies over all pairs of patch indices and is not translated into the chain's
+`𝔾m`-inversion transition — see `FormalSchemes.GlueDataSectionGlue`'s "What this does not do" and
+`FormalSchemes.TateInvNodeChartOverlap`'s "What is left".
 
 Nothing here says the quotient is a formal scheme.
 `AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChart`
@@ -84,9 +93,12 @@ itself. The reindexing is the bijection `Multiplicative.ofAdd`; the two morphism
 `AlgebraicGeometry.tateInvPeriodAction_apply`.
 
 No hypothesis on the action: neither freeness nor proper discontinuity is used, and in fact
-`AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction` says the shift does not
-have a separating open at every point. That is exactly why the invariant-sections route is the one
-available at a node. -/
+`AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction` says, for `I ≠ ⊤`, that it
+is **not** the case that every point of the chain has a separating open neighbourhood. Note that
+is a negated `∀` and not a `∀` of negations: it says only that *some* point has none, and
+`FormalSchemes.TateInvNodeLocus` warns explicitly against the stronger reading. The witness its
+proof supplies is a node, as `FormalSchemes.TateInvSaturation` records, which is why the
+invariant-sections route is the one available there. -/
 theorem exists_actionQuotientπ_c_app_eq_iff_forall_zpow
     (V : Opens (actionQuotient (tateInvPeriodAction R I q hq hI)).toTopCat)
     (s : ToType ((tateChainInv R I q hq hI).presheaf.obj
