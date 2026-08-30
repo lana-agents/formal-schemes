@@ -38,13 +38,13 @@ invariant sections over `π⁻¹ V`, for an arbitrary presentation of the quotie
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.6.
 -/
 
-universe u
+universe u w
 
 open CategoryTheory Opposite TopologicalSpace AlgebraicGeometry CategoryTheory.Limits
 
 namespace CategoryTheory
 
-variable {G : Type u} [Group G] {X : LocallyRingedSpace.{u}} {a : G →* Aut X}
+variable {G : Type w} [Group G] {X : LocallyRingedSpace.{u}} {a : G →* Aut X}
 variable [Limits.HasCoproduct fun _ : G => X]
   [Limits.HasCoequalizer (actionQuotientLeft a) (actionQuotientRight G X)]
 variable {Q : LocallyRingedSpace.{u}} {π : X ⟶ Q}
@@ -61,7 +61,7 @@ The open `V` has to be presented as a preimage before
 `AlgebraicGeometry.PresheafedSpace.injective_c_app_of_iso` applies, which is what the `hV` step
 does; it is `V = e⁻¹ (e⁻¹ᵢₙᵥ V)` and nothing more. -/
 theorem IsActionQuotient.injective_c_app (h : IsActionQuotient a π) (V : Opens Q) :
-    Function.Injective (π.toShHom.hom.c.app (op V)) := by
+    Function.Injective (π.c.app (op V)).hom := by
   set e := (LocallyRingedSpace.forgetToSheafedSpace ⋙
     SheafedSpace.forgetToPresheafedSpace).mapIso h.isoActionQuotient with he
   have hcomp : π.toShHom.hom ≫ e.hom = (actionQuotientπ a).toShHom.hom := by
