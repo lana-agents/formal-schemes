@@ -139,6 +139,7 @@ import FormalSchemes.CompletionTwoPatchEmbedding
 import FormalSchemes.CompletionTwoPatchRange
 import FormalSchemes.CompletionTwoPatchSupport
 import FormalSchemes.CompletionTwoPatchToScheme
+import FormalSchemes.ConservativityTopFiniteType
 import FormalSchemes.CoproductOpenImmersion
 import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.DiagonalPreimageGraph
