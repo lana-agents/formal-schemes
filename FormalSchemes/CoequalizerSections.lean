@@ -214,8 +214,20 @@ sections of `∐ᵢ Xᵢ` it is enough to compare them on each summand. It is
 `colimitPresheafObjIsoComponentwiseLimit` — which is injective because it is an isomorphism.
 
 For a coequalizer this is weaker than `injective_coequalizer_π_c_app` (two legs rather than one),
-so it is stated here for the shapes where there is no single mono leg. -/
-theorem colimit_section_ext {J : Type u} [SmallCategory J]
+so it is stated here for the shapes where there is no single mono leg.
+
+The diagram shape `J` lives in its own universe, unrelated to the space's. That matters because the
+shape a group action produces is `Discrete G` for the acting group `G`, which has no reason to sit
+in the same universe as the space it acts on — `AlgebraicGeometry.tateInvPeriodAction` acts by
+`Multiplicative ℤ` on a space over an arbitrary `R : Type u`. The three `Limits` instance arguments
+are exactly what `SmallCategory J` used to supply silently; the proof is unchanged by the
+generalisation, because `CategoryTheory.Limits.colimitPresheafObjIsoComponentwiseLimit` and
+`AlgebraicGeometry.PresheafedSpace.colimitPresheafObjIsoComponentwiseLimit_hom_π` are already
+polymorphic in the shape. -/
+theorem colimit_section_ext {J : Type w} [Category.{v} J]
+    [Limits.HasColimitsOfShape J TopCat.{u}]
+    [∀ X : TopCat.{u}, Limits.HasLimitsOfShape Jᵒᵖ (X.Presheaf CommRingCat.{u})]
+    [Limits.HasLimitsOfShape Jᵒᵖ CommRingCat.{u}]
     (F : J ⥤ PresheafedSpace.{u, u + 1, u} CommRingCat.{u}) [Limits.HasColimit F]
     (U : Opens (Limits.colimit F).carrier)
     (s t : ToType ((Limits.colimit F).presheaf.obj (op U)))
