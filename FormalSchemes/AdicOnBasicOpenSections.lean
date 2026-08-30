@@ -114,16 +114,15 @@ statement and the same two-rewrite proof already appear at six other rings, as
 `RestrictedLaurentSeries.mem_idealOfDefinition_pow_iff` (`FormalSchemes.FormalGm`),
 `FormalGroupAlgebra.mem_idealOfDefinition_pow_iff` (`FormalSchemes.FormalTorus`),
 `CompletedTensorProduct.mem_idealOfDefinition_pow_iff` (`FormalSchemes.CompletedTensor`) and
-`mem_overlapIdeal_pow_iff` (`FormalSchemes.TateOverlap`, root namespace). The general form —
-`x ∈ (K.map (algebraMap B A)) ^ n ↔ x ∈ (K ^ n • ⊤ : Submodule B A)` for any `B`-algebra `A` —
-subsumes all seven and belongs beside `Ideal.mem_map_pow_iff_mem_smul_top` in
-`FormalSchemes.RestrictedPowerSeries`; it is left to a follow-up because stating it there rebuilds
-most of the tree. -/
+`mem_overlapIdeal_pow_iff` (`FormalSchemes.TateOverlap`, root namespace). **The general form is
+now on the tree** as `Ideal.mem_map_pow_iff_mem_pow_smul_top`
+(`FormalSchemes.RestrictedPowerSeries`), beside `Ideal.mem_map_pow_iff_mem_smul_top`, and all
+seven — this one included — are one application of it. -/
 theorem mem_awayCompletionIdeal_pow_iff (g : R) (m : ℕ) (x : awayCompletion I g) :
     x ∈ (awayCompletionIdeal I g) ^ m ↔
       x ∈ ((I.map (algebraMap R (Localization.Away g))) ^ m • ⊤ :
-        Submodule (Localization.Away g) (awayCompletion I g)) := by
-  rw [← Ideal.mem_map_pow_iff_mem_smul_top, Ideal.mem_smul_top_self_iff]
+        Submodule (Localization.Away g) (awayCompletion I g)) :=
+  Ideal.mem_map_pow_iff_mem_pow_smul_top _ _ _
 
 /-!
 ### Adicity on a basic open, in the ideal-power spelling

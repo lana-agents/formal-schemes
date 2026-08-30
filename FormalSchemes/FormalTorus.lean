@@ -77,13 +77,13 @@ theorem isAdicRing (hI : I.FG) : IsAdicRing (idealOfDefinition R I M) :=
   AdicCompletion.isAdicRing_map _ (hI.map _)
 
 /-- Membership in the powers of the ideal of definition, expressed through the module filtration
-`(I·R[M]) ^ m • ⊤` used by the completion API. -/
+`(I·R[M]) ^ m • ⊤` used by the completion API. An instance of
+`Ideal.mem_map_pow_iff_mem_pow_smul_top` (`FormalSchemes.RestrictedPowerSeries`). -/
 theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : FormalGroupAlgebra R I M) :
     x ∈ (idealOfDefinition R I M) ^ m ↔
       x ∈ ((I.map (algebraMap R (AddMonoidAlgebra R M))) ^ m • ⊤ :
-        Submodule (AddMonoidAlgebra R M) (FormalGroupAlgebra R I M)) := by
-  rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (AddMonoidAlgebra R M))) m x,
-    idealOfDefinition, Ideal.mem_smul_top_self_iff]
+        Submodule (AddMonoidAlgebra R M) (FormalGroupAlgebra R I M)) :=
+  Ideal.mem_map_pow_iff_mem_pow_smul_top _ _ _
 
 /-- The **group-like element** `[g]` of `R⟨M⟩` attached to `g : M`. -/
 def X (g : M) : FormalGroupAlgebra R I M :=

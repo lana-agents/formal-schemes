@@ -83,10 +83,6 @@ evaluation maps to the thickenings, for `I` finitely generated. -/
 theorem ker_evalₐ (hI : I.FG) (n : ℕ) :
     RingHom.ker (evalₐ I n).toRingHom = (idealOfDefinition I) ^ n := by
   have heq : ((I ^ n • ⊤ : Ideal R)) = I ^ n := by ext y; simp
-  have hsmul : ((idealOfDefinition I) ^ n • ⊤ : Submodule (AdicCompletion I R)
-      (AdicCompletion I R)) = ((idealOfDefinition I) ^ n : Ideal (AdicCompletion I R)) := by
-    ext y
-    simp
   -- `evalₐ` is `eval` followed by an isomorphism of the two quotient presentations
   have hcompute : ∀ x : AdicCompletion I R,
       evalₐ I n x = Ideal.quotientEquivAlgOfEq R heq (eval I R n x) := fun _ => rfl
@@ -100,10 +96,9 @@ theorem ker_evalₐ (hI : I.FG) (n : ℕ) :
     have hmem : x ∈ (I ^ n • ⊤ : Submodule R (AdicCompletion I R)) := by
       rw [AdicCompletion.pow_smul_top_eq_ker_eval hI]
       exact hx
-    rw [← Ideal.mem_map_pow_iff_mem_smul_top I n x, hsmul] at hmem
-    exact hmem
+    exact (Ideal.mem_map_pow_iff_mem_pow_smul_top I n x).mpr hmem
   · intro hx
-    rw [← hsmul, Ideal.mem_map_pow_iff_mem_smul_top I n x,
+    rw [Ideal.mem_map_pow_iff_mem_pow_smul_top I n x,
       AdicCompletion.pow_smul_top_eq_ker_eval hI] at hx
     exact hx
 
@@ -141,11 +136,12 @@ variable {R S T : Type u} [CommRing R] [CommRing S] [CommRing T]
 
 /-- Membership in the powers of the ideal of definition, expressed through the module
 filtration `I ^ m • ⊤` used by the completion API (`extendRingHom_continuous`,
-`hom_ext_of_continuous`). -/
+`hom_ext_of_continuous`). An instance of `Ideal.mem_map_pow_iff_mem_pow_smul_top`
+(`FormalSchemes.RestrictedPowerSeries`) at `(B, A, K) = (R, AdicCompletion I R, I)`. -/
 theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : AdicCompletion I R) :
     x ∈ (idealOfDefinition I) ^ m ↔
-      x ∈ (I ^ m • ⊤ : Submodule R (AdicCompletion I R)) := by
-  rw [← Ideal.mem_map_pow_iff_mem_smul_top I m x, Ideal.mem_smul_top_self_iff]
+      x ∈ (I ^ m • ⊤ : Submodule R (AdicCompletion I R)) :=
+  Ideal.mem_map_pow_iff_mem_pow_smul_top _ _ _
 
 /-- **Functoriality of the completion**: a ring homomorphism `f : R →+* S` carrying `I` into `J`
 (`I.map f ≤ J`) induces a ring homomorphism `R^ →+* S^` on the `I`- and `J`-adic completions.

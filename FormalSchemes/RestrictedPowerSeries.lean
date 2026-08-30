@@ -70,6 +70,19 @@ theorem Ideal.mem_map_pow_iff_mem_smul_top (n : ℕ) (x : A) :
   rw [Ideal.mem_smul_top_self_iff, Ideal.smul_top_eq_map (K ^ n), Submodule.restrictScalars_mem,
     ← Ideal.map_pow]
 
+/-- **The powers of an extended ideal are the steps of the module filtration.** For a `B`-algebra
+`A` and an ideal `K` of `B`, an element of `A` lies in `(K·A) ^ n` exactly when it lies in the
+submodule `K ^ n • ⊤` of `A` as a `B`-module. This is the ideal-side counterpart of
+`Ideal.mem_map_pow_iff_mem_smul_top` just above: that one relates the two `• ⊤` spellings, this
+one removes the `• ⊤` on the extended side, which is the form the ring-theoretic consumers of
+adicity want.
+
+Every `mem_idealOfDefinition_pow_iff` on this tree is an instance of it, at a different
+`(B, A, K)`. -/
+theorem Ideal.mem_map_pow_iff_mem_pow_smul_top (n : ℕ) (x : A) :
+    x ∈ (K.map (algebraMap B A)) ^ n ↔ x ∈ (K ^ n • ⊤ : Submodule B A) := by
+  rw [← Ideal.mem_map_pow_iff_mem_smul_top, Ideal.mem_smul_top_self_iff]
+
 /-- Adic completeness transfers from the `B`-module structure to the `A`-ring structure: if a
 `B`-algebra `A` is `K`-adically complete as a `B`-module, it is complete for the extended
 ideal `K·A`. -/
