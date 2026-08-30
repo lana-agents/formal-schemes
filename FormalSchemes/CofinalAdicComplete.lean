@@ -121,9 +121,8 @@ standard witness that the transfer is not vacuous: `I` and `I ^ 2` are different
 same completions, the same example that refutes the on-the-nose form of
 `FormalSpectrum.isCofinal_map_spfIsoRingEquiv` (`FormalSchemes.SpfIsoIdealRecovery`).
 
-Compare `AlgebraicGeometry.IsTopologicallyFiniteType.pow`
-(`FormalSchemes.CofinalTopFiniteType`), which is the same application of the same instance of
-`Ideal.IsCofinal` one layer up. -/
+Compare `IsTopologicallyFiniteType.pow` (`FormalSchemes.CofinalTopFiniteType`), which is the same
+application of the same instance of `Ideal.IsCofinal` one layer up. -/
 theorem IsAdicComplete.pow [IsAdicComplete I M] {k : ℕ} (hk : k ≠ 0) :
     IsAdicComplete (I ^ k) M :=
   (Ideal.IsCofinal.pow I hk).isAdicComplete

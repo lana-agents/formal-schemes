@@ -30,8 +30,8 @@ Three things change, and each is charged to a different lemma:
 * the chart algebras, which are the completions of `A_g` at two cofinal ideals and so are
   isomorphic but not equal: `AdicCompletion.cofinalAlgEquiv`
   (`FormalSchemes.CofinalCompletionAlg`), through
-  `AlgebraicGeometry.IsTopologicallyFiniteType.ofAlgEquiv`;
-* the cover condition `Ideal.span s ⊔ L = ⊤`, which survives because `Ideal.IsCoprime.pow_right`
+  `IsTopologicallyFiniteType.ofAlgEquiv`;
+* the cover condition `Ideal.span s ⊔ L = ⊤`, which survives because `IsCoprime.pow_right`
   moves it to a power of `L` and a power of `L` sits inside `I · A`.
 
 ## The chart hypothesis has to be restated too
@@ -43,7 +43,7 @@ algebra to be the extension of `I`, and `awayCompletionIdeal L g` is the extensi
 `L` is merely cofinal with `I · A` those are different ideals, so the hypothesis as spelled would
 be false rather than merely inconvenient. The chart hypothesis below is therefore spelled with
 `I.map (algebraMap R _)`, which is also exactly what
-`AlgebraicGeometry.IsTopologicallyFiniteType.ofAlgEquiv` produces.
+`IsTopologicallyFiniteType.ofAlgEquiv` produces.
 
 ## What this does *not* close
 
@@ -59,6 +59,7 @@ invariant repair, and the tree does not have it.
 
 ## Main results
 
+* `Ideal.sup_eq_top_of_pow_le`: the cover condition is invariant under cofinality.
 * `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal`: **the
   relaxation.**
 * `AlgebraicGeometry.IsTopologicallyFiniteType.self_of_two_charts_pow`: non-vacuity, through a
@@ -87,8 +88,8 @@ monotonicity of `⊔` finishes it.
 
 Geometrically this is the statement that `V (L) = V (K)` for cofinal `L` and `K`, so a family of
 basic opens covers one exactly when it covers the other. -/
-theorem sup_eq_top_of_pow_le {K : Ideal A} {s : Set A} (hspan : Ideal.span s ⊔ L = ⊤) {m : ℕ}
-    (hm : L ^ m ≤ K) : Ideal.span s ⊔ K = ⊤ := by
+theorem _root_.Ideal.sup_eq_top_of_pow_le {K : Ideal A} {s : Set A}
+    (hspan : Ideal.span s ⊔ L = ⊤) {m : ℕ} (hm : L ^ m ≤ K) : Ideal.span s ⊔ K = ⊤ := by
   have hcop : IsCoprime (Ideal.span s) L := Ideal.isCoprime_iff_sup_eq.mpr hspan
   have hpow : Ideal.span s ⊔ L ^ m = ⊤ :=
     Ideal.isCoprime_iff_sup_eq.mp (hcop.pow_right (n := m))
@@ -117,7 +118,7 @@ theorem IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal (hI : I.FG
   haveI : IsAdicComplete (I.map (algebraMap R A)) A := hcof.isAdicComplete (M := A)
   obtain ⟨m, hm⟩ := hcof.exists_pow_le
   refine IsTopologicallyFiniteType.of_span_awayCompletion hI rfl s
-    (sup_eq_top_of_pow_le hspan hm) ?_
+    (Ideal.sup_eq_top_of_pow_le hspan hm) ?_
   intro g hg
   have hgcof := hcof.map (algebraMap A (Localization.Away g))
   have hstep := (H g hg).ofAlgEquiv
@@ -131,7 +132,7 @@ topologically of finite type over itself, recovered from the two-chart cover
 This exercises the whole relaxation rather than only its statement: `I ^ 2` is not `I · R`, so
 `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion` does not apply; the
 completeness instance is produced by `IsAdicComplete.pow` (`FormalSchemes.CofinalAdicComplete`),
-the cover condition by `sup_eq_top_of_pow_le`, and each chart hypothesis by transporting
+the cover condition by `Ideal.sup_eq_top_of_pow_le`, and each chart hypothesis by transporting
 `IsTopologicallyFiniteType.awayCompletion_base` — which is stated against `I` — across
 `AdicCompletion.cofinalAlgEquiv`. The conclusion `IsTopologicallyFiniteType R I R I` agrees with
 `IsTopologicallyFiniteType.self`, proved by the unrelated zero-variable presentation, and is not

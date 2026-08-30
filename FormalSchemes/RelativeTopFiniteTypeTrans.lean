@@ -56,9 +56,13 @@ Of the two theorems that justify it, only the second is still open:
   `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`
   (`FormalSchemes.TopFiniteTypeAffineLocal`), on top of the basic-open case
   `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`
-  (`FormalSchemes.AwayTopFiniteType`). What is still missing is the identification of the two
-  chart presentations of a basic open `D(f)` of an affine open `V`, which holds only up to an
-  equivalent ideal of definition.
+  (`FormalSchemes.AwayTopFiniteType`). Issue 1207 then assembled the affine-open statement itself,
+  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
+  (`FormalSchemes.AffineOpenTopFiniteType`), including the identification of the two chart
+  presentations of a basic open `D(f)` of an affine open `V` — which does hold only up to an
+  equivalent ideal of definition, and is `FormalSpectrum.spfAlgEquivOfComm`
+  (`FormalSchemes.SpfIsoOverBase`). What is still missing is that hypothesis: that an affine open
+  immersion of formal spectra is adic *up to cofinality*.
 
 Conservativity is still open, so nothing here should be read as saying EGA I 10.13 is finished.
 

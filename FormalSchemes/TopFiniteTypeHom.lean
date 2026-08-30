@@ -98,18 +98,19 @@ conservativity — and only the second is still open.
   `FormalSpectrum.structMap_comp_generalCofinalSpfIso_inv` (`FormalSchemes.CofinalStructMap`) the
   geometry: the ideal comparison commutes with structural morphisms.
 * **Conservativity**, i.e. that at `Y = FormalScheme.Spf I` the general notion implies the
-  base-affine one. Unchanged by this file and by the composition law: it needs an *arbitrary*
-  affine open of `Spf I` to be tf-type over `(R, I)`. The tree has the basic-open case
-  (`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`) and, since issue
-  1202, **affine-locality**: `IsTopologicallyFiniteType.of_span_awayCompletion`
-  (`FormalSchemes.TopFiniteTypeAffineLocal`) assembles an affine from a cover of it by tf-type
-  basic opens, with no finiteness and no quasi-compactness hypothesis. What is still missing is
-  the *chart identification* — that for a basic open `D(f) ⊆ V` of the ambient `Spf I` the chart
-  algebra of `D(f)` as a basic open of `V` is the same tf-type algebra as `R{1/f}^`, which by
-  `FormalSchemes.SpfIsoIdealRecovery` holds only up to an equivalent ideal of definition
-  (`FormalSchemes.CofinalTopFiniteType`). That is the same slack the composition law above had to
-  absorb, and `FormalSchemes.CofinalStructMap` is how it was absorbed; nobody has yet run the
-  argument for conservativity.
+  base-affine one. Unchanged by this file and by the composition law. It needs an *arbitrary*
+  affine open of `Spf I` to be tf-type over `(R, I)`, and since issue 1207 that statement is
+  `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
+  (`FormalSchemes.AffineOpenTopFiniteType`) — built from the basic-open case
+  (`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`),
+  affine-locality (`IsTopologicallyFiniteType.of_span_awayCompletion`,
+  `FormalSchemes.TopFiniteTypeAffineLocal`, issue 1202) and its cofinality-tolerant form. But it
+  carries one hypothesis this tree cannot yet discharge: that the open immersion presenting the
+  affine open is **adic up to cofinality**, `Ideal.IsCofinal J (I · B)`. The on-the-nose form of
+  that is *false* (`FormalSchemes.AdicOnSections`); the cofinality form is its invariant repair
+  and is what remains. The chart identification, which this bullet used to name as the missing
+  ingredient, is `FormalSpectrum.spfAlgEquivOfComm` (`FormalSchemes.SpfIsoOverBase`) — the same
+  slack the composition law above had to absorb.
 
 So `IsTopFiniteTypeHom` is landed with its neighbourhood basis, its reduction from the affine
 case, and EGA I 10.13's composition law. Conservativity is still open, so nothing here should be

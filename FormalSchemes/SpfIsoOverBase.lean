@@ -15,7 +15,7 @@ isomorphism intertwines the two ring maps out of `R` that `m₁` and `m₂` indu
 
 ## Why the tree needs it
 
-`AlgebraicGeometry.IsTopologicallyFiniteType.ofAlgEquiv`
+`IsTopologicallyFiniteType.ofAlgEquiv`
 (`FormalSchemes.CofinalTopFiniteType`) transports topological finite type across an isomorphism of
 the top ring, and it wants an `R`-**algebra** isomorphism. What geometry supplies is an
 isomorphism of formal spectra: `FormalSpectrum.exists_basicOpenChart_inter_iso`
@@ -46,9 +46,9 @@ so that a consumer already carrying an algebra structure — as every consumer o
 * `FormalSpectrum.exists_algEquiv_isCofinal_of_iso_over`: the packaged existential — an
   `R`-algebra isomorphism whose transported ideal is cofinal with the given one. This is the shape
   `IsTopologicallyFiniteType.ofAlgEquiv` and `.ofCofinal` consume, in that order.
-* `FormalSpectrum.exists_basicOpenChart_inter_ringEquiv_comp`: non-vacuity — the intertwining at
-  the common refinement of two basic-open charts of one formal spectrum, which is the situation
-  the statement was written for.
+* `FormalSpectrum.spfIsoRingEquiv_isoOfRangeEq_comp_globalSectionsMap`: non-vacuity — the
+  intertwining at two basic-open charts of one formal spectrum with the same range, which is the
+  situation the statement was written for.
 
 ## References
 
@@ -87,7 +87,7 @@ theorem spfIsoRingEquiv_comp_globalSectionsMap (hcomm : e.hom ≫ m₂ = m₁) :
 /-- **The `R`-algebra isomorphism carried by an isomorphism over `Spf I`.** The two algebra
 structures are taken as hypotheses, identified with the maps `m₁` and `m₂` induce on global
 sections, rather than manufactured by `RingHom.toAlgebra`: a consumer of
-`AlgebraicGeometry.IsTopologicallyFiniteType` already carries an `Algebra` instance, and
+`IsTopologicallyFiniteType` already carries an `Algebra` instance, and
 constructing a second one here would not be defeq to it. -/
 def spfAlgEquivOfComm [Algebra R A₁] [Algebra R A₂] (hcomm : e.hom ≫ m₂ = m₁)
     (h₁ : algebraMap R A₁ = globalSectionsMap I J₁ m₁)
@@ -110,7 +110,7 @@ theorem spfAlgEquivOfComm_apply [Algebra R A₁] [Algebra R A₂] (hcomm : e.hom
 isomorphism of the two global-section rings which moves the ideal of definition only up to
 `Ideal.IsCofinal`.
 
-This is exactly the input `AlgebraicGeometry.IsTopologicallyFiniteType.ofAlgEquiv` followed by
+This is exactly the input `IsTopologicallyFiniteType.ofAlgEquiv` followed by
 `.ofCofinal` (`FormalSchemes.CofinalTopFiniteType`) consumes, and the reason both are needed is
 that the on-the-nose statement — that the isomorphism carries `J₂` *onto* `J₁` — is false;
 `FormalSchemes.SpfIsoIdealRecovery` refutes it with `L` against `L ^ 2`. -/

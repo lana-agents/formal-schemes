@@ -33,6 +33,7 @@ import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductLRS
 import FormalSchemes.AffineFibreProductScheme
 import FormalSchemes.AffineFibreProductUniqueness
+import FormalSchemes.AffineOpenTopFiniteType
 import FormalSchemes.AffineSeparated
 import FormalSchemes.AffineSeparatedInstance
 import FormalSchemes.AffineSeparatedIso
