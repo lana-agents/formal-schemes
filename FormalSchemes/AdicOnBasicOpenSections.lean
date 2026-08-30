@@ -57,9 +57,11 @@ Both halves of the underlying mathematics are already merged, and this file repr
 * **Nothing here says an arbitrary morphism of formal spectra is adic on a basic open.** Every
   statement below carries the global-sections hypothesis `I ≤ J.comap (globalSectionsMap I J w)`
   as an explicit argument, except the `basicOpenChart` specialisation, where it is a theorem.
-  The unhypothesised statement is **false**: `FormalSchemes.AdicOnSections`' module docstring
-  records the counterexample's shape (issue 460), and
-  `FormalSchemes.OpenImmersionReflectsIdeal`'s records a second one.
+  Its **global-sections** case is recorded false in `FormalSchemes.AdicOnSections`' module
+  docstring (issue 460); the basic-open case is not proved false here, and the hypothesis is
+  carried rather than derived. (`FormalSchemes.OpenImmersionReflectsIdeal`'s module docstring
+  records a counterexample to a *different* statement — the reflection
+  `Ψ t ∈ L → awayCompletionHom J g t ∈ awayCompletionIdeal J g`, issue 480 — not to adicity.)
 * **`FormalSpectrum.sectionsBasicOpenEquiv` is not shown to be a map of `R`-algebras.**
   `map_sectionsBasicOpenHom` is the ideal consequence, which is what the consumers need and is
   strictly weaker; no `AlgHom` structure is put on it.
@@ -103,7 +105,20 @@ the `R_g`-module filtration Mathlib's adic API uses.
 
 This is the bridge between the ideal-shaped consumers of continuity on this tree
 (`RingHom.mem_eqLocus_of_forall_sub_mem_pow`, `Subring.IsAdicallyClosed`) and the module-shaped
-producer `FormalSpectrum.arbSheafComponent_mem_pow`. -/
+producer `FormalSpectrum.arbSheafComponent_mem_pow`.
+
+**This is the seventh instance of one general fact on this tree**, not a new one: the same
+statement and the same two-rewrite proof already appear at six other rings, as
+`AdicCompletion.mem_idealOfDefinition_pow_iff` (`FormalSchemes.Completion`),
+`RestrictedPowerSeries.mem_idealOfDefinition_pow_iff` (`FormalSchemes.BaseChange`),
+`RestrictedLaurentSeries.mem_idealOfDefinition_pow_iff` (`FormalSchemes.FormalGm`),
+`FormalGroupAlgebra.mem_idealOfDefinition_pow_iff` (`FormalSchemes.FormalTorus`),
+`CompletedTensorProduct.mem_idealOfDefinition_pow_iff` (`FormalSchemes.CompletedTensor`) and
+`mem_overlapIdeal_pow_iff` (`FormalSchemes.TateOverlap`, root namespace). The general form —
+`x ∈ (K.map (algebraMap B A)) ^ n ↔ x ∈ (K ^ n • ⊤ : Submodule B A)` for any `B`-algebra `A` —
+subsumes all seven and belongs beside `Ideal.mem_map_pow_iff_mem_smul_top` in
+`FormalSchemes.RestrictedPowerSeries`; it is left to a follow-up because stating it there rebuilds
+most of the tree. -/
 theorem mem_awayCompletionIdeal_pow_iff (g : R) (m : ℕ) (x : awayCompletion I g) :
     x ∈ (awayCompletionIdeal I g) ^ m ↔
       x ∈ ((I.map (algebraMap R (Localization.Away g))) ^ m • ⊤ :
@@ -124,8 +139,9 @@ continuity hypothesis on this tree is stated as `v ∈ K ^ m → F v ∈ L ^ m` 
 `Continuous`.
 
 No new continuity is proved — this is `arbSheafComponent_mem_pow` after
-`mem_awayCompletionIdeal_pow_iff`. **The hypothesis is not removable**:
-`FormalSchemes.AdicOnSections` records that the unhypothesised statement is false. -/
+`mem_awayCompletionIdeal_pow_iff`. The hypothesis is carried, not derived:
+`FormalSchemes.AdicOnSections`' module docstring records that the *global-sections* case of the
+unhypothesised statement is false (issue 460). -/
 theorem arbSheafComponent_mem_awayCompletionIdeal_pow
     (hadic : I ≤ J.comap (globalSectionsMap I J w)) (m : ℕ) {v : awayCompletion I g}
     (hv : v ∈ (awayCompletionIdeal I g) ^ m) :
