@@ -1,4 +1,5 @@
 import FormalSchemes.ActionDiscontinuous
+import FormalSchemes.GlueDataImageInter
 import FormalSchemes.TateActionInv
 
 set_option linter.style.header false
@@ -50,6 +51,8 @@ none.
   `x`-chart locus of the annulus.
 * `AlgebraicGeometry.tateInvOverlap_eq_image_chartY`: the same set is the `ι (i+1)`-image of the
   `y`-chart locus — the glue condition, read on ranges.
+* `AlgebraicGeometry.tateInvOverlap_eq_range_ι_inter`: `W_i` is the intersection `U_i ∩ U_{i+1}`,
+  so the name is the theorem it claims to be.
 * `AlgebraicGeometry.tateInvOverlap_disjoint`: `W_i` and `W_j` are disjoint for `i ≠ j`.
 * `AlgebraicGeometry.image_tateInvOverlap_tateInvShiftAut_zpow`: `σᵏ(W_i) = W_{i+k}`.
 * `AlgebraicGeometry.tateInvOverlap_isProperlyDiscontinuousOn`: **the positive result** — every
@@ -219,6 +222,56 @@ theorem tateInvOverlap_eq_image_chartY {i j : ULift.{u} ℤ} (h : j.down - i.dow
     _ = ⇑((tateChainInvFormalGlueData R I q hq hI).ι ⟨i.down + 1⟩).base ''
           Set.range (annulusOverlapChartY R I q).base :=
         congrArg _ (range_tateF_backward R I q (i := ⟨i.down + 1⟩) (j := i) (by simp))
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The overlap is the range of the glue datum's overlap inclusion** `f i j ≫ ι i`, for
+`j = i + 1`. The three steps are the opening of `tateInvOverlap_eq_image_chartY`'s calculation,
+named separately because `tateInvOverlap_eq_range_ι_inter` needs them on their own. -/
+theorem tateInvOverlap_eq_range_f_comp_ι {i j : ULift.{u} ℤ} (h : j.down - i.down = 1) :
+    tateInvOverlap R I q hq hI i =
+      Set.range (((tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.f
+        i j ≫ (tateChainInvFormalGlueData R I q hq hI).ι i).base) := by
+  have hne : i ≠ j := by
+    intro hc
+    obtain rfl := hc
+    omega
+  calc tateInvOverlap R I q hq hI i
+      = ⇑((tateChainInvFormalGlueData R I q hq hI).ι i).base ''
+          Set.range (tateF R I q i j).base :=
+        congrArg _ (range_tateF_forward R I q h).symm
+    _ = ⇑((tateChainInvFormalGlueData R I q hq hI).ι i).base ''
+          Set.range ((tateChainInvFormalGlueData R I q hq
+            hI).toLocallyRingedSpaceGlueData.toGlueData.f i j).base :=
+        congrArg _ (range_tateChainInv_f R I q hq hI hne).symm
+    _ = Set.range (((tateChainInvFormalGlueData R I q hq
+          hI).toLocallyRingedSpaceGlueData.toGlueData.f i j ≫
+            (tateChainInvFormalGlueData R I q hq hI).ι i).base) :=
+        (range_comp_base _ _).symm
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **`W_i` really is `U_i ∩ U_{i+1}`.** Every docstring here describes `tateInvOverlap` as the
+intersection of two consecutive patches; this is that description as a theorem, so nothing depends
+on reading the definition as a claim about ranges.
+
+One inclusion is `LocallyRingedSpace.GlueData.range_ι_inter_subset`
+(`FormalSchemes.GlueDataImageInter`) — two glued pieces meet only along the image of their overlap
+object. The other is that the overlap inclusion lands in `U_i` by construction and in `U_{i+1}` by
+the glue condition, which is `range_tateChainInv_f_comp_ι_symm`. -/
+theorem tateInvOverlap_eq_range_ι_inter {i j : ULift.{u} ℤ} (h : j.down - i.down = 1) :
+    tateInvOverlap R I q hq hI i =
+      Set.range ((tateChainInvFormalGlueData R I q hq hI).ι i).base ∩
+        Set.range ((tateChainInvFormalGlueData R I q hq hI).ι j).base := by
+  refine Set.Subset.antisymm ?_ ?_
+  · rw [tateInvOverlap_eq_range_f_comp_ι R I q hq hI h]
+    refine Set.subset_inter ?_ ?_
+    · rw [range_comp_base]
+      exact Set.image_subset_range _ _
+    · rw [range_tateChainInv_f_comp_ι_symm R I q hq hI i j, range_comp_base]
+      exact Set.image_subset_range _ _
+  · rw [tateInvOverlap_eq_range_f_comp_ι R I q hq hI h]
+    exact (tateChainInvFormalGlueData R I q hq
+      hI).toLocallyRingedSpaceGlueData.range_ι_inter_subset i j
+
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Distinct overlaps are disjoint.** Three cases, and only the two adjacent ones carry content:
