@@ -13,9 +13,10 @@ set_option linter.style.header false
 That is `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`. It is the adic
 analogue of the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and every `S_{gᵢ}` is of
 finite type over `R`, then so is `S`", which is the statement
-`FormalSchemes.RelativeTopFiniteTypeTrans` names as the missing general case, and which
-`FormalSchemes.TopFiniteTypeHom`, `FormalSchemes.TwoChartBasicOpen` and three further module
-docstrings record as absent. It is absent no longer.
+`FormalSchemes.RelativeTopFiniteTypeTrans` named as the missing general case and which
+`FormalSchemes.TopFiniteTypeHom` and `FormalSchemes.TwoChartBasicOpen` recorded as absent. Those
+three module docstrings are the whole of the tree's record of the gap, and all three are amended
+alongside this file: it is absent no longer.
 
 ## The route, and why it is not the expected one
 

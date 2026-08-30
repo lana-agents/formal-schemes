@@ -19,16 +19,23 @@ morphism of special fibres.
 
 ## Why this is the useful shape
 
-`IsTopologicallyFiniteType` (`FormalSchemes.TopFiniteType`; the predicate is root-level, while
-its lemmas sit in `AlgebraicGeometry`) is stated as the
-existence of a surjection from a restricted power series ring, and every consequence of it on this
-tree so far has been proved by manufacturing such a surjection by hand — `awayEval` for the
-basic-open case (`FormalSchemes.AwayTopFiniteType`) is four hundred lines of it. The
-characterisation above replaces that with a statement about an *ordinary* finitely generated
-algebra, and ordinary finite type has a developed theory that transfers wholesale. In particular
-it is a local property of ring maps (`RingHom.finiteType_ofLocalizationSpanTarget`), which is
-what `FormalSchemes.TopFiniteTypeAffineLocal` uses to prove that topological finite type is
-affine-local — the statement six module docstrings on this tree record as missing.
+`IsTopologicallyFiniteType` (`FormalSchemes.TopFiniteType`) is stated as the existence of a
+surjection from a restricted power series ring, and every consequence of it on this tree so far
+has been proved by manufacturing such a surjection by hand — `awayEval` for the basic-open case
+(`FormalSchemes.AwayTopFiniteType`) is four hundred lines of it. The characterisation above
+replaces that with a statement about an *ordinary* finitely generated algebra, and ordinary
+finite type has a developed theory that transfers wholesale. In particular it is a local property
+of ring maps (`RingHom.finiteType_ofLocalizationSpanTarget`), which is what
+`FormalSchemes.TopFiniteTypeAffineLocal` uses to prove that topological finite type is
+affine-local — the statement three module docstrings on this tree recorded as missing
+(`FormalSchemes.TopFiniteTypeHom`, `FormalSchemes.RelativeTopFiniteTypeTrans` and
+`FormalSchemes.TwoChartBasicOpen`, all three amended alongside these two files).
+
+The predicate itself is root-level, and so are some of its lemmas
+(`IsTopologicallyFiniteType.map_eq`, `IsTopologicallyFiniteType.trans`); others
+(`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`,
+`AlgebraicGeometry.IsTopologicallyFiniteType.self`) sit in `AlgebraicGeometry`. The split is
+historical rather than principled; the declarations below follow the second convention.
 
 ## The two directions
 
