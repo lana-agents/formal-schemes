@@ -330,6 +330,7 @@ import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
+import FormalSchemes.TateInvNodeChartLegContinuous
 import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeLocus
