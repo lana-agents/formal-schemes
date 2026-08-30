@@ -205,6 +205,7 @@ import FormalSchemes.GlueDataCarrier
 import FormalSchemes.GlueDataCompact
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.GlueDataSectionExt
+import FormalSchemes.GlueDataSectionGlue
 import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.GlueHomToSpf
 import FormalSchemes.GlueMorphisms
