@@ -51,6 +51,7 @@ one at the ideal `I * J`, which is where `FormalSpectrum.isAdicRing_mul` is need
 * `FormalSpectrum.structMap_comp_generalCofinalSpfIso_inv`: **the square, general case.**
 * `FormalSpectrum.globalSectionsMap_generalCofinalSpfIso_hom`: the comparison is the identity on
   global sections — the form in which an *abstract* isomorphism of two charts is compared with it.
+* `FormalSpectrum.globalSectionsMap_structMap`: global sections of a structural morphism.
 
 ## References
 
@@ -186,6 +187,15 @@ theorem structMap_comp_generalCofinalSpfIso_inv (hI : I.FG) (hJ : J.FG)
 /-! ### Global sections of the comparison isomorphism -/
 
 variable (I J)
+
+/-- **The global-sections map of a structural morphism is the structure map of the algebra.**
+`AlgebraicGeometry.IsTopologicallyFiniteType.structMap` is `locallyRingedSpaceMap` of
+`algebraMap`, so this is `FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap`; it earns a name
+because `rw` is syntactic and no rewrite fires on the `structMap` spelling. -/
+theorem globalSectionsMap_structMap {A : Type u} [CommRing A] [TopologicalSpace A] [Algebra R A]
+    {L : Ideal A} [IsAdicRing L] (h : I.map (algebraMap R A) = L) :
+    globalSectionsMap I L (IsTopologicallyFiniteType.structMap h) = algebraMap R A :=
+  globalSectionsMap_locallyRingedSpaceMap I L (algebraMap R A) _
 
 /-- **The comparison morphism is `Spf` of the identity, so its global-sections map is the
 identity.** Immediate from `FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap`, since

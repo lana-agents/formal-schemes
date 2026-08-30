@@ -391,6 +391,7 @@ import FormalSchemes.TopFiniteTypeBaseChange
 import FormalSchemes.TopFiniteTypeBasis
 import FormalSchemes.TopFiniteTypeHom
 import FormalSchemes.TopFiniteTypeHomComp
+import FormalSchemes.TopFiniteTypeHomTrans
 import FormalSchemes.TopFiniteTypeSpecialFibre
 import FormalSchemes.TopFiniteTypeTrans
 import FormalSchemes.TwoAdicDegeneracy
