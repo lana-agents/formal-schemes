@@ -50,18 +50,25 @@ cofinality**. It is not derivable on this tree, and it is not an oversight:
 * Cofinality is the invariant repair of that false statement: the counterexample's two ideals are
   cofinal, so it does not refute this form, and for an isomorphism the statement is a theorem,
   `FormalSpectrum.isCofinal_map_spfIsoRingEquiv` (`FormalSchemes.SpfIsoIdealRecovery`).
-* The tree has nothing of the shape "an open immersion of formal spectra is adic up to
-  cofinality", and two things that should not be mistaken for it:
+* Two landed statements should not be mistaken for it:
   `FormalSpectrum.isCofinal_map_spfIsoRingEquiv`, which is the statement for an *isomorphism* —
   where the comparison is invisible on global sections — and
   `FormalSpectrum.exists_algEquiv_isCofinal_of_iso_over` (`FormalSchemes.SpfIsoOverBase`), which
   is that statement relativised over a base. Neither says anything about an immersion that is not
-  an isomorphism, and that gap is exactly the hypothesis above.
+  an isomorphism.
 
 So conservativity's residue is now exactly one statement about open immersions, with no algebra
 left in it. It is a statement about the structure sheaf of `Spf I` on an affine open — that the
-extension of the base ideal is again an ideal of definition — and it is the natural successor to
-this file.
+extension of the base ideal is again an ideal of definition.
+
+`FormalSchemes.AdicCofinalOpenImmersion` is the successor to this file, and it settles part of the
+hypothesis. `FormalSpectrum.map_le_radical_of_hom` gives `I · B ≤ √J` for an arbitrary morphism of
+formal spectra, so `FormalSpectrum.isCofinal_map_of_le_radical` reduces the hypothesis above to
+the single containment `J ≤ √(I · B)`; and
+`FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` discharges it outright when the open is
+basic, which is what
+`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen` consumes. What
+remains open is the general affine open.
 
 ## Main results
 

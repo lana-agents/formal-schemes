@@ -14,6 +14,7 @@ import FormalSchemes.ActionQuotientTop
 import FormalSchemes.ActionQuotientType
 import FormalSchemes.ActionSpecialization
 import FormalSchemes.ActionTranslates
+import FormalSchemes.AdicCofinalOpenImmersion
 import FormalSchemes.AdicCompletionAwayTrans
 import FormalSchemes.AdicCompletionCongrIdealAlg
 import FormalSchemes.AdicCompletionCongrLevel
