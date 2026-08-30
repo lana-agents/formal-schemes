@@ -110,6 +110,31 @@ theorem map_base_tateInvPatchSaturateOpens_univ {X : LocallyRingedSpace.{u}}
       = ⊤ := by
   rw [tateInvPatchSaturateOpens_univ]; rfl
 
+/-! ### The two-equation membership criterion, at a general `S` -/
+
+section GeneralS
+
+variable {S : Set (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q))}
+
+/-- **Membership in the chart ring is the pair of chart conditions**, at every open `S` of the
+model patch. `AlgebraicGeometry.mem_tateInvChartSubring_iff`
+(`FormalSchemes.TateInvQuotientChartRing`) turns membership into
+`AlgebraicGeometry.IsTateInvOverlapCompatible`, and
+`AlgebraicGeometry.isTateInvOverlapCompatible_iff_charts` (`FormalSchemes.TateInvOverlapBand`)
+turns that into the two chart conditions.
+
+The two inputs landed on branches neither of which saw the other, so neither file states this;
+it is the sentence every consumer wants. The `S = Set.univ` results below are its specialisation.
+-/
+theorem mem_tateInvChartSubring_iff_charts (hS : IsOpen S)
+    (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
+      (op (tateInvPatchSaturateOpens hq hI hS))) :
+    s ∈ tateInvChartSubring (hq := hq) (hI := hI) hS ↔
+      IsTateInvChartCompatibleForward hS s ∧ IsTateInvChartCompatibleBackward hS s :=
+  (mem_tateInvChartSubring_iff hS s).trans (isTateInvOverlapCompatible_iff_charts hS s)
+
+end GeneralS
+
 /-! ### The four legs as ring maps of `A` -/
 
 /-- **The `x`-chart restriction of `A`**: `A → A{1/x}`. -/
