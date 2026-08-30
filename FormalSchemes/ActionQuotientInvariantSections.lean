@@ -44,6 +44,16 @@ Every comparison of sections living on two different opens goes through
 exactly because those opens are universally quantified there and not in the statements that use
 them.
 
+## The acting group's universe
+
+`G` lives in its own universe, unrelated to the space's. That is not idle generality: an action is
+given by a monoid hom `G →* Aut X`, and the group that matters here —
+`AlgebraicGeometry.tateInvPeriodAction`'s `Multiplicative ℤ` — is in `Type 0` while the space it
+acts on is over a base ring in an arbitrary `Type u`. The price is that the three instances
+`SmallCategory (Discrete G)` used to supply are now hypotheses, introduced immediately before the
+extensionality statement that needs them; all three are synthesisable at `Discrete G` for a `G` in
+`Type 0`, so a consumer does not see them.
+
 ## Main results
 
 * `AlgebraicGeometry.LocallyRingedSpace.sigmaIsoPresheafedSpace`,

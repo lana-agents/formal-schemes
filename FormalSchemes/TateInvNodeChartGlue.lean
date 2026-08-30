@@ -41,27 +41,25 @@ see it. Concretely: if a section `g` of the chain over `tateInvSaturate S` pulls
 * `AlgebraicGeometry.c_app_tateInvShiftAut_zpow_eq_of_const`: **the invariance.** A section whose
   pullbacks are a constant family is fixed by every `σ ^ k`.
 
-## What is left, and exactly what blocks it
+## What is left
 
 The remaining step is **descent**: an invariant section of `T_inv` over `π⁻¹ V` is the pullback of
-a section of the quotient over `V`. The tree has that statement —
+a section of the quotient over `V`. The tree's statement of it,
 `CategoryTheory.exists_actionQuotientπ_c_app_eq_iff_forall`
-(`FormalSchemes.ActionQuotientInvariantSections`) — and the invariance above is exactly its
-hypothesis. It is **not applicable here for a universe reason**, not for a mathematical one:
+(`FormalSchemes.ActionQuotientInvariantSections`), takes exactly the invariance above as its
+hypothesis, and it now applies here: the acting group has its own universe, so the theorem may be
+read at `AlgebraicGeometry.tateInvPeriodAction`, which acts by `Multiplicative ℤ`, over a base
+ring `R : Type u`. `AlgebraicGeometry.exists_actionQuotientπ_c_app_eq_of_const`
+(`FormalSchemes.TateInvQuotientSections`) is `c_app_tateInvShiftAut_zpow_eq_of_const` fed to it,
+and `AlgebraicGeometry.existsUnique_actionQuotientπ_c_app_eq_of_isCompatible` puts that together
+with the gluing above: a compatible `s` on the model patch determines a unique section of the
+quotient.
 
-* that theorem, and `CategoryTheory.exists_actionQuotientπ_c_app_eq_iff` before it, fix the acting
-  group at `G : Type u` with `X : LocallyRingedSpace.{u}`, while
-  `AlgebraicGeometry.tateInvPeriodAction` acts by `Multiplicative ℤ`, which is in `Type 0`;
-* so it applies to the chain over a ring `R : Type` and not over a ring `R : Type u`. Instantiating
-  it at a general `R` does not fail with an error — it does not terminate.
-
-The generalisation is real work and is not attempted here: replacing `Type u` by `Type w` in
-`FormalSchemes.ActionQuotientInvariantSections` needs
-`Limits.HasCoproduct fun _ : G => X.toPresheafedSpace` as a new instance hypothesis through its
-`Sigma` section (that instance *is* synthesisable at `G = Multiplicative ℤ` and
-`X : LocallyRingedSpace.{u}`, so the plan is sound), and then
-`AlgebraicGeometry.PresheafedSpace.colimit_section_ext` (`FormalSchemes.CoequalizerSections`),
-which is stated for `J : Type u` with `[SmallCategory J]`, has to be generalised as well.
+What is still open, and is not a universe question, is making the compatibility condition
+**concrete**. `TopCat.Presheaf.IsCompatible` for the transported constant family is a condition on
+opens of the chain; translating it into the chain's `𝔾m`-inversion transition on the overlap, and
+so exhibiting `Γ (T_inv/⟨σ⟩, π V)` as an equalizer over the single patch, is the piece neither
+this file nor `FormalSchemes.TateInvQuotientSections` touches.
 
 ## References
 
