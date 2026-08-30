@@ -53,7 +53,8 @@ re-presenting the refined target chart on the base ring `R{1/d}^`, which would n
 ring, so that lemma is not on this tree.
 
 **It is not needed, and this file does not prove it.** The refined chart keeps the presentation
-`S{1/c}^` that `awayCompletion_baseChange` already delivers, because
+`S{1/c}^` that `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange` already
+delivers, because
 `IsTopFiniteTypeHomOn.isRelativelyTopFiniteType_of_basicOpen` constrains the *range* of a target
 chart and not its presentation — which is exactly what
 `FormalSpectrum.isCofinal_map_of_range_eq` (`FormalSchemes.AdicCofinalOpenImmersion`) bought. So
@@ -119,7 +120,7 @@ variable {R : Type u} [CommRing R] [TopologicalSpace R] {I : Ideal R} [IsAdicRin
 variable {X : FormalScheme.{u}}
 
 /-- **The per-point data of a refined witness.** At a point `x` of `X`: an affine chart `src` of
-`X` through `x`, an affine chart `mid` of `Spf I` whose range is the basic open `D(g)`, and an
+`X` through `x`, an affine chart `mid` of `Spf I` whose range is a basic open `D(g)`, and an
 algebra `A` tf-type over `(S, K)` making `f` structural through those two charts.
 
 The target chart is carried as a morphism rather than as an index of a fixed cover, exactly as in
@@ -127,7 +128,8 @@ The target chart is carried as a morphism rather than as an index of a fixed cov
 the same reason: the refined charts are built one point at a time and are pieces of neither given
 cover.
 
-Note what `rangeMid` does *not* say. It constrains the range of `mid` and not its presentation:
+Note what `AlgebraicGeometry.FormalScheme.BasicTargetChart.rangeMid` does *not* say. It constrains
+the range of that chart and not its presentation:
 `K` is whatever the shrunk witness produced, and is related to `FormalSpectrum.awayCompletionIdeal
 I g` only through `FormalSpectrum.isCofinal_map_of_range_eq`
 (`FormalSchemes.AdicCofinalOpenImmersion`). That is what keeps the base transport out of this
@@ -314,7 +316,8 @@ variable {f : X ⟶ FormalScheme.Spf I}
 than an internal `Classical.choice`, for the reason
 `AlgebraicGeometry.FormalScheme.OpenCover.ofTfTypeHomCharts` (`FormalSchemes.TopFiniteTypeHom`)
 records: a cover whose charts are chosen inside the definition cannot carry any property the
-caller did not put into the chart type, and the property wanted here is `rangeMid`. -/
+caller did not put into the chart type, and the property wanted here is
+`AlgebraicGeometry.FormalScheme.BasicTargetChart.rangeMid`. -/
 def OpenCover.ofBasicTargetCharts (charts : ∀ x : X, BasicTargetChart f x) : OpenCover X where
   J := X
   obj x := FormalScheme.Spf (charts x).L
@@ -347,7 +350,8 @@ def OpenCover.ofBasicTargetChartsTarget (charts : ∀ x : X, BasicTargetChart f 
 
 /-- **The two assembled covers witness the predicate.** Both identifications are `Iso.refl` — each
 chart *is* `Spf` of its own ring, which is the point of building the covers out of the charts
-rather than refining given ones — so the compatibility square is the chart's own `compat`. -/
+rather than refining given ones — so the compatibility square is
+`AlgebraicGeometry.FormalScheme.BasicTargetChart.compat`. -/
 theorem isTopFiniteTypeHomOn_ofBasicTargetCharts (charts : ∀ x : X, BasicTargetChart f x) :
     IsTopFiniteTypeHomOn f (OpenCover.ofBasicTargetChartsTarget charts)
       (OpenCover.ofBasicTargetCharts charts) := by
