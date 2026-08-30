@@ -32,14 +32,16 @@ Tate quotient over the image of a saturation, which is what this file was writte
 `(D.isFormalScheme i).choose`, an existential witness merely *isomorphic* to `D.U i`, and its
 `map` is `(that isomorphism).hom ≫ D.ι i` rather than `D.ι i`. So specialising
 `OpenCover.eq_of_chart_c_app_eq` to a glue datum leaves a `choose` in the statement and an
-isomorphism in front of every `ι`. Going through `GlueData.ι_jointly_surjective` directly avoids
-both, and `AlgebraicGeometry.FormalScheme.GlueData.ι_isOpenImmersion` supplies the same
-`IsIso` that the cover version gets from `PresheafedSpace.IsOpenImmersion.c_iso`.
+isomorphism in front of every `ι`. Going through
+`AlgebraicGeometry.FormalScheme.GlueData.ι_jointly_surjective` directly avoids both, and
+`AlgebraicGeometry.FormalScheme.GlueData.ι_isOpenImmersion` supplies the same `IsIso` that the
+cover version gets from `PresheafedSpace.IsOpenImmersion.c_iso`.
 
 The `IsIso` needed here is at `W ⊓ (range of ι i)` rather than at the whole range, so it comes
-from `PresheafedSpace.IsOpenImmersion.c_iso'` and not from the instance: `c_iso` fires only on
-opens *syntactically* of the form `(opensFunctor f).obj U`, and `W ⊓ (opensFunctor f).obj ⊤` is
-not one until `inf_opensFunctor_top` rewrites it.
+from `PresheafedSpace.IsOpenImmersion.c_iso'` and not from the instance:
+`PresheafedSpace.IsOpenImmersion.c_iso` fires only on opens *syntactically* of the form
+`(opensFunctor f).obj U`, and `W ⊓ (opensFunctor f).obj ⊤` is not one until
+`AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.inf_opensFunctor_top` rewrites it.
 
 ## References
 

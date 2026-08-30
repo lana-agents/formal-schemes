@@ -21,7 +21,8 @@ presheafed spaces — the comparison of sections is a statement about `c`-compon
 locally ringed space isomorphism must first be pushed through
 `AlgebraicGeometry.LocallyRingedSpace.forgetToSheafedSpace ⋙
 AlgebraicGeometry.SheafedSpace.forgetToPresheafedSpace`, and the open has to be rewritten as a
-preimage along that isomorphism before `injective_c_app_of_iso` applies.
+preimage along that isomorphism before
+`AlgebraicGeometry.PresheafedSpace.injective_c_app_of_iso` applies.
 
 ## Main result
 
@@ -55,7 +56,8 @@ exhibiting the quotient and any open of it.
 `AlgebraicGeometry.LocallyRingedSpace.injective_coequalizer_π_c_app` is the special case
 `π = CategoryTheory.actionQuotientπ a`; this transports it along
 `CategoryTheory.IsActionQuotient.isoActionQuotient`, whose defining property
-`comp_isoActionQuotient_hom` says exactly that the identification carries `π` to that projection.
+`CategoryTheory.IsActionQuotient.comp_isoActionQuotient_hom` says exactly that the identification
+carries `π` to that projection.
 
 The open `V` has to be presented as a preimage before
 `AlgebraicGeometry.PresheafedSpace.injective_c_app_of_iso` applies, which is what the `hV` step
