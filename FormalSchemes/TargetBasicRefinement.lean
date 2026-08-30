@@ -96,7 +96,10 @@ thereby proved.
   notions agree at an affine target.
 * `AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType.comp_isTopFiniteTypeHom` and
   `AlgebraicGeometry.FormalScheme.isRelativelyTopFiniteType_comp_chartMap`: two consequences that
-  the base-affine notion could not reach on its own.
+  the base-affine notion could not reach on its own — a composite through an arbitrary formal
+  scheme, and one through a chart of an arbitrary affine cover of `Spf I`.
+* `AlgebraicGeometry.FormalScheme.isRelativelyTopFiniteType_comp_basicOpenChart`: non-vacuity, at
+  a named intermediate and with every hypothesis discharged.
 
 ## References
 
@@ -474,5 +477,25 @@ theorem isRelativelyTopFiniteType_comp_chartMap (hI : I.FG)
     (i : 𝒰.J) {W : FormalScheme.{u}} {φ : W ⟶ 𝒰.obj i} (hφ : IsTopFiniteTypeHom φ) :
     IsRelativelyTopFiniteType R I (φ ≫ 𝒰.map i) :=
   (hφ.comp_chartMap 𝒰 h𝒰 i).isRelativelyTopFiniteType_of_fg hI
+
+/-- **Non-vacuity, fully instantiated.** A topologically-finite-type morphism into the basic-open
+chart `Spf (I{1/g}^)` of `Spf I` is relatively tf-type over `(R, I)` after composing down, for
+every `g : R` and with no hypothesis beyond `I.FG`.
+
+Every hypothesis is discharged at a named object, so this is an application and not a restatement:
+`AlgebraicGeometry.FormalScheme.isRelativelyTopFiniteType_basicOpenChart`
+(`FormalSchemes.ConservativityTopFiniteType`) supplies the second factor, and it is *not*
+`AlgebraicGeometry.IsTopologicallyFiniteType.structHom` of anything on the nose — recognising it as
+one is what `FormalSpectrum.structMap_eq_generalCofinalSpfIso_comp` does, and it fails `rfl` — so
+`AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType.comp_structHom`
+(`FormalSchemes.RelativeTopFiniteTypeTrans`) does not apply to it. -/
+theorem isRelativelyTopFiniteType_comp_basicOpenChart (hI : I.FG) (g : R) {W : FormalScheme.{u}} :
+    haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I g hI
+    ∀ {φ : W ⟶ FormalScheme.Spf (FormalSpectrum.awayCompletionIdeal I g)},
+      IsTopFiniteTypeHom φ →
+        IsRelativelyTopFiniteType R I (φ ≫ Hom.mk (FormalSpectrum.basicOpenChart I g)) :=
+  haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I g hI
+  fun hφ => IsRelativelyTopFiniteType.comp_isTopFiniteTypeHom hI hφ
+    (isRelativelyTopFiniteType_basicOpenChart hI g)
 
 end AlgebraicGeometry.FormalScheme
