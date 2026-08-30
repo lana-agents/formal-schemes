@@ -40,8 +40,11 @@ proper. Note `D(x − 1)` contains the node locus just as `D(x + y − 1)` does
 (`AlgebraicGeometry.tateInvNodeLocus_subset_tateInvNaiveChartLocus`), so containing the nodes is
 **not** what separates the two candidates.
 
-`x + y − 1` deletes the *pair* `V(x − 1, y) ∪ V(x, y − 1)`, one point on each branch, and that
-pair is exactly what the transition exchanges. Concretely, in the `Ĝm` coordinates of
+The geometric picture behind the choice — **not proved here**, see "What is *not* proved"
+below — is that `x + y − 1` deletes a point of each branch, and that the transition exchanges
+the two. What *is* proved is that the two witnesses `AlgebraicGeometry.annulusUnitPointX` and
+`AlgebraicGeometry.annulusUnitPointY` lie outside the domain, which is all the properness
+statements consume. Concretely, in the `Ĝm` coordinates of
 `FormalSchemes.TateInvGlobalProperness` the two legs out of `A` into `A{1/x}` send
 
 ```
@@ -124,9 +127,16 @@ the uncharted locus, and it is not the whole quotient.
 untouched. `AlgebraicGeometry.tateInvChartAnnulusSubring_univ_ne_top`
 (`FormalSchemes.TateInvGlobalProperness`) is a statement at `S = Set.univ` and says nothing here.
 
-**The deleted pair is not shown to be a single `σ`-orbit.** The saturation theorem says the domain
-is stable, which is what every consumer needs; that its complement is one orbit of one point of
-the quotient is the geometric reading and is not formalised.
+**The complement of the domain is not identified, and is not shown to be a single `σ`-orbit.**
+What is proved is that two specific points lie outside it
+(`AlgebraicGeometry.annulusUnitPointX_notMem_tateInvNodeChartLocus` and its mirror), which is
+what the properness statements consume. That the complement is exactly
+`V(x − 1, y) ∪ V(x, y − 1)`, that those are one point of each branch, that the transition
+exchanges them, and that they form one orbit of one point of the quotient are all the geometric
+reading and none of them is formalised. The first of them is true and short — from `x·y = 0` in
+the special fibre, `x + y − 1 ∈ 𝔭` gives `x·(x − 1) ∈ 𝔭` — and a successor wanting an explicit
+description of the uncharted part of this domain should land it as a theorem rather than cite
+this paragraph.
 
 Nothing here weakens `LocallyRingedSpace.IsProperlyDiscontinuousOn`,
 `LocallyRingedSpace.IsFreeProperlyDiscontinuous` or
