@@ -252,6 +252,7 @@ import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.RelativeTopFiniteTypeBasis
 import FormalSchemes.RelativeTopFiniteTypeTrans
 import FormalSchemes.RestrictedLaurentCoeff
+import FormalSchemes.RestrictedLaurentCoeffInv
 import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding

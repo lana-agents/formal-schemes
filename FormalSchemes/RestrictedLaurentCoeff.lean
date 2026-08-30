@@ -37,8 +37,14 @@ quotients.
   quotients, the backward one for extensionality.
 * `RestrictedLaurentSeries.coeff`: **the `n`-th coefficient of a restricted Laurent series**, an
   `R`-linear map `R{X, X⁻¹} →ₗ[R] R`, for `[IsAdicComplete I R]`.
-* `RestrictedLaurentSeries.coeff_X` and `RestrictedLaurentSeries.coeff_algebraMap`: its values on
-  `X R I k` and on the structural image of a scalar.
+* `RestrictedLaurentSeries.coeff_X`, `RestrictedLaurentSeries.coeff_algebraMap`,
+  `RestrictedLaurentSeries.coeff_one` and `RestrictedLaurentSeries.coeff_algebraMap_mul`: its
+  values on `X R I k` and on the structural image of a scalar, and the fact that scalars pull
+  out.
+* `RestrictedLaurentSeries.coeff_mem_pow`: `coeff` is continuous — a coefficient of an element of
+  the `m`-th step of the filtration lies in `I ^ m`. With
+  `RestrictedLaurentSeries.exists_sub_mem_smul_top`, the density of `R[T, T⁻¹]`, this is what lets
+  an identity between `R`-linear functionals be checked on Laurent polynomials alone.
 * **`RestrictedLaurentSeries.ext_coeff`**: a restricted Laurent series is determined by its
   coefficients. With `RestrictedLaurentSeries.coeff_eq_zero_iff` this is the extensionality
   principle `FormalSchemes.FormalGm` lacks.
@@ -189,6 +195,19 @@ theorem coeffLevel_compat (n : ℤ) {m k : ℕ} (hle : m ≤ k) :
     rw [LinearMap.comp_apply, coeffLevel_apply, coeffLevel_apply, ← z.property hle,
       coeffQuot_transitionMap]
 
+/-- **The image of `R[T, T⁻¹]` is dense**: every restricted Laurent series agrees with a Laurent
+polynomial modulo the `m`-th step of the filtration. This is `AdicCompletion.eval` being
+surjective, read through `AdicCompletion.pow_smul_top_eq_ker_eval`. -/
+theorem exists_sub_mem_smul_top (hI : I.FG) (m : ℕ) (z : RestrictedLaurentSeries R I) :
+    ∃ p : LaurentPolynomial R,
+      z - AdicCompletion.of (I.map (algebraMap R (LaurentPolynomial R))) (LaurentPolynomial R) p ∈
+        ((I.map (algebraMap R (LaurentPolynomial R))) ^ m • ⊤ :
+          Submodule (LaurentPolynomial R) (RestrictedLaurentSeries R I)) := by
+  obtain ⟨p, hp⟩ := Submodule.Quotient.mk_surjective _ (z.val m)
+  refine ⟨p, ?_⟩
+  rw [AdicCompletion.pow_smul_top_eq_ker_eval (hI.map _), LinearMap.mem_ker, map_sub,
+    AdicCompletion.eval_apply, AdicCompletion.eval_of, Submodule.mkQ_apply, ← hp, sub_self]
+
 /-! ### The coefficient itself -/
 
 variable [IsAdicComplete I R]
@@ -230,6 +249,31 @@ theorem coeff_algebraMap (n : ℤ) (r : R) :
     rw [IsScalarTower.algebraMap_apply R (LaurentPolynomial R) (RestrictedLaurentSeries R I),
       AdicCompletion.algebraMap_apply, Algebra.algebraMap_self, RingHom.id_apply, C_eq_algebraMap]
   rw [hr, coeff_of, coeffₗ_C]
+
+/-- **A coefficient of an element of the `m`-th filtration step lies in `I ^ m`** — the
+statement that `coeff` is continuous. -/
+theorem coeff_mem_pow (hI : I.FG) (n : ℤ) (m : ℕ) {z : RestrictedLaurentSeries R I}
+    (hz : z ∈ ((I.map (algebraMap R (LaurentPolynomial R))) ^ m • ⊤ :
+      Submodule (LaurentPolynomial R) (RestrictedLaurentSeries R I))) :
+    coeff I n z ∈ I ^ m := by
+  rw [AdicCompletion.pow_smul_top_eq_ker_eval (hI.map _), LinearMap.mem_ker,
+    AdicCompletion.eval_apply] at hz
+  have h0 : (Submodule.Quotient.mk (coeff I n z) : R ⧸ (I ^ m • ⊤ : Submodule R R)) = 0 := by
+    rw [mk_coeff, coeffLevel_apply, hz, map_zero]
+  rw [Submodule.Quotient.mk_eq_zero, Ideal.mem_smul_top_self_iff] at h0
+  exact h0
+
+/-- **The coefficients of `1`.** -/
+@[simp]
+theorem coeff_one (n : ℤ) :
+    coeff I n (1 : RestrictedLaurentSeries R I) = if n = 0 then 1 else 0 := by
+  rw [← map_one (algebraMap R (RestrictedLaurentSeries R I)), coeff_algebraMap]
+
+/-- **Scalars pull out of a coefficient.** Multiplication by the structural image of `r` is the
+`R`-action, and `coeff` is `R`-linear. -/
+theorem coeff_algebraMap_mul (n : ℤ) (r : R) (z : RestrictedLaurentSeries R I) :
+    coeff I n (algebraMap R (RestrictedLaurentSeries R I) r * z) = r * coeff I n z := by
+  rw [← Algebra.smul_def, map_smul, smul_eq_mul]
 
 /-! ### Extensionality -/
 
