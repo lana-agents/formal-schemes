@@ -80,11 +80,15 @@ sheaf-theoretic transport available at all, and once through
   witness onto the other's ring up to cofinality of the two ideals of definition
   (`FormalSchemes.CofinalTopFiniteType`, `FormalSchemes.CofinalStructMap`).
 * **Conservativity's hard direction** — that an arbitrary affine open of `Spf I` is topologically
-  of finite type over `(R, I)`. Untouched here. The tree has the basic-open case
-  `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion` and, since issue 1202,
-  affine-locality `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`
-  (`FormalSchemes.TopFiniteTypeAffineLocal`); what is missing is the identification of the two
-  chart presentations of a basic open of an affine open.
+  of finite type over `(R, I)`. Untouched here, but this file is what it runs on:
+  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
+  (`FormalSchemes.AffineOpenTopFiniteType`, issue 1207) applies
+  `FormalSpectrum.exists_basicOpenChart_inter_iso` below at every point of the affine open, and
+  feeds the results to affine-locality
+  (`AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`,
+  `FormalSchemes.TopFiniteTypeAffineLocal`). What is missing is no longer the chart
+  identification but a hypothesis of that theorem: that the open immersion is adic up to
+  cofinality.
 * **A `FormalScheme.Hom`-level restatement.** None is given, and none is needed: a consumer
   holding `m : FormalScheme.Spf L ⟶ X` applies the results below to `m.toLRSHom`, since
   `FormalScheme.Hom` is a one-field wrapper and `(f ≫ g).toLRSHom = f.toLRSHom ≫ g.toLRSHom`

@@ -33,6 +33,7 @@ import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductLRS
 import FormalSchemes.AffineFibreProductScheme
 import FormalSchemes.AffineFibreProductUniqueness
+import FormalSchemes.AffineOpenTopFiniteType
 import FormalSchemes.AffineSeparated
 import FormalSchemes.AffineSeparatedInstance
 import FormalSchemes.AffineSeparatedIso
@@ -85,6 +86,7 @@ import FormalSchemes.ClosedImmersionStalk
 import FormalSchemes.ClosedImmersionSubscheme
 import FormalSchemes.ClosedImmersionTargetLocal
 import FormalSchemes.CoequalizerSections
+import FormalSchemes.CofinalAdicComplete
 import FormalSchemes.CofinalAdicRing
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalCompletionAlg
@@ -97,6 +99,7 @@ import FormalSchemes.CofinalSheafComparisonIso
 import FormalSchemes.CofinalSheafComparisonNaturality
 import FormalSchemes.CofinalStructMap
 import FormalSchemes.CofinalTopFiniteType
+import FormalSchemes.CofinalTopFiniteTypeAffineLocal
 import FormalSchemes.CompleteNoetherian
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
@@ -268,6 +271,7 @@ import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpfHomScheme
 import FormalSchemes.SpfHomSchemeNatural
 import FormalSchemes.SpfIsoIdealRecovery
+import FormalSchemes.SpfIsoOverBase
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
