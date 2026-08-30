@@ -279,6 +279,7 @@ import FormalSchemes.SpfIsoOverBase
 import FormalSchemes.SpfMap
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
+import FormalSchemes.TargetBasicRefinement
 import FormalSchemes.TateAction
 import FormalSchemes.TateActionInv
 import FormalSchemes.TateActionQuotient
