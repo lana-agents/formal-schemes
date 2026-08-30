@@ -40,7 +40,8 @@ Both halves of the underlying mathematics are already merged, and this file repr
   consumer meet a module-shaped producer.
 * `FormalSpectrum.arbSheafComponent_pow_le_comap_pow` and
   `FormalSpectrum.arbSheafComponent_mem_awayCompletionIdeal_pow`: the ideal-power forms of
-  `arbSheafComponent_mem_pow`, in the `≤ comap` and the `RingHom`-level spellings respectively.
+  `arbSheafComponent_mem_pow`, as an ideal containment and as a membership implication
+  respectively.
 * `FormalSpectrum.basicOpenChart_arbSheafComponent_mem_awayCompletionIdeal_pow`: the same for
   `FormalSpectrum.basicOpenChart`, with **no continuity hypothesis** — it is discharged by
   `FormalSpectrum.basicOpenChart_le_comap_globalSectionsMap`.
@@ -64,8 +65,10 @@ Both halves of the underlying mathematics are already merged, and this file repr
   strictly weaker; no `AlgHom` structure is put on it.
 * **Nothing here is applied to the Tate cluster.**
   `AlgebraicGeometry.IsTateInvNodeChartLegContinuous` (`FormalSchemes.TateInvNodeChartComplete`)
-  is untouched: a `.c.app` of `AlgebraicGeometry.annulusOverlapChart` is not a basic-open
-  restriction, and it is not claimed here that it reduces to one.
+  is untouched: a `.c.app` of `annulusOverlapChart` (root namespace, **not** under
+  `AlgebraicGeometry` — its file's `namespace FormalSpectrum` block closes before the
+  declaration) is not a basic-open restriction, and it is not claimed here that it reduces
+  to one.
 * No claim is made about `FormalSpectrum.arbSheafComponent` being injective, surjective or
   bijective; that is `FormalSpectrum.bijective_arbSheafComponent`'s business
   (`FormalSchemes.OpenImmersionSheafComponentIso`) and is not used here.
@@ -131,7 +134,7 @@ theorem arbSheafComponent_mem_awayCompletionIdeal_pow
   arbSheafComponent_mem_pow I J w g hadic m v
     ((mem_awayCompletionIdeal_pow_iff I g m v).mp hv)
 
-/-- **The `≤ comap` form of the previous theorem**, for callers that want the containment of
+/-- **The ideal-containment form of the previous theorem**, for callers that want a containment of
 ideals rather than a membership implication. -/
 theorem arbSheafComponent_pow_le_comap_pow
     (hadic : I ≤ J.comap (globalSectionsMap I J w)) (m : ℕ) :
@@ -215,7 +218,7 @@ theorem map_sectionsBasicOpenHom :
   rw [hhom, ← Ideal.map_map, map_awayCompletionHom, sectionsBasicOpenIdeal]
   exact Ideal.map_symm (sectionsBasicOpenEquiv I f)
 
-/-- **The structural map `R → Γ(D(f))` is adic**, the `comap` form of
+/-- **The structural map `R → Γ(D(f))` is adic**, the `Ideal.comap` form of
 `map_sectionsBasicOpenHom` and the presheaf-spelling analogue of
 `FormalSpectrum.le_comap_awayCompletionHom`. -/
 theorem le_comap_sectionsBasicOpenHom :
