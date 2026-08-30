@@ -12,19 +12,22 @@ automorphism of `R{X, X⁻¹}`, `X n ↦ X (-n)`. On coefficients
 
 ## Why it is not two lines
 
-`rlsInv` is evaluation at the unit `(X 1)⁻¹`, so it is described by what it does to `X`, not by
+`RestrictedLaurentSeries.rlsInv` is evaluation at the unit `(X 1)⁻¹`, so it is described by what
+it does to the variable, not by
 what it does to a coefficient. The two `R`-linear functionals `coeff n ∘ rlsInv` and `coeff (-n)`
-agree on the image of `R[T, T⁻¹]`, where `rlsInv` is `LaurentPolynomial.invert`
-(`rlsInv_of`) and `LaurentPolynomial.invert_apply` is the reversal outright — but agreeing on a
+agree on the image of `R[T, T⁻¹]`, where the inversion is `LaurentPolynomial.invert`
+(`RestrictedLaurentSeries.rlsInv_of`) and `LaurentPolynomial.invert_apply` is the reversal
+outright — but agreeing on a
 dense subring does not by itself force two `R`-linear maps to agree. What closes the gap is that
 both are *continuous*: `RestrictedLaurentSeries.coeff_mem_pow` sends the `m`-th step of the
-filtration into `I ^ m`, `RestrictedLaurentSeries.isContinuousPoint_unitEvalAlgHom` keeps `rlsInv`
-inside that step, and `RestrictedLaurentSeries.exists_sub_mem_smul_top` supplies the
+filtration into `I ^ m`, `RestrictedLaurentSeries.isContinuousPoint_unitEvalAlgHom` keeps the
+inversion inside that step, and `RestrictedLaurentSeries.exists_sub_mem_smul_top` supplies the
 approximation. The difference then lies in every `I ^ m`, and `R` is Hausdorff.
 
 ## Main results
 
-* `RestrictedLaurentSeries.rlsInv_of`: `rlsInv` carries the image of a Laurent polynomial to the
+* `RestrictedLaurentSeries.rlsInv_of`: the inversion carries the image of a Laurent polynomial to
+  the
   image of `LaurentPolynomial.invert` of it.
 * **`RestrictedLaurentSeries.coeff_rlsInv`**: `coeff n (rlsInv z) = coeff (-n) z`.
 

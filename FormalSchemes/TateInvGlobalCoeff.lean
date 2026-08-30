@@ -93,7 +93,7 @@ theorem tateInvGlobalCoord_apply (hI : I.FG) (a : annulusAlgebra R I q) :
     tateInvGlobalCoord R I q hI a =
       overlapEquiv R I q hI (algebraMap (annulusAlgebra R I q) (annulusOverlap R I q) a) := rfl
 
-/-- The coordinate map sends `x` to `X`. -/
+/-- The coordinate map sends the coordinate `x` to the variable `X R I 1`. -/
 theorem tateInvGlobalCoord_overlapX (hI : I.FG) :
     tateInvGlobalCoord R I q hI (overlapX R I q) = X R I 1 := by
   rw [tateInvGlobalCoord_apply, overlapEquiv_overlapX]
@@ -171,7 +171,8 @@ theorem tateInvGlobalLegY_eq_legXY_iff (hI : I.FG) (a : annulusAlgebra R I q) :
   rfl
 
 /-- **The two overlap conditions are the same condition.** In coordinates the forward one reads
-`φ a = rlsInv (φ (flip a))` and the backward one `φ (flip a) = rlsInv (φ a)`, and `rlsInv` is an
+`φ a = rlsInv (φ (flip a))` and the backward one `φ (flip a) = rlsInv (φ a)`, and
+`RestrictedLaurentSeries.rlsInv` is an
 involution. So the backward condition carries no information the forward one does not — a
 sharpening of `AlgebraicGeometry.tateInvGlobalLegY_ne_tateInvGlobalLegXY`, which says only that
 each is *some* restriction. -/
