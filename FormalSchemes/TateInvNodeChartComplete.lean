@@ -56,10 +56,14 @@ much of the closedness half as the tree currently supports.
   morphisms of formal spectra, and both of this file's identifications of a section ring — the
   ambient one through `AlgebraicGeometry.tateInvNodeChartAmbientEquiv` and the target ones through
   `AlgebraicGeometry.tateInvNodeChartTargetEquivX` — go through
-  `FormalSpectrum.sectionsBasicOpenEquiv`, which the tree states as a bare `RingEquiv`. Whether it
-  is a map of `A`-algebras, equivalently whether it carries `FormalSpectrum.awayCompletionIdeal`
-  to the extension of `annulusIdealOfDefinition` along `A → Γ(D(f))`, is what a proof of leg
-  continuity would need, and this tree does not say.
+  `FormalSpectrum.sectionsBasicOpenEquiv`, which `FormalSchemes.Sections` states as a bare
+  `RingEquiv`. What a proof of leg continuity would need is that it carries
+  `FormalSpectrum.awayCompletionIdeal` to the extension of `annulusIdealOfDefinition` along
+  `A → Γ(D(f))` — which would follow from its being a map of `A`-algebras, though not conversely
+  — and no declaration on this tree states either. The nearest handle is
+  `FormalSpectrum.eval_sectionsBasicOpenEquiv` (`FormalSchemes.BasicOpenChartComponent`), the
+  level-`n` computation rule for this very equivalence, stated with `AdicCompletion.evalₐ`; a
+  successor should start there rather than from `FormalSchemes.Sections`.
 * **`Subring.HasCofinalInducedFiltration` is not proved for this subring**, and no `(A, K, S)` at
   which it fails is exhibited. `FormalSchemes.AdicSubringComplete` proves two sufficient
   conditions for it; neither is checked here.

@@ -22,10 +22,12 @@ and it is `Ideal.pow_comap_subtype_le_comap_pow` below:
 ```
 
 An element of `S` lying in `K ^ n` is a sum of `n`-fold products of elements of `K`, and nothing
-forces those factors to lie in `S`, so the reverse containment is not available in general.
-Hausdorffness needs only the free direction; precompleteness needs the other one. That is why
-`AlgebraicGeometry.isHausdorff_comap_subtype` is unconditional and why the slogan "a closed
-subring of a complete ring is complete" does not, as stated, produce `IsPrecomplete J S`.
+forces those factors to lie in `S`, so **no argument of that shape gives the reverse containment**
+— whether it can fail is a separate question this file does not settle (see *What is not
+proved*). Hausdorffness needs only the free direction; the proof of precompleteness below needs
+the other one. That is why `AlgebraicGeometry.isHausdorff_comap_subtype` is unconditional and why
+the slogan "a closed subring of a complete ring is complete" does not, as stated, produce
+`IsPrecomplete J S`.
 
 ## What is here
 
@@ -36,7 +38,7 @@ The two obligations are separated, and only one of them carries a hypothesis.
   filtration has a limit in `S`, again for the induced filtration. This is the topological
   statement "a closed subset of a complete space is complete", with no ideal of `S` in it.
 * `Subring.isInducedPrecomplete_of_isAdicallyClosed`: **unconditional** — closedness plus
-  `IsPrecomplete K A` gives `IsInducedPrecomplete`.
+  `IsPrecomplete K A` gives `Subring.IsInducedPrecomplete`.
 * `Subring.HasCofinalInducedFiltration`: the bridge, `∀ n, ∃ m, (K ^ m).comap S.subtype ≤
   (K.comap S.subtype) ^ n`.
 * `Subring.isPrecomplete_comap_subtype` and `Subring.isAdicComplete_comap_subtype`: the two
