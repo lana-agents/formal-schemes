@@ -72,8 +72,12 @@ It is carried out in `FormalSchemes.TateInvGlobalNormalForm` and
 `AlgebraicGeometry.tateInvGlobalSubring_eq_range_of_noetherian` settles it **over a Noetherian
 base**; over a base that is not Noetherian it is still open, and
 `AlgebraicGeometry.isTateInvCoordSeparating_iff_adicKerClosed` says it is then exactly the
-question whether `(x·y − q)` is adically closed in `R{x, y}`. Nothing in this file needs
-`[IsNoetherianRing R]`, so the two statements are independent of each other.
+question whether `(x·y − q)` is adically closed in `R{x, y}`. The properness results here —
+`AlgebraicGeometry.tateInvGlobalSubring_ne_top` and everything before it — need no
+`[IsNoetherianRing R]`; the file's two `S = Set.univ` results,
+`AlgebraicGeometry.tateInvChartAnnulusSubring_univ_ne_top` and
+`AlgebraicGeometry.tateInvGlobalSectionsRingEquiv_ne_overlapX`, do carry it. Smallness and
+bigness stay different questions either way: neither implies the other.
 
 **Issue 1223's goal 3 is untouched here.** That asks for an element of the chart ring *outside*
 the image of `Γ (Spf R, ·)`, i.e. that the ring is *bigger* than the base. Properness is that it

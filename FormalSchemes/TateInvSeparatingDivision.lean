@@ -32,8 +32,9 @@ Noetherian base.**
   `Γ (T_inv/⟨σ⟩, ⊤) ≃+* R`, and it carries no hypothesis its conditional form did not already
   carry: `[TopologicalSpace R]`, `[IsAdicRing I]`, `[IsNoetherianRing R]`, `q ∈ I`, `I.FG`.
 * `AlgebraicGeometry.exists_algebraMap_eq_of_mem_tateInvChartAnnulusSubring_univ`: **issue 1223's
-  goal 3, in the negative.** Every element of the chart ring at `S = Set.univ` comes from the
-  base, so there is no element of it outside the image of `Γ (Spf R, ·)`. This is distinct from
+  goal 3, in the negative, over a Noetherian base.** Every element of the chart ring at
+  `S = Set.univ` comes from the base, so there is no element of it outside the image of
+  `Γ (Spf R, ·)`. This is distinct from
   properness, the opposite inclusion, which `FormalSchemes.TateInvGlobalProperness` settles.
 * `AlgebraicGeometry.isTateInvCoordSeparating_powerSeriesInt` and
   `AlgebraicGeometry.tateInvPeriodQuotientGlobalSectionsEquivPowerSeriesInt`: **non-vacuity at a
@@ -437,7 +438,10 @@ open CategoryTheory TopologicalSpace
 variable {I : Ideal R} {q : R}
 variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
 
-/-- **`Γ (T_inv/⟨σ⟩, ⊤) ≃+* R`, with no hypothesis left.** -/
+/-- **`Γ (T_inv/⟨σ⟩, ⊤) ≃+* R`, with the separation hypothesis discharged.** The remaining
+hypotheses — `[TopologicalSpace R]`, `[IsAdicRing I]`, `[IsNoetherianRing R]`, `hq` and `hI` —
+are exactly those `AlgebraicGeometry.tateInvPeriodQuotientGlobalSectionsEquivBase` already
+carried. -/
 def tateInvPeriodQuotientGlobalSectionsEquivBaseOfNoetherian (hq : q ∈ I) (hI : I.FG) :
     ((actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj
       (Opposite.op (⊤ : Opens (actionQuotient
