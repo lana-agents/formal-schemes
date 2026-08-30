@@ -323,6 +323,88 @@ theorem tateInvGlobalYEquiv_tateInvChartLegXY (hq : q ∈ I) (hI : I.FG)
 
 end Y
 
+/-! ### The legs, in the coordinates of `A` -/
+
+section XY
+
+variable [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))]
+variable [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))]
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
+  [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))] in
+/-- `Γ` of the `x`-chart is `awayCompletionHom` at `x`: the chart **is**
+`FormalSpectrum.basicOpenChart` at `overlapX`, so this is
+`FormalSpectrum.globalSectionsMap_basicOpenChart`. -/
+theorem globalSectionsMap_annulusOverlapChart :
+    FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _
+        (annulusOverlapChart R I q) = tateInvGlobalLegX (R := R) (I := I) (q := q) :=
+  FormalSpectrum.globalSectionsMap_basicOpenChart _ _
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
+  [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))] in
+/-- `Γ` of the `y`-chart is `awayCompletionHom` at `y`. Note `annulusOverlapChartY` is
+`FormalSpectrum.basicOpenChart` at `overlapY` by definition and not by a named lemma. -/
+theorem globalSectionsMap_annulusOverlapChartY :
+    FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _
+        (annulusOverlapChartY R I q) = tateInvGlobalLegY (R := R) (I := I) (q := q) :=
+  FormalSpectrum.globalSectionsMap_basicOpenChart _ _
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
+  [IsAdicRing (annulusIdealOfDefinition R I q)] in
+/-- `Γ` of the `𝔾m`-inversion transition is its `R`-algebra avatar, by
+`AlgebraicGeometry.annulusChartTransitionInvSpf_hom_eq` (the transition is `Spf` of a ring map)
+and `FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap` (EGA I 10.4.6). -/
+theorem globalSectionsMap_annulusChartTransitionInvSpf_hom (hI : I.FG) :
+    FormalSpectrum.globalSectionsMap _ _ (annulusChartTransitionInvSpf R I q hI).hom =
+      (annulusChartTransitionInvAlg R I q hI).symm.toRingHom := by
+  rw [annulusChartTransitionInvSpf_hom_eq R I q hI]
+  exact FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap _ _ _ _
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
+  [IsAdicRing (annulusIdealOfDefinition R I q)] in
+/-- `Γ` of the inverse transition is the forward `R`-algebra avatar. Derived from the previous
+theorem by functoriality (`FormalSpectrum.globalSectionsMap_comp` and `_id`) rather than by
+re-running `annulusChartTransitionInvSpf_hom_eq`'s proof, which needs a raised heartbeat budget. -/
+theorem globalSectionsMap_annulusChartTransitionInvSpf_inv (hI : I.FG) :
+    FormalSpectrum.globalSectionsMap _ _ (annulusChartTransitionInvSpf R I q hI).inv =
+      (annulusChartTransitionInvAlg R I q hI).toRingHom := by
+  refine RingHom.ext fun a => ?_
+  have hcomp := FormalSpectrum.globalSectionsMap_comp
+    (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
+    (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
+    (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
+    (annulusChartTransitionInvSpf R I q hI).hom (annulusChartTransitionInvSpf R I q hI).inv
+  rw [(annulusChartTransitionInvSpf R I q hI).hom_inv_id, FormalSpectrum.globalSectionsMap_id,
+    globalSectionsMap_annulusChartTransitionInvSpf_hom] at hcomp
+  have hpt := congrArg (fun φ : awayCompletion (annulusIdealOfDefinition R I q)
+    (overlapX R I q) →+* _ => φ a) hcomp
+  simp only [RingHom.id_apply, RingHom.comp_apply] at hpt
+  exact ((congrArg (annulusChartTransitionInvAlg R I q hI) hpt).trans
+    ((annulusChartTransitionInvAlg R I q hI).apply_symm_apply _)).symm
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+/-- `Γ` of the transition-then-`y`-chart composite is `tateInvGlobalLegYX`. Contravariant, so the
+transition's map comes second. -/
+theorem globalSectionsMap_transitionInv_comp_chartY (hI : I.FG) :
+    FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _
+        ((annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q) =
+      tateInvGlobalLegYX hI := by
+  rw [FormalSpectrum.globalSectionsMap_comp,
+    globalSectionsMap_annulusChartTransitionInvSpf_hom, globalSectionsMap_annulusOverlapChartY]
+  rfl
+
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
+/-- `Γ` of the inverse-transition-then-`x`-chart composite is `tateInvGlobalLegXY`. -/
+theorem globalSectionsMap_transitionInv_inv_comp_chart (hI : I.FG) :
+    FormalSpectrum.globalSectionsMap (annulusIdealOfDefinition R I q) _
+        ((annulusChartTransitionInvSpf R I q hI).inv ≫ annulusOverlapChart R I q) =
+      tateInvGlobalLegXY hI := by
+  rw [FormalSpectrum.globalSectionsMap_comp,
+    globalSectionsMap_annulusChartTransitionInvSpf_inv, globalSectionsMap_annulusOverlapChart]
+  rfl
+
+end XY
+
 end GlobalCollapse
 
 end AlgebraicGeometry
