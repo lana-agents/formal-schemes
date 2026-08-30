@@ -308,6 +308,7 @@ import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
+import FormalSchemes.TateInvNodeLocus
 import FormalSchemes.TateInvOverlapDiscontinuous
 import FormalSchemes.TateInvPeriodNodePoint
 import FormalSchemes.TateInvPeriodNotDiscontinuous
