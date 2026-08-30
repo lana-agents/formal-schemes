@@ -26,7 +26,7 @@ there. `L` versus `L ^ 2` is the standing counterexample.
 Three things change, and each is charged to a different lemma:
 
 * the completeness instance, which is stated against `L` and needed against `I · A`:
-  `Ideal.IsCofinal.isAdicComplete` (`FormalSchemes.CofinalAdicComplete`);
+  `IsAdicComplete.of_isCofinal` (`FormalSchemes.CofinalAdicRing`);
 * the chart algebras, which are the completions of `A_g` at two cofinal ideals and so are
   isomorphic but not equal: `AdicCompletion.cofinalAlgEquiv`
   (`FormalSchemes.CofinalCompletionAlg`), through
@@ -115,7 +115,8 @@ theorem IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal (hI : I.FG
     (H : ∀ g ∈ s, IsTopologicallyFiniteType R I (FormalSpectrum.awayCompletion L g)
       (I.map (algebraMap R (FormalSpectrum.awayCompletion L g)))) :
     IsTopologicallyFiniteType R I A (I.map (algebraMap R A)) := by
-  haveI : IsAdicComplete (I.map (algebraMap R A)) A := hcof.isAdicComplete (M := A)
+  haveI : IsAdicComplete (I.map (algebraMap R A)) A :=
+    IsAdicComplete.of_isCofinal (M := A) hcof.symm
   obtain ⟨m, hm⟩ := hcof.exists_pow_le
   refine IsTopologicallyFiniteType.of_span_awayCompletion hI rfl s
     (Ideal.sup_eq_top_of_pow_le hspan hm) ?_

@@ -39,11 +39,11 @@ other containment `I ^ (c + 1) ≤ K`.
 * [The Stacks Project, Tag 0AHZ](https://stacks.math.columbia.edu/tag/0AHZ).
 -/
 
-universe u
+universe u v
 
 section CofinalCompleteness
 
-variable {R : Type u} [CommRing R] {M : Type u} [AddCommGroup M] [Module R M]
+variable {R : Type u} [CommRing R] {M : Type v} [AddCommGroup M] [Module R M]
 
 /-- **`IsHausdorff` transfers between cofinal ideals.** An element lying in every `K ^ n • ⊤` lies
 in every `I ^ n • ⊤`, because `K ^ (a n) ≤ I ^ n` for the exponent `a` cofinality supplies. -/
