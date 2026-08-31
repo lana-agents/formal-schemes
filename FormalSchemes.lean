@@ -60,6 +60,7 @@ import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.AwayCompletionNested
 import FormalSchemes.AwayCompletionNestedNaturality
+import FormalSchemes.AwayCompletionRegular
 import FormalSchemes.AwayCompletionResiduePow
 import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.AwayCompletionSurjective
@@ -253,6 +254,7 @@ import FormalSchemes.OpenImmersionSourceFormalScheme
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
+import FormalSchemes.RegularMulEquiv
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.RelativeTopFiniteTypeBasis
 import FormalSchemes.RelativeTopFiniteTypeTrans
@@ -331,6 +333,7 @@ import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvGlobalSections
 import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvNodeChartBaseGenerator
+import FormalSchemes.TateInvNodeChartBaseRegular
 import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
