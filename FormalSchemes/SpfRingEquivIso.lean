@@ -1,4 +1,5 @@
 import FormalSchemes.SpfFunctorial
+import FormalSchemes.AdicMorphism
 
 set_option linter.style.header false
 
@@ -7,41 +8,38 @@ set_option linter.style.header false
 
 `FormalSchemes/SpfMap.lean` builds the morphism `Spf S ⟶ Spf R` induced by a continuous ring
 homomorphism, and `FormalSchemes/SpfFunctorial.lean` proves it respects identities and
-composition (EGA I, 10.2). Those three facts already contain the statement that `Spf` carries a
-ring **isomorphism** to an isomorphism of formal spectra, but nothing on the tree had said so, so
-every place that wanted to move a result from one presentation of an adic ring to another had to
-stop at the ring and could not follow it to the space.
-
-This file supplies the missing direction. It is the converse of
-`FormalSpectrum.spfIsoRingEquiv` (`FormalSchemes.SpfIsoIdealRecovery`), which goes from an
-isomorphism of formal spectra to a ring isomorphism; here a ring isomorphism produces the
-isomorphism of formal spectra.
+composition (EGA I, 10.2). Those three facts contain the statement that `Spf` carries a ring
+**isomorphism** to an isomorphism of formal spectra, and this file is where that statement lives.
 
 ## Main results
 
-* `FormalSpectrum.locallyRingedSpaceMapIso`: from `e : R ≃+* S` continuous in both directions
-  (`I ≤ J.comap e` and `J ≤ I.comap e.symm`), an isomorphism
-  `Spf R ≅ Spf S` of locally ringed spaces, with
-  `FormalSpectrum.locallyRingedSpaceMapIso_hom` and
-  `FormalSpectrum.locallyRingedSpaceMapIso_inv` its two legs.
-* `FormalSpectrum.locallyRingedSpaceMapIsoOfMapEq`: the same from the single hypothesis
-  `I.map e = J`, which is the form the hypothesis usually arrives in — an ideal transported along
-  an isomorphism. Both continuity conditions are then automatic.
+* `FormalSpectrum.isoOfAdicRingEquiv`: from `e : R ≃+* S` with `IsAdicHom I J e.toRingHom` — that
+  is, `I.map e = J`, so `e` carries the ideal of definition of the source *onto* that of the
+  target — an isomorphism `Spf R ≅ Spf S` of locally ringed spaces.
+* `FormalSpectrum.isAdicHom_ringEquiv_symm`: the hypothesis is symmetric, so the inverse is adic
+  too. `FormalSpectrum.ringEquiv_symm_toRingHom_comp` and
+  `FormalSpectrum.ringEquiv_toRingHom_comp_symm` are the two round-trip identities the proof runs
+  on.
 
-## The proof
+## History, and why this file exists at all
 
-`locallyRingedSpaceMap_comp` turns each round trip into the map induced by `e.symm.comp e`
-(respectively `e.comp e.symm`), `locallyRingedSpaceMap_congr` replaces that composite by
-`RingHom.id`, and `locallyRingedSpaceMap_id` finishes. Neither functoriality lemma carries an
-`eqToHom` transport, so there is nothing to conjugate and the two round trips are three rewrites
-each.
+These four declarations were written for `FormalSchemes/CompletedTensorAwayInterchangeSpf.lean`,
+whose `CompletedTensorAwayInterchange.equivSpfIso` is their original consumer, and they sat there
+behind a **32**-module transitive import closure. Nothing about them is specific to completed tensor
+products, so they are here instead, behind **18** modules (both counts include the module itself),
+where a consumer that has no business importing the completed-tensor tower can still reach them.
+
+They are stated for arbitrary rings and ideals deliberately: the mutual-inverse laws then reduce to
+the identity and composition functoriality of `Spf` on *abstract* terms, and the elaborator never
+has to `whnf` a large concrete ring at the instantiation site.
 
 ## What is *not* proved
 
 Nothing here is stated at `AlgebraicGeometry.FormalScheme.Spf`; the isomorphism is of locally
 ringed spaces. That is the form the consumers on this tree need, since
 `FormalSpectrum.locallyRingedSpaceObj` is what `LocallyRingedSpace.IsOpenImmersion` and the chart
-criteria are stated about.
+criteria are stated about. The converse direction — an isomorphism of formal spectra giving a ring
+isomorphism — is `FormalSpectrum.spfIsoRingEquiv` (`FormalSchemes.SpfIsoIdealRecovery`).
 
 ## References
 
@@ -56,63 +54,48 @@ universe u
 
 namespace FormalSpectrum
 
-variable {R S : Type u} [CommRing R] [CommRing S] (I : Ideal R) (J : Ideal S)
+/-- The underlying ring homomorphisms of `e` and `e.symm` are mutually inverse. -/
+theorem ringEquiv_symm_toRingHom_comp {R S : Type u} [CommRing R] [CommRing S] (e : R ≃+* S) :
+    e.symm.toRingHom.comp e.toRingHom = RingHom.id R :=
+  RingHom.ext e.symm_apply_apply
 
-/-- **A ring isomorphism of adic rings induces an isomorphism of their formal spectra.** The two
-legs are `FormalSpectrum.locallyRingedSpaceMap` at `e.symm` and at `e`; the round trips are
-`FormalSpectrum.locallyRingedSpaceMap_comp` followed by
-`FormalSpectrum.locallyRingedSpaceMap_congr` and `FormalSpectrum.locallyRingedSpaceMap_id`.
+/-- The underlying ring homomorphisms of `e` and `e.symm` are mutually inverse (other order). -/
+theorem ringEquiv_toRingHom_comp_symm {R S : Type u} [CommRing R] [CommRing S] (e : R ≃+* S) :
+    e.toRingHom.comp e.symm.toRingHom = RingHom.id S :=
+  RingHom.ext e.apply_symm_apply
 
-Note the two continuity hypotheses are genuinely two: `I ≤ J.comap e` does not by itself give
-`J ≤ I.comap e.symm` — that is the statement that `e` carries `I` *onto* `J` rather than merely
-into it. `FormalSpectrum.locallyRingedSpaceMapIsoOfMapEq` packages the usual case. -/
-def locallyRingedSpaceMapIso (e : R ≃+* S) (h : I ≤ J.comap (e : R →+* S))
-    (h' : J ≤ I.comap (e.symm : S →+* R)) :
+/-- If a ring isomorphism `e` is adic (`I·e = J`), then its inverse is adic (`J·e⁻¹ = I`). -/
+theorem isAdicHom_ringEquiv_symm {R S : Type u} [CommRing R] [CommRing S]
+    {I : Ideal R} {J : Ideal S} (e : R ≃+* S) (h : IsAdicHom I J e.toRingHom) :
+    IsAdicHom J I e.symm.toRingHom := by
+  have hgoal : J.map e.symm.toRingHom = I := by
+    rw [← h, Ideal.map_map, ringEquiv_symm_toRingHom_comp, Ideal.map_id]
+  exact hgoal
+
+/-- **Isomorphism of affine formal spectra from an adic ring isomorphism** `e : R ≃+* S` with
+`IsAdicHom I J e` (`I·e = J`): the two half-morphisms are the maps of formal spectra induced by `e`
+and `e.symm`, and the mutual-inverse laws come from the identity/composition functoriality of `Spf`
+(`locallyRingedSpaceMap_id`, `locallyRingedSpaceMap_comp`). -/
+def isoOfAdicRingEquiv {R S : Type u} [CommRing R] [CommRing S]
+    (I : Ideal R) (J : Ideal S) (e : R ≃+* S) (h : IsAdicHom I J e.toRingHom) :
     locallyRingedSpaceObj I ≅ locallyRingedSpaceObj J where
-  hom := locallyRingedSpaceMap J I (e.symm : S →+* R) h'
-  inv := locallyRingedSpaceMap I J (e : R →+* S) h
+  hom := locallyRingedSpaceMap J I e.symm.toRingHom (isAdicHom_ringEquiv_symm e h).le_comap
+  inv := locallyRingedSpaceMap I J e.toRingHom h.le_comap
   hom_inv_id := by
-    have hid : (e.symm : S →+* R).comp (e : R →+* S) = RingHom.id R := by
-      ext x; simp
-    have hIK : I ≤ I.comap ((e.symm : S →+* R).comp (e : R →+* S)) := by
-      rw [hid]; exact (Ideal.comap_id I).ge
-    rw [← locallyRingedSpaceMap_comp I J I (e : R →+* S) (e.symm : S →+* R) h h' hIK,
-      locallyRingedSpaceMap_congr I I _ (RingHom.id R) hIK (Ideal.comap_id I).ge hid,
+    rw [← locallyRingedSpaceMap_comp I J I e.toRingHom e.symm.toRingHom h.le_comap
+        (isAdicHom_ringEquiv_symm e h).le_comap
+        (h.comp (isAdicHom_ringEquiv_symm e h)).le_comap,
+      locallyRingedSpaceMap_congr I I (e.symm.toRingHom.comp e.toRingHom) (RingHom.id R) _
+        (Ideal.comap_id I).ge (ringEquiv_symm_toRingHom_comp e),
       locallyRingedSpaceMap_id]
   inv_hom_id := by
-    have hid : (e : R →+* S).comp (e.symm : S →+* R) = RingHom.id S := by
-      ext x; simp
-    have hJK : J ≤ J.comap ((e : R →+* S).comp (e.symm : S →+* R)) := by
-      rw [hid]; exact (Ideal.comap_id J).ge
-    rw [← locallyRingedSpaceMap_comp J I J (e.symm : S →+* R) (e : R →+* S) h' h hJK,
-      locallyRingedSpaceMap_congr J J _ (RingHom.id S) hJK (Ideal.comap_id J).ge hid,
+    rw [← locallyRingedSpaceMap_comp J I J e.symm.toRingHom e.toRingHom
+        (isAdicHom_ringEquiv_symm e h).le_comap h.le_comap
+        ((isAdicHom_ringEquiv_symm e h).comp h).le_comap,
+      locallyRingedSpaceMap_congr J J (e.toRingHom.comp e.symm.toRingHom) (RingHom.id S) _
+        (Ideal.comap_id J).ge (ringEquiv_toRingHom_comp_symm e),
       locallyRingedSpaceMap_id]
 
-@[simp]
-theorem locallyRingedSpaceMapIso_hom (e : R ≃+* S) (h : I ≤ J.comap (e : R →+* S))
-    (h' : J ≤ I.comap (e.symm : S →+* R)) :
-    (locallyRingedSpaceMapIso I J e h h').hom =
-      locallyRingedSpaceMap J I (e.symm : S →+* R) h' :=
-  rfl
-
-@[simp]
-theorem locallyRingedSpaceMapIso_inv (e : R ≃+* S) (h : I ≤ J.comap (e : R →+* S))
-    (h' : J ≤ I.comap (e.symm : S →+* R)) :
-    (locallyRingedSpaceMapIso I J e h h').inv = locallyRingedSpaceMap I J (e : R →+* S) h :=
-  rfl
-
-/-- **The same, from the one hypothesis it usually arrives with.** An ideal of definition
-transported along a ring isomorphism satisfies `I.map e = J`, and both continuity conditions
-follow: the forward one from `Ideal.le_comap_map`, the backward one from
-`Ideal.map_le_iff_le_comap` together with `RingEquiv.symm_apply_apply`. (Mathlib's
-`Ideal.comap_symm` is the same fact, but it is stated at the `RingEquiv` coercion of `Ideal.comap`
-rather than the `RingHom` one this file's hypotheses use, so it does not `rw` here.) -/
-def locallyRingedSpaceMapIsoOfMapEq (e : R ≃+* S) (he : I.map (e : R →+* S) = J) :
-    locallyRingedSpaceObj I ≅ locallyRingedSpaceObj J :=
-  locallyRingedSpaceMapIso I J e (he ▸ Ideal.le_comap_map)
-    (by
-      rw [← he, Ideal.map_le_iff_le_comap]
-      intro x hx
-      simpa using hx)
-
 end FormalSpectrum
+
+end
