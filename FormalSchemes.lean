@@ -347,6 +347,7 @@ import FormalSchemes.TateInvNodeChartPrincipal
 import FormalSchemes.TateInvNodeChartPrincipalRegularBase
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeChartSpf
+import FormalSchemes.TateInvNodeChartSpfNonempty
 import FormalSchemes.TateInvNodeLocus
 import FormalSchemes.TateInvOverlapBand
 import FormalSchemes.TateInvOverlapDiscontinuous
