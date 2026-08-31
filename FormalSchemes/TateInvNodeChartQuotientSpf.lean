@@ -39,17 +39,18 @@ restates the reduction on the other side of it.
   `AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartAwayIdeal`.
 * the reduction with its hypothesis moved onto `Spf` of `Γ (T_inv/⟨σ⟩, ·)`, namely
   `AlgebraicGeometry.exists_formalScheme_of_openImmersion_spf_quotientIdeal_of_isLeftRegular_base`.
-  (Its `TateInvNodeChartSpf` sibling is
+  (Its `FormalSchemes.TateInvNodeChartSpf` sibling is
   `AlgebraicGeometry.exists_formalScheme_of_exists_openImmersion_spf_of_isLeftRegular_base`.)
 
 ## What is *not* proved
 
 **`hnode` is still undecided, and this file does not attempt it.** The residue is unchanged in
 substance — one morphism — and only its spelling has moved. #452's survey stands and was not
-re-walked: `glueHomOfGlobalSectionsHom` needs a `FormalScheme` source and points *into* a formal
-spectrum, `locallyRingedSpaceMap` has a formal spectrum for its target, so nothing on this tree
-produces a morphism out of a formal spectrum into a general locally ringed space and it will have
-to be glued by hand.
+re-walked: `AlgebraicGeometry.FormalScheme.OpenCover.glueHomOfGlobalSectionsHom` needs a
+`FormalScheme` source and points *into* a formal spectrum,
+`FormalSpectrum.locallyRingedSpaceMap` has a formal spectrum for its target, so nothing on this
+tree produces a morphism out of a formal spectrum into a general locally ringed space and it will
+have to be glued by hand.
 
 Nothing here says `tateInvNodeChartQuotientOpens` is an affine formal chart, and `ht`/`hreg` are
 still inherited from the principal-base results and still not shown necessary.
