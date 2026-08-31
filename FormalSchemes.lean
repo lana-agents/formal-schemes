@@ -85,6 +85,7 @@ import FormalSchemes.ChartSpfHomOverlap
 import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.ChartedDatumGlueOpenImmersion
 import FormalSchemes.ChartedDatumTopFiniteType
+import FormalSchemes.ChartedSchemeDatum
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
 import FormalSchemes.ClosedImmersionIso
