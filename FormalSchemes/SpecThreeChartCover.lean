@@ -113,21 +113,24 @@ theorem ringHom_ext_of_away {S T : Type u} [CommRing S] [CommRing T] [Algebra A 
   IsLocalization.ringHom_ext (Submonoid.powers x)
     (RingHom.ext fun a => (hφ a).trans (hψ a).symm)
 
-/-- The left further localization is a map under the base ring `A`, not merely under `S`. -/
-theorem awayFurtherLeftHom_algebraMap {S : Type u} [CommRing S] [Algebra A S] (u v : S) (a : A) :
-    awayFurtherLeftHom u v (algebraMap A (Localization.Away u) a) =
+/-- **The left further localization is a map under the base ring `A`**, not merely under `S`.
+Mathlib's `IsLocalization.Away.awayToAwayRight_eq` is the statement one level down, over `S`; this
+is the version two levels down, over the base ring, and it is what the laws below consume. -/
+theorem awayToAwayRight_algebraMap {S : Type u} [CommRing S] [Algebra A S] (u v : S) (a : A) :
+    IsLocalization.Away.awayToAwayRight u v (algebraMap A (Localization.Away u) a) =
       algebraMap A (Localization.Away (u * v)) a := by
   rw [IsScalarTower.algebraMap_apply A S (Localization.Away u),
     IsScalarTower.algebraMap_apply A S (Localization.Away (u * v))]
-  exact RingHom.congr_fun (awayFurtherLeftHom_comp_algebraMap u v) _
+  exact IsLocalization.Away.awayToAwayRight_eq u v _
 
-/-- The right further localization is a map under the base ring `A`. -/
-theorem awayFurtherRightHom_algebraMap {S : Type u} [CommRing S] [Algebra A S] (u v : S) (a : A) :
-    awayFurtherRightHom u v (algebraMap A (Localization.Away v) a) =
+/-- **The right further localization is a map under the base ring `A`.** The mirror of
+`awayToAwayRight_algebraMap`, over `IsLocalization.Away.awayToAwayLeft`. -/
+theorem awayToAwayLeft_algebraMap {S : Type u} [CommRing S] [Algebra A S] (u v : S) (a : A) :
+    IsLocalization.Away.awayToAwayLeft v u (algebraMap A (Localization.Away v) a) =
       algebraMap A (Localization.Away (u * v)) a := by
   rw [IsScalarTower.algebraMap_apply A S (Localization.Away v),
     IsScalarTower.algebraMap_apply A S (Localization.Away (u * v))]
-  exact RingHom.congr_fun (awayFurtherRightHom_comp_algebraMap u v) _
+  exact IsLocalization.Away.awayToAwayLeft_eq v u _
 
 end General
 
@@ -210,13 +213,13 @@ theorem tauAlg_map_ideal (i j : ULift.{u} (Fin 3)) :
 ring maps out of `(A_{f_j})_{g_ji}` — a localization of `A` — under `A`. -/
 theorem sigmaAlg_tauAlg (i j k : ULift.{u} (Fin 3)) :
     (sigmaAlg f i j k).toRingEquiv.symm.toRingHom.comp
-        (awayFurtherRightHom (overlapElt f j k) (overlapElt f j i)) =
-      (awayFurtherLeftHom (overlapElt f i j) (overlapElt f i k)).comp
+        (IsLocalization.Away.awayToAwayLeft (overlapElt f j i) (overlapElt f j k)) =
+      (IsLocalization.Away.awayToAwayRight (overlapElt f i j) (overlapElt f i k)).comp
         (tauAlg f i j).toRingEquiv.symm.toRingHom :=
   ringHom_ext_of_away (f j * f i)
     (fun a => by
       simp only [RingHom.coe_comp, Function.comp_apply]
-      rw [awayFurtherRightHom_algebraMap]
+      rw [awayToAwayLeft_algebraMap]
       exact (sigmaAlg f i j k).symm.commutes a)
     (fun a => by
       simp only [RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
@@ -224,7 +227,7 @@ theorem sigmaAlg_tauAlg (i j k : ULift.{u} (Fin 3)) :
       rw [show (tauAlg f i j).toRingEquiv.symm (algebraMap A _ a) =
           algebraMap A (Localization.Away (overlapElt f i j)) a from
         (tauAlg f i j).symm.commutes a]
-      exact awayFurtherLeftHom_algebraMap _ _ a)
+      exact awayToAwayRight_algebraMap _ _ a)
 
 /-- **The σ cocycle.** Three double-overlap transitions around a distinct triple compose to the
 identity, again by uniqueness of `A`-algebra maps out of a localization of `A`. -/

@@ -87,6 +87,7 @@ import FormalSchemes.ChartedDatumGlueOpenImmersion
 import FormalSchemes.ChartedDatumTopFiniteType
 import FormalSchemes.ChartedSchemeDatum
 import FormalSchemes.ChartedSchemeDatumAlgebraData
+import FormalSchemes.ChartedSchemeDatumDesc
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
 import FormalSchemes.ClosedImmersionIso
@@ -244,6 +245,7 @@ import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.LocalizationSplitOfNilpotentMul
 import FormalSchemes.LocallyFG
+import FormalSchemes.LocallyRingedSpaceGlueDesc
 import FormalSchemes.LocallyRingedSpaceHomExt
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
@@ -270,6 +272,7 @@ import FormalSchemes.Sections
 import FormalSchemes.SpecAwayOverlap
 import FormalSchemes.SpecAwayOverlapLegs
 import FormalSchemes.SpecThreeChartCover
+import FormalSchemes.SpecThreeChartCoverToSpec
 import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.Spf
