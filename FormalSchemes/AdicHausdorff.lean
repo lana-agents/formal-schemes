@@ -17,9 +17,11 @@ four rewrites (`Ideal.smul_top_eq_map`, `Submodule.restrictScalars_mem`, `Algebr
 
 `Ideal.smul_top_self` says it once, as an equality of submodules rather than an iff, and it is two
 rewrites rather than four: `I • ⊤ = I * ⊤ = I`. Note this is the *self* case only. The genuinely
-`R`-versus-`S` statement — `x ∈ (K ^ n • ⊤ : Submodule B A) ↔ x ∈ (K ^ n).map (algebraMap B A)` —
-is a different lemma and lives in `FormalSchemes/RestrictedPowerSeries.lean` as
-`Ideal.mem_map_pow_iff_mem_smul_top`.
+`R`-versus-`S` statements are two different lemmas, both in
+`FormalSchemes/RestrictedPowerSeries.lean`: `Ideal.mem_map_pow_iff_mem_pow_smul_top` says
+`x ∈ (K.map (algebraMap B A)) ^ n ↔ x ∈ (K ^ n • ⊤ : Submodule B A)`, and
+`Ideal.mem_map_pow_iff_mem_smul_top` says
+`x ∈ ((K.map (algebraMap B A)) ^ n • ⊤ : Submodule A A) ↔ x ∈ (K ^ n • ⊤ : Submodule B A)`.
 
 ## The Hausdorff comparison idiom
 

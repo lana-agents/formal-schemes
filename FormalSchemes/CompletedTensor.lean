@@ -167,13 +167,13 @@ theorem idealOfDefinition_eq_map :
   congr 1
 
 /-- Membership in the powers of the ideal of definition, expressed through the module filtration
-`(I·(A⊗B)) ^ m • ⊤` used by the completion API. -/
+`(I·(A⊗B)) ^ m • ⊤` used by the completion API. An instance of
+`Ideal.mem_map_pow_iff_mem_pow_smul_top` (`FormalSchemes.RestrictedPowerSeries`). -/
 theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : CompletedTensorProduct R I A B) :
     x ∈ (idealOfDefinition R I A B) ^ m ↔
       x ∈ ((I.map (algebraMap R (A ⊗[R] B))) ^ m • ⊤ :
-        Submodule (A ⊗[R] B) (CompletedTensorProduct R I A B)) := by
-  rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (A ⊗[R] B))) m x, idealOfDefinition,
-    Ideal.mem_smul_top_self_iff]
+        Submodule (A ⊗[R] B) (CompletedTensorProduct R I A B)) :=
+  Ideal.mem_map_pow_iff_mem_pow_smul_top _ _ _
 
 variable {S : Type u} [CommRing S] (L : Ideal S) [IsAdicComplete L S]
 

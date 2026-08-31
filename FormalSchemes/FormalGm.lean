@@ -68,13 +68,13 @@ theorem isAdicRing (hI : I.FG) : IsAdicRing (idealOfDefinition R I) :=
   AdicCompletion.isAdicRing_map _ (hI.map _)
 
 /-- Membership in the powers of the ideal of definition, expressed through the module filtration
-`(I·R[T,T⁻¹]) ^ m • ⊤` used by the completion API. -/
+`(I·R[T,T⁻¹]) ^ m • ⊤` used by the completion API. An instance of
+`Ideal.mem_map_pow_iff_mem_pow_smul_top` (`FormalSchemes.RestrictedPowerSeries`). -/
 theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : RestrictedLaurentSeries R I) :
     x ∈ (idealOfDefinition R I) ^ m ↔
       x ∈ ((I.map (algebraMap R (LaurentPolynomial R))) ^ m • ⊤ :
-        Submodule (LaurentPolynomial R) (RestrictedLaurentSeries R I)) := by
-  rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (LaurentPolynomial R))) m x,
-    idealOfDefinition, Ideal.mem_smul_top_self_iff]
+        Submodule (LaurentPolynomial R) (RestrictedLaurentSeries R I)) :=
+  Ideal.mem_map_pow_iff_mem_pow_smul_top _ _ _
 
 /-- The image of the Laurent variable `T ^ n` in the restricted Laurent series ring. -/
 def X (n : ℤ) : RestrictedLaurentSeries R I :=

@@ -100,30 +100,29 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `m`-th power of `awayCompletionIdeal` is the `m`-th localization-level filtration step.**
 `FormalSpectrum.awayCompletionIdeal I g` is the extension of `I·R_g` along
 `R_g → R{1/g}`, so its powers are the extensions of the powers, and
-`Ideal.mem_map_pow_iff_mem_smul_top` (`FormalSchemes.RestrictedPowerSeries`) identifies those with
-the `R_g`-module filtration Mathlib's adic API uses.
+`Ideal.mem_map_pow_iff_mem_pow_smul_top` (`FormalSchemes.RestrictedPowerSeries`) identifies those
+with the `R_g`-module filtration Mathlib's adic API uses.
 
 This is the bridge between the ideal-shaped consumers of continuity on this tree
 (`RingHom.mem_eqLocus_of_forall_sub_mem_pow`, `Subring.IsAdicallyClosed`) and the module-shaped
 producer `FormalSpectrum.arbSheafComponent_mem_pow`.
 
 **This is the seventh instance of one general fact on this tree**, not a new one: the same
-statement and the same two-rewrite proof already appear at six other rings, as
+statement appears at six other rings, as
 `AdicCompletion.mem_idealOfDefinition_pow_iff` (`FormalSchemes.Completion`),
 `RestrictedPowerSeries.mem_idealOfDefinition_pow_iff` (`FormalSchemes.BaseChange`),
 `RestrictedLaurentSeries.mem_idealOfDefinition_pow_iff` (`FormalSchemes.FormalGm`),
 `FormalGroupAlgebra.mem_idealOfDefinition_pow_iff` (`FormalSchemes.FormalTorus`),
 `CompletedTensorProduct.mem_idealOfDefinition_pow_iff` (`FormalSchemes.CompletedTensor`) and
-`mem_overlapIdeal_pow_iff` (`FormalSchemes.TateOverlap`, root namespace). The general form —
-`x ∈ (K.map (algebraMap B A)) ^ n ↔ x ∈ (K ^ n • ⊤ : Submodule B A)` for any `B`-algebra `A` —
-subsumes all seven and belongs beside `Ideal.mem_map_pow_iff_mem_smul_top` in
-`FormalSchemes.RestrictedPowerSeries`; it is left to a follow-up because stating it there rebuilds
-most of the tree. -/
+`mem_overlapIdeal_pow_iff` (`FormalSchemes.TateOverlap`, root namespace). **The general form is
+now on the tree** as `Ideal.mem_map_pow_iff_mem_pow_smul_top`
+(`FormalSchemes.RestrictedPowerSeries`), beside `Ideal.mem_map_pow_iff_mem_smul_top`, and all
+seven — this one included — are one application of it. -/
 theorem mem_awayCompletionIdeal_pow_iff (g : R) (m : ℕ) (x : awayCompletion I g) :
     x ∈ (awayCompletionIdeal I g) ^ m ↔
       x ∈ ((I.map (algebraMap R (Localization.Away g))) ^ m • ⊤ :
-        Submodule (Localization.Away g) (awayCompletion I g)) := by
-  rw [← Ideal.mem_map_pow_iff_mem_smul_top, Ideal.mem_smul_top_self_iff]
+        Submodule (Localization.Away g) (awayCompletion I g)) :=
+  Ideal.mem_map_pow_iff_mem_pow_smul_top _ _ _
 
 /-!
 ### Adicity on a basic open, in the ideal-power spelling

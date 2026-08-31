@@ -47,13 +47,13 @@ namespace RestrictedPowerSeries
 variable (R : Type u) [CommRing R] (I : Ideal R) (n : ℕ)
 
 /-- Membership in the powers of the ideal of definition of `R{X₁, …, Xₙ}`, expressed through
-the module filtration `(I·R[X]) ^ m • ⊤` used by the completion API. -/
+the module filtration `(I·R[X]) ^ m • ⊤` used by the completion API. An instance of
+`Ideal.mem_map_pow_iff_mem_pow_smul_top` (`FormalSchemes.RestrictedPowerSeries`). -/
 theorem mem_idealOfDefinition_pow_iff (m : ℕ) (x : RestrictedPowerSeries R I n) :
     x ∈ (idealOfDefinition R I n) ^ m ↔
       x ∈ ((I.map (algebraMap R (MvPolynomial (Fin n) R))) ^ m • ⊤ :
-        Submodule (MvPolynomial (Fin n) R) (RestrictedPowerSeries R I n)) := by
-  rw [← Ideal.mem_map_pow_iff_mem_smul_top (I.map (algebraMap R (MvPolynomial (Fin n) R))) m x,
-    idealOfDefinition, Ideal.mem_smul_top_self_iff]
+        Submodule (MvPolynomial (Fin n) R) (RestrictedPowerSeries R I n)) :=
+  Ideal.mem_map_pow_iff_mem_pow_smul_top _ _ _
 
 /-- The completion map `R[X] → R{X₁, …, Xₙ}` on a polynomial is the algebra structure map. -/
 theorem algebraMap_MvPolynomial_apply (p : MvPolynomial (Fin n) R) :
