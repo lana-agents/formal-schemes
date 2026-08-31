@@ -59,12 +59,23 @@ what is missing, not whether it is missing.
   **target** is a formal spectrum, so it points the wrong way and its source hypothesis is what is
   being sought; and `FormalSpectrum.locallyRingedSpaceMap` (`FormalSchemes.SpfMap`) has a formal
   spectrum for its target too.
-* **Nothing here says the chart ring is nonzero.** `IsAdicComplete K S` and `IsAdicRing K` both
-  hold for the zero ring, so every result above is as strong as
-  `Nontrivial (tateInvNodeChartAwaySubring R I q hq hI)` and no stronger, and that is not proved on
-  this tree at any base — it is issue 1223's goal 3. The same caveat applies to
-  `exists_isAdicComplete_sections_tateInvNodeChart_of_isLeftRegular_base`, whose `K` lives in a
-  section ring that is likewise not shown nontrivial.
+* **Nothing *here* says the chart ring is nonzero**, and it matters: `IsAdicComplete K S` and
+  `IsAdicRing K` both hold for the zero ring, so every result above is exactly as strong as
+  `Nontrivial (tateInvNodeChartAwaySubring R I q hq hI)` and no stronger. That statement is
+  **`AlgebraicGeometry.nontrivial_tateInvNodeChartAwaySubring`**
+  (`FormalSchemes.TateInvNodeChartNontrivial`), which needs only `I ≠ ⊤`, with
+  `AlgebraicGeometry.nontrivial_tateInvNodeChartAwaySubring_powerSeriesInt` at `R = ℤ⟦X⟧`,
+  `I = (X)`, `q = X` — the base of
+  `AlgebraicGeometry.isAdicRing_tateInvNodeChartAwayIdeal_powerSeriesInt` below. So the results
+  above are not vacuous, at that base or at any base with `I ≠ ⊤`. This file does not import that
+  module and does not need to; the point is that the caveat is discharged elsewhere rather than
+  outstanding.
+  `AlgebraicGeometry.exists_isAdicComplete_sections_tateInvNodeChart_of_isLeftRegular_base`'s `K`
+  lives in `Γ (T_inv/⟨σ⟩, V)` instead, and the companion there is
+  `AlgebraicGeometry.exists_nontrivial_actionQuotient_sections_tateInvNodeChartLocus` — an open
+  with the *same* characterising property, `π⁻¹ V = tateInvSaturateOpens hq hI …`, whose section
+  ring is nonzero. Identifying the two `V`s needs surjectivity of `π.base` and nobody has written
+  that line, so the two are stated of separate existentials.
 * **`AlgebraicGeometry.tateInvNodeChartAmbientHom` is still not shown to be an open immersion**,
   and this file does not use it as one: it appears only inside `Set.range … ⊆ Set.range f.base`,
   as a way of naming the set a chart must cover, which is
