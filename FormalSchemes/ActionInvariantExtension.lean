@@ -253,24 +253,37 @@ theorem restrict_translate_of_isInvariantSection {V W : Opens X.toTopCat} (hVW :
     presheaf_map_comp_apply]
   exact ConcreteCategory.congr_hom (presheaf_map_congr X.presheaf _ _) r
 
-/-- **An invariant section on the saturation is determined by its restriction to `V`.** Both
-sections are gluings of the same family of prescribed sections, and the gluing is unique. This is
-the injectivity half of "the sections of the quotient over `π '' V` are the sections of `X` over
-`V`". -/
-theorem eq_of_isInvariantSection_of_restrict_eq {U : Set X}
-    (hU : IsProperlyDiscontinuousOn a U) {V : Opens X.toTopCat} (hVU : (V : Set X) ⊆ U)
-    {W : Opens X.toTopCat} (hW : W = ⨆ g : G, translate a V g) (hVW : V ≤ W)
+/-- **An invariant section on the saturation is determined by its restriction to `V`** — with **no
+hypothesis on the action**. On each translate the section is the pullback of its restriction to `V`
+(`restrict_translate_of_isInvariantSection`, which needs nothing either), so two invariant sections
+agreeing on `V` agree on every member of a cover of `W`, and the sheaf separation axiom finishes.
+This is the injectivity half of "the sections of the quotient over `π '' V` are the sections of `X`
+over `V`".
+
+**Proper discontinuity was a hypothesis here until 2026-08-31 and it was never used.** The earlier
+proof obtained the two equalities from the *uniqueness* clause of
+`existsUnique_invariantExtension`, which does consume disjointness of the translates — but only its
+*existence* clause needs disjointness, and uniqueness of a gluing is the separation axiom, which
+every sheaf satisfies. Replacing that appeal by `TopCat.Sheaf.eq_of_locally_eq'` removes `hU` and
+`hVU` outright.
+
+The distinction is not cosmetic: it is what makes this lemma usable at a **node** of the Tate
+chain, where `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction` says no
+separating open exists, so `IsProperlyDiscontinuousOn` is not merely unproved but false. The
+existence half (`exists_invariant_extension`) genuinely is unavailable there; this half is not. -/
+theorem eq_of_isInvariantSection_of_restrict_eq {V W : Opens X.toTopCat}
+    (hW : W = ⨆ g : G, translate a V g) (hVW : V ≤ W)
     (hinvOpen : ∀ k : G, W = (Opens.map (a k).hom.toShHom.hom.base).obj W)
     {r₁ r₂ : ToType (X.presheaf.obj (op W))} (hr₁ : IsInvariantSection a r₁)
     (hr₂ : IsInvariantSection a r₂)
     (hres : X.presheaf.map (homOfLE hVW).op r₁ = X.presheaf.map (homOfLE hVW).op r₂) :
     r₁ = r₂ := by
-  obtain ⟨t₀, -, huniq⟩ :=
-    existsUnique_invariantExtension hU hVU hW (X.presheaf.map (homOfLE hVW).op r₁)
-  refine (huniq r₁ fun g hg =>
-      restrict_translate_of_isInvariantSection hVW hr₁ g hg (hinvOpen g)).trans
-    (huniq r₂ fun g hg => ?_).symm
-  rw [restrict_translate_of_isInvariantSection hVW hr₂ g hg (hinvOpen g), hres]
+  have hle : ∀ g : G, translate a V g ≤ W := fun g => (le_iSup (translate a V) g).trans hW.ge
+  refine TopCat.Sheaf.eq_of_locally_eq' X.𝒪 (translate a V) W (fun g => homOfLE (hle g))
+    hW.le r₁ r₂ fun g => ?_
+  exact (restrict_translate_of_isInvariantSection hVW hr₁ g (hle g) (hinvOpen g)).trans
+    ((congrArg (fun z => translateSection a z g) hres).trans
+      (restrict_translate_of_isInvariantSection hVW hr₂ g (hle g) (hinvOpen g)).symm)
 
 
 end LocallyRingedSpace

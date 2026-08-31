@@ -76,20 +76,37 @@ def restrictPullback (V : Opens X.toTopCat)
   X.presheaf.map (homOfLE (self_le_preimage_quotientImage a V)).op
     ((actionQuotientπ a).toShHom.hom.c.app (op (quotientImage a V)) u)
 
-/-- **Over a separating open the quotient has exactly the sections of `X`.** Injectivity is the
-uniqueness of the invariant extension composed with the injectivity of `π^*`; surjectivity is the
-existence of the invariant extension composed with the descent criterion. Proper discontinuity
-enters only through `AlgebraicGeometry.LocallyRingedSpace.exists_invariant_extension`. -/
+/-- **`restrictPullback` is injective for an arbitrary action** — no proper discontinuity, no
+freeness, no hypothesis on `V` at all.
+
+Both ingredients are unconditional. `injective_coequalizer_π_c_app` says a section of the quotient
+is determined by its pullback; `eq_of_isInvariantSection_of_restrict_eq` says an invariant section
+on the saturation is determined by its restriction to `V`, which is the sheaf separation axiom
+applied to the cover of the saturation by the translates.
+
+**This is the half of `bijective_restrictPullback` that survives at a point where the action has no
+separating neighbourhood.** Surjectivity does not: it needs `exists_invariant_extension`, whose
+input is the *disjointness* of the translates. Splitting the two is what lets the node locus of the
+Tate chain use this direction — see `FormalSchemes.TateInvInvariantSectionCollapse`, where
+`AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction` rules the other one out. -/
+theorem injective_restrictPullback (V : Opens X.toTopCat) :
+    Function.Injective (restrictPullback a V) := by
+  intro u₁ u₂ hu
+  refine LocallyRingedSpace.injective_coequalizer_π_c_app _ _ _ ?_
+  exact eq_of_isInvariantSection_of_restrict_eq (preimage_quotientImage a V)
+    (self_le_preimage_quotientImage a V) (preimage_actionQuotientπ_eq a (quotientImage a V))
+    (isInvariantSection_actionQuotientπ_c_app a _ u₁)
+    (isInvariantSection_actionQuotientπ_c_app a _ u₂) hu
+
+/-- **Over a separating open the quotient has exactly the sections of `X`.** Injectivity is
+`injective_restrictPullback` and needs nothing; surjectivity is the existence of the invariant
+extension composed with the descent criterion. Proper discontinuity enters only through
+`AlgebraicGeometry.LocallyRingedSpace.exists_invariant_extension`, i.e. only through
+surjectivity. -/
 theorem bijective_restrictPullback {U : Set X} (hU : IsProperlyDiscontinuousOn a U)
     {V : Opens X.toTopCat} (hVU : (V : Set X) ⊆ U) :
     Function.Bijective (restrictPullback a V) := by
-  constructor
-  · intro u₁ u₂ hu
-    refine LocallyRingedSpace.injective_coequalizer_π_c_app _ _ _ ?_
-    exact eq_of_isInvariantSection_of_restrict_eq hU hVU (preimage_quotientImage a V)
-      (self_le_preimage_quotientImage a V) (preimage_actionQuotientπ_eq a (quotientImage a V))
-      (isInvariantSection_actionQuotientπ_c_app a _ u₁)
-      (isInvariantSection_actionQuotientπ_c_app a _ u₂) hu
+  refine ⟨injective_restrictPullback a V, ?_⟩
   · intro s
     obtain ⟨t, hres, hinv⟩ :=
       exists_invariant_extension hU hVU (preimage_quotientImage a V) s
