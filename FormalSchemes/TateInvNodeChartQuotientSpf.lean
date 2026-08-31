@@ -45,12 +45,26 @@ restates the reduction on the other side of it.
 ## What is *not* proved
 
 **`hnode` is still undecided, and this file does not attempt it.** The residue is unchanged in
-substance — one morphism — and only its spelling has moved. #452's survey stands and was not
-re-walked: `AlgebraicGeometry.FormalScheme.OpenCover.glueHomOfGlobalSectionsHom` needs a
-`FormalScheme` source and points *into* a formal spectrum,
-`FormalSpectrum.locallyRingedSpaceMap` has a formal spectrum for its target, so nothing on this
-tree produces a morphism out of a formal spectrum into a general locally ringed space and it will
-have to be glued by hand.
+substance — one morphism — and only its spelling has moved.
+
+**The reason it is still open is not the one #452's survey gave.** That survey concluded that
+nothing on this tree produces a morphism *out of* a formal spectrum into a general locally ringed
+space, from the two candidates `AlgebraicGeometry.FormalScheme.OpenCover.glueHomOfGlobalSectionsHom`
+(which needs a `FormalScheme` source and points *into* a formal spectrum) and
+`FormalSpectrum.locallyRingedSpaceMap` (which has a formal spectrum for its target). Both
+rejections are correct and the conclusion drawn from them is **false**:
+`FormalSpectrum.spfHomOfFamily` (`FormalSchemes.SpfHomOfFamily`) is a morphism `Spf R ⟶ X` for `X`
+a bare locally ringed space,
+`FormalSpectrum.existsUnique_hom_thickeningMap` is EGA I 10.6.10 in that generality, and the
+uniqueness half `FormalSpectrum.hom_ext_thickeningMap_lrs` (`FormalSchemes.ThickeningHomExt`) needs
+no hypothesis on `X` at all.
+
+What blocks *this* row is a different and weaker obstruction:
+`FormalSpectrum.existsUnique_hom_thickeningMap` requires `X` to be covered by opens carrying
+isomorphisms to `Spec (B i)`, and `T_inv/⟨σ⟩`'s charts are formal-affine — the only one missing
+being the one this file is trying to produce. **Applying it here is circular, not impossible.** The
+`Spf`-target analogue (issue 62) is the named candidate for a way out and has not been checked for
+circularity either.
 
 Nothing here says `tateInvNodeChartQuotientOpens` is an affine formal chart, and `ht`/`hreg` are
 still inherited from the principal-base results and still not shown necessary.
@@ -203,9 +217,10 @@ hypothesis is no longer about a subring of `A{1/(x + y − 1)}` but about the se
 quotient itself, over a named open of the quotient — which is where the source of a chart has to
 live, and is the spelling in which the morphism will have to be built.
 
-**It does not decide `hnode`.** Nothing here constructs the morphism, and
-#452's survey stands: no construction on this tree produces a morphism *out of* a formal spectrum
-into a general locally ringed space, so it will have to be glued by hand. -/
+**It does not decide `hnode`.** Nothing here constructs the morphism. The mapping-out machinery
+that does exist — `FormalSpectrum.existsUnique_hom_thickeningMap` — needs the target covered by
+opens isomorphic to `Spec` of a ring, which for `T_inv/⟨σ⟩` is what this row is trying to
+establish, so it is circular here rather than absent. See this file's module docstring. -/
 theorem exists_formalScheme_of_openImmersion_spf_quotientIdeal_of_isLeftRegular_base (t : R)
     (ht : I = Ideal.span {t}) (hreg : IsLeftRegular t)
     (hex :
