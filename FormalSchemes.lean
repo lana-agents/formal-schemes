@@ -299,6 +299,7 @@ import FormalSchemes.TateActionQuotientFormalScheme
 import FormalSchemes.TateActionQuotientStalk
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateAnnulusCoeff
+import FormalSchemes.TateAnnulusRegular
 import FormalSchemes.TateAwaySplit
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainInvGlue
