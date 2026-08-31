@@ -363,7 +363,7 @@ theorem fg_tateInvNodeChartAwayIdeal_of_principal'' (t : R) (ht : I = Ideal.span
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Left-regularity in `A` rises to `A{1/x}{1/(x + y − 1)}`.**
 `FormalSpectrum.isLeftRegular_algebraMap_awayCompletion` applied twice — once at
-`AlgebraicGeometry.overlapX` and once at `AlgebraicGeometry.annulusNodeChartCoord` — with
+`overlapX` (root namespace) and once at `AlgebraicGeometry.annulusNodeChartCoord` — with
 `FormalSpectrum.isNoetherianRing_awayCompletion` supplying the Noetherianity the second application
 needs, and `IsScalarTower.algebraMap_apply` composing the three structural maps.
 
@@ -391,7 +391,7 @@ theorem isLeftRegular_algebraMap_awayCompletion_overlapX (t : R)
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Left-regularity in `A` rises to `A{1/y}{1/(x + y − 1)}`**, the mirror of
-`isLeftRegular_algebraMap_awayCompletion_overlapX` at `AlgebraicGeometry.overlapY`. -/
+`isLeftRegular_algebraMap_awayCompletion_overlapX` at `overlapY` (root namespace). -/
 theorem isLeftRegular_algebraMap_awayCompletion_overlapY (t : R)
     (ht : IsLeftRegular (algebraMap R (annulusAlgebra R I q) t)) :
     IsLeftRegular (algebraMap R (awayCompletion
