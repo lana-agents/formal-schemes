@@ -330,6 +330,7 @@ import FormalSchemes.TateInvGlobalNormalForm
 import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvGlobalSections
 import FormalSchemes.TateInvNodeChartAmbient
+import FormalSchemes.TateInvNodeChartBaseGenerator
 import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
