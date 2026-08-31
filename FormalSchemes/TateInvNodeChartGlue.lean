@@ -27,10 +27,12 @@ see it. Concretely: if a section `g` of the chain over `tateInvSaturate S` pulls
 
 ## What is here
 
-* `AlgebraicGeometry.tateInvSaturateOpens`, `AlgebraicGeometry.tateInvPatchSaturateOpens`: the two
-  sets of `FormalSchemes.TateInvSaturation` and `FormalSchemes.TateInvNodeChartRing`, bundled as
-  opens, and `AlgebraicGeometry.map_ι_tateInvSaturateOpens` — the first is pulled back to the
-  second by every patch inclusion. The statements below are all phrased at an open `W` **equal to**
+* `AlgebraicGeometry.tateInvPatchSaturateOpens`: the set of
+  `FormalSchemes.TateInvNodeChartRing`, bundled as an open. Its companion
+  `AlgebraicGeometry.tateInvSaturateOpens` is declared beside its own two ingredients in
+  `FormalSchemes.TateInvSaturation`; `AlgebraicGeometry.map_ι_tateInvSaturateOpens` relates the
+  two, every patch inclusion pulling the saturation back to the patch open.
+  The statements below are all phrased at an open `W` **equal to**
   the saturation rather than at the saturation itself, so that a `subst` is available at the one
   place where the two sides of an `eqToHom` have to meet; that generality is also what a consumer
   needs, since the open it will want is `π⁻¹` of an open of the quotient.
@@ -90,14 +92,7 @@ variable {R : Type u} [CommRing R] {I : Ideal R} {q : R}
 variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] {hq : q ∈ I} {hI : I.FG}
 variable {S : Set (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q))}
 
-/-! ### The two opens -/
-
-/-- **The saturation of an open of the model patch, as an open of the chain.**
-`AlgebraicGeometry.tateInvSaturate` with `AlgebraicGeometry.isOpen_tateInvSaturate`
-(`FormalSchemes.TateInvSaturation`). -/
-def tateInvSaturateOpens (hq : q ∈ I) (hI : I.FG) (hS : IsOpen S) :
-    Opens (tateChainInv R I q hq hI).toLocallyRingedSpace :=
-  ⟨tateInvSaturate R I q hq hI S, isOpen_tateInvSaturate hq hI hS⟩
+/-! ### The patch open -/
 
 /-- **The open of the model patch that a saturation sees, as an open.**
 `AlgebraicGeometry.tateInvPatchSaturate` with `AlgebraicGeometry.isOpen_tateInvPatchSaturate`
