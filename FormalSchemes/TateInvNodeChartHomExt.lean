@@ -31,7 +31,7 @@ infinitesimal thickening of the source are equal.
 
 ## Why this is worth a name
 
-Both are one-line instantiations of `FormalSpectrum.hom_ext_thickeningMap_lrs`
+They are one-line instantiations of `FormalSpectrum.hom_ext_thickeningMap_lrs`
 (`FormalSchemes.ThickeningHomExt`), which is the uniqueness half of EGA I 10.6.3 and whose binders
 are `{R} [CommRing R] {I : Ideal R} {X : LocallyRingedSpace}` — **no `IsAdicRing`, no `Ideal.FG`,
 no cover, and no hypothesis on the target**. What the instantiation buys is a change in what issue
@@ -45,9 +45,10 @@ morphism it determines.
 
 ## A correction: the tree's mapping-out machinery, surveyed
 
-`FormalSchemes.TateInvNodeChartSpf` and `FormalSchemes.TateInvNodeChartSpfNonempty` record that
-*no construction on this tree produces a morphism out of a formal spectrum into a general locally
-ringed space*. **That is false**, and the following are all on the tree:
+`FormalSchemes.TateInvNodeChartSpf` records that *no construction on this tree produces a morphism
+out of a formal spectrum into a general locally ringed space*, and
+`FormalSchemes.TateInvNodeChartSpfNonempty` cited that forward until this file's commit corrected
+it. **The claim is false**, and the following are all on the tree:
 
 * `FormalSpectrum.hom_ext_thickeningMap_lrs` — the uniqueness half, arbitrary target, no
   hypotheses. This file's input.
