@@ -45,10 +45,12 @@ morphism it determines.
 
 ## A correction: the tree's mapping-out machinery, surveyed
 
-`FormalSchemes.TateInvNodeChartSpf` records that *no construction on this tree produces a morphism
-out of a formal spectrum into a general locally ringed space*, and
-`FormalSchemes.TateInvNodeChartSpfNonempty` cited that forward until this file's commit corrected
-it. **The claim is false**, and the following are all on the tree:
+`FormalSchemes.TateInvNodeChartSpfNonempty` reported, until this file's commit corrected it, that
+*no construction on this tree produces a morphism out of a formal spectrum into a general locally
+ringed space*, and attributed that to `FormalSchemes.TateInvNodeChartSpf`. **Both the claim and
+the attribution are wrong.** `FormalSchemes.TateInvNodeChartSpf` says only that two *named* routes
+are unavailable — which is correct, and is repeated below; the sweep from those two candidates to
+"nothing on the tree" was added downstream of it. The following are all on the tree:
 
 * `FormalSpectrum.hom_ext_thickeningMap_lrs` — the uniqueness half, arbitrary target, no
   hypotheses. This file's input.
@@ -78,9 +80,17 @@ statement of the obstruction is not that the construction is missing but that
 > **circular, not impossible**.
 
 The `Spf`-target analogue of `existsUnique_hom_thickeningMap` (the same theorem with
-`X.restrict _ ≅ Spf (B i)`) is not on the tree and is not attempted here. Only step three of
-`FormalSchemes.SpfHomOfFamily`'s five-step construction is `Spec`-specific, so it has a model to
-imitate; whether it would break the circularity for `T_inv/⟨σ⟩` is unexamined.
+`X.restrict _ ≅ Spf (B i)`) is not on the tree and is not attempted here — checked by listing
+every `∃!` over a morphism out of a formal spectrum, of which there are eight and none has a
+formal-affine cover on the target. Step three of `FormalSchemes.SpfHomOfFamily`'s five-step
+construction is the only one carrying `Spec`-specific *mathematics*
+(`FormalSpectrum.chartSpfHomAmbient`, built on `FormalSpectrum.specHomEquiv`; the formal
+replacement would sit on `AdicRingCat.spfHomEquiv`), so it has a model to imitate — but steps four
+and five (`FormalSchemes.ChartSpfHomIndep`, `FormalSchemes.ChartSpfHomOverlap`) take the chart
+datum `X.restrict _ ≅ Spec (B)` in their *statements* as well, so they need restating even though
+their proofs already run through the target-agnostic
+`FormalSpectrum.hom_ext_thickeningMap_lrs`. Whether any of this would break the circularity for
+`T_inv/⟨σ⟩` is unexamined.
 
 **Nothing here says a compatible family exists.** The uniqueness is unconditional precisely
 because it says nothing about existence.

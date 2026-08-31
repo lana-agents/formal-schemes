@@ -67,9 +67,10 @@ the kind 1223's fallback branch authorises, and nothing more.
 
 **Nothing here builds the morphism `f`.** Issue 1197's residue is untouched: this says only that
 the source of the sought open immersion is nonempty, not that the immersion exists. This file
-previously reported, from `FormalSchemes.TateInvNodeChartSpf`, that no construction on this tree
-produces a morphism out of a formal spectrum into a general locally ringed space; **that is
-false** and `FormalSchemes.TateInvNodeChartHomExt` surveys what is actually there —
+previously reported that no construction on this tree produces a morphism out of a formal spectrum
+into a general locally ringed space, and credited that to `FormalSchemes.TateInvNodeChartSpf`.
+**Both were wrong**: that module rejects two *named* routes and claims nothing more, and the
+sweeping version is false. `FormalSchemes.TateInvNodeChartHomExt` surveys what is actually there —
 `FormalSpectrum.existsUnique_hom_thickeningMap` (EGA I 10.6.10) builds exactly such a morphism
 from a compatible family of morphisms out of the thickenings. It does not apply at
 `T_inv/⟨σ⟩` because it needs the target covered by opens isomorphic to `Spec` of a ring, so the
