@@ -68,14 +68,21 @@ than the `AlgHom` statement — enters one file back, in
 
 ## What is *not* proved
 
-* **`Subring.HasCofinalInducedFiltration` is not proved for the node chart ring**, and no
+* **`Subring.HasCofinalInducedFiltration` is not proved for the node chart ring here**, and no
   `(A, K, S)` at which it fails is exhibited. It is the *other* hypothesis of
   `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_legContinuous`, it is untouched
   here, and `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal'` still carries it. So
-  **nothing here makes the node chart ring complete**.
-* **`AlgebraicGeometry.tateInvNodeChartAwayIdeal` is not shown to be finitely generated.** That is
-  a separate obligation from completeness and is not implied by it, so nothing here says the chart
-  ring is an adic ring in this tree's sense.
+  **nothing here makes the node chart ring complete**;
+  `FormalSchemes.TateInvNodeChartPrincipal` does, unconditionally at `I = ⊥`, `q = 0`
+  (`AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_bot`) and over a principal
+  `I = (t)` under three hypotheses
+  (`AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_principal`). A general base is
+  still open.
+* **`AlgebraicGeometry.tateInvNodeChartAwayIdeal` is not shown to be finitely generated here.**
+  That is a separate obligation from completeness and is not implied by it, so nothing here says
+  the chart ring is an adic ring in this tree's sense.
+  `AlgebraicGeometry.fg_tateInvNodeChartAwayIdeal_bot`
+  (`FormalSchemes.TateInvNodeChartPrincipal`) settles it at `I = ⊥`.
 * **`FormalSpectrum.sectionsBasicOpenEquiv` is still not shown to be a map of `R`-algebras**, and
   nothing here claims it is; the route above avoids the question rather than settling it.
 * **Nothing here is a chart.** No open immersion `Spf J ⟶ Q` is constructed, `hnode` is untouched,
@@ -441,8 +448,11 @@ theorem isInducedPrecomplete_tateInvNodeChartAwaySubring' :
 
 /-- **Adic completeness of the node chart ring, now conditional on the filtration bridge alone.**
 `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_legContinuous` had two hypotheses;
-this has one. `Subring.HasCofinalInducedFiltration` is **not** proved for this subring — see this
-file's module docstring — so this is not an unconditional completeness statement. -/
+this has one, so this is not an unconditional completeness statement.
+`Subring.HasCofinalInducedFiltration` is **not** proved for this subring *in this file* — see this
+file's module docstring. `FormalSchemes.TateInvNodeChartPrincipal` discharges it unconditionally
+at `I = ⊥`, `q = 0` and over a principal `I = (t)` under three hypotheses, and it is still open at
+a general base. -/
 theorem isAdicComplete_tateInvNodeChartAwayIdeal'
     (hcof : (tateInvNodeChartAwaySubring R I q hq hI).HasCofinalInducedFiltration
       (awayCompletionIdeal (annulusIdealOfDefinition R I q)

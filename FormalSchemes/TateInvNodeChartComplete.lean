@@ -69,12 +69,21 @@ much of the closedness half as the tree currently supports.
   question should start from `FormalSpectrum.eval_sectionsBasicOpenEquiv`
   (`FormalSchemes.BasicOpenChartComponent`), the level-`n` computation rule for this very
   equivalence, stated with `AdicCompletion.evalₐ`, rather than from `FormalSchemes.Sections`.
-* **`Subring.HasCofinalInducedFiltration` is not proved for this subring**, and no `(A, K, S)` at
-  which it fails is exhibited. `FormalSchemes.AdicSubringComplete` proves two sufficient
-  conditions for it; neither is checked here.
-* **`AlgebraicGeometry.tateInvNodeChartAwayIdeal` is not shown to be finitely generated**, which
-  is a separate obligation from completeness and is not implied by it. So nothing here says the
-  chart ring is an adic ring in this tree's sense.
+* **`Subring.HasCofinalInducedFiltration` is not proved for this subring here**, and no
+  `(A, K, S)` at which it fails is exhibited. `FormalSchemes.AdicSubringComplete` proves two
+  sufficient conditions for it; neither is checked here. It is discharged for this subring in
+  `FormalSchemes.TateInvNodeChartPrincipal`: unconditionally at `I = ⊥`, `q = 0`
+  (`AlgebraicGeometry.hasCofinalInducedFiltration_tateInvNodeChartAwaySubring_bot`), and over a
+  principal `I = (t)` under three hypotheses
+  (`AlgebraicGeometry.hasCofinalInducedFiltration_tateInvNodeChartAwaySubring`). A general base is
+  still open.
+* **`AlgebraicGeometry.tateInvNodeChartAwayIdeal` is not shown to be finitely generated here**,
+  which is a separate obligation from completeness and is not implied by it. So nothing here says
+  the chart ring is an adic ring in this tree's sense.
+  `AlgebraicGeometry.fg_tateInvNodeChartAwayIdeal_bot`
+  (`FormalSchemes.TateInvNodeChartPrincipal`) settles it at `I = ⊥`, and
+  `AlgebraicGeometry.fg_tateInvNodeChartAwayIdeal_of_principal` at a principal `I` under the same
+  three hypotheses.
 * **Nothing here is a chart.** No open immersion `Spf J ⟶ Q` is constructed, `hnode` is untouched,
   and no claim is made about `AlgebraicGeometry.tateInvNodeChartAmbientHom` being an open
   immersion. Nothing here says the chart ring is nonzero, proper, or larger than the base.
