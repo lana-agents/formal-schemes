@@ -12,8 +12,10 @@ set_option linter.style.header false
 `ULift Bool`. This file is the arbitrary-index version of that construction: a datum of affine
 charts glued along basic opens, and the locally ringed space it glues to.
 
-It is the **target** half of `X_{/Y} ⟶ X` at an arbitrary index; the completion half and the
-morphism are issue 60q.
+It is the **target** half of `X_{/Y} ⟶ X` at an arbitrary index. The completion half is
+`AlgebraicGeometry.ChartedCompletionDatum.completionGlued`
+(`FormalSchemes.ChartedCompletionDatum`), and the morphism between them is
+`AlgebraicGeometry.ChartedCompletionDatum.toScheme` (`FormalSchemes.ChartedCompletionToScheme`).
 
 ## Why this needs a new datum, and not `AffineChartedFibreDatumX`
 
@@ -92,14 +94,16 @@ and the three-chart datum it unlocks, are deliberately not in this file — they
   `Spec (cond i.down B A)` here and `cond i.down (Spec B) (Spec A)` there, which are not
   definitionally equal at a variable index; joining them is an isomorphism of glue data and is not
   needed by anything.
-* **The datum carries `K i` but not `(K i).FG`, and the completion side will need the latter.**
+* **The datum carries `K i` but not `(K i).FG`, and the completion side needs the latter.**
   `formalCompletion` (root-namespace) takes finite generation as an explicit argument to the
   *object* — its signature is `(R) → [CommRing R] → (I : Ideal R) → I.FG → FormalScheme` — so a
-  `ChartedSchemeDatum` does not by itself name the formal charts `Spf (C i)^` that 60q glues. The
-  two-patch line this datum mirrors carries `hI : I.FG` and `hJ : J.FG` alongside its ideals
-  (`FormalSchemes.CompletionGlueTwoPatch`). 60q must therefore either take `∀ i, (D.K i).FG` as a
-  side hypothesis or add it as a field here; adding it is cheapest now, while `ofTwoPatch` is the
-  only construction.
+  `ChartedSchemeDatum` does not by itself name the formal charts `Spf (C i)^` the completion side
+  glues. The two-patch line this datum mirrors carries `hI : I.FG` and `hJ : J.FG` alongside its
+  ideals (`FormalSchemes.CompletionGlueTwoPatch`). This was settled by neither of the two options
+  once weighed here: rather than add the hypothesis to this structure or take it as a side
+  hypothesis, `AlgebraicGeometry.ChartedCompletionDatum` (`FormalSchemes.ChartedCompletionDatum`)
+  is a separate datum carrying `hK : ∀ i, (K i).FG` as a field, whose
+  `AlgebraicGeometry.ChartedCompletionDatum.toChartedSchemeDatum` forgets it to land back here.
 * Nothing here relates `specGlued` to a completion or promotes it to `AlgebraicGeometry.Scheme`.
   Its **universal property is proved**, in `FormalSchemes.ChartedSchemeDatumDesc`:
   `AlgebraicGeometry.ChartedSchemeDatum.desc` glues a family of morphisms out of the charts that

@@ -10,9 +10,9 @@ set_option linter.style.header false
 `FormalSchemes.ChartedSchemeDatum` builds `ChartedSchemeDatum.specGlued`, the affine charts
 `Spec (C i)` glued along the localization transitions `θ i j`, together with the chart inclusions
 `specι i` and their joint surjectivity. Every statement there is about a morphism *into* the glued
-scheme; that file's own "What is *not* proved" section records the absence of the universal
-property, and `FormalSchemes.SpecThreeChartCover` records it again as the reason its `glued` cannot
-be compared with `Spec A`.
+scheme, and the missing universal property was what stopped `FormalSchemes.SpecThreeChartCover`'s
+`glued` from being compared with `Spec A`. Both files now point here instead of recording the
+absence.
 
 This file supplies it. The content is `FormalSchemes.LocallyRingedSpaceGlueDesc` at
 `specLRSGlueData`; what is done here is the translation of the compatibility hypothesis from the

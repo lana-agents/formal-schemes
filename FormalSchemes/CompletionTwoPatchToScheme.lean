@@ -75,12 +75,24 @@ The glued object is a `LocallyRingedSpace`, not an `AlgebraicGeometry.Scheme`: t
 `formalCompletion.toSpec` lives in, and promoting it is a separate question needing a different
 Mathlib API. Nothing here claims that `completionTwoPatchToScheme` is universal, or identifies
 `completionTwoPatch` with a completion of `specTwoPatch` in any sense stronger than the morphism
-below — the affine case of that (the universal property of `toSpec`) is not on master either. The
-arbitrary-index version of all of this needs a triple-overlap `t'`, which the two-patch slice
-sidesteps; that `t'` is built, from the overlap-as-fibre-product input
-`formalCompletion.basicOpenOverlapIso` (`FormalSchemes/CompletionBasicOpenOverlap.lean`), in
-`FormalSchemes/CompletionBasicOpenGlue.lean`. What is still missing for the arbitrary-index
-morphism is the glued *target*, not the cocycle.
+below — the affine case of that (the universal property of `toSpec`) is not on master either.
+
+## The arbitrary-index version, and what the note above used to get wrong about it
+
+Everything above is built at an arbitrary index type in
+`AlgebraicGeometry.ChartedCompletionDatum.toScheme` (`FormalSchemes.ChartedCompletionToScheme`),
+with `completionι_comp_toScheme` its computation rule and `toScheme_unique` its uniqueness; its
+target is `AlgebraicGeometry.ChartedSchemeDatum.specGlued` (`FormalSchemes.ChartedSchemeDatum`).
+
+The `Scope` note above used to end *"what is still missing for the arbitrary-index morphism is the
+glued **target**, not the cocycle"*, and the second clause was the misleading one.
+`FormalSchemes.CompletionBasicOpenGlue` does build a triple-overlap `t'` at an arbitrary index,
+from the overlap-as-fibre-product input `formalCompletion.basicOpenOverlapIso`
+(`FormalSchemes.CompletionBasicOpenOverlap`) — but it discharges `t_fac`, `t_inv` and `cocycle` by
+`cancel_mono` against the common ambient object `Spf R^` that every basic open of a **single**
+affine lies over. Charts with unrelated coordinate rings have nothing lying under all of them, so
+that cocycle does not instantiate; `ChartedCompletionDatum.tripleTransition` rebuilds it, mirroring
+the `Spec` side (`AlgebraicGeometry.ChartedSchemeDatum.specAlgDataT'`) instead.
 
 ## References
 
