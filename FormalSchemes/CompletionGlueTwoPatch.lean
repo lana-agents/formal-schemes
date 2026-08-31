@@ -83,11 +83,16 @@ cocycle; its glued object is `AffineChartedFibreDatumX.xGlued`, and
 `FormalSchemes/CompletionAsChartedGlued.lean` proves that the completion line's objects are
 `xGlued`s.
 
-What is genuinely still missing for EGA I 10.8 at an arbitrary index is the glued *scheme* and the
-morphism `X_{/Y} ⟶ X` — the arbitrary-index analogue of `specTwoPatch` and
-`completionTwoPatchToScheme` (`FormalSchemes/CompletionTwoPatchToScheme.lean`), generalising
-`formalCompletion.toSpec` (`FormalSchemes/CompletionToSpec.lean`). That needs the glued target
-first and is not built here.
+That same section then named the glued *scheme* and the morphism `X_{/Y} ⟶ X` as what genuinely
+remained of EGA I 10.8 at an arbitrary index. **Both are now built, and neither is here.** The
+glued scheme is `AlgebraicGeometry.ChartedSchemeDatum.specGlued`
+(`FormalSchemes.ChartedSchemeDatum`), the arbitrary-index analogue of `specTwoPatch`; the morphism
+is `AlgebraicGeometry.ChartedCompletionDatum.toScheme`
+(`FormalSchemes.ChartedCompletionToScheme`), the arbitrary-index analogue of
+`completionTwoPatchToScheme` (`FormalSchemes/CompletionTwoPatchToScheme.lean`) generalising
+`formalCompletion.toSpec` (`FormalSchemes/CompletionToSpec.lean`). Both take the localization data
+this file's `θ` is an instance of, at an arbitrary index and over a triple overlap that is
+genuinely inhabited.
 
 ## References
 

@@ -12,8 +12,10 @@ set_option linter.style.header false
 `ULift Bool`. This file is the arbitrary-index version of that construction: a datum of affine
 charts glued along basic opens, and the locally ringed space it glues to.
 
-It is the **target** half of `X_{/Y} ⟶ X` at an arbitrary index; the completion half and the
-morphism are issue 60q.
+It is the **target** half of `X_{/Y} ⟶ X` at an arbitrary index. The completion half is
+`AlgebraicGeometry.ChartedCompletionDatum.completionGlued`
+(`FormalSchemes.ChartedCompletionDatum`), and the morphism between them is
+`AlgebraicGeometry.ChartedCompletionDatum.toScheme` (`FormalSchemes.ChartedCompletionToScheme`).
 
 ## Why this needs a new datum, and not `AffineChartedFibreDatumX`
 

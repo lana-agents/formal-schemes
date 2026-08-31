@@ -7,17 +7,16 @@ set_option linter.style.header false
 # The three-chart cover is an open subscheme of `Spec A`, and is `Spec A` when the charts cover
 
 `FormalSchemes.SpecThreeChartCover` assembles `Spec A` presented by three basic opens `D(f_i)` as a
-`ChartedSchemeDatum`, and glues it to `SpecThreeChartCover.glued`. Its own "What is *not* proved"
-section says exactly what is missing:
-
-> **`glued` is not identified with `Spec A`**, even when `D(f₀) ∪ D(f₁) ∪ D(f₂) = Spec A`. […] it
-> needs the descent of the chart inclusions `Spec A_{f_i} ⟶ Spec A` through the colimit, an
-> open-immersion statement for the resulting map, and surjectivity from `Ideal.span {f₀, f₁, f₂} =
-> ⊤`.
+`ChartedSchemeDatum`, and glues it to `SpecThreeChartCover.glued`. Identifying that `glued` with
+`Spec A`, when `D(f₀) ∪ D(f₁) ∪ D(f₂) = Spec A`, takes exactly three things: the descent of the
+chart inclusions `Spec A_{f_i} ⟶ Spec A` through the colimit, an open-immersion statement for the
+resulting map, and surjectivity from `Ideal.span {f₀, f₁, f₂} = ⊤`.
 
 This file supplies all three. The descent is
 `AlgebraicGeometry.ChartedSchemeDatum.desc` (`FormalSchemes.ChartedSchemeDatumDesc`); what is done
-here is its input and its two geometric consequences.
+here is its input and its two geometric consequences. That predecessor file used to list those
+three under its own "What is *not* proved"; it now carries a forward pointer here instead, so
+there is no quotation of it left in this docstring to fall out of step.
 
 ## The two inputs, and where the content is
 

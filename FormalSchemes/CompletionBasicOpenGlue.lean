@@ -112,8 +112,13 @@ morphism is `OpenCover.glueMorphisms` applied to the chart inclusions, and the t
 One thing is deliberately not here.
 
 * **The glued scheme and the morphism `X_{/Y} ⟶ X` at an arbitrary index** — the arbitrary-index
-  analogue of `completionTwoPatchToScheme` (`FormalSchemes/CompletionTwoPatchToScheme.lean`),
-  which is the rest of EGA I, 10.8 for a general affine cover.
+  analogue of `completionTwoPatchToScheme` (`FormalSchemes/CompletionTwoPatchToScheme.lean`).
+  Not here, and no longer outstanding either: they are
+  `AlgebraicGeometry.ChartedSchemeDatum.specGlued` (`FormalSchemes.ChartedSchemeDatum`) and
+  `AlgebraicGeometry.ChartedCompletionDatum.toScheme`
+  (`FormalSchemes.ChartedCompletionToScheme`). That line does **not** reuse the cocycle below: its
+  `cancel_mono` proofs need the common ambient `Spf R^` that every basic open of one affine lies
+  over, and charts with unrelated coordinate rings have no such object.
 
   This bullet used to say instead that the missing piece was "the second ring and the overlap
   identification `θ`" of `FormalSchemes/CompletionGlueTwoPatch.lean`. That was wrong: the
