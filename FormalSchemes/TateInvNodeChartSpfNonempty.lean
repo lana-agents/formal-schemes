@@ -66,9 +66,14 @@ exhibited; `0` and `1` are both in that image. This file is a further non-vacuit
 the kind 1223's fallback branch authorises, and nothing more.
 
 **Nothing here builds the morphism `f`.** Issue 1197's residue is untouched: this says only that
-the source of the sought open immersion is nonempty, not that the immersion exists.
-`FormalSchemes.TateInvNodeChartSpf` records that no construction on this tree produces a morphism
-out of a formal spectrum into a general locally ringed space.
+the source of the sought open immersion is nonempty, not that the immersion exists. This file
+previously reported, from `FormalSchemes.TateInvNodeChartSpf`, that no construction on this tree
+produces a morphism out of a formal spectrum into a general locally ringed space; **that is
+false** and `FormalSchemes.TateInvNodeChartHomExt` surveys what is actually there —
+`FormalSpectrum.existsUnique_hom_thickeningMap` (EGA I 10.6.10) builds exactly such a morphism
+from a compatible family of morphisms out of the thickenings. It does not apply at
+`T_inv/⟨σ⟩` because it needs the target covered by opens isomorphic to `Spec` of a ring, so the
+obstruction is circularity rather than absence.
 
 **No converse for the general lemma at the node chart**: `I = ⊤` is not shown to make
 `tateInvNodeChartAwayIdeal` equal to `⊤`. It makes `Spf A` empty, so the argument below simply
