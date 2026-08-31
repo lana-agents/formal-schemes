@@ -104,8 +104,9 @@ theorem range_glueChartMorphisms :
   D.xFormalGlueData.range_glueMorphisms k _
 
 /-- **A family of chart morphisms that are open immersions and meet only along the double overlaps
-glues to an open immersion.** The hypothesis `hmeet` is required only off the diagonal; on it the
-glue datum's overlap immersion is an isomorphism, so the condition is automatic. -/
+glues to an open immersion.** The hypothesis `hmeet` is required only off the diagonal, which is
+also all that `FormalScheme.GlueData.isOpenImmersion_glueMorphisms` asks for: on the diagonal the
+containment follows from injectivity of the chart alone. -/
 theorem isOpenImmersion_glueChartMorphisms
     (hoi : letI := D.commRing; letI := D.algebra;
       ∀ i, LocallyRingedSpace.IsOpenImmersion (k i))
@@ -115,13 +116,9 @@ theorem isOpenImmersion_glueChartMorphisms
     LocallyRingedSpace.IsOpenImmersion (D.glueChartMorphisms k hk) := by
   letI := D.commRing
   letI := D.algebra
-  refine D.xFormalGlueData.isOpenImmersion_glueMorphisms k _ hoi fun i j => ?_
-  by_cases hij : i = j
-  · subst hij
-    rw [D.range_xGlueData_f_comp_self i (k i)]
-    exact Set.inter_subset_left
-  · rw [D.range_xGlueData_f_comp_of_ne i j hij (k i)]
-    exact hmeet i j hij
+  refine D.xFormalGlueData.isOpenImmersion_glueMorphisms k _ hoi fun i j hij => ?_
+  rw [D.range_xGlueData_f_comp_of_ne i j hij (k i)]
+  exact hmeet i j hij
 
 end AffineChartedFibreDatumX
 
