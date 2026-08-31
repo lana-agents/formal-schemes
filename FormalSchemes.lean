@@ -90,6 +90,7 @@ import FormalSchemes.ChartedDatumTopFiniteType
 import FormalSchemes.ChartedSchemeDatum
 import FormalSchemes.ChartedSchemeDatumAlgebraData
 import FormalSchemes.ChartedSchemeDatumDesc
+import FormalSchemes.ChartedSchemeDatumScheme
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
 import FormalSchemes.ClosedImmersionIso
@@ -277,6 +278,7 @@ import FormalSchemes.SpecAwayOverlap
 import FormalSchemes.SpecAwayOverlapLegs
 import FormalSchemes.SpecThreeChartCompletion
 import FormalSchemes.SpecThreeChartCover
+import FormalSchemes.SpecThreeChartCoverScheme
 import FormalSchemes.SpecThreeChartCoverToSpec
 import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.SpecTwoPatchScheme

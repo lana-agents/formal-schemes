@@ -55,8 +55,16 @@ is on the completion side.
 ## What is *not* proved
 
 Nothing here is stated at `AlgebraicGeometry.Scheme`; see the scope note in
-`FormalSchemes.SpecAwayOverlap`. In particular `glued` is not shown to be a scheme, only a locally
-ringed space isomorphic to `Spec A` under the covering hypothesis.
+`FormalSchemes.SpecAwayOverlap`. Everything below is about `glued` as a locally ringed space,
+isomorphic to `Spec A` under the covering hypothesis.
+
+`glued` **is** a scheme, and that is proved one layer out rather than here:
+`FormalSchemes.SpecThreeChartCoverScheme` promotes it to
+`AlgebraicGeometry.SpecThreeChartCover.gluedScheme` and lifts `gluedIsoSpec` and
+`gluedIsoSpec_intCover` to isomorphisms of schemes, giving
+`AlgebraicGeometry.SpecThreeChartCover.isAffine_gluedScheme`. The lift is not a transport —
+`Scheme.forgetToLocallyRingedSpace` is fully faithful, so `isIso_toSpec` below *is* the scheme
+statement — which is why it costs no restatement of anything in this file.
 
 ## References
 
