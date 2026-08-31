@@ -108,7 +108,7 @@ This is the bridge between the ideal-shaped consumers of continuity on this tree
 producer `FormalSpectrum.arbSheafComponent_mem_pow`.
 
 **This is the seventh instance of one general fact on this tree**, not a new one: the same
-statement and the same two-rewrite proof already appear at six other rings, as
+statement appears at six other rings, as
 `AdicCompletion.mem_idealOfDefinition_pow_iff` (`FormalSchemes.Completion`),
 `RestrictedPowerSeries.mem_idealOfDefinition_pow_iff` (`FormalSchemes.BaseChange`),
 `RestrictedLaurentSeries.mem_idealOfDefinition_pow_iff` (`FormalSchemes.FormalGm`),
