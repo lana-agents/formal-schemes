@@ -82,6 +82,8 @@ import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
+import FormalSchemes.ChartedCompletionDatum
+import FormalSchemes.ChartedCompletionToScheme
 import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.ChartedDatumGlueOpenImmersion
 import FormalSchemes.ChartedDatumTopFiniteType
@@ -130,6 +132,7 @@ import FormalSchemes.CompletedTensorMapSpfIso
 import FormalSchemes.CompletedTensorMapSpfPr
 import FormalSchemes.Completion
 import FormalSchemes.CompletionAsChartedGlued
+import FormalSchemes.CompletionAwayOverlapLegs
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletionBasicOpenGlue
 import FormalSchemes.CompletionBasicOpenMap
@@ -269,6 +272,7 @@ import FormalSchemes.RightCodiagonalClosedEmbedding
 import FormalSchemes.Sections
 import FormalSchemes.SpecAwayOverlap
 import FormalSchemes.SpecAwayOverlapLegs
+import FormalSchemes.SpecThreeChartCompletion
 import FormalSchemes.SpecThreeChartCover
 import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.SpecTwoPatchScheme
