@@ -364,8 +364,9 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Left-regularity in `A` rises to `A{1/x}{1/(x + y − 1)}`.**
 `FormalSpectrum.isLeftRegular_algebraMap_awayCompletion` applied twice — once at
 `overlapX` (root namespace) and once at `AlgebraicGeometry.annulusNodeChartCoord` — with
-`FormalSpectrum.isNoetherianRing_awayCompletion` supplying the Noetherianity the second application
-needs, and `IsScalarTower.algebraMap_apply` composing the three structural maps.
+`FormalSpectrum.isNoetherianRing_awayCompletion` supplying, **as an instance and with nothing
+supplied by hand**, the Noetherianity the second application needs, and
+`IsScalarTower.algebraMap_apply` composing the three structural maps.
 
 `annulusAlgebra R I q` is Noetherian because it is a quotient of `RestrictedPowerSeries`, which is
 (`RestrictedPowerSeries.instIsNoetherianRing`). -/
@@ -375,8 +376,6 @@ theorem isLeftRegular_algebraMap_awayCompletion_overlapX (t : R)
       (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
       (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
         (annulusNodeChartCoord R I q))) t) := by
-  haveI : IsNoetherianRing (awayCompletion (annulusIdealOfDefinition R I q) (overlapX R I q)) :=
-    FormalSpectrum.isNoetherianRing_awayCompletion _ _
   have h1 : IsLeftRegular (algebraMap (annulusAlgebra R I q)
       (awayCompletion (annulusIdealOfDefinition R I q) (overlapX R I q))
       (algebraMap R (annulusAlgebra R I q) t)) :=
@@ -398,8 +397,6 @@ theorem isLeftRegular_algebraMap_awayCompletion_overlapY (t : R)
       (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
       (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
         (annulusNodeChartCoord R I q))) t) := by
-  haveI : IsNoetherianRing (awayCompletion (annulusIdealOfDefinition R I q) (overlapY R I q)) :=
-    FormalSpectrum.isNoetherianRing_awayCompletion _ _
   have h1 : IsLeftRegular (algebraMap (annulusAlgebra R I q)
       (awayCompletion (annulusIdealOfDefinition R I q) (overlapY R I q))
       (algebraMap R (annulusAlgebra R I q) t)) :=
