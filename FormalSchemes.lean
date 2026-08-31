@@ -26,6 +26,7 @@ import FormalSchemes.AdicHausdorff
 import FormalSchemes.AdicMorphism
 import FormalSchemes.AdicOnBasicOpenSections
 import FormalSchemes.AdicOnOpenSections
+import FormalSchemes.AdicOnOpenSectionsPointwise
 import FormalSchemes.AdicOnSections
 import FormalSchemes.AdicOnSectionsDescent
 import FormalSchemes.AdicOverBaseChart
@@ -323,6 +324,7 @@ import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateGraphCodiagonalXLift
 import FormalSchemes.TateInvChartAnnulusRing
+import FormalSchemes.TateInvChartBaseImage
 import FormalSchemes.TateInvGlobalCoeff
 import FormalSchemes.TateInvGlobalNormalForm
 import FormalSchemes.TateInvGlobalProperness
