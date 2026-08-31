@@ -44,19 +44,19 @@ instance uses.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.tateInvPatchOpen`, `AlgebraicGeometry.tateInvSaturateOpen`: the `m`-th patch
-  image of an open of the model patch, and its saturation, as **opens** of the chain — the form
-  `TopologicalSpace.Opens.map` and the sections API consume, where
-  `FormalSchemes.TateInvSaturation` works with bare sets.
+* `AlgebraicGeometry.tateInvPatchOpen`: the `m`-th patch image of an open of the model patch, as
+  an **open** of the chain — the form `TopologicalSpace.Opens.map` and the sections API consume,
+  where `FormalSchemes.TateInvSaturation` works with bare sets. Its companion, the saturation as
+  an open, is `AlgebraicGeometry.tateInvSaturateOpens` of that same file.
 * `AlgebraicGeometry.translate_tateInvPatchOpen`: the `n`-th translate of a patch open is a patch
   open, at the index shifted by `n`. This is the cover-shift law `ι_tateInvShiftAut_zpow` read
   through `LocallyRingedSpace.translate`, which is a *preimage*.
-* `AlgebraicGeometry.tateInvSaturateOpen_eq_iSup_translate`: the saturation is the supremum of the
+* `AlgebraicGeometry.tateInvSaturateOpens_eq_iSup_translate`: the saturation is the supremum of the
   translates of the patch-`0` open — the cover the sheaf axiom is applied to.
-* `AlgebraicGeometry.preimage_tateInvSaturateOpen`: a saturation is its own preimage under every
+* `AlgebraicGeometry.preimage_tateInvSaturateOpens`: a saturation is its own preimage under every
   `σⁿ`, which is the `Opens`-level form of `image_tateInvShiftAut_zpow_tateInvSaturate`.
 * `AlgebraicGeometry.eq_of_isInvariantSection_of_restrict_patch_eq`: **the collapse.** Two invariant
-  sections over `tateInvSaturateOpen S` agreeing on `tateInvPatchOpen S ⟨0⟩` are equal.
+  sections over `tateInvSaturateOpens hS` agreeing on `tateInvPatchOpen S ⟨0⟩` are equal.
 * `AlgebraicGeometry.exists_forall_not_isProperlyDiscontinuousOn` and
   `AlgebraicGeometry.not_isProperlyDiscontinuousOn_univ`: the non-vacuity, stated as the
   unavailability of the hypothesis that was removed.
@@ -126,52 +126,14 @@ def tateInvPatchOpen (hS : IsOpen S) (m : ULift.{u} ℤ) :
   ⟨⇑((tateChainInvFormalGlueData R I q hq hI).ι m).base '' S,
     ((tateChainInvFormalGlueData R I q hq hI).ι_isOpenImmersion m).base_open.isOpenMap _ hS⟩
 
-/-- **The saturation of an open of the model patch, as an open of the chain.** The `Opens` wrapper
-around `AlgebraicGeometry.tateInvSaturate`, whose openness is `isOpen_tateInvSaturate`.
-
-**This duplicates `AlgebraicGeometry.tateInvSaturateOpens`** (`FormalSchemes.TateInvNodeChartGlue`),
-which is the same wrapper around the same two lemmas and elaborates to the same type; the two names
-differ by one character and live in the same namespace, so read this before adding a third. The
-duplication is not free and is not endorsed: it is here only because importing
-`FormalSchemes.TateInvNodeChartGlue` raises this leaf's `FormalSchemes` import closure from 167 to
-184 modules, and this file is a statement about the chain rather than about the node chart. The
-consolidation — moving `tateInvSaturateOpens` down to `FormalSchemes.TateInvSaturation`, beside
-`tateInvSaturate` and `isOpen_tateInvSaturate`, and deleting this copy — is filed as its own row,
-because it rebuilds that file's 34-module cone. -/
-def tateInvSaturateOpen (hS : IsOpen S) :
-    Opens (tateChainInv R I q hq hI).toLocallyRingedSpace.toTopCat :=
-  ⟨tateInvSaturate R I q hq hI S, isOpen_tateInvSaturate hq hI hS⟩
-
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- Every patch image sits inside the saturation. The `Opens` form of
 `image_ι_subset_tateInvSaturate`. -/
-theorem tateInvPatchOpen_le_tateInvSaturateOpen (hS : IsOpen S) (m : ULift.{u} ℤ) :
-    tateInvPatchOpen R I q hq hI hS m ≤ tateInvSaturateOpen R I q hq hI hS :=
+theorem tateInvPatchOpen_le_tateInvSaturateOpens (hS : IsOpen S) (m : ULift.{u} ℤ) :
+    tateInvPatchOpen R I q hq hI hS m ≤ tateInvSaturateOpens hq hI hS :=
   image_ι_subset_tateInvSaturate hq hI S m
 
 /-! ### The translates of a patch open -/
-
-/-- **The shift carries the `m`-th patch image of `S` onto the `(m + n)`-th.** The image form of the
-cover-shift law `ι_tateInvShiftAut_zpow` (`FormalSchemes.TateActionInv`), assembled at term level
-rather than by `rw`: the glue datum's index type is `ULift ℤ` only after unfolding a semireducible
-definition, so a rewrite inside `.ι m` fails with a spurious "did not find an occurrence".
-`image_tateInvShiftAut_zpow_tateInvSaturate` records the same rule for the union.
-
-**The term is not new, only the name is.** This exact composite already occurs twice, unnamed,
-inside `FormalSchemes.TateInvSaturation`: as `step₂` of
-`image_tateInvShiftAut_zpow_tateInvSaturate`, and as `key` of
-`tateInvSaturate_subset_of_invariant`. Naming it here does not remove those two copies, since they
-are upstream; replacing them belongs with the same consolidation row as `tateInvSaturateOpen`
-above. -/
-theorem image_ι_tateInvShiftAut_zpow (n : ℤ) (m : ULift.{u} ℤ) :
-    ⇑((tateInvShiftAut R I q hq hI ^ n).hom).base ''
-        (⇑((tateChainInvFormalGlueData R I q hq hI).ι m).base '' S) =
-      ⇑((tateChainInvFormalGlueData R I q hq hI).ι ⟨m.down + n⟩).base '' S :=
-  (image_comp_base ((tateChainInvFormalGlueData R I q hq hI).ι m)
-      ((tateInvShiftAut R I q hq hI ^ n).hom) S).trans
-    (congrArg (fun φ : (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.U m ⟶
-        (tateChainInv R I q hq hI).toLocallyRingedSpace => ⇑φ.base '' S)
-      (ι_tateInvShiftAut_zpow R I q hq hI n m))
 
 /-- **The `n`-th translate of a patch open is a patch open.** `LocallyRingedSpace.translate` is a
 *preimage* under `σⁿ`, so the index moves the other way: the translate of the `(m + n)`-th patch
@@ -182,13 +144,13 @@ theorem translate_tateInvPatchOpen (hS : IsOpen S) (n : Multiplicative ℤ) (m :
       tateInvPatchOpen R I q hq hI hS m := by
   refine Opens.ext ?_
   rw [LocallyRingedSpace.coe_translate, tateInvPeriodAction_apply]
-  exact preimage_base_of_image_eq _ (image_ι_tateInvShiftAut_zpow R I q hq hI _ m)
+  exact preimage_base_of_image_eq _ (image_ι_tateInvShiftAut_zpow hq hI _ m S)
 
 /-- **The saturation is the supremum of the translates of the patch-`0` open.** This is the open
 cover the sheaf separation axiom is applied to in the collapse below. The reindexing is along
 `n ↦ -n`, `translate` being a preimage. -/
-theorem tateInvSaturateOpen_eq_iSup_translate (hS : IsOpen S) :
-    tateInvSaturateOpen R I q hq hI hS =
+theorem tateInvSaturateOpens_eq_iSup_translate (hS : IsOpen S) :
+    tateInvSaturateOpens hq hI hS =
       ⨆ n : Multiplicative ℤ, LocallyRingedSpace.translate (tateInvPeriodAction R I q hq hI)
         (tateInvPatchOpen R I q hq hI hS ⟨0⟩) n := by
   refine Opens.ext ?_
@@ -209,10 +171,10 @@ theorem tateInvSaturateOpen_eq_iSup_translate (hS : IsOpen S) :
 `image_tateInvShiftAut_zpow_tateInvSaturate`, which is the invariance hypothesis
 `LocallyRingedSpace.eq_of_isInvariantSection_of_restrict_eq` needs in order for
 `IsInvariantSection` to be stated at all. -/
-theorem preimage_tateInvSaturateOpen (hS : IsOpen S) (k : Multiplicative ℤ) :
-    tateInvSaturateOpen R I q hq hI hS =
+theorem preimage_tateInvSaturateOpens (hS : IsOpen S) (k : Multiplicative ℤ) :
+    tateInvSaturateOpens hq hI hS =
       (Opens.map (tateInvPeriodAction R I q hq hI k).hom.toShHom.hom.base).obj
-        (tateInvSaturateOpen R I q hq hI hS) := by
+        (tateInvSaturateOpens hq hI hS) := by
   refine (Opens.ext ?_).symm
   exact preimage_base_of_image_eq (tateInvShiftAut R I q hq hI ^ Multiplicative.toAdd k)
     (image_tateInvShiftAut_zpow_tateInvSaturate hq hI (Multiplicative.toAdd k) S)
@@ -229,18 +191,18 @@ three facts above; the substance is that the general lemma no longer asks for pr
 which this chain provably does not have (`not_isProperlyDiscontinuousOn_univ` below). -/
 theorem eq_of_isInvariantSection_of_restrict_patch_eq (hS : IsOpen S)
     {r₁ r₂ : ToType ((tateChainInv R I q hq hI).toLocallyRingedSpace.presheaf.obj
-      (op (tateInvSaturateOpen R I q hq hI hS)))}
+      (op (tateInvSaturateOpens hq hI hS)))}
     (hr₁ : LocallyRingedSpace.IsInvariantSection (tateInvPeriodAction R I q hq hI) r₁)
     (hr₂ : LocallyRingedSpace.IsInvariantSection (tateInvPeriodAction R I q hq hI) r₂)
     (hres : (tateChainInv R I q hq hI).toLocallyRingedSpace.presheaf.map
-        (homOfLE (tateInvPatchOpen_le_tateInvSaturateOpen R I q hq hI hS ⟨0⟩)).op r₁ =
+        (homOfLE (tateInvPatchOpen_le_tateInvSaturateOpens R I q hq hI hS ⟨0⟩)).op r₁ =
       (tateChainInv R I q hq hI).toLocallyRingedSpace.presheaf.map
-        (homOfLE (tateInvPatchOpen_le_tateInvSaturateOpen R I q hq hI hS ⟨0⟩)).op r₂) :
+        (homOfLE (tateInvPatchOpen_le_tateInvSaturateOpens R I q hq hI hS ⟨0⟩)).op r₂) :
     r₁ = r₂ :=
   LocallyRingedSpace.eq_of_isInvariantSection_of_restrict_eq
-    (tateInvSaturateOpen_eq_iSup_translate R I q hq hI hS)
-    (tateInvPatchOpen_le_tateInvSaturateOpen R I q hq hI hS ⟨0⟩)
-    (preimage_tateInvSaturateOpen R I q hq hI hS) hr₁ hr₂ hres
+    (tateInvSaturateOpens_eq_iSup_translate R I q hq hI hS)
+    (tateInvPatchOpen_le_tateInvSaturateOpens R I q hq hI hS ⟨0⟩)
+    (preimage_tateInvSaturateOpens R I q hq hI hS) hr₁ hr₂ hres
 
 /-! ### Non-vacuity: the hypothesis that was removed is not available here
 

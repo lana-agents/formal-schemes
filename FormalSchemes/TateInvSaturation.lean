@@ -171,12 +171,44 @@ theorem isOpen_tateInvSaturate {S : Set (FormalSpectrum.locallyRingedSpaceObj
     ((tateChainInvFormalGlueData R I q hq hI).ι_isOpenImmersion m).base_open.isOpenMap _ hS
 
 omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The saturation of an open of the model patch, as an open of the chain.**
+`AlgebraicGeometry.tateInvSaturate` bundled with `AlgebraicGeometry.isOpen_tateInvSaturate`.
+
+It lives here, beside its two ingredients, rather than in a consumer. It was originally declared in
+`FormalSchemes.TateInvNodeChartGlue`, which forced any file wanting the wrapper to take that
+module's whole import closure — 183 modules against this one's 166 — and a second copy of it was
+duly declared in `FormalSchemes.TateInvInvariantSectionCollapse`, under a name one character away
+from this one and in the same namespace. Both of those are gone; this is the only one. -/
+def tateInvSaturateOpens {S : Set (FormalSpectrum.locallyRingedSpaceObj
+    (annulusIdealOfDefinition R I q))} (hq : q ∈ I) (hI : I.FG) (hS : IsOpen S) :
+    TopologicalSpace.Opens (tateChainInv R I q hq hI).toLocallyRingedSpace :=
+  ⟨tateInvSaturate R I q hq hI S, isOpen_tateInvSaturate hq hI hS⟩
+
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The saturation of the whole model patch is the whole chain, the patch inclusions being
 jointly surjective. -/
 theorem tateInvSaturate_univ : tateInvSaturate R I q hq hI Set.univ = Set.univ := by
   refine Set.eq_univ_of_forall fun x => ?_
   obtain ⟨m, y, rfl⟩ := (tateChainInvFormalGlueData R I q hq hI).ι_jointly_surjective x
   exact mem_tateInvSaturate_iff hq hI |>.mpr ⟨m, y, trivial, rfl⟩
+
+/-- **The shift carries the `m`-th patch image of `S` onto the `(m + k)`-th.** The image form of the
+cover-shift law `ι_tateInvShiftAut_zpow` (`FormalSchemes.TateActionInv`), assembled at term level
+rather than by `rw`: the glue datum's index type is `ULift ℤ` only after unfolding a semireducible
+definition, so a rewrite inside `.ι m` fails with a spurious "did not find an occurrence".
+
+This is the per-index step of both lemmas below, and it used to be written out inside each of them.
+-/
+theorem image_ι_tateInvShiftAut_zpow (k : ℤ) (m : ULift.{u} ℤ)
+    (S : Set (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q))) :
+    ⇑((tateInvShiftAut R I q hq hI ^ k).hom).base ''
+        (⇑((tateChainInvFormalGlueData R I q hq hI).ι m).base '' S) =
+      ⇑((tateChainInvFormalGlueData R I q hq hI).ι ⟨m.down + k⟩).base '' S :=
+  (image_comp_base ((tateChainInvFormalGlueData R I q hq hI).ι m)
+      ((tateInvShiftAut R I q hq hI ^ k).hom) S).trans
+    (congrArg (fun φ : (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.U m ⟶
+        (tateChainInv R I q hq hI).toLocallyRingedSpace => ⇑φ.base '' S)
+      (ι_tateInvShiftAut_zpow R I q hq hI k m))
 
 /-- **A saturation is `σ`-invariant**, with no hypothesis on `S` whatsoever. The cover-shift law
 `ι_tateInvShiftAut_zpow` (`FormalSchemes.TateActionInv`) turns `ι m ≫ σ ^ k` into `ι (m + k)`, and
@@ -197,12 +229,7 @@ theorem image_tateInvShiftAut_zpow_tateInvSaturate (k : ℤ)
       ⇑((tateInvShiftAut R I q hq hI) ^ k).hom.base ''
           (⇑((tateChainInvFormalGlueData R I q hq hI).ι m).base '' S) =
         ⇑((tateChainInvFormalGlueData R I q hq hI).ι ⟨m.down + k⟩).base '' S := fun m =>
-    (image_comp_base ((tateChainInvFormalGlueData R I q hq hI).ι m)
-        ((tateInvShiftAut R I q hq hI ^ k).hom) S).trans
-      (congrArg
-        (fun φ : (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.U m ⟶
-            (tateChainInv R I q hq hI).toLocallyRingedSpace => ⇑φ.base '' S)
-        (ι_tateInvShiftAut_zpow R I q hq hI k m))
+    image_ι_tateInvShiftAut_zpow hq hI k m S
   rw [step₁, Set.iUnion_congr step₂]
   exact Set.iUnion_congr_of_surjective (fun m : ULift.{u} ℤ => (⟨m.down + k⟩ : ULift.{u} ℤ))
     (fun n => ⟨⟨n.down - k⟩, ULift.down_injective (by simp)⟩) fun _ => rfl
@@ -225,12 +252,7 @@ theorem tateInvSaturate_subset_of_invariant
   have key : ⇑((tateInvShiftAut R I q hq hI) ^ (n.down - m.down)).hom.base ''
         (⇑((tateChainInvFormalGlueData R I q hq hI).ι m).base '' S) =
       ⇑((tateChainInvFormalGlueData R I q hq hI).ι n).base '' S :=
-    ((image_comp_base ((tateChainInvFormalGlueData R I q hq hI).ι m)
-          ((tateInvShiftAut R I q hq hI ^ (n.down - m.down)).hom) S).trans
-        (congrArg
-          (fun φ : (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.U m ⟶
-              (tateChainInv R I q hq hI).toLocallyRingedSpace => ⇑φ.base '' S)
-          (ι_tateInvShiftAut_zpow R I q hq hI (n.down - m.down) m))).trans
+    (image_ι_tateInvShiftAut_zpow hq hI (n.down - m.down) m S).trans
       (congrArg (fun idx : ULift.{u} ℤ =>
         ⇑((tateChainInvFormalGlueData R I q hq hI).ι idx).base '' S) hidx)
   exact key ▸ (Set.image_mono hSm).trans (hV (n.down - m.down))
