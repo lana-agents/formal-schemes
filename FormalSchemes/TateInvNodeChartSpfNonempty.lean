@@ -38,7 +38,7 @@ point that `FormalSchemes.TateInvNodeChartNontrivial` used, and needs the same s
 
 * `FormalSpectrum.nonempty_iff_ne_top`: `Spf R` is nonempty iff `I ≠ ⊤`. General, and the shape
   the tree has been proving one instance of at a time — `annulus_formalSpectrum_nonempty` and
-  `AlgebraicGeometry.nonempty_twoAdic` are both this plus a properness fact.
+  `FormalSpectrum.nonempty_twoAdic` are both this plus a properness fact.
 * `FormalSpectrum.ne_top_awayCompletionIdeal_of_nonempty_basicOpen`: the ideal of definition of
   `R{1/f}` is proper as soon as `D(f) ⊆ Spf R` has a point.
 * `AlgebraicGeometry.ne_top_tateInvNodeChartAwayIdeal` and
@@ -52,8 +52,8 @@ point that `FormalSchemes.TateInvNodeChartNontrivial` used, and needs the same s
   **`AlgebraicGeometry.nonempty_range_tateInvNodeChartAmbientHom`**: the other half of the pairing
   — the set the sought open immersion must cover is itself nonempty for `I ≠ ⊤`, so neither side
   of issue 1197's residual hypothesis is empty for a trivial reason.
-* **`exists_isAdicComplete_nontrivial_sections_tateInvNodeChart_of_isLeftRegular_base`** (in
-  `AlgebraicGeometry`, like everything else below):
+* **`exists_isAdicComplete_nontrivial_sections_tateInvNodeChart_of_isLeftRegular_base`**, in the
+  `AlgebraicGeometry` namespace like everything else on this list bar the first two:
   `AlgebraicGeometry.exists_isAdicComplete_sections_tateInvNodeChart_of_isLeftRegular_base`
   (`FormalSchemes.TateInvNodeChartSpf`) with `Nontrivial (Γ (T_inv/⟨σ⟩, V))` added to its
   conclusion, so that its `K.FG ∧ IsAdicComplete K …` is a statement about a nonzero ring inside
@@ -95,7 +95,7 @@ variable {R : Type u} [CommRing R] (I : Ideal R)
 nontriviality of the special fibre, and `Ideal.Quotient.nontrivial_iff` into `I ≠ ⊤`.
 
 The tree has been proving instances of this one at a time — `annulus_formalSpectrum_nonempty`
-(`FormalSchemes.AnnulusNontrivial`) and `AlgebraicGeometry.nonempty_twoAdic`
+(`FormalSchemes.AnnulusNontrivial`) and `FormalSpectrum.nonempty_twoAdic`
 (`FormalSchemes.TwoAdicDegeneracy`) are each this plus a properness fact about their own ideal. -/
 theorem nonempty_iff_ne_top : Nonempty (FormalSpectrum I) ↔ I ≠ ⊤ :=
   PrimeSpectrum.nonempty_iff_nontrivial.trans Ideal.Quotient.nontrivial_iff
