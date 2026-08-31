@@ -22,17 +22,17 @@ f i j ≫ k i = t i j ≫ f j i ≫ k j    for all i, j.
 ## Relation to `FormalSchemes.GlueMorphisms` and `FormalSchemes.GlueMorphismsOpenImmersion`
 
 Those two files state the same results for `AlgebraicGeometry.FormalScheme.GlueData`, whose pieces
-are required to be formal schemes. **Every proof there uses only the underlying
-`LocallyRingedSpace.GlueData`**, so the statements here are strictly more general and the formal
-ones are corollaries — `FormalScheme.GlueData.ι` is by definition
+are required to be formal schemes, and **every one of them is now a one-line wrapper over a
+declaration in this file**. That is possible because no argument on the formal side ever used the
+formal-scheme condition: `FormalScheme.GlueData.ι` is by definition
 `D.toLocallyRingedSpaceGlueData.toGlueData.ι`, and `(D.gluedFormalScheme).toLocallyRingedSpace` is
-`D.toLocallyRingedSpaceGlueData.toGlueData.glued`.
+`D.toLocallyRingedSpaceGlueData.toGlueData.glued`, so the statements match up to unfolding.
 
-They are stated here rather than reused from there because the consumer that motivated this file,
-`AlgebraicGeometry.ChartedSchemeDatum.specGlued`, glues **affine schemes**, which are not formal
-schemes, so `FormalScheme.GlueData` does not apply to it at all. Repointing the two formal-side
-files at this one is a mechanical follow-up; it is deliberately not done in the same change,
-because `glueMorphisms` has upwards of forty consumers across the Tate cluster.
+The results are stated here rather than in the formal-side files because the consumer that motivated
+this one, `AlgebraicGeometry.ChartedSchemeDatum.specGlued`, glues **affine schemes**, which are not
+formal schemes, so `FormalScheme.GlueData` does not apply to it at all. The formal-side wrappers are
+kept because `glueMorphisms` has upwards of forty consumers across the Tate cluster that spell their
+glued objects formally.
 
 ## Main definitions and results
 
