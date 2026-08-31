@@ -44,9 +44,19 @@ finitely generated — and the filtration bridge holds. The Tate input is theref
   `AlgebraicGeometry.fg_tateInvNodeChartAwayIdeal_bot` — **the degenerate base is
   unconditional**: over any discrete Noetherian `R`, at `I = ⊥` and `q = 0`, the node chart ring
   is adically complete for `AlgebraicGeometry.tateInvNodeChartAwayIdeal` and that ideal is
-  finitely generated. Nothing is assumed beyond the instances. This is the first `(R, I, q)` at
-  which the whole chain of this cluster — leg continuity, closedness, the bridge — is known to
-  compose.
+  finitely generated. Nothing is assumed beyond the instances, and the instances are inhabited —
+  `R = ℤ` with the discrete topology, through
+  `instIsAdicRingBotOfDiscreteTopology` (`FormalSchemes.AdicRing`, root namespace).
+
+  **Read these two as statements about `⊥`, not about the chain.** At `I = ⊥` the contracted
+  ideal *is* `⊥` (`Ideal.comap_bot_of_injective` at the injective `Subring.subtype`, on top of
+  `AlgebraicGeometry.awayCompletionIdeal_annulusNodeChartCoord_bot`), and both conclusions then
+  hold for **any** subring of **any** commutative ring: `IsAdicComplete ⊥ S` is a Mathlib
+  instance and `(⊥ : Ideal S).FG` is `Submodule.fg_bot`. The whole content of the two results is
+  therefore the identification of the ideal as `⊥`. The proofs below do route through
+  `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal'`, and hence through leg continuity
+  and closedness, but nothing in the conclusions depends on them — so **this is not evidence that
+  the chain of this cluster composes**, and no `(R, I, q)` with `q ≠ 0` is reached here.
 
 ## What is *not* proved
 
@@ -231,9 +241,16 @@ theorem hasCofinalInducedFiltration_tateInvNodeChartAwaySubring_bot :
 unconditionally.** Leg continuity (`AlgebraicGeometry.isTateInvNodeChartLegContinuous_tateInv`)
 and closedness are already unconditional; this supplies the last hypothesis.
 
-It says nothing about a base with `q ≠ 0`: at `I = ⊥` the Tate parameter is `0` and the annulus is
-`R[x, y]/(x·y)`. What it does say is that the chain of this cluster composes at a genuine
-`(R, I, q)`, which no earlier result establishes. -/
+**It is a statement about `⊥`, not about the node chart.** At `I = ⊥` the ideal
+`AlgebraicGeometry.tateInvNodeChartAwayIdeal` is `⊥` — that is
+`AlgebraicGeometry.awayCompletionIdeal_annulusNodeChartCoord_bot` followed by
+`Ideal.comap_bot_of_injective` — and `IsAdicComplete ⊥ S` is a Mathlib instance for every
+commutative ring `S`. So the conclusion holds for any subring of any ring once the ideal is known
+to be `⊥`, and that identification is the whole content. The proof below goes through
+`AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal'`, and so through leg continuity and
+closedness, but the statement does not need them: this **does not** exhibit an `(R, I, q)` at
+which the chain of this cluster is tested. It also says nothing about a base with `q ≠ 0` — at
+`I = ⊥` the Tate parameter is `0` and the annulus is `R[x, y]/(x·y)`. -/
 theorem isAdicComplete_tateInvNodeChartAwayIdeal_bot :
     IsAdicComplete
       (tateInvNodeChartAwayIdeal R ⊥ 0 (Submodule.zero_mem _) Submodule.fg_bot)
@@ -243,7 +260,9 @@ theorem isAdicComplete_tateInvNodeChartAwayIdeal_bot :
 
 /-- **The candidate ideal of definition is `⊥`, hence finitely generated, at `I = ⊥`.** The
 companion of `isAdicComplete_tateInvNodeChartAwayIdeal_bot`: completeness does not imply finite
-generation, and both are needed for an ideal of definition. -/
+generation, and both are needed for an ideal of definition. As there, the content is the
+identification of the ideal as `⊥`; `Submodule.fg_bot` then applies to any ring, so this says
+nothing specific to the node chart beyond that identification. -/
 theorem fg_tateInvNodeChartAwayIdeal_bot :
     (tateInvNodeChartAwayIdeal R ⊥ 0 (Submodule.zero_mem _) Submodule.fg_bot).FG := by
   rw [tateInvNodeChartAwayIdeal, awayCompletionIdeal_annulusNodeChartCoord_bot R,
