@@ -22,7 +22,12 @@ chart's target ring into a regularity question about the ring the chart was cut 
 * `FormalSpectrum.isNoetherianRing_awayCompletion` — `A{1/f}` is Noetherian when `A` is
   (`AdicCompletion.isNoetherianRing`, i.e. Atiyah–Macdonald 10.26, at the localization). This is
   what lets the previous item be **iterated**: `A{1/f}{1/g}` is again a completed localization of a
-  Noetherian ring.
+  Noetherian ring. It is an `instance`, so the second step of such a tower finds the first step's
+  Noetherianity with nothing supplied by the caller.
+* `FormalSpectrum.flat_awayCompletion` — `A{1/f}` is a flat `A`-module, the two flat steps composed
+  by `Module.Flat.trans`. Deliberately **not** an instance: neither `Module.Flat` witness it
+  composes is one at these arguments, and making it an instance would send instance search through
+  `Module.Flat.trans` at every `awayCompletion`.
 * `FormalSpectrum.isLeftRegular_algebraMap_awayCompletion` — left-regularity rises along
   `algebraMap A (awayCompletion L f)`.
 
@@ -46,27 +51,40 @@ Noetherian (`IsLocalization`'s instance), every ideal of it is then finitely gen
 `AdicCompletion.isNoetherianRing` (Atiyah–Macdonald 10.26,
 `FormalSchemes.RestrictedPowerSeriesNoetherian`) applies.
 
-Stated because `isLeftRegular_algebraMap_awayCompletion` has to be applied **twice** in a row at a
-nested chart, and the second application needs the first ring's Noetherianity. -/
-theorem isNoetherianRing_awayCompletion : IsNoetherianRing (awayCompletion L f) :=
+An `instance` because `isLeftRegular_algebraMap_awayCompletion` has to be applied **twice** in a
+row at a nested chart, and the second application needs the first ring's Noetherianity. As an
+instance it is found there automatically; `L` and `f` are both determined by the goal
+`IsNoetherianRing (awayCompletion L f)`, so there is nothing for instance search to guess. -/
+instance isNoetherianRing_awayCompletion : IsNoetherianRing (awayCompletion L f) :=
   AdicCompletion.isNoetherianRing _ (IsNoetherian.noetherian _)
+
+/-- **`A{1/f}` is flat over `A`.** The composite of two flat extensions: `A → A_f` is flat because
+it is a localization (`IsLocalization.flat`), and `A_f → awayCompletion L f` is flat because `A_f`
+is Noetherian (`AdicCompletion.flat_of_isNoetherian`, which is an instance and picks up the
+Noetherianity of `A_f` from `IsLocalization`'s own instance).
+
+Not an instance, for the reason in this file's module docstring.
+`isLeftRegular_algebraMap_awayCompletion` is the one consumer here and applies it by name. -/
+theorem flat_awayCompletion : Module.Flat A (awayCompletion L f) :=
+  haveI : Module.Flat A (Localization.Away f) := IsLocalization.flat _ (Submonoid.powers f)
+  haveI : Module.Flat (Localization.Away f) (awayCompletion L f) :=
+    AdicCompletion.flat_of_isNoetherian _
+  Module.Flat.trans A (Localization.Away f) (awayCompletion L f)
 
 /-- **Left-regularity rises to a completed localization**, over a Noetherian base.
 
-`a` regular in `A` gives `algebraMap A A_f a` regular in `A_f` because a localization is flat
-(`IsSMulRegular.of_isLocalization`), and that in turn gives the image in the completion because an
-adic completion of a Noetherian ring is flat over it (`AdicCompletion.flat_of_isNoetherian`, fed to
-`IsSMulRegular.of_flat`). `IsScalarTower.algebraMap_apply` composes the two structural maps into
-`algebraMap A (awayCompletion L f)`.
+`IsSMulRegular.of_flat` at `flat_awayCompletion`, in one step. The two-step form — regularity into
+`A_f` by `IsSMulRegular.of_isLocalization`, then into the completion by `IsSMulRegular.of_flat`,
+recomposed with `IsScalarTower.algebraMap_apply` — proves the same thing and is what this file
+originally did; going through the named flatness of the composite is shorter and keeps the reason
+in one place.
 
 `IsLeftRegular a` and `IsSMulRegular A a` are the same statement — `a • ·` and `a * ·` are the same
-function on `A` — which is why `ha` is passed to a lemma about the latter with no conversion. -/
+function on `A` — which is why `ha` is passed to a lemma about the latter with no conversion, and
+why the result needs only a type ascription to come back. -/
 theorem isLeftRegular_algebraMap_awayCompletion {a : A} (ha : IsLeftRegular a) :
-    IsLeftRegular (algebraMap A (awayCompletion L f) a) := by
-  have h1 : IsSMulRegular (Localization.Away f) (algebraMap A (Localization.Away f) a) :=
-    IsSMulRegular.of_isLocalization (S := Localization.Away f) (p := Submonoid.powers f) ha
-  have h2 := h1.of_flat (S := awayCompletion L f)
-  rw [← IsScalarTower.algebraMap_apply] at h2
-  exact h2
+    IsLeftRegular (algebraMap A (awayCompletion L f) a) :=
+  haveI := flat_awayCompletion L f
+  (IsSMulRegular.of_flat (S := awayCompletion L f) ha : IsSMulRegular _ _)
 
 end FormalSpectrum

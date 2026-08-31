@@ -339,6 +339,7 @@ import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
 import FormalSchemes.TateInvNodeChartLegContinuous
+import FormalSchemes.TateInvNodeChartLegGeneral
 import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartPrincipal
 import FormalSchemes.TateInvNodeChartPrincipalRegularBase
