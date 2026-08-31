@@ -91,13 +91,15 @@ is flat and an adic completion of a Noetherian ring is flat over it
 Only the *rising* direction is available, and that is the direction needed: nothing here says the
 converse, and an element can become regular in a localization without being regular downstairs.
 
-**No `(R, I, q, t)` with `t ≠ 0` at which the regularity holds is exhibited here, and no
-counterexample either.** At `t = 0` the hypothesis is unsatisfiable in a nonzero ring, and `I = ⊥`
-remains the only unconditional case, through
-`AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_bot` rather than through the principal
-criterion. What is gained is that the question is now about one explicit quotient of a restricted
-power series ring, where `R`-level hypotheses — `R` a domain, `R` `t`-torsion-free — can bear on it
-at all.
+**No `(R, I, q, t)` with `t ≠ 0` at which the regularity holds is exhibited here**, and at `t = 0`
+the hypothesis is unsatisfiable in a nonzero ring. What is gained is that the question is now about
+one explicit quotient of a restricted power series ring, where `R`-level hypotheses can bear on it
+at all — and that is what settles it:
+`AlgebraicGeometry.isLeftRegular_algebraMap_annulusAlgebra` (`FormalSchemes.TateAnnulusRegular`)
+proves the hypothesis of the three results below for every non-zero-divisor `t` of a Noetherian
+`I`-adically complete base, with the composites in
+`FormalSchemes.TateInvNodeChartPrincipalRegularBase`. `I = ⊥` is therefore no longer the only base
+at which the node chart ring is known to be a complete adic ring.
 
 ## What is *not* touched
 
