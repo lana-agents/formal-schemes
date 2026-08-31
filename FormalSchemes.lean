@@ -291,6 +291,7 @@ import FormalSchemes.SpfIsoOverBase
 import FormalSchemes.SpfMap
 import FormalSchemes.SpfRingEquivIso
 import FormalSchemes.SpfSectionsNontrivial
+import FormalSchemes.SpfTargetColimit
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.TargetBasicRefinement
