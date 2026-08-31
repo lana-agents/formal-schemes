@@ -22,8 +22,8 @@ state:
   completeness, so this is not a corollary of the bridge; it is a second consequence of the same
   saturation hypothesis;
 * the degenerate case `K = ⊥`, where the bridge holds with no hypothesis at all — which
-  `hasCofinalInducedFiltration_span_singleton` does **not** cover, since its saturation hypothesis
-  at `c = 0` says `S = ⊤`.
+  `Subring.hasCofinalInducedFiltration_span_singleton` does **not** cover, since its saturation
+  hypothesis at `c = 0` says `S = ⊤`.
 
 ## Main results
 
