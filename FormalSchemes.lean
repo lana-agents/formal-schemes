@@ -265,6 +265,7 @@ import FormalSchemes.RestrictedPowerSeriesCoeff
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
 import FormalSchemes.Sections
+import FormalSchemes.SpecAwayOverlap
 import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.Spf

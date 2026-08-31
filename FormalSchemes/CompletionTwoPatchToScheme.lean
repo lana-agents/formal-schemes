@@ -2,6 +2,7 @@ import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.CompletionGlueTwoPatchCondition
 import FormalSchemes.GlueMorphisms
+import FormalSchemes.SpecAwayOverlap
 
 set_option linter.style.header false
 
@@ -27,7 +28,12 @@ development. Everything before it completes an affine and maps to `Spec R`.
 `specTwoPatch` is glued exactly as `completionTwoPatch` is: a `CategoryTheory.GlueData'` on the
 index type `ULift Bool`, with `Spec A` and `Spec B` as patches, `Spec A_a` and `Spec B_b` as
 overlaps, the affine chart inclusions `Spec (A → A_a)` as the inclusions, and `Spec θ` as the
-transition. As there, the `t'`, `t_fac` and `cocycle` fields are vacuous because no triple of
+transition. That those inclusions are open immersions of locally ringed spaces —
+`AlgebraicGeometry.isOpenImmersion_specAwayMap`, which the `f_mono`, `f_hasPullback` and `f_open`
+fields all need — used to be stated here; it is general in the ring and the element and says
+nothing about two patches, so it now lives in `FormalSchemes/SpecAwayOverlap.lean` together with
+the range computation and the overlap identification that an arbitrary-index version of this glue
+would consume. As there, the `t'`, `t_fac` and `cocycle` fields are vacuous because no triple of
 `Bool`-indices is pairwise distinct.
 
 The morphism is `AlgebraicGeometry.completionTwoPatchDesc`
@@ -50,9 +56,6 @@ recorded here as `specTwoPatch_glue`.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.isOpenImmersion_specAwayMap`: the affine chart inclusion
-  `Spec R_f ⟶ Spec R` is an open immersion of locally ringed spaces. Mathlib has this at the level
-  of schemes; this transports it, which is what the glue data needs.
 * `AlgebraicGeometry.specGlueIso`: `Spec` of the overlap identification `θ`.
 * `AlgebraicGeometry.specTwoPatchGlueData'`, `AlgebraicGeometry.specTwoPatchLRSGlueData`,
   `AlgebraicGeometry.specTwoPatch`: the glued scheme `Spec A ∪_{D(a) ≅ D(b)} Spec B`, as a locally
@@ -92,19 +95,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry
 universe u
 
 namespace AlgebraicGeometry
-
-/-- **The affine chart inclusion of a basic open is an open immersion of locally ringed spaces.**
-Mathlib supplies this for schemes (`Scheme.instIsOpenImmersionMapOfHomAwayAlgebraMap`); the
-underlying locally ringed space morphism of `Spec.map` is `Spec.locallyRingedSpaceMap` on the nose,
-so the scheme-level instance transports through `SheafedSpace.isOpenImmersion_iff_hom`. The glue
-datum below needs it in this form for its `f_mono`, `f_hasPullback` and `f_open` fields. -/
-instance isOpenImmersion_specAwayMap {R : Type u} [CommRing R] (f : R) :
-    LocallyRingedSpace.IsOpenImmersion
-      (Spec.locallyRingedSpaceMap
-        (CommRingCat.ofHom (algebraMap R (Localization.Away f)))) :=
-  (SheafedSpace.isOpenImmersion_iff_hom
-    (LocallyRingedSpace.Hom.toShHom (Scheme.Hom.toLRSHom
-      (Spec.map (CommRingCat.ofHom (algebraMap R (Localization.Away f))))))).mp inferInstance
 
 section Glued
 
