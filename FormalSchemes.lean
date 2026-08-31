@@ -60,6 +60,7 @@ import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.AwayCompletionNested
 import FormalSchemes.AwayCompletionNestedNaturality
+import FormalSchemes.AwayCompletionRegular
 import FormalSchemes.AwayCompletionResiduePow
 import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.AwayCompletionSurjective

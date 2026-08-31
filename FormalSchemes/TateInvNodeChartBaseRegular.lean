@@ -1,3 +1,4 @@
+import FormalSchemes.AwayCompletionRegular
 import FormalSchemes.RegularMulEquiv
 import FormalSchemes.TateInvNodeChartBaseGenerator
 
@@ -64,28 +65,39 @@ ring, where flatness and torsion-freeness *are* available.
   `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_principal''` and
   `AlgebraicGeometry.fg_tateInvNodeChartAwayIdeal_of_principal''` — the three results of
   `FormalSchemes.TateInvNodeChartBaseGenerator` with their two remaining hypotheses restated in the
-  presheaf-free form. These are where a future proof of the regularity plugs in.
+  presheaf-free form.
+* `AlgebraicGeometry.isLeftRegular_algebraMap_awayCompletion_overlapX` and its `Y` mirror —
+  regularity of the base generator **in `A` itself** implies both of those, because a completed
+  localization of a Noetherian ring is flat over it.
+* `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_principal_of_isLeftRegular` and
+  its two companions — the same three results carrying **one** hypothesis, about `A` alone.
 
 ## What the obstruction has become, exactly
 
-After this file, the open question behind all three primed results is precisely
+**One statement about `A`, with no completion, no localization and no presheaf in it:**
 
-> is `algebraMap R (A{1/x}{1/(x + y − 1)}) t` left-regular (and its `y`-side mirror)?
+> is `algebraMap R (annulusAlgebra R I q) t` left-regular — i.e. is the base generator a
+> nonzerodivisor in `A = R{x, y}/(x·y − q)`?
 
-equivalently: are those two twice-completed localizations `t`-torsion-free? `A{1/x}` is Noetherian
-whenever `R` is, and both a localization and an adic completion of a Noetherian ring are flat over
-it, so the standard route is to push regularity **up** from `A` — see
-`Mathlib.RingTheory.Flat.Localization`'s `IsSMulRegular.of_isLocalization` and
-`AdicCompletion.flat_of_isNoetherian` with `Module.Flat.IsSMulRegular.of_flat`. That route is
-**not** run here and this file claims nothing about it; running it is the natural successor, and it
-would leave `IsLeftRegular (algebraMap R (annulusAlgebra R I q) t)` — a question about
-`R{x, y}/(x·y − q)` alone — as the whole of the obstruction.
+`AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_principal_of_isLeftRegular` and its
+two companions are #445's three principal-base results carrying exactly that hypothesis and nothing
+else. The reduction is `AlgebraicGeometry.isLeftRegular_algebraMap_awayCompletion_overlapX` and its
+`Y` mirror: regularity **rises** along `A → A{1/x} → A{1/x}{1/(x + y − 1)}` because a localization
+is flat and an adic completion of a Noetherian ring is flat over it
+(`FormalSpectrum.isLeftRegular_algebraMap_awayCompletion`,
+`FormalSchemes.AwayCompletionRegular`), and `A` is Noetherian because
+`RestrictedPowerSeries.instIsNoetherianRing` is.
+
+Only the *rising* direction is available, and that is the direction needed: nothing here says the
+converse, and an element can become regular in a localization without being regular downstairs.
 
 **No `(R, I, q, t)` with `t ≠ 0` at which the regularity holds is exhibited here, and no
-counterexample either.** At `t = 0` the hypotheses are unsatisfiable in a nonzero ring, and `I = ⊥`
+counterexample either.** At `t = 0` the hypothesis is unsatisfiable in a nonzero ring, and `I = ⊥`
 remains the only unconditional case, through
 `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_bot` rather than through the principal
-criterion.
+criterion. What is gained is that the question is now about one explicit quotient of a restricted
+power series ring, where `R`-level hypotheses — `R` a domain, `R` `t`-torsion-free — can bear on it
+at all.
 
 ## What is *not* touched
 
@@ -345,5 +357,101 @@ theorem fg_tateInvNodeChartAwayIdeal_of_principal'' (t : R) (ht : I = Ideal.span
   fg_tateInvNodeChartAwayIdeal_of_principal' R I q hq hI t ht
     ((isLeftRegular_tateInvNodeChartAwayLegX_algebraMap_iff R I q hq hI t).2 hregX)
     ((isLeftRegular_tateInvNodeChartAwayLegY_algebraMap_iff R I q hq hI t).2 hregY)
+
+/-! ### The obstruction, reduced to the annulus algebra -/
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **Left-regularity in `A` rises to `A{1/x}{1/(x + y − 1)}`.**
+`FormalSpectrum.isLeftRegular_algebraMap_awayCompletion` applied twice — once at
+`AlgebraicGeometry.overlapX` and once at `AlgebraicGeometry.annulusNodeChartCoord` — with
+`FormalSpectrum.isNoetherianRing_awayCompletion` supplying the Noetherianity the second application
+needs, and `IsScalarTower.algebraMap_apply` composing the three structural maps.
+
+`annulusAlgebra R I q` is Noetherian because it is a quotient of `RestrictedPowerSeries`, which is
+(`RestrictedPowerSeries.instIsNoetherianRing`). -/
+theorem isLeftRegular_algebraMap_awayCompletion_overlapX (t : R)
+    (ht : IsLeftRegular (algebraMap R (annulusAlgebra R I q) t)) :
+    IsLeftRegular (algebraMap R (awayCompletion
+      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
+      (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
+        (annulusNodeChartCoord R I q))) t) := by
+  haveI : IsNoetherianRing (awayCompletion (annulusIdealOfDefinition R I q) (overlapX R I q)) :=
+    FormalSpectrum.isNoetherianRing_awayCompletion _ _
+  have h1 : IsLeftRegular (algebraMap (annulusAlgebra R I q)
+      (awayCompletion (annulusIdealOfDefinition R I q) (overlapX R I q))
+      (algebraMap R (annulusAlgebra R I q) t)) :=
+    FormalSpectrum.isLeftRegular_algebraMap_awayCompletion _ _ ht
+  rw [← IsScalarTower.algebraMap_apply] at h1
+  have h2 := FormalSpectrum.isLeftRegular_algebraMap_awayCompletion
+    (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
+    (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
+      (annulusNodeChartCoord R I q)) h1
+  rw [← IsScalarTower.algebraMap_apply] at h2
+  exact h2
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **Left-regularity in `A` rises to `A{1/y}{1/(x + y − 1)}`**, the mirror of
+`isLeftRegular_algebraMap_awayCompletion_overlapX` at `AlgebraicGeometry.overlapY`. -/
+theorem isLeftRegular_algebraMap_awayCompletion_overlapY (t : R)
+    (ht : IsLeftRegular (algebraMap R (annulusAlgebra R I q) t)) :
+    IsLeftRegular (algebraMap R (awayCompletion
+      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
+      (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
+        (annulusNodeChartCoord R I q))) t) := by
+  haveI : IsNoetherianRing (awayCompletion (annulusIdealOfDefinition R I q) (overlapY R I q)) :=
+    FormalSpectrum.isNoetherianRing_awayCompletion _ _
+  have h1 : IsLeftRegular (algebraMap (annulusAlgebra R I q)
+      (awayCompletion (annulusIdealOfDefinition R I q) (overlapY R I q))
+      (algebraMap R (annulusAlgebra R I q) t)) :=
+    FormalSpectrum.isLeftRegular_algebraMap_awayCompletion _ _ ht
+  rw [← IsScalarTower.algebraMap_apply] at h1
+  have h2 := FormalSpectrum.isLeftRegular_algebraMap_awayCompletion
+    (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
+    (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
+      (annulusNodeChartCoord R I q)) h1
+  rw [← IsScalarTower.algebraMap_apply] at h2
+  exact h2
+
+/-! ### The principal-base results, on one hypothesis about `A` -/
+
+/-- **The filtration bridge over a principal base ideal, on one hypothesis about `A`.**
+Both left-regularity hypotheses of
+`hasCofinalInducedFiltration_tateInvNodeChartAwaySubring''` follow from left-regularity of
+`algebraMap R (annulusAlgebra R I q) t`, by
+`isLeftRegular_algebraMap_awayCompletion_overlapX` and its `Y` mirror. -/
+theorem hasCofinalInducedFiltration_tateInvNodeChartAwaySubring_of_isLeftRegular (t : R)
+    (ht : I = Ideal.span {t})
+    (hreg : IsLeftRegular (algebraMap R (annulusAlgebra R I q) t)) :
+    (tateInvNodeChartAwaySubring R I q hq hI).HasCofinalInducedFiltration
+      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)) :=
+  hasCofinalInducedFiltration_tateInvNodeChartAwaySubring'' R I q hq hI t ht
+    (isLeftRegular_algebraMap_awayCompletion_overlapX R I q t hreg)
+    (isLeftRegular_algebraMap_awayCompletion_overlapY R I q t hreg)
+
+/-- **Adic completeness of the node chart ring over a principal base ideal, on one hypothesis about
+`A`.** The node chart's candidate ring is a complete adic ring as soon as the base generator is a
+nonzerodivisor in `A = R{x, y}/(x·y − q)`.
+
+This is the whole of #445's obstruction (b), reduced: no presheaf, no completion and no
+localization occurs in `hreg`. -/
+theorem isAdicComplete_tateInvNodeChartAwayIdeal_of_principal_of_isLeftRegular (t : R)
+    (ht : I = Ideal.span {t})
+    (hreg : IsLeftRegular (algebraMap R (annulusAlgebra R I q) t)) :
+    IsAdicComplete (tateInvNodeChartAwayIdeal R I q hq hI)
+      (tateInvNodeChartAwaySubring R I q hq hI) :=
+  isAdicComplete_tateInvNodeChartAwayIdeal_of_principal'' R I q hq hI t ht
+    (isLeftRegular_algebraMap_awayCompletion_overlapX R I q t hreg)
+    (isLeftRegular_algebraMap_awayCompletion_overlapY R I q t hreg)
+
+/-- **Finite generation of the candidate ideal of definition over a principal base ideal, on one
+hypothesis about `A`.** Finite generation is not implied by completeness; this is the second
+consequence of the same reduction. -/
+theorem fg_tateInvNodeChartAwayIdeal_of_principal_of_isLeftRegular (t : R)
+    (ht : I = Ideal.span {t})
+    (hreg : IsLeftRegular (algebraMap R (annulusAlgebra R I q) t)) :
+    (tateInvNodeChartAwayIdeal R I q hq hI).FG :=
+  fg_tateInvNodeChartAwayIdeal_of_principal'' R I q hq hI t ht
+    (isLeftRegular_algebraMap_awayCompletion_overlapX R I q t hreg)
+    (isLeftRegular_algebraMap_awayCompletion_overlapY R I q t hreg)
 
 end AlgebraicGeometry
