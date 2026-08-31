@@ -83,10 +83,12 @@ successor can grind out: it is that the two `Equiv`s have different right-hand s
 difference is exactly the hypothesis that is unavailable. Both signatures are `#check`ed in the
 `Crux` section below, so the comparison can be read off the tree instead of off this docstring.
 
-`FormalSpectrum.existsUnique_hom_thickeningMap_spf_of_continuous` below is what *does* survive: as
-soon as a continuity witness `L ≤ I.comap ψ` is in hand, the morphism exists (it is
-`locallyRingedSpaceMap`) and is unique. It is stated so that the gap is visible as a hypothesis
-rather than hidden in a proof.
+`FormalSpectrum.existsUnique_hom_thickeningMap_spf_of_continuous` below is what *does* survive, and
+it is weaker than its name suggests. Its family is `FormalSpectrum.spfTargetFamily`, which is
+**defined** as the restriction of `Spf ψ`, so the theorem presupposes not merely a continuity
+witness but a `ψ` whose induced family *is* the given one — strictly more than continuity, and
+producing such a `ψ` from a bare family is route 1 below, which does not invert. It is stated to
+make the shape of the missing input explicit, not to reduce the gap to continuity.
 
 ## Two routes that were considered and are recorded as **unformalised**
 
@@ -116,7 +118,10 @@ sheaf-theoretic sketch — also explicitly unformalised, and for the *different*
 ## Which of `ThickeningChartSpfHom.lean`'s declarations survive a change of target
 
 Read off its statements, not guessed from its proofs. `X` there is **already** a bare
-`LocallyRingedSpace`; only the four declarations that mention `B` or `e` are `Spec`-specific.
+`LocallyRingedSpace`. Of the thirteen declarations before its witness section, **five** mention
+neither `B` nor `e` and survive verbatim; the other **eight** carry the target datum in their
+statements, and of those only **four** — `chartSpfHom`, `thickeningMap_comp_chartSpfHom` and the
+two `…Ambient` declarations that go through them — are actually blocked.
 
 * `LocallyRingedSpace.restrictLE` and `restrictLE_comp_ofRestrict`: **verbatim** — they mention no
   target at all.
@@ -250,9 +255,12 @@ for.** This is what survives of `AdicRingCat.spfHomEquiv` at the point issue 62m
 the existence half is `locallyRingedSpaceMap` and needs `hψ`, the uniqueness half is
 `hom_ext_thickeningMap_spf` and needs nothing.
 
-The hypothesis `hψ : L ≤ I.comap ψ` is the whole gap. A compatible family of morphisms of locally
-ringed spaces `Spec (R ⧸ Iⁿ⁺¹) ⟶ Spf L` does **not** come with it — see this file's module
-docstring — so this theorem is not a proof of the general statement and must not be cited as one. -/
+Note what this does *not* say. The family is `spfTargetFamily I L ψ hψ`, which is defined as the
+restriction of `Spf ψ`, so the theorem applies only to families already known to come from a
+continuous `ψ`. A compatible family of morphisms of locally ringed spaces
+`Spec (R ⧸ Iⁿ⁺¹) ⟶ Spf L` comes with neither the `ψ` nor the continuity witness, and recovering a
+`ψ` from one is route 1 of this file's module docstring, which does not invert. So this theorem is
+not a proof of the general statement and must not be cited as one. -/
 theorem existsUnique_hom_thickeningMap_spf_of_continuous :
     ∃! g : locallyRingedSpaceObj I ⟶ locallyRingedSpaceObj L,
       ∀ n : ℕ, thickeningMap I n ≫ g = (spfTargetFamily I L ψ hψ).1 n :=
