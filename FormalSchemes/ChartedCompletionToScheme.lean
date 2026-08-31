@@ -61,7 +61,10 @@ obstruct it** — read off that structure's fields, not guessed:
    `ChartedCompletionDatum` has an independent `K i : Ideal (C i)` in an unrelated ring, which is
    exactly what `FormalSchemes.ChartedSchemeDatum`'s docstring introduces the datum shape to allow
    — the projective line completed at a closed point wants `K₀ = (x)` in `k[x]` and `K₁ = ⊤` in
-   `k[y]`, and no single `(R, I)` produces that pair.
+   `k[y]`, and no single `(R, I)` produces that pair. That datum is
+   `AlgebraicGeometry.projectiveLineDatum` (`FormalSchemes.ProjectiveLineCompletion`), where
+   `AlgebraicGeometry.projectiveLineDatum_K_false_ne_top` and
+   `AlgebraicGeometry.projectiveLineDatum_K_true` are the two ideals in question.
 2. **A second base and a whole extra cocycle.** `AffineChartedFibreDatum` also fixes `B` with
    `[Algebra R B]` and carries `t'`, `t_fac` and `cocycle` at the level of
    `CompletedTensorAwayInterchange.interchangeOpenImmersion` — the *fibre-product* side — as well

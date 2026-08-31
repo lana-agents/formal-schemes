@@ -73,14 +73,23 @@ equation between two `formalCompletion.map`s, and read it off `hσθ`.
   `..completionFormalGlueData`, `..completionGlued`: the glue datum and the glued formal scheme,
   with `..completionι` its charts, `..completionι_isOpenImmersion` and
   `..completionGlued_jointly_surjective`.
+* `AlgebraicGeometry.ChartedCompletionDatum.ofTwoPatch`: the two-patch line's own input, read as a
+  completion datum, with `..ofTwoPatch_K_false` and `..ofTwoPatch_K_true`. Its two ideals are
+  `I : Ideal A` and `J : Ideal B`, in different rings.
 * `AlgebraicGeometry.ChartedCompletionDatum.completion_glue_condition`, `..completionDesc`,
   `..completionι_comp_desc`, `..completionGlued_hom_ext`: the relation that makes morphisms *out
   of* the glued completion definable, and the descent principle it unlocks.
 
 ## What is *not* proved
 
-* **No datum is constructed here.** `FormalSchemes.SpecThreeChartCompletion` builds one on
-  `ULift (Fin 3)`, where the triple fields are genuinely evaluated.
+* **The only datum constructed here is `ChartedCompletionDatum.ofTwoPatch`, and its triple fields
+  are vacuous.** On `ULift Bool` no triple of indices is pairwise distinct, so `σ`, `hσθ` and `hσc`
+  are `False.elim` and nothing exercises them. The instance that does is
+  `AlgebraicGeometry.SpecThreeChartCover.completionDatum`
+  (`FormalSchemes.SpecThreeChartCompletion`), on `ULift (Fin 3)`. The two are complementary:
+  the three-chart datum evaluates the triple fields but takes all its ideals from one `(A, I)`,
+  while `AlgebraicGeometry.projectiveLineDatum` (`FormalSchemes.ProjectiveLineCompletion`), built
+  from `ofTwoPatch`, has independent chart ideals with one of them `⊤`.
 * Nothing here relates `completionGlued` to `specGlued`; that is
   `FormalSchemes.ChartedCompletionToScheme`.
 * No universal property is claimed for `completionGlued`. `completionDesc` is descent along the
@@ -519,6 +528,75 @@ theorem completionGlued_hom_ext {f₁ f₂ : D.completionGlued.toLocallyRingedSp
 end Desc
 
 end ChartedCompletionDatum
+
+/-! ### The two-patch line, read as a completion datum -/
+
+section TwoPatch
+
+variable {A B : Type u} [CommRing A] [CommRing B] (I : Ideal A) (hI : I.FG) (a : A)
+  (J : Ideal B) (hJ : J.FG) (b : B)
+  (θ : Localization.Away a ≃+* Localization.Away b)
+  (hθ : (I.map (algebraMap A (Localization.Away a))).map θ.toRingHom =
+    J.map (algebraMap B (Localization.Away b)))
+
+/-- **The two-patch input, as a `ChartedCompletionDatum`.** The mirror of
+`AlgebraicGeometry.ChartedSchemeDatum.ofTwoPatch`, field for field, with the four extra fields a
+completion datum carries: `hK` from the two finite-generation hypotheses, and `σ`, `hσθ`, `hσc`
+vacuously, since no triple of `ULift Bool`-indices is pairwise distinct
+(`AlgebraicGeometry.bool_not_pairwise_distinct`).
+
+The ideals are `I : Ideal A` and `J : Ideal B`, **in different rings and unrelated to each other**,
+which is what this datum shape exists for and what
+`AlgebraicGeometry.AffineChartedFibreDatumX` cannot express. The backward `hθ` is
+`FormalSpectrum.isAdicHom_ringEquiv_symm`, as on the `Spec` side. -/
+def ChartedCompletionDatum.ofTwoPatch : ChartedCompletionDatum.{u} where
+  J := ULift.{u} Bool
+  C := fun i => cond i.down B A
+  commRing := fun i => match i with
+    | ⟨false⟩ => inferInstanceAs (CommRing A)
+    | ⟨true⟩ => inferInstanceAs (CommRing B)
+  K := fun i => match i with
+    | ⟨false⟩ => I
+    | ⟨true⟩ => J
+  hK := fun i => match i with
+    | ⟨false⟩ => hI
+    | ⟨true⟩ => hJ
+  g := fun i _ => match i with
+    | ⟨false⟩ => a
+    | ⟨true⟩ => b
+  θ := fun i j h => match i, j, h with
+    | ⟨false⟩, ⟨true⟩, _ => θ
+    | ⟨true⟩, ⟨false⟩, _ => θ.symm
+    | ⟨false⟩, ⟨false⟩, h => (h rfl).elim
+    | ⟨true⟩, ⟨true⟩, h => (h rfl).elim
+  θ_symm := by
+    rintro ⟨_ | _⟩ ⟨_ | _⟩ h
+    · exact absurd rfl h
+    · rfl
+    · exact (RingEquiv.symm_symm θ).symm
+    · exact absurd rfl h
+  hθ := by
+    rintro ⟨_ | _⟩ ⟨_ | _⟩ h
+    · exact absurd rfl h
+    · exact hθ
+    · exact FormalSpectrum.isAdicHom_ringEquiv_symm θ hθ
+    · exact absurd rfl h
+  σ := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
+  hσθ := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
+  hσc := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
+
+/-- The `A`-side ideal of the two-patch completion datum is `I`, in `A`. -/
+theorem ChartedCompletionDatum.ofTwoPatch_K_false :
+    (ChartedCompletionDatum.ofTwoPatch I hI a J hJ b θ hθ).K ⟨false⟩ = I :=
+  rfl
+
+/-- The `B`-side ideal of the two-patch completion datum is `J`, in `B`: the two ideals live in
+different rings and are not images of one another. -/
+theorem ChartedCompletionDatum.ofTwoPatch_K_true :
+    (ChartedCompletionDatum.ofTwoPatch I hI a J hJ b θ hθ).K ⟨true⟩ = J :=
+  rfl
+
+end TwoPatch
 
 end AlgebraicGeometry
 
