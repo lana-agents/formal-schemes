@@ -72,9 +72,14 @@ questions and neither is settled here; the first is settled elsewhere.
   `I ≠ ⊤`, with `overlapX` itself the element of `A` outside the subring.
 * *Bigger than the base*, i.e. containing an element outside the image of `Γ (Spf R, ·)`: that is
   issue 1223's goal 3. `algebraMap_mem_tateInvGlobalSubring` is its trivial half — the image is
-  contained — and its converse is not proved here. Deligne–Rapoport's 1-gon being proper predicts
-  that at `S = Set.univ` the answer is *no* and the subring is exactly the image of `R`; that is a
-  prediction about a nodal curve over a field, and this is a formal annulus over an adic ring.
+  contained — and its converse is not proved here. **It is proved elsewhere, in the negative**:
+  `AlgebraicGeometry.tateInvGlobalSubring_eq_range_of_noetherian`
+  (`FormalSchemes.TateInvSeparatingDivision`) says the subring is exactly the image of `R` over a
+  Noetherian base, which is the standing hypothesis of this file's section, and
+  `AlgebraicGeometry.exists_algebraMap_eq_of_mem_tateInvChartAnnulusSubring_univ` transports that
+  to `tateInvChartAnnulusSubring` at `S = Set.univ`. So the answer predicted by
+  Deligne–Rapoport's 1-gon being proper is the right one here too, and it is no longer a
+  prediction.
 
 **Nothing here is a chart, and nothing here says the quotient is a formal scheme.**
 `AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChart`

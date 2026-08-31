@@ -69,7 +69,11 @@ non-vacuity, not an answer; and `tateInvChartAnnulusSubring_empty_eq_top` shows 
 
 **Nor whether the chart ring is larger than the base.** That is a *different* question —
 1223's goal 3 asks for an element of the chart ring outside the image of `Γ (Spf R, ·)`, which is
-about the ring being big, where properness is about it being small. Neither is settled here.
+about the ring being big, where properness is about it being small. Neither is settled here, and
+the second is settled **in the negative** at `S = Set.univ` by
+`AlgebraicGeometry.exists_algebraMap_eq_of_mem_tateInvChartAnnulusSubring_univ`
+(`FormalSchemes.TateInvSeparatingDivision`): there is no such element, because the chart ring
+there is exactly the image of the base.
 
 **The open is still described through the chain.**
 `AlgebraicGeometry.tateInvPatchSaturateOpens hq hI hS` is by definition the preimage under

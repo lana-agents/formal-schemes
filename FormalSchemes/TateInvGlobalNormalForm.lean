@@ -42,10 +42,10 @@ With the membership criterion, `(1 − q ^ |n|) · coeff n (φ a) = 0` for `a �
 * `AlgebraicGeometry.tateInvGlobalCoord_eq_algebraMap_of_mem`: `φ a` is the constant
   `coeff 0 (φ a)`.
 
-## What is *not* proved, and the exact residue
+## What is *not* proved here, and the exact residue
 
-`Γ (T_inv/⟨σ⟩) ≃+* R` is **not** proved unconditionally. It is proved from one hypothesis and
-nothing else:
+`Γ (T_inv/⟨σ⟩) ≃+* R` is **not** proved unconditionally *in this file*. It is proved from one
+hypothesis and nothing else:
 
 * `AlgebraicGeometry.IsTateInvCoordSeparating`: `φ a = 0` and `φ (flip⁻¹ a) = 0` imply `a = 0`.
 
@@ -55,6 +55,18 @@ This is the *uniqueness* half of a normal form for `A`. From it,
 `AlgebraicGeometry.tateInvPeriodQuotientGlobalSectionsEquivBase` transports it along
 `AlgebraicGeometry.tateInvGlobalSectionsRingEquiv` to the global sections of the quotient
 themselves.
+
+**The hypothesis is discharged over a Noetherian base.**
+`AlgebraicGeometry.isTateInvCoordSeparating_of_noetherian`
+(`FormalSchemes.TateInvSeparatingDivision`) proves it for every `[IsNoetherianRing R]`, and
+`AlgebraicGeometry.isTateInvCoordSeparating_iff_adicKerClosed` shows it is *equivalent* to adic
+closedness of the presentation kernel, so a base where it fails is exactly a base where
+`Ideal.span {x·y − q}` is not adically closed in `R{x, y}`. No such base is known. The three
+conditional results above therefore have unconditional Noetherian counterparts
+(`AlgebraicGeometry.tateInvGlobalSubring_eq_range_of_noetherian` and the two
+`…OfNoetherian` definitions); the conditional forms are kept, because they are what a base that
+is not Noetherian gets. `AlgebraicGeometry.isTateInvCoordSeparating_bot` covers the discrete
+family with no Noetherian hypothesis at all.
 
 **The hypothesis cannot be weakened to injectivity of `φ`.**
 `AlgebraicGeometry.not_injective_tateInvGlobalCoord_zero` shows `φ` is not injective at `q = 0`
