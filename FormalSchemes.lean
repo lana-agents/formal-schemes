@@ -340,6 +340,7 @@ import FormalSchemes.TateInvGlobalCoeff
 import FormalSchemes.TateInvGlobalNormalForm
 import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvGlobalSections
+import FormalSchemes.TateInvInvariantSectionCollapse
 import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvNodeChartBaseGenerator
 import FormalSchemes.TateInvNodeChartBaseRegular
