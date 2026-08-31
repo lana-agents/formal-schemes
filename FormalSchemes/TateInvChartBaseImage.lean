@@ -110,7 +110,7 @@ variable [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (over
 omit [TopologicalSpace R] [IsAdicRing I]
   [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))] in
 /-- **The `x`-chart leg on the structural image.** The leg is the `.c.app` of
-`AlgebraicGeometry.annulusOverlapChart`, so this is `FormalSpectrum.sectionsOpenHom_c_app`
+`annulusOverlapChart` (root namespace), so this is `FormalSpectrum.sectionsOpenHom_c_app`
 together with `AlgebraicGeometry.globalSectionsMap_annulusOverlapChart`. -/
 theorem tateInvChartLegX_sectionsOpenHom (hS : IsOpen S) (a : annulusAlgebra R I q) :
     tateInvChartLegX (hq := hq) (hI := hI) hS
