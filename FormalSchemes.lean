@@ -289,6 +289,7 @@ import FormalSchemes.SpfHomSchemeNatural
 import FormalSchemes.SpfIsoIdealRecovery
 import FormalSchemes.SpfIsoOverBase
 import FormalSchemes.SpfMap
+import FormalSchemes.SpfRingEquivIso
 import FormalSchemes.SpfSectionsNontrivial
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
@@ -346,6 +347,7 @@ import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartPrincipal
 import FormalSchemes.TateInvNodeChartPrincipalRegularBase
 import FormalSchemes.TateInvNodeChartQuotientOpen
+import FormalSchemes.TateInvNodeChartQuotientSpf
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeChartSpf
 import FormalSchemes.TateInvNodeChartSpfNonempty
