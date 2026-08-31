@@ -33,6 +33,8 @@ conjoined, which as separate existentials they could not be.
   the witness `AlgebraicGeometry.exists_preimage_eq_tateInvSaturateOpens` already produced.
   `AlgebraicGeometry.preimage_tateInvSaturateQuotientOpens` is its defining property and
   `AlgebraicGeometry.eq_tateInvSaturateQuotientOpens` is the uniqueness.
+  `AlgebraicGeometry.tateInvSaturateQuotientOpens_eq_imageOpen` records that it is the tree's
+  general `AlgebraicGeometry.LocallyRingedSpace.imageOpen` at the saturation, definitionally.
 * `AlgebraicGeometry.tateInvNodeChartQuotientOpens`: that at the node chart locus, with
   `AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv` identifying its sections with
   `AlgebraicGeometry.tateInvNodeChartAwaySubring` — a `def`, not a `Nonempty`, because the open is
@@ -121,6 +123,22 @@ theorem preimage_tateInvSaturateQuotientOpens (hS : IsOpen S) :
         (tateInvSaturateQuotientOpens (hq := hq) (hI := hI) hS) =
       tateInvSaturateOpens hq hI hS :=
   Opens.ext (preimage_image_base_tateInvSaturate hq hI (isActionQuotient_actionQuotientπ _) S)
+
+/-- **It is the tree's general `imageOpen` at the saturation**, definitionally — the general
+construction `AlgebraicGeometry.LocallyRingedSpace.imageOpen`
+(`FormalSchemes.ActionTranslates`) is already stated at `{G : Type v} [Small.{u} G]`, which is the
+generality this cluster needs since the acting group is `Multiplicative ℤ : Type 0`. Recorded so
+that this name is understood as a specialisation rather than a third construction: it is the same
+`Opens` as `AlgebraicGeometry.LocallyRingedSpace.preimage_imageOpen` computes the preimage of.
+
+(`CategoryTheory.quotientImage` in `FormalSchemes.ActionQuotientSeparatingSections` is the other
+wrapper of `imageOpen`, but it is fixed at `G : Type u` and so does **not** apply to the Tate
+action.) -/
+theorem tateInvSaturateQuotientOpens_eq_imageOpen (hS : IsOpen S) :
+    tateInvSaturateQuotientOpens (hq := hq) (hI := hI) hS =
+      LocallyRingedSpace.imageOpen (isActionQuotient_actionQuotientπ
+        (tateInvPeriodAction R I q hq hI)) (tateInvSaturateOpens hq hI hS) :=
+  rfl
 
 /-- **And it is the only open with that property.** Preimage along `π.base` is injective because
 `π.base` is surjective, with no hypothesis on the action; this is what turns the tree's several
