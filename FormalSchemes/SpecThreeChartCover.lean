@@ -53,14 +53,23 @@ chart identification of `FormalSchemes.AwayCompletionNestedNaturality`.
   covered by `D(2)`, `D(3)`, `D(5)`, with the double overlap the triple `0, 1, 2` transports shown
   non-empty — so the non-vacuity above is not a statement about empty spaces.
 
+## `glued ≅ Spec A` is proved, one file on
+
+**`AlgebraicGeometry.SpecThreeChartCover.gluedIsoSpec`
+(`FormalSchemes.SpecThreeChartCoverToSpec`) identifies `glued` with `Spec A`** whenever
+`Ideal.span (Set.range f) = ⊤`, and `gluedIsoSpec_intCover` exhibits that at `Spec ℤ` covered by
+`D(2)`, `D(3)`, `D(5)`. It is the `Spec`-side twin of
+`AlgebraicGeometry.ThreeChartCover.gluedXIsoSpf` (`FormalSchemes.ThreeChartCoverOpenImmersion`).
+
+The three ingredients are the ones that file supplies: the descent of the chart inclusions
+`Spec A_{f_i} ⟶ Spec A` through the colimit (`AlgebraicGeometry.SpecThreeChartCover.toSpec`, via
+the datum's universal property `AlgebraicGeometry.ChartedSchemeDatum.desc` in
+`FormalSchemes.ChartedSchemeDatumDesc`), `isOpenImmersion_toSpec`, and surjectivity from the span
+condition. **So it does follow from the datum** — it is not extra structure, only extra work.
+Nothing of it is *here*, which is why this file stops at `glued`.
+
 ## What is *not* proved
 
-* **`glued` is not identified with `Spec A`**, even when `D(f₀) ∪ D(f₁) ∪ D(f₂) = Spec A`. The
-  formal-side twin of that statement is `AlgebraicGeometry.ThreeChartCover.gluedXIsoSpf`
-  (`FormalSchemes.ThreeChartCoverOpenImmersion`), and it is a file, not a corollary: it needs the
-  descent of the chart inclusions `Spec A_{f_i} ⟶ Spec A` through the colimit, an open-immersion
-  statement for the resulting map, and surjectivity from `Ideal.span {f₀, f₁, f₂} = ⊤`. None of
-  that follows from the datum, and none of it is here.
 * Nothing here is stated at `AlgebraicGeometry.Scheme`; see the scope note in
   `FormalSchemes.SpecAwayOverlap`.
 
