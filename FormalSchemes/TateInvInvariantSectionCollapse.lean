@@ -127,7 +127,17 @@ def tateInvPatchOpen (hS : IsOpen S) (m : ULift.{u} ℤ) :
     ((tateChainInvFormalGlueData R I q hq hI).ι_isOpenImmersion m).base_open.isOpenMap _ hS⟩
 
 /-- **The saturation of an open of the model patch, as an open of the chain.** The `Opens` wrapper
-around `AlgebraicGeometry.tateInvSaturate`, whose openness is `isOpen_tateInvSaturate`. -/
+around `AlgebraicGeometry.tateInvSaturate`, whose openness is `isOpen_tateInvSaturate`.
+
+**This duplicates `AlgebraicGeometry.tateInvSaturateOpens`** (`FormalSchemes.TateInvNodeChartGlue`),
+which is the same wrapper around the same two lemmas and elaborates to the same type; the two names
+differ by one character and live in the same namespace, so read this before adding a third. The
+duplication is not free and is not endorsed: it is here only because importing
+`FormalSchemes.TateInvNodeChartGlue` raises this leaf's `FormalSchemes` import closure from 167 to
+184 modules, and this file is a statement about the chain rather than about the node chart. The
+consolidation — moving `tateInvSaturateOpens` down to `FormalSchemes.TateInvSaturation`, beside
+`tateInvSaturate` and `isOpen_tateInvSaturate`, and deleting this copy — is filed as its own row,
+because it rebuilds that file's 34-module cone. -/
 def tateInvSaturateOpen (hS : IsOpen S) :
     Opens (tateChainInv R I q hq hI).toLocallyRingedSpace.toTopCat :=
   ⟨tateInvSaturate R I q hq hI S, isOpen_tateInvSaturate hq hI hS⟩
@@ -145,7 +155,14 @@ theorem tateInvPatchOpen_le_tateInvSaturateOpen (hS : IsOpen S) (m : ULift.{u} �
 cover-shift law `ι_tateInvShiftAut_zpow` (`FormalSchemes.TateActionInv`), assembled at term level
 rather than by `rw`: the glue datum's index type is `ULift ℤ` only after unfolding a semireducible
 definition, so a rewrite inside `.ι m` fails with a spurious "did not find an occurrence".
-`image_tateInvShiftAut_zpow_tateInvSaturate` records the same rule for the union. -/
+`image_tateInvShiftAut_zpow_tateInvSaturate` records the same rule for the union.
+
+**The term is not new, only the name is.** This exact composite already occurs twice, unnamed,
+inside `FormalSchemes.TateInvSaturation`: as `step₂` of
+`image_tateInvShiftAut_zpow_tateInvSaturate`, and as `key` of
+`tateInvSaturate_subset_of_invariant`. Naming it here does not remove those two copies, since they
+are upstream; replacing them belongs with the same consolidation row as `tateInvSaturateOpen`
+above. -/
 theorem image_ι_tateInvShiftAut_zpow (n : ℤ) (m : ULift.{u} ℤ) :
     ⇑((tateInvShiftAut R I q hq hI ^ n).hom).base ''
         (⇑((tateChainInvFormalGlueData R I q hq hI).ι m).base '' S) =
@@ -244,10 +261,18 @@ theorem exists_forall_not_isProperlyDiscontinuousOn (hItop : I ≠ ⊤) :
   exact not_isFreeProperlyDiscontinuous_tateInvPeriodAction R I q hI hq hItop fun x => hcon x
 
 include hq hI in
-/-- **The whole chain is not a separating open**, whenever `Spf R` is nonempty. So at `S = univ` —
-where `tateInvSaturate S` is the whole chain (`tateInvSaturate_univ`) and the collapse above
-applies unchanged — the two hypotheses the general lemma shed are not merely unproved but false.
-That is the sense in which removing them was necessary and not a tidy-up. -/
+/-- **The whole chain is not a separating open**, whenever `I` is a proper ideal. So at `S = univ`
+— where `tateInvSaturate S` is the whole chain (`tateInvSaturate_univ`) and the collapse above
+applies unchanged — the general lemma's discarded `IsProperlyDiscontinuousOn` hypothesis is not
+merely unproved at `U = Set.univ` but false. That is the sense in which removing it was necessary
+and not a tidy-up.
+
+**Two things this does not say.** The other discarded hypothesis, `V ⊆ U`, is not refuted by
+anything here; at `U = Set.univ` it is trivially true, and only `IsProperlyDiscontinuousOn` is at
+issue. And this refutes that hypothesis at `U = Set.univ` alone, not at every `U` containing the
+patch open — for the latter one would have to place the witness of
+`exists_forall_not_isProperlyDiscontinuousOn` inside `tateInvPatchOpen S ⟨0⟩`, which is not proved
+here. -/
 theorem not_isProperlyDiscontinuousOn_univ (hItop : I ≠ ⊤) :
     ¬ LocallyRingedSpace.IsProperlyDiscontinuousOn (tateInvPeriodAction R I q hq hI)
       (Set.univ : Set (tateChainInv R I q hq hI).toLocallyRingedSpace) := by
