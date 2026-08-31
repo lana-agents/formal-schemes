@@ -11,8 +11,8 @@ generation of the node chart's candidate ideal of definition, over a base with `
 hypotheses: the membership
 
 ```
-hmem : algebraMap R (awayCompletion (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)) t
-         ∈ tateInvNodeChartAwaySubring R I q hq hI
+hmem : algebraMap R (awayCompletion (annulusIdealOfDefinition R I q)
+         (annulusNodeChartCoord R I q)) t ∈ tateInvNodeChartAwaySubring R I q hq hI
 ```
 
 and left-regularity of the images of that element under the two forward legs. Its module docstring
@@ -73,7 +73,7 @@ theorem hasCofinalInducedFiltration_tateInvNodeChartAwaySubring' (t : R)
     (tateInvNodeChartAwaySubring R I q hq hI).HasCofinalInducedFiltration
       (awayCompletionIdeal (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)) :=
   hasCofinalInducedFiltration_tateInvNodeChartAwaySubring R I q hq hI t ht
-    (algebraMap_mem_tateInvNodeChartAwaySubring R I q hq hI t) hregX hregY
+    (algebraMap_mem_tateInvNodeChartAwaySubring (hq := hq) (hI := hI) t) hregX hregY
 
 /-- **Adic completeness of the node chart ring over a principal base ideal, with the membership
 hypothesis discharged.** `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_principal`
@@ -84,7 +84,7 @@ theorem isAdicComplete_tateInvNodeChartAwayIdeal_of_principal' (t : R) (ht : I =
     IsAdicComplete (tateInvNodeChartAwayIdeal R I q hq hI)
       (tateInvNodeChartAwaySubring R I q hq hI) :=
   isAdicComplete_tateInvNodeChartAwayIdeal_of_principal R I q hq hI t ht
-    (algebraMap_mem_tateInvNodeChartAwaySubring R I q hq hI t) hregX hregY
+    (algebraMap_mem_tateInvNodeChartAwaySubring (hq := hq) (hI := hI) t) hregX hregY
 
 /-- **Finite generation of the candidate ideal of definition over a principal base ideal, with the
 membership hypothesis discharged.** `AlgebraicGeometry.fg_tateInvNodeChartAwayIdeal_of_principal`
@@ -94,6 +94,6 @@ theorem fg_tateInvNodeChartAwayIdeal_of_principal' (t : R) (ht : I = Ideal.span 
     (hregY : IsLeftRegular (tateInvNodeChartAwayLegY R I q hq hI (algebraMap R _ t))) :
     (tateInvNodeChartAwayIdeal R I q hq hI).FG :=
   fg_tateInvNodeChartAwayIdeal_of_principal R I q hq hI t ht
-    (algebraMap_mem_tateInvNodeChartAwaySubring R I q hq hI t) hregX hregY
+    (algebraMap_mem_tateInvNodeChartAwaySubring (hq := hq) (hI := hI) t) hregX hregY
 
 end AlgebraicGeometry

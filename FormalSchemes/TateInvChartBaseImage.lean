@@ -88,7 +88,7 @@ theorem sectionsEquivOfEqBasicOpen_sectionsOpenHom {U : Opens (FormalSpectrum I)
     (hU : U = basicOpen I f) (r : R) :
     sectionsEquivOfEqBasicOpen I hU (sectionsOpenHom I U r) = awayCompletionHom I f r := by
   have h := eqToHom_sectionsOpenHom_apply I hU r
-  show sectionsBasicOpenEquiv I f ((((locallyRingedSpaceObj I).presheaf.map
+  change sectionsBasicOpenEquiv I f ((((locallyRingedSpaceObj I).presheaf.map
     (eqToHom (congrArg op hU))).hom) (sectionsOpenHom I U r)) = _
   rw [h]
   exact RingHom.congr_fun (sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom I f) r
@@ -119,7 +119,7 @@ theorem tateInvChartLegX_sectionsOpenHom (hS : IsOpen S) (a : annulusAlgebra R I
       sectionsOpenHom (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
         ((Opens.map (annulusOverlapChart R I q).base).obj (tateInvPatchSaturateOpens hq hI hS))
         (tateInvGlobalLegX a) := by
-  rw [← globalSectionsMap_annulusOverlapChart R I q]
+  rw [← globalSectionsMap_annulusOverlapChart]
   exact FormalSpectrum.sectionsOpenHom_c_app _ _ (annulusOverlapChart R I q) _ a
 
 omit [TopologicalSpace R] [IsAdicRing I]
@@ -133,7 +133,7 @@ theorem tateInvChartLegY_sectionsOpenHom (hS : IsOpen S) (a : annulusAlgebra R I
       sectionsOpenHom (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
         ((Opens.map (annulusOverlapChartY R I q).base).obj (tateInvPatchSaturateOpens hq hI hS))
         (tateInvGlobalLegY a) := by
-  rw [← globalSectionsMap_annulusOverlapChartY R I q]
+  rw [← globalSectionsMap_annulusOverlapChartY]
   exact FormalSpectrum.sectionsOpenHom_c_app _ _ (annulusOverlapChartY R I q) _ a
 
 /-- **The transition-then-`y`-chart leg on the structural image.** The leg is the `.c.app` of the
@@ -202,10 +202,10 @@ theorem sectionsOpenHom_mem_tateInvChartAnnulusSubring (hS : IsOpen S)
       tateInvChartAnnulusSubring (hq := hq) (hI := hI) hS := by
   rw [mem_tateInvGlobalSubring_iff] at ha
   refine (mem_tateInvChartAnnulusSubring_iff hS _).2 ⟨?_, ?_⟩
-  · rw [isTateInvChartCompatibleForward_iff, tateInvChartLegX_sectionsOpenHom,
-      tateInvChartLegYX_sectionsOpenHom, ha.1]
-  · rw [isTateInvChartCompatibleBackward_iff, tateInvChartLegY_sectionsOpenHom,
-      tateInvChartLegXY_sectionsOpenHom, ha.2]
+  · exact ((tateInvChartLegX_sectionsOpenHom hS a).trans (congrArg _ ha.1)).trans
+      (tateInvChartLegYX_sectionsOpenHom hS a).symm
+  · exact ((tateInvChartLegY_sectionsOpenHom hS a).trans (congrArg _ ha.2)).trans
+      (tateInvChartLegXY_sectionsOpenHom hS a).symm
 
 /-- **The image of the base ring lies in the chart ring, at every open `S`**, with no hypothesis
 beyond the standing ones. The previous theorem at
@@ -220,10 +220,9 @@ theorem sectionsOpenHom_algebraMap_mem_tateInvChartAnnulusSubring (hS : IsOpen S
       tateInvChartAnnulusSubring (hq := hq) (hI := hI) hS :=
   sectionsOpenHom_mem_tateInvChartAnnulusSubring hS (algebraMap_mem_tateInvGlobalSubring hI r)
 
-end Legs
-
-/-! ### The node chart, in the `A{1/(x + y − 1)}` spelling -/
-
+omit [TopologicalSpace R] [IsAdicRing I]
+  [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))]
+  [IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))] in
 /-- **The identification of the node chart's ambient ring carries the structural image of `R` to
 `algebraMap R (A{1/(x + y − 1)})`.** `AlgebraicGeometry.tateInvNodeChartAmbientEquiv` is
 `FormalSpectrum.sectionsEquivOfEqBasicOpen` at
@@ -241,6 +240,10 @@ theorem tateInvNodeChartAmbientEquiv_sectionsOpenHom_algebraMap (r : R) :
   rw [tateInvNodeChartAmbientEquiv, FormalSpectrum.sectionsEquivOfEqBasicOpen_sectionsOpenHom]
   exact congrArg (fun φ : R →+* _ => φ r)
     (FormalSpectrum.awayCompletionHom_comp_algebraMap (R := R) (annulusNodeChartCoord R I q))
+
+end Legs
+
+/-! ### The node chart, in the `A{1/(x + y − 1)}` spelling -/
 
 /-- **The image of the base ring lies in the node chart's candidate ring**, in the spelling that
 displays that ring inside `A{1/(x + y − 1)}`. This discharges the membership hypothesis that
@@ -267,6 +270,6 @@ theorem algebraMap_mem_tateInvNodeChartAwaySubring (r : R) :
         (tateInvPatchSaturateOpens hq hI (isOpen_tateInvNodeChartLocus R I q))
         (algebraMap R (annulusAlgebra R I q) r),
       sectionsOpenHom_algebraMap_mem_tateInvChartAnnulusSubring _ r,
-      tateInvNodeChartAmbientEquiv_sectionsOpenHom_algebraMap R I q hq hI r⟩
+      tateInvNodeChartAmbientEquiv_sectionsOpenHom_algebraMap (hq := hq) (hI := hI) r⟩
 
 end AlgebraicGeometry
