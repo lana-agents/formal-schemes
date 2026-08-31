@@ -18,19 +18,20 @@ the spelling a chart naturally comes in: the source of a chart of `T_inv/⟨σ�
 named open `AlgebraicGeometry.tateInvNodeChartQuotientOpens`, the identification
 `AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv` of its sections with the node chart ring,
 and `AlgebraicGeometry.tateInvNodeChartQuotientIdeal` with its `IsAdicRing` structure — but
-stopped at the ring: nothing carried the identification across `Spf`. This file does that, and
-restates the reduction on the other side of it.
+stopped at the ring: nobody had carried that identification across `Spf`. This file does that, and
+restates the reduction on the other side of it. The general transport it runs on,
+`FormalSpectrum.isoOfAdicRingEquiv`, was already on the tree; only the instantiation was missing.
 
 ## What is here
 
 * `AlgebraicGeometry.LocallyRingedSpace.exists_isOpenImmersion_of_iso`: an open immersion whose
   range contains a prescribed set transports along an isomorphism of its source. General.
 * `AlgebraicGeometry.tateInvNodeChartQuotientIdeal_le_comap` and
-  `AlgebraicGeometry.tateInvNodeChartAwayIdeal_le_comap_symm`: the two ideals correspond under
-  `AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv`.
+  `AlgebraicGeometry.isAdicHom_tateInvNodeChartQuotientRingEquiv`: the two ideals correspond under
+  `AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv`, the second saying they correspond exactly.
 * `AlgebraicGeometry.tateInvNodeChartQuotientSpfIso`: hence
   `Spf (Γ (T_inv/⟨σ⟩, tateInvNodeChartQuotientOpens …)) ≅ Spf (tateInvNodeChartAwaySubring …)`,
-  by `FormalSpectrum.locallyRingedSpaceMapIso` (`FormalSchemes.SpfRingEquivIso`).
+  by `FormalSpectrum.isoOfAdicRingEquiv` (`FormalSchemes.SpfRingEquivIso`).
 * `AlgebraicGeometry.ne_top_tateInvNodeChartQuotientIdeal` and
   `AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartQuotientIdeal`, with
   `AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartQuotientIdeal_powerSeriesInt` at
@@ -107,8 +108,9 @@ variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I)
 /-! ### The two ideals correspond under the identification of the two rings -/
 
 /-- **The quotient's candidate ideal of definition lands inside the subring's**, along
-`AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv`. It is in fact carried onto it; only this
-inclusion and the one below are needed, and each is one `simp` after
+`AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv`. It is in fact carried onto it — that is the
+lemma below — but this weaker inclusion is what
+`AlgebraicGeometry.ne_top_tateInvNodeChartQuotientIdeal` uses, and it is one `simp` after
 `Ideal.map_le_iff_le_comap`. -/
 theorem tateInvNodeChartQuotientIdeal_le_comap :
     tateInvNodeChartQuotientIdeal R I q hq hI ≤
@@ -120,23 +122,26 @@ theorem tateInvNodeChartQuotientIdeal_le_comap :
   simp only [Ideal.mem_comap, RingEquiv.coe_toRingHom, RingEquiv.apply_symm_apply]
   exact hx
 
-/-- **And the subring's lands inside the quotient's**, along the inverse. This is
-`Ideal.le_comap_map` at the very map `AlgebraicGeometry.tateInvNodeChartQuotientIdeal` is defined
-by. -/
-theorem tateInvNodeChartAwayIdeal_le_comap_symm :
-    tateInvNodeChartAwayIdeal R I q hq hI ≤
-      (tateInvNodeChartQuotientIdeal R I q hq hI).comap
-        ((tateInvNodeChartQuotientRingEquiv R I q hq hI).symm :
-          tateInvNodeChartAwaySubring R I q hq hI →+* _) := by
-  rw [tateInvNodeChartQuotientIdeal]
-  exact Ideal.le_comap_map
+/-- **And it is carried *onto* it**: `AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv` is an
+adic homomorphism from the quotient's ideal to the subring's. `IsAdicHom I J φ` unfolds to
+`I.map φ = J`, and `AlgebraicGeometry.tateInvNodeChartQuotientIdeal` is *defined* as the image of
+`AlgebraicGeometry.tateInvNodeChartAwayIdeal` under the inverse — so the *reverse* direction is
+`rfl`, and `FormalSpectrum.isAdicHom_ringEquiv_symm` turns it around. -/
+theorem isAdicHom_tateInvNodeChartQuotientRingEquiv :
+    IsAdicHom (tateInvNodeChartQuotientIdeal R I q hq hI)
+      (tateInvNodeChartAwayIdeal R I q hq hI)
+      (tateInvNodeChartQuotientRingEquiv R I q hq hI).toRingHom := by
+  have h : IsAdicHom (tateInvNodeChartAwayIdeal R I q hq hI)
+      (tateInvNodeChartQuotientIdeal R I q hq hI)
+      (tateInvNodeChartQuotientRingEquiv R I q hq hI).symm.toRingHom := rfl
+  simpa using FormalSpectrum.isAdicHom_ringEquiv_symm _ h
 
 /-! ### The two formal spectra are isomorphic -/
 
 /-- **`Spf` of the quotient's sections over the node chart's open is `Spf` of the node chart
-ring.** `FormalSpectrum.locallyRingedSpaceMapIso` at
-`AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv`, whose two continuity hypotheses are the two
-inclusions above.
+ring.** `FormalSpectrum.isoOfAdicRingEquiv` (`FormalSchemes.SpfRingEquivIso`) at
+`AlgebraicGeometry.tateInvNodeChartQuotientRingEquiv`, whose adic-homomorphism hypothesis is the
+exact correspondence proved above.
 
 The left-hand side is the one a chart has to come out of — its ring is literally
 `Γ (T_inv/⟨σ⟩, tateInvNodeChartQuotientOpens …)` — and the right-hand side is the one every
@@ -149,9 +154,8 @@ def tateInvNodeChartQuotientSpfIso
     [IsAdicRing (tateInvNodeChartAwayIdeal R I q hq hI)] :
     FormalSpectrum.locallyRingedSpaceObj (tateInvNodeChartQuotientIdeal R I q hq hI) ≅
       FormalSpectrum.locallyRingedSpaceObj (tateInvNodeChartAwayIdeal R I q hq hI) :=
-  FormalSpectrum.locallyRingedSpaceMapIso _ _ (tateInvNodeChartQuotientRingEquiv R I q hq hI)
-    (tateInvNodeChartQuotientIdeal_le_comap R I q hq hI)
-    (tateInvNodeChartAwayIdeal_le_comap_symm R I q hq hI)
+  FormalSpectrum.isoOfAdicRingEquiv _ _ (tateInvNodeChartQuotientRingEquiv R I q hq hI)
+    (isAdicHom_tateInvNodeChartQuotientRingEquiv R I q hq hI)
 
 /-! ### The source of the required chart is not empty -/
 

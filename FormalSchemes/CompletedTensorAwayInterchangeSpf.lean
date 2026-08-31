@@ -1,6 +1,7 @@
 import FormalSchemes.CompletedTensorAwayInterchange
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.AdicMorphism
+import FormalSchemes.SpfRingEquivIso
 
 set_option linter.style.header false
 -- The formal-spectrum morphisms range over the nested localization/completion towers of the
@@ -39,6 +40,11 @@ tensor `Spf C` cut out by the invertibility of `f̄ = inl f`.
 * `CompletedTensorAwayInterchange.range_interchangeOpenImmersion_base`: its underlying-space range
   is the basic open `D(f̄) ⊆ Spf C`.
 
+The abstract construction the first of those runs on — `FormalSpectrum.isoOfAdicRingEquiv`, an
+isomorphism of formal spectra from a ring isomorphism carrying one ideal of definition onto the
+other — was written here but is not about completed tensor products, and now lives in
+`FormalSchemes.SpfRingEquivIso` with the three lemmas it uses. Nothing about it changed.
+
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
@@ -57,60 +63,6 @@ true (both use the underlying function), and cheap — it avoids forcing the ela
 large concrete isomorphism to reconcile the two coercions. -/
 theorem Ideal.map_ringEquiv_toRingHom {S T : Type*} [CommRing S] [CommRing T]
     (e : S ≃+* T) (J : Ideal S) : J.map e.toRingHom = J.map e := rfl
-
-namespace FormalSpectrum
-
-/-! ### Isomorphism of formal spectra from an adic ring isomorphism
-
-An abstract construction: a ring isomorphism between two adic rings carrying the ideal of definition
-of the source onto that of the target induces an isomorphism of their formal spectra. Keeping this
-generic (over abstract rings and ideals) is essential for performance — the mutual-inverse laws
-reduce to the identity and composition functoriality of `Spf` on *abstract* terms, avoiding the
-elaborator having to `whnf` the huge concrete completed-tensor rings at the instantiation site. -/
-
-/-- The underlying ring homomorphisms of `e` and `e.symm` are mutually inverse. -/
-theorem ringEquiv_symm_toRingHom_comp {R S : Type u} [CommRing R] [CommRing S] (e : R ≃+* S) :
-    e.symm.toRingHom.comp e.toRingHom = RingHom.id R :=
-  RingHom.ext e.symm_apply_apply
-
-/-- The underlying ring homomorphisms of `e` and `e.symm` are mutually inverse (other order). -/
-theorem ringEquiv_toRingHom_comp_symm {R S : Type u} [CommRing R] [CommRing S] (e : R ≃+* S) :
-    e.toRingHom.comp e.symm.toRingHom = RingHom.id S :=
-  RingHom.ext e.apply_symm_apply
-
-/-- If a ring isomorphism `e` is adic (`I·e = J`), then its inverse is adic (`J·e⁻¹ = I`). -/
-theorem isAdicHom_ringEquiv_symm {R S : Type u} [CommRing R] [CommRing S]
-    {I : Ideal R} {J : Ideal S} (e : R ≃+* S) (h : IsAdicHom I J e.toRingHom) :
-    IsAdicHom J I e.symm.toRingHom := by
-  have hgoal : J.map e.symm.toRingHom = I := by
-    rw [← h, Ideal.map_map, ringEquiv_symm_toRingHom_comp, Ideal.map_id]
-  exact hgoal
-
-/-- **Isomorphism of affine formal spectra from an adic ring isomorphism** `e : R ≃+* S` with
-`IsAdicHom I J e` (`I·e = J`): the two half-morphisms are the maps of formal spectra induced by `e`
-and `e.symm`, and the mutual-inverse laws come from the identity/composition functoriality of `Spf`
-(`locallyRingedSpaceMap_id`, `locallyRingedSpaceMap_comp`). -/
-def isoOfAdicRingEquiv {R S : Type u} [CommRing R] [CommRing S]
-    (I : Ideal R) (J : Ideal S) (e : R ≃+* S) (h : IsAdicHom I J e.toRingHom) :
-    locallyRingedSpaceObj I ≅ locallyRingedSpaceObj J where
-  hom := locallyRingedSpaceMap J I e.symm.toRingHom (isAdicHom_ringEquiv_symm e h).le_comap
-  inv := locallyRingedSpaceMap I J e.toRingHom h.le_comap
-  hom_inv_id := by
-    rw [← locallyRingedSpaceMap_comp I J I e.toRingHom e.symm.toRingHom h.le_comap
-        (isAdicHom_ringEquiv_symm e h).le_comap
-        (h.comp (isAdicHom_ringEquiv_symm e h)).le_comap,
-      locallyRingedSpaceMap_congr I I (e.symm.toRingHom.comp e.toRingHom) (RingHom.id R) _
-        (Ideal.comap_id I).ge (ringEquiv_symm_toRingHom_comp e),
-      locallyRingedSpaceMap_id]
-  inv_hom_id := by
-    rw [← locallyRingedSpaceMap_comp J I J e.symm.toRingHom e.toRingHom
-        (isAdicHom_ringEquiv_symm e h).le_comap h.le_comap
-        ((isAdicHom_ringEquiv_symm e h).comp h).le_comap,
-      locallyRingedSpaceMap_congr J J (e.toRingHom.comp e.symm.toRingHom) (RingHom.id S) _
-        (Ideal.comap_id J).ge (ringEquiv_toRingHom_comp_symm e),
-      locallyRingedSpaceMap_id]
-
-end FormalSpectrum
 
 namespace CompletedTensorAwayInterchange
 
