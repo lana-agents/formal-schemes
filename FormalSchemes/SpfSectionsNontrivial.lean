@@ -27,9 +27,9 @@ downstairs.
 ## What is *not* proved here
 
 Nothing about which opens are inhabited — that is a question about the ring `R` and its ideal of
-definition, and the tree answers it separately in each case (for the Tate annulus,
-`AlgebraicGeometry.annulus_formalSpectrum_nonempty`). Nothing about `U = ⊥`, where the sections
-ring genuinely is `0` and the hypothesis of both results below fails.
+definition, and the tree answers it separately in each case — for the Tate annulus by
+`annulus_formalSpectrum_nonempty`, which is in the **root** namespace. Nothing about `U = ⊥`,
+where the sections ring genuinely is `0` and the hypothesis of both results below fails.
 
 No converse: these say an inhabited open has nonzero sections, not that an empty open is the only
 way to get zero sections.

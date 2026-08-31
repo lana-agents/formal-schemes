@@ -36,9 +36,9 @@ transported to the saturated open by
 `AlgebraicGeometry.tateInvPatchSaturateOpens_tateInvNodeChartLocus`, the record that the node
 chart's domain is its own saturation.
 
-So `I ≠ ⊤` is the whole hypothesis: it is what makes `Spf A` nonempty at all
-(`AlgebraicGeometry.annulus_formalSpectrum_nonempty`), and no hypothesis on `q` beyond `q ∈ I`,
-and nothing about regularity, enters.
+So `I ≠ ⊤` is the whole hypothesis: it is what makes `Spf A` nonempty at all, by
+`annulus_formalSpectrum_nonempty` — **root** namespace, like the rest of the `annulus*` family.
+No hypothesis on `q` beyond `q ∈ I`, and nothing about regularity, enters.
 
 ## Main results
 
