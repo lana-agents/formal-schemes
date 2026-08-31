@@ -60,16 +60,26 @@ finitely generated — and the filtration bridge holds. The Tate input is theref
 
 ## What is *not* proved
 
-* **That `algebraMap R (A{1/(x + y − 1)}) t` lies in the chart ring is not proved**, at any
-  `(R, I, q)` other than the degenerate one, and it is carried as a hypothesis `hmem` in every
-  statement that needs it. It is *expected* to hold — all four legs fix the image of `R` at the
-  level of global sections (`AlgebraicGeometry.algebraMap_mem_tateInvGlobalSubring`), and each leg
-  is the `.c.app` of a morphism of formal spectra composed with a transport, so
-  `FormalSpectrum.comp_sectionsOpenHom` computes it on the image of the structural map — but the
-  identification that this needs is a **defeq between two spellings of the same section ring**
-  (`FormalSpectrum.structureSheaf K` against `(FormalSpectrum.locallyRingedSpaceObj K).presheaf`)
-  which the kernel does not check within its budget at these types. That is an obstruction of
-  elaboration, not of mathematics; it is recorded rather than papered over.
+* **That `algebraMap R (A{1/(x + y − 1)}) t` lies in the chart ring is no longer open.** It is
+  `AlgebraicGeometry.algebraMap_mem_tateInvNodeChartAwaySubring`
+  (`FormalSchemes.TateInvChartBaseImage`), for every `r : R` and with no hypothesis beyond the
+  standing ones. The statements below still take it as the hypothesis `hmem`, so that they stay
+  usable at a `c` other than the base generator;
+  `FormalSchemes.TateInvNodeChartBaseGenerator` is where it is fed in, and
+  `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_principal'` and its two
+  companions there are these results without it.
+
+  The route is the expected one — all four legs fix the image of `R` at the level of global
+  sections (`AlgebraicGeometry.algebraMap_mem_tateInvGlobalSubring`), and each leg is the `.c.app`
+  of a morphism of formal spectra composed with a transport, so
+  `FormalSpectrum.comp_sectionsOpenHom` computes it on the image of the structural map. What
+  blocked it was a **defeq between two spellings of the same section ring**
+  (`FormalSpectrum.structureSheaf K` against `(FormalSpectrum.locallyRingedSpaceObj K).presheaf`).
+  **That cost is the kernel's, not the elaborator's** — profiling shows the elaboration finishing
+  in well under a second and `[Kernel] typechecking declarations` failing after it, which is why
+  raising `maxHeartbeats` never helped. `FormalSchemes.AdicOnOpenSectionsPointwise` removes it by
+  stating the reconciliation while the ring, the ideal, the morphism and the open are still
+  variables, with the equation's type pinned by ascription.
 * **Left-regularity is not supplied at any base.** Both hypotheses are explicit arguments; no
   `(R, I, q, t)` with `t ≠ 0` at which they hold is exhibited, and no counterexample either. At
   `I = ⊥` the results above do not use them — the `⊥` case goes through

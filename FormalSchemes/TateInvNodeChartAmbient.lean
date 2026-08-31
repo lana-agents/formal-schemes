@@ -67,9 +67,12 @@ This file makes that identification and draws the two consequences that are free
   glued points. **None of that is proved here**, and no two distinct points of the chain with the
   same image are exhibited. A successor who wants it should land it as a theorem from those two
   preimage lemmas rather than cite this paragraph.
-* **Nothing here says the subring is nonzero, proper, or larger than the image of `R`.** At a
-  general `S` the tree names no element of the chart ring beyond `0` and `1`
-  (`FormalSchemes.TateInvQuotientChartRing`'s module docstring), and this file adds none.
+* **Nothing here says the subring is nonzero, proper, or larger than the image of `R`.** This
+  file adds no element of it. The image of the base ring is in it, at every open `S`
+  (`AlgebraicGeometry.sectionsOpenHom_algebraMap_mem_tateInvChartAnnulusSubring`,
+  `FormalSchemes.TateInvChartBaseImage`) and in this file's own spelling
+  (`AlgebraicGeometry.algebraMap_mem_tateInvNodeChartAwaySubring`, same module) — but that is a
+  lower bound and says nothing about the three questions above.
 
 Nothing here weakens `LocallyRingedSpace.IsProperlyDiscontinuousOn`,
 `LocallyRingedSpace.IsFreeProperlyDiscontinuous` or

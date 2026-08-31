@@ -73,9 +73,12 @@ is an infimum of exactly **two** `RingHom.eqLocus`s, in which no glue-datum morp
 structure on this ring and an open immersion out of its formal spectrum. A ring is not a chart.
 
 **No element of the subring is exhibited here beyond `0` and `1`**, which are in it because it is
-a `Subring`. At `S = Set.univ` the image of the base ring is exhibited elsewhere, by
+a `Subring`. They are exhibited elsewhere: at `S = Set.univ` by
 `AlgebraicGeometry.symm_algebraMap_mem_tateInvChartAnnulusSubring`
-(`FormalSchemes.TateInvGlobalSections`); at a general `S` nothing beyond `0` and `1` is named.
+(`FormalSchemes.TateInvGlobalSections`), and at **every** open `S` by
+`AlgebraicGeometry.sectionsOpenHom_algebraMap_mem_tateInvChartAnnulusSubring`
+(`FormalSchemes.TateInvChartBaseImage`), which puts the whole structural image of the base ring in
+the subring. Both are lower bounds only.
 Whether the subring is strictly smaller than `Γ (Spf A, tateInvPatchSaturate S)` — equivalently,
 whether the overlap condition is a genuine restriction — is not decided here; the condition is at
 least not *definitionally* trivial, since it is not closed by `rfl`. Nor is it an `S`-free
