@@ -86,6 +86,14 @@ and the three-chart datum it unlocks, are deliberately not in this file.
   `Spec (cond i.down B A)` here and `cond i.down (Spec B) (Spec A)` there, which are not
   definitionally equal at a variable index; joining them is an isomorphism of glue data and is not
   needed by anything.
+* **The datum carries `K i` but not `(K i).FG`, and the completion side will need the latter.**
+  `formalCompletion` (root-namespace) takes finite generation as an explicit argument to the
+  *object* — its signature is `(R) → [CommRing R] → (I : Ideal R) → I.FG → FormalScheme` — so a
+  `ChartedSchemeDatum` does not by itself name the formal charts `Spf (C i)^` that 60q glues. The
+  two-patch line this datum mirrors carries `hI : I.FG` and `hJ : J.FG` alongside its ideals
+  (`FormalSchemes.CompletionGlueTwoPatch`). 60q must therefore either take `∀ i, (D.K i).FG` as a
+  side hypothesis or add it as a field here; adding it is cheapest now, while `ofTwoPatch` is the
+  only construction.
 * Nothing here relates `specGlued` to a completion, states a universal property for it, or promotes
   it to `AlgebraicGeometry.Scheme`.
 
@@ -230,7 +238,7 @@ variable {A B : Type u} [CommRing A] [CommRing B] (I : Ideal A) (a : A) (J : Ide
     J.map (algebraMap B (Localization.Away b)))
 
 /-- On a two-element index type no triple is pairwise distinct. -/
-private theorem boolNotPairwiseDistinct {i j k : ULift.{u} Bool}
+private theorem bool_not_pairwise_distinct {i j k : ULift.{u} Bool}
     (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
   obtain ⟨i⟩ := i
   obtain ⟨j⟩ := j
@@ -243,8 +251,9 @@ point of this datum shape — and the transition is the two-patch line's own `θ
 fields are vacuous, since no triple of `Bool`-indices is pairwise distinct.
 
 The backward ideal compatibility is `FormalSpectrum.isAdicHom_ringEquiv_symm`
-(`FormalSchemes.SpfRingEquivIso`): `FormalSpectrum.IsAdicHom` unfolds to an `Ideal.map` equation,
-so `hθ` *is* the forward adicity of `θ` and that lemma turns it around. -/
+(`FormalSchemes.SpfRingEquivIso`): `IsAdicHom` — which is root-namespace, unlike the lemma that
+consumes it — unfolds to an `Ideal.map` equation, so `hθ` *is* the forward adicity of `θ` and that
+lemma turns it around. -/
 def ChartedSchemeDatum.ofTwoPatch : ChartedSchemeDatum.{u} where
   J := ULift.{u} Bool
   C := fun i => cond i.down B A
@@ -274,9 +283,9 @@ def ChartedSchemeDatum.ofTwoPatch : ChartedSchemeDatum.{u} where
     · exact hθ
     · exact FormalSpectrum.isAdicHom_ringEquiv_symm θ hθ
     · exact absurd rfl h
-  t' := fun _ _ _ hij hik hjk => (boolNotPairwiseDistinct hij hik hjk).elim
-  t_fac := fun _ _ _ hij hik hjk => (boolNotPairwiseDistinct hij hik hjk).elim
-  cocycle := fun _ _ _ hij hik hjk => (boolNotPairwiseDistinct hij hik hjk).elim
+  t' := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
+  t_fac := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
+  cocycle := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
 
 /-- The `A`-side ideal of the two-patch datum is `I`, in `A`. -/
 theorem ChartedSchemeDatum.ofTwoPatch_K_false :
