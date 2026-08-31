@@ -40,10 +40,22 @@ specAwayMap (g i j) ≫ k i =
 only for `i ≠ j`, which is the form a caller can actually supply: it is an equation between two
 morphisms `Spec ((C i)_{g i j}) ⟶ Z`, both of which are `Spec` of a ring map when `Z` is affine.
 
+## The two directions across the `ofGlueData'` bookkeeping, which are not the same statement
+
+Both are here, and the pair is easy to mistake for a duplication. `specLRSGlueData_compat` goes
+**datum-level hypothesis → glue-diagram condition**, for an arbitrary family `k`; it is `desc`'s
+input transformer and its hypothesis is supplied by the caller. `specAwayMap_comp_specι` goes the
+other way for the **canonical** family `k = specι`, reading the datum-level statement off
+`CategoryTheory.GlueData.glue_condition`; nothing supplies its hypothesis because it has none.
+Neither is derivable from the other. They now share one spelling of the `dite` unfolding, the
+private `specGD_f` / `specGD_t`, rather than one naming it and the other doing it inline.
+
 ## Main definitions and results
 
 * `AlgebraicGeometry.ChartedSchemeDatum.desc`: the morphism `specGlued ⟶ Z` glued from a
   compatible family, with `specι_desc` its computation rule and `hom_ext` its uniqueness.
+* `AlgebraicGeometry.ChartedSchemeDatum.specAwayMap_comp_specι`: the ambient scheme's own glue
+  condition, at an arbitrary index — the chart inclusions agree over their overlaps.
 * `AlgebraicGeometry.ChartedSchemeDatum.range_desc`: its range is the union of the ranges of the
   chart morphisms.
 * `AlgebraicGeometry.ChartedSchemeDatum.isOpenImmersion_desc`: it is an open immersion as soon as
@@ -70,12 +82,29 @@ variable (D : ChartedSchemeDatum.{u}) {Z : LocallyRingedSpace.{u}}
 
 /-! ### The glue datum's compatibility, in the datum's own terms -/
 
+/-- The constructed glue map of the ambient scheme, off the diagonal. -/
+private theorem specGD_f (i j : D.J) (h : i ≠ j) :
+    D.specLRSGlueData.toGlueData.f i j = eqToHom (dif_neg h) ≫ specAwayMap (D.g i j) :=
+  dif_neg h
+
+/-- The constructed transition of the ambient scheme, off the diagonal. -/
+private theorem specGD_t (i j : D.J) (h : i ≠ j) :
+    D.specLRSGlueData.toGlueData.t i j =
+      eqToHom (dif_neg h) ≫ (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫
+        eqToHom (dif_neg h.symm).symm :=
+  dif_neg h
+
+set_option linter.style.setOption false in
+set_option backward.isDefEq.respectTransparency false in
+-- `specGD_f` / `specGD_t` are stated at `D.J`, while the indices here are at
+-- `D.specLRSGlueData.J`; the two are `D.J` only after unfolding two `def`s, so without this the
+-- rewritten target is rejected as ill-typed at `instances` transparency. Same requirement as
+-- `specAwayMap_comp_specι` below.
 /-- **The datum-level compatibility implies the one the glue diagram imposes.** On the diagonal the
 glue transition is the identity (`CategoryTheory.GlueData.t_id`) and the condition is trivial. Off
-the diagonal, unfolding `CategoryTheory.GlueData.ofGlueData'` exposes `f i j` as
-`eqToHom _ ≫ specAwayMap (g i j)` and `t i j` as `eqToHom _ ≫ specGlueIso _ _ (θ i j) ≫ eqToHom _`;
-the two inner transports cancel and what is left is the hypothesis as stated, with one transport in
-front of both sides.
+the diagonal, `specGD_f` and `specGD_t` expose `f i j` as `eqToHom _ ≫ specAwayMap (g i j)` and
+`t i j` as `eqToHom _ ≫ specGlueIso _ _ (θ i j) ≫ eqToHom _`; the two inner transports cancel and
+what is left is the hypothesis as stated, with one transport in front of both sides.
 
 The `(i : D.J)` ascription in the case split is load-bearing: the index of the glue datum is
 `D.specLRSGlueData.J`, which is `D.J` only after unfolding two `def`s, and a `Ne` at the wrong one
@@ -90,9 +119,8 @@ theorem specLRSGlueData_compat
   obtain rfl | hij0 := eq_or_ne i j
   · rw [D.specLRSGlueData.toGlueData.t_id i, Category.id_comp]
   · have hij : @Ne D.J i j := hij0
-    simp only [specLRSGlueData, specGlueData', CategoryTheory.GlueData.ofGlueData',
-      CategoryTheory.GlueData'.f', dif_neg hij, dif_neg (Ne.symm hij), Category.assoc,
-      eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [D.specGD_f i j hij, D.specGD_t i j hij, D.specGD_f j i hij.symm]
+    simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
     rw [h i j hij]
 
 /-! ### The universal property -/
@@ -154,6 +182,33 @@ theorem isIso_desc
   haveI : Epi (D.desc k h).base :=
     (TopCat.epi_iff_surjective _).2 (Set.range_eq_univ.1 ((D.range_desc k h).trans hsurj))
   exact LocallyRingedSpace.IsOpenImmersion.to_iso _
+
+/-! ### The glue condition at the canonical family -/
+
+set_option linter.style.setOption false in
+set_option backward.isDefEq.respectTransparency false in
+-- The glue datum is a `def`, so `(D.specLRSGlueData).J` does not reduce to `D.J` at `instances`
+-- transparency and the rewrites below are rejected as ill-typed without this. Same requirement as
+-- in `FormalSchemes.CompletionTwoPatchToScheme`.
+/-- **The affine charts of the glued scheme agree over their overlaps**: including
+`Spec ((C i)_{g_ij})` into `Spec (C i)` and then into the glued scheme is the same as transporting
+it along `Spec (θ i j)` and including through the `j`-th chart. This is
+`CategoryTheory.GlueData.glue_condition` for `specLRSGlueData` with the `GlueData.ofGlueData'`
+bookkeeping stripped, and it is `AlgebraicGeometry.specTwoPatch_glue`
+(`FormalSchemes.CompletionTwoPatchToScheme`) at an arbitrary index type.
+
+This is the **converse direction** to `specLRSGlueData_compat` above, and neither derives the
+other: that lemma turns a datum-level hypothesis about an arbitrary family `k` into the condition
+the glue diagram imposes, and is `desc`'s input transformer; this one has no hypothesis to be
+supplied, and reads the datum-level statement off `glue_condition` for the canonical family
+`k = specι`. -/
+theorem specAwayMap_comp_specι (i j : D.J) (h : i ≠ j) :
+    specAwayMap (D.g i j) ≫ D.specι i =
+      (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫ specAwayMap (D.g j i) ≫ D.specι j := by
+  have key := D.specLRSGlueData.toGlueData.glue_condition i j
+  rw [D.specGD_t i j h, D.specGD_f j i h.symm, D.specGD_f i j h] at key
+  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
+  exact ((cancel_epi (eqToHom (dif_neg h))).mp key).symm
 
 end ChartedSchemeDatum
 

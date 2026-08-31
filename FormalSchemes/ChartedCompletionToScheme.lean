@@ -1,4 +1,5 @@
 import FormalSchemes.ChartedCompletionDatum
+import FormalSchemes.ChartedSchemeDatumDesc
 
 set_option linter.style.header false
 
@@ -20,15 +21,16 @@ nothing has to be transported between two unrelated presentations.
 `AlgebraicGeometry.ChartedSchemeDatum.specAwayMap_comp_specι` is
 `AlgebraicGeometry.specTwoPatch_glue` at an arbitrary index type: the affine charts of `specGlued`
 agree over their overlaps. It is `CategoryTheory.GlueData.glue_condition` with the
-`CategoryTheory.GlueData.ofGlueData'` bookkeeping cancelled off both sides. It is stated here
-rather than in `FormalSchemes.ChartedSchemeDatum` only because that file is not this row's to edit.
-**Any future descent out of `specGlued` will want the same lemma**, and whoever adds one should
-keep a single copy.
+`CategoryTheory.GlueData.ofGlueData'` bookkeeping cancelled off both sides. It lives in
+`FormalSchemes.ChartedSchemeDatumDesc`, next to the other statements about mapping out of
+`specGlued`; what this file adds is
+`AlgebraicGeometry.ChartedCompletionDatum.specAwayMap_comp_specι`, the same lemma read at a
+completion datum through `toChartedSchemeDatum`.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.ChartedSchemeDatum.specAwayMap_comp_specι`: the ambient scheme's glue
-  condition, at an arbitrary index.
+* `AlgebraicGeometry.ChartedCompletionDatum.specAwayMap_comp_specι`: the ambient scheme's glue
+  condition, at an arbitrary index, read at a completion datum.
 * `AlgebraicGeometry.ChartedCompletionDatum.toScheme_overlapCompat`: the per-chart morphisms
   `Spf (C i)^ ⟶ Spec (C i) ⟶ X` agree over every overlap.
 * `AlgebraicGeometry.ChartedCompletionDatum.toScheme`: the canonical morphism `X_{/Y} ⟶ X`, with
@@ -88,43 +90,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry
 universe u
 
 namespace AlgebraicGeometry
-
-namespace ChartedSchemeDatum
-
-variable (D : ChartedSchemeDatum.{u})
-
-/-- The constructed glue map of the ambient scheme, off the diagonal. -/
-private theorem specGD_f (i j : D.J) (h : i ≠ j) :
-    D.specLRSGlueData.toGlueData.f i j = eqToHom (dif_neg h) ≫ specAwayMap (D.g i j) :=
-  dif_neg h
-
-/-- The constructed transition of the ambient scheme, off the diagonal. -/
-private theorem specGD_t (i j : D.J) (h : i ≠ j) :
-    D.specLRSGlueData.toGlueData.t i j =
-      eqToHom (dif_neg h) ≫ (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫
-        eqToHom (dif_neg h.symm).symm :=
-  dif_neg h
-
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The glue datum is a `def`, so `(D.specLRSGlueData).J` does not reduce to `D.J` at `instances`
--- transparency and the rewrites below are rejected as ill-typed without this. Same requirement as
--- in `FormalSchemes.CompletionTwoPatchToScheme`.
-/-- **The affine charts of the glued scheme agree over their overlaps**: including
-`Spec ((C i)_{g_ij})` into `Spec (C i)` and then into the glued scheme is the same as transporting
-it along `Spec (θ i j)` and including through the `j`-th chart. This is
-`CategoryTheory.GlueData.glue_condition` for `specLRSGlueData` with the `GlueData.ofGlueData'`
-bookkeeping stripped, and it is `AlgebraicGeometry.specTwoPatch_glue`
-(`FormalSchemes.CompletionTwoPatchToScheme`) at an arbitrary index type. -/
-theorem specAwayMap_comp_specι (i j : D.J) (h : i ≠ j) :
-    specAwayMap (D.g i j) ≫ D.specι i =
-      (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫ specAwayMap (D.g j i) ≫ D.specι j := by
-  have key := D.specLRSGlueData.toGlueData.glue_condition i j
-  rw [D.specGD_t i j h, D.specGD_f j i h.symm, D.specGD_f i j h] at key
-  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact ((cancel_epi (eqToHom (dif_neg h))).mp key).symm
-
-end ChartedSchemeDatum
 
 namespace ChartedCompletionDatum
 

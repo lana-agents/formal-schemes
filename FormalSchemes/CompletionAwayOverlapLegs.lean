@@ -33,9 +33,7 @@ is a map under `R`. Nothing is redefined here.
 
 ## Main definitions and results
 
-* `formalCompletion.map_congr`: the completion functoriality depends on its ring
-  homomorphism only through its value.
-* `formalCompletion.awayFurtherLeft` / `..._awayFurtherRight`: the two
+* `formalCompletion.awayFurtherLeft` / `..awayFurtherRight`: the two
   further-localization morphisms of completions `Spf (R_{fg})^ ⟶ Spf (R_f)^`, `Spf (R_{fg})^ ⟶
   Spf (R_g)^`, with `..._comp` saying each is a factorisation of the basic-open immersion at the
   product.
@@ -56,15 +54,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry
 universe u
 
 namespace formalCompletion
-
-/-- **The completion functoriality depends on its ring homomorphism only through its value**, not
-through the proof that it carries one ideal into the other. Two private copies of this exist
-upstream (`FormalSchemes.CompletionGlueTwoPatch`, `FormalSchemes.CompletionBasicOpenGlue`); this is
-the first public one, and every `formalCompletion.map` identity below goes through it. -/
-theorem map_congr {R S : Type u} [CommRing R] [CommRing S] {I : Ideal R} {J : Ideal S}
-    (hI : I.FG) (hJ : J.FG) {φ ψ : R →+* S} (hφ : I.map φ ≤ J) (hψ : I.map ψ ≤ J) (h : φ = ψ) :
-    formalCompletion.map hI hJ φ hφ = formalCompletion.map hI hJ ψ hψ := by
-  subst h; rfl
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (hI : I.FG) (f g : R)
 

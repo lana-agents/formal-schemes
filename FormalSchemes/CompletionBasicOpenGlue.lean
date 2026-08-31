@@ -190,12 +190,6 @@ namespace AlgebraicGeometry
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (hI : I.FG) {ι : Type u} (f : ι → R)
 
-/-- `formalCompletion.map` depends on its ring homomorphism only through its value. -/
-private theorem cbMapCongr {S : Type u} [CommRing S] {J : Ideal S} (hJ : J.FG)
-    {φ ψ : R →+* S} (hφ : I.map φ ≤ J) (hψ : I.map ψ ≤ J) (h : φ = ψ) :
-    formalCompletion.map hI hJ φ hφ = formalCompletion.map hI hJ ψ hψ := by
-  subst h; rfl
-
 /-- A morphism of completions induced by a ring map **over `R`** commutes with the two structure
 morphisms down to `formalCompletion R I`. -/
 private theorem cbMapOverR {T T' : Type u} [CommRing T] [CommRing T'] [Algebra R T] [Algebra R T']
@@ -205,7 +199,7 @@ private theorem cbMapOverR {T T' : Type u} [CommRing T] [CommRing T'] [Algebra R
     formalCompletion.map hL hL' φ hLL ≫ formalCompletion.map hI hL (algebraMap R T) hTL =
       formalCompletion.map hI hL' (algebraMap R T') hT'L' := by
   rw [← formalCompletion.map_comp I hI hL hL' (algebraMap R T) φ hTL hLL]
-  exact cbMapCongr I hI hL' _ _ hφ
+  exact formalCompletion.map_congr hI hL' _ _ hφ
 
 /-- The chart ring `R_{f i}`. -/
 private abbrev cbS (i : ι) : Type u := Localization.Away (f i)
@@ -300,7 +294,8 @@ private theorem cbChartComp (i : ι) (x : cbS f i) :
     ← formalCompletion.map_comp I hI (hI.map _) ((hI.map _).map _)
       (algebraMap R (cbS f i)) (algebraMap (cbS f i) (Localization.Away x))
       (le_of_eq rfl) (le_of_eq rfl)]
-  exact cbMapCongr I hI _ _ _ (IsScalarTower.algebraMap_eq R (cbS f i) (Localization.Away x)).symm
+  exact formalCompletion.map_congr hI _ _ _
+    (IsScalarTower.algebraMap_eq R (cbS f i) (Localization.Away x)).symm
 
 /-- The overlap `V i j`, included into the ambient completion `Spf R^`. -/
 private abbrev cbV_toW (i j : ι) : cbV I hI f i j ⟶ cbW I hI :=
