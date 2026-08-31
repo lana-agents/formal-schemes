@@ -299,6 +299,7 @@ import FormalSchemes.TateActionQuotientFormalScheme
 import FormalSchemes.TateActionQuotientStalk
 import FormalSchemes.TateAnnulus
 import FormalSchemes.TateAnnulusCoeff
+import FormalSchemes.TateAnnulusRegular
 import FormalSchemes.TateAwaySplit
 import FormalSchemes.TateChainGlue
 import FormalSchemes.TateChainInvGlue
@@ -340,6 +341,7 @@ import FormalSchemes.TateInvNodeChartGlue
 import FormalSchemes.TateInvNodeChartLegContinuous
 import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartPrincipal
+import FormalSchemes.TateInvNodeChartPrincipalRegularBase
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeLocus
 import FormalSchemes.TateInvOverlapBand

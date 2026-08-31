@@ -80,8 +80,14 @@ finitely generated — and the filtration bridge holds. The Tate input is theref
   raising `maxHeartbeats` never helped. `FormalSchemes.AdicOnOpenSectionsPointwise` removes it by
   stating the reconciliation while the ring, the ideal, the morphism and the open are still
   variables, with the equation's type pinned by ascription.
-* **Left-regularity is not supplied at any base.** Both hypotheses are explicit arguments; no
-  `(R, I, q, t)` with `t ≠ 0` at which they hold is exhibited, and no counterexample either. At
+* **Left-regularity is not supplied *here*.** Both hypotheses are explicit arguments of every
+  statement below, and neither is shown necessary. They are discharged elsewhere:
+  `FormalSchemes.TateInvNodeChartBaseRegular` reduces both to left-regularity of
+  `algebraMap R (annulusAlgebra R I q) t`, and
+  `AlgebraicGeometry.isLeftRegular_algebraMap_annulusAlgebra`
+  (`FormalSchemes.TateAnnulusRegular`) supplies that from left-regularity of `t` in `R`, so
+  `FormalSchemes.TateInvNodeChartPrincipalRegularBase` carries these results with no regularity
+  hypothesis beyond `IsLeftRegular t` — at `R = ℤ⟦X⟧`, `I = (X)`, `q = t = X` with none at all. At
   `I = ⊥` the results above do not use them — the `⊥` case goes through
   `Subring.hasCofinalInducedFiltration_bot`, whose saturation-free proof exists precisely because
   the `Ideal.span {c}` criterion is vacuous at `c = 0`.
