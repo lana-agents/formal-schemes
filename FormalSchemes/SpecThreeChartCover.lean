@@ -287,8 +287,11 @@ lives behind the completion-side chart cluster: importing it would take this fil
 from 47 modules to 92. Restating it costs two lines, which is the convention this tree already
 follows for the sibling "no triple of two indices is distinct" lemma: `git grep
 not_pairwise_distinct` finds **eleven** copies of it under eleven names, one per file that needs
-it, most recently the `private bool_not_pairwise_distinct` in
-`FormalSchemes.ChartedSchemeDatum`. -/
+it, most recently `AlgebraicGeometry.bool_not_pairwise_distinct`
+(`FormalSchemes.ChartedSchemeDatum`) — which is *public*, having been un-`private`d so that
+`AlgebraicGeometry.ChartedCompletionDatum.ofTwoPatch` could reuse it rather than make a twelfth
+copy. Reuse is not available *here*: that lemma is about `ULift Bool`, this file needs `ULift
+(Fin 3)`, and the `Fin 3` twin is the one behind the 47-to-92 import jump above. -/
 private theorem up_ne_up {a b : Fin 3} (h : a ≠ b) : (⟨a⟩ : ULift.{u} (Fin 3)) ≠ ⟨b⟩ :=
   fun hh => h (congrArg ULift.down hh)
 
