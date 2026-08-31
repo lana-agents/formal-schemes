@@ -71,7 +71,10 @@ rather than data — but Mathlib's `CategoryTheory.GlueData'` takes `t'` as a fi
 deriving it would mean a smart constructor, and a smart constructor needs the `Spec`-side overlap
 identification `AlgebraicGeometry.specAwayOverlapIso` (`FormalSchemes.SpecAwayOverlap`, issue 60p)
 together with the triple-overlap algebra data it is fed at `g i j * g i k`. That smart constructor,
-and the three-chart datum it unlocks, are deliberately not in this file.
+and the three-chart datum it unlocks, are deliberately not in this file — they are
+`AlgebraicGeometry.ChartedSchemeDatum.ofAlgebraData`
+(`FormalSchemes.ChartedSchemeDatumAlgebraData`) and
+`AlgebraicGeometry.SpecThreeChartCover.datum` (`FormalSchemes.SpecThreeChartCover`).
 
 ## What is *not* proved
 
@@ -80,7 +83,10 @@ and the three-chart datum it unlocks, are deliberately not in this file.
   `False.elim`. The construction above is stated at an arbitrary index type and the fields are
   genuine there; but nothing in this file *exercises* them, and that is the same gap
   `FormalSchemes.CompletionAsChartedGlued` had at `ULift Unit` before the three-chart datum was
-  built. A `Spec`-side three-chart instance is the successor row.
+  built. **That gap is closed elsewhere**: `AlgebraicGeometry.SpecThreeChartCover.datum`
+  (`FormalSchemes.SpecThreeChartCover`) is a three-chart instance whose `t'` is the derived
+  transition at the inhabited triple `0, 1, 2` (`datum_t'_zero_one_two`), over a double overlap
+  shown non-empty at `Spec ℤ` (`intCover_overlap_nonempty`).
 * `specGlued` of `ofTwoPatch` is **not** identified with `AlgebraicGeometry.specTwoPatch`. The two
   glue data agree field for field on `f`, `t` and the three vacuous ones, but their `U` fields are
   `Spec (cond i.down B A)` here and `cond i.down (Spec B) (Spec A)` there, which are not
@@ -94,8 +100,10 @@ and the three-chart datum it unlocks, are deliberately not in this file.
   (`FormalSchemes.CompletionGlueTwoPatch`). 60q must therefore either take `∀ i, (D.K i).FG` as a
   side hypothesis or add it as a field here; adding it is cheapest now, while `ofTwoPatch` is the
   only construction.
-* Nothing here relates `specGlued` to a completion, states a universal property for it, or promotes
-  it to `AlgebraicGeometry.Scheme`.
+* Nothing here relates `specGlued` to a completion or promotes it to `AlgebraicGeometry.Scheme`.
+  Its **universal property is proved**, in `FormalSchemes.ChartedSchemeDatumDesc`:
+  `AlgebraicGeometry.ChartedSchemeDatum.desc` glues a family of morphisms out of the charts that
+  agree on the overlaps, with `specι_desc` its computation rule and `hom_ext` its uniqueness.
 
 ## References
 
