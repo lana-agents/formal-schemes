@@ -119,13 +119,6 @@ private theorem cpMap_symm_eq {R S : Type u} [CommRing R] [CommRing S] (e : R �
     show e.symm.toRingHom.comp e.toRingHom = RingHom.id R from RingHom.ext e.symm_apply_apply,
     Ideal.map_id]
 
-/-- The functoriality morphism of formal completions depends on the ring homomorphism only through
-its value, not through the proof that it is adic. -/
-private theorem cpMap_congr {R S : Type u} [CommRing R] [CommRing S] {K : Ideal R} {L : Ideal S}
-    (hK : K.FG) (hL : L.FG) {φ ψ : R →+* S} (hφ : K.map φ ≤ L) (hψ : K.map ψ ≤ L) (h : φ = ψ) :
-    formalCompletion.map hK hL φ hφ = formalCompletion.map hK hL ψ hψ := by
-  subst h; rfl
-
 variable (θ : Localization.Away a ≃+* Localization.Away b)
   (hθ : (I.map (algebraMap A (Localization.Away a))).map θ.toRingHom =
     J.map (algebraMap B (Localization.Away b)))
@@ -147,15 +140,17 @@ def completionGlueIso :
     ((formalCompletion.map_comp (I.map (algebraMap A (Localization.Away a))) (hI.map _)
       (hJ.map _) (hI.map _) θ.toRingHom θ.symm.toRingHom hθ.le
       (cpMap_symm_eq θ hθ).le).symm.trans
-        (cpMap_congr _ _ _ _ (show θ.symm.toRingHom.comp θ.toRingHom = RingHom.id _ from
-          RingHom.ext θ.symm_apply_apply))).trans
+        (formalCompletion.map_congr _ _ _ _
+          (show θ.symm.toRingHom.comp θ.toRingHom = RingHom.id _ from
+            RingHom.ext θ.symm_apply_apply))).trans
       (formalCompletion.map_id (I.map (algebraMap A (Localization.Away a))) (hI.map _))
   inv_hom_id :=
     ((formalCompletion.map_comp (J.map (algebraMap B (Localization.Away b))) (hJ.map _)
       (hI.map _) (hJ.map _) θ.symm.toRingHom θ.toRingHom (cpMap_symm_eq θ hθ).le
       hθ.le).symm.trans
-        (cpMap_congr _ _ _ _ (show θ.toRingHom.comp θ.symm.toRingHom = RingHom.id _ from
-          RingHom.ext θ.apply_symm_apply))).trans
+        (formalCompletion.map_congr _ _ _ _
+          (show θ.toRingHom.comp θ.symm.toRingHom = RingHom.id _ from
+            RingHom.ext θ.apply_symm_apply))).trans
       (formalCompletion.map_id (J.map (algebraMap B (Localization.Away b))) (hJ.map _))
 
 /-- **The gluing isomorphism of the overlap, on underlying locally ringed spaces.** Morphisms of

@@ -275,6 +275,15 @@ def map {S : Type u} [CommRing S] {I : Ideal R} {J : Ideal S} (hI : I.FG) (hJ : 
       (AdicCompletion.idealOfDefinition J) (AdicCompletion.mapCompletion f hf hJ)
       (Ideal.map_le_iff_le_comap.mp (AdicCompletion.idealOfDefinition_map_le f hf hJ)))
 
+/-- **The completion functoriality depends on its ring homomorphism only through its value**, not
+through the proof that it carries one ideal into the other. Stated next to `map` because every
+consumer of `map` is downstream of this file: three separate copies of it had accumulated further
+up the tree before it was placed here. -/
+theorem map_congr {S : Type u} [CommRing S] {I : Ideal R} {J : Ideal S} (hI : I.FG) (hJ : J.FG)
+    {φ ψ : R →+* S} (hφ : I.map φ ≤ J) (hψ : I.map ψ ≤ J) (h : φ = ψ) :
+    formalCompletion.map hI hJ φ hφ = formalCompletion.map hI hJ ψ hψ := by
+  subst h; rfl
+
 open CategoryTheory in
 /-- **The formal completion respects the identity** (functoriality, EGA I 10.8):
 `map id = id`. -/
