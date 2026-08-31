@@ -100,8 +100,8 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `m`-th power of `awayCompletionIdeal` is the `m`-th localization-level filtration step.**
 `FormalSpectrum.awayCompletionIdeal I g` is the extension of `I·R_g` along
 `R_g → R{1/g}`, so its powers are the extensions of the powers, and
-`Ideal.mem_map_pow_iff_mem_smul_top` (`FormalSchemes.RestrictedPowerSeries`) identifies those with
-the `R_g`-module filtration Mathlib's adic API uses.
+`Ideal.mem_map_pow_iff_mem_pow_smul_top` (`FormalSchemes.RestrictedPowerSeries`) identifies those
+with the `R_g`-module filtration Mathlib's adic API uses.
 
 This is the bridge between the ideal-shaped consumers of continuity on this tree
 (`RingHom.mem_eqLocus_of_forall_sub_mem_pow`, `Subring.IsAdicallyClosed`) and the module-shaped
