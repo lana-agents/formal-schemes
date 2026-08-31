@@ -25,14 +25,26 @@ further up.
 `specAwayMap f` is an open immersion, hence a monomorphism, and
 `specAwayOverlapIso_hom_fst_comp` is precisely the statement that the two candidate maps become
 equal after composing with it. So `cancel_mono` closes it, once the further-localization map is
-known to commute with the two structure maps from `R` — which is `IsLocalization.Away.lift_comp`.
+known to commute with the two structure maps from `R` — which is
+`IsLocalization.Away.awayToAwayRight_eq`.
+
+## The further-localization maps are Mathlib's
+
+The two ring maps `R_f ⟶ R_{fg}` and `R_g ⟶ R_{fg}` are **not** defined here. They are
+`IsLocalization.Away.awayToAwayRight f g` and `IsLocalization.Away.awayToAwayLeft g f`
+(`Mathlib/RingTheory/Localization/Away/Basic.lean`), and their compatibility with the structure
+maps from `R` is `awayToAwayRight_eq` / `awayToAwayLeft_eq` there.
+
+Using Mathlib's spelling rather than a local one is not tidiness. The sheaf condition for
+`𝒪_{Spec R}` along a cover by basic opens — Mathlib's
+`Localization.existsUnique_algebraMap_eq_of_span_eq_top`, and the tool a `desc` out of a glued
+`Spec` eventually consumes — states its overlap hypothesis in exactly these two maps. A local
+alias would have to be bridged into that statement at every use site.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.awayFurtherLeftHom` / `awayFurtherRightHom`: the further-localization ring
-  maps `R_f ⟶ R_{fg}` and `R_g ⟶ R_{fg}`, as `IsLocalization.Away.lift` of the structure map.
-* `AlgebraicGeometry.specAwayFurtherLeft` / `specAwayFurtherRight`: their spectra, the two chart
-  inclusions of the overlap into the single charts.
+* `AlgebraicGeometry.specAwayFurtherLeft` / `specAwayFurtherRight`: the spectra of Mathlib's two
+  further-localization maps, the two chart inclusions of the overlap into the single charts.
 * `AlgebraicGeometry.specAwayFurtherLeft_comp` / `specAwayFurtherRight_comp`: each followed by the
   corresponding chart inclusion is the chart inclusion at the product.
 * `AlgebraicGeometry.specAwayOverlapIso_hom_fst` / `_hom_snd`: the leg identifications, the point
@@ -55,71 +67,40 @@ namespace AlgebraicGeometry
 
 variable {R : Type u} [CommRing R] (f g : R)
 
-/-! ### Units -/
-
-/-- `f` is a unit after inverting `f · g`: it divides the away element. -/
-theorem isUnit_algebraMap_awayMul_left :
-    IsUnit (algebraMap R (Localization.Away (f * g)) f) :=
-  isUnit_of_dvd_unit (map_dvd _ ⟨g, rfl⟩) (IsLocalization.Away.algebraMap_isUnit (f * g))
-
-/-- `g` is a unit after inverting `f · g`. -/
-theorem isUnit_algebraMap_awayMul_right :
-    IsUnit (algebraMap R (Localization.Away (f * g)) g) :=
-  isUnit_of_dvd_unit (map_dvd _ ⟨f, mul_comm f g⟩) (IsLocalization.Away.algebraMap_isUnit (f * g))
-
-/-! ### The further-localization maps -/
-
-/-- **The further localization `R_f ⟶ R_{fg}`**, obtained by inverting `f · g` in `R_f`. It is the
-universal map out of `R_f` induced by the structure map of `R_{fg}`, which sends `f` to a unit. -/
-def awayFurtherLeftHom : Localization.Away f →+* Localization.Away (f * g) :=
-  IsLocalization.Away.lift f (isUnit_algebraMap_awayMul_left f g)
-
-/-- **The further localization `R_g ⟶ R_{fg}`.** -/
-def awayFurtherRightHom : Localization.Away g →+* Localization.Away (f * g) :=
-  IsLocalization.Away.lift g (isUnit_algebraMap_awayMul_right f g)
-
-/-- The left further localization is a map under `R`. -/
-@[simp]
-theorem awayFurtherLeftHom_comp_algebraMap :
-    (awayFurtherLeftHom f g).comp (algebraMap R (Localization.Away f)) =
-      algebraMap R (Localization.Away (f * g)) :=
-  IsLocalization.Away.lift_comp _ _
-
-/-- The right further localization is a map under `R`. -/
-@[simp]
-theorem awayFurtherRightHom_comp_algebraMap :
-    (awayFurtherRightHom f g).comp (algebraMap R (Localization.Away g)) =
-      algebraMap R (Localization.Away (f * g)) :=
-  IsLocalization.Away.lift_comp _ _
-
 /-! ### The two legs -/
 
 /-- **The first leg of the overlap**, `Spec R_{fg} ⟶ Spec R_f`. -/
 abbrev specAwayFurtherLeft :
     Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away (f * g))) ⟶
       Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away f)) :=
-  Spec.locallyRingedSpaceMap (CommRingCat.ofHom (awayFurtherLeftHom f g))
+  Spec.locallyRingedSpaceMap (CommRingCat.ofHom (IsLocalization.Away.awayToAwayRight f g))
 
 /-- **The second leg of the overlap**, `Spec R_{fg} ⟶ Spec R_g`. -/
 abbrev specAwayFurtherRight :
     Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away (f * g))) ⟶
       Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away g)) :=
-  Spec.locallyRingedSpaceMap (CommRingCat.ofHom (awayFurtherRightHom f g))
+  Spec.locallyRingedSpaceMap (CommRingCat.ofHom (IsLocalization.Away.awayToAwayLeft g f))
 
 /-- The first leg followed by the first chart inclusion is the chart inclusion at the product.
-This is `Spec` of `awayFurtherLeftHom_comp_algebraMap`. -/
+This is `Spec` of `IsLocalization.Away.awayToAwayRight_eq`. -/
 @[reassoc]
 theorem specAwayFurtherLeft_comp :
     specAwayFurtherLeft f g ≫ specAwayMap f = specAwayMap (f * g) := by
   rw [← Spec.locallyRingedSpaceMap_comp, ← CommRingCat.ofHom_comp,
-    awayFurtherLeftHom_comp_algebraMap]
+    show (IsLocalization.Away.awayToAwayRight (S := Localization.Away f)
+        (P := Localization.Away (f * g)) f g).comp (algebraMap R (Localization.Away f)) =
+      algebraMap R (Localization.Away (f * g)) from
+      RingHom.ext fun a => IsLocalization.Away.awayToAwayRight_eq f g a]
 
 /-- The second leg followed by the second chart inclusion is the chart inclusion at the product. -/
 @[reassoc]
 theorem specAwayFurtherRight_comp :
     specAwayFurtherRight f g ≫ specAwayMap g = specAwayMap (f * g) := by
   rw [← Spec.locallyRingedSpaceMap_comp, ← CommRingCat.ofHom_comp,
-    awayFurtherRightHom_comp_algebraMap]
+    show (IsLocalization.Away.awayToAwayLeft (S := Localization.Away g)
+        (P := Localization.Away (f * g)) g f).comp (algebraMap R (Localization.Away g)) =
+      algebraMap R (Localization.Away (f * g)) from
+      RingHom.ext fun a => IsLocalization.Away.awayToAwayLeft_eq g f a]
 
 /-- **The first leg identification.** The overlap identification followed by the first projection
 of the fibre product is the further localization `Spec R_{fg} ⟶ Spec R_f`.

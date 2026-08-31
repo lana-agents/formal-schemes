@@ -32,7 +32,9 @@ of *completions*, so composing two of them is not composing two ring maps. Here 
 `AlgebraicGeometry.specGlueIso`, which is `Spec` of a ring isomorphism, so the composition law is
 `Spec.locallyRingedSpaceMap_comp` and nothing has to be bridged: the leg identifications
 `AlgebraicGeometry.specAwayOverlapIso_hom_fst` / `_hom_snd`
-(`FormalSchemes.SpecAwayOverlapLegs`) are stated with the very ring maps `σ` is composed against.
+(`FormalSchemes.SpecAwayOverlapLegs`) are stated with the very ring maps `σ` is composed against —
+which are Mathlib's `IsLocalization.Away.awayToAwayRight` and `awayToAwayLeft`, not local
+definitions.
 
 ## Main definitions and results
 
@@ -116,8 +118,10 @@ theorem specAlgDataT'_fac
     (σ : ∀ (i j k : J), i ≠ j → i ≠ k → j ≠ k →
       (Localization.Away (g i j * g i k) ≃+* Localization.Away (g j k * g j i)))
     (hσθ : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
-      (σ i j k hij hik hjk).symm.toRingHom.comp (awayFurtherRightHom (g j k) (g j i)) =
-        (awayFurtherLeftHom (g i j) (g i k)).comp (θ i j hij).symm.toRingHom)
+      (σ i j k hij hik hjk).symm.toRingHom.comp
+          (IsLocalization.Away.awayToAwayLeft (g j i) (g j k)) =
+        (IsLocalization.Away.awayToAwayRight (g i j) (g i k)).comp
+          (θ i j hij).symm.toRingHom)
     (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
     specAlgDataT' C g σ i j k hij hik hjk ≫
         pullback.snd (specAwayMap (g j k)) (specAwayMap (g j i)) =
@@ -165,8 +169,10 @@ def ofAlgebraData (K : ∀ i, Ideal (C i))
     (σ : ∀ (i j k : J), i ≠ j → i ≠ k → j ≠ k →
       (Localization.Away (g i j * g i k) ≃+* Localization.Away (g j k * g j i)))
     (hσθ : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
-      (σ i j k hij hik hjk).symm.toRingHom.comp (awayFurtherRightHom (g j k) (g j i)) =
-        (awayFurtherLeftHom (g i j) (g i k)).comp (θ i j hij).symm.toRingHom)
+      (σ i j k hij hik hjk).symm.toRingHom.comp
+          (IsLocalization.Away.awayToAwayLeft (g j i) (g j k)) =
+        (IsLocalization.Away.awayToAwayRight (g i j) (g i k)).comp
+          (θ i j hij).symm.toRingHom)
     (hσc : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
       (σ i j k hij hik hjk).trans ((σ j k i hjk hij.symm hik.symm).trans
           (σ k i j hik.symm hjk.symm hij)) =
