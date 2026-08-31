@@ -25,9 +25,10 @@ composition (EGA I, 10.2). Those three facts contain the statement that `Spf` ca
 
 These four declarations were written for `FormalSchemes/CompletedTensorAwayInterchangeSpf.lean`,
 whose `CompletedTensorAwayInterchange.equivSpfIso` is their original consumer, and they sat there
-behind a **32**-module transitive import closure. Nothing about them is specific to completed tensor
-products, so they are here instead, behind **18** modules (both counts include the module itself),
-where a consumer that has no business importing the completed-tensor tower can still reach them.
+behind a **31**-module transitive import closure (that module's own closure is **32** now that it
+imports this one). Nothing about them is specific to completed tensor products, so they are here
+instead, behind **18** modules (all three counts include the module itself), where a consumer that
+has no business importing the completed-tensor tower can still reach them.
 
 They are stated for arbitrary rings and ideals deliberately: the mutual-inverse laws then reduce to
 the identity and composition functoriality of `Spf` on *abstract* terms, and the elaborator never
