@@ -39,9 +39,15 @@ say so. Nothing here says anything about the other two.
 
 ## What is *not* proved
 
-* **Left-regularity is not supplied at any base with `t ≠ 0`.** It remains a genuine question about
-  a twice-completed localization of `R{x, y}/(x·y − q)`, no counterexample is known, and it is not
-  shown necessary. `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_bot` and
+* **Left-regularity is still not supplied at any base with `t ≠ 0`**, no counterexample is known,
+  and it is not shown necessary. It is no longer a question about a twice-completed localization,
+  though: `FormalSchemes.TateInvNodeChartLegRegular` computes both leg images and shows that
+  left-regularity of `algebraMap R (annulusAlgebra R I q) t` in `R{x, y}/(x·y − q)` itself
+  suffices. That file's
+  `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_of_principal_of_isLeftRegular`
+  and its two companions are these three results with the two leg hypotheses replaced by that one.
+  **The reduction is one-way** and exhibits no witness.
+  `AlgebraicGeometry.isAdicComplete_tateInvNodeChartAwayIdeal_bot` and
   `AlgebraicGeometry.fg_tateInvNodeChartAwayIdeal_bot`
   (`FormalSchemes.TateInvNodeChartPrincipal`) remain the only unconditional case, and they do not
   come from the principal criterion — at `c = 0` its saturation hypothesis reads `S = ⊤`.
