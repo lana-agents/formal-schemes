@@ -57,6 +57,7 @@ import FormalSchemes.AwayBaseChangeTopFiniteType
 import FormalSchemes.AwayChartStructMap
 import FormalSchemes.AwayCompletionAway
 import FormalSchemes.AwayCompletionCongrEquiv
+import FormalSchemes.AwayCompletionFlat
 import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.AwayCompletionNested
 import FormalSchemes.AwayCompletionNestedNaturality
@@ -335,6 +336,7 @@ import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
 import FormalSchemes.TateInvNodeChartLegContinuous
+import FormalSchemes.TateInvNodeChartLegRegular
 import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartPrincipal
 import FormalSchemes.TateInvNodeChartRing
