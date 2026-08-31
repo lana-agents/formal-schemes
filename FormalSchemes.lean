@@ -86,6 +86,7 @@ import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.ChartedDatumGlueOpenImmersion
 import FormalSchemes.ChartedDatumTopFiniteType
 import FormalSchemes.ChartedSchemeDatum
+import FormalSchemes.ChartedSchemeDatumAlgebraData
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
 import FormalSchemes.ClosedImmersionIso
@@ -267,6 +268,8 @@ import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
 import FormalSchemes.Sections
 import FormalSchemes.SpecAwayOverlap
+import FormalSchemes.SpecAwayOverlapLegs
+import FormalSchemes.SpecThreeChartCover
 import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.Spf
