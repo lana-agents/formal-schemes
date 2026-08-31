@@ -258,6 +258,7 @@ import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.OpenImmersionReflectsIdeal
 import FormalSchemes.OpenImmersionSheafComponentIso
 import FormalSchemes.OpenImmersionSourceFormalScheme
+import FormalSchemes.ProjectiveLineCompletion
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS

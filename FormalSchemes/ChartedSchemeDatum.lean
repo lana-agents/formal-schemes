@@ -45,10 +45,13 @@ ideals.
 the two-patch line does (`(A, I, a)` and `(B, J, b)`, with `I` and `J` unrelated). The projective
 line completed at a closed point is then a two-chart datum with `C₀ = k[x]`, `C₁ = k[y]`,
 `K₀ = (x)` and `K₁ = ⊤` — the point is not in the second chart, and `Spf` of a unit ideal is empty,
-so the compatibility `hθ` reads `⊤ ↦ ⊤`. **That example is not formalised here**; the isomorphism
-`k[x]_x ≃+* k[y]_y` carrying `x` to `y⁻¹` is its own piece of plumbing. What is formalised is the
-datum shape that admits it, and `AlgebraicGeometry.ChartedSchemeDatum.ofTwoPatch` below, whose two
-ideals genuinely live in different rings.
+so the compatibility `hθ` reads `⊤ ↦ ⊤`. **That example is formalised** in
+`FormalSchemes.ProjectiveLineCompletion`, as `AlgebraicGeometry.projectiveLineDatum`, over an
+arbitrary commutative ring rather than a field and with both charts spelled as one `R[X]`; the
+isomorphism carrying `x` to `y⁻¹` is `AlgebraicGeometry.awayXInv`, built from Mathlib's
+`LaurentPolynomial.invert`. What is formalised *here* is the datum shape that admits it, and
+`AlgebraicGeometry.ChartedSchemeDatum.ofTwoPatch` below, whose two ideals genuinely live in
+different rings.
 
 ## Main definitions and results
 
@@ -249,8 +252,12 @@ variable {A B : Type u} [CommRing A] [CommRing B] (I : Ideal A) (a : A) (J : Ide
   (hθ : (I.map (algebraMap A (Localization.Away a))).map θ.toRingHom =
     J.map (algebraMap B (Localization.Away b)))
 
-/-- On a two-element index type no triple is pairwise distinct. -/
-private theorem bool_not_pairwise_distinct {i j k : ULift.{u} Bool}
+/-- On a two-element index type no triple is pairwise distinct. Public because the completion-side
+twin of `ChartedSchemeDatum.ofTwoPatch` — `AlgebraicGeometry.ChartedCompletionDatum.ofTwoPatch`
+(`FormalSchemes.ChartedCompletionDatum`) — discharges three more vacuous fields with it, and
+restating it there would have made a twelfth copy of a shape this tree already carries eleven of
+(see `FormalSchemes.SpecThreeChartCompletion`'s `up_ne_up_of_ne` and its docstring). -/
+theorem bool_not_pairwise_distinct {i j k : ULift.{u} Bool}
     (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
   obtain ⟨i⟩ := i
   obtain ⟨j⟩ := j

@@ -33,7 +33,8 @@ stack at `R = ℤ`, `I = (2)`, where the glued completion is provably nonempty.
 
 * `AlgebraicGeometry.formalCompletion_compactSpace`: `Spf R^` is quasi-compact.
 * `AlgebraicGeometry.formalCompletion_nonempty`: it has points as soon as `R ⧸ I` is nontrivial,
-  i.e. as soon as `I ≠ ⊤`.
+  i.e. as soon as `I ≠ ⊤`, and `AlgebraicGeometry.formalCompletion_isEmpty` for the converse half —
+  it is empty when `R ⧸ I` is trivial.
 * `AlgebraicGeometry.completionTwoPatch_compactSpace`: the glued two-patch formal completion is
   quasi-compact, with `AlgebraicGeometry.completionTwoPatch_nonempty` for its non-emptiness.
 
@@ -77,6 +78,16 @@ theorem formalCompletion_nonempty {R : Type u} [CommRing R] (I : Ideal R) (hI : 
     [Nontrivial (R ⧸ I)] : Nonempty (formalCompletion R I hI).toLocallyRingedSpace :=
   haveI := AdicCompletion.isAdicRing_map I hI
   ⟨(formalCompletion.homeo I hI).symm (Classical.arbitrary (PrimeSpectrum (R ⧸ I)))⟩
+
+/-- **`Spf R^` is empty when `I = ⊤`.** The converse half of `formalCompletion_nonempty`, by the
+same homeomorphism: the space is `Spec (R ⧸ I)`, and a trivial quotient has no primes. Consumed by
+`AlgebraicGeometry.isEmpty_projectiveLine_chart_true`
+(`FormalSchemes.ProjectiveLineCompletion`), where the closed subset being completed along misses
+the second chart entirely. -/
+theorem formalCompletion_isEmpty {R : Type u} [CommRing R] (I : Ideal R) (hI : I.FG)
+    [Subsingleton (R ⧸ I)] : IsEmpty (formalCompletion R I hI).toLocallyRingedSpace :=
+  haveI := AdicCompletion.isAdicRing_map I hI
+  Function.isEmpty (formalCompletion.homeo I hI)
 
 section TwoPatch
 
