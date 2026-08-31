@@ -28,7 +28,9 @@ statements about a nonzero ring.
 The chart ring is a `Subring` — of `Γ(Spf A, tateInvPatchSaturateOpens hq hI hS)` in the
 `AlgebraicGeometry.tateInvChartAnnulusSubring` spelling, and of `A{1/(x + y − 1)}` in the
 `AlgebraicGeometry.tateInvNodeChartAwaySubring` one — so its nontriviality **is** the ambient
-ring's, and the two ambients are identified by `AlgebraicGeometry.tateInvNodeChartAmbientEquiv`.
+ring's, and the two ambients are identified by `AlgebraicGeometry.tateInvNodeChartAmbientEquiv`. The
+quotient's own sections are one further step, along `AlgebraicGeometry.tateInvChartAnnulusRingEquiv`
+(`FormalSchemes.TateInvChartAnnulusRing`), which is #426's bijection transported.
 For the first ambient, `FormalSpectrum.nontrivial_sections_of_mem`
 (`FormalSchemes.SpfSectionsNontrivial`) reduces the question to exhibiting a point of the open, and
 `AlgebraicGeometry.tateInvNodeChartLocus_nonempty` — which needs exactly `I ≠ ⊤` — is that point,
@@ -47,6 +49,11 @@ No hypothesis on `q` beyond `q ∈ I`, and nothing about regularity, enters.
   `S` of the model patch, the chart ring of `FormalSchemes.TateInvChartAnnulusRing` is nonzero as
   soon as the saturated open `tateInvPatchSaturateOpens hq hI hS` has a point. This is the general
   form; the rest of the file is the node chart's instance of it.
+* `AlgebraicGeometry.nontrivial_actionQuotient_sections` and
+  `AlgebraicGeometry.exists_nontrivial_actionQuotient_sections_tateInvNodeChartLocus`: the same
+  statement about `Γ (T_inv/⟨σ⟩, V)` itself — the ring issue 1223 names — carried across
+  `AlgebraicGeometry.tateInvChartAnnulusRingEquiv`, and at an open `V` the tree produces for the
+  node chart locus rather than an assumed one.
 * `AlgebraicGeometry.nontrivial_tateInvNodeChartSubring`: the node chart ring, in the
   presheaf-section spelling, for `I ≠ ⊤`.
 * `AlgebraicGeometry.nontrivial_tateInvNodeChartAmbient`: the ambient `A{1/(x + y − 1)}` itself.
@@ -113,6 +120,23 @@ theorem nontrivial_tateInvChartAnnulusSubring_of_nonempty (hS : IsOpen S)
     Nontrivial (tateInvChartAnnulusSubring (hq := hq) (hI := hI) hS) :=
   nontrivial_tateInvChartAnnulusSubring hS hne.choose_spec
 
+/-! ### The quotient's own sections -/
+
+/-- **`Γ (T_inv/⟨σ⟩, V)` is itself a nonzero ring**, for `V` an open of the quotient whose preimage
+is the saturation of `S`. This is issue 1223's ring in the spelling the row states it in, rather
+than its model over one patch: `AlgebraicGeometry.tateInvChartAnnulusRingEquiv`
+(`FormalSchemes.TateInvChartAnnulusRing`) identifies the two, and a ring homomorphism into a
+nontrivial ring has nontrivial domain. -/
+theorem nontrivial_actionQuotient_sections
+    (V : Opens (actionQuotient (tateInvPeriodAction R I q hq hI)).toTopCat) (hS : IsOpen S)
+    (hV : (Opens.map (actionQuotientπ (tateInvPeriodAction R I q hq hI)).toShHom.hom.base).obj V =
+      tateInvSaturateOpens hq hI hS)
+    {x : FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)}
+    (hx : x ∈ tateInvPatchSaturateOpens hq hI hS) :
+    Nontrivial ((actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj (op V)) :=
+  haveI := nontrivial_tateInvChartAnnulusSubring (hq := hq) (hI := hI) hS hx
+  (tateInvChartAnnulusRingEquiv V hS hV).toRingHom.domain_nontrivial
+
 /-! ### The node chart -/
 
 variable (R I q)
@@ -152,6 +176,25 @@ theorem nontrivial_tateInvNodeChartAwaySubring (hq : q ∈ I) (hI : I.FG) (hItop
     Nontrivial (tateInvNodeChartAwaySubring R I q hq hI) :=
   haveI := nontrivial_tateInvNodeChartAmbient R I q hq hI hItop
   inferInstance
+
+/-- **The node chart's ring on the quotient is nonzero**, for `I ≠ ⊤`. The open `V` is the one
+`AlgebraicGeometry.exists_preimage_eq_tateInvSaturateOpens` produces for the node chart locus, so
+this is not conditioned on an unexhibited hypothesis, and the point is
+`AlgebraicGeometry.tateInvNodeChartLocus_nonempty`'s. Together with
+`AlgebraicGeometry.exists_tateInvChartAnnulusRingEquiv` this says the ring issue 1223 asks about is
+not the zero ring. -/
+theorem exists_nontrivial_actionQuotient_sections_tateInvNodeChartLocus
+    (hq : q ∈ I) (hI : I.FG) (hItop : I ≠ ⊤) :
+    ∃ (V : Opens (actionQuotient (tateInvPeriodAction R I q hq hI)).toTopCat)
+      (_ : (Opens.map (actionQuotientπ (tateInvPeriodAction R I q hq hI)).toShHom.hom.base).obj V =
+        tateInvSaturateOpens hq hI (isOpen_tateInvNodeChartLocus R I q)),
+      Nontrivial ((actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj (op V)) := by
+  obtain ⟨V, hV⟩ := exists_preimage_eq_tateInvSaturateOpens (hq := hq) (hI := hI)
+    (isOpen_tateInvNodeChartLocus R I q)
+  obtain ⟨x, hx⟩ := tateInvNodeChartLocus_nonempty R I q hq hI hItop
+  refine ⟨V, hV, nontrivial_actionQuotient_sections V _ hV (x := x) ?_⟩
+  rw [tateInvPatchSaturateOpens_tateInvNodeChartLocus R I q hq hI]
+  exact hx
 
 /-! ### The universal Tate base -/
 
