@@ -159,19 +159,6 @@ theorem annulusFibreOverlapTransitionAlg_apply (hq : q ∈ I) (hI : I.FG)
 
 /-! ### The datum -/
 
-/-- On the two-element index type `ULift Bool` no triple of indices is pairwise distinct. This
-discharges the vacuous double-overlap fields `σ`, `hστ`, `hσc` of the datum below.
-
-(The identical lemma exists twice in the tree already — `uliftBool_not_pairwise_distinctX` in
-`FormalSchemes.GeneralFibreProductExposeXAlgebraData` and `tcBool_not_pairwise_distinct` in
-`FormalSchemes.TateCurveModel` — but both are `private`, so it is re-proved here.) -/
-theorem uliftBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 variable (B : Type u) [CommRing B] [Algebra R B]
 
 /-- **The Tate curve model presented as an `AffineChartedFibreDatumX`.** Two charts, both

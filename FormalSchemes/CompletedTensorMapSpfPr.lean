@@ -19,8 +19,8 @@ This file records that the functorial map is **natural in the two projections**:
 * `mapSpf_comp_fibrePr₂ : mapSpf hI f g ≫ fibrePr₂ = fibrePr₂ ≫ Spf g`,
 
 where `Spf f` / `Spf g` are the morphisms of formal spectra induced by `f`, `g` between the ideals
-of definition `I·A → I·A'` and `I·B → I·B'` (`algHom_isAdicHom_map`). Both squares reduce, via the
-contravariant composition law `FormalSpectrum.locallyRingedSpaceMap_comp` and
+of definition `I·A → I·A'` and `I·B → I·B'` (`algHom_mapIdeal_isAdicHom`). Both squares reduce,
+via the contravariant composition law `FormalSpectrum.locallyRingedSpaceMap_comp` and
 `locallyRingedSpaceMap_congr`, to the ring-level identities `map hI f g ∘ inl = inl ∘ f` and
 `map hI f g ∘ inr = inr ∘ g` (`map_inl` / `map_inr`).
 
@@ -43,24 +43,30 @@ universe u
 
 namespace CompletedTensorProduct
 
-variable {R : Type u} [CommRing R] {I : Ideal R} [TopologicalSpace R] [IsAdicRing I]
+variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {A B A' B' : Type u}
 variable [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 variable [CommRing A'] [CommRing B'] [Algebra R A'] [Algebra R B']
-variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
-variable [TopologicalSpace B] [IsAdicRing (I.map (algebraMap R B))]
-variable [TopologicalSpace A'] [IsAdicRing (I.map (algebraMap R A'))]
-variable [TopologicalSpace B'] [IsAdicRing (I.map (algebraMap R B'))]
 
-set_option linter.unusedSectionVars false in
 /-- An `R`-algebra homomorphism `f : A →ₐ[R] A'` is an adic morphism for the ideals of definition
 `I·A` and `I·A'`: it carries `I·A` onto `I·A'`. This packages the structural morphism
-`Spf A' ⟶ Spf A` of an `R`-algebra map, `(algHom_isAdicHom_map f).spfMap`. -/
-theorem algHom_isAdicHom_map (f : A →ₐ[R] A') :
+`Spf A' ⟶ Spf A` of an `R`-algebra map, `(algHom_mapIdeal_isAdicHom f).spfMap`.
+
+Stated before the topological variables below, so that it carries **no** adic-ring hypothesis: it
+is a statement about `Ideal.map` alone, and the two consumers that state a base map with the raw
+`FormalSpectrum.locallyRingedSpaceMap` (`FormalSchemes.TwoPatchFibreProductProjection` and
+`FormalSchemes.TwoPatchFibreProductProjectionLeft`) need it in exactly that topology-free form. -/
+theorem algHom_mapIdeal_isAdicHom (f : A →ₐ[R] A') :
     IsAdicHom (I.map (algebraMap R A)) (I.map (algebraMap R A')) f.toRingHom := by
   unfold IsAdicHom
   rw [Ideal.map_map,
     show f.toRingHom.comp (algebraMap R A) = algebraMap R A' from AlgHom.comp_algebraMap f]
+
+variable [TopologicalSpace R] [IsAdicRing I]
+variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
+variable [TopologicalSpace B] [IsAdicRing (I.map (algebraMap R B))]
+variable [TopologicalSpace A'] [IsAdicRing (I.map (algebraMap R A'))]
+variable [TopologicalSpace B'] [IsAdicRing (I.map (algebraMap R B'))]
 
 set_option linter.unusedSectionVars false in
 /-- **Naturality of the first projection under `mapSpf`.** The functorial morphism of formal
@@ -69,7 +75,7 @@ theorem mapSpf_comp_fibrePr₁ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R]
     haveI := isAdicRing R I A B hI
     haveI := isAdicRing R I A' B' hI
     mapSpf hI f g ≫ fibrePr₁ (R := R) (A := A) (B := B) =
-      fibrePr₁ (R := R) (A := A') (B := B') ≫ (algHom_isAdicHom_map (I := I) f).spfMap := by
+      fibrePr₁ (R := R) (A := A') (B := B') ≫ (algHom_mapIdeal_isAdicHom (I := I) f).spfMap := by
   haveI := isAdicRing R I A B hI
   haveI := isAdicRing R I A' B' hI
   simp only [mapSpf, fibrePr₁, IsAdicHom.spfMap]
@@ -81,8 +87,8 @@ theorem mapSpf_comp_fibrePr₁ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R]
     ← locallyRingedSpaceMap_comp (I := I.map (algebraMap R A))
       (J := I.map (algebraMap R A')) (K := idealOfDefinition R I A' B')
       (φ := f.toRingHom) (ψ := (inl R I A' B').toRingHom)
-      (hIJ := (algHom_isAdicHom_map f).le_comap) (hJK := inl_isAdicHom.le_comap)
-      (hIK := ((algHom_isAdicHom_map f).comp inl_isAdicHom).le_comap)]
+      (hIJ := (algHom_mapIdeal_isAdicHom f).le_comap) (hJK := inl_isAdicHom.le_comap)
+      (hIK := ((algHom_mapIdeal_isAdicHom f).comp inl_isAdicHom).le_comap)]
   exact locallyRingedSpaceMap_congr _ _ _ _ _ _
     (RingHom.ext fun a => map_inl hI f g a)
 
@@ -93,7 +99,7 @@ theorem mapSpf_comp_fibrePr₂ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R]
     haveI := isAdicRing R I A B hI
     haveI := isAdicRing R I A' B' hI
     mapSpf hI f g ≫ fibrePr₂ (R := R) (A := A) (B := B) =
-      fibrePr₂ (R := R) (A := A') (B := B') ≫ (algHom_isAdicHom_map (I := I) g).spfMap := by
+      fibrePr₂ (R := R) (A := A') (B := B') ≫ (algHom_mapIdeal_isAdicHom (I := I) g).spfMap := by
   haveI := isAdicRing R I A B hI
   haveI := isAdicRing R I A' B' hI
   simp only [mapSpf, fibrePr₂, IsAdicHom.spfMap]
@@ -105,8 +111,8 @@ theorem mapSpf_comp_fibrePr₂ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R]
     ← locallyRingedSpaceMap_comp (I := I.map (algebraMap R B))
       (J := I.map (algebraMap R B')) (K := idealOfDefinition R I A' B')
       (φ := g.toRingHom) (ψ := (inr R I A' B').toRingHom)
-      (hIJ := (algHom_isAdicHom_map g).le_comap) (hJK := inr_isAdicHom.le_comap)
-      (hIK := ((algHom_isAdicHom_map g).comp inr_isAdicHom).le_comap)]
+      (hIJ := (algHom_mapIdeal_isAdicHom g).le_comap) (hJK := inr_isAdicHom.le_comap)
+      (hIK := ((algHom_mapIdeal_isAdicHom g).comp inr_isAdicHom).le_comap)]
   exact locallyRingedSpaceMap_congr _ _ _ _ _ _
     (RingHom.ext fun b => map_inr hI f g b)
 

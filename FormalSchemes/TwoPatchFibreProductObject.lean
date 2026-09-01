@@ -128,15 +128,6 @@ private abbrev fpVy : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (CompletedTensorProduct.idealOfDefinition R I
     (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) B)
 
-/-- On a two-element index type no triple is pairwise distinct: this discharges the vacuous
-`t'`, `t_fac` and `cocycle` fields of the two-patch glue data. -/
-private theorem fpBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 /-- **The two-patch fibre-product glue datum** as a `CategoryTheory.GlueData'` on `ULift Bool`: two
 copies of `Spf(A ⊗̂_R B)` glued along the interchange open immersions `f` and the base-changed
 overlap transition `t = twoPatchFibreProductTransition`. The fields `t'`, `t_fac`, `cocycle` are
@@ -180,15 +171,15 @@ def twoPatchFibreProductGlueData' (hI : I.FG) :
     | ⟨true⟩, ⟨false⟩, _ => (twoPatchFibreProductTransition R I q B hI).inv
     | ⟨false⟩, ⟨false⟩, h => (h rfl).elim
     | ⟨true⟩, ⟨true⟩, h => (h rfl).elim
-  t' := fun _ _ _ hij hik hjk => (fpBool_not_pairwise_distinct hij hik hjk).elim
-  t_fac := fun _ _ _ hij hik hjk => (fpBool_not_pairwise_distinct hij hik hjk).elim
+  t' := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  t_fac := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
   t_inv := by
     rintro ⟨_ | _⟩ ⟨_ | _⟩ h
     · exact absurd rfl h
     · exact (twoPatchFibreProductTransition R I q B hI).hom_inv_id
     · exact (twoPatchFibreProductTransition R I q B hI).inv_hom_id
     · exact absurd rfl h
-  cocycle := fun _ _ _ hij hik hjk => (fpBool_not_pairwise_distinct hij hik hjk).elim
+  cocycle := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
 
 /-- **The two-patch fibre-product glue datum as a `LocallyRingedSpace.GlueData`**, via
 `GlueData.ofGlueData'` together with the open-immersion field `f_open`. Off the diagonal each glue

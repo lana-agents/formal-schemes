@@ -28,7 +28,7 @@ induced by the completion map `B → B̂` (which carries `K` into `K̂`), and th
 Noetherianness along it. Surjectivity — the substantive content — rests on the fact that,
 modulo `K̂ ^ (n+1)`, every element of `K̂ ^ n` is congruent to the image of an element of
 `K ^ n` (`AssociatedGraded.exists_approx`), which in turn uses the density of `B` in `B̂`
-(`AssociatedGraded.exists_sub_mem`).
+(`AdicCompletion.exists_sub_algebraMap_mem_idealOfDefinition`, `FormalSchemes.Completion`).
 
 We choose the surjection-plus-transport route (explicitly sanctioned by the issue) rather than a
 full graded-ring isomorphism: the direction `gr_K(B) →+* gr_{K̂}(B̂)` is the one the completion
@@ -137,21 +137,6 @@ theorem completionHom_deg (n : ℕ) (k : (K ^ n : Ideal B)) :
     rw [reesMap_coe, monomialRees_coe, monomialRees_coe, Polynomial.map_monomial]
   rw [deg_apply, completionHom_mk, hmon, ← deg_apply]
 
-/-- **Density of `B` in its completion**: every element of `B̂` is congruent modulo `K̂` to the
-image of an element of `B`. -/
-theorem exists_sub_mem (hK : K.FG) (b : AdicCompletion K B) :
-    ∃ b₀ : B,
-      b - algebraMap B (AdicCompletion K B) b₀ ∈ AdicCompletion.idealOfDefinition K := by
-  obtain ⟨b₀, hb₀⟩ := Ideal.Quotient.mk_surjective (AdicCompletion.evalₐ K 1 b)
-  refine ⟨b₀, ?_⟩
-  have hzero : AdicCompletion.evalₐ K 1 (b - algebraMap B (AdicCompletion K B) b₀) = 0 := by
-    rw [map_sub, algebraMap_eq_of, AdicCompletion.evalₐ_of, hb₀, sub_self]
-  have hmem : b - algebraMap B (AdicCompletion K B) b₀ ∈
-      (AdicCompletion.idealOfDefinition K) ^ 1 := by
-    rw [← AdicCompletion.ker_evalₐ K hK 1, RingHom.mem_ker]
-    exact hzero
-  rwa [pow_one] at hmem
-
 /-- Auxiliary ideal for the successive-approximation step: those `c ∈ B̂` for which some
 `k ∈ K ^ n` has `c - algebraMap k ∈ K̂ ^ (n+1)`. Closure under `B̂`-multiplication is exactly the
 density argument. -/
@@ -164,7 +149,7 @@ def approxIdeal (hK : K.FG) (n : ℕ) : Ideal (AdicCompletion K B) where
     exact ⟨k + l, add_mem hk hl, by rw [map_add]; convert add_mem ha hb using 1; ring⟩
   smul_mem' := by
     rintro b c ⟨k, hk, hc⟩
-    obtain ⟨b₀, hb₀⟩ := exists_sub_mem K hK b
+    obtain ⟨b₀, hb₀⟩ := AdicCompletion.exists_sub_algebraMap_mem_idealOfDefinition K hK b
     refine ⟨b₀ * k, Ideal.mul_mem_left _ b₀ hk, ?_⟩
     have halgk : algebraMap B (AdicCompletion K B) k ∈ (AdicCompletion.idealOfDefinition K) ^ n :=
       algebraMap_mem_pow K n hk

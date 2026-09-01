@@ -143,15 +143,6 @@ private abbrev tpVx : LocallyRingedSpace.{u} :=
 private abbrev tpVy : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
 
-/-- On a two-element index type no triple is pairwise distinct: this discharges the vacuous
-`t'`, `t_fac` and `cocycle` fields of the two-chart glue data. -/
-private theorem tcBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 /-- **The combined overlap chart is an open immersion.** The coproduct `coprod.desc` of the two
 affine overlap charts `annulusOverlapChart` (image `D(x)`) and `annulusOverlapChartY` (image `D(y)`)
 is an open immersion of locally ringed spaces, because the two images are disjoint. -/
@@ -187,8 +178,8 @@ def tateCurveGlueData' (hq : q ∈ I) (hI : I.FG) :
       (coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q)))
   t := fun _ _ _ => coprod.desc ((annulusChartTransitionInvSpf R I q hI).hom ≫ coprod.inr)
     ((annulusChartTransitionInvSpf R I q hI).inv ≫ coprod.inl)
-  t' := fun _ _ _ hij hik hjk => (tcBool_not_pairwise_distinct hij hik hjk).elim
-  t_fac := fun _ _ _ hij hik hjk => (tcBool_not_pairwise_distinct hij hik hjk).elim
+  t' := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  t_fac := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
   t_inv := by
     intro i j h
     refine coprod.hom_ext ?_ ?_
@@ -196,7 +187,7 @@ def tateCurveGlueData' (hq : q ∈ I) (hI : I.FG) :
         ← Category.assoc, Iso.hom_inv_id, Category.id_comp, Category.comp_id]
     · rw [← Category.assoc, coprod.inr_desc, Category.assoc, coprod.inl_desc,
         ← Category.assoc, Iso.inv_hom_id, Category.id_comp, Category.comp_id]
-  cocycle := fun _ _ _ hij hik hjk => (tcBool_not_pairwise_distinct hij hik hjk).elim
+  cocycle := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
 
 /-- **The circular glue datum as a `LocallyRingedSpace.GlueData`**: the full
 `CategoryTheory.GlueData` produced by `GlueData.ofGlueData'`, together with the open-immersion field

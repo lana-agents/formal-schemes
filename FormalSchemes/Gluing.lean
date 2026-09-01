@@ -26,6 +26,10 @@ the Tate chain, obtained by gluing formal annuli.
 * `FormalScheme.GlueData`: glue data of formal schemes (a `LocallyRingedSpace.GlueData` whose
   pieces are formal schemes), and `FormalScheme.GlueData.gluedFormalScheme`, the glued formal
   scheme, with `ι` the open immersions of the pieces into it.
+* `uliftBool_not_pairwise_distinct`: the two-element index type carries no pairwise distinct
+  triple. This is what discharges the triple-index fields of a *two-patch* glue datum. It lives
+  here because eleven files across the tree need it and this is the module about gluing that all
+  eleven of their import closures already contain.
 
 ## References
 
@@ -40,6 +44,27 @@ open CategoryTheory TopologicalSpace Opposite
 universe u
 
 namespace AlgebraicGeometry
+
+/-! ### The two-element index type -/
+
+/-- **On the two-element index type `ULift Bool` no triple of indices is pairwise distinct.**
+
+Every two-patch construction in this development is a `CategoryTheory.GlueData'` (or one of the
+tree's charted-datum wrappers) indexed by `ULift Bool`, and each of them has to supply the
+triple-index fields — `t'`, `t_fac`, `cocycle` for a glue datum, `σ`, `hστ`, `hσc` for the
+algebra data — which this lemma makes vacuous.
+
+It is consumed from eleven different files, spread over the scheme-side, completion-side, Tate
+and general-fibre-product lines, each of which used to restate it under its own name. The lemma
+itself needs no import at all — `ULift`, `Bool`, `Ne` and `False` are everything that occurs in
+it — so the home was chosen by measuring the eleven import closures instead: this module is in
+all eleven, so nothing had to gain an import. -/
+theorem uliftBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
+    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
+  obtain ⟨i⟩ := i
+  obtain ⟨j⟩ := j
+  obtain ⟨k⟩ := k
+  cases i <;> cases j <;> cases k <;> simp_all
 
 namespace LocallyRingedSpace.IsOpenImmersion
 

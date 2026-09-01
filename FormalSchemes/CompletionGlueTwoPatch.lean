@@ -36,9 +36,10 @@ gluing.
 
 Because the index type has only **two** elements, no triple `(i, j, k)` of indices can be pairwise
 distinct, so the `t'`, `t_fac` and `cocycle` fields of a `CategoryTheory.GlueData'` are vacuous
-(`cpBool_not_pairwise_distinct`). That is what made this slice tractable first, and the same device
-carries the Tate two-patch prototype (`FormalSchemes/TateGlueTwoPatch.lean`), whose shape this file
-mirrors. Those three fields are discharged by genuine proofs, at an arbitrary index type, in
+(`uliftBool_not_pairwise_distinct`, `FormalSchemes.Gluing`). That is what made this slice
+tractable first, and the same device carries the Tate two-patch prototype
+(`FormalSchemes/TateGlueTwoPatch.lean`), whose shape this file mirrors. Those three fields are
+discharged by genuine proofs, at an arbitrary index type, in
 `FormalSchemes/CompletionBasicOpenGlue.lean`, over a single affine — the first *completion* glue
 datum on this tree whose cocycle condition has content. (`FormalSchemes/ThreeChartDatum.lean`
 discharges the analogous fields of an `AffineChartedFibreDatumX` on `ULift (Fin 3)`.)
@@ -185,15 +186,6 @@ private abbrev cpV₁ : LocallyRingedSpace.{u} :=
   (formalCompletion (Localization.Away b)
     (J.map (algebraMap B (Localization.Away b))) (hJ.map _)).toLocallyRingedSpace
 
-/-- On a two-element index type no triple is pairwise distinct: this discharges the vacuous
-`t'`, `t_fac` and `cocycle` fields of the two-patch glue data. -/
-private theorem cpBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 /-- **The two-patch glue datum of two affine formal completions** (EGA I, 10.8), as a
 `CategoryTheory.GlueData'` on the index type `ULift Bool`: the patches are the completions
 `formalCompletion A I` and `formalCompletion B J`, the overlaps are their basic-open completions at
@@ -233,15 +225,15 @@ def completionTwoPatchGlueData' : CategoryTheory.GlueData' LocallyRingedSpace.{u
     | ⟨true⟩, ⟨false⟩, _ => (completionGlueLRSIso I hI a J hJ b θ hθ).inv
     | ⟨false⟩, ⟨false⟩, h => (h rfl).elim
     | ⟨true⟩, ⟨true⟩, h => (h rfl).elim
-  t' := fun _ _ _ hij hik hjk => (cpBool_not_pairwise_distinct hij hik hjk).elim
-  t_fac := fun _ _ _ hij hik hjk => (cpBool_not_pairwise_distinct hij hik hjk).elim
+  t' := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  t_fac := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
   t_inv := by
     rintro ⟨_ | _⟩ ⟨_ | _⟩ h
     · exact absurd rfl h
     · exact (completionGlueLRSIso I hI a J hJ b θ hθ).hom_inv_id
     · exact (completionGlueLRSIso I hI a J hJ b θ hθ).inv_hom_id
     · exact absurd rfl h
-  cocycle := fun _ _ _ hij hik hjk => (cpBool_not_pairwise_distinct hij hik hjk).elim
+  cocycle := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
 
 /-- **The two-patch completion glue datum as a `LocallyRingedSpace.GlueData`**: the full
 `CategoryTheory.GlueData` produced by `GlueData.ofGlueData'`, together with the open-immersion
