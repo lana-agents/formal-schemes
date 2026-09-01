@@ -30,8 +30,28 @@ A token counts as resolving if it resolves as **any one** of:
 * a **project module** — `FormalSchemes.Foo`, with `FormalSchemes/Foo.lean` present;
 * a **repository path** — `FormalSchemes/Foo.lean` or the bare `Foo.lean`, present.
 
-Use the **shortest resolving spelling**, and check that it resolves **in the citing file's own
-`open` context** as well as under the audit's, since the file is where a reader meets it.
+Use the **shortest resolving spelling**, and check it under the audit's open set, under **the
+citing file's own `open` set** — the file is where a reader meets it — and against **the
+declaration you actually mean**. The three checks are independent. Each has a counterexample on
+this tree, so none of them can be skipped on the grounds that another passed.
+
+* **The file's `open` *set*, not the lexical position of the citation.** A module docstring sits
+  above the file's `open` line, so at its own position almost nothing is open. Reading the rule
+  lexically would condemn **146 of the 231** declaration-shaped tokens in the module-docstring
+  heads of the thirteen files this convention was settled on, including six of the twenty-four
+  occurrences it rewrote — so the lexical reading is the one that puts the tree back in violation
+  of its own convention. It is the file's open set that binds.
+* **Shortest-under-the-audit is not shortest-in-the-file.** `GlueData.f_open` resolves under the
+  audit's open set, to `AlgebraicGeometry.LocallyRingedSpace.GlueData.f_open`. In
+  `TateSelfProductObject.lean` — inside `namespace AlgebraicGeometry`, with `CategoryTheory` open
+  — the same spelling is an **unknown constant**: the head resolves to `CategoryTheory.GlueData`,
+  which has no `f_open` field. There the shortest spelling is `LocallyRingedSpace.GlueData.f_open`.
+* **Resolving is not resolving to the right thing.** `TopCat.GlueData.f_open` and
+  `AlgebraicGeometry.LocallyRingedSpace.GlueData.f_open` are different theorems about different
+  structures, and `CategoryTheory.GlueData.f_open` does not exist at all — so that one token has
+  three plausible spellings, one nonexistent and two meaning different things. A citation that
+  resolves to the **wrong** declaration is worse than a bare one: unresolved is visible to the
+  audit, wrong-referent is visible to nobody.
 
 For every token the audit still reports, the author does one of exactly two things, in the pull
 request body: **qualify it until it resolves**, or **name the non-citation category it falls in**,
@@ -83,7 +103,10 @@ buys almost nothing and it is not free. So there is no exception, and all 24 are
 `python3 scripts/citation_audit.py --tree` runs the same check over every comment in the tree. It
 is a **measurement, not a gate**: on 2026-09-01 it reported 1302 distinct unresolved tokens over
 4604 occurrences, of which 843 (3428 occurrences) have a qualified spelling that would resolve and
-459 (1176) have none in any spelling. Most of that residue is the last three categories above —
+459 (1176) have none in any spelling. (Re-run on `629fc37`, the commit that landed this document,
+the same command gives 1302 distinct over **4597** occurrences. A figure here is a measurement with
+a commit attached; re-run it rather than quoting it.) Most of that residue is the last three
+categories above —
 longer prose variables, dot-notation on locals, structure fields — and clearing it is not a
 prerequisite for anything. The convention binds the diff; the tree-wide number is there so that
 the backlog is a known quantity rather than a surprise.
