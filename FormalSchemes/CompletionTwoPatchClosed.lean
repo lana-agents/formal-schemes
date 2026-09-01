@@ -51,7 +51,7 @@ use `hθ`, and this one does — through the two chart preimages.
 needs **injectivity** of `completionTwoPatchToScheme.base` together with the inducing property.
 The mixed-chart case of injectivity needs the converse of
 `FormalSchemes/CompletionTwoPatchDoubled.lean`'s overlap analysis — *a point of `Spf A^` lying
-over `D(a)` is in the overlap chart*. `CompletionTwoPatchSupport.lean`'s
+over `D(a)` is in the overlap chart*. `SpecTwoPatchNonAffine.lean`'s
 `preimage_range_specTwoPatchι₁` is the scheme-side analogue of exactly that statement, so the
 completion-side version should now be transcribable rather than invented; but it is unmeasured and
 belongs in its own carve.

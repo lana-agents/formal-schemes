@@ -19,9 +19,7 @@ This file computes the intersection, as an equality:
 ```
 
 That is the arbitrary-index form of `AlgebraicGeometry.preimage_range_specTwoPatchι₁`
-(`FormalSchemes.CompletionTwoPatchSupport`), but **not by that file's route**. Two patches down the
-`⊆` half is the containment the glue datum gives for free and the `⊇` half consumes the glue
-**condition**, in about forty lines. Here both halves come at once from
+(`FormalSchemes.SpecTwoPatchNonAffine`). Both halves come at once from
 `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι`
 (`FormalSchemes.GlueDataImageInter`), which is Mathlib's `TopCat.GlueData.preimage_range`
 transported across the carrier comparison: the topological gluing already knows that
@@ -102,11 +100,12 @@ for any glue datum, transported from `TopCat.GlueData.preimage_range` in
 containment `range_ι_inter_subset` is spent **here**: both halves are already inside the topological
 statement, which is where the glue condition goes instead — Mathlib proves `preimage_range` from
 `TopCat.GlueData.image_inter`, whose `⊇` half is `glue_condition_apply`. That is what makes this
-three lines rather than the two-patch model's forty; the content has moved, not vanished.
+three lines rather than the forty the two-patch model originally took; the content has moved, not
+vanished.
 
 At two patches this is `AlgebraicGeometry.preimage_range_specTwoPatchι₁`
-(`FormalSchemes.CompletionTwoPatchSupport`), whose docstring records the asymmetric hand proof this
-one replaces. -/
+(`FormalSchemes.SpecTwoPatchNonAffine`), which is now the same three-line term at
+`specTwoPatchLRSGlueData`. -/
 theorem preimage_range_specι (i j : D.J) (h : i ≠ j) :
     ⇑(D.specι i).base ⁻¹' Set.range ⇑(D.specι j).base =
       (PrimeSpectrum.basicOpen (D.g i j) : Set (PrimeSpectrum (D.C i))) :=
