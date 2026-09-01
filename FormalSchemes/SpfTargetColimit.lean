@@ -202,16 +202,6 @@ section SpfTarget
 
 variable {C : Type u} [CommRing C] [TopologicalSpace C] (L : Ideal C) [IsAdicRing L]
 
-omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace C] [IsAdicRing L] in
-/-- **A morphism `Spf R ⟶ Spf L` is determined by its restrictions to the thickenings of `Spf R`.**
-The formal-affine instance of `hom_ext_thickeningMap_lrs`, spelled out because it is the shape
-issue 62m's capstone consumes. -/
-theorem hom_ext_thickeningMap_spf
-    (g₁ g₂ : locallyRingedSpaceObj I ⟶ locallyRingedSpaceObj L)
-    (h : ∀ n : ℕ, thickeningMap I n ≫ g₁ = thickeningMap I n ≫ g₂) :
-    g₁ = g₂ :=
-  hom_ext_thickeningMap_lrs g₁ g₂ h
-
 /-- **The bijection at a formal-affine target, given surjectivity.** Injectivity is
 `injective_restrictToThickeningsLRS`, so this records that surjectivity of
 `restrictToThickeningsLRS I (Spf L)` is the *entire* remaining content of the `Spf`-target colimit
@@ -253,7 +243,7 @@ omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace C] [IsAdicRing L] in
 /-- **The `Spf`-target colimit property, on the families that a continuity witness is available
 for.** This is what survives of `AdicRingCat.spfHomEquiv` at the point issue 62m's step 3 needs it:
 the existence half is `locallyRingedSpaceMap` and needs `hψ`, the uniqueness half is
-`hom_ext_thickeningMap_spf` and needs nothing.
+`hom_ext_thickeningMap_lrs` — which is stated for an arbitrary target — and needs nothing.
 
 Note what this does *not* say. The family is `spfTargetFamily I L ψ hψ`, which is defined as the
 restriction of `Spf ψ`, so the theorem applies only to families already known to come from a
