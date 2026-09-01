@@ -76,15 +76,6 @@ private abbrev tpVx : LocallyRingedSpace.{u} :=
 private abbrev tpVy : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
 
-/-- On a two-element index type no triple is pairwise distinct: this discharges the vacuous
-`t'`, `t_fac` and `cocycle` fields of the two-patch glue data. -/
-private theorem tpBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 /-- **The two-patch glue datum** of the Tate annulus, as a `CategoryTheory.GlueData'` on the index
 type `ULift Bool`: two copies of `Spf A` glued along the overlap `{x invertible} ≅ {y invertible}`
 via the geometric transition isomorphism. The three fields `t'`, `t_fac`, `cocycle` are vacuous
@@ -125,15 +116,15 @@ def tateTwoPatchGlueData' (hI : I.FG) : CategoryTheory.GlueData' LocallyRingedSp
     | ⟨true⟩, ⟨false⟩, _ => (annulusChartTransitionSpf R I q hI).inv
     | ⟨false⟩, ⟨false⟩, h => (h rfl).elim
     | ⟨true⟩, ⟨true⟩, h => (h rfl).elim
-  t' := fun _ _ _ hij hik hjk => (tpBool_not_pairwise_distinct hij hik hjk).elim
-  t_fac := fun _ _ _ hij hik hjk => (tpBool_not_pairwise_distinct hij hik hjk).elim
+  t' := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  t_fac := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
   t_inv := by
     rintro ⟨_ | _⟩ ⟨_ | _⟩ h
     · exact absurd rfl h
     · exact (annulusChartTransitionSpf R I q hI).hom_inv_id
     · exact (annulusChartTransitionSpf R I q hI).inv_hom_id
     · exact absurd rfl h
-  cocycle := fun _ _ _ hij hik hjk => (tpBool_not_pairwise_distinct hij hik hjk).elim
+  cocycle := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
 
 /-- **The two-patch glue datum as a `LocallyRingedSpace.GlueData`**: the full
 `CategoryTheory.GlueData` produced by `GlueData.ofGlueData'`, together with the open-immersion

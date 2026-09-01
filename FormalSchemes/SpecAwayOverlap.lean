@@ -46,7 +46,8 @@ the two-patch scheme glue `AlgebraicGeometry.specTwoPatchGlueData'`
   is not nilpotent. This is what makes the identification above non-vacuous: an overlap
   identification between two empty objects would be `Subsingleton`-true, and the two-patch glue
   data on the tree never exercise it, since `specTwoPatchGlueData'` discharges its triple-overlap
-  fields from `spBool_not_pairwise_distinct`. Instantiated at `R = ℤ`, `f = 2`, `g = 3` below.
+  fields from `AlgebraicGeometry.uliftBool_not_pairwise_distinct` (`FormalSchemes.Gluing`).
+  Instantiated at `R = ℤ`, `f = 2`, `g = 3` below.
 
 ## A coercion to know about
 

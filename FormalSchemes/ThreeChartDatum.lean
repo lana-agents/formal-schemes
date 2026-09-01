@@ -176,15 +176,16 @@ section Vacuity
 variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
 variable (B : Type u) [CommRing B] [Algebra R B]
 
-/-- Distinctness in the index type `ULift (Fin 3)` is decided in `Fin 3`. -/
-theorem up_ne_up {a b : Fin 3} (h : a ≠ b) : (⟨a⟩ : ULift.{u} (Fin 3)) ≠ ⟨b⟩ :=
-  fun hab => h (congrArg ULift.down hab)
+/-! Distinctness in the index type `ULift (Fin 3)` is `ULift.up_injective.ne`, from Mathlib's
+`Mathlib.Data.ULift`, applied to a `Fin 3` disequality decided by `decide`. This file used to
+restate that upstream fact as a theorem of its own; two other files restated it privately. -/
 
 /-- **The index type has a pairwise distinct triple** — unlike `ULift Bool`, so the geometric
 triple-overlap fields below are not vacuously discharged. -/
 theorem exists_pairwise_distinct :
     ∃ i j k : ULift.{u} (Fin 3), i ≠ j ∧ i ≠ k ∧ j ≠ k :=
-  ⟨⟨0⟩, ⟨1⟩, ⟨2⟩, up_ne_up (by decide), up_ne_up (by decide), up_ne_up (by decide)⟩
+  ⟨⟨0⟩, ⟨1⟩, ⟨2⟩, ULift.up_injective.ne (by decide), ULift.up_injective.ne (by decide),
+    ULift.up_injective.ne (by decide)⟩
 
 /-- **Non-vacuity of the fibre-product triple.** At a pairwise distinct triple the geometric
 transition `t'` of the datum is the derived transition `AffineChartedFibreDatum.algDataT'` built
@@ -207,11 +208,12 @@ theorem datumX_xt'_eq (i j k : ULift.{u} (Fin 3)) (hij : i ≠ j) (hik : i ≠ k
 /-- **Non-vacuity, concretely**, at the triple `0, 1, 2` of `ULift (Fin 3)`: the hypotheses of the
 geometric fields are satisfiable and the field there is the derived transition. -/
 theorem datumX_xt'_zero_one_two :
-    (datumX hI f B).xt' ⟨0⟩ ⟨1⟩ ⟨2⟩ (up_ne_up (by decide)) (up_ne_up (by decide))
-        (up_ne_up (by decide)) =
+    (datumX hI f B).xt' ⟨0⟩ ⟨1⟩ ⟨2⟩ (ULift.up_injective.ne (by decide))
+        (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide)) =
       AffineChartedFibreDatumX.xAlgDataT' hI (fun _ : ULift.{u} (Fin 3) => A)
         (fun i j => f i * f j) (fun i j k _ _ _ => sigma hI f i j k) ⟨0⟩ ⟨1⟩ ⟨2⟩
-        (up_ne_up (by decide)) (up_ne_up (by decide)) (up_ne_up (by decide)) :=
+        (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide))
+        (ULift.up_injective.ne (by decide)) :=
   rfl
 
 end Vacuity

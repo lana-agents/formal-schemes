@@ -69,14 +69,6 @@ variable {A B A' B' : Type u}
 variable [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 variable [CommRing A'] [CommRing B'] [Algebra R A'] [Algebra R B']
 
-/-- An `R`-algebra homomorphism carries the extended ideal of definition `I·A` onto `I·A'`; the
-topology-free form needed to state the base map `Spf f` with raw `locallyRingedSpaceMap`. -/
-theorem algHom_mapIdeal_isAdicHom (f : A →ₐ[R] A') :
-    IsAdicHom (I.map (algebraMap R A)) (I.map (algebraMap R A')) f.toRingHom := by
-  unfold IsAdicHom
-  rw [Ideal.map_map,
-    show f.toRingHom.comp (algebraMap R A) = algebraMap R A' from AlgHom.comp_algebraMap f]
-
 /-- **Naturality of the first projection under `mapSpf`, in raw `locallyRingedSpaceMap` form.**
 The functorial map `mapSpf hI f g : Spf(A' ⊗̂_R B') ⟶ Spf(A ⊗̂_R B)` composed with the first
 projection `Spf(inl) : Spf(A ⊗̂_R B) ⟶ Spf A` equals the first projection of the source chart

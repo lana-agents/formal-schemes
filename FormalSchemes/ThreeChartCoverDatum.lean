@@ -120,12 +120,12 @@ theorem datumX_xt'_eq (hI : I.FG) (i j k : ULift.{u} (Fin 3))
 
 /-- **Non-vacuity, concretely**, at the triple `0, 1, 2`. -/
 theorem datumX_xt'_zero_one_two (hI : I.FG) :
-    (datumX I f B hI).xt' ⟨0⟩ ⟨1⟩ ⟨2⟩ (ThreeChart.up_ne_up (by decide))
-        (ThreeChart.up_ne_up (by decide)) (ThreeChart.up_ne_up (by decide)) =
+    (datumX I f B hI).xt' ⟨0⟩ ⟨1⟩ ⟨2⟩ (ULift.up_injective.ne (by decide))
+        (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide)) =
       AffineChartedFibreDatumX.xAlgDataT' hI (chartAlgebra I f) (overlapElt I f)
         (fun i j k _ _ _ => sigma I f hI i j k) ⟨0⟩ ⟨1⟩ ⟨2⟩
-        (ThreeChart.up_ne_up (by decide)) (ThreeChart.up_ne_up (by decide))
-        (ThreeChart.up_ne_up (by decide)) :=
+        (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide))
+        (ULift.up_injective.ne (by decide)) :=
   rfl
 
 end Vacuity

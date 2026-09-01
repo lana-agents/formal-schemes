@@ -281,19 +281,16 @@ def glued : LocallyRingedSpace.{u} :=
 
 /-! ### Non-vacuity -/
 
-/-- Distinct elements of `Fin 3` stay distinct after `ULift.up`. The project's
-`AlgebraicGeometry.ThreeChart.up_ne_up` (`FormalSchemes.ThreeChartDatum`) says the same thing, but
-lives behind the completion-side chart cluster: importing it would take this file's import closure
-from 47 modules to 92. Restating it costs two lines, which is the convention this tree already
-follows for the sibling "no triple of two indices is distinct" lemma: `git grep
-not_pairwise_distinct` finds **eleven** copies of it under eleven names, one per file that needs
-it, most recently `AlgebraicGeometry.bool_not_pairwise_distinct`
-(`FormalSchemes.ChartedSchemeDatum`) — which is *public*, having been un-`private`d so that
-`AlgebraicGeometry.ChartedCompletionDatum.ofTwoPatch` could reuse it rather than make a twelfth
-copy. Reuse is not available *here*: that lemma is about `ULift Bool`, this file needs `ULift
-(Fin 3)`, and the `Fin 3` twin is the one behind the 47-to-92 import jump above. -/
-private theorem up_ne_up {a b : Fin 3} (h : a ≠ b) : (⟨a⟩ : ULift.{u} (Fin 3)) ≠ ⟨b⟩ :=
-  fun hh => h (congrArg ULift.down hh)
+/-! Distinct elements of `Fin 3` stay distinct after `ULift.up` because `ULift.up` is injective,
+which is Mathlib's `ULift.up_injective` (`Mathlib.Data.ULift`); the triples below use
+`ULift.up_injective.ne (by decide)`.
+
+This file used to restate that fact privately, and justified doing so by an import jump: the
+project's own restatement lived in `FormalSchemes.ThreeChartDatum`, behind the completion-side
+chart cluster, and importing it would have taken this file's closure from 48 modules to 93. The
+measurement was correct about the wrong alternative — the real alternative was never that
+restatement but the upstream lemma, which is in the closure of every module on this tree and
+costs no import at all. All three project restatements are gone. -/
 
 /-- The index type of the datum is `ULift (Fin 3)`, on which triples of distinct indices exist. -/
 theorem datum_J : (datum I f).J = ULift.{u} (Fin 3) := rfl
@@ -309,11 +306,12 @@ theorem datum_t'_eq (i j k : ULift.{u} (Fin 3)) (hij : i ≠ j) (hik : i ≠ k) 
 /-- **Non-vacuity, at the inhabited triple `0, 1, 2`.** This is the statement the two-patch datum
 cannot make: the triple exists, so the field is genuinely evaluated. -/
 theorem datum_t'_zero_one_two :
-    (datum I f).t' ⟨0⟩ ⟨1⟩ ⟨2⟩ (up_ne_up (by decide)) (up_ne_up (by decide))
-        (up_ne_up (by decide)) =
+    (datum I f).t' ⟨0⟩ ⟨1⟩ ⟨2⟩ (ULift.up_injective.ne (by decide))
+        (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide)) =
       ChartedSchemeDatum.specAlgDataT' (chartRing f) (overlapElt f)
         (fun i j k _ _ _ => (sigmaAlg f i j k).toRingEquiv) ⟨0⟩ ⟨1⟩ ⟨2⟩
-        (up_ne_up (by decide)) (up_ne_up (by decide)) (up_ne_up (by decide)) :=
+        (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide))
+        (ULift.up_injective.ne (by decide)) :=
   rfl
 
 /-! ### A worked instance: `Spec ℤ` covered by `D(2)`, `D(3)`, `D(5)` -/

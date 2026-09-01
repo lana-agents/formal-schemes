@@ -19,11 +19,11 @@ index type `J`, delivering the fibre product `X ×_{Spf R} Spf B` as a glued `Fo
 ## What is new over the template
 
 The template lives on `J = ULift Bool`, where no triple of indices is pairwise distinct, so the
-cocycle fields `t'`, `t_fac`, `cocycle` of the underlying `CategoryTheory.GlueData'` are **vacuous**
-(`fpBool_not_pairwise_distinct`). For a general index type the cocycle is genuine, and its content
-is transported from `X`'s own transition data by the `⊗̂_R B` functoriality of the fibre-product map
-`CompletedTensorProduct.mapSpf`. The *engine* of that transport is recorded here as two reusable,
-standalone lemmas over `mapSpf`:
+cocycle fields `t'`, `t_fac`, `cocycle` of the underlying `CategoryTheory.GlueData'` are
+**vacuous** (`uliftBool_not_pairwise_distinct`). For a general index type the cocycle is genuine,
+and its content is transported from `X`'s own transition data by the `⊗̂_R B` functoriality of
+the fibre-product map `CompletedTensorProduct.mapSpf`. The *engine* of that transport is recorded
+here as two reusable, standalone lemmas over `mapSpf`:
 
 * `CompletedTensorProduct.mapSpfIso_symm`: the `mapSpf`-isomorphism of a pair of *inverse* algebra
   isomorphisms is the inverse isomorphism, so the self-inverse law `t i j ≫ t j i = 𝟙` of a glue
@@ -286,15 +286,6 @@ packaging its chart/overlap/transition data into an `AffineChartedFibreDatum` on
 Because no
 triple of `Bool`-indices is pairwise distinct, the geometric cocycle fields `t'`, `t_fac`, `cocycle`
 of the datum are vacuous, exactly as in the template. -/
-
-/-- On the two-element index type `ULift Bool`, no triple is pairwise distinct; this discharges the
-vacuous geometric cocycle fields of the two-patch datum. -/
-private theorem uliftBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
 
 /-- **The two-chart Tate fibre product as an `AffineChartedFibreDatum`.** The charts are two copies
 of `Spf(annulusAlgebra R I q)`, the away elements are the annulus overlap parameters `overlapX` /
