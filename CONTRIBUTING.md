@@ -61,7 +61,7 @@ inheriting it from a neighbouring docstring, and no build failed either time.
 
 ### What is not a citation
 
-The first four the script decides mechanically. The last three it cannot, so they are what an
+The first five the script decides mechanically. The last three it cannot, so they are what an
 author names in the PR body; the list is closed, and a token outside it that does not resolve is a
 defect.
 
@@ -74,6 +74,10 @@ defect.
   tail of a family of generated names.
 * **Lean vocabulary** — `simp`, `subst`, `whnf`, `instances`: tactics and configuration fields, not
   declarations.
+* **A construction shorthand** — `Spf`, `Spec`, and nothing else. The standard mathematical name of
+  a construction, standing for the whole family of declarations that realise it rather than for any
+  one of them. The list is enumerated in `scripts/citation_audit.py` and the admission rule is
+  below; both entries are excluded **before** the declaration case, because one of them resolves.
 * **Longer prose variables** — `T_inv`, `U_n`, `hnode`, `hστ`, `R_f`. Same category as the
   two-character ones and just as legitimate, but not mechanically separable from a declaration
   name, so **say which binder it is**.
@@ -98,18 +102,93 @@ the cost the exception was supposed to remove.
 Tree-wide the same exception excuses **395 of 13,168** unresolved non-module occurrences: 3%. It
 buys almost nothing and it is not free. So there is no exception, and all 24 are now qualified.
 
+### What a construction shorthand is, and why the list is exactly two
+
+Settled by measurement on the two tokens that broke the closed list (issue 1442), on `5823cac`.
+
+`Spf` and `Spec` are the same kind of token, in the same sentences — "a morphism `Spf R ⟶ Spec C`",
+"`Spec A` is `Spf` of its own ring taken discrete". Before this row one was condemned (317
+occurrences in 128 files, unresolved) and the other waved through (172 in 61), decided entirely by
+whether Mathlib happens to own the bare name. **Both verdicts were wrong**, and the one that passed
+was the worse of the two.
+
+Read a systematic 1-in-8 sample of the 317 bare `` `Spf` `` occurrences and ask, of each, which
+declaration its sentence means:
+
+| what the sentence means | of 40 | the declaration it means |
+| :-- | --: | :-- |
+| `Spf` of a *ring map* — a morphism | 18 | `FormalSpectrum.locallyRingedSpaceMap` |
+| the functor, or the construction as a whole | 12 | `AdicRingCat.spfFunctor`, `spfEquivalence` |
+| the object, at the formal-spectrum level | 8 | `FormalSpectrum.locallyRingedSpaceObj` |
+| the object, as a formal scheme | 2 | `FormalScheme.Spf` |
+
+`AlgebraicGeometry.FormalScheme.Spf` **exists**, so bare `Spf` is not a name with no referent — it
+is worse than that. It is the only declaration whose bare name is `Spf`, and it is what **5%** of
+the prose means. Qualifying the token to make the audit green would convert ~300 loud unresolved
+citations into ~300 silent wrong-referent ones, which the third check above says is the worse
+failure. That is what makes this a category and not a backlog.
+
+A 1-in-4 sample of the 172 bare `` `Spec` `` occurrences splits the same way: 17 of 43 mean `Spec`
+of a ring map, 12 the object, 9 are the adjectival "the `Spec` side" / "`Spec`-shaped" / "the
+`Spec`-target theorem", and **2** mean `AlgebraicGeometry.Spec : CommRingCat ⥤ Scheme` — the one
+declaration the bare token resolves to. About 95% of both tokens are wrong under (b); they differ
+only in which way the audit fails to say so.
+
+A token is a **construction shorthand**, and joins the list, when all three hold:
+
+1. it is the standard mathematical name of a construction, in the literature and in Mathlib — not a
+   name coined in this tree;
+2. measured over its bare occurrences here, the prose uses it for **more than one declaration**, in
+   more than one category, so that no single spelling is right for all of them;
+3. the entry in `scripts/citation_audit.py` names every declaration it stands for, so that a reader
+   who wants the constant can still find it.
+
+Condition 2 is the bound, and it is what keeps the list at two. The only other tokens this tree
+applies to a prose argument more than a dozen times are `algebraMap` (119 applied occurrences),
+`ULift` (109), `AdicCompletion` (58), `formalCompletion` (50), `awayCompletionHom` (31) and
+`eqToHom` (25), and every one of them has a single referent that its bare name already resolves to
+correctly. `mapSpf`, at 108 bare occurrences the third-largest entry in the residue, means
+`CompletedTensorProduct.mapSpf` and nothing else: backlog, not shorthand. `T_inv` (62) names one
+object, not a family: a longer prose variable, as the list already says.
+
 ### The standing backlog
 
 `python3 scripts/citation_audit.py --tree` runs the same check over every comment in the tree. It
-is a **measurement, not a gate**: on 2026-09-01 it reported 1302 distinct unresolved tokens over
-4604 occurrences, of which 843 (3428 occurrences) have a qualified spelling that would resolve and
-459 (1176) have none in any spelling. (Re-run on `629fc37`, the commit that landed this document,
-the same command gives 1302 distinct over **4597** occurrences. A figure here is a measurement with
-a commit attached; re-run it rather than quoting it.) Most of that residue is the last three
-categories above —
-longer prose variables, dot-notation on locals, structure fields — and clearing it is not a
-prerequisite for anything. The convention binds the diff; the tree-wide number is there so that
-the backlog is a known quantity rather than a surprise.
+is a **measurement, not a gate**. A figure here is a measurement with a commit attached; re-run it
+rather than quoting it. On `5823cac` with this document's own change applied, and with `Spf` and
+`Spec` excluded as construction shorthands, it reports **1301 distinct unresolved tokens over 4296
+occurrences**. Partitioned by kind — which is what tells you whether a number is a defect or a
+category (issue 1442):
+
+| | distinct | occ |
+| :-- | --: | --: |
+| **no spelling resolves, in any namespace** | **459** | **1181** |
+| — dot-notation on a local: `I.FG` 40, `D.J` 17, `f.c` 15, `e.symm` 10 | 82 | 251 |
+| — a **namespace**, which is not one of the three resolution kinds | 12 | 26 |
+| — longer prose variables: `T_inv` 62, `U_n` 28, `hστ` 26, `hnode` 18 | 365 | 904 |
+| **some qualified spelling resolves** | **842** | **3115** |
+| — a field of a structure: `t_fac` 115, `cocycle` 74, `f_open` 29 | 49 | 535 |
+| — a bare cite of a real declaration — the actual backlog | 793 | 2580 |
+
+Three things that partition shows and a frequency histogram does not.
+
+* **The structure-field category is a rule almost nothing obeys.** It requires the structure be
+  named, qualified, in the same sentence. Over the 531 field citations whose owning structure is
+  cited anywhere in the tree, the structure appears in the same sentence — under *any* spelling,
+  which is the generous reading — in **102 of them, 19%**. The category is right; the tree is not
+  in it.
+* **`inl`, `inr`, `fst`, `snd`, `lift` are not field citations at all** (201 occurrences). They are
+  bare cites of `CompletedTensorProduct.inl`/`.inr`/`.lift` and friends. A field name that is also
+  a declaration name elsewhere reads as a field to a mechanical check and as a declaration to a
+  reader, so counting the bucket without reading it overstates it by a quarter.
+* **The passing side is not clean either.** Ninety-five distinct tokens (820 occurrences) have
+  their bare name owned by two or more constants; hand-reading every one with at least five
+  occurrences found **five that resolve to a declaration the prose does not mean** — `inv` 31,
+  `map` 14, `Hom.mk` 12, `IsClosedImmersion` 8, `IsSeparated` 8. These are invisible to the audit
+  by construction. Issue 1444 has the list and the sites.
+
+Clearing the backlog is not a prerequisite for anything. The convention binds the diff; the
+tree-wide number is there so that the backlog is a known quantity rather than a surprise.
 
 ### Two traps that have cost this tree real work
 

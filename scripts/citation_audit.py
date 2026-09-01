@@ -4,11 +4,12 @@
 `lake build` cannot catch a docstring that cites a declaration which does not exist, so this
 script is the only thing that does.  See `CONTRIBUTING.md` for the convention it implements; in
 short, a backticked identifier-shaped token is a *citation* and must resolve as a declaration, a
-project module, or a repository path.  Four of the non-citation categories are decided here, in
-`is_excluded`: notation, one- and two-character prose variables, name fragments, and Lean
-vocabulary.  The remaining three -- longer prose variables, dot-notation on a local, and a field
-of a structure named in the same sentence -- are not mechanically separable from a declaration
-name, so this script reports them and the author names them in the pull request body.
+project module, or a repository path.  Five of the non-citation categories are decided here, in
+`is_excluded`: notation, one- and two-character prose variables, name fragments, Lean vocabulary,
+and the enumerated construction shorthands.  The remaining three -- longer prose variables,
+dot-notation on a local, and a field of a structure named in the same sentence -- are not
+mechanically separable from a declaration name, so this script reports them and the author names
+them in the pull request body.
 
 Usage, from the repository root, after a full `lake build`:
 
@@ -53,6 +54,20 @@ SYNTAX_TOKENS = set(
     obtain rintro rcases refine intro apply exact simp rw rfl decide haveI letI inferInstanceAs
     and or not is the a it as on no all be so one two that than only of to""".split()
 )
+
+# The **construction shorthand** allow-list: the standard mathematical name of a construction,
+# used as prose for the whole family of declarations that realise it rather than for any one of
+# them.  `CONTRIBUTING.md` states the admission rule and the measurement behind each entry, and
+# the list is closed -- a token joins it only by that measurement.
+#
+# This check runs *before* the declaration case, deliberately.  Bare `Spec` does resolve, to
+# `AlgebraicGeometry.Spec : CommRingCat -> Scheme`, which is what 2 of a 43-occurrence sample
+# mean by it; letting it through the declaration case is how a wrong referent got blessed.
+CONSTRUCTION_SHORTHAND = {
+    "Spf": "FormalScheme.Spf, FormalSpectrum.locallyRingedSpaceObj, "
+           "FormalSpectrum.locallyRingedSpaceMap, AdicRingCat.spfFunctor",
+    "Spec": "Spec, Spec.locallyRingedSpaceObj, Spec.locallyRingedSpaceMap, PrimeSpectrum",
+}
 
 # Tactics, elaborator entry points and configuration fields.  Some of these do resolve to a real
 # constant (`subst` to `HEq.subst`, `whnf` to `Lean.Meta.whnf`), which is precisely why they have
@@ -119,6 +134,8 @@ def is_excluded(token: str) -> str | None:
     """Return the exclusion category, or `None` if the token has to resolve."""
     if not IDENTIFIER.match(token):
         return "notation"
+    if token in CONSTRUCTION_SHORTHAND:
+        return "construction shorthand"
     if token in SYNTAX_TOKENS or token in VOCABULARY:
         return "Lean vocabulary"
     if len(token) <= 2:
