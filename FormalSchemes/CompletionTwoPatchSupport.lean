@@ -40,24 +40,23 @@ What `hθ` needs of the gluing is not merely that a prime of `D(a)` lies in the 
 `ι₀⁻¹(ι₁''U)` is the image, under the chart of `D(a)`, of the `θ`-translate of the overlap's
 preimage of `U`, for an arbitrary subset `U` of `Spec B` and with no ideal in it. It comes from
 `LocallyRingedSpace.GlueData.preimage_image_ι` without touching this datum's fields. That is not
-independence from the glue condition — Mathlib's `TopCat.GlueData.preimage_image_eq_image` rests on
-`CategoryTheory.GlueData.glue_condition_apply` one level down — but it is independence from
-anything about *two patches*.
+independence from the glue condition — Mathlib's `TopCat.GlueData.preimage_image_eq_image` rests
+on `CategoryTheory.GlueData.glue_condition_apply` through `TopCat.GlueData.preimage_range` and
+`TopCat.GlueData.image_inter` — but it is independence from anything about *two patches*.
 
 What is left for this file is the three rewrites that put the ideals back in, and **`hθ` is spent
 on the middle one**: the innermost preimage is `V(J·B_b)`, its `θ`-translate is `V(I·A_a)`, and the
 image of that is `V(I) ∩ D(a)`.
 
-The `CategoryTheory.GlueData.glue_condition` **field** itself is opened upstream of this file,
-not here. `AlgebraicGeometry.specTwoPatch_glue` (`FormalSchemes.CompletionTwoPatchToScheme`,
-reached through this file's only import `FormalSchemes.CompletionTwoPatchRange`) is already
-exactly the morphism-level identity this section needs — discharged from
-`(specTwoPatchLRSGlueData a b θ).toGlueData.glue_condition ⟨false⟩ ⟨true⟩`, which is what that
-file's own overlap obligation required — and this file consumes it by import. Worth saying,
-because the same statement used to be proved here a second time under a different name, and three
-successive rows read the resulting sentence as evidence that the field was untouched upstream.
+The `CategoryTheory.GlueData.glue_condition` **field** itself is opened upstream of this file, not
+here, as `AlgebraicGeometry.specTwoPatch_glue` (`FormalSchemes.CompletionTwoPatchToScheme`) —
+discharged there from `(specTwoPatchLRSGlueData a b θ).toGlueData.glue_condition ⟨false⟩ ⟨true⟩`,
+which is what that file's own overlap obligation required. **This file does not name it either.**
+Worth saying, because the same statement used to be proved here a second time under a different
+name, and three successive rows read the resulting sentence as evidence that the field was
+untouched upstream.
 
-## The three layers
+## The two layers
 
 **Localization.** `zeroLocus_map_away_eq_preimage` and `image_zeroLocus_map_away`: `V(I·A_a)` is
 the preimage of `V(I)`, and its image in `Spec A` is `V(I) ∩ D(a)`. General facts about
@@ -68,24 +67,19 @@ the preimage of `V(I)`, and its image in `Spec A` is `V(I) ∩ D(a)`. General fa
 `PrimeSpectrum.preimage_comap_zeroLocus`. `map_θ_symm_ideal` is the ideal-level inverse of `hθ`,
 obtained from `Ideal.map_map` and `θ.symm ∘ θ = id`.
 
-**Glue.** The glue condition in usable form — the two ways of mapping `Spec A_a` into the glued
-scheme agree — is `AlgebraicGeometry.specTwoPatch_glue`, and it is **not** proved here; it comes in
-from `FormalSchemes.CompletionTwoPatchToScheme`, which needed it for the overlap obligation of
-`completionTwoPatchToScheme`. What this file adds is its `ι₁` twin, a two-line consequence obtained
-by composing with `specGlueIso.inv` rather than by redoing the `eqToHom` bookkeeping, and the
-reading of both at a point (`specTwoPatchι₀_base_comap_algebraMap` and its twin): a prime of `A_a`
-and its `θ`-translate have the *same* image in the glued scheme.
+**There is no third, glue-condition layer, and that is a decision rather than an omission.** This
+file used to carry a `B`-side morphism-level companion to `AlgebraicGeometry.specTwoPatch_glue`
+together with the reading of both at a point; the `Support` section below ran on them until it was
+rerouted through `AlgebraicGeometry.preimage_image_specTwoPatchι₁` and its mirror, which say the
+same of an arbitrary subset and come from the topological gluing rather than from this datum.
+Nothing consumed them afterwards and all three are gone. The policy that disposed of them, and the
+reason, are stated once in `FormalSchemes/ChartedSchemeDatumChartOverlap.lean`, where the
+arbitrary-index one lived.
 
-**Those two point-level readings have no consumer.** The `Support` section below used to run on
-them; it now runs on `AlgebraicGeometry.preimage_image_specTwoPatchι₁` and its mirror, which say
-the same thing about an arbitrary subset and come from the topological gluing rather than from this
-datum. They are kept because they are the only statement of the glue condition at a point at two
-patches — their arbitrary-index cousin
-`AlgebraicGeometry.ChartedSchemeDatum.specι_base_comap_algebraMap` is kept on the same footing —
-but that is a judgement, and it is recorded here rather than left to a grep. The chart preimages
-themselves — `preimage_range_specTwoPatchι₁`, `preimage_range_specTwoPatchι₀` and their
-image-shaped refinements — are **not** proved here either: they need none of this and live in
-`FormalSchemes/SpecTwoPatchNonAffine.lean`, beside the properness statements they now prove.
+The chart preimages themselves — `preimage_range_specTwoPatchι₁`, `preimage_range_specTwoPatchι₀`
+and their image-shaped refinements — are **not** proved here either: they need none of this and
+live in `FormalSchemes/SpecTwoPatchNonAffine.lean`, beside the properness statements they now
+prove.
 
 ## Scope
 
@@ -108,10 +102,6 @@ own, since `ι₀` is an *open* immersion. Any correct argument must use `hθ`.
   `V(I·A_a)` as a preimage of `V(I)`, and its image `V(I) ∩ D(a)`.
 * `AlgebraicGeometry.comap_θ_preimage_zeroLocus`,
   `AlgebraicGeometry.comap_θ_symm_preimage_zeroLocus`: **`hθ` as a statement about primes.**
-* `AlgebraicGeometry.specAwayMap_comp_specTwoPatchι₁`: the `B`-side glue condition, off
-  `AlgebraicGeometry.specTwoPatch_glue`, with
-  `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` and its twin reading both at a point.
-  **Neither point-level reading has a consumer**; see the `Glue` paragraph above.
 * `AlgebraicGeometry.preimage_range_completionTwoPatchToScheme_base_ι₀` and `..._ι₁`: **the
   completion is supported on `V(I)`, chart by chart.**
 
@@ -195,64 +185,6 @@ theorem comap_θ_symm_preimage_zeroLocus :
     map_θ_symm_ideal I a J b θ hθ]
 
 end Transport
-
-section Glue
-
-variable {A B : Type u} [CommRing A] [CommRing B] (a : A) (b : B)
-  (θ : Localization.Away a ≃+* Localization.Away b)
-
-/-- The glue condition at a point: a prime of `A_a`, pushed into the glued scheme through the
-`A`-chart, is the image through the `B`-chart of its `θ`-translate.
-
-**It has no consumer.** It supplied the identification the `Support` section below needed until
-that went through `AlgebraicGeometry.preimage_image_specTwoPatchι₁`, which says the same of an
-arbitrary subset and needs nothing about two patches. It is kept for the reason its arbitrary-index
-cousin `AlgebraicGeometry.ChartedSchemeDatum.specι_base_comap_algebraMap` is kept: it is the only
-statement of the glue condition at a point at this index, and it is what a mapping-out argument
-that has to name *which* prime of `B` a prime of `D(a)` becomes would otherwise rederive. Whether
-that earns a zero-consumer public name is flagged, not assumed. -/
-theorem specTwoPatchι₀_base_comap_algebraMap (y : PrimeSpectrum (Localization.Away a)) :
-    (specTwoPatchι₀ a b θ).base
-        (PrimeSpectrum.comap (algebraMap A (Localization.Away a)) y) =
-      (specTwoPatchι₁ a b θ).base
-        (PrimeSpectrum.comap (algebraMap B (Localization.Away b))
-          (PrimeSpectrum.comap θ.symm.toRingHom y)) := by
-  have h := congrArg
-    (fun m : Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away a)) ⟶
-      specTwoPatch a b θ => m.base y) (specTwoPatch_glue a b θ)
-  simp only [LocallyRingedSpace.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp,
-    Function.comp_apply] at h
-  exact h
-
-/-- **The glue condition from the `B` side.** Compose `AlgebraicGeometry.specTwoPatch_glue`
-(`FormalSchemes.CompletionTwoPatchToScheme`) with `specGlueIso.inv`; there is no need to redo the
-`eqToHom` bookkeeping. -/
-theorem specAwayMap_comp_specTwoPatchι₁ :
-    Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap B (Localization.Away b))) ≫
-        specTwoPatchι₁ a b θ =
-      (specGlueIso a b θ).inv ≫
-        Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap A (Localization.Away a))) ≫
-          specTwoPatchι₀ a b θ := by
-  rw [specTwoPatch_glue a b θ, ← Category.assoc, Iso.inv_hom_id,
-    Category.id_comp]
-
-/-- The glue condition at a point, from the `B` side. **It has no consumer either**; see
-`specTwoPatchι₀_base_comap_algebraMap` for why both are kept. It is the sole consumer of
-`specAwayMap_comp_specTwoPatchι₁`, so deleting it would orphan that too. -/
-theorem specTwoPatchι₁_base_comap_algebraMap (z : PrimeSpectrum (Localization.Away b)) :
-    (specTwoPatchι₁ a b θ).base
-        (PrimeSpectrum.comap (algebraMap B (Localization.Away b)) z) =
-      (specTwoPatchι₀ a b θ).base
-        (PrimeSpectrum.comap (algebraMap A (Localization.Away a))
-          (PrimeSpectrum.comap θ.toRingHom z)) := by
-  have h := congrArg
-    (fun m : Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away b)) ⟶
-      specTwoPatch a b θ => m.base z) (specAwayMap_comp_specTwoPatchι₁ a b θ)
-  simp only [LocallyRingedSpace.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp,
-    Function.comp_apply] at h
-  exact h
-
-end Glue
 
 section Support
 

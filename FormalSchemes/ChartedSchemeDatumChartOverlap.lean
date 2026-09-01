@@ -44,9 +44,38 @@ continue, and this file is the answer to it.
 Nothing here uses the ideals `K i` or the compatibility `hθ`: this is a statement about the glued
 **scheme**, not about any completion of it. `hθ` enters one file later, where the zero loci do.
 Neither statement here opens the glue datum's `glue_condition` field either — both come from the
-topological gluing, where the glue condition is spent one level down inside Mathlib's
-`TopCat.GlueData.image_inter`. `specι_base_comap_algebraMap` therefore has **no consumer left on
-the tree**; see its own docstring.
+topological gluing, where the glue condition is spent inside Mathlib's
+`TopCat.GlueData.image_inter`: one level below `TopCat.GlueData.preimage_range`, two below
+`TopCat.GlueData.preimage_image_eq_image`.
+
+## The glue condition at a point is deliberately not stated, here or two patches down
+
+This file used to carry the glue condition read at a point at an arbitrary index, and
+`FormalSchemes/CompletionTwoPatchSupport.lean` used to carry the two-patch pair together with a
+`B`-side morphism-level companion whose only consumer was one of them. All four lost their last
+consumer when the chart preimages were rerouted through the topological gluing, and all four are
+now gone. Their names are deliberately not repeated here: a backticked name that resolves to
+nothing is itself a defect on this tree.
+
+**The rule, stated once here so that it is not re-derived a fourth time.** A zero-consumer
+*point-level* reading of a morphism-level identity that keeps its own consumers is **deleted**,
+not kept and flagged. The identity is where the fact lives, and the reading is one
+`congrArg` at the point followed by a `simp only` that pushes `.base` through the composite — so
+nothing is lost that a future consumer cannot restate in four lines, at the shape it actually
+wants. Here the surviving identity is
+`AlgebraicGeometry.ChartedSchemeDatum.specAwayMap_comp_specι`
+(`FormalSchemes.ChartedSchemeDatumDesc`); two patches down it is
+`AlgebraicGeometry.specTwoPatch_glue` (`FormalSchemes.CompletionTwoPatchToScheme`). Both keep
+consumers of their own.
+
+Three successive pull requests each re-argued this judgement in a different docstring, each time
+keeping the declarations on the speculative ground that a datum-level mapping-out argument needing
+to name *which* prime of `C j` a prime of `D (g i j)` becomes would want them. No such consumer
+appeared. The nearest live mapping-out row is the `Spf`-target analogue of EGA I 10.6.10, whose
+remaining content is the surjectivity of `FormalSpectrum.restrictToThickeningsLRS` — a question
+about sections of `𝒪_{Spf R}`, reached through `FormalSpectrum.sectionsLimitIso`, in a part of the
+tree that imports neither this file nor its two-patch counterpart. Deleting is therefore the call
+supported by measurement; keeping was the call supported by speculation.
 
 ## Main results
 
@@ -68,12 +97,6 @@ the tree**; see its own docstring.
   `..._of_mem`: **the gluing is proper** — a point of the `i`-th chart outside `D (g i j)` maps
   outside the `j`-th chart, read off the equality. This is the arbitrary-index twin of
   `AlgebraicGeometry.specTwoPatchι₀_base_notMem_range_specTwoPatchι₁`.
-* `AlgebraicGeometry.ChartedSchemeDatum.specι_base_comap_algebraMap`: the glue condition at a
-  point, and the only statement of it at an arbitrary index. **Nothing consumes it**: neither
-  equality above needs it, and `FormalSchemes.ChartedCompletionSupport` stopped needing it when
-  `preimage_image_zeroLocus_specι` was rerouted through `preimage_image_specι`. Its two-patch twin
-  `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` lost its consumers to the same reroute
-  two patches down and is kept on the same footing.
 
 ## References
 
@@ -208,34 +231,6 @@ theorem specι_base_notMem_range_specι_of_mem (i j : D.J) (h : i ≠ j)
   D.specι_base_notMem_range_specι i j h x (by
     rw [range_specAwayMap]
     exact fun hmem => (PrimeSpectrum.mem_basicOpen _ _).mp hmem hx)
-
-/-! ### The glue condition at a point -/
-
-/-- **The glue condition at a point**: a prime of the overlap `(C i)_{g i j}`, pushed into the glued
-scheme through the `i`-th chart, is the image through the `j`-th chart of its `θ i j`-translate.
-This is `AlgebraicGeometry.ChartedSchemeDatum.specAwayMap_comp_specι` evaluated at a point.
-
-**It has no consumer.** It supplied the converse containment for `preimage_range_specι` until that
-went through the topological gluing, and the `hθ` step of
-`AlgebraicGeometry.ChartedCompletionDatum.preimage_image_zeroLocus_specι` until that went through
-`preimage_image_specι`. It is kept because it is the only statement of the glue condition at a
-point at an arbitrary index, and because a datum-level mapping-out argument that needs to name
-*which* prime of `C j` a prime of `D (g i j)` becomes will want this rather than rederive it. Its
-two-patch twin `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` is **no longer consumed
-either**: the same reroute ran two patches down, and that file records the same judgement. Whether
-that is enough to keep a zero-consumer public name is a judgement this file does not make silently:
-it is flagged rather than assumed. -/
-theorem specι_base_comap_algebraMap (i j : D.J) (h : i ≠ j)
-    (y : PrimeSpectrum (Localization.Away (D.g i j))) :
-    (D.specι i).base (PrimeSpectrum.comap (algebraMap (D.C i) (Localization.Away (D.g i j))) y) =
-      (D.specι j).base (PrimeSpectrum.comap (algebraMap (D.C j) (Localization.Away (D.g j i)))
-        (PrimeSpectrum.comap (D.θ i j h).symm.toRingHom y)) := by
-  have hcomp := congrArg
-    (fun m : Spec.locallyRingedSpaceObj (CommRingCat.of (Localization.Away (D.g i j))) ⟶
-      D.specGlued => m.base y) (D.specAwayMap_comp_specι i j h)
-  simp only [LocallyRingedSpace.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp,
-    Function.comp_apply] at hcomp
-  exact hcomp
 
 end ChartedSchemeDatum
 
