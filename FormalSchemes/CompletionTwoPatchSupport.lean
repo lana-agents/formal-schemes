@@ -34,11 +34,17 @@ this file is therefore equally true of an *incompatible* gluing. It cannot stay 
 chart preimage above is false without `hθ`, because `ι₀⁻¹(ι₁''V(J))` is then some other subset of
 `D(a)` entirely.
 
-Correspondingly this file is where the glue datum's `glue_condition` is consumed for the first time
-in this development. Everything about `specTwoPatch` proved so far used only
-`GlueData.range_ι_inter_subset` — *the charts meet **at most** over the overlap* — which is the
-containment half. Here we need the converse, that a prime of `D(a)` really does lie in the
-`B`-chart, and that is exactly what the glue condition says.
+Correspondingly this file is where **this** glue datum's `glue_condition` field is opened for the
+first time in this development. What the earlier files needed of the gluing is only *where* the
+charts meet, and that holds for any glue datum whatever:
+`FormalSchemes/SpecTwoPatchNonAffine.lean` gets `ι₀⁻¹(range ι₁) = D(a)` from
+`LocallyRingedSpace.GlueData.preimage_range_ι` without touching the datum's fields. That is not
+independence from the glue condition — Mathlib's `TopCat.GlueData.preimage_range` rests on
+`CategoryTheory.GlueData.glue_condition_apply` one level down — but it is independence from
+anything about *two patches*.
+Here we need more: not merely that a prime of `D(a)` lies in the `B`-chart, but **which** prime of
+`B` it is, since that is what `hθ` is a statement about. Naming it is what
+`specAwayMap_comp_specTwoPatchι₀` below does, and that does open the field.
 
 ## The three layers
 
@@ -53,12 +59,12 @@ obtained from `Ideal.map_map` and `θ.symm ∘ θ = id`.
 
 **Glue.** `specAwayMap_comp_specTwoPatchι₀` is the glue condition in usable form: the two ways of
 mapping `Spec A_a` into the glued scheme agree. Its `ι₁` twin is a two-line consequence, obtained
-by composing with `specGlueIso.inv` rather than by redoing the `eqToHom` bookkeeping. From it,
-`preimage_range_specTwoPatchι₁ : ι₀⁻¹(range ι₁) = D(a)` upgrades
-`FormalSchemes/SpecTwoPatchNonAffine.lean`'s one-directional statement to an equality. The two
-`B`-side facts that step also needs — `range_specTwoPatchLRSGlueData_f_true_false` and
-`specTwoPatchι₁_base_notMem_range_specTwoPatchι₀` — live in that file too, beside the `A`-side
-statements they mirror.
+by composing with `specGlueIso.inv` rather than by redoing the `eqToHom` bookkeeping. Read at a
+point (`specTwoPatchι₀_base_comap_algebraMap` and its twin) it says that a prime of `A_a` and its
+`θ`-translate have the *same* image in the glued scheme, which is the identification the `Support`
+section below feeds `hθ`. The chart preimages themselves — `preimage_range_specTwoPatchι₁` and
+`preimage_range_specTwoPatchι₀` — are **not** proved here: they need none of this and live in
+`FormalSchemes/SpecTwoPatchNonAffine.lean`, beside the properness statements they now prove.
 
 ## Scope
 
@@ -82,9 +88,8 @@ own, since `ι₀` is an *open* immersion. Any correct argument must use `hθ`.
 * `AlgebraicGeometry.comap_θ_preimage_zeroLocus`,
   `AlgebraicGeometry.comap_θ_symm_preimage_zeroLocus`: **`hθ` as a statement about primes.**
 * `AlgebraicGeometry.specAwayMap_comp_specTwoPatchι₀` and its `ι₁` twin: the glue condition in
-  usable form.
-* `AlgebraicGeometry.preimage_range_specTwoPatchι₁` and `..._specTwoPatchι₀`: **the two charts of
-  the glued scheme meet exactly over `D(a) ≅ D(b)`** — the equality, not just the containment.
+  usable form, with `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` and its twin reading
+  it at a point.
 * `AlgebraicGeometry.preimage_range_completionTwoPatchToScheme_base_ι₀` and `..._ι₁`: **the
   completion is supported on `V(I)`, chart by chart.**
 
@@ -253,50 +258,6 @@ theorem specTwoPatchι₁_base_comap_algebraMap (z : PrimeSpectrum (Localization
   simp only [LocallyRingedSpace.comp_base, TopCat.hom_comp, ContinuousMap.coe_comp,
     Function.comp_apply] at h
   exact h
-
-/-- **The two charts meet exactly over the overlap**, from the `B` side: the part of `Spec B` that
-lands in the `A`-chart is precisely `D(b)`. -/
-theorem preimage_range_specTwoPatchι₀ :
-    ⇑(specTwoPatchι₁ a b θ).base ⁻¹' Set.range ⇑(specTwoPatchι₀ a b θ).base =
-      (PrimeSpectrum.basicOpen b : Set (PrimeSpectrum B)) := by
-  ext q
-  constructor
-  · intro hq
-    by_contra hqb
-    refine specTwoPatchι₁_base_notMem_range_specTwoPatchι₀ a b θ q ?_ hq
-    change q ∉ Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away b)))
-    rw [PrimeSpectrum.localization_away_comap_range (Localization.Away b) b]
-    exact hqb
-  · intro hq
-    obtain ⟨z, rfl⟩ :
-        q ∈ Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away b))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away b) b]
-      exact hq
-    exact ⟨_, (specTwoPatchι₁_base_comap_algebraMap a b θ z).symm⟩
-
-/-- **The two charts meet exactly over the overlap.** The part of `Spec A` that lands in the
-`B`-chart is precisely `D(a)`.
-
-`FormalSchemes/SpecTwoPatchNonAffine.lean` has one direction of this — a prime containing `a` maps
-outside the `B`-chart — which follows from `GlueData.range_ι_inter_subset` alone. The converse needs
-the glue condition, and is the reason this file exists. -/
-theorem preimage_range_specTwoPatchι₁ :
-    ⇑(specTwoPatchι₀ a b θ).base ⁻¹' Set.range ⇑(specTwoPatchι₁ a b θ).base =
-      (PrimeSpectrum.basicOpen a : Set (PrimeSpectrum A)) := by
-  ext p
-  constructor
-  · intro hp
-    by_contra hpa
-    exact specTwoPatchι₀_base_notMem_range_specTwoPatchι₁ a b θ p
-      (notMem_range_specAwayMap a (by
-        by_contra hmem
-        exact hpa ((PrimeSpectrum.mem_basicOpen a p).mpr hmem))) hp
-  · intro hp
-    obtain ⟨y, rfl⟩ :
-        p ∈ Set.range (PrimeSpectrum.comap (algebraMap A (Localization.Away a))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away a) a]
-      exact hp
-    exact ⟨_, (specTwoPatchι₀_base_comap_algebraMap a b θ y).symm⟩
 
 end Glue
 
