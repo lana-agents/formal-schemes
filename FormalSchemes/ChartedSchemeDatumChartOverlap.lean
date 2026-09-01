@@ -99,8 +99,10 @@ This is `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι` — th
 for any glue datum, transported from `TopCat.GlueData.preimage_range` in
 `FormalSchemes.GlueDataImageInter` — followed by `range_specLRSGlueData_f` and
 `AlgebraicGeometry.range_specAwayMap` to name the overlap. Neither the glue *condition* nor the
-containment `range_ι_inter_subset` is used: both halves are already in the topological statement,
-which is what makes this three lines rather than the two-patch model's forty.
+containment `range_ι_inter_subset` is spent **here**: both halves are already inside the topological
+statement, which is where the glue condition goes instead — Mathlib proves `preimage_range` from
+`TopCat.GlueData.image_inter`, whose `⊇` half is `glue_condition_apply`. That is what makes this
+three lines rather than the two-patch model's forty; the content has moved, not vanished.
 
 At two patches this is `AlgebraicGeometry.preimage_range_specTwoPatchι₁`
 (`FormalSchemes.CompletionTwoPatchSupport`), whose docstring records the asymmetric hand proof this
