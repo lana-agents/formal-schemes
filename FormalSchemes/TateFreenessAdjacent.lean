@@ -69,9 +69,10 @@ theorem tateChain_range_glueF_forward {i j : ULift.{u} ℤ} (h : j.down - i.down
     simp only [tateChainLRSGlueData, CategoryTheory.GlueData.ofGlueData', GlueData'.f',
       dif_neg hne, tateChainGlueData']
   calc Set.range ((tateChainLRSGlueData R I q hq hI).toGlueData.f i j).base
-      = Set.range (tateF R I q i j).base := by rw [hfeq]; exact range_eqToHom_comp _ _
+      = Set.range (tateF R I q i j).base := by
+        rw [hfeq]; exact LocallyRingedSpace.range_eqToHom_comp_base _ _
     _ = Set.range (annulusOverlapChart R I q).base := by
-        rw [tateF_forward R I q h]; exact range_eqToHom_comp _ _
+        rw [tateF_forward R I q h]; exact LocallyRingedSpace.range_eqToHom_comp_base _ _
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Consecutive patches have distinct images.** For `I ≠ ⊤` and `j.down = i.down + 1`, the patch

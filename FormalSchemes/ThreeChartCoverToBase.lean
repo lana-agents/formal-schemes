@@ -57,8 +57,12 @@ morphism to a `Spf` of its chart algebra is not addressed anywhere and is not cl
 Three small facts are needed that already exist somewhere in the tree; the choice was measured in
 each case rather than guessed.
 
-* `range_eqToHom_comp_base` is public in `FormalSchemes.GeneralFibreProductBothOverlapRange`, which
-  was **already** in this file's import closure — reusing it added nothing, so it is reused.
+* `LocallyRingedSpace.range_eqToHom_comp_base` is public in
+  `FormalSchemes.LocallyRingedSpaceRange`, a Mathlib-only leaf that is in this file's import
+  closure — reusing it adds nothing, so it is reused. **When this paragraph was written the
+  measurement was against one copy of a statement the tree carried five times**, in five files
+  under four names; the one it found happened to be in closure, and the sentence above read as
+  evidence that the question had been settled. It had not been. Issue 1399 merged the five.
 * The scalar-tower fact `A → A{1/f_i} → A{1/f_i}{1/g_ij}` is
   `FormalSpectrum.awayCompletionHom_comp_algebraMap`, and it is reused at no cost: it now lives in
   `FormalSchemes.BasicOpenChart`, beside `awayCompletionHom` itself, which was already in this
@@ -174,7 +178,7 @@ theorem range_chartToBase_base (hI : I.FG) (i : ULift.{u} (Fin 3)) :
     Set.range (chartToBase I f i).base =
       (FormalSpectrum.basicOpen (I.map (algebraMap R A)) (f i) :
         Set (FormalSpectrum (I.map (algebraMap R A)))) := by
-  rw [chartToBase_eq, range_eqToHom_comp_base]
+  rw [chartToBase_eq, LocallyRingedSpace.range_eqToHom_comp_base]
   exact range_basicOpenChart_base (I.map (algebraMap R A)) (f i) (hI.map _)
 
 /-! ### The glued morphism -/

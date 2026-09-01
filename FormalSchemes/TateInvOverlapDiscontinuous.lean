@@ -72,21 +72,16 @@ universe u
 
 namespace AlgebraicGeometry
 
-/-! ### Two range/image manipulations for locally ringed spaces
+/-! ### An image manipulation for locally ringed spaces
 
-Both are stated over abstract locally ringed spaces and instantiated at the Tate chain below.
+It is stated over abstract locally ringed spaces and instantiated at the Tate chain below.
 Instantiation is substitution, so nothing here re-elaborates at the chain's concrete types — the
 rule `FormalSchemes.TateInvPeriodNodePoint` records for the annulus completions applies equally to
-the glue datum, whose index type is only propositionally `ULift ℤ`. -/
+the glue datum, whose index type is only propositionally `ULift ℤ`.
 
-/-- **Pre-composing with an isomorphism does not change the range.** The `Iso` form of
-`range_eqToHom_comp` (`FormalSchemes.TateChainGlue`), which only covers `eqToHom`. -/
-theorem range_iso_comp {X Y Z : LocallyRingedSpace.{u}} (e : X ≅ Y) (g : Y ⟶ Z) :
-    Set.range (e.hom ≫ g).base = Set.range g.base := by
-  rw [range_comp_base]
-  have hsurj : Set.range (e.hom.base : X → Y) = Set.univ :=
-    Set.range_eq_univ.mpr (TopCat.homeoOfIso (LocallyRingedSpace.forgetToTop.mapIso e)).surjective
-  rw [hsurj, Set.image_univ]
+The range counterpart used to sit here too, in an `Iso` form and an `eqToHom` form that this file
+believed were two lemmas. They are one, three other files had restated one or the other of them,
+and both now come from `FormalSchemes.LocallyRingedSpaceRange` (issue 1399). -/
 
 /-- **Images compose**: the `b`-image of the `a`-image is the `(a ≫ b)`-image. The image form of
 `range_comp_base`. -/
@@ -109,7 +104,7 @@ theorem range_tateChainInv_f {i j : ULift.{u} ℤ} (hij : i ≠ j) :
   have hij' : ¬ @Eq (ULift.{u} ℤ) i j := hij
   simp only [tateChainInvFormalGlueData, tateChainInvLRSGlueData, tateChainInvGlueData',
     CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij']
-  exact range_eqToHom_comp _ _
+  exact LocallyRingedSpace.range_eqToHom_comp_base _ _
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The overlap inclusion is symmetric in its two indices**, on ranges. This is the glue condition
@@ -129,7 +124,7 @@ theorem range_tateChainInv_f_comp_ι_symm (i j : ULift.{u} ℤ) :
     ((tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition
       i j).symm
   rw [hgc]
-  exact range_iso_comp (asIso
+  exact LocallyRingedSpace.range_iso_hom_comp_base (asIso
     ((tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.t i j)) _
 
 omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
@@ -138,14 +133,14 @@ overlap inclusions have the same range inside a patch. -/
 theorem range_tateF_forward {i j : ULift.{u} ℤ} (h : j.down - i.down = 1) :
     Set.range (tateF R I q i j).base = Set.range (annulusOverlapChart R I q).base := by
   rw [tateF_forward R I q h]
-  exact range_eqToHom_comp _ _
+  exact LocallyRingedSpace.range_eqToHom_comp_base _ _
 
 omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 /-- The backward overlap `V(i, i−1)` is the `y`-chart `Spf A{1/y}` for every `i`. -/
 theorem range_tateF_backward {i j : ULift.{u} ℤ} (h : j.down - i.down = -1) :
     Set.range (tateF R I q i j).base = Set.range (annulusOverlapChartY R I q).base := by
   rw [tateF_backward R I q h]
-  exact range_eqToHom_comp _ _
+  exact LocallyRingedSpace.range_eqToHom_comp_base _ _
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The patch inclusions are injective on underlying spaces, being open immersions. -/

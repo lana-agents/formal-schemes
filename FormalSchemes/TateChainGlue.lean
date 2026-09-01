@@ -1,5 +1,6 @@
 import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.Gluing
+import FormalSchemes.LocallyRingedSpaceRange
 
 set_option linter.style.header false
 
@@ -61,11 +62,16 @@ Tate chain glues with no genuine cocycle obstruction.
 
 ## Shared helpers
 
-The four range/emptiness helpers below the chart definitions — `range_eqToHom_comp`,
-`range_comp_base`, `range_emptyTo_empty`, `tateF_range_disjoint` and `isEmpty_tatePullback` — are
-public rather than `private`. None of them mentions the glue transition `t`, so they are literally
-the same statements for the inversion-glued chain (`FormalSchemes.TateChainInvGlue`) and for the
-freeness files, all of which cite them from here rather than re-deriving them (issue 621).
+The four range/emptiness helpers below the chart definitions — `range_comp_base`,
+`range_emptyTo_empty`, `tateF_range_disjoint` and `isEmpty_tatePullback` — are public rather than
+`private`. None of them mentions the glue transition `t`, so they are literally the same statements
+for the inversion-glued chain (`FormalSchemes.TateChainInvGlue`) and for the freeness files, all of
+which cite them from here rather than re-deriving them (issue 621).
+
+A fifth helper used to sit with them — the range manipulation that discards the `eqToHom` which
+`CategoryTheory.GlueData.ofGlueData'` inserts. It mentions neither a ring nor an ideal nor the Tate
+chain, four other files wanted it and each had restated it, and it now lives in
+`FormalSchemes.LocallyRingedSpaceRange`, which this file imports (issue 1399).
 
 ## What comes next
 
@@ -179,12 +185,6 @@ def tateT (hI : I.FG) (i j : ULift.{u} ℤ) : tateV R I q i j ⟶ tateV R I q j 
       eqToHom (tateV_far R I q (show i.down - j.down ≠ 1 by omega)
         (show i.down - j.down ≠ -1 by omega)).symm
 
-/-- The range of `f i j` on underlying spaces is unchanged by the `eqToHom` pre-composition:
-pre-composing with an isomorphism does not change the range. -/
-theorem range_eqToHom_comp {X Y Z : LocallyRingedSpace.{u}} (e : X = Y) (g : Y ⟶ Z) :
-    Set.range (eqToHom e ≫ g).base = Set.range g.base := by
-  subst e; simp
-
 /-- The range of a composite morphism is the image of the first leg's range under the second. -/
 theorem range_comp_base {X Y Z : LocallyRingedSpace.{u}} (a : X ⟶ Y) (b : Y ⟶ Z) :
     Set.range (a ≫ b).base = ⇑b.base '' Set.range ⇑a.base := by
@@ -214,21 +214,23 @@ theorem tateF_range_disjoint (hq : q ∈ I) (hI : I.FG) {i j k : ULift.{u} ℤ}
     · by_cases h2k : k.down - i.down = -1
       · -- (i,j) = x-chart, (i,k) = y-chart: disjoint D(x), D(y).
         rw [tateF_forward R I q h1j, tateF_backward R I q h2k,
-          range_eqToHom_comp, range_eqToHom_comp]
+          LocallyRingedSpace.range_eqToHom_comp_base, LocallyRingedSpace.range_eqToHom_comp_base]
         exact annulusOverlapChart_range_disjoint R I q hq hI
-      · rw [tateF_far R I q h1k h2k, range_eqToHom_comp, range_emptyTo_empty]
+      · rw [tateF_far R I q h1k h2k, LocallyRingedSpace.range_eqToHom_comp_base,
+          range_emptyTo_empty]
         exact Set.disjoint_right.mpr fun a ha => ha.elim
   · by_cases h2j : j.down - i.down = -1
     · by_cases h1k : k.down - i.down = 1
       · -- (i,j) = y-chart, (i,k) = x-chart: disjoint D(y), D(x).
         rw [tateF_backward R I q h2j, tateF_forward R I q h1k,
-          range_eqToHom_comp, range_eqToHom_comp]
+          LocallyRingedSpace.range_eqToHom_comp_base, LocallyRingedSpace.range_eqToHom_comp_base]
         exact (annulusOverlapChart_range_disjoint R I q hq hI).symm
       · by_cases h2k : k.down - i.down = -1
         · exact absurd (ULift.down_injective (show j.down = k.down by omega)) hjk
-        · rw [tateF_far R I q h1k h2k, range_eqToHom_comp, range_emptyTo_empty]
+        · rw [tateF_far R I q h1k h2k, LocallyRingedSpace.range_eqToHom_comp_base,
+            range_emptyTo_empty]
           exact Set.disjoint_right.mpr fun a ha => ha.elim
-    · rw [tateF_far R I q h1j h2j, range_eqToHom_comp, range_emptyTo_empty]
+    · rw [tateF_far R I q h1j h2j, LocallyRingedSpace.range_eqToHom_comp_base, range_emptyTo_empty]
       exact Set.disjoint_left.mpr fun a ha => ha.elim
 
 /-- **The triple overlap of any pairwise-distinct triple is empty.** The tool that degenerates the

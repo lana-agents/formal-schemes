@@ -142,9 +142,9 @@ theorem range_ι_eq_pr_preimage_inter
         have hrange : Set.range ⇑(D.lrsGlueData.toGlueData.f p' p).base =
             Set.range ⇑(bothAlgDataF hI D.gX D.gY p' p h').base := by
           rw [hcgdf]
-          refine (range_eqToHom_comp_base _ _).trans ?_
+          refine (LocallyRingedSpace.range_eqToHom_comp_base _ _).trans ?_
           rw [hf p' p h']
-          exact range_eqToHom_comp_base _ _
+          exact LocallyRingedSpace.range_eqToHom_comp_base _ _
         rw [hrange, range_bothAlgDataF_base]
         refine ⟨?_, ?_⟩
         · -- first coordinate
@@ -164,7 +164,7 @@ theorem range_ι_eq_pr_preimage_inter
                 (basicOpen (I.map (algebraMap R (D.A p'.1))) (D.gX p'.1 p.1) :
                   Set (FormalSpectrum (I.map (algebraMap R (D.A p'.1))))) := by
               rw [hxf]
-              exact (range_eqToHom_comp_base _ _).trans
+              exact (LocallyRingedSpace.range_eqToHom_comp_base _ _).trans
                 (range_basicOpenChart_base _ _ (hI.map (algebraMap R (D.A p'.1))))
             -- `(ι_X p'.1) u` lies in the intersection of the two `X`-chart ranges.
             have hmem := D.xLrsGlueData.range_ι_inter_subset p'.1 p.1
@@ -212,7 +212,7 @@ theorem range_ι_eq_pr_preimage_inter
                 (basicOpen (I.map (algebraMap R (D.B p'.2))) (D.gY p'.2 p.2) :
                   Set (FormalSpectrum (I.map (algebraMap R (D.B p'.2))))) := by
               rw [hyf]
-              exact (range_eqToHom_comp_base _ _).trans
+              exact (LocallyRingedSpace.range_eqToHom_comp_base _ _).trans
                 (range_basicOpenChart_base _ _ (hI.map (algebraMap R (D.B p'.2))))
             have hmem := D.yLrsGlueData.range_ι_inter_subset p'.2 p.2
               ⟨⟨(D.pr₂ChartSelf p').base w, rfl⟩, hx2⟩

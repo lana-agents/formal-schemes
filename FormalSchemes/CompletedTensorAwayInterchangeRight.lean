@@ -168,7 +168,7 @@ theorem commSpfIso_inv_base_preimage_basicOpen (g : B) (hI : I.FG) :
 /-- **The underlying-space range of the second-factor interchange open immersion** is the basic
 open `D(inr_{A,B} g) ⊆ Spf(A ⊗̂_R B)`. The base map factors as an isomorphism (surjective) followed
 by the left-factor immersion followed by an isomorphism; stripping the leading iso with
-`range_iso_hom_comp_base`, computing the left-factor range with
+`LocallyRingedSpace.range_iso_hom_comp_base`, computing the left-factor range with
 `range_interchangeOpenImmersion_base`, and transporting the image across the trailing iso
 (`commSpfIso_inv_base_preimage_basicOpen`) gives `D(inr g)`. -/
 theorem range_rightInterchangeOpenImmersion_base (g : B) (hI : I.FG) :
@@ -177,7 +177,7 @@ theorem range_rightInterchangeOpenImmersion_base (g : B) (hI : I.FG) :
         (CompletedTensorProduct.inr R I A B g) :
         Set (FormalSpectrum (CompletedTensorProduct.idealOfDefinition R I A B))) := by
   unfold rightInterchangeOpenImmersion
-  rw [range_iso_hom_comp_base]
+  rw [LocallyRingedSpace.range_iso_hom_comp_base]
   have hcomp : ⇑(interchangeOpenImmersion (A := B) (B := A) I g hI ≫
         (commSpfIso (A := B) (B := A) I hI).hom).base =
       ⇑(commSpfIso (A := B) (B := A) I hI).hom.base ∘

@@ -106,8 +106,8 @@ because that is the form the cover-shift law `ι_tateInvShiftAut_zpow` produces,
 `LocallyRingedSpace.translate` and `TopologicalSpace.Opens.map` consume preimages.
 
 Stated over abstract locally ringed spaces and instantiated below, as
-`FormalSchemes.TateInvOverlapDiscontinuous` does for `range_iso_comp` and `image_comp_base`:
-instantiation is substitution, so nothing re-elaborates at the chain's concrete types. -/
+`FormalSchemes.TateInvOverlapDiscontinuous` does for `image_comp_base`: instantiation is
+substitution, so nothing re-elaborates at the chain's concrete types. -/
 theorem preimage_base_of_image_eq {X Y : LocallyRingedSpace.{u}} (e : X ≅ Y) {T : Set X}
     {U : Set Y} (h : ⇑e.hom.base '' T = U) : ⇑e.hom.base ⁻¹' U = T :=
   h ▸ Set.preimage_image_eq T
