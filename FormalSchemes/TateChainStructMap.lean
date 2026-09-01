@@ -332,7 +332,7 @@ def tateChainStructMap [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     · -- diagonal: `t i i = 𝟙`, so both sides collapse to `f i i ≫ annulusStructMap`.
       subst hij
       simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · -- off-diagonal: unfold the `ofGlueData'` `if`-forms into `tateF`/`tateT`. The dite
+    · -- off-diagonal: unfold the `GlueData.ofGlueData'` `if`-forms into `tateF`/`tateT`. The dite
       -- conditions live at `ULift ℤ`, so re-type the disequalities before rewriting.
       have hij' : ¬ @Eq (ULift.{u} ℤ) i j := hij
       have hji' : ¬ @Eq (ULift.{u} ℤ) j i := fun h => hij h.symm

@@ -30,9 +30,9 @@ which is itself the sixth module, so the closure goes 52 to **47**.
 
 ## The compatibility hypothesis, and why it is stated only off the diagonal
 
-`ofGlueData'` fills the diagonal `V (i, i)` with `U i` and both `f i i` and `t i i` with `eqToHom`s,
-so the diagonal instance of the gluing condition is an identity between transports and carries no
-information. Accordingly `desc` below asks for
+`GlueData.ofGlueData'` fills the diagonal `V (i, i)` with `U i` and both `f i i` and `t i i` with
+`eqToHom`s, so the diagonal instance of the gluing condition is an identity between transports and
+carries no information. Accordingly `ChartedSchemeDatum.desc` below asks for
 
 ```
 specAwayMap (g i j) ≫ k i =
@@ -42,7 +42,7 @@ specAwayMap (g i j) ≫ k i =
 only for `i ≠ j`, which is the form a caller can actually supply: it is an equation between two
 morphisms `Spec ((C i)_{g i j}) ⟶ Z`, both of which are `Spec` of a ring map when `Z` is affine.
 
-## The two directions across the `ofGlueData'` bookkeeping, which are not the same statement
+## The two directions across the `GlueData.ofGlueData'` bookkeeping, and why they differ
 
 Both are here, and the pair is easy to mistake for a duplication. `specLRSGlueData_compat` goes
 **datum-level hypothesis → glue-diagram condition**, for an arbitrary family `k`; it is `desc`'s
@@ -110,7 +110,7 @@ what is left is the hypothesis as stated, with one transport in front of both si
 
 The `(i : D.J)` ascription in the case split is load-bearing: the index of the glue datum is
 `D.specLRSGlueData.J`, which is `D.J` only after unfolding two `def`s, and a `Ne` at the wrong one
-of the two spellings does not match the `dite` that `ofGlueData'` produces. -/
+of the two spellings does not match the `dite` that `GlueData.ofGlueData'` produces. -/
 theorem specLRSGlueData_compat
     (k : ∀ i, Spec.locallyRingedSpaceObj (CommRingCat.of (D.C i)) ⟶ Z)
     (h : ∀ (i j : D.J) (hij : i ≠ j), specAwayMap (D.g i j) ≫ k i =

@@ -225,7 +225,8 @@ def tateChainInv (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] : FormalScheme.
 /-! ### The abstract gluing criterion -/
 
 set_option maxHeartbeats 1600000 in
--- The four-case unfolding of the glue datum `ofGlueData'` produces a large term; raise the budget.
+-- The four-case unfolding of the glue datum `GlueData.ofGlueData'` produces a large term;
+-- raise the budget.
 /-- **Abstract criterion for gluing a family of morphisms out of the inversion-glued Tate chain.**
 A family `k i : Spf A ⟶ Y` is compatible with the gluing (i.e. satisfies the obligation of
 `FormalScheme.GlueData.glueMorphisms`) as soon as the `x`- and `y`-charts agree with `k` over the

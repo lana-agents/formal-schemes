@@ -39,7 +39,7 @@ The index type is `ULift Bool`, with `⟨false⟩` the `A`-side chart and `⟨tr
 in `CompletionGlueTwoPatch.lean`. The datum is **not** symmetric — the two patches are different
 rings — so each statement below is given at both index pairs rather than parametrised over a
 `b : Bool`. The `₁`-orientations follow from the `₀`-ones by cancelling the overlap isomorphism, so
-only the `₀`-orientations pay for the `ofGlueData'` unfolding.
+only the `₀`-orientations pay for the `GlueData.ofGlueData'` unfolding.
 
 ## Main definitions and results
 
@@ -149,7 +149,7 @@ theorem completionTwoPatch_glue_condition₀ :
 
 /-- **The two charts of the glued completion agree over their overlap, read from the `B` side.**
 This is `completionTwoPatch_glue_condition₀` with the overlap isomorphism moved across, so it needs
-none of the `ofGlueData'` bookkeeping. -/
+none of the `GlueData.ofGlueData'` bookkeeping. -/
 theorem completionTwoPatch_glue_condition₁ :
     (completionGlueLRSIso I hI a J hJ b θ hθ).inv ≫
         (formalCompletion.basicOpenImmersion I hI a).toLRSHom ≫

@@ -92,7 +92,8 @@ def tateShiftFunInv (i : ULift.{u} ℤ) : ULift.{u} ℤ := ⟨i.down - 1⟩
 /-! ### The abstract gluing criterion -/
 
 set_option maxHeartbeats 1600000 in
--- The four-case unfolding of the glue datum `ofGlueData'` produces a large term; raise the budget.
+-- The four-case unfolding of the glue datum `GlueData.ofGlueData'` produces a large term;
+-- raise the budget.
 /-- **Abstract criterion for gluing a family of morphisms out of the Tate chain.** A family
 `k i : Spf A ⟶ Y` is compatible with the gluing (i.e. satisfies the obligation of
 `FormalScheme.GlueData.glueMorphisms`) as soon as the `x`- and `y`-charts agree with `k` over the
@@ -140,12 +141,14 @@ theorem tateChain_glueMorphisms_compat [TopologicalSpace R] [IsAdicRing I] [IsNo
 /-! ### The adjacent-overlap cruxes -/
 
 set_option maxHeartbeats 1600000 in
--- Unfolding `glue_condition` at the shifted indices through `ofGlueData'` is expensive; raise it.
+-- Unfolding `CategoryTheory.GlueData.glue_condition` at the shifted indices through
+-- `GlueData.ofGlueData'` is expensive; raise it.
 /-- **The forward adjacent-overlap identity for a difference-preserving reindexing `σ`.** If `σ`
 carries the adjacent pair `(i, j)` (with `j = i + 1`) to an adjacent pair `(σ i, σ j)` (still a
 forward step), then the `x`-chart into `U (σ i)` agrees, over the chart transition
 `Spf A{1/x} ≅ Spf A{1/y}`, with the `y`-chart into `U (σ j)`. This is exactly
-`CategoryTheory.GlueData.glue_condition` at the shifted indices, unfolded through `ofGlueData'`. -/
+`CategoryTheory.GlueData.glue_condition` at the shifted indices, unfolded through
+`GlueData.ofGlueData'`. -/
 theorem tateShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) (σ : ULift.{u} ℤ → ULift.{u} ℤ) {i j : ULift.{u} ℤ}
     (h1 : (σ j).down - (σ i).down = 1) :
@@ -168,7 +171,8 @@ theorem tateShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoe
   exact ((cancel_epi (eqToHom _)).mp key).symm
 
 set_option maxHeartbeats 1600000 in
--- Unfolding `glue_condition` at the shifted indices through `ofGlueData'` is expensive; raise it.
+-- Unfolding `CategoryTheory.GlueData.glue_condition` at the shifted indices through
+-- `GlueData.ofGlueData'` is expensive; raise it.
 /-- **The backward adjacent-overlap identity for a difference-preserving reindexing `σ`.** The
 analogue of `tateShift_overlap_forward_gen` for a backward step `j = i - 1`. -/
 theorem tateShift_overlap_backward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
