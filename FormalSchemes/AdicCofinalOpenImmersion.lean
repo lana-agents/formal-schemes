@@ -357,9 +357,8 @@ theorem isCofinal_map_of_range_eq_basicOpenChart (hI : I.FG) (hJ : J.FG)
   haveI : IsAdicRing (awayCompletionIdeal I f) := isAdicRing_awayCompletionIdeal I f hI
   haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart I f) :=
     isOpenImmersion_basicOpenChart I f hI
-  have halgaway : algebraMap R (awayCompletion I f) = awayCompletionHom I f := by
-    rw [← awayCompletionHom_comp_algebraMap (R := R) (A := R) (L := I) f,
-      Algebra.algebraMap_self, RingHom.comp_id]
+  have halgaway : algebraMap R (awayCompletion I f) = awayCompletionHom I f :=
+    (awayCompletionHom_eq_algebraMap I f).symm
   have hchart : I.map (algebraMap R (awayCompletion I f)) = awayCompletionIdeal I f := by
     rw [halgaway]; exact map_awayCompletionHom I f
   refine isCofinal_map_of_range_eq I J hJ ?_ m (basicOpenChart I f) halg ?_ hrange ?_
@@ -442,9 +441,8 @@ theorem IsTopologicallyFiniteType.awayCompletion_sq_of_openImmersion (hI : I.FG)
   haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart I (t * t)) :=
     isOpenImmersion_basicOpenChart I (t * t) hI
   have halgaway : algebraMap R (FormalSpectrum.awayCompletion I (t * t)) =
-      FormalSpectrum.awayCompletionHom I (t * t) := by
-    rw [← FormalSpectrum.awayCompletionHom_comp_algebraMap (R := R) (A := R) (L := I) (t * t),
-      Algebra.algebraMap_self, RingHom.comp_id]
+      FormalSpectrum.awayCompletionHom I (t * t) :=
+    (FormalSpectrum.awayCompletionHom_eq_algebraMap I (t * t)).symm
   have hfg : (FormalSpectrum.awayCompletionIdeal I (t * t)).FG :=
     FormalSpectrum.awayCompletionIdeal_fg I (t * t) hI
   have hrange : Set.range (basicOpenChart I (t * t)).base

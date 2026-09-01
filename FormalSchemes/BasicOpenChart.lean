@@ -38,6 +38,10 @@ feeding `SheafedSpace.IsOpenImmersion.of_stalk_iso`, is proved in
   is finitely generated.
 * `FormalSpectrum.awayCompletionIdeal_fg`: the ideal of definition of `R{1/f}` is finitely
   generated whenever `I` is.
+* `FormalSpectrum.awayCompletionHom_eq_algebraMap`: the structural map `R → R{1/f}` *is*
+  `algebraMap R (awayCompletion I f)` — the unbased case of
+  `FormalSpectrum.awayCompletionHom_comp_algebraMap`, which four sites had re-proved before issue
+  1456 moved it here.
 * `FormalSpectrum.map_algebraMap_awayCompletion`, its `rfl` case
   `FormalSpectrum.map_algebraMap_awayCompletion_eq`, and
   `FormalSpectrum.awayCompletionIdeal_eq_map_algebraMap`: the ideal-convention bookkeeping —
@@ -109,10 +113,30 @@ property, `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`, and
 `FormalSpectrum.isAdicRing_awayCompletionIdeal`, which has the identical hypothesis and the
 identical binders, for the reason recorded above: every consumer already imports this module.
 Issue 1284 first named it in `FormalSchemes/TateInvNodeChartComplete.lean`, a Tate leaf too far to
-the right of the import graph for anything else to cite, so fifteen sites had written the two-line
-proof out as an anonymous `have` instead; issue 1445 moved it here and routed them through it. -/
+the right of the import graph for anything else to cite, so fifteen sites re-proved it — fourteen
+as an anonymous `have`, and one, `AffineChartedFibreDatumX.fg_awayCompletionIdeal`, as a named
+theorem at a more specific ideal; issue 1445 moved it here and routed all fifteen through it. -/
 theorem awayCompletionIdeal_fg (hI : I.FG) : (awayCompletionIdeal I f).FG :=
   map_awayCompletionHom I f ▸ hI.map (awayCompletionHom I f)
+
+/-- **The structural map `R → R{1/f}` is the algebra map.** `awayCompletionHom I f` and
+`algebraMap R (awayCompletion I f)` both factor as `R → R_f → R{1/f}`, so they are the same map;
+this is the scalar tower `R → R_f → R{1/f}` read through `IsScalarTower.algebraMap_eq`.
+
+It is the unbased case of `FormalSpectrum.awayCompletionHom_comp_algebraMap` below, at `A = R`,
+and it earns its own name for the reason that one does: callers meet the left-hand side spelled
+`awayCompletionHom`, which no Mathlib rewrite fires on, and recovering this from the based form
+costs `Algebra.algebraMap_self` and `RingHom.comp_id` on top of it.
+
+Issue 374 named it in `FormalSchemes/TateSeparated.lean`, a Tate leaf that nothing outside the
+Tate cluster can cite, so four other sites carried their own proof of it: a `private theorem` of
+the identical name in `FormalSchemes/TateSelfProductSummandNaturality.lean`, which is *upstream*
+of that leaf and so could never have cited it — and is a week older, so the public lemma was
+itself the copy; two `have`s routed through the based form; and one `show … from rfl`. Issue 1456
+moved it here and routed all four through it. -/
+theorem awayCompletionHom_eq_algebraMap :
+    awayCompletionHom I f = algebraMap R (awayCompletion I f) :=
+  (IsScalarTower.algebraMap_eq R (Localization.Away f) (awayCompletion I f)).symm
 
 /-- **The structural map of a completed localization is a map of algebras over any base.** If `A`
 is an `R`-algebra, then `A → A{1/g}^` precomposed with `R → A` is `R → A{1/g}^`.

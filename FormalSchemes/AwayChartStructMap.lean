@@ -82,8 +82,7 @@ theorem basicOpenChart_comp_structMap_baseChange (hI : I.FG)
       IsTopologicallyFiniteType.structMap hbc ≫ basicOpenChart I c := by
   have hring : (awayCompletionHom L (algebraMap R A c)).comp (algebraMap R A) =
       (awayBaseHom c hI hL).comp (awayCompletionHom I c) := by
-    rw [awayCompletionHom_comp_algebraMap,
-      show awayCompletionHom I c = algebraMap R (awayCompletion I c) from rfl,
+    rw [awayCompletionHom_comp_algebraMap, awayCompletionHom_eq_algebraMap I c,
       awayBaseHom_comp_algebraMap]
   have hIle : I ≤ (awayCompletionIdeal L (algebraMap R A c)).comap
       ((awayCompletionHom L (algebraMap R A c)).comp (algebraMap R A)) := by
