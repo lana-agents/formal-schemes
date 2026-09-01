@@ -60,7 +60,8 @@ Three statements say this one is not degenerate:
 * `AlgebraicGeometry.map_span_X_away_eq_top`, `AlgebraicGeometry.projectiveLine_hθ`: the ideal
   compatibility, and the unit-ideal computation behind it.
 * `AlgebraicGeometry.projectiveLineDatum`: the datum, with `..projectiveLineDatum_K_false`,
-  `..projectiveLineDatum_K_true` and `..projectiveLineDatum_θ`.
+  `..projectiveLineDatum_K_true`, `..projectiveLineDatum_g_false_true` and
+  `..projectiveLineDatum_θ`.
 * `AlgebraicGeometry.projectiveLine`, `..projectiveLineCompletion`,
   `..projectiveLineCompletionToScheme`: the ambient scheme, its completion, and `X_{/Y} ⟶ X`.
 * `AlgebraicGeometry.span_X_ne_top`: the one small ideal fact the non-degeneracy needs. The
@@ -170,6 +171,10 @@ theorem projectiveLineDatum_K_false :
 
 /-- The second chart is completed along the empty closed subset. -/
 theorem projectiveLineDatum_K_true : (projectiveLineDatum R).K ⟨true⟩ = ⊤ := rfl
+
+/-- The two charts are glued along `D(X)`: the away element of the first chart is `X`. -/
+theorem projectiveLineDatum_g_false_true :
+    (projectiveLineDatum R).g ⟨false⟩ ⟨true⟩ = (X : R[X]) := rfl
 
 /-- **The ambient scheme**: the projective line over `R`. -/
 def projectiveLine : LocallyRingedSpace.{u} := (projectiveLineDatum R).specGlued
