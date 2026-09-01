@@ -237,8 +237,8 @@ theorem nonempty_basicTargetChart {f : X ⟶ FormalScheme.Spf I} (hI : I.FG)
       (FormalSpectrum.awayCompletion L (algebraMap S A c))
       (FormalSpectrum.awayCompletionIdeal L (algebraMap S A c)) :=
     IsTopologicallyFiniteType.awayCompletion_baseChange hKfg hA c
-  have hKcfg : (FormalSpectrum.awayCompletionIdeal K c).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom]; exact hKfg.map _
+  have hKcfg : (FormalSpectrum.awayCompletionIdeal K c).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg K c hKfg
   haveI : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart K c) :=
     FormalSpectrum.isOpenImmersion_basicOpenChart K c hKfg
   haveI : LocallyRingedSpace.IsOpenImmersion

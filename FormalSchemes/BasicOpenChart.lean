@@ -36,6 +36,8 @@ feeding `SheafedSpace.IsOpenImmersion.of_stalk_iso`, is proved in
   completed localization is a map of `R`-algebras.
 * `FormalSpectrum.isAdicRing_awayCompletionIdeal`: `R{1/f}` is a complete adic ring whenever `I`
   is finitely generated.
+* `FormalSpectrum.awayCompletionIdeal_fg`: the ideal of definition of `R{1/f}` is finitely
+  generated whenever `I` is.
 * `FormalSpectrum.map_algebraMap_awayCompletion`, its `rfl` case
   `FormalSpectrum.map_algebraMap_awayCompletion_eq`, and
   `FormalSpectrum.awayCompletionIdeal_eq_map_algebraMap`: the ideal-convention bookkeeping —
@@ -97,6 +99,20 @@ which is too high in the hierarchy for the files that had been writing the one-l
 issue 1065 moved it here and routed those eighteen sites through it. -/
 theorem isAdicRing_awayCompletionIdeal (hI : I.FG) : IsAdicRing (awayCompletionIdeal I f) :=
   AdicCompletion.isAdicRing_map _ (hI.map _)
+
+/-- **The ideal of definition of `R{1/f}` is finitely generated** when `I` is: it is the image of
+`I` under `FormalSpectrum.awayCompletionHom`, and `Ideal.FG` is stable under `Ideal.map`.
+
+This is the side condition every consumer of the chart has to discharge — the affine-target colimit
+property, `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`, and
+`FormalSpectrum.IsThickeningColimitTarget` all take it. It lives here, one line from
+`FormalSpectrum.isAdicRing_awayCompletionIdeal`, which has the identical hypothesis and the
+identical binders, for the reason recorded above: every consumer already imports this module.
+Issue 1284 first named it in `FormalSchemes/TateInvNodeChartComplete.lean`, a Tate leaf too far to
+the right of the import graph for anything else to cite, so fifteen sites had written the two-line
+proof out as an anonymous `have` instead; issue 1445 moved it here and routed them through it. -/
+theorem awayCompletionIdeal_fg (hI : I.FG) : (awayCompletionIdeal I f).FG :=
+  map_awayCompletionHom I f ▸ hI.map (awayCompletionHom I f)
 
 /-- **The structural map of a completed localization is a map of algebras over any base.** If `A`
 is an `R`-algebra, then `A → A{1/g}^` precomposed with `R → A` is `R → A{1/g}^`.

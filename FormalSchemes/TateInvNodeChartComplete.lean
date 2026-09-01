@@ -115,13 +115,6 @@ theorem preimage_basicOpen_basicOpenChart {R : Type u} [CommRing R] [Topological
       basicOpen (awayCompletionIdeal I f) (awayCompletionHom I f c) :=
   rfl
 
-/-- **The ideal of definition of `R{1/f}` is finitely generated** when `I` is: it is the image of
-`I` under `FormalSpectrum.awayCompletionHom`. -/
-theorem awayCompletionIdeal_fg {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R)
-    [IsAdicRing I] (f : R) (hI : I.FG) : (awayCompletionIdeal I f).FG := by
-  rw [← map_awayCompletionHom I f]
-  exact hI.map _
-
 end FormalSpectrum
 
 namespace AlgebraicGeometry

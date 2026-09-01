@@ -82,9 +82,8 @@ theorem exists_affineChart_subset (X : FormalScheme.{u}) (hX : X.LocallyFG) (x :
     FormalSpectrum.isAdicRing_awayCompletionIdeal I g hIfg
   haveI hoi : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart I g) :=
     FormalSpectrum.isOpenImmersion_basicOpenChart I g hIfg
-  have hJfg : (FormalSpectrum.awayCompletionIdeal I g).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom I g]
-    exact hIfg.map _
+  have hJfg : (FormalSpectrum.awayCompletionIdeal I g).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg I g hIfg
   have hrange : Set.range (FormalSpectrum.basicOpenChart I g).base =
       (FormalSpectrum.basicOpen I g : Set (FormalSpectrum I)) :=
     FormalSpectrum.range_basicOpenChart_base I g hIfg

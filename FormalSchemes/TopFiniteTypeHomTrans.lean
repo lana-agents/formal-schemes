@@ -235,10 +235,10 @@ theorem nonempty_tfTypeCompChart_aux {f : X ⟶ Y} {g : Y ⟶ Z} {𝒲 : OpenCov
     FormalSpectrum.isAdicRing_awayCompletionIdeal I c hIfg
   haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal M d) :=
     FormalSpectrum.isAdicRing_awayCompletionIdeal M d hMfg
-  have hJ₁fg : (FormalSpectrum.awayCompletionIdeal I c).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom]; exact hIfg.map _
-  have hJ₂fg : (FormalSpectrum.awayCompletionIdeal M d).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom]; exact hMfg.map _
+  have hJ₁fg : (FormalSpectrum.awayCompletionIdeal I c).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg I c hIfg
+  have hJ₂fg : (FormalSpectrum.awayCompletionIdeal M d).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg M d hMfg
   have hB₂ : IsTopologicallyFiniteType S K (FormalSpectrum.awayCompletion M d)
       (FormalSpectrum.awayCompletionIdeal M d) :=
     IsTopologicallyFiniteType.awayCompletion d hKfg hB
@@ -271,8 +271,8 @@ theorem nonempty_tfTypeCompChart_aux {f : X ⟶ Y} {g : Y ⟶ Z} {𝒲 : OpenCov
   haveI : IsAdicComplete (I.map (algebraMap R A)) A := by rw [hA.map_eq]; infer_instance
   haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal L (algebraMap R A c)) :=
     FormalSpectrum.isAdicRing_awayCompletionIdeal L _ hLfg
-  have hL'fg : (FormalSpectrum.awayCompletionIdeal L (algebraMap R A c)).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom]; exact hLfg.map _
+  have hL'fg : (FormalSpectrum.awayCompletionIdeal L (algebraMap R A c)).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg L (algebraMap R A c) hLfg
   letI := FormalSpectrum.awayBaseAlgebra c hIfg hA.map_eq
   have hA₂ : IsTopologicallyFiniteType (FormalSpectrum.awayCompletion I c)
       (FormalSpectrum.awayCompletionIdeal I c)
@@ -497,10 +497,10 @@ theorem nonempty_tfTypeCompChart {f : X ⟶ Y} {g : Y ⟶ Z} {𝒲 : OpenCover Z
     FormalSpectrum.isAdicRing_awayCompletionIdeal I c hIfg
   haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal M d) :=
     FormalSpectrum.isAdicRing_awayCompletionIdeal M d hMfg
-  have hJ₁fg : (FormalSpectrum.awayCompletionIdeal I c).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom]; exact hIfg.map _
-  have hJ₂fg : (FormalSpectrum.awayCompletionIdeal M d).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom]; exact hMfg.map _
+  have hJ₁fg : (FormalSpectrum.awayCompletionIdeal I c).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg I c hIfg
+  have hJ₂fg : (FormalSpectrum.awayCompletionIdeal M d).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg M d hMfg
   -- the `g`-side witness, transported to the `f`-side ring by the recovered ring isomorphism
   have hB₂ : IsTopologicallyFiniteType S K (FormalSpectrum.awayCompletion M d)
       (FormalSpectrum.awayCompletionIdeal M d) :=
@@ -527,8 +527,8 @@ theorem nonempty_tfTypeCompChart {f : X ⟶ Y} {g : Y ⟶ Z} {𝒲 : OpenCover Z
   haveI : IsAdicComplete (I.map (algebraMap R A)) A := by rw [hA.map_eq]; infer_instance
   haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal L (algebraMap R A c)) :=
     FormalSpectrum.isAdicRing_awayCompletionIdeal L _ hLfg
-  have hL'fg : (FormalSpectrum.awayCompletionIdeal L (algebraMap R A c)).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom]; exact hLfg.map _
+  have hL'fg : (FormalSpectrum.awayCompletionIdeal L (algebraMap R A c)).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg L (algebraMap R A c) hLfg
   letI := FormalSpectrum.awayBaseAlgebra c hIfg hA.map_eq
   have hA₂ : IsTopologicallyFiniteType (FormalSpectrum.awayCompletion I c)
       (FormalSpectrum.awayCompletionIdeal I c)

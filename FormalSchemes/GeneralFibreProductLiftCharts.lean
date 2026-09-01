@@ -374,9 +374,8 @@ theorem fibreLift_overlapOf
   have hwpf : w ≫ pf = FormalSpectrum.basicOpenChart (charts c).J gv :=
     LocallyRingedSpace.IsOpenImmersion.lift_fac pf
       (FormalSpectrum.basicOpenChart (charts c).J gv) lbc.hsub
-  have hLfg : (FormalSpectrum.awayCompletionIdeal (charts c).J gv).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom (charts c).J gv]
-    exact (charts c).fg.map _
+  have hLfg : (FormalSpectrum.awayCompletionIdeal (charts c).J gv).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg (charts c).J gv (charts c).fg
   refine D.hom_eq_of_chart_factor (Z := V) hV hf ht
     (pf ≫ D.fibreLiftPieceOf a b charts hcomm hs c)
     (ps ≫ D.fibreLiftPieceOf a b charts hcomm hs c')

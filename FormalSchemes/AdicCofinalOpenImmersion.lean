@@ -445,8 +445,8 @@ theorem IsTopologicallyFiniteType.awayCompletion_sq_of_openImmersion (hI : I.FG)
       FormalSpectrum.awayCompletionHom I (t * t) := by
     rw [← FormalSpectrum.awayCompletionHom_comp_algebraMap (R := R) (A := R) (L := I) (t * t),
       Algebra.algebraMap_self, RingHom.comp_id]
-  have hfg : (FormalSpectrum.awayCompletionIdeal I (t * t)).FG := by
-    rw [← map_awayCompletionHom I (t * t)]; exact hI.map _
+  have hfg : (FormalSpectrum.awayCompletionIdeal I (t * t)).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg I (t * t) hI
   have hrange : Set.range (basicOpenChart I (t * t)).base
       = Set.range (basicOpenChart I t).base := by
     rw [range_basicOpenChart_base I (t * t) hI, range_basicOpenChart_base I t hI,

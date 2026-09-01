@@ -122,21 +122,11 @@ def chartThickeningFamily : ThickeningFamilyLRS (awayCompletionIdeal I r) Y :=
 
 variable (hY : IsThickeningColimitTarget Y)
 
-omit [TopologicalSpace R] [IsAdicRing I] [IsAdicRing (awayCompletionIdeal I r)] in
-include hI in
-/-- **The ideal of definition of `R{1/r}` is finitely generated** when `I` is, which is the side
-condition `IsThickeningColimitTarget` carries. It is `FormalSpectrum.awayCompletionIdeal_fg`, which
-this file cannot cite: that lemma sits in `FormalSchemes/TateInvNodeChartComplete.lean`, far to the
-right of this module in the import graph. Rehoming it — it has ten hand-rolled copies elsewhere on
-the tree — is its own row. -/
-theorem awayCompletionIdeal_fg : (awayCompletionIdeal I r).FG :=
-  map_awayCompletionHom I r ▸ hI.map (awayCompletionHom I r)
-
 /-- **The morphism `Spf R{1/r} ⟶ Y`.** Where `FormalSpectrum.chartSpfHom` inverts the affine-target
 bijection, this takes the preimage supplied by `hY`; `injective_restrictToThickeningsLRS` makes the
 choice immaterial, and `chartSpfHom_uniq` records that. -/
 def chartSpfHom : locallyRingedSpaceObj (awayCompletionIdeal I r) ⟶ Y :=
-  (hY (awayCompletionIdeal I r) (awayCompletionIdeal_fg I r hI)
+  (hY (awayCompletionIdeal I r) (FormalSpectrum.awayCompletionIdeal_fg I r hI)
     (chartThickeningFamily I f hf U r hr hI e)).choose
 
 omit [TopologicalSpace R] [IsAdicRing I] in
@@ -146,7 +136,7 @@ theorem thickeningMap_comp_chartSpfHom (n : ℕ) :
     thickeningMap (awayCompletionIdeal I r) n ≫ chartSpfHom I f hf U r hr hI e hY =
       chartFamily I f hf U r hr hI e n :=
   congrFun (congrArg Subtype.val
-    (hY (awayCompletionIdeal I r) (awayCompletionIdeal_fg I r hI)
+    (hY (awayCompletionIdeal I r) (FormalSpectrum.awayCompletionIdeal_fg I r hI)
       (chartThickeningFamily I f hf U r hr hI e)).choose_spec) n
 
 omit [TopologicalSpace R] [IsAdicRing I] in
