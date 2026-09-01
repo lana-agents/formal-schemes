@@ -37,6 +37,13 @@ this glue datum's overlap inclusion with `Spec` of the localization map,
 statements are available in either index order; the `B`-side mirrors carry the primed index
 distinctness `spidxNe'`.
 
+That does **not** make the equalities independent of the glue condition: Mathlib derives
+`TopCat.GlueData.preimage_range` from `image_inter`, whose `⊇` half is `glue_condition_apply`. The
+content has moved rather than vanished, and what is gained here is independence from anything
+particular to two patches — `FormalSchemes/CompletionTwoPatchSupport.lean` is still where this
+datum's `glue_condition` field is opened, because that is where `hθ` needs to know *which* prime of
+`B` a prime of `D(a)` corresponds to.
+
 **Hence not separated, hence not affine.** Write `specDouble a` for `specTwoPatchScheme a a
 (RingEquiv.refl _)`. The two charts `specTwoPatchSchemeι₀`, `specTwoPatchSchemeι₁` are then two
 morphisms `Spec A ⟶ specDouble a` *with the same source*, and `specTwoPatch_glue` at `θ = refl`

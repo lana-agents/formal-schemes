@@ -34,14 +34,16 @@ this file is therefore equally true of an *incompatible* gluing. It cannot stay 
 chart preimage above is false without `hθ`, because `ι₀⁻¹(ι₁''V(J))` is then some other subset of
 `D(a)` entirely.
 
-Correspondingly this file is where the glue datum's `glue_condition` is consumed for the first time
-in this development. What the earlier files needed of the gluing is *where* the charts meet, and
-that is a purely topological fact about any glue datum:
+Correspondingly this file is where **this** glue datum's `glue_condition` field is opened for the
+first time in this development. What the earlier files needed of the gluing is only *where* the
+charts meet, and that holds for any glue datum whatever:
 `FormalSchemes/SpecTwoPatchNonAffine.lean` gets `ι₀⁻¹(range ι₁) = D(a)` from
-`LocallyRingedSpace.GlueData.preimage_range_ι` without opening the datum at all. Here we need
-more — not merely that a prime of `D(a)` lies in the `B`-chart, but **which** prime of `B` it is,
-since that is what `hθ` is a statement about. Naming it is exactly what the glue condition does,
-through `specAwayMap_comp_specTwoPatchι₀` below.
+`LocallyRingedSpace.GlueData.preimage_range_ι` without touching the datum's fields. That is not
+independence from the glue condition — Mathlib's `TopCat.GlueData.preimage_range` rests on
+`glue_condition_apply` one level down — but it is independence from anything about *two patches*.
+Here we need more: not merely that a prime of `D(a)` lies in the `B`-chart, but **which** prime of
+`B` it is, since that is what `hθ` is a statement about. Naming it is what
+`specAwayMap_comp_specTwoPatchι₀` below does, and that does open the field.
 
 ## The three layers
 
