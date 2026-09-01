@@ -43,8 +43,6 @@ conditional statement dressed as an application.
 
 ## Main results
 
-* `RestrictedPowerSeries.isTopologicallyFiniteType_self`: the polydisc is tf-type over its base by
-  its identity presentation.
 * `AlgebraicGeometry.tateCurveModel_isRelativelyTopFiniteType_base`,
   `AlgebraicGeometry.tateCurveModel_isLocallyTopFiniteType_base`: the Tate curve over a tf-type
   base.
@@ -68,17 +66,10 @@ namespace RestrictedPowerSeries
 
 variable (R₀ : Type u) [CommRing R₀] (I₀ : Ideal R₀) (n : ℕ)
 
-/-- **The formal polydisc is topologically of finite type over its own base**, by the identity
-presentation. This is the cheapest nontrivial value of `IsTopologicallyFiniteType`, and it is what
-makes the instantiation below unconditional. -/
-theorem isTopologicallyFiniteType_self :
-    IsTopologicallyFiniteType R₀ I₀ (RestrictedPowerSeries R₀ I₀ n) (idealOfDefinition R₀ I₀ n) :=
-  ⟨n, AlgHom.id R₀ _, Function.surjective_id, Ideal.map_id _⟩
-
 /-- The polydisc's ideal of definition is finitely generated when the base ideal is: it is the
 extension `I₀·R₀{X₁, …, Xₙ}`. -/
 theorem idealOfDefinition_fg (hI₀ : I₀.FG) : (idealOfDefinition R₀ I₀ n).FG :=
-  AlgebraicGeometry.IsTopologicallyFiniteType.fg (isTopologicallyFiniteType_self R₀ I₀ n) hI₀
+  AlgebraicGeometry.IsTopologicallyFiniteType.fg (isTopologicallyFiniteType R₀ I₀ n) hI₀
 
 variable {R₀ I₀}
 
@@ -86,7 +77,7 @@ variable {R₀ I₀}
 downstairs is a Tate parameter upstairs. -/
 theorem algebraMap_mem_idealOfDefinition {q₀ : R₀} (hq₀ : q₀ ∈ I₀) :
     algebraMap R₀ (RestrictedPowerSeries R₀ I₀ n) q₀ ∈ idealOfDefinition R₀ I₀ n :=
-  IsTopologicallyFiniteType.map_eq (isTopologicallyFiniteType_self R₀ I₀ n) ▸
+  IsTopologicallyFiniteType.map_eq (isTopologicallyFiniteType R₀ I₀ n) ▸
     Ideal.mem_map_of_mem _ hq₀
 
 end RestrictedPowerSeries
@@ -127,7 +118,7 @@ theorem tateCurveModel_isLocallyTopFiniteType_base (hI₀ : I₀.FG)
 
 The tower is `𝔈_q ⟶ Spf (I₀·R₀{X₁, …, Xₙ}) ⟶ Spf I₀` with the Tate parameter the image of a
 `q₀ ∈ I₀`. Nothing is assumed beyond `I₀.FG`, `q₀ ∈ I₀` and Noetherianness of `R₀`: the middle
-term's tf-type structure is `RestrictedPowerSeries.isTopologicallyFiniteType_self`, and the two
+term's tf-type structure is `RestrictedPowerSeries.isTopologicallyFiniteType`, and the two
 side conditions of `tateCurveModel` are supplied by
 `RestrictedPowerSeries.algebraMap_mem_idealOfDefinition` and
 `RestrictedPowerSeries.idealOfDefinition_fg`. -/
@@ -144,7 +135,7 @@ theorem polydisc_tateCurveModel_isLocallyTopFiniteType [IsNoetherianRing R₀] (
   haveI : IsAdicRing (RestrictedPowerSeries.idealOfDefinition R₀ I₀ n) :=
     RestrictedPowerSeries.isAdicRing R₀ I₀ n hI₀
   tateCurveModel_isLocallyTopFiniteType_base hI₀
-    (RestrictedPowerSeries.isTopologicallyFiniteType_self R₀ I₀ n) _ _
+    (RestrictedPowerSeries.isTopologicallyFiniteType R₀ I₀ n) _ _
 
 section PolydiscAffineBase
 
@@ -153,7 +144,7 @@ variable [TopologicalSpace R₀] [IsAdicRing I₀]
 /-- **EGA I 10.13's composition law, run on the Tate curve over the formal polydisc, with nothing
 assumed about the tower.** This is `tateCurveModel_isRelativelyTopFiniteType_base` at
 `R = R₀{X₁, …, Xₙ}`, whose tf-type structure over `(R₀, I₀)` is the identity presentation
-`RestrictedPowerSeries.isTopologicallyFiniteType_self`.
+`RestrictedPowerSeries.isTopologicallyFiniteType` (`FormalSchemes.TopFiniteTypeBaseChange`).
 
 It is stated separately from `polydisc_tateCurveModel_isLocallyTopFiniteType` because that one is
 `IsLocallyTopFiniteType.trans` and this one is
@@ -170,11 +161,11 @@ theorem polydisc_tateCurveModel_isRelativelyTopFiniteType [IsNoetherianRing R₀
           (RestrictedPowerSeries.algebraMap_mem_idealOfDefinition n hq₀)
           (RestrictedPowerSeries.idealOfDefinition_fg R₀ I₀ n hI₀)) ≫
         IsTopologicallyFiniteType.structHom
-          (RestrictedPowerSeries.isTopologicallyFiniteType_self R₀ I₀ n)) :=
+          (RestrictedPowerSeries.isTopologicallyFiniteType R₀ I₀ n)) :=
   haveI : IsAdicRing (RestrictedPowerSeries.idealOfDefinition R₀ I₀ n) :=
     RestrictedPowerSeries.isAdicRing R₀ I₀ n hI₀
   tateCurveModel_isRelativelyTopFiniteType_base hI₀
-    (RestrictedPowerSeries.isTopologicallyFiniteType_self R₀ I₀ n) _ _
+    (RestrictedPowerSeries.isTopologicallyFiniteType R₀ I₀ n) _ _
 
 end PolydiscAffineBase
 

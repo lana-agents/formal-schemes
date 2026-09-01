@@ -103,16 +103,6 @@ theorem annulusFibreChartTransitionInvAlg_trans_graphChartAlgY (hI : I.FG) :
 
 /-! ### The bridges on the structural map of `A` -/
 
-/-- The `y`-side ideal-convention bridge intertwines the two structural completion maps
-(`y`-analogue of `bridgeX_comp_awayCompletionHom`). -/
-theorem bridgeY_comp_awayCompletionHom :
-    (annulusFibreChartBridgeY R I q).toRingHom.comp
-        (awayCompletionHom (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) =
-      awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q) := by
-  simp only [awayCompletionHom, annulusFibreChartBridgeY,
-    AdicCompletion.congrIdealₐ_toRingHom]
-  rw [← RingHom.comp_assoc, AdicCompletion.congrIdeal_toRingHom_comp_algebraMap]
-
 /-- The `x`-side chart-domain identification carries the structural map of `A` to the structural map
 into `A[x⁻¹]^∧`. -/
 theorem chartOverlapAlgX_comp_awayCompletionHom :
@@ -170,7 +160,7 @@ theorem graphChartAlgY_comp_awayCompletionHom (hI : I.FG) :
         ((algebraMap (annulusAlgebra R I q) (annulusOverlap R I q)).comp
           (annulusFlipHom R I q hI).toRingHom) := by
   rw [graphChartAlgY, algEquiv_trans_toRingHom, algEquiv_trans_toRingHom, RingHom.comp_assoc,
-    RingHom.comp_assoc, bridgeY_comp_awayCompletionHom, chartOverlapAlgY_comp_awayCompletionHom,
+    RingHom.comp_assoc, awayCompletionHom_bridgeY, chartOverlapAlgY_comp_awayCompletionHom,
     inversionAlg_symm_comp_algebraMap]
 
 /-! ### Pointwise forms of the bridge computations -/
@@ -332,7 +322,7 @@ theorem chartBridgeY_comp_awayCompletionHom :
         (awayCompletionHom (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) =
       algebraMap (annulusAlgebra R I q) (annulusOverlapY R I q) := by
   rw [chartBridgeY, algEquiv_trans_toRingHom, RingHom.comp_assoc,
-    bridgeY_comp_awayCompletionHom, chartOverlapAlgY_comp_awayCompletionHom]
+    awayCompletionHom_bridgeY, chartOverlapAlgY_comp_awayCompletionHom]
 
 omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem chartBridgeY_algebraMap (a : annulusAlgebra R I q) :

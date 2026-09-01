@@ -81,7 +81,7 @@ theorem polydisc_tateCurveModel_isTopFiniteTypeHom [IsNoetherianRing R₀] (hI�
           (RestrictedPowerSeries.algebraMap_mem_idealOfDefinition n hq₀)
           (RestrictedPowerSeries.idealOfDefinition_fg R₀ I₀ n hI₀)) ≫
         IsTopologicallyFiniteType.structHom
-          (RestrictedPowerSeries.isTopologicallyFiniteType_self R₀ I₀ n)) :=
+          (RestrictedPowerSeries.isTopologicallyFiniteType R₀ I₀ n)) :=
   haveI : IsAdicRing (RestrictedPowerSeries.idealOfDefinition R₀ I₀ n) :=
     RestrictedPowerSeries.isAdicRing R₀ I₀ n hI₀
   (polydisc_tateCurveModel_isRelativelyTopFiniteType hI₀ hq₀ n).isTopFiniteTypeHom hI₀
