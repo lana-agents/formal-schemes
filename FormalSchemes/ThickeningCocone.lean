@@ -21,7 +21,8 @@ Spec.locallyRingedSpaceMap (stepRingHom I n) ≫ thickeningMap I (n + 1) = thick
 ```
 
 exhibiting `n ↦ Spec (R ⧸ I ^ (n + 1))` with `thickeningMap` as a genuine cocone over the tower in
-`LocallyRingedSpace`.
+`LocallyRingedSpace`, and iterates it to `specMap_factor_comp_thickeningMap`, the same statement
+for an arbitrary pair of levels `m ≤ p`.
 
 ## Implementation notes: never write down the containment proof of a `StructureSheaf.comap`
 
@@ -126,5 +127,46 @@ theorem thickeningMap_comp :
     erw [StructureSheaf.comap_ofHom_target_eq (stepRingHom I n).hom
       (thickeningOpen I (n + 1) V) (map_topMap_thickeningOpen I n V)]
     exact thickeningMap_c_app_comp I n V _
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **Cocone condition at an arbitrary pair of levels.** For `m ≤ p` the canonical morphism
+`thickeningMap I p` restricts along the tower map `R ⧸ I ^ (p + 1) →+* R ⧸ I ^ (m + 1)` to
+`thickeningMap I m`. This is `thickeningMap_comp` iterated: that lemma is the case `p = m + 1`,
+and the general case is what a statement quantifying over *two* levels — rather than over a level
+and its successor — needs.
+
+The tower map is spelled `Ideal.Quotient.factor`, of which `stepRingHom` is the one-step case;
+`Ideal.Quotient.factor_comp` is what turns the induction step into an application of
+`thickeningMap_comp`. -/
+theorem specMap_factor_comp_thickeningMap {m p : ℕ} (h : m ≤ p) :
+    Spec.locallyRingedSpaceMap (CommRingCat.ofHom
+        (Ideal.Quotient.factor (Ideal.pow_le_pow_right (I := I) (Nat.add_le_add_right h 1)))) ≫
+      thickeningMap I p = thickeningMap I m := by
+  induction p with
+  | zero =>
+    obtain rfl : m = 0 := Nat.le_zero.mp h
+    have hid : (Ideal.Quotient.factor (Ideal.pow_le_pow_right (I := I)
+        (Nat.add_le_add_right h 1))) = RingHom.id (R ⧸ I ^ (0 + 1)) :=
+      Ideal.Quotient.ringHom_ext (by ext x; rfl)
+    rw [hid, CommRingCat.ofHom_id, Spec.locallyRingedSpaceMap_id, Category.id_comp]
+  | succ k ih =>
+    rcases Nat.lt_or_ge k m with hlt | hmk
+    · obtain rfl : m = k + 1 := le_antisymm h hlt
+      have hid : (Ideal.Quotient.factor (Ideal.pow_le_pow_right (I := I)
+          (Nat.add_le_add_right h 1))) = RingHom.id (R ⧸ I ^ (k + 1 + 1)) :=
+        Ideal.Quotient.ringHom_ext (by ext x; rfl)
+      rw [hid, CommRingCat.ofHom_id, Spec.locallyRingedSpaceMap_id, Category.id_comp]
+    · have hfac : (Ideal.Quotient.factor (Ideal.pow_le_pow_right (I := I)
+            (Nat.add_le_add_right h 1))) =
+          (Ideal.Quotient.factor (Ideal.pow_le_pow_right (I := I)
+            (Nat.add_le_add_right hmk 1))).comp
+            (Ideal.Quotient.factor (Ideal.pow_le_pow_right (I := I)
+              (Nat.add_le_add_right k.le_succ 1))) :=
+        (Ideal.Quotient.factor_comp _ _).symm
+      have hstep : CommRingCat.ofHom (Ideal.Quotient.factor (Ideal.pow_le_pow_right (I := I)
+          (Nat.add_le_add_right k.le_succ 1))) = stepRingHom I k := rfl
+      rw [hfac, CommRingCat.ofHom_comp, Spec.locallyRingedSpaceMap_comp, Category.assoc, hstep,
+        thickeningMap_comp]
+      exact ih hmk
 
 end FormalSpectrum
