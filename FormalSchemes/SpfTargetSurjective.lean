@@ -88,9 +88,10 @@ universe u
 namespace FormalSpectrum
 
 /-- **`Spec` is faithful into locally ringed spaces**, in the spelling this tree uses. Mathlib's
-`Spec.toLocallyRingedSpace` carries the `Faithful` instance, but its `map` is applied to an
-`op`-ped morphism; every statement here is phrased with `Spec.locallyRingedSpaceMap`, so the `op`
-is peeled off once, here, rather than at each use site. -/
+`Spec.toLocallyRingedSpace` carries the `Functor.Faithful` instance, but its `Functor.map` is
+applied to an `op`-ped morphism; every statement here is phrased with
+`Spec.locallyRingedSpaceMap`, so the `op` is peeled off once, here, rather than at each use site.
+-/
 theorem specMap_injective {P Q : CommRingCat.{u}} {f g : P ⟶ Q}
     (h : Spec.locallyRingedSpaceMap f = Spec.locallyRingedSpaceMap g) : f = g :=
   Quiver.Hom.op_inj (Spec.toLocallyRingedSpace.map_injective h)

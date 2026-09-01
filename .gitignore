@@ -2,3 +2,4 @@
 /.elan-home
 /.cache-home
 /.claude
+__pycache__/
