@@ -47,8 +47,9 @@ equality above. That is the form a statement about a *closed* subset of a chart 
 what `FormalSchemes/CompletionTwoPatchSupport.lean` now spends `hθ` on: the compatibility
 hypothesis moves the middle preimage and nothing else. It costs one extra step that the range form
 does not need — the `GlueData.ofGlueData'` `eqToHom` is invisible to a range but not to the image
-of a named subset — which is what `specTwoPatchLRSGlueData_t_comp_f_false_true` and
-`LocallyRingedSpace.image_preimage_eqToHom_comp_base` below are for.
+of a named subset — which is what `specTwoPatchLRSGlueData_t_comp_f_false_true` below and
+`AlgebraicGeometry.LocallyRingedSpace.image_preimage_eqToHom_comp_base`
+(`FormalSchemes.LocallyRingedSpaceRange`) are for.
 
 That does **not** make the equalities independent of the glue condition: Mathlib derives
 `TopCat.GlueData.preimage_range` from `TopCat.GlueData.image_inter`, whose `⊇` half is
@@ -129,22 +130,6 @@ open CategoryTheory TopologicalSpace Opposite
 universe u
 
 namespace AlgebraicGeometry
-
-/-- **The image/preimage form of the same fact.** Precomposing *both* legs with the same `eqToHom`
-does not change the image of the preimage: `eqToHom e` is an isomorphism, so its base map is a
-bijection and `φ '' (φ ⁻¹' S) = S`.
-
-This is not a consequence of `LocallyRingedSpace.range_eqToHom_comp_base`
-(`FormalSchemes.LocallyRingedSpaceRange`): a range is insensitive to precomposition with any
-surjection, but the image of a *named* subset is not, so the two `eqToHom`s have to cancel
-against each other rather than be discarded one at a time. That is why the image-shaped chart
-preimage `ChartedSchemeDatum.preimage_image_specι` needs this and the range-shaped
-`preimage_range_specι` does not. -/
-theorem LocallyRingedSpace.image_preimage_eqToHom_comp_base {W X Y Z : LocallyRingedSpace.{u}}
-    (e : W = X) (α : X ⟶ Y) (β : X ⟶ Z) (U : Set Z) :
-    ⇑(eqToHom e ≫ α).base '' (⇑(eqToHom e ≫ β).base ⁻¹' U) = ⇑α.base '' (⇑β.base ⁻¹' U) := by
-  subst e
-  rw [eqToHom_refl, Category.id_comp, Category.id_comp]
 
 section TwoCharts
 
