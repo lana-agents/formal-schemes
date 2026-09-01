@@ -287,9 +287,9 @@ lives behind the completion-side chart cluster: importing it would take this fil
 from 47 modules to 92, so it is restated here at a cost of two lines.
 
 The sibling "no triple of two indices is distinct" lemma used to be restated the same way, in
-eleven files under eight names; it is now a single declaration,
+eleven files under nine names; it is now a single declaration,
 `AlgebraicGeometry.uliftBool_not_pairwise_distinct` in `FormalSchemes.Gluing`, a module all
-eleven of those files already imported. **That is not a precedent for merging this one**, and the
+fourteen of its callers already imported. **That is not a precedent for merging this one**, and the
 reason is the import jump above and not the duplication: the merged lemma is about `ULift Bool`,
 this file needs `ULift (Fin 3)`, and the `Fin 3` twin is the declaration behind the 47-to-92
 jump. -/
