@@ -46,9 +46,10 @@ Here we need more: not merely that a prime of `D(a)` lies in the `B`-chart, but 
 `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` below, and it is the first statement in
 this development that names the correspondence rather than asserting that one exists.
 
-The `CategoryTheory.GlueData.glue_condition` **field** itself is opened one file earlier, not
-here. `AlgebraicGeometry.specTwoPatch_glue` (`FormalSchemes.CompletionTwoPatchToScheme`) is
-already exactly the morphism-level identity this section needs — discharged from
+The `CategoryTheory.GlueData.glue_condition` **field** itself is opened upstream of this file,
+not here. `AlgebraicGeometry.specTwoPatch_glue` (`FormalSchemes.CompletionTwoPatchToScheme`,
+reached through this file's only import `FormalSchemes.CompletionTwoPatchRange`) is already
+exactly the morphism-level identity this section needs — discharged from
 `(specTwoPatchLRSGlueData a b θ).toGlueData.glue_condition ⟨false⟩ ⟨true⟩`, which is what that
 file's own overlap obligation required — and this file consumes it by import. Worth saying,
 because the same statement used to be proved here a second time under a different name, and three
