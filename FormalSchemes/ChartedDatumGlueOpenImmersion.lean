@@ -19,8 +19,11 @@ datum, where the overlap objects are named `Spf (A i{1/g_ij})` rather than
 Exactly one thing: `CategoryTheory.GlueData.ofGlueData'` pads the diagonal of a `GlueData'`, so the
 glue datum's overlap immersion `f i j` is not `basicOpenChart (I·A_i) (g i j)` on the nose but that
 morphism preceded by an `eqToHom` — and on the diagonal it is an `eqToHom` alone. An `eqToHom` is an
-isomorphism, so neither changes a range (`range_eqToHom_comp_base`), and the two lemmas below record
-the resulting range identities. The `dite` conditions live at `D.J` while the glue datum indexes by
+isomorphism, so neither changes a range (`range_eqToHom_comp_base`), and
+`range_xGlueData_f_comp_of_ne` below records the resulting range identity off the diagonal. **The
+diagonal needs no such identity**: `FormalScheme.GlueData.isOpenImmersion_glueMorphisms` asks its
+containment only for `i ≠ j`, so the diagonal case is discharged without rewriting a range at all.
+The `dite` conditions live at `D.J` while the glue datum indexes by
 `D.xFormalGlueData.toLocallyRingedSpaceGlueData.J`, so the disequality has to be re-typed as
 `¬ @Eq D.J i j` before `dif_neg` fires — the same step, for the same reason, that
 `glueChartMorphisms` itself performs.
@@ -30,8 +33,8 @@ The hypothesis a consumer must supply is therefore stated in the datum's own spe
 
 ## Main results
 
-* `AlgebraicGeometry.AffineChartedFibreDatumX.range_xGlueData_f_comp_of_ne` and
-  `range_xGlueData_f_comp_self`: the two range identities above.
+* `AlgebraicGeometry.AffineChartedFibreDatumX.range_xGlueData_f_comp_of_ne`: the range identity
+  above.
 * `AlgebraicGeometry.AffineChartedFibreDatumX.range_glueChartMorphisms`: the range of the glued
   morphism is the union of the ranges of the chart morphisms.
 * `AlgebraicGeometry.AffineChartedFibreDatumX.isOpenImmersion_glueChartMorphisms`: **the criterion**
@@ -72,20 +75,6 @@ theorem range_xGlueData_f_comp_of_ne (i j : D.J) (hij : i ≠ j)
   have hij' : ¬ @Eq D.J i j := hij
   simp only [xFormalGlueData, xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',
     CategoryTheory.GlueData'.f', dif_neg hij', Category.assoc]
-  exact range_eqToHom_comp_base _ _
-
-/-- On the diagonal, the glue datum's overlap immersion is an `eqToHom`, so composing with any `kk`
-gives back the range of `kk`. -/
-theorem range_xGlueData_f_comp_self (i : D.J)
-    (kk : letI := D.commRing; letI := D.algebra;
-      locallyRingedSpaceObj (I.map (algebraMap R (D.A i))) ⟶ Y) :
-    letI := D.commRing; letI := D.algebra
-    Set.range (D.xFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.f i i ≫ kk).base =
-      Set.range kk.base := by
-  letI := D.commRing
-  letI := D.algebra
-  simp only [xFormalGlueData, xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',
-    CategoryTheory.GlueData'.f', dif_pos trivial]
   exact range_eqToHom_comp_base _ _
 
 /-! ### The glued morphism -/
