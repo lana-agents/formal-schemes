@@ -56,10 +56,13 @@ cover and reduces to
 
 whose middle equality is the first place the compatibility hypothesis `hθ` would actually be used:
 a prime of `V(J) ∩ D(b)` corresponds under `θ` to one of `V(I·A_a) = V(I) ∩ D(a)`. That transport
-— from `hθ`, an equality of ideals in the localizations, to a statement about primes — does not
-exist in this development. Injectivity of the base map is likewise left open; its mixed-chart case
-needs a converse to the overlap analysis of `FormalSchemes.CompletionTwoPatchDoubled`, namely that
-a point of `Spf A^` lying over `D(a)` is in the overlap chart.
+— from `hθ`, an equality of ideals in the localizations, to a statement about primes — is
+`AlgebraicGeometry.comap_θ_preimage_zeroLocus` (`FormalSchemes.CompletionTwoPatchSupport`), which
+is downstream of this file and carries the argument sketched above to its conclusion in
+`FormalSchemes.CompletionTwoPatchClosed`. Injectivity of the base map is left open; its
+mixed-chart case needs a converse to the overlap analysis of
+`FormalSchemes.CompletionTwoPatchDoubled`, namely that a point of `Spf A^` lying over `D(a)` is in
+the overlap chart, and that is what still blocks the closed embedding.
 
 That the glued completion is *genuinely* glued — its two charts meet only over `D(â)`, so a point
 outside the overlap is doubled — is `FormalSchemes.CompletionTwoPatchDoubled` and is deliberately
