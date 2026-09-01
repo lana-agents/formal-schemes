@@ -83,6 +83,7 @@ import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
 import FormalSchemes.ChartedCompletionDatum
+import FormalSchemes.ChartedCompletionRange
 import FormalSchemes.ChartedCompletionToScheme
 import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.ChartedDatumGlueOpenImmersion

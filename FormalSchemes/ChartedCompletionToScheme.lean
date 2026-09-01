@@ -42,9 +42,16 @@ completion datum through `toChartedSchemeDatum`.
 * **No universal property.** `toScheme_unique` says the morphism is the only one restricting to the
   affine `formalCompletion.toSpec`s chart by chart; the affine case of the universal property of
   `formalCompletion.toSpec` is not on master, so nothing stronger is available.
-* No closed-embedding or support statement for the arbitrary-index morphism. The two-patch line has
-  those (`FormalSchemes.CompletionTwoPatchClosed`, `FormalSchemes.CompletionTwoPatchSupport`) and
-  generalising them is separate work.
+* Nothing **here** says what `toScheme` does to points. Its image is computed, at this index, in
+  `FormalSchemes.ChartedCompletionRange`
+  (`AlgebraicGeometry.ChartedCompletionDatum.range_toScheme_base`), the arbitrary-index form of
+  `FormalSchemes.CompletionTwoPatchRange`; its proof spends neither `hθ` nor `hσθ`, which
+  are what make the two glued objects exist rather than what computes the image.
+* No **chart preimage**, no closedness and no closed-embedding statement for the arbitrary-index
+  morphism. The two-patch line has the first two
+  (`FormalSchemes.CompletionTwoPatchSupport`, where `hθ` is first spent, and
+  `FormalSchemes.CompletionTwoPatchClosed`, which is downstream of it) and generalising them is
+  separate work; the third is open at both indices.
 * Nothing **here** promotes `specGlued` to `AlgebraicGeometry.Scheme`;
   `FormalSchemes.ChartedSchemeDatumScheme` does, as a separate carve, and retypes
   `toScheme` there as `AlgebraicGeometry.ChartedCompletionDatum.toSchemeHom`. That promotion
