@@ -28,8 +28,8 @@ datum-presented `X` to surjectivity of the **chart codiagonals**
 ```
 
 — a purely ring-theoretic condition on the datum's own data. This is the second concrete
-`IsSeparated` value in the tree after the affine one (issue 513), and the first with more than one
-chart.
+`BothChartedFibreDatumXY.IsSeparated` value in the tree after the affine one (issue 513), and the
+first with more than one chart.
 
 ## Why the chart codiagonals are surjective
 

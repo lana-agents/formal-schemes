@@ -94,8 +94,8 @@ def schemeDiagonal' :
 
 /-- **The scheme-level diagonal is a section of the first projection**: `Δ' ≫ pr₁ = 𝟙_X`, as
 morphisms of formal schemes. This is `diagonal'_comp_pr₁` transported along `FormalScheme.Hom.ext'`:
-composition and identities in `FormalScheme` are `Hom.mk` of the corresponding locally-ringed-space
-data, so the two statements have the same underlying content. -/
+composition and identities in `FormalScheme` are `FormalScheme.Hom.mk` of the corresponding
+locally-ringed-space data, so the two statements have the same underlying content. -/
 theorem schemeDiagonal'_comp_pr₁ :
     schemeDiagonal' DX σX hστX hσcX ≫ FormalScheme.Hom.mk ((diagonalDatum DX σX hστX hσcX).pr₁
         (ofFactors_hV DX DX σX σX hστX hστX hσcX hσcX)

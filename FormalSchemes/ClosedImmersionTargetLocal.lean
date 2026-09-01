@@ -13,14 +13,14 @@ did not descend, and was carried as a **global** hypothesis, because the tree ha
 whose stalk maps one could hypothesise about. That module's own docstring recorded the gap, before
 it was repointed at this file:
 
-> A fully target-local variant, whose per-chart hypothesis is a genuine `IsClosedImmersion` of the
-> restricted morphism (relating `(restricted f).stalkMap` to `f.stalkMap` through the
-> open-immersion stalk isomorphism), is left as a documented follow-up.
+> A fully target-local variant, whose per-chart hypothesis is a genuine
+> `FormalScheme.IsClosedImmersion` of the restricted morphism (relating `(restricted f).stalkMap` to
+> `f.stalkMap` through the open-immersion stalk isomorphism), is left as a documented follow-up.
 
 `FormalScheme.restrictOpenMap` (`FormalSchemes.OpenFormalSubscheme`) is that missing morphism, and
 with its base map identified as `Set.restrictPreimage` and its stalk maps identified with those of
 `f`, both halves descend. That is `isClosedImmersion_iff_restrictOpen`: an **iff**, with a genuine
-`IsClosedImmersion` on each chart and no global hypothesis left over.
+`FormalScheme.IsClosedImmersion` on each chart and no global hypothesis left over.
 
 ## Why it is stated over an arbitrary family of opens
 
@@ -57,8 +57,8 @@ namespace AlgebraicGeometry.FormalScheme
 variable {X Y : FormalScheme.{u}}
 
 /-- **Being a closed immersion is local on the target**, in the full sense: both the base condition
-and the stalk condition descend, so the per-chart hypothesis is a genuine `IsClosedImmersion` and
-nothing is left as a global assumption.
+and the stalk condition descend, so the per-chart hypothesis is a genuine
+`FormalScheme.IsClosedImmersion` and nothing is left as a global assumption.
 
 The base half is Mathlib's `isClosedEmbedding_iff_restrictPreimage`, reached because
 `restrictOpenMap_base` says the induced morphism's base map *is* `Set.restrictPreimage`. The stalk
@@ -106,9 +106,11 @@ theorem isClosedImmersion_iff_openCover (hX : X.LocallyFG) (hY : Y.LocallyFG)
 /-- **`isClosedImmersion_of_openCover` is now the special case with a global stalk hypothesis.**
 
 `FormalSchemes.ClosedImmersion`'s version takes the base condition per chart and the stalk
-condition globally; this one takes a genuine `IsClosedImmersion` per chart, which is strictly
-weaker input, and the two are related by `isClosedImmersion_iff_openCover`. The old statement is
-left where it is — it has consumers — but it is no longer the strongest form available. -/
+condition globally; this one takes a genuine `FormalScheme.IsClosedImmersion` per chart, which is
+strictly weaker input, and the two are related by `FormalScheme.isClosedImmersion_iff_openCover`.
+The old statement is left where it is — it has consumers — but it is no longer the strongest form
+available.
+-/
 theorem isClosedImmersion_of_openCover' (hX : X.LocallyFG) (hY : Y.LocallyFG)
     (𝒰 : OpenCover Y) (f : X ⟶ Y)
     (h : ∀ j, IsClosedImmersion (restrictOpenSchemeMap X hX Y hY f

@@ -69,12 +69,12 @@ CONSTRUCTION_SHORTHAND = {
     "Spec": "Spec, Spec.locallyRingedSpaceObj, Spec.locallyRingedSpaceMap, PrimeSpectrum",
 }
 
-# Tactics, elaborator entry points and configuration fields.  Some of these do resolve to a real
-# constant (`subst` to `HEq.subst`, `whnf` to `Lean.Meta.whnf`), which is precisely why they have
-# to be listed: resolving is not evidence that the citation meant that constant.
+# Tactics, attributes, elaborator entry points and configuration fields.  Some of these do resolve
+# to a real constant (`subst` to `HEq.subst`, `whnf` to `Lean.Meta.whnf`), which is precisely why
+# they have to be listed: resolving is not evidence that the citation meant that constant.
 VOCABULARY = set(
-    """subst whnf isDefEq instances dsimp erw omega aesop norm_num unfold delta conv gcongr
-    positivity ring linarith nlinarith push_cast field_simp abel module bound fun_prop
+    """reassoc subst whnf isDefEq instances dsimp erw omega aesop norm_num unfold delta conv
+    gcongr positivity ring linarith nlinarith push_cast field_simp abel module bound fun_prop
     congr convert ext filter_upwards induction cases constructor specialize symm trans
     change convert! rcases' peel measurability continuity""".split()
 )

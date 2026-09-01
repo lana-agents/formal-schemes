@@ -35,7 +35,7 @@ projections as `FormalSpectrum.locallyRingedSpaceMap` of concrete ring maps, whi
 * `FormalSpectrum.basicOpenChartFurtherLeft_comp` / `basicOpenChartFurtherRight_comp`: the affine
   factorizations `D(f·g) ↪ D(f) ↪ Spf A` and `D(f·g) ↪ D(g) ↪ Spf A` of the chart at `f·g`.
 * `FormalSpectrum.basicOpenChartOverlapIso_hom_fst` / `_hom_snd`: **the leg identifications**, and
-  their `inv`-side forms `basicOpenChartOverlapIso_inv_comp_furtherLeft` / `_furtherRight`.
+  their `Iso.inv`-side forms `basicOpenChartOverlapIso_inv_comp_furtherLeft` / `_furtherRight`.
 
 ## Route
 
@@ -253,7 +253,7 @@ theorem basicOpenChartOverlapIso_hom_snd (hI : I.FG) :
   rw [← cancel_mono (basicOpenChart I g), Category.assoc,
     basicOpenChartOverlapIso_hom_snd_comp I f g hI, basicOpenChartFurtherRight_comp I f g hI]
 
-/-- The `inv`-side form of the first leg identification: going out of the pullback through the
+/-- The `Iso.inv`-side form of the first leg identification: going out of the pullback through the
 overlap identification and then into `Spf A{1/f}` is the first projection. -/
 @[reassoc]
 theorem basicOpenChartOverlapIso_inv_comp_furtherLeft (hI : I.FG) :
@@ -265,7 +265,7 @@ theorem basicOpenChartOverlapIso_inv_comp_furtherLeft (hI : I.FG) :
   letI := isOpenImmersion_basicOpenChart I g hI
   rw [← basicOpenChartOverlapIso_hom_fst I f g hI, Iso.inv_hom_id_assoc]
 
-/-- The `inv`-side form of the second leg identification. -/
+/-- The `Iso.inv`-side form of the second leg identification. -/
 @[reassoc]
 theorem basicOpenChartOverlapIso_inv_comp_furtherRight (hI : I.FG) :
     letI := isOpenImmersion_basicOpenChart I f hI

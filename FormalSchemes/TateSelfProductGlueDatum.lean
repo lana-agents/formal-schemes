@@ -222,8 +222,8 @@ theorem tateSelfProductGlueF_hasPullback (hq : q ∈ I) (hI : I.FG) :
   infer_instance
 
 /-- **`t_inv`.** Each transition is its own inverse: `t i j h ≫ t j i h.symm = 𝟙`. Since
-`t i j = t j i` is the `hom` leg of a self-inverse involution (whose `hom` and `inv` legs coincide),
-each case is `Iso.hom_inv_id` of the corresponding transition. -/
+`t i j = t j i` is the `Iso.hom` leg of a self-inverse involution (whose `Iso.hom` and `Iso.inv`
+legs coincide), each case is `Iso.hom_inv_id` of the corresponding transition. -/
 theorem tateSelfProductGlueT_inv (hI : I.FG) :
     ∀ (i j : Bool × Bool) (h : i ≠ j),
       tateSelfProductGlueT R I q hI i j h ≫ tateSelfProductGlueT R I q hI j i h.symm = 𝟙 _ := by

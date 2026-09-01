@@ -186,7 +186,8 @@ theorem tateSelfProductBothTransitionInv_eq_swapSecond_swapFirst (hI : I.FG) :
 
 /-! ### The Klein four-group relations and the `σ`-triple identity -/
 
-/-- `swapFirst` is an involution (its `inv` equals its `hom`). -/
+/-- `tateSelfProductSwapFirstTransitionInv` is an involution (its `Iso.inv` equals its `Iso.hom`).
+-/
 theorem swapFirstInv_hom_hom (hI : I.FG) :
     (tateSelfProductSwapFirstTransitionInv R I q hI).hom ≫
         (tateSelfProductSwapFirstTransitionInv R I q hI).hom = 𝟙 _ :=

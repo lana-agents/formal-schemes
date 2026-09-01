@@ -32,10 +32,10 @@ restricting to the members of an open cover of `Y`.
 The stalk half is a *global* pointwise condition, so it is not re-derived from the cover here.
 The fully target-local variant is `FormalScheme.isClosedImmersion_iff_restrictOpen`
 (`FormalSchemes.ClosedImmersionTargetLocal`): an `↔` over an arbitrary family of opens covering
-`Y`, whose per-chart hypothesis is a genuine `IsClosedImmersion` of the restricted morphism
-`X|_{f⁻¹(V i)} ⟶ Y|_{V i}`, with no global hypothesis left over. That hypothesis is strictly weaker
-per chart, so `isClosedImmersion_of_openCover` below is the special case in which the stalk half is
-supplied globally; it is kept because it has consumers.
+`Y`, whose per-chart hypothesis is a genuine `FormalScheme.IsClosedImmersion` of the restricted
+morphism `X|_{f⁻¹(V i)} ⟶ Y|_{V i}`, with no global hypothesis left over. That hypothesis is
+strictly weaker per chart, so `FormalScheme.isClosedImmersion_of_openCover` below is the special
+case in which the stalk half is supplied globally; it is kept because it has consumers.
 
 ## References
 

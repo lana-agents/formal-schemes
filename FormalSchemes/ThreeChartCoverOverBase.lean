@@ -191,9 +191,9 @@ def gluedXToBaseHom (hI : I.FG) :
   FormalScheme.Hom.mk (gluedXToBase I f B hI)
 
 /-- **`gluedXToBaseHom` is a morphism over `Spf R`**, the formal-scheme form of
-`gluedXToBase_comp_ambientStructMap`. Composition in `FormalScheme` is `Hom.mk` of the composition
-of the underlying morphisms of locally ringed spaces, so this is that identity under
-`FormalScheme.Hom.ext'`. -/
+`ThreeChartCover.gluedXToBase_comp_ambientStructMap`. Composition in `FormalScheme` is
+`FormalScheme.Hom.mk` of the composition of the underlying morphisms of locally ringed spaces, so
+this is that identity under `FormalScheme.Hom.ext'`. -/
 theorem gluedXToBaseHom_comp_ambientStructHom (hI : I.FG) :
     gluedXToBaseHom I f B hI ≫ ambientStructHom I =
       FormalScheme.Hom.mk (datumX I f B hI).xStructMap :=

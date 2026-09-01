@@ -14,8 +14,9 @@ fibre product `generalFibreProduct` of the associated `diagonalDatum` are built 
 `GlueData.ofGlueData'` → `gluedFormalScheme` over a **one-element** index, so each is only
 *isomorphic* to its single chart, not definitionally equal.
 
-This file supplies the two identifying isomorphisms, which the affine `IsSeparated` value (the
-follow-up 506c) transports the affine diagonal closed-immersion across:
+This file supplies the two identifying isomorphisms, which the affine
+`BothChartedFibreDatumXY.IsSeparated` value (the follow-up 506c) transports the affine diagonal
+closed-immersion across:
 
 * `oneChartXGluedIso : (oneChartExposeXDatum …).xGlued ≅ Spf A`;
 * `oneChartFibreProductIso : (diagonalDatum (oneChartExposeXDatum …) …).generalFibreProduct

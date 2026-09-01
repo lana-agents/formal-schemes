@@ -70,8 +70,8 @@ variable (B : Type u) [CommRing B] [Algebra R B]
 identification of the datum's glued object with the Tate curve model, followed by the model's
 structural morphism, is the datum's own structural morphism.
 
-`tateXGluedInv_comp_xStructMap` is the same statement in the `inv` direction; the two are related
-by cancelling `tateXGluedIsoLRS.hom_inv_id`. -/
+`tateXGluedInv_comp_xStructMap` is the same statement in the `Iso.inv` direction; the two are
+related by cancelling `Iso.hom_inv_id` for `tateXGluedIsoLRS`. -/
 theorem tateXGluedHom_comp_tateCurveModelStructMap (hq : q ∈ I) (hI : I.FG) :
     tateXGluedHom R I q B hq hI ≫ tateCurveModelStructMap R I q hq hI =
       (tateCurveExposeXDatum R I q B hq hI).xStructMap := by

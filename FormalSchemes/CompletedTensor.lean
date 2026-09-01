@@ -138,8 +138,8 @@ end Lift
 Two continuous ring homomorphisms out of `A ⊗̂_R B` that agree on the two factors agree. The
 continuity hypotheses are phrased with the powers of the ideal of definition; the following
 lemma bridges those to the module filtration `(I·(A⊗B)) ^ m • ⊤` used by
-`AdicCompletion.hom_ext_of_continuous`, and makes the continuity of `lift`, `map` and the
-commutativity isomorphism compose cleanly.
+`AdicCompletion.hom_ext_of_continuous`, and makes the continuity of `CompletedTensorProduct.lift`,
+`CompletedTensorProduct.map` and the commutativity isomorphism compose cleanly.
 -/
 
 section HomExt
@@ -260,7 +260,8 @@ theorem map_inr (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') (b : B) :
   exact lift_inr _ _ _ _ b
 
 /-- The functorial map maps the powers of the ideal of definition into the powers of the ideal
-of definition of the target (for `I` finitely generated) — continuity of `map`. -/
+of definition of the target (for `I` finitely generated) — continuity of
+`CompletedTensorProduct.map`. -/
 theorem map_mem_pow (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') (m : ℕ)
     {x : CompletedTensorProduct R I A B} (hx : x ∈ (idealOfDefinition R I A B) ^ m) :
     map hI f g x ∈ (idealOfDefinition R I A' B') ^ m := by

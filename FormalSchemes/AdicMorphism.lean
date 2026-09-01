@@ -115,9 +115,9 @@ def closedFormalSubscheme (ha : (Ideal.Quotient.mk a).AdicKerClosed I) :
 
 The topological content of EGA I 10.14: the underlying map of a closed formal subscheme is a
 closed embedding onto the vanishing locus of the ideal cut out by `a`. This is the `base_closed`
-half of the eventual `IsClosedImmersion` statement — the closed-subscheme analogue of the open
-embedding `FormalSpectrum.isOpenEmbedding_basicOpenChartBase` of the basic-open chart. Since the
-inducing ring map `R ⧸ I → (R ⧸ a) ⧸ (I·(R ⧸ a))` is a quotient (hence surjective) map, no
+half of the eventual `FormalScheme.IsClosedImmersion` statement — the closed-subscheme analogue of
+the open embedding `FormalSpectrum.isOpenEmbedding_basicOpenChartBase` of the basic-open chart.
+Since the inducing ring map `R ⧸ I → (R ⧸ a) ⧸ (I·(R ⧸ a))` is a quotient (hence surjective) map, no
 `I.FG` hypothesis is needed here, unlike the open case.
 -/
 

@@ -103,8 +103,8 @@ abbrev locY : annulusAlgebra R I q →ₐ[R] annulusOverlapY R I q :=
 /-! ### The two automorphisms of `A ⊗̂_R A` -/
 
 set_option linter.unusedSectionVars false in
-/-- `id ⊗̂ flip` is surjective: it is an involution of `A ⊗̂_R A`, by functoriality of `map` and the
-involutivity of the coordinate swap `annulusFlip`. -/
+/-- `id ⊗̂ flip` is surjective: it is an involution of `A ⊗̂_R A`, by functoriality of
+`CompletedTensorProduct.map` and the involutivity of the coordinate swap `annulusFlip`. -/
 theorem map_id_flip_surjective (hI : I.FG) :
     Function.Surjective
       (map hI (AlgHom.id R (annulusAlgebra R I q)) (annulusFlipHom R I q hI)) := by

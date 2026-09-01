@@ -16,8 +16,9 @@ formalCompletion.basicOpenImmersion I hI f :
 *geometrically*, as the completion–localization interchange isomorphism followed by the affine
 basic-open chart of `Spf R^`, which is how it acquires `LocallyRingedSpace.IsOpenImmersion` and its
 range `D(f̂)`. `FormalSchemes/Completion.lean` builds the *functorial* morphism
-`formalCompletion.map`, and `FormalSchemes/CompletionToSpec.lean` proves that `map` commutes with
-the canonical morphism `formalCompletion.toSpec : X_{/Y} ⟶ X` (`map_comp_toSpec`).
+`formalCompletion.map`, and `FormalSchemes/CompletionToSpec.lean` proves that `formalCompletion.map`
+commutes with the canonical morphism `formalCompletion.toSpec : X_{/Y} ⟶ X`
+(`formalCompletion.map_comp_toSpec`).
 
 The two morphisms out of a basic-open completion were built for different purposes and had never
 been identified. This file identifies them, and reads off the consequence that motivates it: the

@@ -98,8 +98,8 @@ namespace AlgebraicGeometry.FormalScheme
 
 /-- **An isomorphism of formal spectra, as an isomorphism of formal schemes.** Formal schemes are
 a full subcategory of locally ringed spaces, so this is only a repackaging; it is a `def` rather
-than an application of `Functor.preimageIso` so that its `hom` and `inv` are `FormalScheme.Hom.mk`
-on the nose, which is what the squares below are stated against. -/
+than an application of `Functor.preimageIso` so that its `Iso.hom` and `Iso.inv` are
+`FormalScheme.Hom.mk` on the nose, which is what the squares below are stated against. -/
 def spfIsoOfLRS {R S : Type u} [CommRing R] [CommRing S] [TopologicalSpace R] [TopologicalSpace S]
     {I : Ideal R} {J : Ideal S} [IsAdicRing I] [IsAdicRing J]
     (e : FormalSpectrum.locallyRingedSpaceObj I ≅ FormalSpectrum.locallyRingedSpaceObj J) :
@@ -175,7 +175,9 @@ set_option maxHeartbeats 1000000 in
 -- The statement carries five rings, four ideals and three morphisms, and the proof builds the
 -- transported witness on top of all of them, so elaboration needs room. Every chart is kept at a
 -- *variable* (`m`, `t`, `t'`) for the reason `FormalScheme.basicOpenChartHom_comp_target` records
--- — instantiating first makes the `Hom.mk`/`toLRSHom` unfolding step time out at `isDefEq`.
+-- — instantiating first makes the `FormalScheme.Hom.mk`/`FormalScheme.Hom.toLRSHom` unfolding step
+-- time out at
+-- `isDefEq`.
 set_option synthInstance.maxHeartbeats 1000000 in
 -- Instance search runs in a context with five rings and their ideals of definition, and the
 -- composite open-immersion instances chain three morphisms; the default budget is not enough.
@@ -200,7 +202,7 @@ The three squares it has to check, and where each comes from:
 
 Stated at fixed data, separately from `nonempty_tfTypeCompChart`, because every chart has to stay
 a *variable*: instantiating `m`, `t`, `t'` before the squares are proved makes the
-`Hom.mk`/`toLRSHom` unfolding time out, exactly as
+`FormalScheme.Hom.mk`/`FormalScheme.Hom.toLRSHom` unfolding time out, exactly as
 `AlgebraicGeometry.FormalScheme.basicOpenChartHom_comp_target` records. -/
 theorem nonempty_tfTypeCompChart_aux {f : X ⟶ Y} {g : Y ⟶ Z} {𝒲 : OpenCover Z}
     {R : Type u} [CommRing R] [TopologicalSpace R] {I : Ideal R} [IsAdicRing I] (hIfg : I.FG)

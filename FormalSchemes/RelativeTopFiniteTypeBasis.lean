@@ -130,10 +130,10 @@ namespace FormalScheme
 refinement `Spf A{1/g}^ ⟶ Spf A ⟶ X`.
 
 Stated at a variable `m` and a variable target `f` on purpose: instantiating first and proving the
-composite identity afterwards makes the `Hom.mk`/`toLRSHom` unfolding step below time out at
-`isDefEq`, because nothing pins `Hom.mk`'s implicit formal scheme. At a variable `m` the same step
-is `rfl` on two small explicit terms. This is the tree's standing rule — generalise the constant to
-a variable *before* the equation, never after. -/
+composite identity afterwards makes the `FormalScheme.Hom.mk`/`FormalScheme.Hom.toLRSHom` unfolding
+step below time out at `isDefEq`, because nothing pins `FormalScheme.Hom.mk`'s implicit formal
+scheme. At a variable `m` the same step is `rfl` on two small explicit terms. This is the tree's
+standing rule — generalise the constant to a variable *before* the equation, never after. -/
 theorem basicOpenChartHom_comp (g : A)
     [IsAdicRing (FormalSpectrum.awayCompletionIdeal L g)] {X : FormalScheme.{u}}
     {f : X ⟶ FormalScheme.Spf I} (m : FormalScheme.Spf L ⟶ X)

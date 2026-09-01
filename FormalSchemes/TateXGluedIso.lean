@@ -23,8 +23,8 @@ Fix an adic base `(R, I)` with `I` finitely generated and a Tate parameter `q �
 
 683 deliberately did **not** claim that the datum's glued object `xGlued` is `𝔈_q`. This file
 proves it: `tateXGluedIso : xGlued ≅ tateCurveModel`. It is brick 4a2 of 601's programme
-(issue 704) and, with the fibre-product half (705), it is what lets the general `IsSeparated`
-vocabulary of §10.15 be applied to the Tate curve.
+(issue 704) and, with the fibre-product half (705), it is what lets the general
+`BothChartedFibreDatumXY.IsSeparated` vocabulary of §10.15 be applied to the Tate curve.
 
 ## The route
 

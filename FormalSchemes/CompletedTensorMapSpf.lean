@@ -58,7 +58,8 @@ private theorem locallyRingedSpaceMap_congr {P Q : Type u} [CommRing P] [CommRin
   rfl
 
 /-- Unfolding lemma: `mapSpf` is the morphism of locally ringed spaces induced by the ring-level
-functorial map `map`, with continuity witness `(map_isAdicHom …).le_comap`. -/
+functorial map `CompletedTensorProduct.map`, with continuity witness `(map_isAdicHom …).le_comap`.
+-/
 theorem mapSpf_eq (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') :
     haveI := isAdicRing R I A B hI
     haveI := isAdicRing R I A' B' hI
