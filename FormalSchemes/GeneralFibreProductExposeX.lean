@@ -222,15 +222,6 @@ end AffineChartedFibreDatumX
 
 /-! ### Validation: the two-patch template as a special case -/
 
-/-- On the two-element index type `ULift Bool`, no triple is pairwise distinct; this discharges the
-vacuous geometric cocycle fields of the two-patch `X`-expose datum. -/
-private theorem uliftBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 /-- **The two-chart Tate `X`-expose datum.** Extends `twoPatchFibreProductDatum` with the per-chart
 topology and adic-ring data of the Tate annulus and the (vacuous, since `ULift Bool` has no pairwise
 distinct triple) geometric cocycle fields. This witnesses that `AffineChartedFibreDatumX` is

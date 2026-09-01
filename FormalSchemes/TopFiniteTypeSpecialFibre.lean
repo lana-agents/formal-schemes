@@ -43,8 +43,8 @@ Neither direction is formal, and they cost different hypotheses.
 
 * **Forward** (`IsTopologicallyFiniteType.finiteType_residueRingHom`): reduce a presentation mod
   `L`. The content is that every restricted power series agrees with an honest polynomial modulo
-  the ideal of definition — `AdicCompletion.exists_sub_algebraMap_mem_idealOfDefinition` below,
-  which is `AdicCompletion.ker_evalₐ` (`FormalSchemes.Completion`) at level one read on elements.
+  the ideal of definition — `AdicCompletion.exists_sub_algebraMap_mem_idealOfDefinition`, which is
+  `AdicCompletion.ker_evalₐ` at level one read on elements (both `FormalSchemes.Completion`).
   **No completeness of `A` is used**, and neither is `L = I·A`; only `I ≤ L.comap (algebraMap R A)`,
   to have a map of special fibres at all.
 * **Backward** (`IsTopologicallyFiniteType.of_finiteType_residueRingHom`): lift generators of
@@ -75,8 +75,6 @@ affine-locality, and how far it goes towards conservativity of
 
 ## Main results
 
-* `AdicCompletion.exists_sub_algebraMap_mem_idealOfDefinition`: a completion adds nothing modulo
-  its ideal of definition.
 * `AlgebraicGeometry.quotient_apply_algebraMap_eq_eval₂`: a presentation, read on the special
   fibre.
 * `AlgebraicGeometry.IsTopologicallyFiniteType.finiteType_residueRingHom` and
@@ -95,28 +93,6 @@ affine-locality, and how far it goes towards conservativity of
 noncomputable section
 
 universe u
-
-namespace AdicCompletion
-
-variable {B : Type u} [CommRing B] {K : Ideal B}
-
-/-- **The completion adds nothing modulo the ideal of definition**: every element of
-`AdicCompletion K B` differs from the image of an element of `B` by an element of
-`AdicCompletion.idealOfDefinition K`.
-
-This is `AdicCompletion.ker_evalₐ` at level `1` read as a statement about elements: the level-one
-evaluation `B^ → B ⧸ K` is surjective with kernel the ideal of definition. -/
-theorem exists_sub_algebraMap_mem_idealOfDefinition (hK : K.FG) (x : AdicCompletion K B) :
-    ∃ b : B, x - algebraMap B (AdicCompletion K B) b ∈ idealOfDefinition K := by
-  obtain ⟨b, hb⟩ := Ideal.Quotient.mk_surjective (evalₐ K 1 x)
-  refine ⟨b, ?_⟩
-  have hker : (evalₐ K 1).toRingHom (x - algebraMap B (AdicCompletion K B) b) = 0 := by
-    change evalₐ K 1 (x - algebraMap B (AdicCompletion K B) b) = 0
-    rw [map_sub, AlgHom.commutes, Ideal.Quotient.algebraMap_eq, hb, sub_self]
-  have hmem := RingHom.mem_ker.mpr hker
-  rwa [ker_evalₐ K hK 1, pow_one] at hmem
-
-end AdicCompletion
 
 namespace AlgebraicGeometry
 
@@ -184,7 +160,7 @@ theorem IsTopologicallyFiniteType.finiteType_residueRingHom (hI : I.FG)
   obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective y
   obtain ⟨x, rfl⟩ := hψ a
   obtain ⟨p, hp⟩ := AdicCompletion.exists_sub_algebraMap_mem_idealOfDefinition
-    (K := I.map (algebraMap R (MvPolynomial (Fin n) R))) (hI.map _) x
+    (I.map (algebraMap R (MvPolynomial (Fin n) R))) (hI.map _) x
   refine ⟨MvPolynomial.map (Ideal.Quotient.mk I) p, ?_⟩
   have hstep : Ideal.Quotient.mk L (ψ x) =
       Ideal.Quotient.mk L

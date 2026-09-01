@@ -108,10 +108,16 @@ theorem completionι_comp_toScheme (i : ULift.{u} (Fin 3)) :
 
 /-! ### Non-vacuity -/
 
-/-- Distinct elements of `Fin 3` stay distinct after `ULift.up`. Restated here rather than imported:
-`FormalSchemes/SpecThreeChartCover.lean`'s copy is `private`, and its docstring records that the
-tree
-has eleven copies of this shape, one per file that needs it. -/
+/-- Distinct elements of `Fin 3` stay distinct after `ULift.up`. Restated here rather than
+imported: `FormalSchemes/SpecThreeChartCover.lean`'s copy is `private`, and the public
+`AlgebraicGeometry.ThreeChart.up_ne_up` (`FormalSchemes.ThreeChartDatum`) would take this file's
+import closure from 60 modules to 104.
+
+The justification this docstring used to give — that the tree carries eleven copies of this
+shape, one per file that needs it — no longer holds. That convention was about the `ULift Bool`
+sibling, which is now the single `AlgebraicGeometry.uliftBool_not_pairwise_distinct` in
+`FormalSchemes.Gluing`. The `Fin 3` family here is still three copies under three names, and it
+is the import jump above, not a convention, that keeps this one where it is. -/
 private theorem up_ne_up_of_ne {a b : Fin 3} (h : a ≠ b) : (⟨a⟩ : ULift.{u} (Fin 3)) ≠ ⟨b⟩ :=
   fun hh => h (congrArg ULift.down hh)
 

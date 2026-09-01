@@ -157,15 +157,6 @@ private abbrev spF₀ : spV₀ a ⟶ spU₀ (A := A) :=
 private abbrev spF₁ : spV₁ b ⟶ spU₁ (B := B) :=
   Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap B (Localization.Away b)))
 
-/-- On a two-element index type no triple is pairwise distinct: this discharges the vacuous
-`t'`, `t_fac` and `cocycle` fields of the two-patch glue data. -/
-private theorem spBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 /-- **The two-patch glue datum of two affine schemes**, as a `CategoryTheory.GlueData'` on the
 index type `ULift Bool`: the patches are `Spec A` and `Spec B`, the overlaps are the basic opens
 `Spec A_a` and `Spec B_b`, the inclusions are `Spec` of the localizations and the transition is
@@ -202,15 +193,15 @@ def specTwoPatchGlueData' : CategoryTheory.GlueData' LocallyRingedSpace.{u} wher
     | ⟨true⟩, ⟨false⟩, _ => (specGlueIso a b θ).inv
     | ⟨false⟩, ⟨false⟩, h => (h rfl).elim
     | ⟨true⟩, ⟨true⟩, h => (h rfl).elim
-  t' := fun _ _ _ hij hik hjk => (spBool_not_pairwise_distinct hij hik hjk).elim
-  t_fac := fun _ _ _ hij hik hjk => (spBool_not_pairwise_distinct hij hik hjk).elim
+  t' := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  t_fac := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
   t_inv := by
     rintro ⟨_ | _⟩ ⟨_ | _⟩ h
     · exact absurd rfl h
     · exact (specGlueIso a b θ).hom_inv_id
     · exact (specGlueIso a b θ).inv_hom_id
     · exact absurd rfl h
-  cocycle := fun _ _ _ hij hik hjk => (spBool_not_pairwise_distinct hij hik hjk).elim
+  cocycle := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
 
 /-- **The two-patch scheme glue datum as a `LocallyRingedSpace.GlueData`**: the full
 `CategoryTheory.GlueData` produced by `GlueData.ofGlueData'`, together with the open-immersion

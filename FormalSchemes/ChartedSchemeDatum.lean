@@ -252,18 +252,6 @@ variable {A B : Type u} [CommRing A] [CommRing B] (I : Ideal A) (a : A) (J : Ide
   (hθ : (I.map (algebraMap A (Localization.Away a))).map θ.toRingHom =
     J.map (algebraMap B (Localization.Away b)))
 
-/-- On a two-element index type no triple is pairwise distinct. Public because the completion-side
-twin of `ChartedSchemeDatum.ofTwoPatch` — `AlgebraicGeometry.ChartedCompletionDatum.ofTwoPatch`
-(`FormalSchemes.ChartedCompletionDatum`) — discharges three more vacuous fields with it, and
-restating it there would have made a twelfth copy of a shape this tree already carries eleven of
-(see `FormalSchemes.SpecThreeChartCompletion`'s `up_ne_up_of_ne` and its docstring). -/
-theorem bool_not_pairwise_distinct {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 /-- **The two-patch input, as a `ChartedSchemeDatum`.** The charts are `Spec A` and `Spec B`, the
 ideals are `I ⊆ A` and `J ⊆ B` — in different rings, and unrelated to each other, which is the
 point of this datum shape — and the transition is the two-patch line's own `θ`. The three geometric
@@ -302,9 +290,9 @@ def ChartedSchemeDatum.ofTwoPatch : ChartedSchemeDatum.{u} where
     · exact hθ
     · exact FormalSpectrum.isAdicHom_ringEquiv_symm θ hθ
     · exact absurd rfl h
-  t' := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
-  t_fac := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
-  cocycle := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
+  t' := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  t_fac := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  cocycle := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
 
 /-- The `A`-side ideal of the two-patch datum is `I`, in `A`. -/
 theorem ChartedSchemeDatum.ofTwoPatch_K_false :

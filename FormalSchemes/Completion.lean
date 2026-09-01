@@ -102,6 +102,21 @@ theorem ker_evalₐ (hI : I.FG) (n : ℕ) :
       AdicCompletion.pow_smul_top_eq_ker_eval hI] at hx
     exact hx
 
+/-- **Density of `R` in its completion**: every element of `R^` differs from the image of an
+element of `R` by an element of the ideal of definition `I·R^`.
+
+This is `ker_evalₐ` at level `1` read as a statement about elements: the level-one evaluation
+`R^ → R ⧸ I` is surjective with kernel the ideal of definition. -/
+theorem exists_sub_algebraMap_mem_idealOfDefinition (hI : I.FG) (x : AdicCompletion I R) :
+    ∃ r : R, x - algebraMap R (AdicCompletion I R) r ∈ idealOfDefinition I := by
+  obtain ⟨r, hr⟩ := Ideal.Quotient.mk_surjective (evalₐ I 1 x)
+  refine ⟨r, ?_⟩
+  have hker : (evalₐ I 1).toRingHom (x - algebraMap R (AdicCompletion I R) r) = 0 := by
+    change evalₐ I 1 (x - algebraMap R (AdicCompletion I R) r) = 0
+    rw [map_sub, AlgHom.commutes, Ideal.Quotient.algebraMap_eq, hr, sub_self]
+  have hmem := RingHom.mem_ker.mpr hker
+  rwa [ker_evalₐ I hI 1, pow_one] at hmem
+
 /-- **Completion does not change the infinitesimal thickenings**: the `n`-th thickening of the
 completion `R^` is the `n`-th thickening `R ⧸ I ^ n` of `R` itself. -/
 def quotientEquivPow (hI : I.FG) (n : ℕ) :

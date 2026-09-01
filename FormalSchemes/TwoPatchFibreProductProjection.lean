@@ -63,15 +63,6 @@ variable {A B A' B' : Type u}
 variable [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 variable [CommRing A'] [CommRing B'] [Algebra R A'] [Algebra R B']
 
-/-- An `R`-algebra homomorphism carries the extended ideal of definition `I·A` onto `I·A'`; the
-topology-free form of `algHom_isAdicHom_map`, needed to state the base map `Spf g` with raw
-`locallyRingedSpaceMap`. -/
-theorem algHom_map_isAdicHom (f : A →ₐ[R] A') :
-    IsAdicHom (I.map (algebraMap R A)) (I.map (algebraMap R A')) f.toRingHom := by
-  unfold IsAdicHom
-  rw [Ideal.map_map,
-    show f.toRingHom.comp (algebraMap R A) = algebraMap R A' from AlgHom.comp_algebraMap f]
-
 /-- **Naturality of the second projection under `mapSpf`, in raw `locallyRingedSpaceMap` form.**
 The functorial map `mapSpf hI f g : Spf(A' ⊗̂_R B') ⟶ Spf(A ⊗̂_R B)` composed with the second
 projection `Spf(inr) : Spf(A ⊗̂_R B) ⟶ Spf B` equals the second projection of the source chart
@@ -86,7 +77,7 @@ theorem mapSpf_comp_inrMap (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B')
       FormalSpectrum.locallyRingedSpaceMap (I.map (algebraMap R B'))
           (idealOfDefinition R I A' B') (inr R I A' B').toRingHom inr_isAdicHom.le_comap ≫
         FormalSpectrum.locallyRingedSpaceMap (I.map (algebraMap R B)) (I.map (algebraMap R B'))
-          g.toRingHom (algHom_map_isAdicHom g).le_comap := by
+          g.toRingHom (algHom_mapIdeal_isAdicHom g).le_comap := by
   haveI := isAdicRing R I A B hI
   haveI := isAdicRing R I A' B' hI
   simp only [mapSpf, IsAdicHom.spfMap]
@@ -98,8 +89,8 @@ theorem mapSpf_comp_inrMap (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B')
     ← FormalSpectrum.locallyRingedSpaceMap_comp (I := I.map (algebraMap R B))
       (J := I.map (algebraMap R B')) (K := idealOfDefinition R I A' B')
       (φ := g.toRingHom) (ψ := (inr R I A' B').toRingHom)
-      (hIJ := (algHom_map_isAdicHom g).le_comap) (hJK := inr_isAdicHom.le_comap)
-      (hIK := ((algHom_map_isAdicHom g).comp inr_isAdicHom).le_comap)]
+      (hIJ := (algHom_mapIdeal_isAdicHom g).le_comap) (hJK := inr_isAdicHom.le_comap)
+      (hIK := ((algHom_mapIdeal_isAdicHom g).comp inr_isAdicHom).le_comap)]
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (RingHom.ext fun b => map_inr hI f g b)
 

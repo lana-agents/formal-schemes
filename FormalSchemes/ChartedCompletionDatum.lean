@@ -543,7 +543,7 @@ variable {A B : Type u} [CommRing A] [CommRing B] (I : Ideal A) (hI : I.FG) (a :
 `AlgebraicGeometry.ChartedSchemeDatum.ofTwoPatch`, field for field, with the four extra fields a
 completion datum carries: `hK` from the two finite-generation hypotheses, and `σ`, `hσθ`, `hσc`
 vacuously, since no triple of `ULift Bool`-indices is pairwise distinct
-(`AlgebraicGeometry.bool_not_pairwise_distinct`).
+(`AlgebraicGeometry.uliftBool_not_pairwise_distinct`, `FormalSchemes.Gluing`).
 
 The ideals are `I : Ideal A` and `J : Ideal B`, **in different rings and unrelated to each other**,
 which is what this datum shape exists for and what
@@ -581,9 +581,9 @@ def ChartedCompletionDatum.ofTwoPatch : ChartedCompletionDatum.{u} where
     · exact hθ
     · exact FormalSpectrum.isAdicHom_ringEquiv_symm θ hθ
     · exact absurd rfl h
-  σ := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
-  hσθ := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
-  hσc := fun _ _ _ hij hik hjk => (bool_not_pairwise_distinct hij hik hjk).elim
+  σ := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  hσθ := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
+  hσc := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim
 
 /-- The `A`-side ideal of the two-patch completion datum is `I`, in `A`. -/
 theorem ChartedCompletionDatum.ofTwoPatch_K_false :

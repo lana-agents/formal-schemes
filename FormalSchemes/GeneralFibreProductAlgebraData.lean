@@ -211,15 +211,6 @@ end AffineChartedFibreDatum
 
 /-! ### Validation: the two-patch template through the smart constructor -/
 
-/-- On the two-element index type `ULift Bool`, no triple is pairwise distinct; this discharges the
-vacuous algebra data `σ`, `hστ`, `hσc` for the two-patch datum built via `ofAlgebraData`. -/
-private theorem uliftBool_not_pairwise_distinct' {i j k : ULift.{u} Bool}
-    (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) : False := by
-  obtain ⟨i⟩ := i
-  obtain ⟨j⟩ := j
-  obtain ⟨k⟩ := k
-  cases i <;> cases j <;> cases k <;> simp_all
-
 /-- **The two-chart Tate fibre product through `ofAlgebraData`.** Re-exhibits
 `twoPatchFibreProductDatum` via the smart constructor, reusing the same chart/overlap/transition
 data. Because no triple of `ULift Bool` indices is pairwise distinct, the double-overlap data `σ`,
@@ -240,8 +231,8 @@ def twoPatchFibreProductDatumOfAlg (R : Type u) [CommRing R] (I : Ideal R) (q : 
       · rfl
       · exact ((annulusFibreChartTransitionAlg R I q hI).symm_symm).symm
       · exact absurd rfl h)
-    (σ := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct' hij hik hjk).elim)
-    (hστ := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct' hij hik hjk).elim)
-    (hσc := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct' hij hik hjk).elim)
+    (σ := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim)
+    (hστ := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim)
+    (hσc := fun _ _ _ hij hik hjk => (uliftBool_not_pairwise_distinct hij hik hjk).elim)
 
 end AlgebraicGeometry
