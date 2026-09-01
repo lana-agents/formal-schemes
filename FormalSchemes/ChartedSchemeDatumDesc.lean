@@ -25,8 +25,8 @@ Discarding those `eqToHom`s on ranges is
 exactly this `CategoryTheory.GlueData.ofGlueData'` bookkeeping. Until issue 1399 it was stated
 five times in five files, and this one reached it through `FormalSchemes.SpecTwoPatchNonAffine`, at
 a cost this paragraph priced at **+6** modules of import closure, 46 to 52 — the only thing this
-file ever took from that module. The move refunds exactly that: the import is now the leaf, and the
-closure is back to **46**.
+file ever took from that module. The move refunds five of the six: the import is now the leaf,
+which is itself the sixth module, so the closure goes 52 to **47**.
 
 ## The compatibility hypothesis, and why it is stated only off the diagonal
 

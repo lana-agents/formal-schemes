@@ -28,11 +28,16 @@ adic-ring or formal-spectrum module — so the file sits directly on Mathlib, as
 `FormalSchemes/PullbackRangeLRS.lean` and `FormalSchemes/LocallyRingedSpaceHomExt.lean` already do
 for their own general facts.
 
-Three modules — `TateChainGlue`, `SpecTwoPatchNonAffine`, `CompletionNestedBasicOpen` — are enough
-to put this one in all sixteen citing files' closures; they are the minimal antichain among them.
-Two further files, `ChartedSchemeDatumDesc` and `CompletionTwoPatchDoubled`, imported
-`SpecTwoPatchNonAffine` *only* for the copy that used to live there, and now import what they
-actually use: their closures drop from 52 to 46 and from 48 to 38.
+Five modules import this one. Three of them — `TateChainGlue`, `SpecTwoPatchNonAffine`,
+`CompletionNestedBasicOpen` — are the minimal antichain among the sixteen citing files *as the tree
+stood before issue 1399*. The other two, `ChartedSchemeDatumDesc` and `CompletionTwoPatchDoubled`,
+imported `SpecTwoPatchNonAffine` *only* for the copy that used to live there; they now import what
+they actually use, which is exactly what removed their route to this module, so they take it
+directly. Counting each file itself, their closures fall from 52 to **47** and from 48 to **39**:
+six and ten modules drop out and this one is added back. `ChartedSchemeDatumChartOverlap`, which
+does use a declaration of `SpecTwoPatchNonAffine` and had been reaching it through
+`ChartedSchemeDatumDesc`, takes that import directly and goes 53 to 54 — the same +1, with nothing
+to set against it.
 -/
 
 open CategoryTheory

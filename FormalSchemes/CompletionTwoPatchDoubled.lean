@@ -21,7 +21,7 @@ of `FormalSchemes/SpecTwoPatchNonAffine.lean`, and they are built from the same 
 stated generally on the argument that every `GlueData.ofGlueData'` consumer meets the same
 `eqToHom`. Until issue 1399 both bricks arrived here through `SpecTwoPatchNonAffine`, whose own
 declarations this file never used; importing what it actually uses instead takes its closure from
-**48** to **38**.
+**48** to **39** — ten modules drop out and the leaf adds one back, counting this file itself.
 
 ## The two steps
 

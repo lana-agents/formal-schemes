@@ -53,7 +53,6 @@ variable {A : JX → Type u} {B : JY → Type u}
 variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
 variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
 
-
 /-- **The underlying-space range of the dispatched product-overlap immersion.** For distinct
 product-index charts `p`, `p'` of `X ×_{Spf R} Y`, the range of the overlap immersion
 `bothAlgDataF hI gX gY p p' h` in the chart `Spf(A_{p.1} ⊗̂_R B_{p.2})` is the intersection of the
