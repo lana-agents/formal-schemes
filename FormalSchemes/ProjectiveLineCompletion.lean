@@ -72,8 +72,10 @@ Three statements say this one is not degenerate:
   There is no `Proj` on this tree to compare against, and no global-sections computation is made
   here. What is established is a statement about the *datum*: it is a `ChartedCompletionDatum`
   whose two chart ideals are independent and one of which is `⊤`.
-* Nothing promotes `projectiveLine` to `AlgebraicGeometry.Scheme`;
-  `FormalSchemes.ChartedCompletionToScheme` records that nothing does this for any datum yet.
+* Nothing **here** promotes `projectiveLine` to `AlgebraicGeometry.Scheme`, but
+  `FormalSchemes.ChartedSchemeDatumScheme` does it for every datum, so
+  `(projectiveLineDatum R).specScheme` is already a scheme on this carrier by `rfl` and only the
+  abbreviation at this name is missing.
 * The triple-overlap fields are vacuous, as they are for every two-chart datum. The instance that
   exercises them is `AlgebraicGeometry.SpecThreeChartCover.completionDatum`
   (`FormalSchemes.SpecThreeChartCompletion`), whose chart ideals all come from one `(A, I)` — so

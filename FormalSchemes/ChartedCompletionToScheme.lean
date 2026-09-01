@@ -45,7 +45,10 @@ completion datum through `toChartedSchemeDatum`.
 * No closed-embedding or support statement for the arbitrary-index morphism. The two-patch line has
   those (`FormalSchemes.CompletionTwoPatchClosed`, `FormalSchemes.CompletionTwoPatchSupport`) and
   generalising them is separate work.
-* Nothing promotes `specGlued` to `AlgebraicGeometry.Scheme`.
+* Nothing **here** promotes `specGlued` to `AlgebraicGeometry.Scheme`;
+  `FormalSchemes.ChartedSchemeDatumScheme` does, as a separate carve, and retypes
+  `toScheme` there as `AlgebraicGeometry.ChartedCompletionDatum.toSchemeHom`. That promotion
+  is `rfl` on the underlying locally ringed space, so nothing in this file has to move.
 
 ## The comparison with `AffineChartedFibreDatumX`, measured
 
