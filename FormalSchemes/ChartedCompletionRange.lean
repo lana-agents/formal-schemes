@@ -42,26 +42,30 @@ and a witness in which every term contributes cannot show that a term ever drops
 collapse is also visible one level down — `AlgebraicGeometry.isEmpty_projectiveLine_chart_true`
 already says the second completion chart is empty as a space.
 
-## What is *not* proved
+## What is *not* proved *here*
 
 * **No chart preimage, and hence no closedness.** The two-patch line continues
   `ι₀⁻¹(range) = V(I)` (`FormalSchemes/CompletionTwoPatchSupport.lean`) and then "the image is
-  closed" (`FormalSchemes/CompletionTwoPatchClosed.lean`). Both are open at an arbitrary index.
-  The preimage is where `hθ` and the glue datum's `glue_condition` are spent — that file's "Why
-  `hθ` had to appear here and nowhere earlier" section is the map — and closedness is downstream of
-  it. Nothing here should be read as progress on either.
-* **No properness statement at the arbitrary index.** `CompletionTwoPatchRange.lean` pairs its
-  range computation with `notMem_range_completionTwoPatchToScheme_base`, on the ground that an
-  equality of sets is compatible with the image being *everything*. The two-patch proof of that
-  runs through `specTwoPatchι₀_base_notMem_range_specTwoPatchι₁`, and the arbitrary-index datum has
-  **no** analogue: `git grep -n "notMem_range" -- 'FormalSchemes/ChartedSchemeDatum*.lean'
-  'FormalSchemes/ChartedCompletion*.lean'` returns nothing, and neither does a search for a range
-  computation of `ChartedSchemeDatum.specι`. Producing one is a separate brick and is not attempted
-  here; what the projective-line witness gives instead is that the union *collapses*, which is a
-  statement about the shape of the image rather than about its complement.
+  closed" (`FormalSchemes/CompletionTwoPatchClosed.lean`). Neither is in this file, and the
+  preimage is where `hθ` and the glue datum's `glue_condition` are spent — that file's "Why `hθ`
+  had to appear here and nowhere earlier" section is the map. **Both are now available one and two
+  files downstream**, as `AlgebraicGeometry.ChartedCompletionDatum.preimage_range_toScheme_base`
+  (`FormalSchemes.ChartedCompletionSupport`) and
+  `..isClosed_range_toScheme_base` (`FormalSchemes.ChartedCompletionClosed`); nothing in *this*
+  file's proofs is progress on either, which is the point of saying so.
+* **No properness statement.** `CompletionTwoPatchRange.lean` pairs its range computation with
+  `notMem_range_completionTwoPatchToScheme_base`, on the ground that an equality of sets is
+  compatible with the image being *everything*, and the proof of that runs through
+  `specTwoPatchι₀_base_notMem_range_specTwoPatchι₁`. What the projective-line witness below gives
+  instead is that the union *collapses*, which is a statement about the shape of the image rather
+  than about its complement. The arbitrary-index twin of that `notMem_range` — the brick this
+  file recorded as missing — is
+  `AlgebraicGeometry.ChartedSchemeDatum.specι_base_notMem_range_specι`
+  (`FormalSchemes.ChartedSchemeDatumChartOverlap`), and the properness statement it yields is
+  `..ChartedCompletionDatum.notMem_range_toScheme_base`.
 * No closed embedding. `FormalSchemes/CompletionTwoPatchClosed.lean` prices that even two patches
   down, where it needs injectivity of the base map and hence the converse of
-  `FormalSchemes/CompletionTwoPatchDoubled.lean`'s overlap analysis.
+  `FormalSchemes/CompletionTwoPatchDoubled.lean`'s overlap analysis. Still open at both indices.
 
 ## References
 
