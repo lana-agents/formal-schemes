@@ -80,6 +80,10 @@ all of the projective line as soon as `R` is nontrivial.
   `AlgebraicGeometry.range_projectiveLineCompletionToScheme_base_ne_univ`: the witness — the
   completion of the projective line at the origin of its first chart misses the second chart
   entirely.
+* `AlgebraicGeometry.preimage_range_projectiveLine_specι` and
+  `AlgebraicGeometry.projectiveLine_specι_false_base_notMem_range`: the same picture one layer
+  down, at the **ambient** projective line — its two charts meet exactly over `D(X)`, so a prime
+  containing `X` is outside the second chart altogether.
 
 ## References
 
@@ -235,6 +239,41 @@ theorem preimage_range_projectiveLineCompletionToScheme_base_false :
         Set.range ⇑(projectiveLineCompletionToScheme R).base =
       PrimeSpectrum.zeroLocus ((Ideal.span {(X : R[X])} : Ideal R[X]) : Set R[X]) :=
   (projectiveLineDatum R).preimage_range_toScheme_base ⟨false⟩
+
+/-! #### The ambient scheme, one layer below the completion -/
+
+/-- **The two charts of the projective line meet exactly over `D(X)`.** The part of the first chart
+`Spec R[X]` that lands in the second is the complement of the origin, which is what the projective
+line is glued along.
+
+This is `AlgebraicGeometry.ChartedSchemeDatum.preimage_range_specι` at the sharpest datum on the
+tree, with `AlgebraicGeometry.projectiveLineDatum_g_false_true` naming the away element, and it is
+a statement about the **ambient** scheme rather than about its completion — one
+layer below the rest of this section. It lives here because this is the first file that imports
+both `FormalSchemes.ChartedSchemeDatumChartOverlap` and
+`FormalSchemes.ProjectiveLineCompletion`; putting it in either of those would drag the other into
+its import closure for two witnesses. -/
+theorem preimage_range_projectiveLine_specι :
+    ⇑((projectiveLineDatum R).specι ⟨false⟩).base ⁻¹'
+        Set.range ⇑((projectiveLineDatum R).specι ⟨true⟩).base =
+      (PrimeSpectrum.basicOpen (X : R[X]) : Set (PrimeSpectrum R[X])) := by
+  rw [← projectiveLineDatum_g_false_true R]
+  exact (projectiveLineDatum R).preimage_range_specι ⟨false⟩ ⟨true⟩ cgcNe
+
+/-- **The origin of the first chart of the projective line is not in the second chart.** A prime of
+`R[X]` containing `X` lies outside `D(X)`, hence outside the overlap, hence its image in
+`projectiveLine R` is not reached by the second chart at all.
+
+The point it produces is the one the completion is supported at — `K ⟨false⟩` is
+`Ideal.span {X}` — so this is the ambient-scheme reason the support statement above cannot leak
+into the second chart. -/
+theorem projectiveLine_specι_false_base_notMem_range (p : PrimeSpectrum R[X])
+    (hp : (X : R[X]) ∈ p.asIdeal) :
+    ((projectiveLineDatum R).specι ⟨false⟩).base p ∉
+      Set.range ⇑((projectiveLineDatum R).specι ⟨true⟩).base := by
+  intro hmem
+  refine (PrimeSpectrum.mem_basicOpen (X : R[X]) p).mp ?_ hp
+  exact (preimage_range_projectiveLine_specι R).subset hmem
 
 /-- **The image is proper.** As soon as `R` is nontrivial the second chart of the projective line
 has points, and by `preimage_range_projectiveLineCompletionToScheme_base_true` none of them is in
