@@ -108,18 +108,14 @@ theorem completionι_comp_toScheme (i : ULift.{u} (Fin 3)) :
 
 /-! ### Non-vacuity -/
 
-/-- Distinct elements of `Fin 3` stay distinct after `ULift.up`. Restated here rather than
-imported: `FormalSchemes/SpecThreeChartCover.lean`'s copy is `private`, and the public
-`AlgebraicGeometry.ThreeChart.up_ne_up` (`FormalSchemes.ThreeChartDatum`) would take this file's
-import closure from 60 modules to 104.
+/-! Distinct elements of `Fin 3` stay distinct after `ULift.up` because `ULift.up` is injective,
+which is Mathlib's `ULift.up_injective` (`Mathlib.Data.ULift`); the triple below uses
+`ULift.up_injective.ne (by decide)`.
 
-The justification this docstring used to give — that the tree carries eleven copies of this
-shape, one per file that needs it — no longer holds. That convention was about the `ULift Bool`
-sibling, which is now the single `AlgebraicGeometry.uliftBool_not_pairwise_distinct` in
-`FormalSchemes.Gluing`. The `Fin 3` family here is still three copies under three names, and it
-is the import jump above, not a convention, that keeps this one where it is. -/
-private theorem up_ne_up_of_ne {a b : Fin 3} (h : a ≠ b) : (⟨a⟩ : ULift.{u} (Fin 3)) ≠ ⟨b⟩ :=
-  fun hh => h (congrArg ULift.down hh)
+This file used to restate that fact privately, justified by an import jump: the project's public
+restatement in `FormalSchemes.ThreeChartDatum` would have taken this file's closure from 60
+modules to 104. The measurement was right and the alternative it priced was wrong —
+`Mathlib.Data.ULift` is already in this file's closure, so the upstream lemma costs nothing. -/
 
 /-- **Non-vacuity of the completion side's triple-overlap field, in general.** At a pairwise
 distinct triple the glue datum's `t'` is the derived transition of
@@ -133,10 +129,10 @@ theorem completionDatum_t'_eq (i j k : ULift.{u} (Fin 3)) (hij : i ≠ j) (hik :
 /-- **Non-vacuity, at the inhabited triple `0, 1, 2`.** This is the statement the two-patch
 completion cannot make: the triple exists, so the field is genuinely evaluated. -/
 theorem completionDatum_t'_zero_one_two :
-    (completionDatum I hI f).completionGlueData'.t' ⟨0⟩ ⟨1⟩ ⟨2⟩ (up_ne_up_of_ne (by decide))
-        (up_ne_up_of_ne (by decide)) (up_ne_up_of_ne (by decide)) =
-      (completionDatum I hI f).tripleTransition ⟨0⟩ ⟨1⟩ ⟨2⟩ (up_ne_up_of_ne (by decide))
-        (up_ne_up_of_ne (by decide)) (up_ne_up_of_ne (by decide)) :=
+    (completionDatum I hI f).completionGlueData'.t' ⟨0⟩ ⟨1⟩ ⟨2⟩ (ULift.up_injective.ne (by decide))
+        (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide)) =
+      (completionDatum I hI f).tripleTransition ⟨0⟩ ⟨1⟩ ⟨2⟩ (ULift.up_injective.ne (by decide))
+        (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide)) :=
   rfl
 
 /-- `(7 : ℤ)` generates a finitely generated ideal, by exhibiting the generating finset. -/
