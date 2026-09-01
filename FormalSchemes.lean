@@ -90,6 +90,7 @@ import FormalSchemes.ChartedDatumTopFiniteType
 import FormalSchemes.ChartedSchemeDatum
 import FormalSchemes.ChartedSchemeDatumAlgebraData
 import FormalSchemes.ChartedSchemeDatumDesc
+import FormalSchemes.ChartedSchemeDatumOverlap
 import FormalSchemes.ChartedSchemeDatumScheme
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionAffine
