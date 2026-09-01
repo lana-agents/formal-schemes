@@ -42,8 +42,11 @@ hypothesis on `X` either. So:
   ```lean
   Function.Surjective (restrictToThickeningsLRS I (locallyRingedSpaceObj L))
   ```
-  and that is the statement a successor should attack. Nothing else in EGA I 10.6.7's affine step
-  is missing.
+  and nothing else in EGA I 10.6.7's affine step is missing. **That statement is now proved**, for
+  `L` finitely generated, as `FormalSpectrum.surjective_restrictToThickeningsLRS_spf`
+  (`FormalSchemes/SpfTargetSurjective.lean`); the unconditional bijection and `∃!` are
+  `FormalSpectrum.thickeningRestrictionEquivSpfOfFG` and
+  `FormalSpectrum.existsUnique_hom_thickeningMap_spf` in the same file.
 * `FormalSpectrum.surjective_restrictToThickeningsLRS` — the same `Function.Surjective` statement is
   what the landed `Spec`-cover theorem supplies, so the split above is a factorisation of
   `thickeningRestrictionEquivLRS` and not a re-phrasing: injectivity plus that surjectivity rebuild
@@ -83,16 +86,28 @@ successor can grind out: it is that the two `Equiv`s have different right-hand s
 difference is exactly the hypothesis that is unavailable. Both signatures are `#check`ed in the
 `Crux` section below, so the comparison can be read off the tree instead of off this docstring.
 
-`FormalSpectrum.existsUnique_hom_thickeningMap_spf_of_continuous` below is what *does* survive, and
-it is weaker than its name suggests. Its family is `FormalSpectrum.spfTargetFamily`, which is
-**defined** as the restriction of `Spf ψ`, so the theorem presupposes not merely a continuity
+The negative answer stands — the two `Equiv`s really do have different right-hand sides — but it is
+**not** the obstruction it was taken to be: `FormalSchemes/SpfTargetSurjective.lean` proves the
+affine case without substituting `AdicRingCat.spfHomEquiv` anywhere, by route 2 below. See the
+correction to that route.
+
+`FormalSpectrum.existsUnique_hom_thickeningMap_spf_of_continuous` below is what survives *of the
+`AdicRingCat.spfHomEquiv` route*, and it is weaker than its name suggests. Its family is
+`FormalSpectrum.spfTargetFamily`, which is **defined** as the restriction of `Spf ψ`, so the
+theorem presupposes not merely a continuity
 witness but a `ψ` whose induced family *is* the given one — strictly more than continuity, and
 producing such a `ψ` from a bare family is route 1 below, which does not invert. It is stated to
 make the shape of the missing input explicit, not to reduce the gap to continuity.
+`FormalSpectrum.existsUnique_hom_thickeningMap_spf`
+(`FormalSchemes/SpfTargetSurjective.lean`) is the unconditional statement and needs neither a `ψ`
+nor a continuity witness; a successor should cite that one.
 
-## Two routes that were considered and are recorded as **unformalised**
+## Two routes that were considered, and the correction to the second
 
-Neither is cited by any proof here, and neither should be cited as a result.
+Neither is cited by any proof *in this file*. **Route 2 is the one that closed the problem**, in
+`FormalSchemes/SpfTargetSurjective.lean`, and the paragraph below stating that it inherits issue
+62k's open problem was wrong; the correction is spelled out there and repeated at the end of the
+route.
 
 1. *Compose with `ι : Spf L ⟶ Spec C` and use the `Spec`-target theorem.* This produces a
    `g : Spf R ⟶ Spec C` and a `ψ : C →+* R`, but it cannot be inverted, because `ι` is not
@@ -101,9 +116,14 @@ Neither is cited by any proof here, and neither should be cited as a result.
    than its composite with `ι`. **Not checked, and not used.**
 2. *Recover continuity from the family.* The base map of the family lands in `V(L)`, which on the
    ring side gives only `L.map ψ ≤ (I).radical` — a containment up to radical, not the equality
-   `L ≤ I.comap ψ` that `spfHomEquiv` wants. That is the same "adic only up to cofinality" gap that
-   issue 62k (`FormalSchemes/AdicCofinalOpenImmersion.lean`) is about, and closing it here would
-   inherit that row's open problem. **Not checked, and not used.**
+   `L ≤ I.comap ψ` that `AdicRingCat.spfHomEquiv` wants. **This route works, and the sentence that
+   used to follow here — that it inherits issue 62k's open problem — was false.** Issue 62k
+   (`FormalSchemes/AdicCofinalOpenImmersion.lean`) is open in its *openness* half, `J ≤ √(I · B)`;
+   what this route needs is the *nilpotence* half, `L.map ψ ≤ (I).radical`, which #418 proved
+   unconditionally as `FormalSpectrum.map_le_radical_of_hom`. With `L` finitely generated the
+   radical containment is `L ^ k ≤ I.comap ψ`, and the resulting `Spf (L ^ k) ⟶ ` slack is absorbed
+   by `FormalSpectrum.cofinalSpfIso`, which is a theorem and not a gap. See
+   `FormalSchemes/SpfTargetSurjective.lean`.
 
 A third route, which this file also does not take, is the only one that avoids a ring homomorphism
 entirely: build the morphism `Spf R ⟶ Spf L` directly out of its sheaf map, using that sections of
@@ -131,10 +151,14 @@ two `…Ambient` declarations that go through them — are actually blocked.
   by `locallyRingedSpaceObj (J i)`. `chartFamily_step`'s proof mentions neither `B` nor `e`.
 * `chartThickeningFamily`: **restate** at `ThickeningFamilyLRS`, which *equals* `ThickeningFamily`
   at an affine target (`thickeningFamily_eq_thickeningFamilyLRS`).
-* `chartSpfHom` and `thickeningMap_comp_chartSpfHom`: **blocked** — this is the crux above.
+* `chartSpfHom` and `thickeningMap_comp_chartSpfHom`: were **blocked** on the crux above. They are
+  no longer blocked — `FormalSpectrum.thickeningRestrictionEquivSpfOfFG`
+  (`FormalSchemes/SpfTargetSurjective.lean`) is exactly the `Equiv` whose `.symm` `chartSpfHom` is
+  built from, at a formal-affine target. **The `Spf`-shaped analogues have not been written**, so
+  this is an unblocking, not a delivery.
 * `chartSpfHom_uniq`: **available now**, from `injective_restrictToThickeningsLRS`.
-* `chartSpfHomAmbient` and `thickeningMap_comp_chartSpfHomAmbient`: blocked only *through*
-  `chartSpfHom`; their own proofs are target-agnostic.
+* `chartSpfHomAmbient` and `thickeningMap_comp_chartSpfHomAmbient`: were blocked only *through*
+  `chartSpfHom`; their own proofs are target-agnostic, so they are unblocked with it.
 * The whole `Witness` section: needs a new witness with a genuine formal-affine cover (goal 4).
 
 ## Non-vacuity

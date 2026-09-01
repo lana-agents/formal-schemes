@@ -289,6 +289,7 @@ import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.Spf
 import FormalSchemes.SpfBasicOpenCover
+import FormalSchemes.SpfDiscrete
 import FormalSchemes.SpfEquivalence
 import FormalSchemes.SpfFullyFaithful
 import FormalSchemes.SpfFunctorial
@@ -312,6 +313,7 @@ import FormalSchemes.SpfMap
 import FormalSchemes.SpfRingEquivIso
 import FormalSchemes.SpfSectionsNontrivial
 import FormalSchemes.SpfTargetColimit
+import FormalSchemes.SpfTargetSurjective
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.TargetBasicRefinement
