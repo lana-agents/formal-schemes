@@ -204,9 +204,9 @@ set_option backward.isDefEq.respectTransparency false in
 /-- **The `A`-side transition-then-inclusion of the two-patch glue datum is `Spec θ.symm` followed
 by the `B`-side localization chart**, up to the `CategoryTheory.GlueData.ofGlueData'` `eqToHom`.
 
-The two inner `eqToHom`s that `ofGlueData'` inserts — one closing `t ⟨false⟩ ⟨true⟩`, one opening
-`f ⟨true⟩ ⟨false⟩` — are mutually inverse and cancel, and what is left in front is exactly the
-`eqToHom` that also prefixes `f ⟨false⟩ ⟨true⟩`. That is what lets the two cancel against each
+The two inner `eqToHom`s that `GlueData.ofGlueData'` inserts — one closing `t ⟨false⟩ ⟨true⟩`, one
+opening `f ⟨true⟩ ⟨false⟩` — are mutually inverse and cancel, and what is left in front is exactly
+the `eqToHom` that also prefixes `f ⟨false⟩ ⟨true⟩`. That is what lets the two cancel against each
 other in `preimage_image_specTwoPatchι₁`, where they cannot be discarded one at a time. The
 arbitrary-index form is `AlgebraicGeometry.ChartedSchemeDatum.specLRSGlueData_t_comp_f`. -/
 theorem specTwoPatchLRSGlueData_t_comp_f_false_true :
@@ -291,9 +291,10 @@ the `B`-chart needs, and `FormalSchemes.CompletionTwoPatchSupport` spends `hθ` 
 middle preimage. The arbitrary-index form is
 `AlgebraicGeometry.ChartedSchemeDatum.preimage_image_specι`.
 
-Unlike `preimage_range_specTwoPatchι₁`, this one cannot discard the `ofGlueData'` `eqToHom` with
-`LocallyRingedSpace.range_eqToHom_comp_base`: an isomorphism is invisible to a range but not to the
-image of a named subset. The two occurrences cancel against each other instead, which is what
+Unlike `preimage_range_specTwoPatchι₁`, this one cannot discard the `GlueData.ofGlueData'`
+`eqToHom` with `LocallyRingedSpace.range_eqToHom_comp_base`: an isomorphism is invisible to a range
+but not to the image of a named subset. The two occurrences cancel against each other instead,
+which is what
 `specTwoPatchLRSGlueData_t_comp_f_false_true` and
 `LocallyRingedSpace.image_preimage_eqToHom_comp_base` are for.
 
