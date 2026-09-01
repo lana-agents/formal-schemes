@@ -47,8 +47,8 @@ trap `FormalSchemes.ChartedSchemeDatumScheme` documents, one layer out.
 
 * `AlgebraicGeometry.SpecThreeChartCover.gluedScheme`: the three-chart glued object as a scheme,
   with `..gluedScheme_toLocallyRingedSpace` identifying its space with
-  `AlgebraicGeometry.SpecThreeChartCover.glued` by `rfl`, and quasi-compact for free since the
-  index type is `ULift (Fin 3)`.
+  `AlgebraicGeometry.SpecThreeChartCover.glued` by `rfl`, and quasi-compact by
+  `..compactSpace_gluedScheme` since the index type is `ULift (Fin 3)`.
 * `AlgebraicGeometry.SpecThreeChartCover.gluedSchemeToSpec`: the cover map as a morphism of
   schemes, with `..isIso_gluedSchemeToSpec` and `..gluedSchemeIsoSpec` under the covering
   hypothesis.
@@ -94,11 +94,22 @@ def gluedScheme : Scheme.{u} := (datum I f).specScheme
 theorem gluedScheme_toLocallyRingedSpace :
     (gluedScheme I f).toLocallyRingedSpace = glued I f := rfl
 
-/-- The datum's index type is `ULift (Fin 3)`, so it is finite — which is what makes
-`ChartedSchemeDatum.specScheme_compactSpace` apply to `gluedScheme` without any further hypothesis.
--/
+/-- The datum's index type is `ULift (Fin 3)`, so it is finite — which is the hypothesis
+`ChartedSchemeDatum.specScheme_compactSpace` takes, and it has to be stated here because instance
+search will not unfold the projection `(datum I f).J`. -/
 instance finite_datum_J : Finite (datum I f).J :=
   inferInstanceAs (Finite (ULift.{u} (Fin 3)))
+
+/-- **The glued scheme is quasi-compact**, with no hypothesis: `finite_datum_J` above supplies
+`ChartedSchemeDatum.specScheme_compactSpace`'s `[Finite D.J]`.
+
+Restating it at `gluedScheme` is not redundant. `gluedScheme` is a plain `def`, and instance search
+matches only up to reducible transparency, so `CompactSpace (gluedScheme I f)` is **not**
+synthesised from the instance at `(datum I f).specScheme` — the same class of gap as the two defeq
+traps this cluster documents, here between a `def` and its body rather than between two spellings
+of one term. -/
+instance compactSpace_gluedScheme : CompactSpace (gluedScheme I f) :=
+  inferInstanceAs (CompactSpace ((datum I f).specScheme))
 
 /-- **The cover map to `Spec A` as a morphism of schemes.** -/
 def gluedSchemeToSpec : gluedScheme I f ⟶ Spec (CommRingCat.of A) :=
