@@ -99,9 +99,9 @@ for any glue datum, transported from `TopCat.GlueData.preimage_range` in
 `AlgebraicGeometry.range_specAwayMap` to name the overlap. Neither the glue *condition* nor the
 containment `range_ι_inter_subset` is spent **here**: both halves are already inside the topological
 statement, which is where the glue condition goes instead — Mathlib proves `preimage_range` from
-`TopCat.GlueData.image_inter`, whose `⊇` half is `glue_condition_apply`. That is what makes this
-three lines rather than the forty the two-patch model originally took; the content has moved, not
-vanished.
+`TopCat.GlueData.image_inter`, whose `⊇` half is
+`CategoryTheory.GlueData.glue_condition_apply`. That is what makes this three lines rather than the
+forty the two-patch model originally took; the content has moved, not vanished.
 
 At two patches this is `AlgebraicGeometry.preimage_range_specTwoPatchι₁`
 (`FormalSchemes.SpecTwoPatchNonAffine`), which is now the same three-line term at
