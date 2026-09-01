@@ -255,6 +255,7 @@ import FormalSchemes.LocalizationSplitOfNilpotentMul
 import FormalSchemes.LocallyFG
 import FormalSchemes.LocallyRingedSpaceGlueDesc
 import FormalSchemes.LocallyRingedSpaceHomExt
+import FormalSchemes.LocallyRingedSpaceRange
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.OpenCoverHomExt

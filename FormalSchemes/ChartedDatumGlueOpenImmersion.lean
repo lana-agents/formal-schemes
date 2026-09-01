@@ -19,7 +19,7 @@ datum, where the overlap objects are named `Spf (A i{1/g_ij})` rather than
 Exactly one thing: `CategoryTheory.GlueData.ofGlueData'` pads the diagonal of a `GlueData'`, so the
 glue datum's overlap immersion `f i j` is not `basicOpenChart (I·A_i) (g i j)` on the nose but that
 morphism preceded by an `eqToHom` — and on the diagonal it is an `eqToHom` alone. An `eqToHom` is an
-isomorphism, so neither changes a range (`range_eqToHom_comp_base`), and
+isomorphism, so neither changes a range (`LocallyRingedSpace.range_eqToHom_comp_base`), and
 `range_xGlueData_f_comp_of_ne` below records the resulting range identity off the diagonal. **The
 diagonal needs no such identity**: `FormalScheme.GlueData.isOpenImmersion_glueMorphisms` asks its
 containment only for `i ≠ j`, so the diagonal case is discharged without rewriting a range at all.
@@ -75,7 +75,7 @@ theorem range_xGlueData_f_comp_of_ne (i j : D.J) (hij : i ≠ j)
   have hij' : ¬ @Eq D.J i j := hij
   simp only [xFormalGlueData, xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',
     CategoryTheory.GlueData'.f', dif_neg hij', Category.assoc]
-  exact range_eqToHom_comp_base _ _
+  exact LocallyRingedSpace.range_eqToHom_comp_base _ _
 
 /-! ### The glued morphism -/
 

@@ -1,6 +1,6 @@
 import FormalSchemes.ChartedSchemeDatum
 import FormalSchemes.LocallyRingedSpaceGlueDesc
-import FormalSchemes.SpecTwoPatchNonAffine
+import FormalSchemes.LocallyRingedSpaceRange
 
 set_option linter.style.header false
 
@@ -21,10 +21,12 @@ This file supplies it. The content is `FormalSchemes.LocallyRingedSpaceGlueDesc`
 
 Discarding those `eqToHom`s on ranges is
 `AlgebraicGeometry.LocallyRingedSpace.range_eqToHom_comp_base`
-(`FormalSchemes.SpecTwoPatchNonAffine`), whose own docstring says it exists for exactly this
-`ofGlueData'` bookkeeping. Importing that file rather than restating the two-line lemma costs this
-one **+6** modules of import closure, 46 to 52; the tree already carries three copies of that
-statement under two names, and a fourth is not worth six modules saved.
+(`FormalSchemes.LocallyRingedSpaceRange`), a module that sits directly on Mathlib and exists for
+exactly this `CategoryTheory.GlueData.ofGlueData'` bookkeeping. Until issue 1399 it was stated
+five times in five files, and this one reached it through `FormalSchemes.SpecTwoPatchNonAffine`, at
+a cost this paragraph priced at **+6** modules of import closure, 46 to 52 — the only thing this
+file ever took from that module. The move refunds five of the six: the import is now the leaf,
+which is itself the sixth module, so the closure goes 52 to **47**.
 
 ## The compatibility hypothesis, and why it is stated only off the diagonal
 

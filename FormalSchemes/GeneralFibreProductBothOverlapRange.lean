@@ -26,8 +26,10 @@ issue 426b) consumes it.
 ## Main results
 
 * `AlgebraicGeometry.range_bothAlgDataF_base`: the range formula above.
-* `AlgebraicGeometry.range_eqToHom_comp_base`: precomposition with `eqToHom` preserves the range of
-  the underlying base map (a small helper).
+
+The small helper this file used to state alongside it — precomposition with an `eqToHom` preserves
+the range of the underlying base map — is a fact about bare locally ringed spaces that four other
+files had also restated, and it now lives in `FormalSchemes.LocallyRingedSpaceRange` (issue 1399).
 
 ## References
 
@@ -51,13 +53,6 @@ variable {A : JX → Type u} {B : JY → Type u}
 variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
 variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
 
-/-- Precomposition with an `eqToHom` does not change the range of the underlying base map: the
-`eqToHom` is an isomorphism, so its base map is a bijection. -/
-theorem range_eqToHom_comp_base {X Y Z : LocallyRingedSpace.{u}} (pf : X = Y) (h : Y ⟶ Z) :
-    Set.range ⇑(eqToHom pf ≫ h).base = Set.range ⇑h.base := by
-  subst pf
-  rw [eqToHom_refl, Category.id_comp]
-
 /-- **The underlying-space range of the dispatched product-overlap immersion.** For distinct
 product-index charts `p`, `p'` of `X ×_{Spf R} Y`, the range of the overlap immersion
 `bothAlgDataF hI gX gY p p' h` in the chart `Spf(A_{p.1} ⊗̂_R B_{p.2})` is the intersection of the
@@ -80,12 +75,13 @@ theorem range_bothAlgDataF_base (hI : I.FG) (gX : ∀ i _ : JX, A i) (gY : ∀ j
   · rw [dif_pos h1, if_pos h1, Set.univ_inter]
     by_cases h2 : p.2 = p'.2
     · exact absurd (Prod.ext h1 h2) h
-    · rw [if_neg h2, range_eqToHom_comp_base, range_rightInterchangeOpenImmersion_base]
+    · rw [if_neg h2, LocallyRingedSpace.range_eqToHom_comp_base,
+        range_rightInterchangeOpenImmersion_base]
   · rw [dif_neg h1, if_neg h1]
     by_cases h2 : p.2 = p'.2
-    · rw [dif_pos h2, if_pos h2, Set.inter_univ, range_eqToHom_comp_base,
+    · rw [dif_pos h2, if_pos h2, Set.inter_univ, LocallyRingedSpace.range_eqToHom_comp_base,
         range_interchangeOpenImmersion_base]
-    · rw [dif_neg h2, if_neg h2, range_eqToHom_comp_base,
+    · rw [dif_neg h2, if_neg h2, LocallyRingedSpace.range_eqToHom_comp_base,
         range_bothInterchangeOpenImmersion_base, TopologicalSpace.Opens.coe_inf]
 
 end AlgebraicGeometry

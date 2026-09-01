@@ -1,5 +1,7 @@
+import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.CompletionToSpec
-import FormalSchemes.SpecTwoPatchNonAffine
+import FormalSchemes.GlueDataImageInter
+import FormalSchemes.LocallyRingedSpaceRange
 
 set_option linter.style.header false
 
@@ -15,8 +17,11 @@ file says is that the glued object is any **bigger** than one of its patches.
 This file supplies that. Its two statements are the completion-side counterparts of the first half
 of `FormalSchemes/SpecTwoPatchNonAffine.lean`, and they are built from the same two bricks:
 `LocallyRingedSpace.GlueData.range_ι_inter_subset` (`FormalSchemes.GlueDataImageInter`) and
-`LocallyRingedSpace.range_eqToHom_comp_base`, which that file stated generally on the argument that
-every `GlueData.ofGlueData'` consumer meets the same `eqToHom`. This is its second consumer.
+`LocallyRingedSpace.range_eqToHom_comp_base` (`FormalSchemes.LocallyRingedSpaceRange`), which is
+stated generally on the argument that every `GlueData.ofGlueData'` consumer meets the same
+`eqToHom`. Until issue 1399 both bricks arrived here through `SpecTwoPatchNonAffine`, whose own
+declarations this file never used; importing what it actually uses instead takes its closure from
+**48** to **39** — ten modules drop out and the leaf adds one back, counting this file itself.
 
 ## The two steps
 

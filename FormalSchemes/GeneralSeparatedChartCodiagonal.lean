@@ -569,7 +569,7 @@ theorem range_overlapChart_comp_ι (i j : DX.J) (h : i ≠ j) :
         Set.range ⇑(basicOpenChart (I.map (algebraMap R (DX.A i))) (DX.g i j) ≫
           (diagonalDatum DX σX hστX hσcX).xFormalGlueData.ι i).base := by
       rw [e]
-      exact range_eqToHom_comp_base _ _
+      exact LocallyRingedSpace.range_eqToHom_comp_base _ _
     exact hr ▸ (diagonalDatum DX σX hστX hσcX).xLrsGlueData.range_ι_inter_subset i j hx
 
 

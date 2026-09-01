@@ -1,3 +1,4 @@
+import FormalSchemes.LocallyRingedSpaceRange
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.TwoPatchWitness
@@ -109,20 +110,13 @@ universe u
 
 namespace AlgebraicGeometry
 
-/-- Precomposing with an `eqToHom` does not change the range on underlying spaces: the `eqToHom` is
-an isomorphism, so its base map is surjective. Used to discard the `GlueData.ofGlueData'`
-bookkeeping in `range_specTwoPatchLRSGlueData_f_false_true`. -/
-theorem LocallyRingedSpace.range_eqToHom_comp_base {X Y Z : LocallyRingedSpace.{u}} (e : X = Y)
-    (φ : Y ⟶ Z) : Set.range (eqToHom e ≫ φ).base = Set.range φ.base := by
-  subst e
-  simp
-
 /-- **The image/preimage form of the same fact.** Precomposing *both* legs with the same `eqToHom`
 does not change the image of the preimage: `eqToHom e` is an isomorphism, so its base map is a
 bijection and `φ '' (φ ⁻¹' S) = S`.
 
-This is not a consequence of `range_eqToHom_comp_base`: a range is insensitive to precomposition
-with any surjection, but the image of a *named* subset is not, so the two `eqToHom`s have to cancel
+This is not a consequence of `LocallyRingedSpace.range_eqToHom_comp_base`
+(`FormalSchemes.LocallyRingedSpaceRange`): a range is insensitive to precomposition with any
+surjection, but the image of a *named* subset is not, so the two `eqToHom`s have to cancel
 against each other rather than be discarded one at a time. That is why the image-shaped chart
 preimage `ChartedSchemeDatum.preimage_image_specι` needs this and the range-shaped
 `preimage_range_specι` does not. -/

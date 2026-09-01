@@ -1,5 +1,6 @@
 import FormalSchemes.ChartedSchemeDatumDesc
 import FormalSchemes.GlueDataImageInter
+import FormalSchemes.SpecTwoPatchNonAffine
 
 set_option linter.style.header false
 

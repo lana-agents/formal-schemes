@@ -1,3 +1,4 @@
+import FormalSchemes.LocallyRingedSpaceRange
 import FormalSchemes.AwayCompletionAway
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletedTensorAwayInterchangeSpf
@@ -54,21 +55,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry
 
 universe u
-
-/-- **The range of an iso-precomposed morphism** equals the range of the morphism: precomposing a
-locally ringed space morphism `h` with the `hom` leg of an isomorphism `e` (a homeomorphism on
-underlying spaces, hence surjective) does not change the range of the underlying base map. Stated
-with uniform source/target objects so the range decomposition avoids the defeq-presentation
-mismatch between `locallyRingedSpaceObj (…)` and `(formalCompletion …).toLocallyRingedSpace`. -/
-theorem range_iso_hom_comp_base {X Y Z : LocallyRingedSpace.{u}} (e : X ≅ Y) (h : Y ⟶ Z) :
-    Set.range ⇑(e.hom ≫ h).base = Set.range ⇑h.base := by
-  have hsurj : Function.Surjective ⇑e.hom.base := fun y =>
-    ⟨e.inv.base y, LocallyRingedSpace.iso_inv_base_hom_base_apply e y⟩
-  have hcomp : ⇑(e.hom ≫ h).base = ⇑h.base ∘ ⇑e.hom.base := by
-    ext x
-    simp only [LocallyRingedSpace.comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp,
-      ContinuousMap.coe_comp, Function.comp_apply]
-  rw [hcomp, Set.range_comp, Set.range_eq_univ.mpr hsurj, Set.image_univ]
 
 namespace formalCompletion
 
@@ -220,7 +206,7 @@ theorem range_nestedBasicOpenImmersion (hI : I.FG)
       basicOpenChart (idealOfDefinition (I.map (algebraMap R (Localization.Away f))))
         (awayPoint (I.map (algebraMap R (Localization.Away f)))
           (algebraMap R (Localization.Away f) g))).base) = _
-  rw [range_iso_hom_comp_base, range_iso_hom_comp_base]
+  rw [LocallyRingedSpace.range_iso_hom_comp_base, LocallyRingedSpace.range_iso_hom_comp_base]
   exact range_basicOpenChart_base (idealOfDefinition (I.map (algebraMap R (Localization.Away f))))
     (awayPoint (I.map (algebraMap R (Localization.Away f)))
       (algebraMap R (Localization.Away f) g)) ((hI.map _).map _)
