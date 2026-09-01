@@ -289,6 +289,7 @@ import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.Spf
 import FormalSchemes.SpfBasicOpenCover
+import FormalSchemes.SpfDiscrete
 import FormalSchemes.SpfEquivalence
 import FormalSchemes.SpfFullyFaithful
 import FormalSchemes.SpfFunctorial
