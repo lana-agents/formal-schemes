@@ -313,6 +313,7 @@ import FormalSchemes.SpfMap
 import FormalSchemes.SpfRingEquivIso
 import FormalSchemes.SpfSectionsNontrivial
 import FormalSchemes.SpfTargetColimit
+import FormalSchemes.SpfTargetSurjective
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.TargetBasicRefinement
