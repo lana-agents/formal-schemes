@@ -117,6 +117,21 @@ theorem LocallyRingedSpace.range_eqToHom_comp_base {X Y Z : LocallyRingedSpace.{
   subst e
   simp
 
+/-- **The image/preimage form of the same fact.** Precomposing *both* legs with the same `eqToHom`
+does not change the image of the preimage: `eqToHom e` is an isomorphism, so its base map is a
+bijection and `φ '' (φ ⁻¹' S) = S`.
+
+This is not a consequence of `range_eqToHom_comp_base`: a range is insensitive to precomposition
+with any surjection, but the image of a *named* subset is not, so the two `eqToHom`s have to cancel
+against each other rather than be discarded one at a time. That is why the image-shaped chart
+preimage `ChartedSchemeDatum.preimage_image_specι` needs this and the range-shaped
+`preimage_range_specι` does not. -/
+theorem LocallyRingedSpace.image_preimage_eqToHom_comp_base {W X Y Z : LocallyRingedSpace.{u}}
+    (e : W = X) (α : X ⟶ Y) (β : X ⟶ Z) (U : Set Z) :
+    ⇑(eqToHom e ≫ α).base '' (⇑(eqToHom e ≫ β).base ⁻¹' U) = ⇑α.base '' (⇑β.base ⁻¹' U) := by
+  subst e
+  rw [eqToHom_refl, Category.id_comp, Category.id_comp]
+
 section TwoCharts
 
 variable {A B : Type u} [CommRing A] [CommRing B] (a : A) (b : B)
