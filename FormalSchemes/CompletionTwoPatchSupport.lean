@@ -34,17 +34,19 @@ this file is therefore equally true of an *incompatible* gluing. It cannot stay 
 chart preimage above is false without `hθ`, because `ι₀⁻¹(ι₁''V(J))` is then some other subset of
 `D(a)` entirely.
 
-Correspondingly this file is where the glue condition is first read **at a point**. What the
-earlier files needed of the gluing is only *where* the charts meet, and that holds for any glue
-datum whatever: `FormalSchemes/SpecTwoPatchNonAffine.lean` gets `ι₀⁻¹(range ι₁) = D(a)` from
-`LocallyRingedSpace.GlueData.preimage_range_ι` without touching the datum's fields. That is not
-independence from the glue condition — Mathlib's `TopCat.GlueData.preimage_range` rests on
+What `hθ` needs of the gluing is not merely that a prime of `D(a)` lies in the `B`-chart, but
+**which** prime of `B` it is. That refinement is not proved here and is not about two patches:
+`AlgebraicGeometry.preimage_image_specTwoPatchι₁` (`FormalSchemes.SpecTwoPatchNonAffine`) says that
+`ι₀⁻¹(ι₁''U)` is the image, under the chart of `D(a)`, of the `θ`-translate of the overlap's
+preimage of `U`, for an arbitrary subset `U` of `Spec B` and with no ideal in it. It comes from
+`LocallyRingedSpace.GlueData.preimage_image_ι` without touching this datum's fields. That is not
+independence from the glue condition — Mathlib's `TopCat.GlueData.preimage_image_eq_image` rests on
 `CategoryTheory.GlueData.glue_condition_apply` one level down — but it is independence from
 anything about *two patches*.
-Here we need more: not merely that a prime of `D(a)` lies in the `B`-chart, but **which** prime of
-`B` it is, since that is what `hθ` is a statement about. That is
-`AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` below, and it is the first statement in
-this development that names the correspondence rather than asserting that one exists.
+
+What is left for this file is the three rewrites that put the ideals back in, and **`hθ` is spent
+on the middle one**: the innermost preimage is `V(J·B_b)`, its `θ`-translate is `V(I·A_a)`, and the
+image of that is `V(I) ∩ D(a)`.
 
 The `CategoryTheory.GlueData.glue_condition` **field** itself is opened upstream of this file,
 not here. `AlgebraicGeometry.specTwoPatch_glue` (`FormalSchemes.CompletionTwoPatchToScheme`,
@@ -72,11 +74,18 @@ from `FormalSchemes.CompletionTwoPatchToScheme`, which needed it for the overlap
 `completionTwoPatchToScheme`. What this file adds is its `ι₁` twin, a two-line consequence obtained
 by composing with `specGlueIso.inv` rather than by redoing the `eqToHom` bookkeeping, and the
 reading of both at a point (`specTwoPatchι₀_base_comap_algebraMap` and its twin): a prime of `A_a`
-and its `θ`-translate have the *same* image in the glued scheme, which is the identification the
-`Support` section below feeds `hθ`. The chart preimages themselves —
-`preimage_range_specTwoPatchι₁` and `preimage_range_specTwoPatchι₀` — are **not** proved here
-either: they need none of this and live in `FormalSchemes/SpecTwoPatchNonAffine.lean`, beside the
-properness statements they now prove.
+and its `θ`-translate have the *same* image in the glued scheme.
+
+**Those two point-level readings have no consumer.** The `Support` section below used to run on
+them; it now runs on `AlgebraicGeometry.preimage_image_specTwoPatchι₁` and its mirror, which say
+the same thing about an arbitrary subset and come from the topological gluing rather than from this
+datum. They are kept because they are the only statement of the glue condition at a point at two
+patches — their arbitrary-index cousin
+`AlgebraicGeometry.ChartedSchemeDatum.specι_base_comap_algebraMap` is kept on the same footing —
+but that is a judgement, and it is recorded here rather than left to a grep. The chart preimages
+themselves — `preimage_range_specTwoPatchι₁`, `preimage_range_specTwoPatchι₀` and their
+image-shaped refinements — are **not** proved here either: they need none of this and live in
+`FormalSchemes/SpecTwoPatchNonAffine.lean`, beside the properness statements they now prove.
 
 ## Scope
 
@@ -102,6 +111,7 @@ own, since `ι₀` is an *open* immersion. Any correct argument must use `hθ`.
 * `AlgebraicGeometry.specAwayMap_comp_specTwoPatchι₁`: the `B`-side glue condition, off
   `AlgebraicGeometry.specTwoPatch_glue`, with
   `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` and its twin reading both at a point.
+  **Neither point-level reading has a consumer**; see the `Glue` paragraph above.
 * `AlgebraicGeometry.preimage_range_completionTwoPatchToScheme_base_ι₀` and `..._ι₁`: **the
   completion is supported on `V(I)`, chart by chart.**
 
@@ -192,7 +202,15 @@ variable {A B : Type u} [CommRing A] [CommRing B] (a : A) (b : B)
   (θ : Localization.Away a ≃+* Localization.Away b)
 
 /-- The glue condition at a point: a prime of `A_a`, pushed into the glued scheme through the
-`A`-chart, is the image through the `B`-chart of its `θ`-translate. -/
+`A`-chart, is the image through the `B`-chart of its `θ`-translate.
+
+**It has no consumer.** It supplied the identification the `Support` section below needed until
+that went through `AlgebraicGeometry.preimage_image_specTwoPatchι₁`, which says the same of an
+arbitrary subset and needs nothing about two patches. It is kept for the reason its arbitrary-index
+cousin `AlgebraicGeometry.ChartedSchemeDatum.specι_base_comap_algebraMap` is kept: it is the only
+statement of the glue condition at a point at this index, and it is what a mapping-out argument
+that has to name *which* prime of `B` a prime of `D(a)` becomes would otherwise rederive. Whether
+that earns a zero-consumer public name is flagged, not assumed. -/
 theorem specTwoPatchι₀_base_comap_algebraMap (y : PrimeSpectrum (Localization.Away a)) :
     (specTwoPatchι₀ a b θ).base
         (PrimeSpectrum.comap (algebraMap A (Localization.Away a)) y) =
@@ -218,7 +236,9 @@ theorem specAwayMap_comp_specTwoPatchι₁ :
   rw [specTwoPatch_glue a b θ, ← Category.assoc, Iso.inv_hom_id,
     Category.id_comp]
 
-/-- The glue condition at a point, from the `B` side. -/
+/-- The glue condition at a point, from the `B` side. **It has no consumer either**; see
+`specTwoPatchι₀_base_comap_algebraMap` for why both are kept. It is the sole consumer of
+`specAwayMap_comp_specTwoPatchι₁`, so deleting it would orphan that too. -/
 theorem specTwoPatchι₁_base_comap_algebraMap (z : PrimeSpectrum (Localization.Away b)) :
     (specTwoPatchι₁ a b θ).base
         (PrimeSpectrum.comap (algebraMap B (Localization.Away b)) z) =
@@ -244,49 +264,25 @@ variable {A B : Type u} [CommRing A] [CommRing B] (I : Ideal A) (hI : I.FG) (a :
 
 include hθ
 
-/-- **The part of `Spec A` lying over the `B`-side of the completion is `V(I) ∩ D(a)`.** A prime
-`p` of `A` with `ι₀(p) ∈ ι₁''V(J)` lies in `D(a)` by `preimage_range_specTwoPatchι₁`, hence comes
-from a prime `y` of `A_a`; the glue condition identifies the corresponding prime of `B` as the
-image of the `θ`-translate of `y`, and `hθ` turns "that translate lies in `V(J·B_b)`" into "`y`
-lies in `V(I·A_a)`". This is where the compatibility hypothesis does its work. -/
+/-- **The part of `Spec A` lying over the `B`-side of the completion is `V(I) ∩ D(a)`.**
+
+`AlgebraicGeometry.preimage_image_specTwoPatchι₁` (`FormalSchemes.SpecTwoPatchNonAffine`) already
+says that the left-hand side is the image, under the chart of `D(a)`, of the `θ`-translate of the
+overlap's preimage of `V(J)` — a statement about the glued **scheme**, with no ideal in it. Three
+rewrites finish: the innermost preimage is `V(J·B_b)` (`zeroLocus_map_away_eq_preimage`); `hθ`
+turns its `θ`-translate into `V(I·A_a)` (`comap_θ_symm_preimage_zeroLocus`); and the image of that
+is `V(I) ∩ D(a)` (`image_zeroLocus_map_away`).
+
+**The middle step is where the compatibility hypothesis does its work**, exactly as
+`AlgebraicGeometry.ChartedCompletionDatum.preimage_image_zeroLocus_specι` does at an arbitrary
+index. Rerouting the set-theoretic bookkeeping around it through the topological gluing does not
+move it: `hθ` is still the only reason a prime of `D(a)` lands where it does. -/
 theorem preimage_image_zeroLocus_specTwoPatchι₁ :
     ⇑(specTwoPatchι₀ a b θ).base ⁻¹'
         (⇑(specTwoPatchι₁ a b θ).base '' PrimeSpectrum.zeroLocus (J : Set B)) =
       PrimeSpectrum.zeroLocus (I : Set A) ∩ PrimeSpectrum.basicOpen a := by
-  ext p
-  constructor
-  · rintro ⟨q, hq, hqe⟩
-    have hpa : p ∈ (PrimeSpectrum.basicOpen a : Set (PrimeSpectrum A)) := by
-      rw [← preimage_range_specTwoPatchι₁ a b θ]
-      exact ⟨q, hqe⟩
-    obtain ⟨y, rfl⟩ :
-        p ∈ Set.range (PrimeSpectrum.comap (algebraMap A (Localization.Away a))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away a) a]
-      exact hpa
-    have hqy : q = PrimeSpectrum.comap (algebraMap B (Localization.Away b))
-        (PrimeSpectrum.comap θ.symm.toRingHom y) :=
-      (specTwoPatchι₁_isOpenImmersion a b θ).base_open.injective
-        (hqe.trans (specTwoPatchι₀_base_comap_algebraMap a b θ y))
-    rw [hqy] at hq
-    have hy : y ∈ PrimeSpectrum.zeroLocus
-        (I.map (algebraMap A (Localization.Away a)) : Set _) := by
-      rw [← comap_θ_symm_preimage_zeroLocus I a J b θ hθ, Set.mem_preimage,
-        zeroLocus_map_away_eq_preimage]
-      exact hq
-    rw [← image_zeroLocus_map_away I a]
-    exact ⟨y, hy, rfl⟩
-  · intro hp
-    rw [← image_zeroLocus_map_away I a] at hp
-    obtain ⟨y, hy, rfl⟩ := hp
-    refine ⟨PrimeSpectrum.comap (algebraMap B (Localization.Away b))
-      (PrimeSpectrum.comap θ.symm.toRingHom y), ?_,
-      (specTwoPatchι₀_base_comap_algebraMap a b θ y).symm⟩
-    have hmem : PrimeSpectrum.comap θ.symm.toRingHom y ∈
-        PrimeSpectrum.zeroLocus (J.map (algebraMap B (Localization.Away b)) : Set _) := by
-      rw [← Set.mem_preimage, comap_θ_symm_preimage_zeroLocus I a J b θ hθ]
-      exact hy
-    rw [zeroLocus_map_away_eq_preimage J b] at hmem
-    exact hmem
+  rw [preimage_image_specTwoPatchι₁ a b θ, ← zeroLocus_map_away_eq_preimage J b,
+    comap_θ_symm_preimage_zeroLocus I a J b θ hθ, image_zeroLocus_map_away I a]
 
 /-- **The part of `Spec B` lying over the `A`-side of the completion is `V(J) ∩ D(b)`**, the mirror
 of `preimage_image_zeroLocus_specTwoPatchι₁`. -/
@@ -294,40 +290,8 @@ theorem preimage_image_zeroLocus_specTwoPatchι₀ :
     ⇑(specTwoPatchι₁ a b θ).base ⁻¹'
         (⇑(specTwoPatchι₀ a b θ).base '' PrimeSpectrum.zeroLocus (I : Set A)) =
       PrimeSpectrum.zeroLocus (J : Set B) ∩ PrimeSpectrum.basicOpen b := by
-  ext q
-  constructor
-  · rintro ⟨p, hp, hpe⟩
-    have hqb : q ∈ (PrimeSpectrum.basicOpen b : Set (PrimeSpectrum B)) := by
-      rw [← preimage_range_specTwoPatchι₀ a b θ]
-      exact ⟨p, hpe⟩
-    obtain ⟨z, rfl⟩ :
-        q ∈ Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away b))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away b) b]
-      exact hqb
-    have hpz : p = PrimeSpectrum.comap (algebraMap A (Localization.Away a))
-        (PrimeSpectrum.comap θ.toRingHom z) :=
-      (specTwoPatchι₀_isOpenImmersion a b θ).base_open.injective
-        (hpe.trans (specTwoPatchι₁_base_comap_algebraMap a b θ z))
-    rw [hpz] at hp
-    have hz : z ∈ PrimeSpectrum.zeroLocus
-        (J.map (algebraMap B (Localization.Away b)) : Set _) := by
-      rw [← comap_θ_preimage_zeroLocus I a J b θ hθ, Set.mem_preimage,
-        zeroLocus_map_away_eq_preimage]
-      exact hp
-    rw [← image_zeroLocus_map_away J b]
-    exact ⟨z, hz, rfl⟩
-  · intro hq
-    rw [← image_zeroLocus_map_away J b] at hq
-    obtain ⟨z, hz, rfl⟩ := hq
-    refine ⟨PrimeSpectrum.comap (algebraMap A (Localization.Away a))
-      (PrimeSpectrum.comap θ.toRingHom z), ?_,
-      (specTwoPatchι₁_base_comap_algebraMap a b θ z).symm⟩
-    have hmem : PrimeSpectrum.comap θ.toRingHom z ∈
-        PrimeSpectrum.zeroLocus (I.map (algebraMap A (Localization.Away a)) : Set _) := by
-      rw [← Set.mem_preimage, comap_θ_preimage_zeroLocus I a J b θ hθ]
-      exact hz
-    rw [zeroLocus_map_away_eq_preimage I a] at hmem
-    exact hmem
+  rw [preimage_image_specTwoPatchι₀ a b θ, ← zeroLocus_map_away_eq_preimage I a,
+    comap_θ_preimage_zeroLocus I a J b θ hθ, image_zeroLocus_map_away J b]
 
 /-- **The completion is supported on `V(J)`, seen on the `B`-chart** (EGA I, 10.8). -/
 theorem preimage_range_completionTwoPatchToScheme_base_ι₁ :
