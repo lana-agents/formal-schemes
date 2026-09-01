@@ -260,7 +260,7 @@ def towerHom (φ : ∀ n : ℕ, C →+* R ⧸ I ^ (n + 1)) : ∀ n : ℕ, C →+
   | (n + 1) => φ n
 
 omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace C] in
-/-- The re-indexed system is compatible, in the `factorPow` spelling that
+/-- The re-indexed system is compatible, in the `Ideal.Quotient.factorPow` spelling that
 `existsUnique_thickeningMap_comp` asks for. -/
 theorem towerHom_compat (φ : ∀ n : ℕ, C →+* R ⧸ I ^ (n + 1))
     (hφ : ∀ n : ℕ, (stepRingHom I n).hom.comp (φ (n + 1)) = φ n) (n : ℕ) :

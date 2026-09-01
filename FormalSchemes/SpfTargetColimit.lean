@@ -88,11 +88,11 @@ difference is exactly the hypothesis that is unavailable. Both signatures are `#
 
 The negative answer stands — the two `Equiv`s really do have different right-hand sides — but it is
 **not** the obstruction it was taken to be: `FormalSchemes/SpfTargetSurjective.lean` proves the
-affine case without substituting `spfHomEquiv` anywhere, by route 2 below. See the correction to
-that route.
+affine case without substituting `AdicRingCat.spfHomEquiv` anywhere, by route 2 below. See the
+correction to that route.
 
 `FormalSpectrum.existsUnique_hom_thickeningMap_spf_of_continuous` below is what survives *of the
-`spfHomEquiv` route*, and it is weaker than its name suggests. Its family is
+`AdicRingCat.spfHomEquiv` route*, and it is weaker than its name suggests. Its family is
 `FormalSpectrum.spfTargetFamily`, which is **defined** as the restriction of `Spf ψ`, so the
 theorem presupposes not merely a continuity
 witness but a `ψ` whose induced family *is* the given one — strictly more than continuity, and
@@ -116,8 +116,8 @@ route.
    than its composite with `ι`. **Not checked, and not used.**
 2. *Recover continuity from the family.* The base map of the family lands in `V(L)`, which on the
    ring side gives only `L.map ψ ≤ (I).radical` — a containment up to radical, not the equality
-   `L ≤ I.comap ψ` that `spfHomEquiv` wants. **This route works, and the sentence that used to
-   follow here — that it inherits issue 62k's open problem — was false.** Issue 62k
+   `L ≤ I.comap ψ` that `AdicRingCat.spfHomEquiv` wants. **This route works, and the sentence that
+   used to follow here — that it inherits issue 62k's open problem — was false.** Issue 62k
    (`FormalSchemes/AdicCofinalOpenImmersion.lean`) is open in its *openness* half, `J ≤ √(I · B)`;
    what this route needs is the *nilpotence* half, `L.map ψ ≤ (I).radical`, which #418 proved
    unconditionally as `FormalSpectrum.map_le_radical_of_hom`. With `L` finitely generated the
