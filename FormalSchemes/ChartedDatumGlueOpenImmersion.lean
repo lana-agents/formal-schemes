@@ -29,7 +29,7 @@ The `dite` conditions live at `D.J` while the glue datum indexes by
 `glueChartMorphisms` itself performs.
 
 The hypothesis a consumer must supply is therefore stated in the datum's own spelling, and only for
-`i ≠ j`: on the diagonal the condition is vacuous, since the overlap immersion is an isomorphism.
+`i ≠ j`: on the diagonal nothing is asked of the consumer at all.
 
 ## Main results
 
@@ -94,8 +94,8 @@ theorem range_glueChartMorphisms :
 
 /-- **A family of chart morphisms that are open immersions and meet only along the double overlaps
 glues to an open immersion.** The hypothesis `hmeet` is required only off the diagonal, which is
-also all that `FormalScheme.GlueData.isOpenImmersion_glueMorphisms` asks for: on the diagonal the
-containment follows from injectivity of the chart alone. -/
+also all that `FormalScheme.GlueData.isOpenImmersion_glueMorphisms` asks for: the diagonal case of
+that criterion is never invoked, so nothing has to be known about it. -/
 theorem isOpenImmersion_glueChartMorphisms
     (hoi : letI := D.commRing; letI := D.algebra;
       ∀ i, LocallyRingedSpace.IsOpenImmersion (k i))
