@@ -46,6 +46,14 @@ isomorphism below is exactly what applies them to a family member, and the last 
 * `FormalSpectrum.hom_ext_specHom` — a morphism `Spec A ⟶ Spf L` whose global-sections map carries
   `L` to `0` is determined by that ring map. This is the round trip read at `J = ⊥`.
 
+**Both of those require the caller to install a topology on `A` and an algebra structure
+identifying it; the interface a successor actually wants is one file later.**
+`FormalSpectrum.exists_pow_map_eq_bot_of_comp_toSpecAmbient` and
+`FormalSpectrum.hom_ext_of_comp_toSpecAmbient` (`FormalSchemes/SpfTargetSurjective.lean`) take a
+bare ring homomorphism `C →+* A` and need no topology on `A` at all. They are the only consumers
+of the two above, and they are what to cite; the pair here is a real intermediate step and not an
+alias, which is why neither is deleted.
+
 Together those two are the shape "a morphism out of an affine scheme into `Spf L` is a continuous
 ring map, up to replacing `L` by a power" — the statement the issue-156 counterexample bounds from
 below, and which `FormalSpectrum.cofinalSpfIso`

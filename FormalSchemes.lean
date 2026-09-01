@@ -80,6 +80,7 @@ import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
+import FormalSchemes.ChartSpfHomColimitTarget
 import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
 import FormalSchemes.ChartedCompletionClosed
@@ -303,6 +304,7 @@ import FormalSchemes.SpfGammaSheafComponentArbComp
 import FormalSchemes.SpfGammaSheafComponentArbCont
 import FormalSchemes.SpfGammaSheafComponentArbOf
 import FormalSchemes.SpfGammaSheafComponentFunctor
+import FormalSchemes.SpfHomColimitTarget
 import FormalSchemes.SpfHomNonAffineWitness
 import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpfHomScheme
@@ -449,6 +451,7 @@ import FormalSchemes.ThickeningChartAffine
 import FormalSchemes.ThickeningChartRestrict
 import FormalSchemes.ThickeningChartSpfHom
 import FormalSchemes.ThickeningCocone
+import FormalSchemes.ThickeningColimitTarget
 import FormalSchemes.ThickeningCommonBase
 import FormalSchemes.ThickeningCoverPullback
 import FormalSchemes.ThickeningHomExt

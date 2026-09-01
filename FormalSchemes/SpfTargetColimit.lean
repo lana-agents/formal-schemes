@@ -121,7 +121,8 @@ route.
    (`FormalSchemes/AdicCofinalOpenImmersion.lean`) is open in its *openness* half, `J ≤ √(I · B)`;
    what this route needs is the *nilpotence* half, `L.map ψ ≤ (I).radical`, which #418 proved
    unconditionally as `FormalSpectrum.map_le_radical_of_hom`. With `L` finitely generated the
-   radical containment is `L ^ k ≤ I.comap ψ`, and the resulting `Spf (L ^ k) ⟶ ` slack is absorbed
+   radical containment is `L ^ k ≤ I.comap ψ`, and the resulting `Spf (L ^ k)`-versus-`Spf L`
+   slack is absorbed
    by `FormalSpectrum.cofinalSpfIso`, which is a theorem and not a gap. See
    `FormalSchemes/SpfTargetSurjective.lean`.
 
