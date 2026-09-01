@@ -165,9 +165,10 @@ set_option backward.isDefEq.respectTransparency false in
 -- transparency and the two `dif_neg`s are otherwise rejected as ill-typed.
 /-- **Off the diagonal the glue datum's transition-then-inclusion is `Spec (θ i j)` followed by the
 affine chart of `D (g j i)`**, up to the `CategoryTheory.GlueData.ofGlueData'` `eqToHom`. The two
-inner `eqToHom`s introduced by `ofGlueData'` — one at the end of `t i j`, one at the start of
-`f j i` — are mutually inverse and cancel; what is left in front is exactly the `eqToHom` that also
-prefixes `f i j`, which is what `preimage_image_specι` needs. -/
+inner `eqToHom`s introduced by `GlueData.ofGlueData'` — one at the end of `t i j`, one at the
+start of `f j i` — are mutually inverse and cancel; what is left in front is exactly the
+`eqToHom` that also prefixes `f i j`, which is what
+`ChartedSchemeDatum.preimage_image_specι` needs. -/
 theorem specLRSGlueData_t_comp_f (i j : D.J) (h : i ≠ j) :
     D.specLRSGlueData.toGlueData.t i j ≫ D.specLRSGlueData.toGlueData.f j i =
       eqToHom (dif_neg h) ≫ (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫
@@ -193,7 +194,8 @@ transported across the carrier comparison, followed by the identification of thi
 *closed subset* of the `j`-th chart needs, and `FormalSchemes.ChartedCompletionSupport` spends `hθ`
 on exactly the middle preimage.
 
-Unlike `preimage_range_specι`, this one cannot discard the `ofGlueData'` `eqToHom` with
+Unlike `ChartedSchemeDatum.preimage_range_specι`, this one cannot discard the
+`GlueData.ofGlueData'` `eqToHom` with
 `AlgebraicGeometry.LocallyRingedSpace.range_eqToHom_comp_base`: an isomorphism is invisible to a
 range but not to the image of a named subset. The two occurrences cancel against each other instead,
 which is what `specLRSGlueData_t_comp_f` and

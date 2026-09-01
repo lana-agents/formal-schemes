@@ -35,7 +35,8 @@ the `Bool × Bool`-indexed fields, converting `i ≠ j` to `i.down ≠ j.down` v
 * `AlgebraicGeometry.tateSelfProductGlueData'`: the four-chart glue datum as a
   `CategoryTheory.GlueData' LocallyRingedSpace`.
 * `AlgebraicGeometry.tateSelfProductLRSGlueData`, `...FormalGlueData`: the glue datum as a
-  `LocallyRingedSpace.GlueData` (via `ofGlueData'` + `f_open`) and a `FormalScheme.GlueData`.
+  `LocallyRingedSpace.GlueData` (via `GlueData.ofGlueData'` + `f_open`) and a
+  `FormalScheme.GlueData`.
 * `AlgebraicGeometry.tateSelfProduct`: the glued fibre product `𝔈_q ×_{Spf R} 𝔈_q`.
 
 ## References

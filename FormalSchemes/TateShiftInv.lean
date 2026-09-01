@@ -78,13 +78,14 @@ variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 /-! ### The adjacent-overlap cruxes -/
 
 set_option maxHeartbeats 1600000 in
--- Unfolding `glue_condition` at the shifted indices through `ofGlueData'` is expensive; raise it.
+-- Unfolding `CategoryTheory.GlueData.glue_condition` at the shifted indices through
+-- `GlueData.ofGlueData'` is expensive; raise it.
 /-- **The forward adjacent-overlap identity for a difference-preserving reindexing `σ`.** If `σ`
 carries the adjacent pair `(i, j)` (with `j = i + 1`) to an adjacent pair `(σ i, σ j)` (still a
 forward step), then the `x`-chart into `U (σ i)` agrees, over the 𝔾m-inversion chart transition
 `Spf A{1/x} ≅ Spf A{1/y}`, with the `y`-chart into `U (σ j)`. This is exactly
-`CategoryTheory.GlueData.glue_condition` at the shifted indices, unfolded through `ofGlueData'`.
-`Inv` analogue of `tateShift_overlap_forward_gen`. -/
+`CategoryTheory.GlueData.glue_condition` at the shifted indices, unfolded through
+`GlueData.ofGlueData'`. `Inv` analogue of `tateShift_overlap_forward_gen`. -/
 theorem tateInvShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) (σ : ULift.{u} ℤ → ULift.{u} ℤ) {i j : ULift.{u} ℤ}
     (h1 : (σ j).down - (σ i).down = 1) :
@@ -107,7 +108,8 @@ theorem tateInvShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [Is
   exact ((cancel_epi (eqToHom _)).mp key).symm
 
 set_option maxHeartbeats 1600000 in
--- Unfolding `glue_condition` at the shifted indices through `ofGlueData'` is expensive; raise it.
+-- Unfolding `CategoryTheory.GlueData.glue_condition` at the shifted indices through
+-- `GlueData.ofGlueData'` is expensive; raise it.
 /-- **The backward adjacent-overlap identity for a difference-preserving reindexing `σ`.** The
 analogue of `tateInvShift_overlap_forward_gen` for a backward step `j = i - 1`. -/
 theorem tateInvShift_overlap_backward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]

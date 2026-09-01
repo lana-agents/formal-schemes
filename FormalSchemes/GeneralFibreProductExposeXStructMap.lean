@@ -119,8 +119,8 @@ def xStructMap :
     · -- diagonal: `t i i = 𝟙`, so both sides collapse to `f i i ≫ xStructMapChart`.
       subst hij
       simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · -- off-diagonal: unfold the `ofGlueData'` `if`-forms; the dite conditions are on `= : D.J`,
-      -- so re-type the disequalities in `¬ Eq` form before rewriting.
+    · -- off-diagonal: unfold the `GlueData.ofGlueData'` `if`-forms; the dite conditions are on
+      -- `= : D.J`, so re-type the disequalities in `¬ Eq` form before rewriting.
       have hij' : ¬ @Eq D.J i j := hij
       have hji' : ¬ @Eq D.J j i := fun heq => hij heq.symm
       simp only [xFormalGlueData, xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',

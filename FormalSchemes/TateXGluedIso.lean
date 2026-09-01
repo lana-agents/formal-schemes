@@ -490,7 +490,7 @@ theorem xGlueData_V {i j : D.xIdx} (hij : i ≠ j) :
     dif_neg (show ¬ @Eq D.J i j from hij), xOverlapObj]
 
 /-- Off the diagonal, the `X` glue datum's overlap immersion is the basic-open chart at `g i j`,
-up to the transport `ofGlueData'` inserts. -/
+up to the transport `GlueData.ofGlueData'` inserts. -/
 theorem xGlueData_f {i j : D.xIdx} (hij : i ≠ j)
     (h : D.xFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.V (i, j) =
       D.xOverlapObj (D.xIdxToJ i) (D.xIdxToJ j)) :
@@ -500,7 +500,7 @@ theorem xGlueData_f {i j : D.xIdx} (hij : i ≠ j)
     CategoryTheory.GlueData'.f', dif_neg (show ¬ @Eq D.J i j from hij), xChartU]
 
 /-- Off the diagonal, the `X` glue datum's transition is `Spf` of the datum's `τ`, up to the
-transports `ofGlueData'` inserts. -/
+transports `GlueData.ofGlueData'` inserts. -/
 theorem xGlueData_t {i j : D.xIdx} (hij : i ≠ j)
     (h : D.xFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.V (i, j) =
       D.xOverlapObj (D.xIdxToJ i) (D.xIdxToJ j))

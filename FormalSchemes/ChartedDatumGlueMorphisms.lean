@@ -14,7 +14,7 @@ it means supplying one morphism per chart and checking they agree on the double 
 
 `FormalSchemes.GeneralFibreProductExposeXStructMap` already does this once, for the structural
 morphism `xGlued ⟶ Spf R`. This file abstracts that assembly over the target: the same three-line
-`ofGlueData'` bookkeeping serves any target, and no consumer should have to repeat it.
+`GlueData.ofGlueData'` bookkeeping serves any target, and no consumer should have to repeat it.
 
 ## The bookkeeping, and why it is worth factoring out
 
@@ -86,8 +86,8 @@ def glueChartMorphisms
     · -- diagonal: `t i i = 𝟙`, so both sides collapse to `f i i ≫ k i`.
       subst hij
       simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · -- off-diagonal: unfold the `ofGlueData'` `dite`-forms; the conditions are on `= : D.J`, so
-      -- re-type the disequalities in `¬ @Eq D.J` form before `dif_neg` will fire.
+    · -- off-diagonal: unfold the `GlueData.ofGlueData'` `dite`-forms; the conditions are on
+      -- `= : D.J`, so re-type the disequalities in `¬ @Eq D.J` form before `dif_neg` will fire.
       have hij' : ¬ @Eq D.J i j := hij
       have hji' : ¬ @Eq D.J j i := fun heq => hij heq.symm
       simp only [xFormalGlueData, xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',

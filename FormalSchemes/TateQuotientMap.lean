@@ -186,8 +186,8 @@ theorem tateChartSection_tateChartIndex_emod (i : ULift.{u} ℤ) :
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The two-chart model's glue condition at the pair `(⟨b⟩, ⟨!b⟩)`**, with both the overlap chart
 and the transition spelled out. Obtained from `CategoryTheory.GlueData.glue_condition` by unfolding
-`ofGlueData'` off the diagonal (the two indices `⟨b⟩`, `⟨!b⟩` are distinct) and cancelling the
-`eqToHom` prefix common to `f i j` and `t i j`. -/
+`GlueData.ofGlueData'` off the diagonal (the two indices `⟨b⟩`, `⟨!b⟩` are distinct) and cancelling
+the `eqToHom` prefix common to `f i j` and `t i j`. -/
 theorem tateCurveModel_glue_condition_desc (b : Bool) :
     coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨b⟩ =
