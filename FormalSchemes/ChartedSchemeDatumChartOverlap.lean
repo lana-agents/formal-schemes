@@ -18,6 +18,12 @@ This file computes the intersection, as an equality:
 (specι i)⁻¹ (range (specι j)) = D (g i j)        for i ≠ j
 ```
 
+and the refinement of it that names *which* part of the `j`-th chart a given subset comes from:
+
+```
+(specι i)⁻¹ (specι j '' U) = D(g i j)-chart '' (θ i j-translate)⁻¹ (overlap chart⁻¹ U)
+```
+
 That is the arbitrary-index form of `AlgebraicGeometry.preimage_range_specTwoPatchι₁`
 (`FormalSchemes.SpecTwoPatchNonAffine`). Both halves come at once from
 `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι`
@@ -35,9 +41,11 @@ above. That file records the absence of any range computation for `specι` as th
 continue, and this file is the answer to it.
 
 Nothing here uses the ideals `K i` or the compatibility `hθ`: this is a statement about the glued
-**scheme**, not about any completion of it. `hθ` enters one file later, where the zero loci do —
-and neither does the glue condition any longer, though `specι_base_comap_algebraMap` still lives
-here because that later file consumes it.
+**scheme**, not about any completion of it. `hθ` enters one file later, where the zero loci do.
+Neither statement here opens the glue datum's `glue_condition` field either — both come from the
+topological gluing, where the glue condition is spent one level down inside Mathlib's
+`TopCat.GlueData.image_inter`. `specι_base_comap_algebraMap` therefore has **no consumer left on
+the tree**; see its own docstring.
 
 ## Main results
 
@@ -46,13 +54,24 @@ here because that later file consumes it.
   `CategoryTheory.GlueData.ofGlueData'` `eqToHom` being invisible to a range.
 * `AlgebraicGeometry.ChartedSchemeDatum.preimage_range_specι`: **the equality**, off the general
   glue-datum statement.
+* `AlgebraicGeometry.ChartedSchemeDatum.specLRSGlueData_t_comp_f`: off the diagonal the glue datum's
+  transition-then-inclusion `t i j ≫ f j i` is `eqToHom` followed by `Spec (θ i j)` and the affine
+  chart of `D (g j i)` — the same `eqToHom` that prefixes `f i j`, which is what lets the two cancel
+  below.
+* `AlgebraicGeometry.ChartedSchemeDatum.preimage_image_specι`: **the equality for the image of a
+  subset**, off `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_image_ι`. Taking
+  `U = Set.univ` gives `preimage_range_specι` back, but the general form is what a statement about a
+  *closed subset* of the `j`-th chart needs, and it is stated in the `PrimeSpectrum.comap` language
+  its consumers speak.
 * `AlgebraicGeometry.ChartedSchemeDatum.specι_base_notMem_range_specι` and
   `..._of_mem`: **the gluing is proper** — a point of the `i`-th chart outside `D (g i j)` maps
   outside the `j`-th chart, read off the equality. This is the arbitrary-index twin of
   `AlgebraicGeometry.specTwoPatchι₀_base_notMem_range_specTwoPatchι₁`.
 * `AlgebraicGeometry.ChartedSchemeDatum.specι_base_comap_algebraMap`: the glue condition at a
-  point. The equality above no longer needs it; `FormalSchemes.ChartedCompletionSupport` does, for
-  the step where `hθ` is spent, and this is its home.
+  point, and the only statement of it at an arbitrary index. **Nothing consumes it**: neither
+  equality above needs it, and `FormalSchemes.ChartedCompletionSupport` stopped needing it when
+  `preimage_image_zeroLocus_specι` was rerouted through `preimage_image_specι`. Its two-patch twin
+  `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` is live.
 
 ## References
 
@@ -112,6 +131,61 @@ theorem preimage_range_specι (i j : D.J) (h : i ≠ j) :
   (D.specLRSGlueData.preimage_range_ι j i).trans
     ((D.range_specLRSGlueData_f i j h).trans (range_specAwayMap (D.g i j)))
 
+/-! ### The image of a subset of one chart, seen in another -/
+
+set_option linter.style.setOption false in
+set_option backward.isDefEq.respectTransparency false in
+-- Same transparency requirement as `range_specLRSGlueData_f` above, and for the same reason: the
+-- glue datum is a `def`, so `D.specLRSGlueData.J` does not reduce to `D.J` at `instances`
+-- transparency and the two `dif_neg`s are otherwise rejected as ill-typed.
+/-- **Off the diagonal the glue datum's transition-then-inclusion is `Spec (θ i j)` followed by the
+affine chart of `D (g j i)`**, up to the `CategoryTheory.GlueData.ofGlueData'` `eqToHom`. The two
+inner `eqToHom`s introduced by `ofGlueData'` — one at the end of `t i j`, one at the start of
+`f j i` — are mutually inverse and cancel; what is left in front is exactly the `eqToHom` that also
+prefixes `f i j`, which is what `preimage_image_specι` needs. -/
+theorem specLRSGlueData_t_comp_f (i j : D.J) (h : i ≠ j) :
+    D.specLRSGlueData.toGlueData.t i j ≫ D.specLRSGlueData.toGlueData.f j i =
+      eqToHom (dif_neg h) ≫ (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫
+        specAwayMap (D.g j i) := by
+  have ht : D.specLRSGlueData.toGlueData.t i j =
+      eqToHom (dif_neg h) ≫ (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫
+        eqToHom (dif_neg (Ne.symm h)).symm := dif_neg h
+  have hf : D.specLRSGlueData.toGlueData.f j i =
+      eqToHom (dif_neg (Ne.symm h)) ≫ specAwayMap (D.g j i) := dif_neg (Ne.symm h)
+  rw [ht, hf, Category.assoc, Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
+    Category.id_comp]
+
+set_option linter.style.setOption false in
+set_option backward.isDefEq.respectTransparency false in
+/-- **The part of the `i`-th chart that lands in a given subset `U` of the `j`-th chart.** It is the
+image, under the affine chart of `D (g i j)`, of the part of the overlap that the `θ i j`-translate
+carries into `U`.
+
+This is `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_image_ι`
+(`FormalSchemes.GlueDataImageInter`), which is Mathlib's `TopCat.GlueData.preimage_image_eq_image`
+transported across the carrier comparison, followed by the identification of this datum's `f` and
+`t`. At `U = Set.univ` it is `preimage_range_specι`; the general form is what a statement about a
+*closed subset* of the `j`-th chart needs, and `FormalSchemes.ChartedCompletionSupport` spends `hθ`
+on exactly the middle preimage.
+
+Unlike `preimage_range_specι`, this one cannot discard the `ofGlueData'` `eqToHom` with
+`AlgebraicGeometry.LocallyRingedSpace.range_eqToHom_comp_base`: an isomorphism is invisible to a
+range but not to the image of a named subset. The two occurrences cancel against each other instead,
+which is what `specLRSGlueData_t_comp_f` and
+`AlgebraicGeometry.LocallyRingedSpace.image_preimage_eqToHom_comp_base` are for. -/
+theorem preimage_image_specι (i j : D.J) (h : i ≠ j) (U : Set (PrimeSpectrum (D.C j))) :
+    ⇑(D.specι i).base ⁻¹' (⇑(D.specι j).base '' U) =
+      PrimeSpectrum.comap (algebraMap (D.C i) (Localization.Away (D.g i j))) ''
+        (PrimeSpectrum.comap (D.θ i j h).symm.toRingHom ⁻¹'
+          (PrimeSpectrum.comap (algebraMap (D.C j) (Localization.Away (D.g j i))) ⁻¹' U)) := by
+  have hf : D.specLRSGlueData.toGlueData.f i j =
+      eqToHom (dif_neg h) ≫ specAwayMap (D.g i j) := dif_neg h
+  refine (D.specLRSGlueData.preimage_image_ι j i U).trans ?_
+  rw [D.specLRSGlueData_t_comp_f i j h, hf,
+    LocallyRingedSpace.image_preimage_eqToHom_comp_base, LocallyRingedSpace.comp_base,
+    TopCat.coe_comp, Set.preimage_comp]
+  rfl
+
 /-! ### The gluing is proper -/
 
 /-- **A point of the `i`-th chart outside the overlap misses the `j`-th chart.** The arbitrary-index
@@ -137,8 +211,17 @@ theorem specι_base_notMem_range_specι_of_mem (i j : D.J) (h : i ≠ j)
 
 /-- **The glue condition at a point**: a prime of the overlap `(C i)_{g i j}`, pushed into the glued
 scheme through the `i`-th chart, is the image through the `j`-th chart of its `θ i j`-translate.
-This is `AlgebraicGeometry.ChartedSchemeDatum.specAwayMap_comp_specι` evaluated at a point, and it
-is what supplies the converse containment below. -/
+This is `AlgebraicGeometry.ChartedSchemeDatum.specAwayMap_comp_specι` evaluated at a point.
+
+**It has no consumer.** It supplied the converse containment for `preimage_range_specι` until that
+went through the topological gluing, and the `hθ` step of
+`AlgebraicGeometry.ChartedCompletionDatum.preimage_image_zeroLocus_specι` until that went through
+`preimage_image_specι`. It is kept because it is the only statement of the glue condition at a
+point at an arbitrary index — its two-patch twin
+`AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` is still consumed, and a datum-level
+mapping-out argument that needs to name *which* prime of `C j` a prime of `D (g i j)` becomes will
+want this rather than rederive it. Whether that is enough to keep a zero-consumer public name is a
+judgement this file does not make silently: it is flagged rather than assumed. -/
 theorem specι_base_comap_algebraMap (i j : D.J) (h : i ≠ j)
     (y : PrimeSpectrum (Localization.Away (D.g i j))) :
     (D.specι i).base (PrimeSpectrum.comap (algebraMap (D.C i) (Localization.Away (D.g i j))) y) =

@@ -42,9 +42,13 @@ than restated, since they were already stated for an arbitrary `(A, I, a)` and `
   `AlgebraicGeometry.image_zeroLocus_map_away`.
 * **Transport** — `AlgebraicGeometry.comap_θ_symm_preimage_zeroLocus`, which turns `hθ` from an
   equality of ideals into an equality of sets of primes.
-* **Glue** — `AlgebraicGeometry.ChartedSchemeDatum.preimage_range_specι`
-  (`FormalSchemes.ChartedSchemeDatumChartOverlap`), the brick this file was waiting on: the charts
-  of the glued scheme meet *exactly* over `D (g i j)`.
+* **Glue** — `AlgebraicGeometry.ChartedSchemeDatum.preimage_image_specι`
+  (`FormalSchemes.ChartedSchemeDatumChartOverlap`), the brick this file was waiting on: it says not
+  merely that the charts of the glued scheme meet *exactly* over `D (g i j)`
+  (`..preimage_range_specι`, the `U = Set.univ` case) but **which** part of the `i`-th chart the
+  image of a given subset of the `j`-th chart is. That refinement is what leaves this file with
+  nothing to do but rewrite: the localization and transport layers above turn the middle preimage
+  into `V (K i · (C i)_{g i j})` and its image into `V (K i) ∩ D (g i j)`.
 
 ## Properness, which the range computation alone could not give
 
@@ -68,8 +72,8 @@ all of the projective line as soon as `R` is nontrivial.
 
 ## Main results
 
-* `AlgebraicGeometry.ChartedCompletionDatum.preimage_range_specι` and
-  `..specι_base_comap_algebraMap`: the `Spec`-side brick, read at a completion datum.
+* `AlgebraicGeometry.ChartedCompletionDatum.preimage_range_specι` and `..preimage_image_specι`:
+  the `Spec`-side bricks, read at a completion datum.
 * `AlgebraicGeometry.ChartedCompletionDatum.preimage_image_zeroLocus_specι`: **where `hθ` is
   spent** — the `j`-th chart's zero locus meets the `i`-th chart in `V (K i) ∩ D (g i j)`.
 * `AlgebraicGeometry.ChartedCompletionDatum.preimage_range_toScheme_base`: **the support
@@ -111,13 +115,14 @@ theorem preimage_range_specι (i j : D.J) (h : i ≠ j) :
       (PrimeSpectrum.basicOpen (D.g i j) : Set (PrimeSpectrum (D.C i))) :=
   D.toChartedSchemeDatum.preimage_range_specι i j h
 
-/-- **The glue condition at a point**, read at this datum. -/
-theorem specι_base_comap_algebraMap (i j : D.J) (h : i ≠ j)
-    (y : PrimeSpectrum (Localization.Away (D.g i j))) :
-    (D.specι i).base (PrimeSpectrum.comap (algebraMap (D.C i) (Localization.Away (D.g i j))) y) =
-      (D.specι j).base (PrimeSpectrum.comap (algebraMap (D.C j) (Localization.Away (D.g j i)))
-        (PrimeSpectrum.comap (D.θ i j h).symm.toRingHom y)) :=
-  D.toChartedSchemeDatum.specι_base_comap_algebraMap i j h y
+/-- **The part of the `i`-th chart that lands in a given subset of the `j`-th**, read at this
+datum. -/
+theorem preimage_image_specι (i j : D.J) (h : i ≠ j) (U : Set (PrimeSpectrum (D.C j))) :
+    ⇑(D.specι i).base ⁻¹' (⇑(D.specι j).base '' U) =
+      PrimeSpectrum.comap (algebraMap (D.C i) (Localization.Away (D.g i j))) ''
+        (PrimeSpectrum.comap (D.θ i j h).symm.toRingHom ⁻¹'
+          (PrimeSpectrum.comap (algebraMap (D.C j) (Localization.Away (D.g j i))) ⁻¹' U)) :=
+  D.toChartedSchemeDatum.preimage_image_specι i j h U
 
 /-- The chart inclusions of the glued ambient scheme are injective on points. -/
 theorem specι_base_injective (i : D.J) : Function.Injective ⇑(D.specι i).base :=
@@ -128,53 +133,25 @@ theorem specι_base_injective (i : D.J) : Function.Injective ⇑(D.specι i).bas
 /-- **The part of the `i`-th chart lying over the `j`-th chart's zero locus is
 `V (K i) ∩ D (g i j)`.**
 
-A prime `p` of `C i` whose image lies in `(specι j) '' V (K j)` lies in `D (g i j)` by
-`preimage_range_specι`, hence comes from a prime `y` of `(C i)_{g i j}`; the glue condition
-identifies the corresponding prime of `C j` as the image of the `θ i j`-translate of `y`, and `hθ`
-turns *"that translate lies in `V (K j · (C j)_{g j i})`"* into *"`y` lies in
-`V (K i · (C i)_{g i j})`"*. This is where the compatibility hypothesis does its work, exactly as
-`AlgebraicGeometry.preimage_image_zeroLocus_specTwoPatchι₁` does two patches down. -/
+`preimage_image_specι` already says that the left-hand side is the image, under the chart of
+`D (g i j)`, of the `θ i j`-translate of the overlap's preimage of `V (K j)` — a statement about the
+glued **scheme**, with no ideal in it. Three rewrites finish: the innermost preimage is
+`V (K j · (C j)_{g j i})` (`zeroLocus_map_away_eq_preimage`); `hθ` turns its `θ i j`-translate into
+`V (K i · (C i)_{g i j})` (`comap_θ_symm_preimage_zeroLocus`); and the image of that is
+`V (K i) ∩ D (g i j)` (`image_zeroLocus_map_away`).
+
+**The middle step is where the compatibility hypothesis does its work**, exactly as
+`AlgebraicGeometry.preimage_image_zeroLocus_specTwoPatchι₁` does two patches down, and rerouting the
+set-theoretic bookkeeping around it through the topological gluing does not move it: `hθ` is still
+the only reason a prime of `D (g i j)` lands where it does. -/
 theorem preimage_image_zeroLocus_specι (i j : D.J) (h : i ≠ j) :
     ⇑(D.specι i).base ⁻¹'
         (⇑(D.specι j).base '' PrimeSpectrum.zeroLocus ((D.K j : Ideal (D.C j)) : Set (D.C j))) =
       PrimeSpectrum.zeroLocus ((D.K i : Ideal (D.C i)) : Set (D.C i)) ∩
         PrimeSpectrum.basicOpen (D.g i j) := by
-  ext p
-  constructor
-  · rintro ⟨q, hq, hqe⟩
-    have hpg : p ∈ (PrimeSpectrum.basicOpen (D.g i j) : Set (PrimeSpectrum (D.C i))) := by
-      rw [← D.preimage_range_specι i j h]
-      exact ⟨q, hqe⟩
-    obtain ⟨y, rfl⟩ :
-        p ∈ Set.range (PrimeSpectrum.comap
-          (algebraMap (D.C i) (Localization.Away (D.g i j)))) := by
-      rw [PrimeSpectrum.localization_away_comap_range _ (D.g i j)]
-      exact hpg
-    have hqy : q = PrimeSpectrum.comap (algebraMap (D.C j) (Localization.Away (D.g j i)))
-        (PrimeSpectrum.comap (D.θ i j h).symm.toRingHom y) :=
-      D.specι_base_injective j (hqe.trans (D.specι_base_comap_algebraMap i j h y))
-    rw [hqy] at hq
-    have hy : y ∈ PrimeSpectrum.zeroLocus
-        ((D.K i).map (algebraMap (D.C i) (Localization.Away (D.g i j))) : Set _) := by
-      rw [← comap_θ_symm_preimage_zeroLocus (D.K i) (D.g i j) (D.K j) (D.g j i) (D.θ i j h)
-        (D.hθ i j h), Set.mem_preimage, zeroLocus_map_away_eq_preimage]
-      exact hq
-    rw [← image_zeroLocus_map_away (D.K i) (D.g i j)]
-    exact ⟨y, hy, rfl⟩
-  · intro hp
-    rw [← image_zeroLocus_map_away (D.K i) (D.g i j)] at hp
-    obtain ⟨y, hy, rfl⟩ := hp
-    refine ⟨PrimeSpectrum.comap (algebraMap (D.C j) (Localization.Away (D.g j i)))
-      (PrimeSpectrum.comap (D.θ i j h).symm.toRingHom y), ?_,
-      (D.specι_base_comap_algebraMap i j h y).symm⟩
-    have hmem : PrimeSpectrum.comap (D.θ i j h).symm.toRingHom y ∈
-        PrimeSpectrum.zeroLocus
-          ((D.K j).map (algebraMap (D.C j) (Localization.Away (D.g j i))) : Set _) := by
-      rw [← Set.mem_preimage, comap_θ_symm_preimage_zeroLocus (D.K i) (D.g i j) (D.K j) (D.g j i)
-        (D.θ i j h) (D.hθ i j h)]
-      exact hy
-    rw [zeroLocus_map_away_eq_preimage (D.K j) (D.g j i)] at hmem
-    exact hmem
+  rw [D.preimage_image_specι i j h, ← zeroLocus_map_away_eq_preimage (D.K j) (D.g j i),
+    comap_θ_symm_preimage_zeroLocus (D.K i) (D.g i j) (D.K j) (D.g j i) (D.θ i j h) (D.hθ i j h),
+    image_zeroLocus_map_away (D.K i) (D.g i j)]
 
 /-! ### The support statement -/
 
