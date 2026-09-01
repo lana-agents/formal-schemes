@@ -72,7 +72,8 @@ the tree**; see its own docstring.
   point, and the only statement of it at an arbitrary index. **Nothing consumes it**: neither
   equality above needs it, and `FormalSchemes.ChartedCompletionSupport` stopped needing it when
   `preimage_image_zeroLocus_specι` was rerouted through `preimage_image_specι`. Its two-patch twin
-  `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` is live.
+  `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` lost its consumers to the same reroute
+  two patches down and is kept on the same footing.
 
 ## References
 
@@ -218,11 +219,12 @@ This is `AlgebraicGeometry.ChartedSchemeDatum.specAwayMap_comp_specι` evaluated
 went through the topological gluing, and the `hθ` step of
 `AlgebraicGeometry.ChartedCompletionDatum.preimage_image_zeroLocus_specι` until that went through
 `preimage_image_specι`. It is kept because it is the only statement of the glue condition at a
-point at an arbitrary index — its two-patch twin
-`AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` is still consumed, and a datum-level
-mapping-out argument that needs to name *which* prime of `C j` a prime of `D (g i j)` becomes will
-want this rather than rederive it. Whether that is enough to keep a zero-consumer public name is a
-judgement this file does not make silently: it is flagged rather than assumed. -/
+point at an arbitrary index, and because a datum-level mapping-out argument that needs to name
+*which* prime of `C j` a prime of `D (g i j)` becomes will want this rather than rederive it. Its
+two-patch twin `AlgebraicGeometry.specTwoPatchι₀_base_comap_algebraMap` is **no longer consumed
+either**: the same reroute ran two patches down, and that file records the same judgement. Whether
+that is enough to keep a zero-consumer public name is a judgement this file does not make silently:
+it is flagged rather than assumed. -/
 theorem specι_base_comap_algebraMap (i j : D.J) (h : i ≠ j)
     (y : PrimeSpectrum (Localization.Away (D.g i j))) :
     (D.specι i).base (PrimeSpectrum.comap (algebraMap (D.C i) (Localization.Away (D.g i j))) y) =
