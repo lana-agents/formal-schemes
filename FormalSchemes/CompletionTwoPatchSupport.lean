@@ -38,7 +38,10 @@ Correspondingly this file is where the glue datum's `glue_condition` is consumed
 in this development. Everything about `specTwoPatch` proved so far used only
 `GlueData.range_ι_inter_subset` — *the charts meet **at most** over the overlap* — which is the
 containment half. Here we need the converse, that a prime of `D(a)` really does lie in the
-`B`-chart, and that is exactly what the glue condition says.
+`B`-chart, and that is exactly what the glue condition says. It is spent below at
+`specTwoPatchι₀_base_comap_algebraMap`, which the chart preimage of the *completion* goes through;
+the chart preimage of the glued **scheme** gets its converse from the topological gluing instead
+(see the "Glue" layer).
 
 ## The three layers
 
@@ -51,14 +54,21 @@ the preimage of `V(I)`, and its image in `Spec A` is `V(I) ∩ D(a)`. General fa
 `PrimeSpectrum.preimage_comap_zeroLocus`. `map_θ_symm_ideal` is the ideal-level inverse of `hθ`,
 obtained from `Ideal.map_map` and `θ.symm ∘ θ = id`.
 
-**Glue.** `specAwayMap_comp_specTwoPatchι₀` is the glue condition in usable form: the two ways of
-mapping `Spec A_a` into the glued scheme agree. Its `ι₁` twin is a two-line consequence, obtained
-by composing with `specGlueIso.inv` rather than by redoing the `eqToHom` bookkeeping. From it,
+**Glue.** Two separate things, and they are worth keeping apart.
+
 `preimage_range_specTwoPatchι₁ : ι₀⁻¹(range ι₁) = D(a)` upgrades
-`FormalSchemes/SpecTwoPatchNonAffine.lean`'s one-directional statement to an equality. The two
-`B`-side facts that step also needs — `range_specTwoPatchLRSGlueData_f_true_false` and
-`specTwoPatchι₁_base_notMem_range_specTwoPatchι₀` — live in that file too, beside the `A`-side
-statements they mirror.
+`FormalSchemes/SpecTwoPatchNonAffine.lean`'s one-directional statement to an equality, and it comes
+from `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι`
+(`FormalSchemes.GlueDataImageInter`) — the statement, for *any* glue datum, that one piece meets
+another exactly along their overlap, transported from `TopCat.GlueData.preimage_range`. The two
+`eqToHom`-discarding range lemmas it consumes, `range_specTwoPatchLRSGlueData_f_false_true` and
+`..._f_true_false`, live in that same file beside the containment statements they mirror.
+
+`specAwayMap_comp_specTwoPatchι₀` is the glue condition in usable form: the two ways of mapping
+`Spec A_a` into the glued scheme agree. Its `ι₁` twin is a two-line consequence, obtained by
+composing with `specGlueIso.inv` rather than by redoing the `eqToHom` bookkeeping. This is what the
+**completion**'s chart preimage spends, at the `hθ` step, through
+`specTwoPatchι₀_base_comap_algebraMap` — not the scheme-level equality above.
 
 ## Scope
 
@@ -255,48 +265,39 @@ theorem specTwoPatchι₁_base_comap_algebraMap (z : PrimeSpectrum (Localization
   exact h
 
 /-- **The two charts meet exactly over the overlap**, from the `B` side: the part of `Spec B` that
-lands in the `A`-chart is precisely `D(b)`. -/
+lands in the `A`-chart is precisely `D(b)`.
+
+The `A`-side twin below carries the discussion; this one is the same three steps with the two
+indices exchanged. -/
 theorem preimage_range_specTwoPatchι₀ :
     ⇑(specTwoPatchι₁ a b θ).base ⁻¹' Set.range ⇑(specTwoPatchι₀ a b θ).base =
-      (PrimeSpectrum.basicOpen b : Set (PrimeSpectrum B)) := by
-  ext q
-  constructor
-  · intro hq
-    by_contra hqb
-    refine specTwoPatchι₁_base_notMem_range_specTwoPatchι₀ a b θ q ?_ hq
-    change q ∉ Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away b)))
-    rw [PrimeSpectrum.localization_away_comap_range (Localization.Away b) b]
-    exact hqb
-  · intro hq
-    obtain ⟨z, rfl⟩ :
-        q ∈ Set.range (PrimeSpectrum.comap (algebraMap B (Localization.Away b))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away b) b]
-      exact hq
-    exact ⟨_, (specTwoPatchι₁_base_comap_algebraMap a b θ z).symm⟩
+      (PrimeSpectrum.basicOpen b : Set (PrimeSpectrum B)) :=
+  ((specTwoPatchLRSGlueData a b θ).preimage_range_ι ⟨false⟩ ⟨true⟩).trans
+    ((range_specTwoPatchLRSGlueData_f_true_false a b θ).trans
+      (PrimeSpectrum.localization_away_comap_range _ b))
 
 /-- **The two charts meet exactly over the overlap.** The part of `Spec A` that lands in the
 `B`-chart is precisely `D(a)`.
 
 `FormalSchemes/SpecTwoPatchNonAffine.lean` has one direction of this — a prime containing `a` maps
-outside the `B`-chart — which follows from `GlueData.range_ι_inter_subset` alone. The converse needs
-the glue condition, and is the reason this file exists. -/
+outside the `B`-chart — which follows from `GlueData.range_ι_inter_subset` alone. Both directions
+at once are `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι`
+(`FormalSchemes.GlueDataImageInter`): the topological gluing already knows that `ι₀⁻¹(range ι₁)` is
+the range of the overlap inclusion, for any glue datum whatever, and `specTwoPatchι₀` is *by
+definition* that datum's `ι ⟨false⟩`. What is left is to name the overlap, which is
+`range_specTwoPatchLRSGlueData_f_false_true` (it discards the `GlueData.ofGlueData'` `eqToHom`)
+followed by `PrimeSpectrum.localization_away_comap_range`.
+
+The glue condition has not gone away, it has moved: Mathlib derives `TopCat.GlueData.preimage_range`
+from `TopCat.GlueData.image_inter`, whose `⊇` half closes by
+`CategoryTheory.GlueData.glue_condition_apply`. What this file still spends the glue condition on
+*directly* is the `hθ` step below, through `specTwoPatchι₀_base_comap_algebraMap`. -/
 theorem preimage_range_specTwoPatchι₁ :
     ⇑(specTwoPatchι₀ a b θ).base ⁻¹' Set.range ⇑(specTwoPatchι₁ a b θ).base =
-      (PrimeSpectrum.basicOpen a : Set (PrimeSpectrum A)) := by
-  ext p
-  constructor
-  · intro hp
-    by_contra hpa
-    exact specTwoPatchι₀_base_notMem_range_specTwoPatchι₁ a b θ p
-      (notMem_range_specAwayMap a (by
-        by_contra hmem
-        exact hpa ((PrimeSpectrum.mem_basicOpen a p).mpr hmem))) hp
-  · intro hp
-    obtain ⟨y, rfl⟩ :
-        p ∈ Set.range (PrimeSpectrum.comap (algebraMap A (Localization.Away a))) := by
-      rw [PrimeSpectrum.localization_away_comap_range (Localization.Away a) a]
-      exact hp
-    exact ⟨_, (specTwoPatchι₀_base_comap_algebraMap a b θ y).symm⟩
+      (PrimeSpectrum.basicOpen a : Set (PrimeSpectrum A)) :=
+  ((specTwoPatchLRSGlueData a b θ).preimage_range_ι ⟨true⟩ ⟨false⟩).trans
+    ((range_specTwoPatchLRSGlueData_f_false_true a b θ).trans
+      (PrimeSpectrum.localization_away_comap_range _ a))
 
 end Glue
 
