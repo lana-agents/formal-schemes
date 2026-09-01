@@ -11,7 +11,7 @@ set_option linter.style.header false
 
 An ordinary affine scheme is a formal scheme: `Spec A` is `Spf` of the adic ring `(A, ⊥)`, whose
 topology is discrete. `FormalSchemes/AdicRing.lean` already records the ring-theoretic half —
-`AdicRing.instIsAdicRingBotOfDiscreteTopology` makes a discrete ring adic with ideal of definition
+`instIsAdicRingBotOfDiscreteTopology` makes a discrete ring adic with ideal of definition
 `⊥` — but nothing on the tree identified the two locally ringed spaces. This file does.
 
 The identification is `FormalSpectrum.thickeningMap (⊥ : Ideal A) 0` itself: the canonical morphism
