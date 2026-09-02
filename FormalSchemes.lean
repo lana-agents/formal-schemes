@@ -34,6 +34,7 @@ import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AdicRingCat
 import FormalSchemes.AdicSubringComplete
+import FormalSchemes.AdicSubringFinite
 import FormalSchemes.AdicSubringPrincipal
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
