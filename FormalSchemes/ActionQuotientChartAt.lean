@@ -78,9 +78,12 @@ set_option backward.isDefEq.respectTransparency false in
 -- Comparing the restriction of the ambient space with the affine model needs reducible-transparency
 -- defeq checks. This proof is `LocallyRingedSpace.formalSchemeOfIsOpenImmersionRestrict`
 -- (`FormalSchemes.ActionQuotientFormalScheme`) read one point at a time, and the option is on that
--- definition for the same comparison; those two are the only sites on the tree that need it. The
--- measurement, and the tree-wide rule this comment used to assert in place of it, are recorded
--- there rather than repeated here (issue 1531).
+-- definition for the same comparison; those two are the only sites that need it *for that
+-- comparison*, which is not a claim about the tree's other
+-- `set_option backward.isDefEq.respectTransparency false` blocks — there are 53 of them, in 30
+-- other files, and they justify themselves locally. The measurement, and the tree-wide rule this
+-- comment used to assert in place of it, are recorded there rather than repeated here (issue
+-- 1531).
 /-- **The pointwise chart theorem.** A separating open `U ∋ x` gives an affine formal chart of the
 quotient at `π x`, with no hypothesis at any other point of `X`.
 
