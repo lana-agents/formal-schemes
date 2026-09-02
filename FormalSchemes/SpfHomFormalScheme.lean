@@ -23,14 +23,6 @@ an open immersion only for a finitely generated ideal. So the hypothesis here is
 `FormalScheme.local_affine` with `I.FG` added, and not the structure field. Whether the field
 alone suffices is not settled here and nothing below assumes it does.
 
-## Main definitions
-
-* `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.rangeOpens`: the range of an open
-  immersion, as an open of the target.
-* `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictRangeOpens`: the target
-  restricted to that open *is* the source. This is the general form of the identification
-  `FormalSchemes.SpfHomColimitTarget`'s witness builds by hand for one basic open.
-
 ## Main results
 
 * `FormalSpectrum.existsUnique_hom_thickeningMap_of_isThickeningColimitTarget`: the colimit
@@ -42,9 +34,11 @@ alone suffices is not settled here and nothing below assumes it does.
 * `FormalSpectrum.existsUnique_hom_thickeningMap_formalScheme` and
   `FormalSpectrum.thickeningRestrictionEquivFormalScheme`: EGA I 10.6.10 at such a target, as an
   `∃!` and as a bijection, with `hI : I.FG` and `hX : X.LocallyFG` the only hypotheses.
-* `FormalSpectrum.isThickeningColimitTarget_formalScheme_spf`: the same at `Spf I` itself, where
-  it reproduces `FormalSpectrum.isThickeningColimitTarget_spf`.
-  `FormalSchemes.TateChainInvColimitTarget` applies it at a target that is genuinely glued.
+
+The general theorem is applied at a target that is genuinely glued — neither `Spec` nor `Spf` of
+anything — in `FormalSchemes.TateChainInvColimitTarget`. At `Spf I` itself it reproduces
+`FormalSpectrum.isThickeningColimitTarget_spf`, and issue 1479 deleted the consumerless theorem
+that recorded that: the two statements are definitionally equal, so the tree keeps one.
 
 ## What is *not* proved
 
@@ -64,34 +58,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry TopologicalSpace
 
 universe u
-
-namespace AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion
-
-variable {Z Y : LocallyRingedSpace.{u}} (g : Z ⟶ Y) [H : LocallyRingedSpace.IsOpenImmersion g]
-
-/-- **The range of an open immersion, as an open of the target.** The openness is
-`Topology.IsOpenEmbedding.isOpen_range` of `PresheafedSpace.IsOpenImmersion.base_open`. -/
-def rangeOpens : Opens Y.toTopCat :=
-  ⟨Set.range g.base, H.base_open.isOpen_range⟩
-
-@[simp]
-theorem coe_rangeOpens : (rangeOpens g : Set Y.toTopCat) = Set.range g.base := rfl
-
-/-- **An open immersion identifies the target's restriction to its range with its source.** Both
-`Z` and `Y|_{range g}` are open immersions into `Y` with the same range, so this is
-`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq`, whose range hypothesis is
-`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`.
-
-Every cover-shaped hypothesis in the `SpfHom*` cluster asks for an isomorphism in this direction —
-`X.restrict (U i).isOpenEmbedding ≅ Y i` — while every supply of charts on this tree
-(`AlgebraicGeometry.FormalScheme.LocallyFG`,
-`AlgebraicGeometry.LocallyRingedSpace.HasAffineChartAt`) produces an open immersion instead. This
-is the one line between them. -/
-def isoRestrictRangeOpens : Y.restrict (rangeOpens g).isOpenEmbedding ≅ Z :=
-  (isoOfRangeEq g (Y.ofRestrict (rangeOpens g).isOpenEmbedding)
-    (LocallyRingedSpace.range_ofRestrict Y (rangeOpens g)).symm).symm
-
-end AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion
 
 namespace FormalSpectrum
 
@@ -134,7 +100,7 @@ include hX in
 
 The cover is indexed by the points of `X`: `AlgebraicGeometry.FormalScheme.LocallyFG` supplies at
 each `x` an open immersion `Spf (L x) ⟶ X` whose range contains `x` and whose ideal of definition
-is finitely generated, `IsOpenImmersion.isoRestrictRangeOpens` turns it into the chart datum
+is finitely generated, `IsOpenImmersion.isoRestrictOpensRange` turns it into the chart datum
 `X|_{range} ≅ Spf (L x)` that `FormalSpectrum.isThickeningColimitTarget_of_cover` asks for, and
 each piece has the property by `FormalSpectrum.isThickeningColimitTarget_spf`. The cover condition
 holds for the cheapest possible reason: `x` lies in its own piece. -/
@@ -145,13 +111,13 @@ theorem isThickeningColimitTarget_formalScheme :
   letI := hT
   letI := hA
   letI := hc
-  have hcov : (⨆ x, rangeOpens (c x)) = ⊤ := by
+  have hcov : (⨆ x, opensRange (c x)) = ⊤ := by
     refine Opens.ext (Set.eq_univ_of_forall fun x => ?_)
     rw [Opens.coe_iSup]
     exact Set.mem_iUnion.2 ⟨x, hmem x⟩
   intro S _ _ J _ hJ
-  exact isThickeningColimitTarget_of_cover (fun x => rangeOpens (c x)) hcov
-    (fun x => locallyRingedSpaceObj (L x)) (fun x => isoRestrictRangeOpens (c x))
+  exact isThickeningColimitTarget_of_cover (fun x => opensRange (c x)) hcov
+    (fun x => locallyRingedSpaceObj (L x)) (fun x => isoRestrictOpensRange (c x))
     (fun x => isThickeningColimitTarget_spf (L x) (hLfg x)) J hJ
 
 variable {X}
@@ -187,13 +153,5 @@ theorem thickeningRestrictionEquivFormalScheme_apply (hI : I.FG)
   rfl
 
 end FormalSchemeTarget
-
-/-- **A formal affine is a locally finitely generated formal scheme's special case.** Recording
-both entry points at one space, as `FormalSchemes.SpfHomColimitTarget` does for its witness: the
-identity chart makes `FormalScheme.Spf I` locally finitely generated for `I.FG`, and the general
-theorem then reproduces `FormalSpectrum.isThickeningColimitTarget_spf`. -/
-theorem isThickeningColimitTarget_formalScheme_spf (hI : I.FG) :
-    IsThickeningColimitTarget (FormalScheme.Spf I).toLocallyRingedSpace :=
-  isThickeningColimitTarget_formalScheme _ (FormalScheme.locallyFG_Spf hI)
 
 end FormalSpectrum

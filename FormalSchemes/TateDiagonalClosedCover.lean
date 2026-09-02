@@ -61,8 +61,9 @@ glue inclusion; it is open because `ι p` is an open immersion. -/
 def tateSelfProductChartCover (hq : q ∈ I) (hI : I.FG) :
     ULift (Bool × Bool) →
       TopologicalSpace.Opens ((tateSelfProductInv R I q hq hI).toLocallyRingedSpace) :=
-  fun p => ⟨Set.range ((tateSelfProductFormalGlueDataInv R I q hq hI).ι p).base,
-    ((tateSelfProductFormalGlueDataInv R I q hq hI).ι_isOpenImmersion p).base_open.isOpen_range⟩
+  fun p => @LocallyRingedSpace.IsOpenImmersion.opensRange _ _
+    ((tateSelfProductFormalGlueDataInv R I q hq hI).ι p)
+    ((tateSelfProductFormalGlueDataInv R I q hq hI).ι_isOpenImmersion p)
 
 omit [IsNoetherianRing R] in
 /-- **The four charts form an open cover** of the Tate self-product: their union is the whole space,
