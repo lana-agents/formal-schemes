@@ -33,9 +33,9 @@ schemeDiagonal' = (tateXGluedIso).hom ≫ tateSchemeDiagonal ≫ (tateFibreProdu
 
 Both sides are morphisms **into** `generalFibreProduct` and both are sections of `pr₁` and of
 `pr₂`, so `fibreLift_unique_adicOverBase` (518) identifies them; its adic hypothesis is
-`adicOverBase_xStructMap`, datum-generic. This is `AffineSeparatedValue.lean:135`'s
-`oneChart_schemeDiagonal'_eq` with the two isomorphisms changed, and the three side goals really are
-datum-generic, exactly as issue 706 predicted.
+`BothChartedFibreDatumXY.adicOverBase_xStructMap`, datum-generic. This is
+`oneChart_schemeDiagonal'_eq` (`FormalSchemes.AffineSeparatedValue`) with the two isomorphisms
+changed, and the three side goals really are datum-generic, exactly as issue 706 predicted.
 
 `tate_isSeparated` then transports #243 across the two isomorphisms with
 `FormalScheme.IsClosedImmersion.iso_comp` / `.comp_iso`. **No stalk is computed**: the stalk half of

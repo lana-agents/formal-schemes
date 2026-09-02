@@ -16,8 +16,14 @@ Usage, from the repository root, after a full `lake build`:
     python3 scripts/citation_audit.py --diff upstream/master...HEAD
     python3 scripts/citation_audit.py --tree
 
-`--selftest` checks the tokenizer against the cases it used to get wrong, and both of the
-malformed-span checks below, and needs no build.
+A backticked `<project file>.lean:NN` pointer is a sixth thing that is not a citation, and the
+only one this script treats as a *defect* rather than a category: it is not identifier-shaped, so
+the resolution machinery never sees it, while the line it names moves the first time anyone inserts
+a declaration above it.  `project_line_pointer` reports them.  Mathlib pointers are left alone --
+they are pinned by the toolchain, not by this repository's edits.
+
+`--selftest` checks the tokenizer against the cases it used to get wrong, both of the
+malformed-span checks below, and the line-pointer predicate, and needs no build.
 
 Resolution of the declaration case is done by elaborating one `#check @Token` per distinct token
 in a single throwaway Lean file, which costs one `import FormalSchemes` and a few seconds.
@@ -61,6 +67,24 @@ _CONTINUATION = re.compile(r"^\s*(?:--\s*)?")
 # the wrong text.  The shape that produces it is a run of two or more backticks once fences are
 # stripped: Lean comments have no double-backtick convention, so such a run is the defect or a typo.
 ADJACENT = re.compile(r"``+")
+
+# A `File.lean:NN` pointer at a *project* file.  `is_excluded` files it under notation, because a
+# colon is not an identifier character, so nothing ever checks it -- and unlike every other
+# non-citation category it makes a claim that can go wrong silently: issue 1479 removed the three
+# `set_option` blocks of `Gluing.lean` and `Gluing.lean:48`, cited from two other files as the
+# precedent for one, went on pointing at a blank line.  A declaration name is checked on every pull
+# request; a line number is checked by nobody.
+#
+# Mathlib pointers are deliberately *not* matched.  They are pinned by the toolchain rather than by
+# this repository's edits, and the comparison below is exactly what separates them: the project's
+# `Gluing.lean` is a path this repository globs, `Mathlib/AlgebraicGeometry/Gluing.lean` is not.
+LINE_POINTER = re.compile(r"^(\S+\.lean):\d+(?:-\d+)?$")
+
+
+def project_line_pointer(token: str, paths: set[str]) -> bool:
+    """True if `token` is a `<project file>.lean:NN` pointer -- a citation nothing can check."""
+    m = LINE_POINTER.match(token)
+    return bool(m) and m.group(1) in paths
 
 # Lean identifier syntax.  Subscripts (U+2080-U+209C) are identifier characters; superscripts are
 # not, which is why `Iⁿ` is notation and `U₂` is a name.  Getting this wrong makes the generated
@@ -432,6 +456,22 @@ def selftest() -> int:
           % ("ok  " if ok else "FAIL"))
     if not ok:
         print("        want %r and no parity report\n        got  %r" % ([("<selftest>", 1)], got))
+
+    # The scope of the line-pointer check (issue 1517): a project pointer in either spelling and at
+    # either a line or a range, a Mathlib pointer that shares the project file's *basename*, and
+    # the two shapes it must not swallow -- a module name and a bare path.
+    fake = {"FormalSchemes/Gluing.lean", "Gluing.lean"}
+    want = [("Gluing.lean:48", True), ("FormalSchemes/Gluing.lean:48", True),
+            ("Gluing.lean:48-52", True),
+            ("Mathlib/AlgebraicGeometry/Gluing.lean:262-423", False),
+            ("FormalSchemes.Gluing", False), ("Gluing.lean", False)]
+    got = [(t, project_line_pointer(t, fake)) for t, _ in want]
+    ok = got == want
+    bad += not ok
+    print("%s  a project line pointer is reported and a Mathlib one is not"
+          % ("ok  " if ok else "FAIL"))
+    if not ok:
+        print("        want %r\n        got  %r" % (want, got))
     return 1 if bad else 0
 
 
@@ -461,6 +501,7 @@ def main() -> int:
         elif tok not in modules and tok not in paths:
             candidates.append(tok)
 
+    pointers = [t for t in sorted(sites) if project_line_pointer(t, paths)]
     unresolved = resolve_declarations(candidates)
     resolved = [t for t in candidates if t not in unresolved]
 
@@ -483,6 +524,8 @@ def main() -> int:
     print("  unbalanced fragments    : %5d%s"
           % (len(unbalanced), "" if args.tree else "   (advisory: a hunk is a slice)"))
     print("  nested spans            : %5d" % len(nested))
+    print("  project line pointers   : %5d distinct, %5d occurrences"
+          % (len(pointers), n(pointers)))
 
     for tok in sorted(unresolved, key=lambda t: (-len(sites[t]), t)):
         where = sites[tok][0]
@@ -494,9 +537,15 @@ def main() -> int:
     for path, line in nested:
         print("  %-10s  %s -- adjacent backticks re-pair the span they sit in"
               % ("NESTED", _loc(path, line)))
+    for tok in sorted(pointers, key=lambda t: (-len(sites[t]), t)):
+        where = sites[tok][0]
+        loc = where[0] if where[1] == 0 else "%s:%d" % where
+        print("  %-10s  %s -- `%s` names a line, which nothing checks; name the declaration"
+              % ("POINTER", loc, tok))
     # Parity is exact on a whole comment and advisory on a hunk; adjacent backticks are exact on
-    # both.  See `collect` for the measurement that settled the asymmetry.
-    return 1 if unresolved or nested or (unbalanced and args.tree) else 0
+    # both, and so is a line pointer -- slicing a hunk can neither manufacture nor destroy one.
+    # See `collect` for the measurement that settled the asymmetry.
+    return 1 if unresolved or nested or pointers or (unbalanced and args.tree) else 0
 
 
 if __name__ == "__main__":

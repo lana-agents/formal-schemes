@@ -84,10 +84,19 @@ theorem isOpenImmersion_ofRestrict_comp_of_stalk_iso (h : IsActionQuotient a π)
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- Comparing the restriction of the ambient space with the affine model needs reducible-transparency
--- defeq checks, as everywhere this tree feeds `IsOpenImmersion.formalScheme`; see `Gluing.lean:48`
--- and `OpenImmersionSourceFormalScheme.lean:86`. The chart morphism is handed to a focused goal for
--- the same reason: the one-shot `refine ⟨R, ‹_›, ‹_›, J, ‹_›, f ≫ …, ⟨z, ?_⟩, ?_⟩` times out at
--- `whnf` even at a million heartbeats.
+-- defeq checks. Exactly one other site needs them for the same comparison:
+-- `LocallyRingedSpace.hasAffineChartAt_of_isProperlyDiscontinuousOn`
+-- (`FormalSchemes.ActionQuotientChartAt`), which is this proof read one point at a time. This
+-- comment used to justify the option by "everywhere this tree feeds
+-- `IsOpenImmersion.formalScheme`", pointing at two line numbers; both had gone stale, and the
+-- general claim is false. `LocallyRingedSpace.formalSchemeOfHasAffineChartAt`,
+-- `FormalScheme.GlueData.gluedFormalScheme` and `FormalScheme.ofOpenImmersion`
+-- (`FormalSchemes.OpenImmersionSourceFormalScheme`) all feed the criterion with no option at all,
+-- and `FormalSchemes.Gluing`'s module docstring records that its own three blocks were removed
+-- once they were shown unnecessary. The chart morphism is handed to a focused goal for the reason
+-- `FormalScheme.ofOpenImmersion` gives in its body, to keep the chart ring's ideal concrete: the
+-- one-shot `refine ⟨R, ‹_›, ‹_›, J, ‹_›, f ≫ …, ⟨z, ?_⟩, ?_⟩` times out at `whnf` even at a
+-- million heartbeats.
 /-- **The quotient of a formal scheme by a free, properly discontinuous action is a formal scheme,
 given that the projection restricts to an open immersion over separating opens.**
 
