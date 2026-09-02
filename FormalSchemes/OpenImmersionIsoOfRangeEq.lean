@@ -29,37 +29,47 @@ coproduct of charts with a single chart is the typical way this lemma gets used 
 * `AlgebraicGeometry.LocallyRingedSpace.range_coprodDesc_base`: the range of `coprod.desc f g` is
   the union of the ranges of `f` and `g`.
 * `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`: the range of `Y|_V ⟶ Y` is `V`.
-* `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.opensRange` and `coe_opensRange`: the range
-  of an open immersion, as an open of the target.
+* `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.opensRange` and
+  `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.coe_opensRange`: the range of an open
+  immersion, as an open of the target.
 * `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`: an open immersion
   `j : X ⟶ Y` whose range is an open `U` identifies `Y|_U` with `X`, and
-  `isoRestrictOpensRange` is the case `U = opensRange j`.
+  `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOpensRange` is the case
+  `U = opensRange j`.
 
 ## Implementation notes
 
-`isoRestrictOfRangeEq` is the single proof of "an open immersion is the restriction to its range",
-and the two forms this library asks for are one line each off it:
-`AlgebraicGeometry.FormalScheme.restrictOpenIso` (`FormalSchemes.OpenFormalSubscheme`), which takes
-the open and a range proof, and `isoRestrictOpensRange`, which takes neither. Two constructions in
-the same direction already exist and neither serves, which is why this one is here:
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq` is the single proof of
+"an open immersion is the restriction to its range", and the two forms this library asks for are
+one line each off it: `AlgebraicGeometry.FormalScheme.restrictOpenIso`
+(`FormalSchemes.OpenFormalSubscheme`), which takes the open and a range proof, and
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOpensRange`, which takes neither.
+Two constructions in the same direction already exist and neither serves, which is why this one is
+here:
 
 * Mathlib's `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrict`, in this very
   namespace, is `X ≅ Y.restrict H.base_open` — the restriction along the *map*, whose carrier is
-  `X`. Every cover hypothesis in the `SpfHom*` cluster and the `local_affine` field of
-  `AlgebraicGeometry.FormalScheme` instead ask for the restriction along an `Opens`, whose carrier
+  `X`. Every cover hypothesis in the `SpfHom*` cluster and the
+  `AlgebraicGeometry.FormalScheme.local_affine` field instead ask for the restriction along an
+  `Opens`, whose carrier
   is `↥(Set.range j.base)`, so Mathlib's iso has the wrong type there, not merely the wrong
   direction.
 * `AlgebraicGeometry.FormalScheme.restrictOpenIso` is the same term, but stated for
   `X : FormalScheme` with `hX : X.LocallyFG`, hypotheses its proof never uses. It is now a
-  `.symm` of `isoRestrictOfRangeEq` rather than a second call of `isoOfRangeEq` (issue 1479).
+  `.symm` of the general form below rather than a second call of
+  `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` (issue 1479).
 
 The names follow Mathlib's at the `Scheme` level — `AlgebraicGeometry.Scheme.Hom.opensRange`
 (`Mathlib/AlgebraicGeometry/OpenImmersion.lean`) is the identical construction one level up, and
-`isoRestrict…` echoes the `LocallyRingedSpace`-level `isoRestrict` above. Mathlib also ships
-`Scheme.Hom.isoOpensRange_hom_ι` and `isoOpensRange_inv_comp`; the analogues are not here because
-no call site on this tree needs them — the two triangles that *are* needed,
-`FormalScheme.restrictOpenIso_hom_comp` and `_inv_comp`, are stated where `restrictOpenIso` is and
-are `isoOfRangeEq_hom_fac`/`_inv_fac` directly.
+`isoRestrict…` echoes the `LocallyRingedSpace`-level
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrict` cited above. Mathlib also ships
+`AlgebraicGeometry.Scheme.Hom.isoOpensRange_hom_ι` and
+`AlgebraicGeometry.Scheme.Hom.isoOpensRange_inv_comp`; the analogues are not here because no call
+site on this tree needs them — the two triangles that *are* needed,
+`AlgebraicGeometry.FormalScheme.restrictOpenIso_hom_comp` and its `_inv_comp`, are stated where
+`AlgebraicGeometry.FormalScheme.restrictOpenIso` is and are
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq_inv_fac` and its
+`_hom_fac` directly.
 
 `range_coprodDesc_base` is the single home of this general locally-ringed-space fact. It was for a
 while duplicated as `AlgebraicGeometry.range_coprodDesc_base` in
@@ -84,13 +94,17 @@ namespace AlgebraicGeometry.LocallyRingedSpace
 variable {X Y Z : LocallyRingedSpace.{u}}
 
 /-- **The restriction of a locally ringed space to an open has that open as its range.** A
-restatement of `Opens.set_range_inclusion'` in the spelling the `IsOpenImmersion.lift` hypotheses
-take.
+restatement of `Opens.set_range_inclusion'` in the spelling the hypotheses of
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.lift` take. (Qualified: the unnamespaced
+form is *ambiguous* under this tree's citation open set, since
+`AlgebraicGeometry.IsOpenImmersion.lift` is the `Scheme`-level lemma of the same name, and
+`scripts/citation_audit.py` passes an ambiguous token by design.)
 
 It lives in `AlgebraicGeometry.LocallyRingedSpace` rather than in `FormalSpectrum`: its statement
 mentions no ring, no ideal and no spectrum. Issue 1479 moved it here from
 `FormalSchemes.ThickeningChartRestrict`, whose import closure of 25 modules put it out of reach of
-`isoRestrictOfRangeEq` below; that file still holds the four `range_ofRestrict_comp_*` lemmas
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq` below; that file still
+holds the `range_ofRestrict_comp_*` lemmas
 about compatible families, which are not general. -/
 theorem range_ofRestrict (Y : LocallyRingedSpace.{u}) (V : Opens Y.toTopCat) :
     Set.range (Y.ofRestrict V.isOpenEmbedding).base = (V : Set Y.toTopCat) :=
@@ -161,25 +175,28 @@ theorem coe_opensRange : (opensRange j : Set Y.toTopCat) = Set.range j.base := r
 
 omit H in
 /-- **An open immersion with range `U` and the inclusion of `U` have the same range**, in the
-spelling `isoOfRangeEq`'s hypothesis takes. Named rather than written out because the three
-declarations below all need it and `isoOfRangeEq`'s range argument cannot be synthesised from
-their goals. -/
+spelling the range hypothesis of
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` takes. Named rather than
+written out because the three declarations below all need it and that lemma's range argument
+cannot be synthesised from their goals. -/
 theorem range_ofRestrict_eq_range (U : Opens Y.toTopCat)
     (hj : Set.range j.base = (U : Set Y.toTopCat)) :
     Set.range (Y.ofRestrict U.isOpenEmbedding).base = Set.range j.base :=
   (LocallyRingedSpace.range_ofRestrict Y U).trans hj.symm
 
 /-- **An open immersion whose range is `U` identifies `Y|_U` with its source.** Both `X` and
-`Y|_U` are open immersions into `Y` with the same range, so this is `isoOfRangeEq`, whose range
+`Y|_U` are open immersions into `Y` with the same range, so this is
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq`, whose range
 hypothesis is `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`.
 
 Every cover-shaped hypothesis on this tree asks for an isomorphism in this direction —
 `Y.restrict (U i).isOpenEmbedding ≅ X i`, as in `FormalSpectrum.isThickeningColimitTarget_of_cover`
-and in the `local_affine` field of `AlgebraicGeometry.FormalScheme` — while every supply of charts
+and in the `AlgebraicGeometry.FormalScheme.local_affine` field — while every supply of charts
 (`AlgebraicGeometry.FormalScheme.LocallyFG`,
 `AlgebraicGeometry.LocallyRingedSpace.HasAffineChartAt`) produces an open immersion instead. This
 is the one line between them; see the implementation notes for why neither Mathlib's
-`isoRestrict` nor `AlgebraicGeometry.FormalScheme.restrictOpenIso` is that line. -/
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrict` nor
+`AlgebraicGeometry.FormalScheme.restrictOpenIso` is that line. -/
 def isoRestrictOfRangeEq (U : Opens Y.toTopCat) (hj : Set.range j.base = (U : Set Y.toTopCat)) :
     Y.restrict U.isOpenEmbedding ≅ X :=
   isoOfRangeEq (Y.ofRestrict U.isOpenEmbedding) j (range_ofRestrict_eq_range j U hj)
