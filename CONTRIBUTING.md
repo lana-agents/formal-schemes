@@ -226,6 +226,12 @@ rather than quoting it. On `5823cac` with this document's own change applied, an
 occurrences**. Partitioned by kind — which is what tells you whether a number is a defect or a
 category (issue 1442):
 
+*(The partition below is that `5823cac` hand-reading and is **not** restamped: issue 1482 fixed the
+tokenizer and re-measured only the top line, on `6f2e3bd`, where the same run reports 1286/4240
+before the fix and **1287/4247** after — one token and seven occurrences, all of them named in the
+paragraph that follows the table. The proportions the partition reports are unaffected at that
+size; the absolute levels below are still `5823cac`'s.)*
+
 | | distinct | occ |
 | :-- | --: | --: |
 | **no spelling resolves, in any namespace** | **459** | **1181** |
@@ -262,14 +268,26 @@ Three things that partition shows and a frequency histogram does not.
   the audit's `UNRESOLVED` list cannot drive it, because a wrong referent is by definition
   something the audit passed.
 
-**One known blind spot in the figures, so nobody re-derives it.** `BACKTICKED` is
-`` `[^`\n]+` ``, which cannot match a backticked span that wraps across a line — and after such a
-span the backticks *re-pair off by one* for the rest of that comment, so tokens after it are
-mis-read rather than merely missed. **617 comment lines in 196 files carry an odd number of
-backticks**, 1.4% of the tree's comment lines. It cost a real token: bare `Inv` at
-`TateOverlapInversionIso.lean:47` is invisible to `--tree`, which sees 26 of the file family's 27.
-Every figure above is therefore a lower bound, and a `--diff` run is exposed to the same thing on
-any hunk that wraps a backticked span.
+**The blind spot these figures used to carry is fixed (issue 1482), and what it was worth is worth
+recording.** `BACKTICKED` was `` `[^`\n]+` ``, which cannot match a span that wraps across a line;
+**617 comment lines in 196 files, 1.4%,** carry an odd number of backticks for that reason. The
+loss was never the wrapped span. A wrap happens at a space and a Lean name has none, so a wrapped
+span is always an *expression* — all **116** of the tree's are — and the cost was that its
+unclosed backtick consumed the *next* citation's opening one, and everything after it re-paired.
+Making the regex cross lines recovered **four citations** that had been invisible since they were
+written (`thickeningSheaf`, `specTwoPatchSchemeι₀`, `specTwoPatchSchemeι₁` — all three resolve, and
+to the declaration the prose means — and `backwardHom_awayCompletionHom`, which does not and joined
+the backlog above), and lost none.
+
+Two things that fix carries, because a newline-crossing regex is not free. A fenced code block would
+otherwise be swallowed whole — its three opening backticks would pair with whatever came next — so
+fences are stripped; no loss, the 8 spans inside fences were all excluded anyway. And a stray
+backtick now re-pairs a whole *comment* rather than one line, so
+`--tree` reports **unbalanced fragments** and exits non-zero on them. There were exactly two, both
+genuine prose defects invisible until the regex could see them — a missing closer in
+`IndSchemeLimitComponents.lean` and a nested pair in `TateGraphCodiagonalXLift.lean` — and both are
+fixed; **the tree is at zero and that is the state to keep it in.** `--selftest` checks the
+tokenizer against every case it used to get wrong and needs no build.
 
 Clearing the backlog is not a prerequisite for anything. The convention binds the diff; the
 tree-wide number is there so that the backlog is a known quantity rather than a surprise.

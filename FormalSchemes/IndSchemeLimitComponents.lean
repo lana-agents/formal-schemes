@@ -32,7 +32,7 @@ thickeningMap I n ≫ g = Spec (limit.π _ ⟨n + 1⟩ (specHomLimitEquiv I B g)
 
 `AdicCompletion.quotientTower I` has level `n` equal to `R ⧸ Iⁿ`
 (`FormalSchemes/AdicCompletionLimit.lean`), whereas `thickeningMap I n` lands on
-`Spec (R ⧸ I ^ (n + 1))`. **So the geometric statement pairs `limit.π _ ⟨n + 1⟩ with
+`Spec (R ⧸ I ^ (n + 1))`. **So the geometric statement pairs `limit.π _ ⟨n + 1⟩` with
 `thickeningMap I n`**, and the missing level is `π ⟨0⟩`, whose target `R ⧸ I⁰ = R ⧸ ⊤` is the zero
 ring (`subsingleton_quotient_pow_zero` below) and which therefore carries no information. This is
 the same shift, for the same reason, that `AdicCompletionLimit.lean`'s "shifted tower" section
