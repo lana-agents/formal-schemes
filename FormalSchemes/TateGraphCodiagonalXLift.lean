@@ -61,7 +61,7 @@ def annulusOverlapInvXAlg (hI : I.FG) : annulusOverlap R I q ≃ₐ[R] annulusOv
   AlgEquiv.ofRingEquiv (f := annulusOverlapInvX R I q hI)
     (fun r => annulusOverlapInvX_algebraMap R I q hI r)
 
-/-- The `R`-algebra map `A →ₐ[R] A[x⁻¹]^∧`, `a ↦ x⁻¹-inversion of `locX (flip a)``: the second leg
+/-- The `R`-algebra map `A →ₐ[R] A[x⁻¹]^∧`, `a ↦ x⁻¹-inversion of locX (flip a)`: the second leg
 of the `x`-side graph codiagonal (`graphCodiagX_inr`). -/
 def invFlipLocX (hI : I.FG) : annulusAlgebra R I q →ₐ[R] annulusOverlap R I q :=
   (annulusOverlapInvXAlg R I q hI).toAlgHom.comp

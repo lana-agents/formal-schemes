@@ -16,6 +16,8 @@ Usage, from the repository root, after a full `lake build`:
     python3 scripts/citation_audit.py --diff upstream/master...HEAD
     python3 scripts/citation_audit.py --tree
 
+`--selftest` checks the tokenizer against the cases it used to get wrong and needs no build.
+
 Resolution of the declaration case is done by elaborating one `#check @Token` per distinct token
 in a single throwaway Lean file, which costs one `import FormalSchemes` and a few seconds.
 """
@@ -35,7 +37,23 @@ OPEN_SET = (
     "  CategoryTheory.Limits FormalSpectrum TopologicalSpace\n"
 )
 
-BACKTICKED = re.compile(r"`([^`\n]+)`")
+# A citation span may be broken by the 100-column wrap, so this crosses newlines.  That has two
+# consequences, and both are handled below rather than left to bite.  A span that wraps is joined
+# by `tokens_of`, so a wrapped *name* still resolves and a wrapped *expression* is still notation.
+# And a fragment with an odd number of backticks no longer merely loses one span: every backtick
+# after the stray one re-pairs, so the rest of the fragment is read as the wrong text.  A
+# line-bounded regex confined that damage to one line and hid it; `unbalanced_fragments` reports it
+# instead.
+BACKTICKED = re.compile(r"`([^`]+)`")
+
+# A fenced block is code, not prose, so its contents are not citations -- and with a newline-
+# crossing `BACKTICKED` the three backticks of a fence would otherwise pair with whatever comes
+# next and swallow the block.
+FENCE = re.compile(r"^\s*```")
+
+# The layout of a wrapped span: the newline, the next line's indentation, and its `--` marker when
+# the span wraps inside a line comment.  None of it is part of the name.
+_CONTINUATION = re.compile(r"^\s*(?:--\s*)?")
 
 # Lean identifier syntax.  Subscripts (U+2080-U+209C) are identifier characters; superscripts are
 # not, which is why `Iⁿ` is notation and `U₂` is a name.  Getting this wrong makes the generated
@@ -125,9 +143,31 @@ def comment_regions(src: str):
     return out
 
 
+def strip_fences(text: str) -> str:
+    """Blank the contents of ``` fenced blocks, keeping the line count so attribution survives."""
+    out, inside = [], False
+    for line in text.split("\n"):
+        if FENCE.match(line):
+            inside = not inside
+            out.append("")
+            continue
+        out.append("" if inside else line)
+    return "\n".join(out)
+
+
+def join_wrapped(raw: str) -> str:
+    """Collapse a span broken by the line wrap back into one line."""
+    head, *rest = raw.split("\n")
+    parts = [head.rstrip()] + [_CONTINUATION.sub("", p).rstrip() for p in rest]
+    return " ".join(p for p in parts if p)
+
+
 def tokens_of(text: str, base_line: int):
+    text = strip_fences(text)
     for m in BACKTICKED.finditer(text):
-        yield m.group(1), base_line + text[: m.start()].count("\n")
+        raw = m.group(1)
+        yield (join_wrapped(raw) if "\n" in raw else raw,
+               base_line + text[: m.start()].count("\n"))
 
 
 def is_excluded(token: str) -> str | None:
@@ -182,36 +222,121 @@ def resolve_declarations(tokens: list[str]) -> set[str]:
     return unresolved
 
 
+def merge_line_comments(regions):
+    """Merge a run of consecutive `--` lines into one fragment.
+
+    `comment_regions` yields one region per `--` line, which is the right granularity for
+    everything except a citation span that wraps *between* two of them -- five such spans exist in
+    this tree, and with one region per line no regex can see them.  Merging is confined to lines
+    that are literally adjacent, so a `--` comment separated from the next by code stays separate.
+    """
+    def is_line_comment(text: str) -> bool:
+        return "\n" not in text and text.lstrip().startswith("--")
+
+    out: list = []
+    for line, text in regions:
+        prev = out[-1] if out else None
+        if (prev and is_line_comment(text) and is_line_comment(prev[1].rsplit("\n", 1)[-1])
+                and prev[0] + prev[1].count("\n") + 1 == line):
+            out[-1] = (out[-1][0], out[-1][1] + "\n" + text)
+        else:
+            out.append((line, text))
+    return out
+
+
+def unbalanced_fragments(fragments):
+    """Yield `(file, line)` for each comment fragment with an odd number of backticks.
+
+    Before the newline-crossing `BACKTICKED`, a stray backtick cost one span on one line.  Now it
+    re-pairs every backtick after it, so the whole fragment is read as the wrong text -- which is
+    exactly the failure this script exists to catch, turned on the script itself.  Two such
+    fragments existed when issue 1482 made the regex cross lines, both genuine prose defects
+    (a missing closer and a nested pair); both are fixed in the tree.
+    """
+    for path, line, text in fragments:
+        if strip_fences(text).count("`") % 2:
+            yield path, line
+
+
 def added_lines(diff_range: str):
-    """Yield `(file, text)` for each added line of a diff, restricted to Lean sources."""
+    """Yield `(file, text)` for each added *hunk* of a diff, restricted to Lean sources.
+
+    One entry per contiguous run of added lines rather than per line: a citation span that wraps
+    is one token, and joining the run is what lets `tokens_of` see it.  Lines from different hunks
+    are not contiguous in the new file and are never joined.
+    """
     out = subprocess.run(
         ["git", "diff", "--unified=0", diff_range, "--", "*.lean"],
         capture_output=True, text=True, check=True,
     ).stdout
-    current = None
+    current, block = None, []
     for line in out.splitlines():
         if line.startswith("+++ b/"):
-            current = line[6:]
+            if block:
+                yield current, "\n".join(block)
+            current, block = line[6:], []
         elif line.startswith("+") and not line.startswith("+++"):
-            yield current, line[1:]
+            block.append(line[1:])
+        elif block:
+            yield current, "\n".join(block)
+            block = []
+    if block:
+        yield current, "\n".join(block)
 
 
 def collect(args):
-    """Return `{token: [(file, line), ...]}` over the selected sources."""
+    """Return `({token: [(file, line), ...]}, [(file, line) unbalanced])` over the sources."""
     sites: dict[str, list] = {}
+    fragments = []
     if args.tree:
         for f in sorted(glob.glob("FormalSchemes/*.lean")):
             src = open(f, encoding="utf-8").read()
-            for ln, frag in comment_regions(src):
+            for ln, frag in merge_line_comments(comment_regions(src)):
+                fragments.append((f, ln, frag))
                 for tok, at in tokens_of(frag, ln):
                     sites.setdefault(tok, []).append((f, at))
     else:
-        # An added line is judged on its own: a comment marker is not needed, since a backticked
+        # An added hunk is judged on its own: a comment marker is not needed, since a backticked
         # identifier in added Lean code is either a citation or inside a string.
         for f, text in added_lines(args.diff):
             for tok, _ in tokens_of(text, 0):
                 sites.setdefault(tok, []).append((f, 0))
-    return sites
+    return sites, list(unbalanced_fragments(fragments))
+
+
+# Every case here is one this script got wrong before issue 1482, stated as the smallest input
+# that shows it.  The second is the one that cost real citations: a span wrapped at the 100-column
+# limit is always an *expression*, because the wrap happens at a space and a Lean name has none --
+# so the loss is never the wrapped span itself, it is the next citation, whose opening backtick the
+# unmatched span used to consume.
+SELFTEST = [
+    ("a citation on one line is unchanged",
+     "-- see `FormalSpectrum.awayCompletionHom_eq_algebraMap`\n", 1,
+     ["FormalSpectrum.awayCompletionHom_eq_algebraMap"]),
+    ("a wrapped span is one notation token, and the citation after it still pairs",
+     "/-- `a ≫\nb` then `Iso.symm` -/", 1, ["a ≫ b", "Iso.symm"]),
+    ("a `--` marker on the continuation line is layout, not part of the span",
+     "-- `a ≫\n-- b` then `Iso.symm`\n", 1, ["a ≫ b", "Iso.symm"]),
+    ("a fenced block is code: its contents are not citations",
+     "/-!\n```\nlet `x` := 1\n```\n`Iso.symm`\n-/", 1, ["Iso.symm"]),
+]
+
+
+def selftest() -> int:
+    bad = 0
+    for name, src, line, want in SELFTEST:
+        got = [t for t, _ in tokens_of(src, line)]
+        ok = got == want
+        bad += not ok
+        print("%s  %s" % ("ok  " if ok else "FAIL", name))
+        if not ok:
+            print("        want %r\n        got  %r" % (want, got))
+    src = "/-- `a` and `b -/"
+    got = list(unbalanced_fragments([("<selftest>", 1, src)]))
+    ok = got == [("<selftest>", 1)]
+    bad += not ok
+    print("%s  an odd backtick is reported, not silently re-paired" % ("ok  " if ok else "FAIL"))
+    return 1 if bad else 0
 
 
 def main() -> int:
@@ -219,10 +344,14 @@ def main() -> int:
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--diff", metavar="RANGE", help="audit the added lines of a git diff range")
     g.add_argument("--tree", action="store_true", help="audit every comment in FormalSchemes/")
+    g.add_argument("--selftest", action="store_true", help="check the tokenizer, no build needed")
     ap.add_argument("--verbose", action="store_true", help="also list the excluded tokens")
     args = ap.parse_args()
 
-    sites = collect(args)
+    if args.selftest:
+        return selftest()
+
+    sites, unbalanced = collect(args)
     modules = project_modules()
     # Both spellings the tree uses: the path, and the bare file name after a locative.
     paths = set(glob.glob("FormalSchemes/*.lean"))
@@ -255,11 +384,16 @@ def main() -> int:
     print("  UNRESOLVED              : %5d distinct, %5d occurrences"
           % (len(unresolved), n(unresolved)))
 
+    print("  unbalanced fragments    : %5d" % len(unbalanced))
+
     for tok in sorted(unresolved, key=lambda t: (-len(sites[t]), t)):
         where = sites[tok][0]
         loc = where[0] if where[1] == 0 else "%s:%d" % where
         print("  %4d  %-50s %s" % (len(sites[tok]), tok, loc))
-    return 1 if unresolved else 0
+    for path, line in unbalanced:
+        print("  UNBALANCED  %s:%d -- an odd backtick re-pairs the rest of this comment"
+              % (path, line))
+    return 1 if unresolved or unbalanced else 0
 
 
 if __name__ == "__main__":
