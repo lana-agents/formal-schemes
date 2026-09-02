@@ -36,8 +36,7 @@ than the `AlgHom` statement — enters one file back, in
 
 ## What is proved here
 
-* `FormalSpectrum.sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom`,
-  `FormalSpectrum.map_sectionsOpenIdeal_sectionsEquivOfEqBasicOpen`,
+* `FormalSpectrum.map_sectionsOpenIdeal_sectionsEquivOfEqBasicOpen`,
   `FormalSpectrum.comap_awayCompletionIdeal_sectionsEquivOfEqBasicOpen` and
   `FormalSpectrum.symm_sectionsEquivOfEqBasicOpen_mem_pow` — general: an open that *happens* to be
   a basic open has `FormalSpectrum.sectionsOpenIdeal` equal to the contraction of
@@ -113,20 +112,8 @@ variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRin
 ### An open that happens to be a basic open
 -/
 
-/-- **`FormalSpectrum.sectionsEquivOfEqBasicOpen` carries the structural map of `Γ(U)` to the
-structural map of `R{1/f}`.** Both are restrictions from `⊤`, so this is
-`FormalSpectrum.sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom`
-(`FormalSchemes.AdicOnBasicOpenSections`) after the transport along `hU` has been absorbed by
-`FormalSpectrum.comp_eqToHom_sectionsOpenHom`. -/
-theorem sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom {U : Opens (FormalSpectrum I)} {f : R}
-    (hU : U = basicOpen I f) :
-    (sectionsEquivOfEqBasicOpen I hU).toRingHom.comp (sectionsOpenHom I U) =
-      awayCompletionHom I f := by
-  rw [← sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom I f, ← sectionsOpenHom_basicOpen I f,
-    ← comp_eqToHom_sectionsOpenHom I hU, ← RingHom.comp_assoc]
-  rfl
-
-/-- **The ideal form of the previous theorem**: the equivalence carries
+/-- **The ideal form of `FormalSpectrum.sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom`**
+(`FormalSchemes.TateInvNodeChartAmbient`): the equivalence carries
 `FormalSpectrum.sectionsOpenIdeal` to `FormalSpectrum.awayCompletionIdeal`. -/
 theorem map_sectionsOpenIdeal_sectionsEquivOfEqBasicOpen {U : Opens (FormalSpectrum I)} {f : R}
     (hU : U = basicOpen I f) :

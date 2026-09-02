@@ -90,7 +90,7 @@ omit [TopologicalSpace R] [IsAdicRing I]
 `AlgebraicGeometry.tateInvNodeChartAmbientEquiv` is `FormalSpectrum.sectionsEquivOfEqBasicOpen`,
 which carries `FormalSpectrum.sectionsOpenHom` to `FormalSpectrum.awayCompletionHom`
 (`FormalSpectrum.sectionsEquivOfEqBasicOpen_sectionsOpenHom`, in
-`FormalSchemes.TateInvChartBaseImage`); this is that equation read backwards through the
+`FormalSchemes.TateInvNodeChartAmbient`); this is that equation read backwards through the
 isomorphism.
 
 At `a = algebraMap R (annulusAlgebra R I q) r` this is
