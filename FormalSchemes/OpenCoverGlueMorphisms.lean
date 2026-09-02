@@ -35,6 +35,8 @@ so `LocallyRingedSpace.IsOpenImmersion.to_iso` applies. Precomposing the glued-o
 * `FormalScheme.OpenCover.fromGlued`: the canonical morphism from the glued cover into `X`, an iso.
 * `FormalScheme.OpenCover.glueMorphisms`: the glued morphism `X ⟶ Y`.
 * `FormalScheme.OpenCover.map_glueMorphisms`: its restriction to the `j`-th piece is `k j`.
+* `FormalScheme.OpenCover.range_glueMorphisms`: the image of the glued morphism is the
+  union of the images of the `k j`, with no hypothesis on `Y` and none on the `k j`.
 
 ## References
 
@@ -292,6 +294,31 @@ theorem map_glueMorphisms {Y : LocallyRingedSpace.{u}} (k : ∀ i, (𝒰.obj i).
     𝒰.cmap i ≫ 𝒰.glueMorphisms k h = k i := by
   rw [glueMorphisms, ← 𝒰.ι_fromGlued i, Category.assoc, IsIso.hom_inv_id_assoc]
   exact 𝒰.gluedCover.ι_glueMorphisms _ _ i
+
+/-- **The image of the glued morphism is the union of the images of the pieces.** An equality,
+not an inclusion: `FormalScheme.OpenCover.map_glueMorphisms` gives `⊇` and
+`FormalScheme.OpenCover.covers` — the cover maps are jointly surjective on points — gives `⊆`.
+
+No hypothesis on `Y`, and none on the `k j` beyond the compatibility
+`FormalScheme.OpenCover.glueMorphisms` already takes.
+The consumers are statements of the form "the glued morphism reaches this point, so one of the
+pieces does": in particular `FormalSpectrum.ColimitTarget.range_spfHomOfFamily_le`, which reads the
+image of EGA I 10.6.10's morphism off the target opens the chart data was supplied with. -/
+theorem range_glueMorphisms {Y : LocallyRingedSpace.{u}}
+    (k : ∀ i, (𝒰.obj i).toLocallyRingedSpace ⟶ Y)
+    (h : ∀ i j, pullback.fst (𝒰.cmap i) (𝒰.cmap j) ≫ k i =
+      pullback.snd (𝒰.cmap i) (𝒰.cmap j) ≫ k j) :
+    Set.range (𝒰.glueMorphisms k h).base = ⋃ i, Set.range (k i).base := by
+  have hcomp : ∀ i, ⇑(k i).base = ⇑(𝒰.glueMorphisms k h).base ∘ ⇑(𝒰.cmap i).base := by
+    intro i
+    conv_lhs => rw [← 𝒰.map_glueMorphisms k h i]
+    rfl
+  refine Set.Subset.antisymm ?_ (Set.iUnion_subset fun i => ?_)
+  · rintro y ⟨x, rfl⟩
+    obtain ⟨z, hz⟩ := 𝒰.covers x
+    exact Set.mem_iUnion.2 ⟨𝒰.f x, z, by rw [hcomp, Function.comp_apply, hz]⟩
+  · rw [hcomp i, Set.range_comp]
+    exact Set.image_subset_range _ _
 
 /-- **The round trip**: gluing the cover maps themselves gives back the identity of `X`. Their
 compatibility is `pullback.condition`, so this takes no hypothesis.

@@ -36,6 +36,10 @@ the nodes, and this file is what lets the rest of the chain be dealt with anyway
   `LocallyRingedSpace.IsOpenImmersion.formalScheme`, at one point.
 * `AlgebraicGeometry.LocallyRingedSpace.formalSchemeOfHasAffineChartAt`: a locally ringed space with
   a chart at every point is a formal scheme — the criterion restated in those terms.
+* `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_isoRestrict`: an open of `X`
+  *identified* with a formal spectrum gives a chart at each of its points — the converse of
+  `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`, which turns a chart into such an
+  identification.
 * `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_isProperlyDiscontinuousOn`: **the
   pointwise chart theorem** — a separating open around `x` gives a chart of `Q` at `π x`.
 * `AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme_eq_ofHasAffineChartAt`:
@@ -78,6 +82,29 @@ def formalSchemeOfHasAffineChartAt (Q : LocallyRingedSpace.{u})
 theorem formalSchemeOfHasAffineChartAt_toLocallyRingedSpace (Q : LocallyRingedSpace.{u})
     (h : ∀ x : Q, HasAffineChartAt Q x) :
     (formalSchemeOfHasAffineChartAt Q h).toLocallyRingedSpace = Q :=
+  rfl
+
+/-- **An open identified with a formal spectrum is a chart at each of its points.** If
+`e : X|_U ≅ Spf L`, then `e.inv ≫ X.ofRestrict U.isOpenEmbedding` is an open immersion whose range
+is `U`, so every `y ∈ U` has an affine formal chart.
+
+This is the direction opposite to `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`
+(`FormalSchemes.OpenImmersionIsoOfRangeEq`), which converts an open immersion with range `U` into
+such an identification. Every *cover-shaped* hypothesis on this tree — the
+`AlgebraicGeometry.FormalScheme.local_affine` field,
+`FormalSpectrum.isThickeningColimitTarget_of_cover`,
+`FormalSpectrum.existsUnique_hom_thickeningMap_spfCover` — supplies data in the `≅` direction,
+while `HasAffineChartAt` consumes it in the open-immersion direction; this is the one line between
+them, and it is what makes a formal-affine chart *datum* on a target say something about the
+target's points. -/
+theorem hasAffineChartAt_of_isoRestrict {X : LocallyRingedSpace.{u}} (U : Opens X.toTopCat)
+    {C : Type u} [CommRing C] [TopologicalSpace C] (L : Ideal C) [IsAdicRing L]
+    (e : X.restrict U.isOpenEmbedding ≅ FormalSpectrum.locallyRingedSpaceObj L)
+    {y : X} (hy : y ∈ U) : HasAffineChartAt X y := by
+  refine ⟨C, inferInstance, inferInstance, L, inferInstance,
+    e.inv ≫ X.ofRestrict U.isOpenEmbedding, ⟨e.hom.base ⟨y, hy⟩, ?_⟩, inferInstance⟩
+  simp only [comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp, ContinuousMap.comp_apply,
+    iso_hom_base_inv_base_apply]
   rfl
 
 /-- **The converse**: every point of a formal scheme has an affine formal chart. Together with
