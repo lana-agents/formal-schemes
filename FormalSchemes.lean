@@ -305,6 +305,7 @@ import FormalSchemes.SpfGammaSheafComponentArbCont
 import FormalSchemes.SpfGammaSheafComponentArbOf
 import FormalSchemes.SpfGammaSheafComponentFunctor
 import FormalSchemes.SpfHomColimitTarget
+import FormalSchemes.SpfHomFormalScheme
 import FormalSchemes.SpfHomNonAffineWitness
 import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpfHomScheme
@@ -329,6 +330,7 @@ import FormalSchemes.TateAnnulusCoeff
 import FormalSchemes.TateAnnulusRegular
 import FormalSchemes.TateAwaySplit
 import FormalSchemes.TateChainGlue
+import FormalSchemes.TateChainInvColimitTarget
 import FormalSchemes.TateChainInvGlue
 import FormalSchemes.TateChainInvLocallyFG
 import FormalSchemes.TateChainStructMap
