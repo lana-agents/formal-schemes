@@ -58,8 +58,9 @@ earlier in the chain uses finite generation.
 * `FormalSpectrum.sectionsCone`, `FormalSpectrum.isLimitSectionsCone`: the tower of sections over
   `U`, presented as a limit cone whose point is `Γ (U, O_{Spf R})` itself rather than the
   categorical `limit`, so that the projections are literally `FormalSpectrum.sectionsPi`.
-* `FormalSpectrum.sectionsMk`: the canonical ring map `R →+* Γ (U, O_{Spf R})`, the map along
-  which `I · Γ (U, O_{Spf R})` is an extension. It is characterised by
+* `FormalSpectrum.sectionsMkCone`, `FormalSpectrum.sectionsMk`: the cone over the same tower with
+  point `R`, and the canonical ring map `R →+* Γ (U, O_{Spf R})` it induces — the map along which
+  `I · Γ (U, O_{Spf R})` is an extension. It is characterised by
   `FormalSpectrum.sectionsPi_comp_sectionsMk`, which pins it uniquely, and
   `FormalSpectrum.globalSectionsEquiv_sectionsMk_top` identifies it at `⊤` with the identity of
   `R` under `FormalSpectrum.globalSectionsEquiv`.
@@ -80,6 +81,10 @@ earlier in the chain uses finite generation.
   with affine thickenings. `FormalSpectrum.ker_sectionsPi_zero_top` and
   `FormalSpectrum.ker_sectionsPi_zero_basicOpen` are its two instances with no hypothesis on the
   open.
+* `FormalSpectrum.stepSheafHom_app_thickeningSectionsMk` and `FormalSpectrum.sectionsCone_π_app`:
+  the plumbing that makes the two cones cones — the canonical maps `R →+* Bₙ` commute with the
+  transition maps of the tower, and the legs of `FormalSpectrum.sectionsCone` are the projections
+  `FormalSpectrum.sectionsPi`.
 
 ## References
 
