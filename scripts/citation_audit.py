@@ -16,14 +16,21 @@ Usage, from the repository root, after a full `lake build`:
     python3 scripts/citation_audit.py --diff upstream/master...HEAD
     python3 scripts/citation_audit.py --tree
 
-A backticked `<project file>.lean:NN` pointer is a sixth thing that is not a citation, and the
-only one this script treats as a *defect* rather than a category: it is not identifier-shaped, so
-the resolution machinery never sees it, while the line it names moves the first time anyone inserts
-a declaration above it.  `project_line_pointer` reports them.  Mathlib pointers are left alone --
-they are pinned by the toolchain, not by this repository's edits.
+A backticked `<project file>.lean:NN` pointer is not a citation either, and it is the only
+non-citation shape this script treats as a *defect* rather than as a category: it is not
+identifier-shaped, so the resolution machinery never sees it, while the line it names moves the
+first time anyone inserts a declaration above it.  `project_line_pointer` reports them.  Mathlib
+pointers are left alone -- they are pinned by the toolchain, not by this repository's edits.
+(There is deliberately no count here.  The two lists above hold five categories and three, and an
+ordinal that has to be kept in step with both of them is one more thing that can go quietly wrong
+-- which is the defect this paragraph is about.)
+
+The pointer check, and only the pointer check, also runs over this repository's Markdown:
+`markdown_line_pointers`.  See `CONTRIBUTING.md` for why that is the one part of the audit that
+crosses over, and for the use/mention rule it reads off the document.
 
 `--selftest` checks the tokenizer against the cases it used to get wrong, both of the
-malformed-span checks below, and the line-pointer predicate, and needs no build.
+malformed-span checks below, the line-pointer predicate and the Markdown scan, and needs no build.
 
 Resolution of the declaration case is done by elaborating one `#check @Token` per distinct token
 in a single throwaway Lean file, which costs one `import FormalSchemes` and a few seconds.
@@ -80,11 +87,56 @@ ADJACENT = re.compile(r"``+")
 # `Gluing.lean` is a path this repository globs, `Mathlib/AlgebraicGeometry/Gluing.lean` is not.
 LINE_POINTER = re.compile(r"^(\S+\.lean):\d+(?:-\d+)?$")
 
+# The same shape in Markdown, where the Lean tokenizer above does not apply and must not be run:
+# a ``...`` run is ordinary markup in a document and a *defect* in a Lean comment (`nested_spans`),
+# and a document that deliberately cites deleted names and misspellings would drown the resolution
+# machinery.  Only the pointer predicate crosses over, because it is a shape test on a token and
+# the shape means the same thing in both languages.
+#
+# `MENTION` is what stops this reporting the document that defines the rule.  `CONTRIBUTING.md`
+# already separates *using* a token from *naming* one, in its own markup and without having been
+# asked to: a pointer that cites a location is written with single backticks, while the one place
+# the document displays the defective token itself is written with double backticks -- which is
+# how Markdown shows a backtick.  Measured on `c80eb53` (issue 1530): six single, one double, no
+# exceptions either way.  The rule is read off the document, not imposed on it.
+#
+# A pointer never wraps -- the shape has no space in it -- so scanning line by line is exact here,
+# and the newline-crossing `BACKTICKED` is deliberately not reused.
+MENTION = re.compile(r"``.+?``")
+MD_SPAN = re.compile(r"`([^`]+)`")
+
 
 def project_line_pointer(token: str, paths: set[str]) -> bool:
     """True if `token` is a `<project file>.lean:NN` pointer -- a citation nothing can check."""
     m = LINE_POINTER.match(token)
     return bool(m) and m.group(1) in paths
+
+
+def line_pointers_in_markdown(text: str, paths: set[str]):
+    """Yield `(line, token)` for each single-backticked project line pointer in `text`."""
+    for n, line in enumerate(strip_fences(text).split("\n"), 1):
+        for m in MD_SPAN.finditer(MENTION.sub(" ", line)):
+            if project_line_pointer(m.group(1), paths):
+                yield n, m.group(1)
+
+
+def tracked_markdown() -> list[str]:
+    """The Markdown this repository versions.  `git ls-files` rather than a glob: the sandbox keeps
+    an unversioned Lean toolchain under `.elan-home/`, with README files of its own."""
+    out = subprocess.run(["git", "ls-files", "*.md"], capture_output=True, text=True, check=True)
+    return out.stdout.split()
+
+
+def markdown_line_pointers(paths: set[str]) -> list[tuple[str, int, str]]:
+    """Report every project line pointer in the tracked Markdown, as `(path, line, token)`.
+
+    Whole documents in both modes, not the diff.  A citation is falsified by the pull request that
+    changes it, so the diff is the right population for one; a line pointer is falsified by an edit
+    to the file it *names*, which is nowhere near the document carrying it, so a diff-restricted
+    scan would be blind to the only way one ever goes wrong.
+    """
+    return [(path, n, tok) for path in sorted(tracked_markdown())
+            for n, tok in line_pointers_in_markdown(open(path, encoding="utf-8").read(), paths)]
 
 # Lean identifier syntax.  Subscripts (U+2080-U+209C) are identifier characters; superscripts are
 # not, which is why `Iⁿ` is notation and `U₂` is a name.  Getting this wrong makes the generated
@@ -472,6 +524,23 @@ def selftest() -> int:
           % ("ok  " if ok else "FAIL"))
     if not ok:
         print("        want %r\n        got  %r" % (want, got))
+
+    # The Markdown scan (issue 1530), on the four inputs that define it: a pointer that cites a
+    # location, the same token *displayed* inside a mention span, a pointer inside a fenced block,
+    # and the Mathlib pointer.  Only the first is a defect, and the second is what `CONTRIBUTING.md`
+    # needs in order to be able to state the rule at all.
+    doc = ("cited: `Gluing.lean:48`\n"
+           "displayed: `` `Gluing.lean:48` ``\n"
+           "```\n`Gluing.lean:52`\n```\n"
+           "`Mathlib/AlgebraicGeometry/Gluing.lean:262-423`\n")
+    want = [(1, "Gluing.lean:48")]
+    got = list(line_pointers_in_markdown(doc, fake))
+    ok = got == want
+    bad += not ok
+    print("%s  in Markdown a cited pointer is reported and a displayed one is not"
+          % ("ok  " if ok else "FAIL"))
+    if not ok:
+        print("        want %r\n        got  %r" % (want, got))
     return 1 if bad else 0
 
 
@@ -502,6 +571,7 @@ def main() -> int:
             candidates.append(tok)
 
     pointers = [t for t in sorted(sites) if project_line_pointer(t, paths)]
+    md_pointers = markdown_line_pointers(paths)
     unresolved = resolve_declarations(candidates)
     resolved = [t for t in candidates if t not in unresolved]
 
@@ -526,6 +596,8 @@ def main() -> int:
     print("  nested spans            : %5d" % len(nested))
     print("  project line pointers   : %5d distinct, %5d occurrences"
           % (len(pointers), n(pointers)))
+    print("  ... in Markdown         : %5d   (whole documents, not the diff)"
+          % len(md_pointers))
 
     for tok in sorted(unresolved, key=lambda t: (-len(sites[t]), t)):
         where = sites[tok][0]
@@ -542,10 +614,17 @@ def main() -> int:
         loc = where[0] if where[1] == 0 else "%s:%d" % where
         print("  %-10s  %s -- `%s` names a line, which nothing checks; name the declaration"
               % ("POINTER", loc, tok))
+    for path, line, tok in md_pointers:
+        print("  %-10s  %s:%d -- `%s` names a line; name the declaration, or display the token"
+              " in a ``...`` mention span if you mean to quote it"
+              % ("POINTER", path, line, tok))
     # Parity is exact on a whole comment and advisory on a hunk; adjacent backticks are exact on
     # both, and so is a line pointer -- slicing a hunk can neither manufacture nor destroy one.
-    # See `collect` for the measurement that settled the asymmetry.
-    return 1 if unresolved or nested or pointers or (unbalanced and args.tree) else 0
+    # See `collect` for the measurement that settled the asymmetry.  The Markdown scan reads whole
+    # documents in either mode, so it is exact in both for the reason `markdown_line_pointers`
+    # gives.
+    return 1 if unresolved or nested or pointers or md_pointers or (
+        unbalanced and args.tree) else 0
 
 
 if __name__ == "__main__":

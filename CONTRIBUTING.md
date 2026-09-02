@@ -64,15 +64,16 @@ this tree, so none of them can be skipped on the grounds that another passed.
 * **The audit's open set is not any file's `open` set.** `scripts/citation_audit.py` resolves
   every token under the single fixed set listed above; it is not any file's own set and it is
   deliberately not the union of them. So the audit flags tokens that are correct where they sit.
-  `CompletionTwoPatchEmbedding.lean:108` is `open CategoryTheory Topology TopologicalSpace`, so
-  bare `IsEmbedding` resolves in that file, to `Topology.IsEmbedding`, while under the audit's set
-  it is an unknown identifier. The reviewer's question is never "does the audit flag it" but "does
-  it resolve, to the intended declaration, **in the citing file**". Qualifying a token the audit
-  flags but the file resolves is always allowed, and is usually right when siblings need it: the
-  same file's neighbours `CompletionTwoPatchClosed.lean` and `CompletionTwoPatchSupport.lean` open
-  no `Topology`, so there the bare spelling genuinely did not resolve, and a half-qualified token
-  across sibling files is worse than either state. That is **consistency, not repair** — a pull
-  request doing it should say which of the two it is doing, because the diff looks the same.
+  Bare `IsEmbedding` resolves in `FormalSchemes.CompletionTwoPatchEmbedding`, to
+  `Topology.IsEmbedding`, because that file carries `open CategoryTheory Topology TopologicalSpace`
+  — while under the audit's set it is an unknown identifier. The reviewer's question is never
+  "does the audit flag it" but "does it resolve, to the intended declaration, **in the citing
+  file**". Qualifying a token the audit flags but the file resolves is always allowed, and is
+  usually right when siblings need it: the same file's neighbours
+  `CompletionTwoPatchClosed.lean` and `CompletionTwoPatchSupport.lean` open no `Topology`, so there
+  the bare spelling genuinely did not resolve, and a half-qualified token across sibling files is
+  worse than either state. That is **consistency, not repair** — a pull request doing it should say
+  which of the two it is doing, because the diff looks the same.
 
 For every token the audit still reports, the author does one of exactly two things, in the pull
 request body: **qualify it until it resolves**, or **name the non-citation category it falls in**,
@@ -119,11 +120,12 @@ defect.
   Write `…Inv`.
 
   **This bullet is also the worked example of the audit's fixed blind spot.** On `07cd325` the
-  audit reported **26** of those 27 — it could not see the one at `TateOverlapInversionIso.lean:47`,
-  whose backticked span wrapped across a line — and the figure this bullet used to publish was
-  that 26. Issue 1482 made `BACKTICKED` cross newlines; the same script on the same tree now
-  reports 27, and grep and audit agree. There is no longer a reading of this document on which
-  the two instruments disagree about `Inv`.
+  audit reported **26** of those 27 — it could not see the one in the *Scope* paragraph of
+  `FormalSchemes.TateOverlapInversionIso`'s module docstring, hidden behind the span
+  `annulusOverlapChart ≫ s = …` that wrapped across a line — and the figure this bullet used to
+  publish was that 26. Issue 1482 made `BACKTICKED` cross newlines; the same script on the same
+  tree now reports 27, and grep and audit agree. There is no longer a reading of this document on
+  which the two instruments disagree about `Inv`.
 * **Lean vocabulary** — `simp`, `subst`, `whnf`, `instances`: tactics and configuration fields, not
   declarations.
 * **A construction shorthand** — `Spf`, `Spec`, and nothing else. The standard mathematical name of
@@ -147,12 +149,12 @@ defect.
   sentence must say the thing is gone.** Measured (issue 1476): the deleted module
   `FormalSchemes.GlueOpenCoverFactor` (3 occurrences) and **21 deleted declaration names over 33
   occurrences**, all of them in the four issue-812 deletion paragraphs of
-  `GlueOpenCoverFactorBoth.lean:28-34`, `GlueOpenCoverFactorBothAlg.lean:26-34`,
-  `GeneralFibreProductLiftAdic.lean:77-95` and `GeneralFibreProductLiftUniqueAdic.lean:31-34`.
-  Every one of those paragraphs says it outright — *"Issue 812 deleted it"*, *"That layer is
-  gone"*, *"None of those exist any more; the module is gone entirely"*, *"Every mention of those
-  names in this library is history"* — which is what makes the bound checkable rather than a
-  licence.
+  `FormalSchemes.GlueOpenCoverFactorBoth`, `FormalSchemes.GlueOpenCoverFactorBothAlg`,
+  `FormalSchemes.GeneralFibreProductLiftAdic` and
+  `FormalSchemes.GeneralFibreProductLiftUniqueAdic`. Every one of those paragraphs says it
+  outright — *"Issue 812 deleted it"*, *"That layer is gone"*, *"None of those exist any more; the
+  module is gone entirely"*, *"Every mention of those names in this library is history"* — which is
+  what makes the bound checkable rather than a licence.
 
 ### A source location is named by declaration, never by line
 
@@ -177,6 +179,24 @@ so the audit has something to bite on.
 between our commits. The check compares the whole path against the files this repository globs,
 which is what tells `FormalSchemes/Gluing.lean` apart from
 `Mathlib/AlgebraicGeometry/Gluing.lean:262-423`.
+
+**This document is checked too, and the check reads its own use/mention markup.** A pointer written
+with single backticks *cites* a location and is reported; the same token displayed inside a
+``…`` span — which is how Markdown shows a backtick — is the document *naming* the defective token
+rather than making a claim with it, and is not. That distinction was not invented for the check.
+Measured on `c80eb53` (issue 1530): of the seven pointers this file then carried, the six that
+cited a location were single-backticked and the one that displayed the token itself was the only
+double-backticked one, with no exceptions either way. So the rule is read off the document rather
+than imposed on it, and the escape hatch a mention needs already existed.
+
+Markdown is scanned **whole, in both modes**, rather than through the diff. A citation is falsified
+by the pull request that changes it, which is why the diff is the right population for one; a line
+pointer is falsified by an edit to the file it *names*, which is nowhere near the document carrying
+it, so a diff-restricted scan would be blind to the only way one ever goes wrong. It costs a regex
+over three files and no build. **Only the pointer predicate crosses over into Markdown**, not
+resolution: this document deliberately cites deleted names, misspellings and tokens with three
+plausible spellings, none of which could resolve, and running the whole audit here would report the
+document that defines the convention.
 
 ### Why a bare shorthand is a citation, and not prose
 
