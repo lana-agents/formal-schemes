@@ -154,6 +154,30 @@ defect.
   names in this library is history"* — which is what makes the bound checkable rather than a
   licence.
 
+### A source location is named by declaration, never by line
+
+**A backticked `` `File.lean:NN` `` pointing at a file of this repository is a defect, and
+`scripts/citation_audit.py` reports it.** A colon is not a Lean identifier character, so the
+pointer is filed under notation and the resolution machinery never sees it; and unlike every other
+non-citation shape it makes a claim that can go wrong silently. Issue 1479 removed the three
+`set_option backward.isDefEq.respectTransparency false` blocks of `FormalSchemes/Gluing.lean` after
+showing they were unnecessary, and `` `Gluing.lean:48` `` — cited from two other files as the
+precedent for keeping one — went on pointing at a blank line, through every pull request since.
+Measured on `e64d0ab` (issue 1517): five project pointers, of which three were correct and two were
+wrong, and not one of the five was checked by anything.
+
+Name the declaration, and the module in parentheses when the file is worth naming:
+`` `oneChart_schemeDiagonal'_eq` (`FormalSchemes.AffineSeparatedValue`) ``. Both halves resolve, so
+both are checked on every pull request, and neither moves when a line is inserted above it. If what
+you must point at is a *proof step* rather than a declaration, name the enclosing declaration too,
+so the audit has something to bite on.
+
+**Mathlib line pointers are a different case and are not banned.** `Mathlib/…` is pinned by
+`lean-toolchain` and `lake-manifest.json` rather than by this repository's edits, so it does not rot
+between our commits. The check compares the whole path against the files this repository globs,
+which is what tells `FormalSchemes/Gluing.lean` apart from
+`Mathlib/AlgebraicGeometry/Gluing.lean:262-423`.
+
 ### Why a bare shorthand is a citation, and not prose
 
 Settled by measurement on the token that produced the defect twice (issue 1423).
