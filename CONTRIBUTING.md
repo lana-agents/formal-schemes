@@ -227,8 +227,8 @@ occurrences**. Partitioned by kind — which is what tells you whether a number 
 category (issue 1442):
 
 *(The partition below is that `5823cac` hand-reading and is **not** restamped: issue 1482 fixed the
-tokenizer and re-measured only the top line, on `c3ca8d4`, where the same run reports 1286/4242
-before the fix and **1287/4249** after — one token and seven occurrences, all of them named in the
+tokenizer and re-measured only the top line, on `6f2e3bd`, where the same run reports 1286/4240
+before the fix and **1287/4247** after — one token and seven occurrences, all of them named in the
 paragraph that follows the table. The proportions the partition reports are unaffected at that
 size; the absolute levels below are still `5823cac`'s.)*
 
