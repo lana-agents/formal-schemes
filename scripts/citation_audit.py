@@ -144,7 +144,15 @@ def comment_regions(src: str):
 
 
 def strip_fences(text: str) -> str:
-    """Blank the contents of ``` fenced blocks, keeping the line count so attribution survives."""
+    """Blank the contents of ``` fenced blocks, keeping the line count so attribution survives.
+
+    A fragment with an odd number of fence lines is left alone: that happens when a `--diff` hunk
+    adds one side of a fence, and there is then no way to tell which lines are inside it.  Blanking
+    from the lone fence to the end of the hunk would silently drop real citations, which is the
+    failure this script is for.
+    """
+    if sum(bool(FENCE.match(l)) for l in text.split("\n")) % 2:
+        return text
     out, inside = [], False
     for line in text.split("\n"):
         if FENCE.match(line):
