@@ -61,6 +61,18 @@ this tree, so none of them can be skipped on the grounds that another passed.
   three plausible spellings, one nonexistent and two meaning different things. A citation that
   resolves to the **wrong** declaration is worse than a bare one: unresolved is visible to the
   audit, wrong-referent is visible to nobody.
+* **The audit's open set is not any file's `open` set.** `scripts/citation_audit.py` resolves
+  every token under the single fixed set listed above; it is not any file's own set and it is
+  deliberately not the union of them. So the audit flags tokens that are correct where they sit.
+  `CompletionTwoPatchEmbedding.lean:108` is `open CategoryTheory Topology TopologicalSpace`, so
+  bare `IsEmbedding` resolves in that file, to `Topology.IsEmbedding`, while under the audit's set
+  it is an unknown identifier. The reviewer's question is never "does the audit flag it" but "does
+  it resolve, to the intended declaration, **in the citing file**". Qualifying a token the audit
+  flags but the file resolves is always allowed, and is usually right when siblings need it: the
+  same file's neighbours `CompletionTwoPatchClosed.lean` and `CompletionTwoPatchSupport.lean` open
+  no `Topology`, so there the bare spelling genuinely did not resolve, and a half-qualified token
+  across sibling files is worse than either state. That is **consistency, not repair** — a pull
+  request doing it should say which of the two it is doing, because the diff looks the same.
 
 For every token the audit still reports, the author does one of exactly two things, in the pull
 request body: **qualify it until it resolves**, or **name the non-citation category it falls in**,
@@ -83,12 +95,35 @@ defect.
   rather than one of them: a leading `_` (`_hom_snd`, `_comp_pr₂`), which is genuinely part of the
   generated names it is the tail of, or a `…` at whichever end is elided (`…_hom_fac`,
   `…InterchangeOpenImmersion`, `bothAlgData…`, `…GlueF_…`). The `…` form needs no rule of its own —
-  it is not identifier-shaped, so it is already notation — and the tree uses it **43 distinct
-  tokens over 52 occurrences**, 23 of them a leading `…` on a CamelCase name. **The category is
-  about the fragment, and the marker is how the fragment is visible.** A fragment written without
-  one is not in this category: bare `` `Inv` `` — 26 occurrences over 7 files, meaning the `…Inv`
-  family — *resolves*, to Mathlib's `Inv` class, so the audit blessed a wrong referent rather than
-  reporting it. Write `…Inv`.
+  it is not identifier-shaped, so it is already notation. On `c16a642` the tree uses it **49
+  distinct tokens over 87 occurrences**, of which **36 / 71** put the `…` first and **24 / 55** put
+  it first on a CamelCase name. **Quote the regex with the count**: the population here is every
+  backticked span carrying a `…` and no space or comma, which is what "a fragment of one name"
+  means, and `citation_audit.py`'s own tokenizer reproduces it token for token —
+
+  ```sh
+  git grep -oh '`[^` ,]*…[^` ,]*`' -- 'FormalSchemes/*.lean' | sort -u | wc -l   # 49
+  git grep -oh '`[^`]*…[^`]*`'     -- 'FormalSchemes/*.lean' | sort -u | wc -l   # 215
+  ```
+
+  The second line is the same census under the loose reading, which admits a prose ellipsis such
+  as `f i₁, …, f iₙ`: **215 distinct over 338 occurrences**, four times the figure, on the same
+  commit and in the same document. A `…` count without its population is not reproducible.
+  **The category is about the fragment, and the marker is how the fragment is visible.** A fragment
+  written without one is not in this category: bare `` `Inv` `` — **27** occurrences over 7 files
+  on `07cd325`, meaning the `…Inv` family — *resolves*, to Mathlib's `Inv` class, so the audit
+  blessed a wrong referent rather than reporting it. Per file: `TateShiftInv.lean` 8,
+  `TateChainStructMapInv.lean` 5, `TateOverlapInversionIso.lean` 4, `TateActionInv.lean` 4,
+  `TateFreenessInv.lean` 3, `TateChainInvGlue.lean` 2, `TateShift.lean` 1. Issue 1476 rewrote all
+  27 to `…Inv` with that breakdown unchanged, and bare `` `Inv` `` is now absent from the tree.
+  Write `…Inv`.
+
+  **This bullet is also the worked example of the audit's fixed blind spot.** On `07cd325` the
+  audit reported **26** of those 27 — it could not see the one at `TateOverlapInversionIso.lean:47`,
+  whose backticked span wrapped across a line — and the figure this bullet used to publish was
+  that 26. Issue 1482 made `BACKTICKED` cross newlines; the same script on the same tree now
+  reports 27, and grep and audit agree. There is no longer a reading of this document on which
+  the two instruments disagree about `Inv`.
 * **Lean vocabulary** — `simp`, `subst`, `whnf`, `instances`: tactics and configuration fields, not
   declarations.
 * **A construction shorthand** — `Spf`, `Spec`, and nothing else. The standard mathematical name of
