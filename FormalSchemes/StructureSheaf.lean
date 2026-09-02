@@ -27,12 +27,30 @@ We reindex by `n : ℕ` standing for the exponent `n + 1`, so that the `n ≠ 0`
 * `FormalSpectrum.thickeningSheaf I n`: the structure sheaf of the `n`-th thickening
   `Spec (R ⧸ I ^ (n + 1))`, transported to `TopCat.of (FormalSpectrum I)` along
   `thickeningTopIso`, as a sheaf of `CommRingCat`.
+* `FormalSpectrum.stepRingHom I n`, `FormalSpectrum.towerRingHom I hmn`: the transition maps
+  `R ⧸ I ^ (n + 2) ⟶ R ⧸ I ^ (n + 1)` and `R ⧸ I ^ (n + 1) ⟶ R ⧸ I ^ (m + 1)` (`m ≤ n`) of the
+  tower of thickenings. The one-step map is the arbitrary-levels one at `m = n`, `n + 1`
+  (`FormalSpectrum.towerRingHom_succ`, a `rfl`), and each of the four lemmas about the one-step
+  map below is likewise the arbitrary-levels lemma specialised there.
 * `FormalSpectrum.structureSheafFunctor I : ℕᵒᵖ ⥤ TopCat.Sheaf CommRingCat (TopCat.of
   (FormalSpectrum I))`: the inverse system of the `thickeningSheaf`, with transition maps induced
   by the ring surjections `Ideal.Quotient.factor : R ⧸ I ^ (n + 1) →+* R ⧸ I ^ m` classifying the
   closed immersions of the thickenings into one another.
 * `FormalSpectrum.structureSheaf I`: the structure sheaf `O_{Spf R}` of `Spf R`, defined as the
   limit of `structureSheafFunctor`.
+
+## Why both level ranges of the transition map live here
+
+`towerRingHom` and the four lemmas about it were first written downstream, in
+`FormalSchemes.ThickeningTowerKernel`, as copies of this file's one-step declarations with `m ≤ n`
+in place of `m = n`, `n + 1`. They were moved here because this file is in the import closure of
+445 of the library's 496 modules while that one is a leaf: a caller of a one-step form could not
+have reached the general form there, so the two would have stayed duplicated for as long as anyone
+needed both. The one-step names, statements and binder order are unchanged and are now proved by
+specialisation, so no citation of them changed anywhere; `stepRingHom` in particular keeps its own
+definition rather than being redefined through `towerRingHom`, because
+`FormalSchemes.ThickeningCocone` records that reconciling two spellings of the containment proof
+`thickeningOpen_le_comap` costs the kernel 14.26 GB. (Issue 1511.)
 
 ## References
 
@@ -71,22 +89,56 @@ def stepRingHom (n : ℕ) :
   CommRingCat.ofHom (Ideal.Quotient.factor (Ideal.pow_le_pow_right (Nat.le_succ (n + 1))))
 
 omit [TopologicalSpace R] [IsAdicRing I] in
+/-- The transition map `R ⧸ I ^ (n + 1) ⟶ R ⧸ I ^ (m + 1)` of the tower of thickenings, for
+`m ≤ n`: the ring map classifying the closed immersion of the `m`-th thickening into the `n`-th
+one.
+
+This is `Ideal.Quotient.factorPow` at the shifted indices the thickenings of `Spf R` are numbered
+by, bundled into `CommRingCat` so that `Spec.topMap` can be applied to it. It stands to
+`FormalSpectrum.stepRingHom` — which is the same term at `m = n`, `n + 1`, recorded as
+`FormalSpectrum.towerRingHom_succ` — exactly as `Ideal.Quotient.factorPow` stands to
+`Ideal.Quotient.factorPowSucc`. -/
+def towerRingHom {m n : ℕ} (hmn : m ≤ n) :
+    CommRingCat.of (R ⧸ I ^ (n + 1)) ⟶ CommRingCat.of (R ⧸ I ^ (m + 1)) :=
+  CommRingCat.ofHom (Ideal.Quotient.factorPow I (Nat.succ_le_succ hmn))
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+theorem towerRingHom_succ (n : ℕ) : towerRingHom I (Nat.le_succ n) = stepRingHom I n :=
+  rfl
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- The triangle of maps out of `Spf R` into the thickenings `Spec (R ⧸ I ^ (m + 1))` and
+`Spec (R ⧸ I ^ (n + 1))` commutes with the transition map `Spec.topMap (towerRingHom I hmn)` of
+the tower of thickenings. -/
+theorem thickeningTopIso_hom_comp_topMap_towerRingHom {m n : ℕ} (hmn : m ≤ n) :
+    (thickeningTopIso I m).hom ≫ Spec.topMap (towerRingHom I hmn) =
+      (thickeningTopIso I n).hom := by
+  ext x
+  exact congrFun (comap_factor_comp_toThickening I (Nat.succ_ne_zero m) (Nat.succ_ne_zero n)
+    (Nat.succ_le_succ hmn)) x
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+theorem topMap_towerRingHom_comp_inv {m n : ℕ} (hmn : m ≤ n) :
+    Spec.topMap (towerRingHom I hmn) ≫ (thickeningTopIso I n).inv =
+      (thickeningTopIso I m).inv := by
+  rw [Iso.comp_inv_eq, ← thickeningTopIso_hom_comp_topMap_towerRingHom I hmn,
+    Iso.inv_hom_id_assoc]
+
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The triangle of maps out of `Spf R` into the thickenings `Spec (R ⧸ I ^ (n + 1))` and
 `Spec (R ⧸ I ^ (n + 2))` commutes with the transition map `Spec.topMap (stepRingHom I n)` of the
-tower of thickenings. -/
+tower of thickenings. This is
+`FormalSpectrum.thickeningTopIso_hom_comp_topMap_towerRingHom` at `m = n`, `n + 1`. -/
 theorem thickeningTopIso_hom_comp_topMap_stepRingHom (n : ℕ) :
     (thickeningTopIso I n).hom ≫ Spec.topMap (stepRingHom I n) =
-      (thickeningTopIso I (n + 1)).hom := by
-  ext x
-  exact congrFun (comap_factor_comp_toThickening I (Nat.succ_ne_zero n)
-    (Nat.succ_ne_zero (n + 1)) (Nat.le_succ (n + 1))) x
+      (thickeningTopIso I (n + 1)).hom :=
+  thickeningTopIso_hom_comp_topMap_towerRingHom I (Nat.le_succ n)
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 theorem topMap_stepRingHom_comp_inv (n : ℕ) :
     Spec.topMap (stepRingHom I n) ≫ (thickeningTopIso I (n + 1)).inv =
-      (thickeningTopIso I n).inv := by
-  rw [Iso.comp_inv_eq, ← thickeningTopIso_hom_comp_topMap_stepRingHom I n,
-    Iso.inv_hom_id_assoc]
+      (thickeningTopIso I n).inv :=
+  topMap_towerRingHom_comp_inv I (Nat.le_succ n)
 
 /-!
 ### Sections of the thickening sheaves, and the transition maps of the tower
@@ -124,25 +176,42 @@ theorem thickeningSheaf_obj :
       (Spec.structureSheaf (R ⧸ I ^ (n + 1))).presheaf.obj (op (thickeningOpen I n U)) :=
   rfl
 
+/-- **The opens cut out of two levels of the tower by one open of `Spf R` correspond under the
+transition map.** The transition maps `Spec (R ⧸ I ^ (m + 1)) → Spec (R ⧸ I ^ (n + 1))` of the
+tower of thickenings match up the opens `thickeningOpen` corresponding to a fixed open of
+`Spf R`. -/
+theorem map_topMap_thickeningOpen_tower {m n : ℕ} (hmn : m ≤ n) :
+    (TopologicalSpace.Opens.map (Spec.topMap (towerRingHom I hmn))).obj
+        (thickeningOpen I n U) =
+      thickeningOpen I m U := by
+  have h : (TopologicalSpace.Opens.map
+        (Spec.topMap (towerRingHom I hmn) ≫ (thickeningTopIso I n).inv)).obj U =
+      thickeningOpen I m U := by
+    rw [topMap_towerRingHom_comp_inv]
+    rfl
+  exact h
+
+theorem thickeningOpen_le_comap_tower {m n : ℕ} (hmn : m ≤ n) :
+    (thickeningOpen I m U : Set (PrimeSpectrum (R ⧸ I ^ (m + 1)))) ⊆
+      PrimeSpectrum.comap (towerRingHom I hmn).hom ⁻¹'
+        (thickeningOpen I n U : Set (PrimeSpectrum (R ⧸ I ^ (n + 1)))) := by
+  rw [← map_topMap_thickeningOpen_tower I U hmn]
+  exact fun x hx => hx
+
 /-- The transition maps `Spec (R ⧸ I ^ (n + 1)) → Spec (R ⧸ I ^ (n + 2))` of the tower of
-thickenings match up the opens `thickeningOpen` corresponding to a fixed open of `Spf R`. -/
+thickenings match up the opens `thickeningOpen` corresponding to a fixed open of `Spf R`. This is
+`FormalSpectrum.map_topMap_thickeningOpen_tower` at `m = n`, `n + 1`. -/
 theorem map_topMap_thickeningOpen :
     (TopologicalSpace.Opens.map (Spec.topMap (stepRingHom I n))).obj
         (thickeningOpen I (n + 1) U) =
-      thickeningOpen I n U := by
-  have h : (TopologicalSpace.Opens.map
-        (Spec.topMap (stepRingHom I n) ≫ (thickeningTopIso I (n + 1)).inv)).obj U =
-      thickeningOpen I n U := by
-    rw [topMap_stepRingHom_comp_inv]
-    rfl
-  exact h
+      thickeningOpen I n U :=
+  map_topMap_thickeningOpen_tower I U (Nat.le_succ n)
 
 theorem thickeningOpen_le_comap :
     (thickeningOpen I n U : Set (PrimeSpectrum (R ⧸ I ^ (n + 1)))) ⊆
       PrimeSpectrum.comap (stepRingHom I n).hom ⁻¹'
-        (thickeningOpen I (n + 1) U : Set (PrimeSpectrum (R ⧸ I ^ (n + 2)))) := by
-  rw [← map_topMap_thickeningOpen I n U]
-  exact fun x hx => hx
+        (thickeningOpen I (n + 1) U : Set (PrimeSpectrum (R ⧸ I ^ (n + 2)))) :=
+  thickeningOpen_le_comap_tower I U (Nat.le_succ n)
 
 /-- Under the thickening homeomorphism, the basic open `D(f) ⊆ Spf R` corresponds to the basic
 open `D(f mod I ^ (n + 1))` of the `n`-th thickening `Spec (R ⧸ I ^ (n + 1))`. -/
