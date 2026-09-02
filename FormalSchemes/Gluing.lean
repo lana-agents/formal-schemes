@@ -78,13 +78,15 @@ namespace LocallyRingedSpace.IsOpenImmersion
 point, an open immersion from the formal spectrum of an adic ring is a formal scheme. This
 mirrors `LocallyRingedSpace.IsOpenImmersion.scheme` for schemes.
 
-The chart datum the `local_affine` field asks for is exactly `isoRestrictOpensRange`
+The chart datum the `FormalScheme.local_affine` field asks for is exactly
+`LocallyRingedSpace.IsOpenImmersion.isoRestrictOpensRange`
 (`FormalSchemes.OpenImmersionIsoOfRangeEq`), so both halves of the witness — the open and the
 isomorphism — come from the open immersion itself. Until issue 1479 this file built them by hand,
 the isomorphism through `PresheafedSpace.IsOpenImmersion.isoOfRangeEq` under
 `set_option backward.isDefEq.respectTransparency false`, as
 `LocallyRingedSpace.IsOpenImmersion.scheme` still does in Mathlib; the locally-ringed-space
-`isoOfRangeEq` of that file makes the detour and the transparency bump unnecessary. -/
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` of that file makes the detour and the
+transparency bump unnecessary. -/
 protected def formalScheme (X : LocallyRingedSpace.{u})
     (h : ∀ x : X, ∃ (R : Type u) (_ : CommRing R) (_ : TopologicalSpace R) (I : Ideal R)
       (_ : IsAdicRing I) (f : FormalSpectrum.locallyRingedSpaceObj I ⟶ X),

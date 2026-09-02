@@ -144,7 +144,8 @@ variable {W : LocallyRingedSpace.{u}}
 This is `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`
 (`FormalSchemes.OpenImmersionIsoOfRangeEq`) read the other way round: the underlying space of
 `X.restrictOpen hX U` is `X.toLocallyRingedSpace.restrict U.isOpenEmbedding` by
-`restrictOpen_toLocallyRingedSpace`, and `restrictOpenι` is its `ofRestrict`. Issue 1479 routed
+`FormalScheme.restrictOpen_toLocallyRingedSpace`, and `FormalScheme.restrictOpenι` is its
+`LocallyRingedSpace.ofRestrict`. Issue 1479 routed
 this through the general form; before it, this was a second call of
 `LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` at a statement carrying `X : FormalScheme` and
 `hX : X.LocallyFG`, which the construction never uses. -/

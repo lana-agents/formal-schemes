@@ -55,7 +55,8 @@ was not previously in this subtree's closure.
 * `FormalSpectrum.stepChartRestrict_comp_chartRestrict`: **the restricted family is again
   compatible.** This is the theorem.
 * `FormalSpectrum.range_ofRestrict_comp_subset` and `range_ofRestrict_comp_step_subset`: the range
-  conditions the two `lift`s above take, both applications of
+  conditions the two `LocallyRingedSpace.IsOpenImmersion.lift` calls above take, both applications
+  of
   `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`
   (`FormalSchemes.OpenImmersionIsoOfRangeEq`).
 
