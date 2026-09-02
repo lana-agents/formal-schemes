@@ -56,11 +56,14 @@ enters, and it is not attempted here. Everything in `FormalSchemes.AdicCofinalOp
 particular the openness half `J ≤ √(I · B)` — is untouched, and so is
 `FormalSchemes.AdicOnSections`'s refutation of the on-the-nose containment.
 
+The transition map of the tower at an arbitrary pair of levels,
+`FormalSpectrum.towerRingHom`, and the four lemmas about it that this file needs, live in
+`FormalSchemes.StructureSheaf` beside the one-step forms they generalise — where every caller of
+the one-step forms can reach them, and where the one-step forms are their specialisations rather
+than a second copy (issue 1511).
+
 ## Main definitions
 
-* `FormalSpectrum.towerRingHom`: `Ideal.Quotient.factorPow` at the shifted indices, bundled into
-  `CommRingCat` — the transition map `R ⧸ I ^ (n + 1) ⟶ R ⧸ I ^ (m + 1)` of the tower of
-  thickenings, for `m ≤ n`. At `m = n`, `n + 1` it is `FormalSpectrum.stepRingHom`.
 * `FormalSpectrum.thickeningSectionsMk`: the canonical ring map
   `R →+* Γ (U, thickeningSheaf I n)`.
 * `FormalSpectrum.stepQuotientEquiv`: the ring isomorphism
@@ -73,13 +76,6 @@ particular the openness half `J ≤ √(I · B)` — is untouched, and so is
   `AlgebraicGeometry.ker_structureSheaf_comap`: the kernel of `Spec φ` on sections over an affine
   open is the extension of `RingHom.ker φ`, in the `Scheme.Hom.app` and the
   `StructureSheaf.comap` spellings.
-* `FormalSpectrum.map_topMap_thickeningOpen_tower`: the opens cut out of two levels of the tower
-  by one open of `Spf R` correspond under the transition map, for any two levels. Its plumbing is
-  `FormalSpectrum.towerRingHom_succ`,
-  `FormalSpectrum.thickeningTopIso_hom_comp_topMap_towerRingHom`,
-  `FormalSpectrum.topMap_towerRingHom_comp_inv` and
-  `FormalSpectrum.thickeningOpen_le_comap_tower`, each the arbitrary-levels form of a statement
-  `FormalSchemes.StructureSheaf` proves for one step.
 * `FormalSpectrum.ker_towerSectionsComap`, `FormalSpectrum.ker_towerSectionsComap_map`: the
   kernel of `Bₙ → Bₘ`, as an extension from `R ⧸ I ^ (n + 1)` and as an extension from `R`.
 * `FormalSpectrum.ker_stepSheafHom_app`: **the sketch's third input**,
@@ -159,64 +155,6 @@ universe u
 namespace FormalSpectrum
 
 variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
-
-section Tower
-
-omit [TopologicalSpace R] [IsAdicRing I]
-
-variable {m n : ℕ}
-
-/-- The transition map `R ⧸ I ^ (n + 1) ⟶ R ⧸ I ^ (m + 1)` of the tower of thickenings, for
-`m ≤ n`: the ring map classifying the closed immersion of the `m`-th thickening into the `n`-th
-one.
-
-This is `Ideal.Quotient.factorPow` at the shifted indices the thickenings of `Spf R` are numbered
-by, bundled into `CommRingCat` so that `Spec.topMap` can be applied to it. It stands to
-`FormalSpectrum.stepRingHom` — which is the same term at `m = n`, `n + 1`, recorded as
-`FormalSpectrum.towerRingHom_succ` — exactly as `Ideal.Quotient.factorPow` stands to
-`Ideal.Quotient.factorPowSucc`. -/
-def towerRingHom (hmn : m ≤ n) :
-    CommRingCat.of (R ⧸ I ^ (n + 1)) ⟶ CommRingCat.of (R ⧸ I ^ (m + 1)) :=
-  CommRingCat.ofHom (Ideal.Quotient.factorPow I (Nat.succ_le_succ hmn))
-
-theorem towerRingHom_succ (n : ℕ) : towerRingHom I (Nat.le_succ n) = stepRingHom I n :=
-  rfl
-
-/-- The triangle of maps out of `Spf R` into the thickenings `Spec (R ⧸ I ^ (m + 1))` and
-`Spec (R ⧸ I ^ (n + 1))` commutes with the transition map of the tower. This is
-`FormalSpectrum.thickeningTopIso_hom_comp_topMap_stepRingHom` at an arbitrary pair of levels. -/
-theorem thickeningTopIso_hom_comp_topMap_towerRingHom (hmn : m ≤ n) :
-    (thickeningTopIso I m).hom ≫ Spec.topMap (towerRingHom I hmn) = (thickeningTopIso I n).hom := by
-  ext x
-  exact congrFun (comap_factor_comp_toThickening I (Nat.succ_ne_zero m) (Nat.succ_ne_zero n)
-    (Nat.succ_le_succ hmn)) x
-
-theorem topMap_towerRingHom_comp_inv (hmn : m ≤ n) :
-    Spec.topMap (towerRingHom I hmn) ≫ (thickeningTopIso I n).inv = (thickeningTopIso I m).inv := by
-  rw [Iso.comp_inv_eq, ← thickeningTopIso_hom_comp_topMap_towerRingHom I hmn, Iso.inv_hom_id_assoc]
-
-variable (U : Opens (FormalSpectrum I))
-
-/-- **The opens cut out of two levels of the tower by one open of `Spf R` correspond under the
-transition map.** This is `FormalSpectrum.map_topMap_thickeningOpen` at an arbitrary pair of
-levels. -/
-theorem map_topMap_thickeningOpen_tower (hmn : m ≤ n) :
-    (Opens.map (Spec.topMap (towerRingHom I hmn))).obj (thickeningOpen I n U)
-      = thickeningOpen I m U := by
-  have h : (Opens.map (Spec.topMap (towerRingHom I hmn) ≫ (thickeningTopIso I n).inv)).obj U
-      = thickeningOpen I m U := by
-    rw [topMap_towerRingHom_comp_inv]
-    rfl
-  exact h
-
-theorem thickeningOpen_le_comap_tower (hmn : m ≤ n) :
-    (thickeningOpen I m U : Set (PrimeSpectrum (R ⧸ I ^ (m + 1)))) ⊆
-      PrimeSpectrum.comap (towerRingHom I hmn).hom ⁻¹'
-        (thickeningOpen I n U : Set (PrimeSpectrum (R ⧸ I ^ (n + 1)))) := by
-  rw [← map_topMap_thickeningOpen_tower I U hmn]
-  exact fun x hx => hx
-
-end Tower
 
 /-- The canonical ring map `R →+* Γ (U, thickeningSheaf I n)`: reduce modulo `I ^ (n + 1)` and
 take the resulting section of the structure sheaf of the `n`-th thickening. -/
