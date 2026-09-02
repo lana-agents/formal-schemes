@@ -49,6 +49,7 @@ import FormalSchemes.AffineSeparatedScheme
 import FormalSchemes.AffineSeparatedTopFiniteType
 import FormalSchemes.AffineSeparatedTopological
 import FormalSchemes.AffineSeparatedValue
+import FormalSchemes.AffineThickenings
 import FormalSchemes.AnnulusNontrivial
 import FormalSchemes.AnnulusOverlapProper
 import FormalSchemes.AnnulusSpecialFibre
