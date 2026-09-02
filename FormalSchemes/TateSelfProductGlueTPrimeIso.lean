@@ -58,7 +58,7 @@ variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 /-! ### Generic upgrades from `⊆` to `=` -/
 
 /-- The `hom` base map of a locally-ringed-space isomorphism is bijective: its two-sided inverse is
-the `inv` base map (the two `iso_..._base_..._base_apply` lemmas). -/
+the `Iso.inv` base map (the two `iso_..._base_..._base_apply` lemmas). -/
 theorem bijective_hom_base {X Y : LocallyRingedSpace.{u}} (e : X ≅ Y) :
     Function.Bijective ⇑e.hom.base :=
   Function.bijective_iff_has_inverse.mpr

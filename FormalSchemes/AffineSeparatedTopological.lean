@@ -8,15 +8,15 @@ set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
 /-!
-# The affine `IsSeparated` value, seen through the topological criterion
+# The affine `BothChartedFibreDatumXY.IsSeparated` value, seen through the topological criterion
 
 `FormalSchemes/AffineSeparatedValue.lean` (issue 513) proved that `Spf A` is separated over `Spf R`
 by transporting the affine diagonal's closed immersion across the one-chart gluing isomorphisms.
 `FormalSchemes/GeneralSeparatedTopological.lean` characterises separatedness of *any*
 datum-presented formal scheme as a purely topological condition on the diagonal's base map. This
-file applies the characterisation to the one existing `IsSeparated` value, which both validates the
-new API against a concrete datum and extracts a fact not previously stated: the base map of the
-one-chart general diagonal is a closed topological embedding.
+file applies the characterisation to the one existing `BothChartedFibreDatumXY.IsSeparated` value,
+which both validates the new API against a concrete datum and extracts a fact not previously stated:
+the base map of the one-chart general diagonal is a closed topological embedding.
 
 Note that the vacuity lemma `oneChartNeElim'` is restated here at the datum's own index type
 `(oneChartExposeXDatum R I hI A).J` rather than at `ULift Unit`; as recorded in issue 513, the

@@ -127,8 +127,10 @@ theorem tateSelfProductBothChartIso_hom_fst_comp (hI : I.FG) (i j k : Bool × Bo
     (tateSelfProductGlueF R I q hI i k hik) (bothFactorOverlapChart R I q hI)
     (tateSelfProductBothChart_range R I q hI i j k hij hik hjk)
 
-/-- **The `inv`-leg law** of `tateSelfProductBothChartIso`: `inv ≫ bothFactorOverlapChart` is the
-canonical map `pullback.fst (f i j) (f i k) ≫ f i j`. Directly `pullbackIsoOfRangeEq_inv_comp`. -/
+/-- **The `Iso.inv`-leg law** of `tateSelfProductBothChartIso`: `inv ≫ bothFactorOverlapChart` is
+the canonical map `pullback.fst (f i j) (f i k) ≫ f i j`. Directly
+`IsOpenImmersion.pullbackIsoOfRangeEq_inv_comp`.
+-/
 @[reassoc]
 theorem tateSelfProductBothChartIso_inv_comp (hI : I.FG) (i j k : Bool × Bool)
     (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k)
@@ -189,7 +191,8 @@ both-chart `bothFactorOverlapChart` exposes the genuine transition `t i j ≫ f 
 overlap:
 `tateSelfProductD i j k ≫ bothFactorOverlapChart =
   (bothChartIso i j k).hom ≫ pullback.fst (f i j) (f i k) ≫ t i j ≫ f j i`. Derived from the
-first-leg law `tateSelfProductGlueT'_fst_comp` and the `inv`-leg law of the second overlap iso. -/
+first-leg law `tateSelfProductGlueT'_fst_comp` and the `Iso.inv`-leg law of the second overlap iso.
+-/
 theorem tateSelfProductD_comp_bothChart (hI : I.FG) (i j k : Bool × Bool)
     (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k)
     [LocallyRingedSpace.IsOpenImmersion (tateSelfProductGlueF R I q hI i j hij)]

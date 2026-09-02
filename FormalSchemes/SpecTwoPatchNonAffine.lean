@@ -216,7 +216,7 @@ set_option backward.isDefEq.respectTransparency false in
 /-- **The `B`-side transition-then-inclusion of the two-patch glue datum is `Spec θ` followed by the
 `A`-side localization chart**, up to the `CategoryTheory.GlueData.ofGlueData'` `eqToHom`. The mirror
 of `specTwoPatchLRSGlueData_t_comp_f_false_true` with the two indices exchanged; note that
-`specGlueIso`'s `inv` is `Spec` of `θ` itself, its `hom` being `Spec` of `θ.symm`. -/
+`specGlueIso`'s `Iso.inv` is `Spec` of `θ` itself, its `Iso.hom` being `Spec` of `θ.symm`. -/
 theorem specTwoPatchLRSGlueData_t_comp_f_true_false :
     (specTwoPatchLRSGlueData a b θ).toGlueData.t ⟨true⟩ ⟨false⟩ ≫
         (specTwoPatchLRSGlueData a b θ).toGlueData.f ⟨false⟩ ⟨true⟩ =

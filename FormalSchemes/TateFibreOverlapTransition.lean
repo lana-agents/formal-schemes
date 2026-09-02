@@ -522,10 +522,10 @@ theorem tateSelfProductBothTransitionInv_half_y (hq : q ∈ I) (hI : I.FG) :
             (annulusFibreOverlapTransitionAlg R I q hq hI)).hom) := by
   rw [tateSelfProductBothTransitionInv_branch_yx, tateSelfProductBothTransitionInv_branch_yy]
 
-/-- **The both-factors `t` law, in `inv` form.** Stated against `tensorOverlapChartIsoBoth.inv` on
-both sides so that 761's packaged `coprod_desc_tensorOverlapSummandBoth` can replace the right-hand
-`inv` and `coprod.desc_comp` can distribute both sides — which avoids `coprod.hom_ext` at four-fold
-size altogether. -/
+/-- **The both-factors `t` law, in `Iso.inv` form.** Stated against the `Iso.inv` leg of
+`tensorOverlapChartIsoBoth` on both sides so that 761's packaged
+`coprod_desc_tensorOverlapSummandBoth` can replace the right-hand `Iso.inv` and `coprod.desc_comp`
+can distribute both sides — which avoids `coprod.hom_ext` at four-fold size altogether. -/
 theorem tateSelfProductBothTransitionInv_hom_comp_inv (hq : q ∈ I) (hI : I.FG) :
     (tateSelfProductBothTransitionInv R I q hI).hom ≫
         (tensorOverlapChartIsoBoth R I q hq hI).inv =

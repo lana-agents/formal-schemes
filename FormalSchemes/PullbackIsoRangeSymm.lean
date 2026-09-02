@@ -18,7 +18,7 @@ identifications differ exactly by the canonical
   equality with the intersection commuted.
 * `pullbackIsoOfRangeEq_trans_symm`: the packaged iso form,
   `pullbackIsoOfRangeEq f g h e ≪≫ pullbackSymmetry f g = pullbackIsoOfRangeEq g f h e'`.
-* `pullbackIsoOfRangeEq_symm_inv`: the dual `inv` form.
+* `IsOpenImmersion.pullbackIsoOfRangeEq_symm_inv`: the dual `Iso.inv` form.
 
 This is the compatibility a glue-datum cocycle needs when it identifies an overlap object `V i j =
 pullback (fᵢ) (fⱼ)` with a concrete range-cut-out object: the concrete object does not know the
@@ -58,7 +58,7 @@ theorem pullbackIsoOfRangeEq_trans_symm :
   rw [Iso.trans_hom]
   exact pullbackIsoOfRangeEq_hom_symm f g h e
 
-/-- The `inv`-leg dual of `pullbackIsoOfRangeEq_hom_symm`. -/
+/-- The `Iso.inv`-leg dual of `IsOpenImmersion.pullbackIsoOfRangeEq_hom_symm`. -/
 theorem pullbackIsoOfRangeEq_symm_inv :
     (pullbackSymmetry f g).inv ≫ (pullbackIsoOfRangeEq f g h e).inv =
       (pullbackIsoOfRangeEq g f h (e.trans (Set.inter_comm _ _))).inv := by

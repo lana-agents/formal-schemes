@@ -108,7 +108,7 @@ Settled by measurement on the two tokens that broke the closed list (issue 1442)
 
 `Spf` and `Spec` are the same kind of token, in the same sentences — "a morphism `Spf R ⟶ Spec C`",
 "`Spec A` is `Spf` of its own ring taken discrete". Before this row one was condemned (317
-occurrences in 128 files, unresolved) and the other waved through (172 in 61), decided entirely by
+occurrences in 129 files, unresolved) and the other waved through (172 in 63), decided entirely by
 whether Mathlib happens to own the bare name. **Both verdicts were wrong**, and the one that passed
 was the worse of the two.
 

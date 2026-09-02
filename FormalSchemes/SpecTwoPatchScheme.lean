@@ -58,10 +58,10 @@ whether it is affine. That question is settled downstream, in
 `FormalSchemes.SpecTwoPatchNonAffine`: at `A = B`, `a = b`, `θ = RingEquiv.refl` — the doubled
 `Spec A`, which glues `Spec A` to itself along `D(a)` — the glued scheme is **neither separated
 nor affine**, as soon as `A` is a domain and `a` a non-zero non-unit; the concrete witness there is
-the affine line over `ℚ` with a doubled origin. That is also why no `IsSeparated` statement is
-attempted here: none could hold at this generality. Likewise nothing here claims
-`completionTwoPatch` is *the* completion of `specTwoPatchScheme` in any sense beyond the
-morphism.
+the affine line over `ℚ` with a doubled origin. That is also why no
+`BothChartedFibreDatumXY.IsSeparated` statement is attempted here: none could hold at this
+generality. Likewise nothing here claims `completionTwoPatch` is *the* completion of
+`specTwoPatchScheme` in any sense beyond the morphism.
 
 ## References
 

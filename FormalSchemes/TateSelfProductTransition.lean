@@ -40,9 +40,9 @@ per-summand transition isomorphisms:
   `(a, b) ↦ (swap a, swap b)` through `mapSpfIso` of the annulus chart transition on each factor.
 
 Since each transition swaps two paired summands (the second factor being the honest inverse of the
-first), each is its own inverse, so all three are packaged as `Iso`s whose `hom` and `inv` legs
-coincide. The self-inverse law `t i j ≫ t j i = 𝟙` of the eventual four-chart `GlueData'` is then
-`Iso.hom_inv_id` of these; the same isomorphisms feed the genuine `Bool × Bool` cocycle.
+first), each is its own inverse, so all three are packaged as `Iso`s whose `Iso.hom` and `Iso.inv`
+legs coincide. The self-inverse law `t i j ≫ t j i = 𝟙` of the eventual four-chart `GlueData'` is
+then `Iso.hom_inv_id` of these; the same isomorphisms feed the genuine `Bool × Bool` cocycle.
 
 ## Main definitions
 

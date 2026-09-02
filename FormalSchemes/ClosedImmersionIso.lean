@@ -57,7 +57,7 @@ faithful, `FormalSchemes.FormalScheme`).
 
 This is what lets an isomorphism produced in `LocallyRingedSpace` — for instance the comparison
 isomorphism of two presentations of a fibre product — be used against predicates such as
-`IsClosedImmersion` that are stated for morphisms of formal schemes. -/
+`FormalScheme.IsClosedImmersion` that are stated for morphisms of formal schemes. -/
 theorem isIso_of_isIso_toLRSHom (f : X ⟶ Y) [IsIso f.toLRSHom] : IsIso f := by
   have : IsIso (forgetToLocallyRingedSpace.map f) := ‹_›
   exact isIso_of_fully_faithful forgetToLocallyRingedSpace f

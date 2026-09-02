@@ -30,9 +30,9 @@ Tate quotient over the image of a saturation, which is what this file was writte
 
 `AlgebraicGeometry.FormalScheme.GlueData.openCover` presents the patches through
 `(D.isFormalScheme i).choose`, an existential witness merely *isomorphic* to `D.U i`, and its
-`map` is `(that isomorphism).hom ≫ D.ι i` rather than `D.ι i`. So specialising
-`OpenCover.eq_of_chart_c_app_eq` to a glue datum leaves a `choose` in the statement and an
-isomorphism in front of every `ι`. Going through
+`FormalScheme.OpenCover.map` is `(that isomorphism).hom ≫ D.ι i` rather than `D.ι i`. So
+specialising `FormalScheme.OpenCover.eq_of_chart_c_app_eq` to a glue datum leaves an
+`Exists.choose` in the statement and an isomorphism in front of every `ι`. Going through
 `AlgebraicGeometry.FormalScheme.GlueData.ι_jointly_surjective` directly avoids both, and
 `AlgebraicGeometry.FormalScheme.GlueData.ι_isOpenImmersion` supplies the same `IsIso` that the
 cover version gets from `PresheafedSpace.IsOpenImmersion.c_iso`.

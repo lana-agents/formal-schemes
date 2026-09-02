@@ -19,7 +19,7 @@ This file records the *isolated*-leg forms, obtained by cancelling the (mono) op
   direction are the open-immersion lifts `IsOpenImmersion.lift f h _` / `IsOpenImmersion.lift g h _`
   of `h` through `f` / `g`.
 * `pullbackIsoOfRangeEq_fst_eq` / `pullbackIsoOfRangeEq_snd_eq`: dually, the pullback projections
-  themselves factor through the `inv` direction as `inv ≫ lift f h _` / `inv ≫ lift g h _`.
+  themselves factor through the `Iso.inv` direction as `inv ≫ lift f h _` / `inv ≫ lift g h _`.
 
 These are exactly the shape consumed by the transition cocycle (`t'` / `t_fac` / `cocycle`) of a
 glue datum whose overlap objects are cut out by open immersions of prescribed image and thereby
@@ -53,15 +53,15 @@ theorem pullbackIsoOfRangeEq_hom_snd :
       lift g h (e.le.trans Set.inter_subset_right) := by
   rw [← cancel_mono g, Category.assoc, pullbackIsoOfRangeEq_hom_snd_comp, lift_fac]
 
-/-- The first pullback projection factors through the `inv` direction of `pullbackIsoOfRangeEq` as
-`inv ≫ lift f h _`. -/
+/-- The first pullback projection factors through the `Iso.inv` direction of
+`IsOpenImmersion.pullbackIsoOfRangeEq` as `inv ≫ lift f h _`. -/
 theorem pullbackIsoOfRangeEq_fst_eq :
     pullback.fst f g =
       (pullbackIsoOfRangeEq f g h e).inv ≫ lift f h (e.le.trans Set.inter_subset_left) := by
   rw [← pullbackIsoOfRangeEq_hom_fst f g h e, Iso.inv_hom_id_assoc]
 
-/-- The second pullback projection factors through the `inv` direction of `pullbackIsoOfRangeEq` as
-`inv ≫ lift g h _`. -/
+/-- The second pullback projection factors through the `Iso.inv` direction of
+`IsOpenImmersion.pullbackIsoOfRangeEq` as `inv ≫ lift g h _`. -/
 theorem pullbackIsoOfRangeEq_snd_eq :
     pullback.snd f g =
       (pullbackIsoOfRangeEq f g h e).inv ≫ lift g h (e.le.trans Set.inter_subset_right) := by

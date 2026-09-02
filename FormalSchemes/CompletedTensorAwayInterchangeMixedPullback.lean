@@ -61,9 +61,10 @@ of the completed-localization `R`-algebra maps `A →ₐ[R] A{1/a}` and `B →�
 (`IsScalarTower.toAlgHom`). This makes both charts objects of the `mapSpf` functor calculus, so the
 mixed commutativity square reduces to `mapSpf`-functoriality. -/
 
-/-- **The completed-tensor lift `gCHom` is `map` of the localization algebra map.** The ring shadow
-of "the first-factor interchange chart is `mapSpf` of the `A`-localization": on generators both send
-`inl x ↦ inl (loc_a x)` and `inr y ↦ inr y`. -/
+/-- **The completed-tensor lift `CompletedTensorAwayInterchange.gCHom` is
+`CompletedTensorProduct.map` of the localization algebra map.** The ring shadow of "the first-factor
+interchange chart is `CompletedTensorProduct.mapSpf` of the `A`-localization": on generators both
+send `inl x ↦ inl (loc_a x)` and `inr y ↦ inr y`. -/
 theorem gCHom_eq_map (f : A) (hI : I.FG) :
     gCHom I f hI =
       CompletedTensorProduct.map hI
@@ -94,11 +95,12 @@ theorem interchangeOpenImmersion_eq_mapSpf (f : A) (hI : I.FG) :
   rw [interchangeOpenImmersion_eq_map I f hI, CompletedTensorProduct.mapSpf_eq]
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ (gCHom_eq_map I f hI)
 
-/-! ### The commutativity isomorphism `hom` as an `inv`, and the double-swap identity -/
+/-! ### The commutativity isomorphism `Iso.hom` as an `Iso.inv`, and the double-swap identity -/
 
-/-- The `hom` leg of `commSpfIso (A, B)` is the `inv` leg of the flipped `commSpfIso (B, A)`.
-Both are `Spf` of the same underlying ring map `commEquiv (A, B).symm = commHom (B, A)`; only the
-(propositional) continuity witnesses differ, and `locallyRingedSpaceMap` ignores those. -/
+/-- The `Iso.hom` leg of `commSpfIso (A, B)` is the `Iso.inv` leg of the flipped
+`commSpfIso (B, A)`. Both are `Spf` of the same underlying ring map
+`commEquiv (A, B).symm = commHom (B, A)`; only the (propositional) continuity witnesses differ, and
+`locallyRingedSpaceMap` ignores those. -/
 theorem commSpfIso_hom_eq_inv (hI : I.FG) :
     (commSpfIso (A := A) (B := B) I hI).hom = (commSpfIso (A := B) (B := A) I hI).inv :=
   rfl

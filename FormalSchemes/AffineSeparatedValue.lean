@@ -10,7 +10,7 @@ set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
 /-!
-# `Spf A` is separated over `Spf R`: the first `IsSeparated` value (EGA I §10.15)
+# `Spf A` over `Spf R`: the first `BothChartedFibreDatumXY.IsSeparated` value (EGA I §10.15)
 
 `FormalSchemes/GeneralSeparated.lean` (issue 499) introduced the §10.15 separatedness vocabulary
 for a datum-presented formal scheme — the scheme-level general diagonal

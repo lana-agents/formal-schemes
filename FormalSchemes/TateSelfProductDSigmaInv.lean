@@ -111,8 +111,8 @@ def tateSelfProductGlueTInv (hI : I.FG) :
   | (true, true), (true, true), h => (h rfl).elim
 
 /-- **`t_inv` is its own inverse:** `t_inv i j h ≫ t_inv j i h.symm = 𝟙`. Each case is
-`Iso.hom_inv_id` of the corresponding inversion transition (whose `hom` and `inv` legs coincide).
-The inversion analogue of `tateSelfProductGlueT_inv`. -/
+`Iso.hom_inv_id` of the corresponding inversion transition (whose `Iso.hom` and `Iso.inv` legs
+coincide). The inversion analogue of `tateSelfProductGlueT_inv`. -/
 theorem tateSelfProductGlueTInv_inv (hI : I.FG) :
     ∀ (i j : Bool × Bool) (h : i ≠ j),
       tateSelfProductGlueTInv R I q hI i j h ≫

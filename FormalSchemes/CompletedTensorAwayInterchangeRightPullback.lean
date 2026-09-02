@@ -91,7 +91,8 @@ private theorem map_commEquiv_fwd (hI : I.FG) (φ : A →ₐ[R] A') (ψ : B →�
       CompletedTensorProduct.commEquiv_inr,
       CompletedTensorProduct.map_inl, CompletedTensorProduct.map_inr]
 
-/-- Unfolding of the `inv` leg of `commSpfIso` to the raw `locallyRingedSpaceMap` of `commEquiv`. -/
+/-- Unfolding of the `Iso.inv` leg of `CompletedTensorAwayInterchange.commSpfIso` to the raw
+`locallyRingedSpaceMap` of `CompletedTensorProduct.commEquiv`. -/
 theorem commSpfIso_inv_eq (hI : I.FG) :
     (commSpfIso (A := A) (B := B) I hI).inv =
       FormalSpectrum.locallyRingedSpaceMap (CompletedTensorProduct.idealOfDefinition R I A B)
@@ -100,7 +101,7 @@ theorem commSpfIso_inv_eq (hI : I.FG) :
         (isAdicHom_commEquiv I hI).le_comap :=
   rfl
 
-/-- **Naturality of the commutativity iso of formal spectra (`inv` form).**
+/-- **Naturality of the commutativity iso of formal spectra (`Iso.inv` form).**
 `mapSpf hI ψ φ ≫ commSpfIso(A,B).inv = commSpfIso(A',B').inv ≫ mapSpf hI φ ψ`. Reduces, through
 `locallyRingedSpaceMap_comp`, to the ring-level naturality `map_commEquiv_fwd`. -/
 theorem commSpfIso_inv_naturality (φ : A →ₐ[R] A') (ψ : B →ₐ[R] B') (hI : I.FG) :
@@ -127,7 +128,7 @@ theorem commSpfIso_inv_naturality (φ : A →ₐ[R] A') (ψ : B →ₐ[R] B') (h
 
 /-- **Naturality of the commutativity iso of formal spectra (`hom` form).**
 `mapSpf hI φ ψ ≫ commSpfIso(A,B).hom = commSpfIso(A',B').hom ≫ mapSpf hI ψ φ`. Obtained from the
-`inv` form by cancelling the isomorphisms. -/
+`Iso.inv` form by cancelling the isomorphisms. -/
 theorem commSpfIso_hom_naturality (φ : A →ₐ[R] A') (ψ : B →ₐ[R] B') (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI φ ψ ≫ (commSpfIso (A := A) (B := B) I hI).hom =
       (commSpfIso (A := A') (B := B') I hI).hom ≫ CompletedTensorProduct.mapSpf hI ψ φ := by

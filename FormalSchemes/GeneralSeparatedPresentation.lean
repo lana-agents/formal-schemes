@@ -49,7 +49,7 @@ schemes*; since formal schemes are a full subcategory of locally ringed spaces, 
 `FormalScheme.Hom.mk` and the round trips are `FormalScheme.Hom.ext'`, packaged as
 `FormalScheme.isoOfLRSIso` (added to `FormalSchemes.ClosedImmersionIso` beside the new
 `FormalScheme.isIso_of_isIso_toLRSHom`). That packaging, rather than `asIso` of the latter, is what
-keeps `.hom` and `.inv` *definitionally* `Hom.mk` of `e.hom` and `e.inv`, which is what
+keeps `.hom` and `.inv` *definitionally* `FormalScheme.Hom.mk` of `e.hom` and `e.inv`, which is what
 `schemeDiagonal'_transport`'s `Hom.ext'` proof needs — `asIso`'s `.inv` is only propositionally
 `Hom.mk e.inv`.
 
@@ -69,9 +69,9 @@ remedy: restate once in each spelling rather than transport.
 
 ## What this does not do
 
-It does not *redefine* `IsSeparated` as a predicate on a `FormalScheme`. That is a real design
-question, it touches every §10.15 consumer including the Tate tower, and it should be argued on its
-own now that this theorem exists to support it.
+It does not *redefine* `BothChartedFibreDatumXY.IsSeparated` as a predicate on a `FormalScheme`.
+That is a real design question, it touches every §10.15 consumer including the Tate tower, and it
+should be argued on its own now that this theorem exists to support it.
 
 ## Main results
 
@@ -208,9 +208,11 @@ def xGluedSchemeIso :
     (diagonalDatum DX₁ σX₁ hστX₁ hσcX₁).xGlued ≅ (diagonalDatum DX₂ σX₂ hστX₂ hσcX₂).xGlued :=
   FormalScheme.isoOfLRSIso eX
 
-/-- **`diagonal'_transport` at the `FormalScheme` level.** `schemeDiagonal'` is `Hom.mk` of
-`diagonal'` and both sides of the equation have the same underlying locally-ringed-space morphism,
-so this is `Hom.ext'` on `diagonal'_transport`. -/
+/-- **`BothChartedFibreDatumXY.diagonal'_transport` at the `FormalScheme` level.**
+`BothChartedFibreDatumXY.schemeDiagonal'` is `FormalScheme.Hom.mk` of
+`BothChartedFibreDatumXY.diagonal'` and both sides of the equation have the same underlying
+locally-ringed-space morphism, so this is `Hom.ext'` on
+`BothChartedFibreDatumXY.diagonal'_transport`. -/
 theorem schemeDiagonal'_transport :
     schemeDiagonal' DX₂ σX₂ hστX₂ hσcX₂ =
       (xGluedSchemeIso DX₁ σX₁ hστX₁ hσcX₁ DX₂ σX₂ hστX₂ hσcX₂ eX).inv ≫

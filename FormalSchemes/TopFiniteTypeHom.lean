@@ -345,7 +345,9 @@ its basic-open refinement `Spf A{1/g}^ ⟶ Spf A ⟶ X`.
 statement at `Y = Spf R` and `t = 𝟙`; the only new content is that a tail composes on the right of
 both sides, which is `Category.assoc` around `basicOpenChartHom_comp_structHom`. Stated at a
 variable `m` and a variable `f` for the reason recorded there — instantiating first makes the
-`Hom.mk`/`toLRSHom` unfolding step time out at `isDefEq`, and at variables it is `rfl`. -/
+`FormalScheme.Hom.mk`/`FormalScheme.Hom.toLRSHom` unfolding step time out at `isDefEq`, and at
+variables it is `rfl`.
+-/
 theorem basicOpenChartHom_comp_target (g : A)
     [IsAdicRing (FormalSpectrum.awayCompletionIdeal L g)]
     (m : FormalScheme.Spf L ⟶ X) (t : FormalScheme.Spf I ⟶ Y)

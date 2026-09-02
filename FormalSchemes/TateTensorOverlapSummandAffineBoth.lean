@@ -176,8 +176,8 @@ theorem tensorOverlapSummandYYBoth_comp (hq : q ∈ I) (hI : I.FG) :
 of the corresponding pair of projections.**
 
 Build-cost note: unlike 703's un-tensored analogues this is shipped **bare**, with neither
-`reassoc` nor `simp`. The left-hand side is a doubly-nested coproduct inclusion into the `inv` of a
-four-fold coproduct isomorphism of completed tensor products, and at that size both attributes
+`reassoc` nor `simp`. The left-hand side is a doubly-nested coproduct inclusion into the `Iso.inv`
+of a four-fold coproduct isomorphism of completed tensor products, and at that size both attributes
 overflow the elaborator's stack: `reassoc` on its own, and `simp` cumulatively — one such lemma in
 the simp set is fine, a second one elaborated afterwards in the same module is not. Bare, the four
 elaborate in ~45 s each. Rewrite with them explicitly and reassociate with `Category.assoc`. -/
@@ -198,8 +198,8 @@ theorem coprod_inl_inl_comp_tensorOverlapChartIsoBoth_inv (hq : q ∈ I) (hI : I
 of the corresponding pair of projections.**
 
 Build-cost note: unlike 703's un-tensored analogues this is shipped **bare**, with neither
-`reassoc` nor `simp`. The left-hand side is a doubly-nested coproduct inclusion into the `inv` of a
-four-fold coproduct isomorphism of completed tensor products, and at that size both attributes
+`reassoc` nor `simp`. The left-hand side is a doubly-nested coproduct inclusion into the `Iso.inv`
+of a four-fold coproduct isomorphism of completed tensor products, and at that size both attributes
 overflow the elaborator's stack: `reassoc` on its own, and `simp` cumulatively — one such lemma in
 the simp set is fine, a second one elaborated afterwards in the same module is not. Bare, the four
 elaborate in ~45 s each. Rewrite with them explicitly and reassociate with `Category.assoc`. -/
@@ -220,8 +220,8 @@ theorem coprod_inr_inl_comp_tensorOverlapChartIsoBoth_inv (hq : q ∈ I) (hI : I
 of the corresponding pair of projections.**
 
 Build-cost note: unlike 703's un-tensored analogues this is shipped **bare**, with neither
-`reassoc` nor `simp`. The left-hand side is a doubly-nested coproduct inclusion into the `inv` of a
-four-fold coproduct isomorphism of completed tensor products, and at that size both attributes
+`reassoc` nor `simp`. The left-hand side is a doubly-nested coproduct inclusion into the `Iso.inv`
+of a four-fold coproduct isomorphism of completed tensor products, and at that size both attributes
 overflow the elaborator's stack: `reassoc` on its own, and `simp` cumulatively — one such lemma in
 the simp set is fine, a second one elaborated afterwards in the same module is not. Bare, the four
 elaborate in ~45 s each. Rewrite with them explicitly and reassociate with `Category.assoc`. -/
@@ -242,8 +242,8 @@ theorem coprod_inl_inr_comp_tensorOverlapChartIsoBoth_inv (hq : q ∈ I) (hI : I
 of the corresponding pair of projections.**
 
 Build-cost note: unlike 703's un-tensored analogues this is shipped **bare**, with neither
-`reassoc` nor `simp`. The left-hand side is a doubly-nested coproduct inclusion into the `inv` of a
-four-fold coproduct isomorphism of completed tensor products, and at that size both attributes
+`reassoc` nor `simp`. The left-hand side is a doubly-nested coproduct inclusion into the `Iso.inv`
+of a four-fold coproduct isomorphism of completed tensor products, and at that size both attributes
 overflow the elaborator's stack: `reassoc` on its own, and `simp` cumulatively — one such lemma in
 the simp set is fine, a second one elaborated afterwards in the same module is not. Bare, the four
 elaborate in ~45 s each. Rewrite with them explicitly and reassociate with `Category.assoc`. -/

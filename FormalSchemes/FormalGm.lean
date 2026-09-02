@@ -687,7 +687,7 @@ gives the same continuous `R`-algebra map. Both composites send `X ↦ X ⊗ X �
 /-- The comultiplication tensored with the identity on the second factor, `Δ ⊗̂ id`, bundled as an
 `R`-algebra homomorphism `R{X,X⁻¹} ⊗̂_R R{X,X⁻¹} →ₐ[R] (R{X,X⁻¹} ⊗̂_R R{X,X⁻¹}) ⊗̂_R R{X,X⁻¹}`
 (the `AlgHom` form of `CompletedTensorProduct.map hI comulAlgHom id`; built via `liftAlgHom`, so it
-coincides with `map` as a ring homomorphism). -/
+coincides with `CompletedTensorProduct.map` as a ring homomorphism). -/
 def comulMapLeftAlgHom :
     tensorSquare R I →ₐ[R]
       CompletedTensorProduct R I (tensorSquare R I) (RestrictedLaurentSeries R I) :=
@@ -714,7 +714,7 @@ theorem comulMapLeftAlgHom_apply (x : tensorSquare R I) :
 /-- The identity on the first factor tensored with the comultiplication, `id ⊗̂ Δ`, bundled as an
 `R`-algebra homomorphism `R{X,X⁻¹} ⊗̂_R R{X,X⁻¹} →ₐ[R] R{X,X⁻¹} ⊗̂_R (R{X,X⁻¹} ⊗̂_R R{X,X⁻¹})`
 (the `AlgHom` form of `CompletedTensorProduct.map hI id comulAlgHom`; built via `liftAlgHom`, so it
-coincides with `map` as a ring homomorphism). -/
+coincides with `CompletedTensorProduct.map` as a ring homomorphism). -/
 def comulMapRightAlgHom :
     tensorSquare R I →ₐ[R]
       CompletedTensorProduct R I (RestrictedLaurentSeries R I) (tensorSquare R I) :=

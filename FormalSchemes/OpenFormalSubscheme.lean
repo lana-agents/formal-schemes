@@ -428,9 +428,9 @@ theorem surjective_stalkMap_restrictOpenMap_iff
     (hs.surjective.comp hv.surjective)]
 
 /-- **The morphism induced on open subschemes, in `FormalScheme`.** `FormalScheme` is a full
-subcategory of locally ringed spaces, so this is `Hom.mk`; it exists because `IsClosedImmersion`
-and the rest of the target-local vocabulary are stated for `FormalScheme.Hom`, not for the
-underlying morphism. -/
+subcategory of locally ringed spaces, so this is `FormalScheme.Hom.mk`; it exists because
+`FormalScheme.IsClosedImmersion` and the rest of the target-local vocabulary are stated for
+`FormalScheme.Hom`, not for the underlying morphism. -/
 def restrictOpenSchemeMap (g : X ⟶ Y) (V : Opens Y) :
     X.restrictOpen hX ((Opens.map g.toLRSHom.base).obj V) ⟶ Y.restrictOpen hY V :=
   Hom.mk (X.restrictOpenMap hX Y hY g.toLRSHom V)

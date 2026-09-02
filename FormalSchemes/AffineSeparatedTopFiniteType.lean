@@ -26,7 +26,7 @@ The separatedness half sees it through `.toLRSHom` only because
 `FormalScheme.IsSeparatedOverSpf` is stated at the level of `LocallyRingedSpace`, matching
 `fibreLiftAdic` and the rest of the general fibre-product API, while
 `FormalScheme.IsRelativelyTopFiniteType` is stated at `FormalScheme.Hom`. The asymmetry is in the
-two predicates, not in the object: `Hom.mk` and `.toLRSHom` are inverse on the nose.
+two predicates, not in the object: `FormalScheme.Hom.mk` and `.toLRSHom` are inverse on the nose.
 
 ## The ideal of definition is not specialised
 
@@ -67,7 +67,7 @@ all — every affine formal scheme is separated. What the finite-type hypothesis
 half, `IsTopologicallyFiniteType.isRelativelyTopFiniteType`, and the right to state them together.
 
 `IsTopologicallyFiniteType.map_eq` identifies `L` with `I·A`, after which the two structural
-morphisms are the same term: `structHom` is `Hom.mk` of
+morphisms are the same term: `IsTopologicallyFiniteType.structHom` is `FormalScheme.Hom.mk` of
 `locallyRingedSpaceMap I L (algebraMap R A) _`, and its proof argument is a proof of the same
 `Prop` as the `Ideal.le_comap_map` that `spf_isSeparatedOverSpf` uses. -/
 theorem spf_isSeparatedOverSpf_and_isRelativelyTopFiniteType
