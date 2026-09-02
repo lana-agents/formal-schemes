@@ -36,11 +36,28 @@ formal spectra is adically continuous for them, provided its global-sections map
   `FormalSpectrum.sectionsComponent_mem_pow` — **the payoff**: `w.c.app (op U)` carries
   `sectionsOpenIdeal I U ^ m` into `sectionsOpenIdeal J (w⁻¹ U) ^ m`, as an ideal containment and
   as a membership implication. The hypothesis is `I ≤ J.comap (globalSectionsMap I J w)`.
+* `FormalSpectrum.sectionsEquivOfEqBasicOpen` — **sections over an open that happens to be a
+  basic open** are the completed localization, together with
+  `FormalSpectrum.sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom` and its pointwise spelling
+  `FormalSpectrum.sectionsEquivOfEqBasicOpen_sectionsOpenHom`, which say that the equivalence
+  carries `FormalSpectrum.sectionsOpenHom` to `FormalSpectrum.awayCompletionHom`. This is the
+  bridge between the two spellings of a section ring: **21** call sites outside this file, in the
+  six modules of the Tate node-chart cluster, plus three inside it.
+* `FormalSpectrum.isHausdorff_awayCompletionIdeal` — `R{1/f}` is Hausdorff whenever `I` is
+  `Ideal.FG`, with no topology on `R{1/f}` required. It travels with the three above because it
+  is what a consumer of the identification reaches for next; **3** call sites, in two modules.
 * `FormalSpectrum.comp_eqToHom_sectionsOpenHom`,
   `FormalSpectrum.map_eqToHom_sectionsOpenIdeal` and
   `FormalSpectrum.mem_pow_map_eqToHom_sectionsOpenIdeal` — an equality of opens transports the
   structural map, its ideal and every power of that ideal, so a leg that composes a `.c.app` with
   an `eqToHom` presheaf transport costs no new argument.
+
+Issue 1473 brought those four here from `FormalSchemes.TateInvNodeChartAmbient`, a Tate leaf whose
+module docstring is about `A = R{x, y}/(x·y − q)`. None of the four mentions a Tate object, a
+period, a node or an annulus, and the tell was the direction of an import: to state the two
+structural-map lemmas in that leaf, issue 1459 had to add `import FormalSchemes.AdicOnOpenSections`
+to it — pulling a general upstream module sideways into the cluster. Their statements are
+unchanged by the move.
 
 ## What is *not* proved
 
@@ -160,6 +177,52 @@ theorem mem_pow_map_eqToHom_sectionsOpenIdeal {U₁ U₂ : Opens (FormalSpectrum
       (sectionsOpenIdeal I U₂) ^ m := by
     rw [Ideal.map_pow, map_eqToHom_sectionsOpenIdeal I h]
   exact hpow ▸ Ideal.mem_map_of_mem _ hx
+
+/-!
+### Sections over an open that *is* a basic open
+-/
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **`R{1/f}` is Hausdorff** for `I` finitely generated: it is `AdicCompletion.isAdicRing_map` at
+the localization, of which `IsHausdorff` is a component. Unlike
+`FormalSpectrum.isAdicRing_awayCompletionIdeal` this needs no topology on `R{1/f}`. -/
+theorem isHausdorff_awayCompletionIdeal (f : R) (hI : I.FG) :
+    IsHausdorff (awayCompletionIdeal I f) (awayCompletion I f) :=
+  (AdicCompletion.isAdicRing_map _ (hI.map _)).toIsAdicComplete.toIsHausdorff
+
+/-- **Sections over an open that happens to be a basic open** are the completed localization:
+`FormalSpectrum.sectionsBasicOpenEquiv` (EGA I, 10.1.4) after the transport along `hU`. The
+`⊤`-analogue is `FormalSpectrum.sectionsEquivOfEqTop`. -/
+def sectionsEquivOfEqBasicOpen {U : Opens (FormalSpectrum I)} {f : R} (hU : U = basicOpen I f) :
+    ((locallyRingedSpaceObj I).presheaf.obj (op U) : Type u) ≃+* awayCompletion I f :=
+  (((locallyRingedSpaceObj I).presheaf.mapIso
+    (eqToIso (congrArg op hU))).commRingCatIsoToRingEquiv).trans (sectionsBasicOpenEquiv I f)
+
+/-- **`FormalSpectrum.sectionsEquivOfEqBasicOpen` carries the structural map of `Γ(U)` to the
+structural map of `R{1/f}`.** Both are restrictions from `⊤`, so this is
+`FormalSpectrum.sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom`
+(`FormalSchemes.AdicOnBasicOpenSections`) after the transport along `hU` has been absorbed by
+`FormalSpectrum.comp_eqToHom_sectionsOpenHom`. The pointwise spelling is
+`FormalSpectrum.sectionsEquivOfEqBasicOpen_sectionsOpenHom`, which is derived from this one. -/
+theorem sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom {U : Opens (FormalSpectrum I)} {f : R}
+    (hU : U = basicOpen I f) :
+    (sectionsEquivOfEqBasicOpen I hU).toRingHom.comp (sectionsOpenHom I U) =
+      awayCompletionHom I f := by
+  rw [← sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom I f, ← sectionsOpenHom_basicOpen I f,
+    ← comp_eqToHom_sectionsOpenHom I hU, ← RingHom.comp_assoc]
+  rfl
+
+/-- **The pointwise spelling** of `FormalSpectrum.sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom`,
+which is the form the four legs of the chart condition are stated in
+(`FormalSchemes.TateInvChartBaseImage`, `FormalSchemes.TateInvNodeChartLegGeneral`).
+
+Stated at a general `I` on purpose: this is where the two spellings of the section ring meet, and
+that reconciliation is cheap for the kernel only while `I`, `U` and `f` are variables. See
+`FormalSchemes.AdicOnOpenSectionsPointwise`. -/
+theorem sectionsEquivOfEqBasicOpen_sectionsOpenHom {U : Opens (FormalSpectrum I)} {f : R}
+    (hU : U = basicOpen I f) (r : R) :
+    sectionsEquivOfEqBasicOpen I hU (sectionsOpenHom I U r) = awayCompletionHom I f r :=
+  RingHom.congr_fun (sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom I hU) r
 
 /-!
 ### The naturality square, and adicity of a sheaf component
