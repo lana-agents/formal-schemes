@@ -91,8 +91,6 @@ Those are the sketch's first two inputs, `Bₙ₊₁ ↠ Bₙ` and `B ↠ B₀`.
 
 ## Main results
 
-* `AlgebraicGeometry.isAffineOpen_primeSpectrumBasicOpen`: a basic open of an affine scheme is an
-  affine open, in the `PrimeSpectrum.basicOpen` spelling.
 * `AlgebraicGeometry.surjective_structureSheaf_comap`: `StructureSheaf.comap` along a surjection is
   surjective over an affine open.
 * `FormalSpectrum.HasAffineThickenings.isAffineOpen`: the hypothesis unpacked at one level.
@@ -119,13 +117,6 @@ noncomputable section
 open AlgebraicGeometry CategoryTheory CategoryTheory.Limits TopologicalSpace Opposite
 
 namespace AlgebraicGeometry
-
-/-- A basic open of an affine scheme is an affine open, stated for the `PrimeSpectrum` spelling of
-the basic open rather than the `Scheme.basicOpen` one. -/
-theorem isAffineOpen_primeSpectrumBasicOpen {A : CommRingCat} (g : A) :
-    IsAffineOpen (X := Spec A) (PrimeSpectrum.basicOpen g) := by
-  rw [← basicOpen_eq_of_affine]
-  exact (isAffineOpen_top (Spec A)).basicOpen _
 
 /-- If `φ : A ⟶ C` is surjective then over an **affine** open `V ⊆ Spec A` the induced map on
 sections `StructureSheaf.comap` is surjective, `W` being the preimage of `V`.
@@ -188,7 +179,7 @@ open of an affine scheme is affine. -/
 theorem hasAffineThickenings_basicOpen (f : R) :
     HasAffineThickenings I (basicOpen I f) := fun n => by
   rw [thickeningOpen_basicOpen]
-  exact isAffineOpen_primeSpectrumBasicOpen _
+  exact IsAffineOpen.Spec_basicOpen _
 
 variable {I}
 
