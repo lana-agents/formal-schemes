@@ -317,12 +317,44 @@ the backlog above), and lost none.
 Two things that fix carries, because a newline-crossing regex is not free. A fenced code block would
 otherwise be swallowed whole — its three opening backticks would pair with whatever came next — so
 fences are stripped; no loss, the 8 spans inside fences were all excluded anyway. And a stray
-backtick now re-pairs a whole *comment* rather than one line, so
-`--tree` reports **unbalanced fragments** and exits non-zero on them. There were exactly two, both
-genuine prose defects invisible until the regex could see them — a missing closer in
-`IndSchemeLimitComponents.lean` and a nested pair in `TateGraphCodiagonalXLift.lean` — and both are
-fixed; **the tree is at zero and that is the state to keep it in.** `--selftest` checks the
-tokenizer against every case it used to get wrong and needs no build.
+backtick now re-pairs a whole *comment* rather than one line, so the audit reports the malformed
+comment itself. **A malformed span comes in two classes and it takes two checks** — issue 1482
+fixed one prose defect of each class in the same commit, which is how they came to be recorded as
+one, and issues 1501 and 1503 separated them:
+
+* **unbalanced fragments** — an **odd** backtick count: a missing closer. There was exactly **one**
+  on `6f2e3bd`, in `IndSchemeLimitComponents.lean`, worth five citations out of a 68-line
+  docstring. The report names the line the stray backtick is on — the first line from which the
+  running parity is odd and stays odd, `:35` there, not the comment's own first line `:6`.
+* **nested spans** — a run of two or more **adjacent** backticks, which is what a citation nested
+  inside another leaves behind. The count stays **even**, so parity never sees it, while the outer
+  span closes at the inner one's opener and the rest of the comment reads as the wrong text:
+
+  ```
+  /-- The `R`-algebra map `A →ₐ[R] A[x⁻¹]^∧`, `a ↦ x⁻¹-inversion of `locX (flip a)``: the second leg
+  of the `x`-side graph codiagonal (`graphCodiagX_inr`). -/
+  ```
+
+  Twelve backticks, and it cost `graphCodiagX_inr` and `x`. It was found by **diffing the old and
+  new token maps**, not by any check, and lived in `TateGraphCodiagonalXLift.lean` for two weeks
+  with no signal at all. Lean comments have no double-backtick convention, so the tree-wide
+  baseline is **0** and a run of them is always this defect or a typo.
+
+Against `6f2e3bd` each check reports exactly its own defect and nothing else; against `1b1d684`
+both report **0**, and **that pair of zeros is the state to keep the tree in** — a single number
+never was the invariant. Both run under `--diff` as well as `--tree`, and they are not worth the
+same there. A hunk is an arbitrary slice, so a span opened on an *unchanged* line leaves the added
+text odd with nothing wrong: over the **712** added hunks of the last **60** commits on `master`
+that happened **once**, and that once was benign. So `--diff` prints unbalanced as advisory and
+fails only on nested spans, which a slice can hide but not invent. Both of the known defects would
+have been reported at the commit that introduced them — the missing closer by parity at `9813e4d`,
+the nested pair by adjacency at `bbfc9da` — because both arrived in a new file, where the hunk is
+the whole file. `--selftest` covers both checks and every case the tokenizer used to
+get wrong, and needs no build.
+
+Nothing in `.github/workflows/` runs `scripts/citation_audit.py`. It is an instrument an author
+runs by hand under this convention, not a gate, so **the printed lines are the signal, not the exit
+status**: `--tree` returns 1 on the standing backlog alone and will while the backlog is non-empty.
 
 Clearing the backlog is not a prerequisite for anything. The convention binds the diff; the
 tree-wide number is there so that the backlog is a known quantity rather than a surprise.

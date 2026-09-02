@@ -16,7 +16,8 @@ Usage, from the repository root, after a full `lake build`:
     python3 scripts/citation_audit.py --diff upstream/master...HEAD
     python3 scripts/citation_audit.py --tree
 
-`--selftest` checks the tokenizer against the cases it used to get wrong and needs no build.
+`--selftest` checks the tokenizer against the cases it used to get wrong, and both of the
+malformed-span checks below, and needs no build.
 
 Resolution of the declaration case is done by elaborating one `#check @Token` per distinct token
 in a single throwaway Lean file, which costs one `import FormalSchemes` and a few seconds.
@@ -54,6 +55,12 @@ FENCE = re.compile(r"^\s*```")
 # The layout of a wrapped span: the newline, the next line's indentation, and its `--` marker when
 # the span wraps inside a line comment.  None of it is part of the name.
 _CONTINUATION = re.compile(r"^\s*(?:--\s*)?")
+
+# A span nested inside another is *balanced*, so a parity check cannot see it, but the crossing
+# `BACKTICKED` closes the outer span at the inner one's opener and the rest of the comment reads as
+# the wrong text.  The shape that produces it is a run of two or more backticks once fences are
+# stripped: Lean comments have no double-backtick convention, so such a run is the defect or a typo.
+ADJACENT = re.compile(r"``+")
 
 # Lean identifier syntax.  Subscripts (U+2080-U+209C) are identifier characters; superscripts are
 # not, which is why `Iⁿ` is notation and `U₂` is a name.  Getting this wrong makes the generated
@@ -252,18 +259,65 @@ def merge_line_comments(regions):
     return out
 
 
+def _loc(path, line) -> str:
+    """`file:line`, or the file alone when the line is not meaningful -- a `--diff` hunk."""
+    return path if line is None else "%s:%d" % (path, line)
+
+
+def _first_odd_line(text: str) -> int:
+    """Offset of the first line from which the running backtick parity is odd and stays odd.
+
+    The stray backtick is what a reader has to find, and it is not the fragment's first line.  In
+    `IndSchemeLimitComponents.lean` -- the defect this check was written for -- the comment starts
+    at line 6 and the unclosed span opens at line 35, 29 lines and 119 backticks later.  Falls back
+    to the fragment start when the parity is already odd on the first line.
+    """
+    parity, last_even = 0, -1
+    for i, line in enumerate(text.split("\n")):
+        parity ^= line.count("`") & 1
+        if not parity:
+            last_even = i
+    return last_even + 1
+
+
 def unbalanced_fragments(fragments):
     """Yield `(file, line)` for each comment fragment with an odd number of backticks.
 
     Before the newline-crossing `BACKTICKED`, a stray backtick cost one span on one line.  Now it
     re-pairs every backtick after it, so the whole fragment is read as the wrong text -- which is
-    exactly the failure this script exists to catch, turned on the script itself.  Two such
-    fragments existed when issue 1482 made the regex cross lines, both genuine prose defects
-    (a missing closer and a nested pair); both are fixed in the tree.
+    exactly the failure this script exists to catch, turned on the script itself.
+
+    **Parity catches a missing closer and nothing else.**  A *balanced* mis-pairing -- a span
+    nested inside another -- has an even count and passes this check silently; `nested_spans` is
+    the instrument for that class, and the two together are what the tree is held to.  Exactly one
+    fragment was unbalanced when issue 1482 made the regex cross lines: a missing closer in
+    `IndSchemeLimitComponents.lean`, worth five citations.  The nested pair in
+    `TateGraphCodiagonalXLift.lean` fixed in the same commit was found by diffing the old and new
+    token maps, not by this check.  Both are fixed in the tree.
     """
     for path, line, text in fragments:
-        if strip_fences(text).count("`") % 2:
-            yield path, line
+        stripped = strip_fences(text)
+        if stripped.count("`") % 2:
+            yield path, None if line is None else line + _first_odd_line(stripped)
+
+
+def nested_spans(fragments):
+    """Yield `(file, line)` for each run of adjacent backticks in a comment fragment.
+
+    The class parity cannot see.  `` `a `b` `` is balanced and still mis-pairs: the outer span
+    closes at the inner one's opener, and everything after it reads as the wrong text.  It cost
+    `graphCodiagX_inr` in `TateGraphCodiagonalXLift.lean` for two weeks with no signal at all.
+
+    The tree-wide baseline is **0** (`1b1d684`), and it is zero for a reason rather than by luck,
+    so the check is exact rather than merely quiet.  Unlike parity it also survives slicing, which
+    is why it fails a `--diff` run: a hunk can hide a run of backticks but not invent one.  The one
+    way it could is a hunk that adds a single fence line, since `strip_fences` then leaves the
+    block's text in place -- that did not occur once in the 712 added hunks measured in `collect`.
+    """
+    for path, line, text in fragments:
+        stripped = strip_fences(text)
+        for m in ADJACENT.finditer(stripped):
+            yield path, None if line is None else line + stripped[: m.start()].count("\n")
 
 
 def added_lines(diff_range: str):
@@ -293,7 +347,19 @@ def added_lines(diff_range: str):
 
 
 def collect(args):
-    """Return `({token: [(file, line), ...]}, [(file, line) unbalanced])` over the sources."""
+    """Return `(sites, unbalanced, nested)`: `{token: [(file, line), ...]}` and the defect lists.
+
+    Both checks run in both modes; they are not worth the same in each.  A `--tree` fragment is a
+    whole comment, so both are exact and both fail the run.  A `--diff` hunk is an arbitrary slice
+    of a file, so a span opened on an *unchanged* line leaves the added text with an odd count and
+    nothing wrong -- over the 712 added hunks of the last 60 commits on `master` that happened
+    once, and that once was benign, so `--diff` prints unbalanced as advisory and does not fail on
+    it.  Adjacent backticks cannot be manufactured by slicing, so `nested_spans` fails either mode.
+
+    Nothing in `.github/workflows/` invokes this script; the convention in `CONTRIBUTING.md` is
+    what binds it, and an author runs it by hand.  The printed lines are the signal, not the exit
+    status -- `--tree` returns 1 on the standing backlog alone.
+    """
     sites: dict[str, list] = {}
     fragments = []
     if args.tree:
@@ -305,11 +371,13 @@ def collect(args):
                     sites.setdefault(tok, []).append((f, at))
     else:
         # An added hunk is judged on its own: a comment marker is not needed, since a backticked
-        # identifier in added Lean code is either a citation or inside a string.
+        # identifier in added Lean code is either a citation or inside a string.  A hunk's line
+        # numbers are not the file's, so its fragment carries `None` and reports as the file alone.
         for f, text in added_lines(args.diff):
+            fragments.append((f, None, text))
             for tok, _ in tokens_of(text, 0):
                 sites.setdefault(tok, []).append((f, 0))
-    return sites, list(unbalanced_fragments(fragments))
+    return sites, list(unbalanced_fragments(fragments)), list(nested_spans(fragments))
 
 
 # Every case here is one this script got wrong before issue 1482, stated as the smallest input
@@ -344,6 +412,26 @@ def selftest() -> int:
     ok = got == [("<selftest>", 1)]
     bad += not ok
     print("%s  an odd backtick is reported, not silently re-paired" % ("ok  " if ok else "FAIL"))
+
+    src = "/-- `a` and `b`\nno backticks on this line\nstray ` opens\nand nothing closes it -/"
+    got = list(unbalanced_fragments([("<selftest>", 1, src)]))
+    ok = got == [("<selftest>", 3)]
+    bad += not ok
+    print("%s  the report points at the stray backtick, not the fragment's first line"
+          % ("ok  " if ok else "FAIL"))
+    if not ok:
+        print("        want %r\n        got  %r" % ([("<selftest>", 3)], got))
+
+    # The assertion is about the *report*, not the token list: the token list for a nested pair is
+    # wrong by construction, which is the whole reason the class needs a check of its own.
+    src = "/-- `a \u21a6 f of `g x`` -/"
+    got = list(nested_spans([("<selftest>", 1, src)]))
+    ok = got == [("<selftest>", 1)] and not list(unbalanced_fragments([("<selftest>", 1, src)]))
+    bad += not ok
+    print("%s  a nested pair is reported, though its backtick count is even"
+          % ("ok  " if ok else "FAIL"))
+    if not ok:
+        print("        want %r and no parity report\n        got  %r" % ([("<selftest>", 1)], got))
     return 1 if bad else 0
 
 
@@ -359,7 +447,7 @@ def main() -> int:
     if args.selftest:
         return selftest()
 
-    sites, unbalanced = collect(args)
+    sites, unbalanced, nested = collect(args)
     modules = project_modules()
     # Both spellings the tree uses: the path, and the bare file name after a locative.
     paths = set(glob.glob("FormalSchemes/*.lean"))
@@ -392,16 +480,23 @@ def main() -> int:
     print("  UNRESOLVED              : %5d distinct, %5d occurrences"
           % (len(unresolved), n(unresolved)))
 
-    print("  unbalanced fragments    : %5d" % len(unbalanced))
+    print("  unbalanced fragments    : %5d%s"
+          % (len(unbalanced), "" if args.tree else "   (advisory: a hunk is a slice)"))
+    print("  nested spans            : %5d" % len(nested))
 
     for tok in sorted(unresolved, key=lambda t: (-len(sites[t]), t)):
         where = sites[tok][0]
         loc = where[0] if where[1] == 0 else "%s:%d" % where
         print("  %4d  %-50s %s" % (len(sites[tok]), tok, loc))
     for path, line in unbalanced:
-        print("  UNBALANCED  %s:%d -- an odd backtick re-pairs the rest of this comment"
-              % (path, line))
-    return 1 if unresolved or unbalanced else 0
+        print("  %-10s  %s -- an odd backtick re-pairs the rest of this comment"
+              % ("UNBALANCED" if args.tree else "unbalanced", _loc(path, line)))
+    for path, line in nested:
+        print("  %-10s  %s -- adjacent backticks re-pair the span they sit in"
+              % ("NESTED", _loc(path, line)))
+    # Parity is exact on a whole comment and advisory on a hunk; adjacent backticks are exact on
+    # both.  See `collect` for the measurement that settled the asymmetry.
+    return 1 if unresolved or nested or (unbalanced and args.tree) else 0
 
 
 if __name__ == "__main__":
