@@ -26,7 +26,7 @@ this file. Under the inversion gluing `x_n · y_{n+1} = 1` the relation `x_n · 
 
 The `q^ℤ` labels are kept here because they name the declarations
 (`tatePeriodAction` and friends), and renaming would be a large mechanical diff; the geometric
-reading belongs to the `Inv` files. Note also that the two-chart model `tateCurveModel` is the
+reading belongs to the `…Inv` files. Note also that the two-chart model `tateCurveModel` is the
 quotient by the **square** of the shift, hence has period `q²` — see the period note in
 `FormalSchemes.TateCurveModel`.
 

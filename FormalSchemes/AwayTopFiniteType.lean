@@ -17,7 +17,7 @@ set_option synthInstance.maxHeartbeats 400000
 Let `(R, I)` be an adic base with `I` finitely generated and let `A` be an `R`-algebra which is
 **topologically of finite type** over `(R, I)` with ideal of definition `L` — that is, a quotient
 of a restricted power series ring `R{X₁, …, Xₙ}` carrying the ideal of definition onto `L`
-(`AlgebraicGeometry.IsTopologicallyFiniteType`). For `g : A` the basic-open chart of `Spf A` at
+(`IsTopologicallyFiniteType`). For `g : A` the basic-open chart of `Spf A` at
 `g` is `Spf` of the completed localization
 
 ```

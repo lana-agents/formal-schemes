@@ -40,7 +40,7 @@ This file is the fifth step. It has three parts.
 2. **The gluing.** `chartHom_pullback_compat` converts `chartSpfHomAmbient_overlap`, which is
    stated along the two *legs* of the overlap, into the *pullback* form `glueMorphisms` takes;
    the bridge is `basicOpenChartOverlapIso_inv_comp_furtherLeft`/`_furtherRight`, which
-   `BasicOpenChartOverlapLegs.lean` proved for exactly this. The `Left` half already has a
+   `BasicOpenChartOverlapLegs.lean` proved for exactly this. The `…Left` half already has a
    consumer in the same shape: `GeneralFibreProductExposeXAlgebraData.lean` rewrites a
    `pullback.fst` by it in its `hfst` step.
    `spfHomOfFamily` is then `OpenCover.glueMorphisms` of the chart morphisms.
@@ -137,7 +137,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 projections by the leg identifications of `BasicOpenChartOverlapLegs.lean`, which were built for
 exactly this. The manoeuvre has a worked precedent one file away —
 `GeneralFibreProductExposeXAlgebraData.lean` rewrites `pullback.fst` by
-`basicOpenChartOverlapIso_inv_comp_furtherLeft` in its `hfst` step — and it is the `Right` half
+`basicOpenChartOverlapIso_inv_comp_furtherLeft` in its `hfst` step — and it is the `…Right` half
 that is used here for the first time. The transport is a cancellation of an isomorphism, not a
 transport of a statement across one. -/
 theorem chartHom_pullback_compat (i j : ι) :

@@ -79,7 +79,7 @@ once issue 798 removed their last consumer. Every mention of those names in this
 The same applies one layer down. Docstrings here and in
 `FormalSchemes.GeneralFibreProductLiftCharts`, `FormalSchemes.GeneralDiagonalUnconditional`,
 `FormalSchemes.AdicOverBaseChart` and `FormalSchemes.BothDatumAdicOverBase` motivate the
-`Of`/`Adic` constructions by comparison with
+`…Of`/`…Adic` constructions by comparison with
 
   `BothChartedFibreDatumXY.nonempty_bothRefinedChart`, `bothRefinedChart`, `bothRefinedCover`,
   `xIndex`, `yIndex`, `xFactor`, `yFactor`, `xFactor_comp_ι`, `yFactor_comp_ι`,

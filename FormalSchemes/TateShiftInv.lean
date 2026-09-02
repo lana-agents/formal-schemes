@@ -24,14 +24,14 @@ Here the `q^ℤ` naming is accurate: `x_n · y_{n+1} = 1` together with `x_n · 
 along **both** overlaps, so it is `T_inv/⟨σ²⟩` — period `q²`, not `q`. See the period note in
 `FormalSchemes.TateCurveModel`, and `FormalSchemes.TateQuotientMap` for the presentation.
 
-This file is the `Inv` analogue of `FormalSchemes.TateShift`: it builds the `±1` index shifts of
+This file is the `…Inv` analogue of `FormalSchemes.TateShift`: it builds the `±1` index shifts of
 `T_inv` and packages them as an automorphism. Nothing in `FormalSchemes.TateShift` is touched;
 the two chains coexist until the migration of issue 606 lands in full.
 
-## A warning about the two meanings of `Inv`
+## A warning about the two meanings of `…Inv`
 
 `FormalSchemes.TateShift` already has a declaration called `tateShiftInv`: it is the **`−1`-shift
-of the swap chain**. Here `Inv` refers instead to the **chain** — the one glued by the
+of the swap chain**. Here `…Inv` refers instead to the **chain** — the one glued by the
 𝔾m-inversion. To keep the two apart, the declarations of this file suffix the chain rather than
 the direction:
 
@@ -85,7 +85,7 @@ carries the adjacent pair `(i, j)` (with `j = i + 1`) to an adjacent pair `(σ i
 forward step), then the `x`-chart into `U (σ i)` agrees, over the 𝔾m-inversion chart transition
 `Spf A{1/x} ≅ Spf A{1/y}`, with the `y`-chart into `U (σ j)`. This is exactly
 `CategoryTheory.GlueData.glue_condition` at the shifted indices, unfolded through
-`GlueData.ofGlueData'`. `Inv` analogue of `tateShift_overlap_forward_gen`. -/
+`GlueData.ofGlueData'`. `…Inv` analogue of `tateShift_overlap_forward_gen`. -/
 theorem tateInvShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) (σ : ULift.{u} ℤ → ULift.{u} ℤ) {i j : ULift.{u} ℤ}
     (h1 : (σ j).down - (σ i).down = 1) :
@@ -138,7 +138,7 @@ theorem tateInvShift_overlap_backward_gen [TopologicalSpace R] [IsAdicRing I] [I
 
 /-- **The `+1`-shift self-map of the inversion-glued formal Tate chain** `T_inv ⟶ T_inv`, assembled
 from the shifted inclusions `ι (tateShiftFun ·)` via `glueMorphisms`, using the criterion
-`tateChainInv_glueMorphisms_compat` fed by the overlap cruxes. `Inv` analogue of `tateShift`. -/
+`tateChainInv_glueMorphisms_compat` fed by the overlap cruxes. `…Inv` analogue of `tateShift`. -/
 def tateInvShift [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I) (hI : I.FG) :
     (tateChainInv R I q hq hI).toLocallyRingedSpace ⟶
       (tateChainInv R I q hq hI).toLocallyRingedSpace :=
@@ -151,8 +151,9 @@ def tateInvShift [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : 
         simp only [tateShiftFun_down]; omega)))
 
 /-- **The `−1`-shift self-map of the inversion-glued formal Tate chain** `T_inv ⟶ T_inv`, the
-inverse of `tateInvShift`, assembled from the inclusions `ι (tateShiftFunInv ·)`. `Inv` analogue of
-`tateShiftInv` — note the different meaning of the two `Inv`s, explained in the module docstring. -/
+inverse of `tateInvShift`, assembled from the inclusions `ι (tateShiftFunInv ·)`. `…Inv` analogue
+of `tateShiftInv` — note the different meaning of the two `…Inv`s, explained in the module
+docstring. -/
 def tateInvShiftBack [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I)
     (hI : I.FG) :
     (tateChainInv R I q hq hI).toLocallyRingedSpace ⟶
@@ -186,7 +187,7 @@ theorem ι_tateInvShiftBack [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRin
 /-- **The `q^ℤ`-shift automorphism of the inversion-glued formal Tate chain** `T_inv ≅ T_inv`: the
 `+1` index shift `tateInvShift`, with inverse the `−1` index shift `tateInvShiftBack`. The triangle
 identities reduce, via `hom_ext`, to the round-trip identities `tateShiftFunInv_tateShiftFun` /
-`tateShiftFun_tateShiftFunInv` of the index maps. `Inv` analogue of `tateShiftIso`. -/
+`tateShiftFun_tateShiftFunInv` of the index maps. `…Inv` analogue of `tateShiftIso`. -/
 def tateInvShiftIso [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I)
     (hI : I.FG) :
     (tateChainInv R I q hq hI).toLocallyRingedSpace ≅
