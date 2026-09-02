@@ -84,9 +84,9 @@ discrete topology, at which `FormalSpectrum.specIsoSpfBot` identifies `Spec B` w
 and the `Spf`-shaped statement applies.
 
 Separated from its companion because that one lives beside
-`AlgebraicGeometry.LocallyRingedSpace.HasAffineChartAt` in `FormalSchemes.ActionQuotientChartAt`,
-whose import closure does not reach `FormalSchemes.SpfDiscrete` and should not be made to for one
-corollary. -/
+`AlgebraicGeometry.LocallyRingedSpace.HasAffineChartAt` in `FormalSchemes.Gluing`, whose import
+closure does not reach `FormalSchemes.SpfDiscrete` and should not be made to for one corollary —
+less than ever, `FormalSchemes.Gluing` being upstream of 272 of this tree's 496 modules. -/
 theorem hasAffineChartAt_of_isoRestrict_spec {X : LocallyRingedSpace.{u}} (U : Opens X.toTopCat)
     (B : Type u) [CommRing B]
     (e : X.restrict U.isOpenEmbedding ≅ Spec.locallyRingedSpaceObj (CommRingCat.of B))

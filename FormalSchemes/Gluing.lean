@@ -21,6 +21,13 @@ the Tate chain, obtained by gluing formal annuli.
 
 ## Main definitions and results
 
+* `LocallyRingedSpace.HasAffineChartAt`: the per-point hypothesis of the local criterion, named
+  so that it can be established one point at a time, with
+  `LocallyRingedSpace.formalSchemeOfHasAffineChartAt` the criterion restated in those terms.
+* `LocallyRingedSpace.hasAffineChartAt_of_isoRestrict`: an open of `X` *identified* with a formal
+  spectrum gives a chart at each of its points. This is the converse of
+  `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`, and it is the whole content of
+  `FormalScheme.exists_openImmersion`.
 * `FormalScheme.exists_openImmersion`: every point of a formal scheme is in the range of an
   open immersion from an affine formal scheme.
 * `LocallyRingedSpace.IsOpenImmersion.formalScheme`: the converse; the local criterion.
@@ -108,23 +115,77 @@ protected def formalScheme (X : LocallyRingedSpace.{u})
 
 end LocallyRingedSpace.IsOpenImmersion
 
+/-! ### Affine formal charts, one point at a time -/
+
+namespace LocallyRingedSpace
+
+/-- **`Q` has an affine formal chart at `x`**: some formal spectrum `Spf I` of an adic ring admits
+an open immersion into `Q` whose range contains `x`. This is character-for-character the per-point
+hypothesis of `LocallyRingedSpace.IsOpenImmersion.formalScheme` above, named so that it can be
+established one point at a time — an action can be properly discontinuous at some points and not at
+others, and then the global criterion says nothing while the pointwise one still produces charts
+(`FormalSchemes.ActionQuotientChartAt`). -/
+def HasAffineChartAt (Q : LocallyRingedSpace.{u}) (x : Q) : Prop :=
+  ∃ (R : Type u) (_ : CommRing R) (_ : TopologicalSpace R) (I : Ideal R) (_ : IsAdicRing I)
+    (f : FormalSpectrum.locallyRingedSpaceObj I ⟶ Q),
+      (x ∈ Set.range f.base :) ∧ LocallyRingedSpace.IsOpenImmersion f
+
+/-- **A locally ringed space with an affine formal chart at every point is a formal scheme.** This
+is `LocallyRingedSpace.IsOpenImmersion.formalScheme` with its hypothesis spelled through
+`HasAffineChartAt`; the content is entirely in that theorem. -/
+def formalSchemeOfHasAffineChartAt (Q : LocallyRingedSpace.{u})
+    (h : ∀ x : Q, HasAffineChartAt Q x) : FormalScheme.{u} :=
+  LocallyRingedSpace.IsOpenImmersion.formalScheme Q h
+
+/-- The formal scheme produced has `Q` itself as its underlying locally ringed space. -/
+@[simp]
+theorem formalSchemeOfHasAffineChartAt_toLocallyRingedSpace (Q : LocallyRingedSpace.{u})
+    (h : ∀ x : Q, HasAffineChartAt Q x) :
+    (formalSchemeOfHasAffineChartAt Q h).toLocallyRingedSpace = Q :=
+  rfl
+
+/-- **An open identified with a formal spectrum is a chart at each of its points.** If
+`e : X|_U ≅ Spf L`, then `e.inv ≫ X.ofRestrict U.isOpenEmbedding` is an open immersion whose range
+is `U`, so every `y ∈ U` has an affine formal chart.
+
+This is the direction opposite to `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`
+(`FormalSchemes.OpenImmersionIsoOfRangeEq`), which converts an open immersion with range `U` into
+such an identification. Every *cover-shaped* hypothesis on this tree — the
+`AlgebraicGeometry.FormalScheme.local_affine` field,
+`FormalSpectrum.isThickeningColimitTarget_of_cover`,
+`FormalSpectrum.existsUnique_hom_thickeningMap_spfCover` — supplies data in the `≅` direction,
+while `HasAffineChartAt` consumes it in the open-immersion direction; this is the one line between
+them, and it is what makes a formal-affine chart *datum* on a target say something about the
+target's points.
+
+It is the first **named** form of that converse, not the first form of it: the
+`FormalScheme.local_affine` field supplies exactly this datum, so
+`FormalScheme.exists_openImmersion` below has been running this argument inline since this file was
+written, and now cites it instead. -/
+theorem hasAffineChartAt_of_isoRestrict {X : LocallyRingedSpace.{u}} (U : Opens X.toTopCat)
+    {C : Type u} [CommRing C] [TopologicalSpace C] (L : Ideal C) [IsAdicRing L]
+    (e : X.restrict U.isOpenEmbedding ≅ FormalSpectrum.locallyRingedSpaceObj L)
+    {y : X} (hy : y ∈ U) : HasAffineChartAt X y := by
+  refine ⟨C, inferInstance, inferInstance, L, inferInstance,
+    e.inv ≫ X.ofRestrict U.isOpenEmbedding, ⟨e.hom.base ⟨y, hy⟩, ?_⟩, inferInstance⟩
+  simp only [comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp, ContinuousMap.comp_apply,
+    iso_hom_base_inv_base_apply]
+  rfl
+
+end LocallyRingedSpace
+
 namespace FormalScheme
 
 /-- Every point of a formal scheme lies in the range of an open immersion from an affine formal
-scheme: the inverse of the local isomorphism, composed with the inclusion of the open. -/
+scheme: the inverse of the local isomorphism, composed with the inclusion of the open. That is
+`LocallyRingedSpace.hasAffineChartAt_of_isoRestrict` applied to the `FormalScheme.local_affine`
+datum, the conclusion here being `HasAffineChartAt X.toLocallyRingedSpace x` unfolded. -/
 theorem exists_openImmersion (X : FormalScheme.{u}) (x : X) :
     ∃ (R : Type u) (_ : CommRing R) (_ : TopologicalSpace R) (I : Ideal R) (_ : IsAdicRing I)
       (f : FormalSpectrum.locallyRingedSpaceObj I ⟶ X.toLocallyRingedSpace),
       (x ∈ Set.range f.base :) ∧ LocallyRingedSpace.IsOpenImmersion f := by
-  obtain ⟨U, R, hR, hTR, I, hI, ⟨e⟩⟩ := X.local_affine x
-  refine ⟨R, hR, hTR, I, hI,
-    e.inv ≫ X.toLocallyRingedSpace.ofRestrict U.isOpenEmbedding,
-    ⟨e.hom.base ⟨x, U.2⟩, ?_⟩, inferInstance⟩
-  simp only [LocallyRingedSpace.comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp,
-    ContinuousMap.coe_comp, Function.comp_apply]
-  have hinv : e.inv.base (e.hom.base ⟨x, U.2⟩) = ⟨x, U.2⟩ := by simp
-  rw [hinv]
-  rfl
+  obtain ⟨U, R, _, _, I, _, ⟨e⟩⟩ := X.local_affine x
+  exact LocallyRingedSpace.hasAffineChartAt_of_isoRestrict U.1 I e U.2
 
 /-- Glue data of formal schemes: a family of formal schemes together with gluing data of the
 underlying locally ringed spaces along open immersions. -/

@@ -17,9 +17,13 @@ spectrum — and `isIso_stalkMap_ofRestrict_comp` takes only `IsProperlyDisconti
 statement about the single open `U`. So a separating neighbourhood of a *single* `x : X` already
 produces the chart of `Q` at `π x`, with no hypothesis anywhere else on `X`.
 
-This file records that, by naming the pointwise conclusion and factoring the existing proof through
-it. Nothing here is a weakening of `IsProperlyDiscontinuousOn` or of `IsFreeProperlyDiscontinuous`:
-both are used exactly as stated, and `freeActionQuotientFormalScheme` is untouched.
+This file records that, by factoring the existing proof through the pointwise conclusion. The
+conclusion itself, `AlgebraicGeometry.LocallyRingedSpace.HasAffineChartAt`, is named in
+`FormalSchemes.Gluing` beside the criterion it is the hypothesis of, together with
+`LocallyRingedSpace.formalSchemeOfHasAffineChartAt` and
+`LocallyRingedSpace.hasAffineChartAt_of_isoRestrict`. Nothing here is a weakening of
+`IsProperlyDiscontinuousOn` or of `IsFreeProperlyDiscontinuous`: both are used exactly as stated,
+and `freeActionQuotientFormalScheme` is untouched.
 
 ## Why the pointwise form is worth naming
 
@@ -32,14 +36,8 @@ the nodes, and this file is what lets the rest of the chain be dealt with anyway
 
 ## Main results
 
-* `AlgebraicGeometry.LocallyRingedSpace.HasAffineChartAt`: the hypothesis of
-  `LocallyRingedSpace.IsOpenImmersion.formalScheme`, at one point.
-* `AlgebraicGeometry.LocallyRingedSpace.formalSchemeOfHasAffineChartAt`: a locally ringed space with
-  a chart at every point is a formal scheme — the criterion restated in those terms.
-* `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_isoRestrict`: an open of `X`
-  *identified* with a formal spectrum gives a chart at each of its points — the converse of
-  `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`, which turns a chart into such an
-  identification.
+* `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_formalScheme`: every point of a formal
+  scheme has a chart, so `HasAffineChartAt` is characteristic and not merely sufficient.
 * `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_isProperlyDiscontinuousOn`: **the
   pointwise chart theorem** — a separating open around `x` gives a chart of `Q` at `π x`.
 * `AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme_eq_ofHasAffineChartAt`:
@@ -61,55 +59,10 @@ namespace AlgebraicGeometry
 
 namespace LocallyRingedSpace
 
-/-- **`Q` has an affine formal chart at `x`**: some formal spectrum `Spf I` of an adic ring admits
-an open immersion into `Q` whose range contains `x`. This is exactly the per-point hypothesis of
-`LocallyRingedSpace.IsOpenImmersion.formalScheme`, named so that it can be established one point at
-a time. -/
-def HasAffineChartAt (Q : LocallyRingedSpace.{u}) (x : Q) : Prop :=
-  ∃ (R : Type u) (_ : CommRing R) (_ : TopologicalSpace R) (I : Ideal R) (_ : IsAdicRing I)
-    (f : FormalSpectrum.locallyRingedSpaceObj I ⟶ Q),
-      (x ∈ Set.range f.base :) ∧ LocallyRingedSpace.IsOpenImmersion f
-
-/-- **A locally ringed space with an affine formal chart at every point is a formal scheme.** This
-is `LocallyRingedSpace.IsOpenImmersion.formalScheme` with its hypothesis spelled through
-`HasAffineChartAt`; the content is entirely in that theorem. -/
-def formalSchemeOfHasAffineChartAt (Q : LocallyRingedSpace.{u})
-    (h : ∀ x : Q, HasAffineChartAt Q x) : FormalScheme.{u} :=
-  LocallyRingedSpace.IsOpenImmersion.formalScheme Q h
-
-/-- The formal scheme produced has `Q` itself as its underlying locally ringed space. -/
-@[simp]
-theorem formalSchemeOfHasAffineChartAt_toLocallyRingedSpace (Q : LocallyRingedSpace.{u})
-    (h : ∀ x : Q, HasAffineChartAt Q x) :
-    (formalSchemeOfHasAffineChartAt Q h).toLocallyRingedSpace = Q :=
-  rfl
-
-/-- **An open identified with a formal spectrum is a chart at each of its points.** If
-`e : X|_U ≅ Spf L`, then `e.inv ≫ X.ofRestrict U.isOpenEmbedding` is an open immersion whose range
-is `U`, so every `y ∈ U` has an affine formal chart.
-
-This is the direction opposite to `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`
-(`FormalSchemes.OpenImmersionIsoOfRangeEq`), which converts an open immersion with range `U` into
-such an identification. Every *cover-shaped* hypothesis on this tree — the
-`AlgebraicGeometry.FormalScheme.local_affine` field,
-`FormalSpectrum.isThickeningColimitTarget_of_cover`,
-`FormalSpectrum.existsUnique_hom_thickeningMap_spfCover` — supplies data in the `≅` direction,
-while `HasAffineChartAt` consumes it in the open-immersion direction; this is the one line between
-them, and it is what makes a formal-affine chart *datum* on a target say something about the
-target's points. -/
-theorem hasAffineChartAt_of_isoRestrict {X : LocallyRingedSpace.{u}} (U : Opens X.toTopCat)
-    {C : Type u} [CommRing C] [TopologicalSpace C] (L : Ideal C) [IsAdicRing L]
-    (e : X.restrict U.isOpenEmbedding ≅ FormalSpectrum.locallyRingedSpaceObj L)
-    {y : X} (hy : y ∈ U) : HasAffineChartAt X y := by
-  refine ⟨C, inferInstance, inferInstance, L, inferInstance,
-    e.inv ≫ X.ofRestrict U.isOpenEmbedding, ⟨e.hom.base ⟨y, hy⟩, ?_⟩, inferInstance⟩
-  simp only [comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp, ContinuousMap.comp_apply,
-    iso_hom_base_inv_base_apply]
-  rfl
-
-/-- **The converse**: every point of a formal scheme has an affine formal chart. Together with
-`formalSchemeOfHasAffineChartAt` this says `HasAffineChartAt` is not merely sufficient but
-characteristic. -/
+/-- **The converse of `formalSchemeOfHasAffineChartAt`**: every point of a formal scheme has an
+affine formal chart. Together the two say `HasAffineChartAt` is not merely sufficient but
+characteristic. This is `FormalScheme.exists_openImmersion`, whose conclusion is
+`HasAffineChartAt X.toLocallyRingedSpace x` unfolded. -/
 theorem hasAffineChartAt_of_formalScheme (X : FormalScheme.{u}) (x : X) :
     HasAffineChartAt X.toLocallyRingedSpace x :=
   X.exists_openImmersion x
@@ -123,8 +76,10 @@ variable {Q : LocallyRingedSpace.{u}} {π : X.toLocallyRingedSpace ⟶ Q}
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- Comparing the restriction of the ambient space with the affine model needs reducible-transparency
--- defeq checks, as everywhere this tree feeds `IsOpenImmersion.formalScheme`; see `Gluing.lean:48`
--- and `ActionQuotientFormalScheme.lean:86`.
+-- defeq checks, as everywhere this tree feeds `IsOpenImmersion.formalScheme`; the option is on
+-- `formalSchemeOfIsOpenImmersionRestrict` for the same reason, and this proof is its body. The
+-- pointer to `Gluing.lean` this comment used to carry was already stale: issue 1479 removed all
+-- three of that file's blocks, after checking they were unnecessary.
 /-- **The pointwise chart theorem.** A separating open `U ∋ x` gives an affine formal chart of the
 quotient at `π x`, with no hypothesis at any other point of `X`.
 
