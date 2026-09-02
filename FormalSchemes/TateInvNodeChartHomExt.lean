@@ -79,18 +79,26 @@ statement of the obstruction is not that the construction is missing but that
 > already, and the quotient's only missing chart is the one being built — applying them there is
 > **circular, not impossible**.
 
-The `Spf`-target analogue of `existsUnique_hom_thickeningMap` (the same theorem with
-`X.restrict _ ≅ Spf (B i)`) is not on the tree and is not attempted here — checked by listing
-every `∃!` over a morphism out of a formal spectrum, of which there are eight and none has a
-formal-affine cover on the target. Step three of `FormalSchemes.SpfHomOfFamily`'s five-step
-construction is the only one carrying `Spec`-specific *mathematics*
-(`FormalSpectrum.chartSpfHomAmbient`, built on `FormalSpectrum.specHomEquiv`; the formal
-replacement would sit on `AdicRingCat.spfHomEquiv`), so it has a model to imitate — but steps four
-and five (`FormalSchemes.ChartSpfHomIndep`, `FormalSchemes.ChartSpfHomOverlap`) take the chart
-datum `X.restrict _ ≅ Spec (B)` in their *statements* as well, so they need restating even though
-their proofs already run through the target-agnostic
-`FormalSpectrum.hom_ext_thickeningMap_lrs`. Whether any of this would break the circularity for
-`T_inv/⟨σ⟩` is unexamined.
+The paragraph that stood here said the `Spf`-target analogue of
+`existsUnique_hom_thickeningMap` — the same theorem with `X.restrict _ ≅ Spf (L i)` — was not on
+the tree. **That was true when this file was written and is false now.** Issue 1336 landed it the
+next day as `FormalSpectrum.existsUnique_hom_thickeningMap_spfCover`
+(`FormalSchemes.SpfHomColimitTarget`), by isolating behind
+`FormalSpectrum.IsThickeningColimitTarget` (`FormalSchemes.ThickeningColimitTarget`) the one step
+of the five-step chain that consumed affineness; `FormalSpectrum.isThickeningColimitTarget_of_cover`
+is the locality statement that follows, and
+`FormalSpectrum.isThickeningColimitTarget_formalScheme` (`FormalSchemes.SpfHomFormalScheme`) is
+the same at a locally finitely generated formal-scheme target, of which
+`AlgebraicGeometry.isThickeningColimitTarget_tateChainInv` records that `T_inv` itself is one.
+
+**That sharpens the obstruction rather than removing it.** The blockquote above gave two reasons
+in one: that the target must carry charts already, and that the charts on offer were `Spec`-shaped
+while the quotient's are formal-affine. The second reason is gone — a formal-affine cover is now
+as good as an affine one — so what is left is the first alone, and it is the whole of it:
+
+> `T_inv/⟨σ⟩` is a target of the colimit property as soon as it is covered by formal affines, and
+> the one open of it that is not known to be covered by formal affines is the node chart being
+> built.
 
 **Nothing here says a compatible family exists.** The uniqueness is unconditional precisely
 because it says nothing about existence.
