@@ -461,6 +461,7 @@ import FormalSchemes.ThickeningCoverPullback
 import FormalSchemes.ThickeningHomExt
 import FormalSchemes.ThickeningMapNatural
 import FormalSchemes.ThickeningNonDegenerateWitness
+import FormalSchemes.ThickeningTowerKernel
 import FormalSchemes.Thickenings
 import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
