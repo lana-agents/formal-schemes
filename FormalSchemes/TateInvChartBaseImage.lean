@@ -71,30 +71,6 @@ open Opposite TopCat.Presheaf
 
 universe u
 
-namespace FormalSpectrum
-
-variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
-
-/-- **The identification of the sections over an open that is a basic open carries the structural
-map to the structural map.** `FormalSpectrum.sectionsEquivOfEqBasicOpen` is the transport along
-`hU` followed by `FormalSpectrum.sectionsBasicOpenEquiv`; the transport is
-`FormalSpectrum.eqToHom_sectionsOpenHom_apply` and the identification is
-`FormalSpectrum.sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom`.
-
-Stated at a general `I` on purpose: this is where the two spellings of the section ring meet, and
-that reconciliation is cheap for the kernel only while `I`, `U` and `f` are variables. See
-`FormalSchemes.AdicOnOpenSectionsPointwise`. -/
-theorem sectionsEquivOfEqBasicOpen_sectionsOpenHom {U : Opens (FormalSpectrum I)} {f : R}
-    (hU : U = basicOpen I f) (r : R) :
-    sectionsEquivOfEqBasicOpen I hU (sectionsOpenHom I U r) = awayCompletionHom I f r := by
-  have h := eqToHom_sectionsOpenHom_apply I hU r
-  change sectionsBasicOpenEquiv I f ((((locallyRingedSpaceObj I).presheaf.map
-    (eqToHom (congrArg op hU))).hom) (sectionsOpenHom I U r)) = _
-  rw [h]
-  exact RingHom.congr_fun (sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom I f) r
-
-end FormalSpectrum
-
 namespace AlgebraicGeometry
 
 variable {R : Type u} [CommRing R] {I : Ideal R} {q : R}
