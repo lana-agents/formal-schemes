@@ -1,4 +1,5 @@
 import FormalSchemes.CompletionTwoPatchClosed
+import FormalSchemes.OpenImmersionIsoOfRangeEq
 
 set_option linter.style.header false
 
@@ -243,10 +244,8 @@ private def cChartι : ∀ i : Bool, cChart I hI J hJ i →
 omit hθ in
 /-- The two chart ranges of `X`, as opens: the open cover the embedding criterion runs over. -/
 private def cU : Bool → Opens ↥(specTwoPatch a b θ)
-  | false => ⟨Set.range ⇑(specTwoPatchι₀ a b θ).base,
-      (specTwoPatchι₀_isOpenImmersion a b θ).base_open.isOpen_range⟩
-  | true => ⟨Set.range ⇑(specTwoPatchι₁ a b θ).base,
-      (specTwoPatchι₁_isOpenImmersion a b θ).base_open.isOpen_range⟩
+  | false => LocallyRingedSpace.IsOpenImmersion.opensRange (specTwoPatchι₀ a b θ)
+  | true => LocallyRingedSpace.IsOpenImmersion.opensRange (specTwoPatchι₁ a b θ)
 
 /-- **The canonical morphism `X_{/Y} ⟶ X` is a topological embedding** (EGA I, 10.8), for the
 two-patch glued scheme `X = Spec A ∪_{D(a) ≅ D(b)} Spec B`.

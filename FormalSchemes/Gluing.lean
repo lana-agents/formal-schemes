@@ -1,3 +1,4 @@
+import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.SpfMap
 import Mathlib.AlgebraicGeometry.Gluing
 
@@ -73,13 +74,17 @@ theorem uliftBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
 
 namespace LocallyRingedSpace.IsOpenImmersion
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- As for `LocallyRingedSpace.IsOpenImmersion.scheme` in Mathlib, comparing the restriction of
--- the ambient space with the affine model needs reducible-transparency defeq checks.
 /-- **The formal-scheme condition is local**: a locally ringed space admitting, around every
 point, an open immersion from the formal spectrum of an adic ring is a formal scheme. This
-mirrors `LocallyRingedSpace.IsOpenImmersion.scheme` for schemes. -/
+mirrors `LocallyRingedSpace.IsOpenImmersion.scheme` for schemes.
+
+The chart datum the `local_affine` field asks for is exactly `isoRestrictOpensRange`
+(`FormalSchemes.OpenImmersionIsoOfRangeEq`), so both halves of the witness — the open and the
+isomorphism — come from the open immersion itself. Until issue 1479 this file built them by hand,
+the isomorphism through `PresheafedSpace.IsOpenImmersion.isoOfRangeEq` under
+`set_option backward.isDefEq.respectTransparency false`, as
+`LocallyRingedSpace.IsOpenImmersion.scheme` still does in Mathlib; the locally-ringed-space
+`isoOfRangeEq` of that file makes the detour and the transparency bump unnecessary. -/
 protected def formalScheme (X : LocallyRingedSpace.{u})
     (h : ∀ x : X, ∃ (R : Type u) (_ : CommRing R) (_ : TopologicalSpace R) (I : Ideal R)
       (_ : IsAdicRing I) (f : FormalSpectrum.locallyRingedSpaceObj I ⟶ X),
@@ -89,11 +94,9 @@ protected def formalScheme (X : LocallyRingedSpace.{u})
   local_affine := by
     intro x
     obtain ⟨R, _, _, I, _, f, h₁, h₂⟩ := h x
-    refine ⟨⟨⟨_, h₂.base_open.isOpen_range⟩, h₁⟩, R, ‹_›, ‹_›, I, ‹_›, ⟨?_⟩⟩
-    apply LocallyRingedSpace.isoOfSheafedSpaceIso
-    refine SheafedSpace.forgetToPresheafedSpace.preimageIso ?_
-    apply PresheafedSpace.IsOpenImmersion.isoOfRangeEq (PresheafedSpace.ofRestrict _ _) f.1
-    exact Subtype.range_coe_subtype
+    haveI := h₂
+    refine ⟨⟨opensRange f, h₁⟩, R, ‹_›, ‹_›, I, ‹_›, ⟨?_⟩⟩
+    exact isoRestrictOpensRange f
 
 end LocallyRingedSpace.IsOpenImmersion
 
