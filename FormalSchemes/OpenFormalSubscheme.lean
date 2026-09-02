@@ -141,13 +141,18 @@ theorem restrictOpenHom_toLRSHom :
 variable {W : LocallyRingedSpace.{u}}
 
 /-- **Any open immersion into `X` with range `U` identifies its source with `X.restrictOpen hX U`.**
-Two open immersions of locally ringed spaces with the same range have isomorphic sources
-(`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq`), and the inclusion has range `U`. -/
+This is `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`
+(`FormalSchemes.OpenImmersionIsoOfRangeEq`) read the other way round: the underlying space of
+`X.restrictOpen hX U` is `X.toLocallyRingedSpace.restrict U.isOpenEmbedding` by
+`FormalScheme.restrictOpen_toLocallyRingedSpace`, and `FormalScheme.restrictOpenι` is its
+`LocallyRingedSpace.ofRestrict`. Issue 1479 routed
+this through the general form; before it, this was a second call of
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` at a statement carrying `X : FormalScheme` and
+`hX : X.LocallyFG`, which the construction never uses. -/
 def restrictOpenIso (j : W ⟶ X.toLocallyRingedSpace) [LocallyRingedSpace.IsOpenImmersion j]
     (hj : Set.range j.base = (U : Set X)) :
     W ≅ (X.restrictOpen hX U).toLocallyRingedSpace :=
-  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq j (X.restrictOpenι hX U)
-    (by rw [hj, range_restrictOpenι_base])
+  (LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq j U hj).symm
 
 /-- **The comparison is an isomorphism over `X`.** This is the half that makes `restrictOpenIso`
 usable: a property of `W` stated relative to a morphism factoring through `j` transports to
@@ -156,14 +161,14 @@ usable: a property of `W` stated relative to a morphism factoring through `j` tr
 theorem restrictOpenIso_hom_comp (j : W ⟶ X.toLocallyRingedSpace)
     [LocallyRingedSpace.IsOpenImmersion j] (hj : Set.range j.base = (U : Set X)) :
     (X.restrictOpenIso hX U j hj).hom ≫ X.restrictOpenι hX U = j :=
-  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac _ _ _
+  LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq_inv_fac j U hj
 
 /-- **The comparison is an isomorphism over `X`, other direction.** -/
 @[reassoc (attr := simp)]
 theorem restrictOpenIso_inv_comp (j : W ⟶ X.toLocallyRingedSpace)
     [LocallyRingedSpace.IsOpenImmersion j] (hj : Set.range j.base = (U : Set X)) :
     (X.restrictOpenIso hX U j hj).inv ≫ j = X.restrictOpenι hX U :=
-  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_inv_fac _ _ _
+  LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq_hom_fac j U hj
 
 /-- **The comparison in `FormalScheme`**: `restrictOpenIso` lifted along the fully faithful
 forgetful functor, for a source that is already known to be a formal scheme. -/

@@ -1,5 +1,6 @@
 import FormalSchemes.ThickeningBasicOpenRefinement
 import FormalSchemes.FormalLineWitness
+import FormalSchemes.OpenImmersionIsoOfRangeEq
 import Mathlib.Geometry.RingedSpace.OpenImmersion
 
 set_option linter.style.header false
@@ -53,8 +54,11 @@ was not previously in this subtree's closure.
   charts — this is what makes "the restricted family" a family over the *same* tower.
 * `FormalSpectrum.stepChartRestrict_comp_chartRestrict`: **the restricted family is again
   compatible.** This is the theorem.
-* `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`: the range of `Y|_V ⟶ Y` is `V`, in
-  the spelling the `lift` hypotheses take. Everything else in the file is an application of it.
+* `FormalSpectrum.range_ofRestrict_comp_subset` and `range_ofRestrict_comp_step_subset`: the range
+  conditions the two `LocallyRingedSpace.IsOpenImmersion.lift` calls above take, both applications
+  of
+  `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`
+  (`FormalSchemes.OpenImmersionIsoOfRangeEq`).
 
 This is also the first file on umbrella 59 whose witness is **not** degenerate: the chart it cuts
 out of each thickening is a proper, non-empty open, which the one-point `|Spf ℤ^|` cannot
@@ -72,9 +76,15 @@ behind is:
 > `AlgebraicGeometry.Scheme`, `TopologicalSpace.Opens`, `Int` — and it will be found by the next
 > person who needs it instead of being rewritten.
 
-`range_ofRestrict` above is the instance from this file. The test is mechanical enough to apply
-while writing: read the statement, not the motivation. `range_ofRestrict` exists *because* of the
-thickening charts, and says nothing about them.
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict` is the instance from this file. The test is
+mechanical enough to apply while writing: read the statement, not the motivation.
+`range_ofRestrict` exists *because* of the thickening charts, and says nothing about them.
+
+**And the test decides the namespace, not the file.** `range_ofRestrict` was written here, in the
+right namespace, in a file whose import closure is 25 modules — so
+`FormalSchemes.OpenImmersionIsoOfRangeEq`, at closure 2, could not cite it and would have had to
+re-prove it. Issue 1479 moved it there and this file now imports it. A general statement wants
+both halves: the namespace its subject lives in, and a file its consumers can reach.
 
 Three pieces of friction, all of the same kind: a term is definitionally what a lemma wants but
 not syntactically, so `rw` refuses while `exact` does not. None of them needs a transparency
@@ -82,8 +92,9 @@ bump, and this file sets no option beyond the header linter.
 
 `Opens.set_range_inclusion'` is stated about `Opens.inclusion' V`, while the goals here are about
 `(Y.ofRestrict V.isOpenEmbedding).base`. Leaving `V` as a metavariable makes the `rw` fail with a
-type mismatch on the `Set.range` argument; naming it once in `range_ofRestrict` and rewriting with
-that instead avoids the problem at both call sites.
+type mismatch on the `Set.range` argument; naming it once in
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict` and rewriting with that instead avoids the
+problem at both call sites.
 
 In `range_ofRestrict_comp_step_subset` the goal's argument is the *composite* base map
 `(ofRestrict ≫ step).base y`, inside which `rw` cannot see the step map. Stating the split form as
@@ -111,20 +122,6 @@ noncomputable section
 open CategoryTheory AlgebraicGeometry TopologicalSpace
 
 universe u
-
-namespace AlgebraicGeometry.LocallyRingedSpace
-
-/-- **The restriction of a locally ringed space to an open has that open as its range.** A
-restatement of `Opens.set_range_inclusion'` in the spelling the `IsOpenImmersion.lift` hypotheses
-below actually take.
-
-It lives in `AlgebraicGeometry.LocallyRingedSpace` rather than in `FormalSpectrum`: its statement
-mentions no ring, no ideal and no spectrum. See the implementation notes. -/
-theorem range_ofRestrict (Y : LocallyRingedSpace.{u}) (V : Opens Y.toTopCat) :
-    Set.range (Y.ofRestrict V.isOpenEmbedding).base = (V : Set Y.toTopCat) :=
-  Opens.set_range_inclusion' V
-
-end AlgebraicGeometry.LocallyRingedSpace
 
 namespace FormalSpectrum
 

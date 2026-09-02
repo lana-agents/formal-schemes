@@ -98,8 +98,9 @@ def diagonalChartCover :
     (diagonalDatum DX σX hστX hσcX).JX × (diagonalDatum DX σX hστX hσcX).JY →
       TopologicalSpace.Opens
         (diagonalDatum DX σX hστX hσcX).generalFibreProduct.toLocallyRingedSpace :=
-  fun p => ⟨Set.range ((diagonalDatum DX σX hστX hσcX).formalGlueData.ι p).base,
-    ((diagonalDatum DX σX hστX hσcX).formalGlueData.ι_isOpenImmersion p).base_open.isOpen_range⟩
+  fun p => @LocallyRingedSpace.IsOpenImmersion.opensRange _ _
+    ((diagonalDatum DX σX hστX hσcX).formalGlueData.ι p)
+    ((diagonalDatum DX σX hστX hσcX).formalGlueData.ι_isOpenImmersion p)
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The product charts cover `X ×_{Spf R} X`**, by joint surjectivity of the glue inclusions. -/

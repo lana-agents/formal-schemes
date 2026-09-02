@@ -257,21 +257,20 @@ def formalLineFormalOpen (b : Bool) :
   basicOpen formalLineIdeal (formalLineElem b)
 
 /-- **Each piece of that cover is a formal affine**, namely `Spf ℤ⟦X⟧{1/2}` and `Spf ℤ⟦X⟧{1/3}`.
-The identification is `LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` between the basic-open
-chart — an open immersion of range `D(r)`, `range_basicOpenChart_base` — and the tautological
-inclusion of the open, whose range is the open. -/
+The identification is `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`
+(`FormalSchemes.OpenImmersionIsoOfRangeEq`) at the basic-open chart, an open immersion of range
+`D(r)` by `range_basicOpenChart_base`; all this site supplies is that range. Issue 1479 routed it
+there — before that this was a fourth hand-rolled call of
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` against `ofRestrict`. -/
 def formalLineFormalChartIso (b : Bool) :
     (locallyRingedSpaceObj formalLineIdeal).restrict (formalLineFormalOpen b).isOpenEmbedding ≅
       locallyRingedSpaceObj (awayCompletionIdeal formalLineIdeal (formalLineElem b)) :=
   letI := isOpenImmersion_basicOpenChart formalLineIdeal (formalLineElem b) (polyXIdeal_fg.map _)
-  (LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq
-    (basicOpenChart formalLineIdeal (formalLineElem b))
-    ((locallyRingedSpaceObj formalLineIdeal).ofRestrict
-      (formalLineFormalOpen b).isOpenEmbedding)
+  LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq
+    (basicOpenChart formalLineIdeal (formalLineElem b)) (formalLineFormalOpen b)
     (by
-      rw [range_basicOpenChart_base formalLineIdeal (formalLineElem b) (polyXIdeal_fg.map _),
-        LocallyRingedSpace.range_ofRestrict]
-      rfl)).symm
+      rw [range_basicOpenChart_base formalLineIdeal (formalLineElem b) (polyXIdeal_fg.map _)]
+      rfl)
 
 /-- **Every piece of the cover has the colimit property**, by `isThickeningColimitTarget_spf`: the
 ideal of definition of `ℤ⟦X⟧{1/r}` is finitely generated because `polyXIdeal` is. -/

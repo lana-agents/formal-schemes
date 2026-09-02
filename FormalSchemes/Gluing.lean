@@ -1,3 +1,4 @@
+import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.SpfMap
 import Mathlib.AlgebraicGeometry.Gluing
 
@@ -73,13 +74,25 @@ theorem uliftBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
 
 namespace LocallyRingedSpace.IsOpenImmersion
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- As for `LocallyRingedSpace.IsOpenImmersion.scheme` in Mathlib, comparing the restriction of
--- the ambient space with the affine model needs reducible-transparency defeq checks.
 /-- **The formal-scheme condition is local**: a locally ringed space admitting, around every
 point, an open immersion from the formal spectrum of an adic ring is a formal scheme. This
-mirrors `LocallyRingedSpace.IsOpenImmersion.scheme` for schemes. -/
+mirrors `LocallyRingedSpace.IsOpenImmersion.scheme` for schemes.
+
+The chart datum the `FormalScheme.local_affine` field asks for is exactly
+`LocallyRingedSpace.IsOpenImmersion.isoRestrictOpensRange`
+(`FormalSchemes.OpenImmersionIsoOfRangeEq`), so both halves of the witness — the open and the
+isomorphism — come from the open immersion itself. Until issue 1479 this file built them by hand,
+the isomorphism through `PresheafedSpace.IsOpenImmersion.isoOfRangeEq`, as
+`LocallyRingedSpace.IsOpenImmersion.scheme` still does in Mathlib; the locally-ringed-space
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` removes the detour.
+
+**On the three `set_option backward.isDefEq.respectTransparency false` blocks this file used to
+carry** (here, on `FormalScheme.exists_openImmersion`, and on
+`FormalScheme.GlueData.gluedFormalScheme`, the latter two justified only by "as in the criterion
+above"): they were **already stale**, and not made stale by the rewrite. Checked rather than
+assumed — stripping all three from the *unmodified* file compiles. They are gone; if a future change
+to any of the three proofs needs reducible-transparency defeq again, that option is what to reach
+for, and `LocallyRingedSpace.IsOpenImmersion.scheme` in Mathlib is the precedent. -/
 protected def formalScheme (X : LocallyRingedSpace.{u})
     (h : ∀ x : X, ∃ (R : Type u) (_ : CommRing R) (_ : TopologicalSpace R) (I : Ideal R)
       (_ : IsAdicRing I) (f : FormalSpectrum.locallyRingedSpaceObj I ⟶ X),
@@ -89,20 +102,14 @@ protected def formalScheme (X : LocallyRingedSpace.{u})
   local_affine := by
     intro x
     obtain ⟨R, _, _, I, _, f, h₁, h₂⟩ := h x
-    refine ⟨⟨⟨_, h₂.base_open.isOpen_range⟩, h₁⟩, R, ‹_›, ‹_›, I, ‹_›, ⟨?_⟩⟩
-    apply LocallyRingedSpace.isoOfSheafedSpaceIso
-    refine SheafedSpace.forgetToPresheafedSpace.preimageIso ?_
-    apply PresheafedSpace.IsOpenImmersion.isoOfRangeEq (PresheafedSpace.ofRestrict _ _) f.1
-    exact Subtype.range_coe_subtype
+    haveI := h₂
+    refine ⟨⟨opensRange f, h₁⟩, R, ‹_›, ‹_›, I, ‹_›, ⟨?_⟩⟩
+    exact isoRestrictOpensRange f
 
 end LocallyRingedSpace.IsOpenImmersion
 
 namespace FormalScheme
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- Composing the local isomorphism with the inclusion of the open needs reducible-transparency
--- defeq checks, as in the criterion above.
 /-- Every point of a formal scheme lies in the range of an open immersion from an affine formal
 scheme: the inverse of the local isomorphism, composed with the inclusion of the open. -/
 theorem exists_openImmersion (X : FormalScheme.{u}) (x : X) :
@@ -133,9 +140,6 @@ namespace GlueData
 
 variable (D : GlueData.{u})
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- Same transparency requirement as in the local criterion above.
 /-- **Gluing formal schemes**: the locally ringed space glued from a family of formal schemes
 along open immersions is a formal scheme. Every point lies in the image of some piece, and the
 piece is locally an affine formal scheme, so the criterion

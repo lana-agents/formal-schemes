@@ -99,7 +99,7 @@ open and cover `Y`; the criterion applies to that family. -/
 theorem isClosedImmersion_iff_openCover (hX : X.LocallyFG) (hY : Y.LocallyFG)
     (𝒰 : OpenCover Y) (f : X ⟶ Y) :
     IsClosedImmersion f ↔ ∀ j, IsClosedImmersion (restrictOpenSchemeMap X hX Y hY f
-      ⟨Set.range (𝒰.map j).toLRSHom.base, (𝒰.isOpenImmersion j).base_open.isOpen_range⟩) :=
+      (LocallyRingedSpace.IsOpenImmersion.opensRange (𝒰.map j).toLRSHom)) :=
   isClosedImmersion_iff_restrictOpen hX hY
     (IsOpenCover.of_sets (fun j => (𝒰.isOpenImmersion j).base_open.isOpen_range) 𝒰.iUnion_range) f
 
@@ -114,7 +114,7 @@ available.
 theorem isClosedImmersion_of_openCover' (hX : X.LocallyFG) (hY : Y.LocallyFG)
     (𝒰 : OpenCover Y) (f : X ⟶ Y)
     (h : ∀ j, IsClosedImmersion (restrictOpenSchemeMap X hX Y hY f
-      ⟨Set.range (𝒰.map j).toLRSHom.base, (𝒰.isOpenImmersion j).base_open.isOpen_range⟩)) :
+      (LocallyRingedSpace.IsOpenImmersion.opensRange (𝒰.map j).toLRSHom))) :
     IsClosedImmersion f :=
   (isClosedImmersion_iff_openCover hX hY 𝒰 f).mpr h
 
