@@ -307,6 +307,7 @@ import FormalSchemes.SpfGammaSheafComponentArbCont
 import FormalSchemes.SpfGammaSheafComponentArbOf
 import FormalSchemes.SpfGammaSheafComponentFunctor
 import FormalSchemes.SpfHomColimitTarget
+import FormalSchemes.SpfHomFamilyChart
 import FormalSchemes.SpfHomFormalScheme
 import FormalSchemes.SpfHomNonAffineWitness
 import FormalSchemes.SpfHomOfFamily
@@ -381,6 +382,7 @@ import FormalSchemes.TateInvNodeChartQuotientOpen
 import FormalSchemes.TateInvNodeChartQuotientSpf
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeChartSpf
+import FormalSchemes.TateInvNodeChartSpfFamily
 import FormalSchemes.TateInvNodeChartSpfNonempty
 import FormalSchemes.TateInvNodeLocus
 import FormalSchemes.TateInvOverlapBand

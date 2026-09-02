@@ -55,6 +55,8 @@ copies of it:
   the *kind* of chart: an affine one and a formal-affine one over the same `r` give the same
   morphism.
 * `FormalSpectrum.ColimitTarget.chartSpfHomAmbient_overlap`: the overlap agreement.
+* `FormalSpectrum.ColimitTarget.range_chartSpfHomAmbient_le`: its image lies in `U` — the chart's
+  own target open, and nothing about the family is used.
 * `FormalSpectrum.ColimitTarget.chartSpfHomAmbient_eq`: at an affine chart this is the landed
   `chartSpfHomAmbient`.
 
@@ -181,6 +183,29 @@ theorem chartSpfHomAmbient_uniq (g : locallyRingedSpaceObj (awayCompletionIdeal 
     g = chartSpfHomAmbient I f hf U r hr hI e hY :=
   hom_ext_thickeningMap_lrs _ _ fun n =>
     (hg n).trans (thickeningMap_comp_chartSpfHomAmbient I f hf U r hr hI e hY n).symm
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The image of the chart morphism lies in `U`.** `chartSpfHomAmbient` ends in
+`X.ofRestrict U.isOpenEmbedding`, whose range is `U` by
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`, and a composite cannot leave the range of
+its last factor. Neither the family nor the compatibility `hf` is used.
+
+Small, and the reason to name it is what it says about the *hypotheses* of EGA I 10.6.10 rather
+than about this construction: the target opens `U` are not asked to cover `X`, but every point the
+glued morphism reaches lies in one of them — see
+`FormalSpectrum.ColimitTarget.range_spfHomOfFamily_le`. -/
+theorem range_chartSpfHomAmbient_le :
+    Set.range (chartSpfHomAmbient I f hf U r hr hI e hY).base ⊆ (U : Set X.toTopCat) := by
+  have hcomp : chartSpfHomAmbient I f hf U r hr hI e hY =
+      (chartSpfHom I f hf U r hr hI e hY ≫ e.inv) ≫ X.ofRestrict U.isOpenEmbedding := by
+    rw [chartSpfHomAmbient, Category.assoc]
+  rw [hcomp, ← LocallyRingedSpace.range_ofRestrict X U]
+  have hb : ⇑((chartSpfHom I f hf U r hr hI e hY ≫ e.inv) ≫
+      X.ofRestrict U.isOpenEmbedding).base =
+      ⇑(X.ofRestrict U.isOpenEmbedding).base ∘
+        ⇑(chartSpfHom I f hf U r hr hI e hY ≫ e.inv).base := rfl
+  rw [hb, Set.range_comp]
+  exact Set.image_subset_range _ _
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **At an affine chart this is the landed construction.** The two are built through different

@@ -45,6 +45,9 @@ and that is `ColimitTarget.chartSpfHomAmbient_eq`, one file back.
 * `FormalSpectrum.ColimitTarget.existsUnique_hom_thickeningMap`: EGA I 10.6.10 at a cover by
   targets of the colimit property.
 * `FormalSpectrum.isThickeningColimitTarget_of_cover`: the property is local on the target.
+* `FormalSpectrum.ColimitTarget.range_spfHomOfFamily_le`: **the image of the glued morphism lies
+  in the union of the target opens the chart data was supplied with**, with no use of any covering
+  hypothesis on the target — `hcov` covers the *source*.
 * `FormalSpectrum.existsUnique_hom_thickeningMap_spfCover`: EGA I 10.6.10 with the target covered
   by **formal** affines — issue 62m. (`existsUnique_hom_thickeningMap_spf`, one file back, is the
   *affine* formal target; this is the covered one.)
@@ -153,6 +156,38 @@ theorem spfHomOfFamily_uniq (g : locallyRingedSpaceObj I ⟶ X)
     g = spfHomOfFamily I f hf hI r hcov U hr Y e hY :=
   hom_ext_thickeningMap_lrs _ _ fun n =>
     (hg n).trans (thickeningMap_comp_spfHomOfFamily I f hf hI r hcov U hr Y e hY n).symm
+
+set_option linter.style.setOption false in
+-- `basicOpenCover`'s index type and pieces are `ι` and `Spf R{1/r i}` by `rfl` but not at
+-- `instances` transparency, so `FormalScheme.OpenCover.range_glueMorphisms` has to be applied as
+-- a term with its cover argument written out; the same accommodation
+-- `thickeningMap_comp_spfHomOfFamily` makes.
+set_option backward.isDefEq.respectTransparency false in
+/-- **The image of the glued morphism lies in the union of the target opens.** `hcov` is a
+hypothesis about the *source* — the `D(r i)` cover `|Spf R|` — and the `U i` are asked only to
+receive the image of the chart they are attached to (`hr`). Nothing asks them to cover `X`. Yet
+every point `spfHomOfFamily` reaches lies in one of them, because the glued morphism reaches
+exactly what the pieces reach (`FormalScheme.OpenCover.range_glueMorphisms`) and each piece stays
+inside its own `U i` (`ColimitTarget.range_chartSpfHomAmbient_le`).
+
+**This is the precise sense in which dropping `hU` does not weaken the chart datum where it
+matters.** `existsUnique_hom_thickeningMap` asks the `U i` to cover `X`; `spfHomOfFamily` does not,
+and the difference is invisible on the image of the morphism produced. Whatever the `U i` are known
+to be — `Spec`-shaped, `Spf`-shaped, or merely
+`FormalSpectrum.IsThickeningColimitTarget` — they are known to be that at every point the morphism
+hits. See `FormalSpectrum.hasAffineChartAt_of_spfChartFamily`
+(`FormalSchemes.SpfHomFamilyChart`) for the consequence. -/
+theorem range_spfHomOfFamily_le :
+    Set.range (spfHomOfFamily I f hf hI r hcov U hr Y e hY).base ⊆
+      ⋃ i, (U i : Set X.toTopCat) := by
+  have hrg : Set.range (spfHomOfFamily I f hf hI r hcov U hr Y e hY).base =
+      ⋃ i, Set.range (chartHom I f hf hI r U hr Y e hY i).base :=
+    FormalScheme.OpenCover.range_glueMorphisms (basicOpenCover I r hI hcov)
+      (chartHom I f hf hI r U hr Y e hY)
+      (fun i j => chartHom_pullback_compat I f hf hI r U hr Y e hY i j)
+  rw [hrg]
+  exact Set.iUnion_mono fun i =>
+    range_chartSpfHomAmbient_le I f hf (U i) (r i) (hr i) hI (e i) (hY i)
 
 end Glue
 
