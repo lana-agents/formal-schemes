@@ -384,10 +384,7 @@ theorem exists_basicOpenChart_le_affine_inter_two_charts (hL : L.FG) (t t' : A)
     isOpenImmersion_basicOpenChart L t hL
   haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart L t') :=
     isOpenImmersion_basicOpenChart L t' hL
-  have hfg : ∀ s : A, (awayCompletionIdeal L s).FG := by
-    intro s
-    rw [← map_awayCompletionHom L s]
-    exact hL.map _
+  have hfg : ∀ s : A, (awayCompletionIdeal L s).FG := fun s => awayCompletionIdeal_fg L s hL
   refine exists_basicOpenChart_le_affine_inter (hfg t) (hfg t')
     (basicOpenChart L t) (basicOpenChart L t') x ?_ ?_
   · rw [range_basicOpenChart_base L t hL]; exact hx

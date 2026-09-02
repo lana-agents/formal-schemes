@@ -215,9 +215,8 @@ theorem IsTopologicallyFiniteType.of_basicOpenChart (hI : I.FG) (f : R) :
   have hideal : I.map (algebraMap R (FormalSpectrum.awayCompletion I f)) =
       FormalSpectrum.awayCompletionIdeal I f :=
     FormalSpectrum.map_algebraMap_awayCompletion (I := I) (A := R) f hself
-  have hJfg : (FormalSpectrum.awayCompletionIdeal I f).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom I f]
-    exact hI.map _
+  have hJfg : (FormalSpectrum.awayCompletionIdeal I f).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg I f hI
   refine IsTopologicallyFiniteType.of_openImmersion_of_isCofinal hI hJfg
     (FormalSpectrum.basicOpenChart I f) ?_ ?_
   · rw [FormalSpectrum.globalSectionsMap_basicOpenChart,

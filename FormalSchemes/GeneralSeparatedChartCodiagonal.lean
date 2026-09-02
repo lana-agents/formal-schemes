@@ -160,10 +160,9 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The away completion's ideal of definition is finitely generated when `I` is. -/
 theorem fg_awayCompletionIdeal (i j : DX.J) :
     letI := DX.commRing; letI := DX.algebra
-    (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)).FG := by
+    (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)).FG :=
   letI := DX.commRing; letI := DX.algebra
-  rw [← map_awayCompletionHom]
-  exact (hI.map _).map _
+  awayCompletionIdeal_fg _ _ (hI.map _)
 
 /-- **The first structure map of the overlap** `A i → A i{1/g i j}^`: the away-completion map,
 i.e. the ring map of the inclusion `X_i ∩ X_j ↪ X_i`. -/

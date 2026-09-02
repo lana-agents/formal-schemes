@@ -279,7 +279,7 @@ theorem isThickeningColimitTarget_formalLineChart (b : Bool) :
     IsThickeningColimitTarget
       (locallyRingedSpaceObj (awayCompletionIdeal formalLineIdeal (formalLineElem b))) :=
   isThickeningColimitTarget_spf _
-    (ColimitTarget.awayCompletionIdeal_fg formalLineIdeal (formalLineElem b)
+    (awayCompletionIdeal_fg formalLineIdeal (formalLineElem b)
       (polyXIdeal_fg.map _))
 
 /-- **The witness of `isThickeningColimitTarget_of_cover`**: `Spf ℤ⟦X⟧` has the colimit property
@@ -321,7 +321,7 @@ theorem existsUnique_hom_thickeningMap_formalLine_spfCover
       ∀ n : ℕ, thickeningMap formalLineIdeal n ≫ g = f n :=
   existsUnique_hom_thickeningMap_spfCover formalLineIdeal f hf (polyXIdeal_fg.map _)
     formalLineFormalOpen iSup_basicOpen_formalLineElem _
-    (fun b => ColimitTarget.awayCompletionIdeal_fg formalLineIdeal (formalLineElem b)
+    (fun b => awayCompletionIdeal_fg formalLineIdeal (formalLineElem b)
       (polyXIdeal_fg.map _))
     formalLineFormalChartIso
 

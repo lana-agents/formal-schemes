@@ -422,9 +422,8 @@ theorem isRelativelyTopFiniteType_basicOpenChart (hI : I.FG) (g : R) :
   haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I g hI
   haveI : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart I g) :=
     FormalSpectrum.isOpenImmersion_basicOpenChart I g hI
-  have hJ : (FormalSpectrum.awayCompletionIdeal I g).FG := by
-    rw [← FormalSpectrum.map_awayCompletionHom I g]
-    exact hI.map _
+  have hJ : (FormalSpectrum.awayCompletionIdeal I g).FG :=
+    FormalSpectrum.awayCompletionIdeal_fg I g hI
   exact isRelativelyTopFiniteType_of_openImmersion_range_eq_basicOpen hI hJ _ g rfl
 
 end AlgebraicGeometry.FormalScheme
