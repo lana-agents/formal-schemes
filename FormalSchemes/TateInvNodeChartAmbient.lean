@@ -21,8 +21,13 @@ This file makes that identification and draws the two consequences that are free
 * **`AlgebraicGeometry.tateInvNodeChartAmbientEquiv`**: the ambient ring is
   `FormalSpectrum.awayCompletion (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)`,
   the completed localization `A{1/(x + y − 1)}`. It is
-  `FormalSpectrum.sectionsBasicOpenEquiv` after the transport along
-  `AlgebraicGeometry.tateInvNodeChartOpens_eq_basicOpen`.
+  `FormalSpectrum.sectionsEquivOfEqBasicOpen` — itself
+  `FormalSpectrum.sectionsBasicOpenEquiv` conjugated by a transport — at
+  `AlgebraicGeometry.tateInvNodeChartOpens_eq_basicOpen`. That equivalence and the three general
+  lemmas around it used to be declared here, in a `namespace FormalSpectrum` block mentioning no
+  Tate object; issue 1473 moved them to `FormalSchemes.AdicOnOpenSections`, beside
+  `FormalSpectrum.sectionsOpenHom`, which is what they are about. The `import` of that module
+  stays, and this line is what justifies it.
 * **`AlgebraicGeometry.tateInvNodeChartAwaySubring`**: the candidate chart ring, carried across
   that equivalence, as a `Subring` of `A{1/(x + y − 1)}` — with
   `AlgebraicGeometry.tateInvNodeChartSubringEquivAway` and
@@ -44,15 +49,6 @@ This file makes that identification and draws the two consequences that are free
   `Spf A{1/(x + y − 1)} ⟶ Q` obtained by composing the basic-open chart with the patch inclusion
   `ι ⟨0⟩` and the quotient projection, and the computation that its range is **exactly** the
   candidate chart domain `π '' tateInvSaturate D(x + y − 1)`.
-* **`FormalSpectrum.sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom`** and its pointwise spelling
-  **`FormalSpectrum.sectionsEquivOfEqBasicOpen_sectionsOpenHom`**: that equivalence carries the
-  structural map of `Γ(U)` to the structural map of `R{1/f}`. Both used to be proved separately,
-  in `FormalSchemes.TateInvNodeChartLegContinuous` and `FormalSchemes.TateInvChartBaseImage`,
-  which are siblings that cannot cite each other; issue 1459 brought them here, beside the
-  definition, where the pointwise one is `RingHom.congr_fun` of the composed one. Between them
-  they serve **7** call sites in four modules. This is why the file imports
-  `FormalSchemes.AdicOnOpenSections`, which is where `FormalSpectrum.sectionsOpenHom` and the
-  transport lemma `FormalSpectrum.comp_eqToHom_sectionsOpenHom` live.
 
 ## What is *not* proved
 
@@ -101,54 +97,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum Topol
 open Opposite TopCat.Presheaf
 
 universe u
-
-namespace FormalSpectrum
-
-variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
-
-omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **`R{1/f}` is Hausdorff** for `I` finitely generated: it is `AdicCompletion.isAdicRing_map` at
-the localization, of which `IsHausdorff` is a component. Unlike
-`FormalSpectrum.isAdicRing_awayCompletionIdeal` this needs no topology on `R{1/f}`. -/
-theorem isHausdorff_awayCompletionIdeal (f : R) (hI : I.FG) :
-    IsHausdorff (awayCompletionIdeal I f) (awayCompletion I f) :=
-  (AdicCompletion.isAdicRing_map _ (hI.map _)).toIsAdicComplete.toIsHausdorff
-
-/-- **Sections over an open that happens to be a basic open** are the completed localization:
-`FormalSpectrum.sectionsBasicOpenEquiv` (EGA I, 10.1.4) after the transport along `hU`. The
-`⊤`-analogue is `FormalSpectrum.sectionsEquivOfEqTop`. -/
-def sectionsEquivOfEqBasicOpen {U : Opens (FormalSpectrum I)} {f : R} (hU : U = basicOpen I f) :
-    ((locallyRingedSpaceObj I).presheaf.obj (op U) : Type u) ≃+* awayCompletion I f :=
-  (((locallyRingedSpaceObj I).presheaf.mapIso
-    (eqToIso (congrArg op hU))).commRingCatIsoToRingEquiv).trans (sectionsBasicOpenEquiv I f)
-
-/-- **`FormalSpectrum.sectionsEquivOfEqBasicOpen` carries the structural map of `Γ(U)` to the
-structural map of `R{1/f}`.** Both are restrictions from `⊤`, so this is
-`FormalSpectrum.sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom`
-(`FormalSchemes.AdicOnBasicOpenSections`) after the transport along `hU` has been absorbed by
-`FormalSpectrum.comp_eqToHom_sectionsOpenHom`. The pointwise spelling is
-`FormalSpectrum.sectionsEquivOfEqBasicOpen_sectionsOpenHom`, which is derived from this one. -/
-theorem sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom {U : Opens (FormalSpectrum I)} {f : R}
-    (hU : U = basicOpen I f) :
-    (sectionsEquivOfEqBasicOpen I hU).toRingHom.comp (sectionsOpenHom I U) =
-      awayCompletionHom I f := by
-  rw [← sectionsBasicOpenEquiv_comp_sectionsBasicOpenHom I f, ← sectionsOpenHom_basicOpen I f,
-    ← comp_eqToHom_sectionsOpenHom I hU, ← RingHom.comp_assoc]
-  rfl
-
-/-- **The pointwise spelling** of `FormalSpectrum.sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom`,
-which is the form the four legs of the chart condition are stated in
-(`FormalSchemes.TateInvChartBaseImage`, `FormalSchemes.TateInvNodeChartLegGeneral`).
-
-Stated at a general `I` on purpose: this is where the two spellings of the section ring meet, and
-that reconciliation is cheap for the kernel only while `I`, `U` and `f` are variables. See
-`FormalSchemes.AdicOnOpenSectionsPointwise`. -/
-theorem sectionsEquivOfEqBasicOpen_sectionsOpenHom {U : Opens (FormalSpectrum I)} {f : R}
-    (hU : U = basicOpen I f) (r : R) :
-    sectionsEquivOfEqBasicOpen I hU (sectionsOpenHom I U r) = awayCompletionHom I f r :=
-  RingHom.congr_fun (sectionsEquivOfEqBasicOpen_comp_sectionsOpenHom I hU) r
-
-end FormalSpectrum
 
 namespace AlgebraicGeometry
 
