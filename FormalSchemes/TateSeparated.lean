@@ -82,19 +82,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
 
 universe u
 
-namespace FormalSpectrum
-
-/-- The structural completion map `awayCompletionHom K f : A →+* A{1/f}` is the algebra map
-`algebraMap A (awayCompletion K f)` (both factor `A → A_f → A{1/f}`). This lets one bridge the
-`awayCompletionHom` presentation against the scalar-tower `IsScalarTower.toAlgHom` presentation of
-the same map. -/
-theorem awayCompletionHom_eq_algebraMap {A : Type u} [CommRing A] (K : Ideal A) (f : A) :
-    awayCompletionHom K f = algebraMap A (awayCompletion K f) := by
-  rw [awayCompletionHom]
-  exact (IsScalarTower.algebraMap_eq A (Localization.Away f) (awayCompletion K f)).symm
-
-end FormalSpectrum
-
 namespace CompletedTensorProduct
 
 variable {R : Type u} [CommRing R] {I : Ideal R}

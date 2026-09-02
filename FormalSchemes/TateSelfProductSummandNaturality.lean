@@ -64,17 +64,10 @@ variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 All the completion ideal-transports (`congrIdealₐ`) are handled at the `RingHom.comp` level with the
 black-box lemmas `congrIdeal_toRingHom_comp_algebraMap` and its `symm` variant
 (keeping `congrIdeal` opaque, avoiding the pathologically expensive concrete pointwise route), and
-`awayCompletionHom` is identified with `algebraMap` of the base annulus algebra via the scalar
-tower. -/
-
-/-- The structural completion map `A → A{1/f}` is the algebra map (scalar tower `A → A_f → A{1/f}`).
--/
-private theorem awayCompletionHom_eq_algebraMap (K : Ideal (annulusAlgebra R I q))
-    (f : annulusAlgebra R I q) :
-    FormalSpectrum.awayCompletionHom K f =
-      algebraMap (annulusAlgebra R I q) (awayCompletion K f) :=
-  (IsScalarTower.algebraMap_eq (annulusAlgebra R I q) (Localization.Away f)
-    (awayCompletion K f)).symm
+`awayCompletionHom` is identified with `algebraMap` of the base annulus algebra by
+`FormalSpectrum.awayCompletionHom_eq_algebraMap` (`FormalSchemes/BasicOpenChart.lean`), which is
+that scalar tower at an arbitrary base; this file carried a `private` copy of it, specialised to
+the annulus algebra, until issue 1456 rehomed the general one. -/
 
 /-- The localized coordinate swap on the localizations `A[x⁻¹] → A[y⁻¹]` restricted to `A`. -/
 private theorem locTransition_comp_algebraMap_A (hI : I.FG) :
@@ -145,7 +138,7 @@ private theorem middle_comp (hI : I.FG) :
       (FormalSpectrum.awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)).comp
         (annulusFlip R I q hI).toRingHom := by
   rw [chartTrans_toRingHom_eq, RingHom.comp_assoc, RingHom.comp_assoc, L1, L2,
-    ← RingHom.comp_assoc, L3, awayCompletionHom_eq_algebraMap]
+    ← RingHom.comp_assoc, L3, FormalSpectrum.awayCompletionHom_eq_algebraMap]
 
 private theorem B1 :
     (annulusFibreChartBridgeX R I q).toRingHom.comp
@@ -195,7 +188,7 @@ theorem annulusFibreChartTransitionAlg_algebraMap (hI : I.FG) (a : annulusAlgebr
         (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q))
         (annulusFlip R I q hI a) := by
   have h := RingHom.congr_fun (crux_comp R I q hI) a
-  simp only [RingHom.comp_apply, awayCompletionHom_eq_algebraMap] at h
+  simp only [RingHom.comp_apply, FormalSpectrum.awayCompletionHom_eq_algebraMap] at h
   exact h
 
 private theorem flip_flip (hI : I.FG) (a : annulusAlgebra R I q) :
