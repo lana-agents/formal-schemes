@@ -279,9 +279,10 @@ written (`thickeningSheaf`, `specTwoPatchSchemeι₀`, `specTwoPatchSchemeι₁`
 to the declaration the prose means — and `backwardHom_awayCompletionHom`, which does not and joined
 the backlog above), and lost none.
 
-Two things that fix carries, because a newline-crossing regex is not free. A ``` fenced block would
-otherwise be swallowed whole, so fences are stripped — no loss, the 8 spans inside fences were all
-excluded anyway. And a stray backtick now re-pairs a whole *comment* rather than one line, so
+Two things that fix carries, because a newline-crossing regex is not free. A fenced code block would
+otherwise be swallowed whole — its three opening backticks would pair with whatever came next — so
+fences are stripped; no loss, the 8 spans inside fences were all excluded anyway. And a stray
+backtick now re-pairs a whole *comment* rather than one line, so
 `--tree` reports **unbalanced fragments** and exits non-zero on them. There were exactly two, both
 genuine prose defects invisible until the regex could see them — a missing closer in
 `IndSchemeLimitComponents.lean` and a nested pair in `TateGraphCodiagonalXLift.lean` — and both are
