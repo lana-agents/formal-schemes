@@ -157,12 +157,6 @@ theorem spfHomOfFamily_uniq (g : locallyRingedSpaceObj I ⟶ X)
   hom_ext_thickeningMap_lrs _ _ fun n =>
     (hg n).trans (thickeningMap_comp_spfHomOfFamily I f hf hI r hcov U hr Y e hY n).symm
 
-set_option linter.style.setOption false in
--- `basicOpenCover`'s index type and pieces are `ι` and `Spf R{1/r i}` by `rfl` but not at
--- `instances` transparency, so `FormalScheme.OpenCover.range_glueMorphisms` has to be applied as
--- a term with its cover argument written out; the same accommodation
--- `thickeningMap_comp_spfHomOfFamily` makes.
-set_option backward.isDefEq.respectTransparency false in
 /-- **The image of the glued morphism lies in the union of the target opens.** `hcov` is a
 hypothesis about the *source* — the `D(r i)` cover `|Spf R|` — and the `U i` are asked only to
 receive the image of the chart they are attached to (`hr`). Nothing asks them to cover `X`. Yet
@@ -180,6 +174,10 @@ hits. See `FormalSpectrum.hasAffineChartAt_of_spfChartFamily`
 theorem range_spfHomOfFamily_le :
     Set.range (spfHomOfFamily I f hf hI r hcov U hr Y e hY).base ⊆
       ⋃ i, (U i : Set X.toTopCat) := by
+  -- `basicOpenCover`'s index type and pieces are `ι` and `Spf R{1/r i}` by `rfl` but not at
+  -- `instances` transparency, so `rw [spfHomOfFamily, FormalScheme.OpenCover.range_glueMorphisms]`
+  -- builds an ill-typed motive. Applying `range_glueMorphisms` as a *term*, with all three of its
+  -- arguments written out, avoids the rewrite entirely and needs no transparency option.
   have hrg : Set.range (spfHomOfFamily I f hf hI r hcov U hr Y e hY).base =
       ⋃ i, Set.range (chartHom I f hf hI r U hr Y e hY i).base :=
     FormalScheme.OpenCover.range_glueMorphisms (basicOpenCover I r hI hcov)
