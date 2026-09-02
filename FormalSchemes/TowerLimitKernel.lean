@@ -1,3 +1,4 @@
+import FormalSchemes.AdicOnOpenSections
 import FormalSchemes.ThickeningTowerKernel
 
 set_option linter.style.header false
@@ -64,6 +65,15 @@ earlier in the chain uses finite generation.
   `FormalSpectrum.sectionsPi_comp_sectionsMk`, which pins it uniquely, and
   `FormalSpectrum.globalSectionsEquiv_sectionsMk_top` identifies it at `⊤` with the identity of
   `R` under `FormalSpectrum.globalSectionsEquiv`.
+
+  **It is not a new map.** `FormalSpectrum.sectionsMk_eq_sectionsOpenHom` identifies it with
+  `FormalSpectrum.sectionsOpenHom` (`FormalSchemes.AdicOnOpenSections`), which is the structural
+  map this tree already fixes at an arbitrary open — and whose basic-open alias
+  `FormalSpectrum.sectionsBasicOpenHom` is reconciled with it the same way, by
+  `FormalSpectrum.sectionsOpenHom_basicOpen`. The limit presentation is what this file needs to
+  *run the approximation*; the reconciliation is what lets the answer be stated in the ideal every
+  consumer of `FormalSchemes.AdicOnOpenSections` already speaks,
+  `FormalSpectrum.sectionsOpenIdeal`.
 * `FormalSpectrum.sectionsQuotientEquiv`: the resulting `B ⧸ I · B ≃+* B₀`.
 
 ## Main results
@@ -80,7 +90,13 @@ earlier in the chain uses finite generation.
 * `FormalSpectrum.ker_sectionsPi_zero`: **the limit step**, `ker (B ↠ B₀) = I · B` over an open
   with affine thickenings. `FormalSpectrum.ker_sectionsPi_zero_top` and
   `FormalSpectrum.ker_sectionsPi_zero_basicOpen` are its two instances with no hypothesis on the
-  open.
+  open, and `FormalSpectrum.ker_sectionsPi_zero_eq_sectionsOpenIdeal` is the same statement in the
+  spelling `FormalSchemes.AdicOnOpenSections` uses.
+* `FormalSpectrum.sectionsMk_eq_sectionsOpenHom`: **the new map is the old one.** Both are pinned
+  by `FormalSpectrum.sectionsPi`, so the limit's uniqueness identifies them; the ingredients are
+  `FormalSpectrum.sectionsPi_naturality`, `FormalSpectrum.restrict_thickeningSectionsMk` and the
+  `⊤` case `FormalSpectrum.sectionsMk_top_eq`, which is `globalSectionsEquiv_sectionsMk_top` read
+  as an equation of maps.
 * `FormalSpectrum.stepSheafHom_app_thickeningSectionsMk` and `FormalSpectrum.sectionsCone_π_app`:
   the plumbing that makes the two cones cones — the canonical maps `R →+* Bₙ` commute with the
   transition maps of the tower, and the legs of `FormalSpectrum.sectionsCone` are the projections
@@ -459,5 +475,84 @@ theorem ker_sectionsPi_zero_basicOpen (f : R) (hI : I.FG) :
     RingHom.ker (sectionsPi I 0 (basicOpen I f)).hom
       = Ideal.map (sectionsMk I (basicOpen I f)) I :=
   ker_sectionsPi_zero (hasAffineThickenings_basicOpen I f) hI
+
+/-!
+### `sectionsMk` is the structural map this tree already has
+
+`FormalSpectrum.sectionsOpenHom` (`FormalSchemes.AdicOnOpenSections`) is the same map, presented
+as a restriction from `⊤` rather than as a limit lift. Both are pinned by the projections
+`FormalSpectrum.sectionsPi`, so the limit's uniqueness identifies them, and the identification is
+what lets the limit step be stated in `FormalSpectrum.sectionsOpenIdeal` — the ideal of definition
+of `Γ (U, O_{Spf R})` that the adicity results downstream are phrased in.
+-/
+
+/-- **`FormalSpectrum.sectionsPi` is natural in the open**, being a component of a limit
+projection between two sheaves. -/
+theorem sectionsPi_naturality (n : ℕ) {U V : Opens (FormalSpectrum I)} (h : U ≤ V) :
+    (structureSheaf I).presheaf.map (homOfLE h).op ≫ sectionsPi I n U
+      = sectionsPi I n V ≫ (thickeningSheaf I n).presheaf.map (homOfLE h).op :=
+  (limit.π (structureSheafFunctor I) ⟨n⟩).hom.naturality (homOfLE h).op
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- Restriction carries the canonical map into a level to the canonical map into that level: both
+are the `R ⧸ I ^ (n + 1)`-algebra map of a structure sheaf, and restriction is an algebra map. -/
+theorem restrict_thickeningSectionsMk (n : ℕ) {U V : Opens (FormalSpectrum I)} (h : U ≤ V)
+    (x : R) :
+    ((thickeningSheaf I n).presheaf.map (homOfLE h).op).hom (thickeningSectionsMk I n V x)
+      = thickeningSectionsMk I n U x :=
+  rfl
+
+/-- **The `⊤` case**: `FormalSpectrum.globalSectionsEquiv_sectionsMk_top` read as an equation of
+maps rather than pointwise, the restriction along `⊤ ⊆ ⊤` being the identity. -/
+theorem sectionsMk_top_eq : sectionsMk I ⊤ = sectionsOpenHom I ⊤ := by
+  refine RingHom.ext fun x => ?_
+  rw [sectionsOpenHom]
+  have hid : (homOfLE (le_top (a := (⊤ : Opens (FormalSpectrum I))))).op = 𝟙 _ :=
+    Quiver.Hom.unop_inj (Subsingleton.elim _ _)
+  simp only [hid, CategoryTheory.Functor.map_id, CommRingCat.hom_id, RingHom.id_apply,
+    RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom]
+  exact (((globalSectionsEquiv I).symm_apply_eq).mpr
+    (globalSectionsEquiv_sectionsMk_top I x).symm).symm
+
+/-- **`FormalSpectrum.sectionsOpenHom` satisfies the characterisation that pins
+`FormalSpectrum.sectionsMk`.** Naturality of `FormalSpectrum.sectionsPi` moves the question to
+`⊤`, where it is `FormalSpectrum.sectionsMk_top_eq`. -/
+theorem sectionsPi_comp_sectionsOpenHom (n : ℕ) (U : Opens (FormalSpectrum I)) :
+    ((sectionsPi I n U).hom).comp (sectionsOpenHom I U) = thickeningSectionsMk I n U := by
+  refine RingHom.ext fun x => ?_
+  have hnat := congrArg CommRingCat.Hom.hom (sectionsPi_naturality I n (le_top (a := U)))
+  rw [CommRingCat.hom_comp, CommRingCat.hom_comp] at hnat
+  have hgs : ((globalSectionsEquiv I).symm.toRingHom x) = sectionsMk I ⊤ x :=
+    ((globalSectionsEquiv I).symm_apply_eq).mpr (globalSectionsEquiv_sectionsMk_top I x).symm
+  have hx : sectionsOpenHom I U x
+      = ((structureSheaf I).presheaf.map (homOfLE (le_top (a := U))).op).hom
+          (sectionsMk I ⊤ x) := by
+    rw [← hgs]; rfl
+  have htop := DFunLike.congr_fun (sectionsPi_comp_sectionsMk I ⊤ n) x
+  rw [RingHom.comp_apply] at htop
+  rw [RingHom.comp_apply, hx, ← RingHom.comp_apply, hnat, RingHom.comp_apply, htop]
+  exact restrict_thickeningSectionsMk I n (le_top (a := U)) x
+
+/-- **The map this file builds is the one the tree already had.** A cone over the tower of
+sections with point `R` has exactly one map to the limit, and
+`FormalSpectrum.sectionsPi_comp_sectionsOpenHom` says `FormalSpectrum.sectionsOpenHom` is such a
+map. This is the arbitrary-open twin of `FormalSpectrum.sectionsOpenHom_basicOpen`. -/
+theorem sectionsMk_eq_sectionsOpenHom (U : Opens (FormalSpectrum I)) :
+    sectionsMk I U = sectionsOpenHom I U := by
+  have huniq := (isLimitSectionsCone I U).uniq (sectionsMkCone I U)
+    (CommRingCat.ofHom (sectionsOpenHom I U)) ?_
+  · exact congrArg CommRingCat.Hom.hom huniq.symm
+  · rintro ⟨n⟩
+    apply CommRingCat.hom_ext
+    rw [CommRingCat.hom_comp, sectionsCone_π_app]
+    exact sectionsPi_comp_sectionsOpenHom I n U
+
+/-- **The limit step in the tree's own spelling.** `FormalSpectrum.sectionsOpenIdeal` is the ideal
+of definition of `Γ (U, O_{Spf R})` that `FormalSchemes.AdicOnOpenSections` and its consumers use;
+over an open with affine thickenings it is exactly the kernel of the reduction map. -/
+theorem ker_sectionsPi_zero_eq_sectionsOpenIdeal {U : Opens (FormalSpectrum I)}
+    (hU : HasAffineThickenings I U) (hI : I.FG) :
+    RingHom.ker (sectionsPi I 0 U).hom = sectionsOpenIdeal I U := by
+  rw [ker_sectionsPi_zero hU hI, sectionsMk_eq_sectionsOpenHom I U, sectionsOpenIdeal]
 
 end FormalSpectrum
