@@ -98,7 +98,14 @@ statement about the structure sheaf and not about the ideals.
 
 ## What the openness half probably needs, and this is a sketch, not a proof
 
-Nothing below is formalised or verified; it is recorded so the next worker does not re-derive it.
+Recorded so the next worker does not re-derive it. Its first three steps have since been
+formalised, under the hypothesis that the thickenings of the open are affine
+(`FormalSpectrum.HasAffineThickenings`, `FormalSchemes.AffineThickenings`): the surjections and
+the kernel computation are `FormalSchemes.AffineThickenings` and
+`FormalSchemes.ThickeningTowerKernel`, and the successive approximation is
+`FormalSpectrum.ker_sectionsPi_zero` (`FormalSchemes.TowerLimitKernel`). **The last step below is
+still a sketch** — that `√(ker (B ↠ B₁)) = √J` because both cut out `U` — and so is the claim
+that the affineness hypothesis holds at an arbitrary open immersion.
 Write `B` as the inverse limit of `Bₙ = Γ (U, 𝒪_{Spec (R ⧸ Iⁿ)})`. If `U` is an affine open of
 `Spec (R ⧸ I)` then each `Uₙ` is affine — it is a nilpotent thickening of `U` — so the transition
 maps `Bₙ₊₁ → Bₙ` are surjective, `B ↠ Bₙ`, and `ker (Bₙ₊₁ → Bₙ) = Iⁿ · Bₙ₊₁`. Successive
