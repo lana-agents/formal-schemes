@@ -110,26 +110,12 @@ through `Scheme.ΓSpecIso_naturality`; it carries no geometric content. -/
 theorem ker_appTop_specMap :
     RingHom.ker ((Spec.map φ).appTop).hom
       = Ideal.map ((Scheme.ΓSpecIso A).inv).hom (RingHom.ker φ.hom) := by
-  have hround : ∀ x, ((Scheme.ΓSpecIso A).hom).hom (((Scheme.ΓSpecIso A).inv).hom x) = x := by
-    intro x
-    rw [← CommRingCat.comp_apply, Iso.inv_hom_id]
-    rfl
-  have hinj : Function.Injective ((Scheme.ΓSpecIso C).hom).hom :=
-    (ConcreteCategory.bijective_of_isIso (Scheme.ΓSpecIso C).hom).1
-  have h1 : Ideal.map ((Scheme.ΓSpecIso A).inv).hom (RingHom.ker φ.hom)
-      = Ideal.comap ((Scheme.ΓSpecIso A).hom).hom (RingHom.ker φ.hom) := by
-    refine le_antisymm (Ideal.map_le_iff_le_comap.mpr fun x hx => ?_) fun x hx => ?_
-    · simpa only [Ideal.mem_comap, hround] using hx
-    · have hx' : ((Scheme.ΓSpecIso A).inv).hom (((Scheme.ΓSpecIso A).hom).hom x)
-          ∈ Ideal.map ((Scheme.ΓSpecIso A).inv).hom (RingHom.ker φ.hom) :=
-        Ideal.mem_map_of_mem _ hx
-      rwa [← CommRingCat.comp_apply, Iso.hom_inv_id, CommRingCat.id_apply] at hx'
-  rw [h1, RingHom.comap_ker]
-  have h2 : φ.hom.comp ((Scheme.ΓSpecIso A).hom).hom
-      = ((Scheme.ΓSpecIso C).hom).hom.comp ((Spec.map φ).appTop).hom := by
-    rw [← CommRingCat.hom_comp, ← CommRingCat.hom_comp, Scheme.ΓSpecIso_naturality]
-  rw [h2, ← RingHom.comap_ker, (RingHom.injective_iff_ker_eq_bot _).mp hinj,
-    ← RingHom.ker_eq_comap_bot]
+  rw [← RingHom.ker_equiv_comp _ (Scheme.ΓSpecIso C).commRingCatIsoToRingEquiv,
+    RingEquiv.toRingHom_eq_coe, Iso.commRingCatIsoToRingEquiv_toRingHom,
+    ← CommRingCat.hom_comp, Scheme.ΓSpecIso_naturality, CommRingCat.hom_comp,
+    ← RingHom.comap_ker]
+  exact (Ideal.map_comap_of_equiv
+    (Scheme.ΓSpecIso A).commRingCatIsoToRingEquiv.symm).symm
 
 /-- **The kernel of `Spec φ` on sections over an affine open is the extension of
 `RingHom.ker φ`.** No hypothesis on `φ`.
@@ -312,8 +298,13 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The reduction map of the tower has nilpotent kernel**: `(ker (Bₙ ↠ B₀)) ^ (n + 1) = ⊥`, so
 `Spec B₀` is an infinitesimal thickening inside `Spec Bₙ` and the two have the same underlying
 space. This is `FormalSpectrum.ker_sectionsComap_zero` combined with the fact that `I ^ (n + 1)`
-already dies at level `n`; note it is *not* available for the kernel of `Bₙ ↠ Bₘ` with `m > 0`
-raised to a smaller power, because the relevant ideal there is `I ^ (m + 1)`. -/
+already dies at level `n`.
+
+The same argument runs for `Bₙ ↠ Bₘ` at any `m ≤ n`, only with a different exponent: that kernel
+is the extension of `I ^ (m + 1)` (`FormalSpectrum.ker_towerSectionsComap_map`), so its `k`-th
+power is the extension of `I ^ ((m + 1) * k)` and is `⊥` as soon as `(m + 1) * k ≥ n + 1` — for
+`m > 0` that is a *smaller* exponent than the `n + 1` recorded here. Only `m = 0` is stated,
+because it is the level the successive approximation compares against. -/
 theorem ker_sectionsComap_zero_pow {U : Opens (FormalSpectrum I)}
     (hU : HasAffineThickenings I U) (n : ℕ) :
     RingHom.ker (StructureSheaf.comap (towerRingHom I (Nat.zero_le n)).hom (thickeningOpen I n U)
