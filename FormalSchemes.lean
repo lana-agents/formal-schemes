@@ -485,6 +485,7 @@ import FormalSchemes.TopFiniteTypeHomComp
 import FormalSchemes.TopFiniteTypeHomTrans
 import FormalSchemes.TopFiniteTypeSpecialFibre
 import FormalSchemes.TopFiniteTypeTrans
+import FormalSchemes.TowerLimitKernel
 import FormalSchemes.TwoAdicDegeneracy
 import FormalSchemes.TwoAdicWitness
 import FormalSchemes.TwoChartBasicOpen

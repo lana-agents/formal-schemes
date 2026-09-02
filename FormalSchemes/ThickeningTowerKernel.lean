@@ -49,11 +49,11 @@ whose limit over `n` the approximation has to compare with `I · B`. Both are re
 Note that the level-`0` form is *not* obtained by composing the step form `n` times — it is the
 same lemma at another pair of levels, so no induction is involved.
 
-**What is still missing** is exactly the limit step: from `ker (Bₙ ↠ B₀) = I · Bₙ` for every `n`,
-together with `Bₙ₊₁ ↠ Bₙ` and `B = lim Bₙ`, conclude `ker (B ↠ B₀) = I · B`. That is the classical
-Mittag-Leffler argument against a finite generating set of `I`, it is where `Ideal.FG` finally
-enters, and it is not attempted here. Everything in `FormalSchemes.AdicCofinalOpenImmersion` — in
-particular the openness half `J ≤ √(I · B)` — is untouched, and so is
+The limit step that consumes these — from `ker (Bₙ ↠ B₀) = I · Bₙ` for every `n`, together with
+`Bₙ₊₁ ↠ Bₙ` and `B = lim Bₙ`, conclude `ker (B ↠ B₀) = I · B` — is **not attempted here**; it is
+`FormalSpectrum.ker_sectionsPi_zero` in `FormalSchemes.TowerLimitKernel`, which is where
+`Ideal.FG` enters. Everything in `FormalSchemes.AdicCofinalOpenImmersion` — in particular the
+openness half `J ≤ √(I · B)` — is untouched by either file, and so is
 `FormalSchemes.AdicOnSections`'s refutation of the on-the-nose containment.
 
 ## Main definitions
