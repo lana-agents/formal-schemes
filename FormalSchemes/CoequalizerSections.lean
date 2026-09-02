@@ -84,7 +84,7 @@ It also does not identify the equalised sections geometrically. For a quotient b
 is the coproduct `∐_{g : G} X`; turning "equalised" into "invariant under every `a g`" needs the
 sections of that coproduct to be detected by the coproduct legs. That step *is* here, as
 `colimit_section_ext`; what is not here is the identification of each leg's pullback with the
-action of the corresponding `a g`, which is a statement about `actionQuotientLeft`/`Right` and
+action of the corresponding `a g`, which is a statement about `actionQuotientLeft`/`…Right` and
 belongs with them. Nor is the step after it, that a separating open
 carries the invariant sections isomorphically, which is where the disjointness of the translates
 finally enters.

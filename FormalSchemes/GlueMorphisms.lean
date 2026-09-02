@@ -40,7 +40,7 @@ non-affine formal scheme built by gluing.
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4.
-* Mathlib `CategoryTheory.GlueData`, `CategoryTheory.Limits.Multicoequalizer`.
+* Mathlib `CategoryTheory.GlueData`, `CategoryTheory.Limits.multicoequalizer`.
 -/
 
 noncomputable section

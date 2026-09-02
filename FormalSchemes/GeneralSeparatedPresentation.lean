@@ -50,8 +50,8 @@ schemes*; since formal schemes are a full subcategory of locally ringed spaces, 
 `FormalScheme.isoOfLRSIso` (added to `FormalSchemes.ClosedImmersionIso` beside the new
 `FormalScheme.isIso_of_isIso_toLRSHom`). That packaging, rather than `asIso` of the latter, is what
 keeps `.hom` and `.inv` *definitionally* `FormalScheme.Hom.mk` of `e.hom` and `e.inv`, which is what
-`schemeDiagonal'_transport`'s `Hom.ext'` proof needs — `asIso`'s `.inv` is only propositionally
-`Hom.mk e.inv`.
+`BothChartedFibreDatumXY.schemeDiagonal'_transport`'s `FormalScheme.Hom.ext'` proof needs —
+`asIso`'s `.inv` is only propositionally `Hom.mk e.inv`.
 
 ## The `xGlued` spelling wall
 
@@ -211,7 +211,7 @@ def xGluedSchemeIso :
 /-- **`BothChartedFibreDatumXY.diagonal'_transport` at the `FormalScheme` level.**
 `BothChartedFibreDatumXY.schemeDiagonal'` is `FormalScheme.Hom.mk` of
 `BothChartedFibreDatumXY.diagonal'` and both sides of the equation have the same underlying
-locally-ringed-space morphism, so this is `Hom.ext'` on
+locally-ringed-space morphism, so this is `FormalScheme.Hom.ext'` on
 `BothChartedFibreDatumXY.diagonal'_transport`. -/
 theorem schemeDiagonal'_transport :
     schemeDiagonal' DX₂ σX₂ hστX₂ hσcX₂ =

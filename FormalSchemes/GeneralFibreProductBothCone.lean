@@ -11,10 +11,10 @@ set_option synthInstance.maxHeartbeats 1000000
 
 `FormalSchemes.GeneralFibreProductBothProjectionLeft` builds the first projection
 `pr₁ : X ×_{Spf R} Y ⟶ X` into the exposed glued factor `X`
-(`FormalSchemes.GeneralFibreProductBothExposeXY.xGlued`), and
+(`BothChartedFibreDatumXY.xGlued`), and
 `FormalSchemes.GeneralFibreProductBothProjectionRight` builds the second projection
 `pr₂ : X ×_{Spf R} Y ⟶ Y` into the exposed glued factor `Y`
-(`FormalSchemes.GeneralFibreProductBothExposeXY.yGlued`). The exposed structural morphisms
+(`BothChartedFibreDatumXY.yGlued`). The exposed structural morphisms
 `xStructMap : X ⟶ Spf R` and `yStructMap : Y ⟶ Spf R` are built in
 `FormalSchemes.GeneralFibreProductBothExposeXY`.
 

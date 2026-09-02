@@ -47,8 +47,9 @@ use `hθ`, and this one does — through the two chart preimages.
 
 ## Scope
 
-**`IsClosedEmbedding` is not attempted.** It is `IsEmbedding` plus closed range, and `IsEmbedding`
-needs **injectivity** of `completionTwoPatchToScheme.base` together with the inducing property.
+**`Topology.IsClosedEmbedding` is not attempted.** It is `Topology.IsEmbedding` plus closed range,
+and `Topology.IsEmbedding` needs **injectivity** of the base map of
+`completionTwoPatchToScheme`, together with the inducing property.
 The mixed-chart case of injectivity needs the converse of
 `FormalSchemes/CompletionTwoPatchDoubled.lean`'s overlap analysis — *a point of `Spf A^` lying
 over `D(a)` is in the overlap chart*. `SpecTwoPatchNonAffine.lean`'s

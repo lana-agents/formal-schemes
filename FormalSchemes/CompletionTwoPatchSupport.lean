@@ -83,11 +83,12 @@ prove.
 
 ## Scope
 
-**`IsClosed` and `IsClosedEmbedding` are not attempted.** With this file, closedness of the range
-is `V(I)` and `V(J)` being closed plus *"a subset of a space is closed when its preimage under
-each member of an open cover is closed"* — true, but not stated anywhere in this development for
-the `LocallyRingedSpace` carrier, and worth its own carve. `IsClosedEmbedding` additionally needs
-**injectivity** of `completionTwoPatchToScheme.base`, whose mixed-chart case needs the converse of
+**`IsClosed` and `Topology.IsClosedEmbedding` are not attempted.** With this file, closedness of
+the range is `V(I)` and `V(J)` being closed plus *"a subset of a space is closed when its preimage
+under each member of an open cover is closed"* — true, but not stated anywhere in this development
+for the `LocallyRingedSpace` carrier, and worth its own carve. `Topology.IsClosedEmbedding`
+additionally needs **injectivity** of the base map of `completionTwoPatchToScheme`, whose
+mixed-chart case needs the converse of
 `FormalSchemes/CompletionTwoPatchDoubled.lean`'s overlap analysis (a point of `Spf A^` lying over
 `D(a)` is in the overlap chart) and is unpriced.
 

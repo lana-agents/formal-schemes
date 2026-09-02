@@ -41,6 +41,15 @@ this tree, so none of them can be skipped on the grounds that another passed.
   heads of the thirteen files this convention was settled on, including six of the twenty-four
   occurrences it rewrote — so the lexical reading is the one that puts the tree back in violation
   of its own convention. It is the file's open set that binds.
+* **"The file's `open` set" means everything the file makes visible, and that includes its
+  `namespace` stack.** Of the nineteen files issue 1444 gave an `AlgebraicGeometry`-headed
+  spelling, **six** never `open AlgebraicGeometry` at all —
+  `AffineSeparatedTopFiniteType.lean`, `OpenFormalSubscheme.lean`,
+  `RelativeTopFiniteTypeBasis.lean`, `TateXGluedIso.lean`, `TopFiniteTypeHom.lean`,
+  `TopFiniteTypeHomTrans.lean`. Every one of those spellings is right, and it is the enclosing
+  `namespace AlgebraicGeometry` that makes it so, not an `open` line. A module docstring sits
+  above the `namespace` too, and the previous bullet's argument applies verbatim: it is what the
+  file declares, not where the citation sits, that binds.
 * **Shortest-under-the-audit is not shortest-in-the-file.** `GlueData.f_open` resolves under the
   audit's open set, to `AlgebraicGeometry.LocallyRingedSpace.GlueData.f_open`. In
   `TateSelfProductObject.lean` — inside `namespace AlgebraicGeometry`, with `CategoryTheory` open
@@ -70,8 +79,16 @@ defect.
   `U₂` is a name.)
 * **Prose variables of one or two characters** — `R`, `X`, `f`, `hθ`, `t'`. These name a binder of
   the surrounding statement.
-* **Name fragments** — a token beginning with `_` (`_hom_snd`, `_comp_pr₂`), used to talk about the
-  tail of a family of generated names.
+* **Name fragments** — a token carrying an **elision marker**, used to talk about a family of names
+  rather than one of them: a leading `_` (`_hom_snd`, `_comp_pr₂`), which is genuinely part of the
+  generated names it is the tail of, or a `…` at whichever end is elided (`…_hom_fac`,
+  `…InterchangeOpenImmersion`, `bothAlgData…`, `…GlueF_…`). The `…` form needs no rule of its own —
+  it is not identifier-shaped, so it is already notation — and the tree uses it **43 distinct
+  tokens over 52 occurrences**, 23 of them a leading `…` on a CamelCase name. **The category is
+  about the fragment, and the marker is how the fragment is visible.** A fragment written without
+  one is not in this category: bare `` `Inv` `` — 26 occurrences over 7 files, meaning the `…Inv`
+  family — *resolves*, to Mathlib's `Inv` class, so the audit blessed a wrong referent rather than
+  reporting it. Write `…Inv`.
 * **Lean vocabulary** — `simp`, `subst`, `whnf`, `instances`: tactics and configuration fields, not
   declarations.
 * **A construction shorthand** — `Spf`, `Spec`, and nothing else. The standard mathematical name of
@@ -86,6 +103,21 @@ defect.
 * **A field of a structure named, qualified, in the same sentence** — `t_fac` and `f_open` after
   `CategoryTheory.GlueData'`. This is the one place a shorthand stands, and it is bounded: the
   structure must be named in the sentence, not merely somewhere in the file.
+* **A namespace** — `AlgebraicGeometry`, `AlgebraicGeometry.Scheme.Pullback`, `Classical`. It is
+  **not** a fourth resolution kind, and the reason is measured below; it is author-named, and
+  bounded: the sentence must be about the namespace, not about something in it.
+* **A historical citation** — the name of a module or declaration that has been **deleted**, cited
+  on purpose to record what used to exist and why it does not. It cannot be made to resolve, and
+  qualifying it would be a lie. Bounded the same way the structure-field category is: **the
+  sentence must say the thing is gone.** Measured (issue 1476): the deleted module
+  `FormalSchemes.GlueOpenCoverFactor` (3 occurrences) and **21 deleted declaration names over 33
+  occurrences**, all of them in the four issue-812 deletion paragraphs of
+  `GlueOpenCoverFactorBoth.lean:28-34`, `GlueOpenCoverFactorBothAlg.lean:26-34`,
+  `GeneralFibreProductLiftAdic.lean:77-95` and `GeneralFibreProductLiftUniqueAdic.lean:31-34`.
+  Every one of those paragraphs says it outright — *"Issue 812 deleted it"*, *"That layer is
+  gone"*, *"None of those exist any more; the module is gone entirely"*, *"Every mention of those
+  names in this library is history"* — which is what makes the bound checkable rather than a
+  licence.
 
 ### Why a bare shorthand is a citation, and not prose
 
@@ -151,6 +183,40 @@ correctly. `mapSpf`, at 108 bare occurrences the third-largest entry in the resi
 `CompletedTensorProduct.mapSpf` and nothing else: backlog, not shorthand. `T_inv` (62) names one
 object, not a family: a longer prose variable, as the list already says.
 
+### Why a namespace is not a fourth resolution kind
+
+Settled by measurement (issue 1476), on `26aed15`. A namespace is cheap to detect — `open Token in`
+succeeds or it does not — and adding it to the resolution kinds is about three lines of
+`scripts/citation_audit.py`. It was implemented, measured, and **rejected**.
+
+Tree-wide it moves **14 distinct tokens over 31 occurrences** out of `UNRESOLVED`: a 1.1% dent in a
+1279-token backlog. Read one at a time, of those 14 — **eight are right and six are not**:
+
+* **The namespace is what the sentence means** (8 tokens, 20 occurrences): `AlgebraicGeometry` 11,
+  `NatIso` 2, `Classical`, `Limits`, `AlgebraicGeometry.Scheme.Pullback`,
+  `CompletedTensorAwayInterchange`, `FormalSpectrum.ColimitTarget`, `ThreeChartCover`.
+* **A bare cite of a real declaration**: `IsEmbedding` 4 — the predicate `Topology.IsEmbedding`.
+* **A name fragment**: `Right` 3 and `Left` — the elided half of `actionQuotientLeft`/`…Right` and
+  of `basicOpenChartOverlapIso_inv_comp_furtherLeft`/`_furtherRight`.
+* **A `private` declaration of the citing file**: `cChart`, which no `#check` from outside can
+  reach. Not a namespace, and not a category this list has.
+* **Two dead citations** — a declaration that does not exist:
+  `AlgebraicGeometry.IsTopologicallyFiniteType` (it is `IsTopologicallyFiniteType`, at the root)
+  and `CategoryTheory.Limits.Multicoequalizer` (Mathlib renamed the object to `multicoequalizer`).
+
+So the pass rate is 20 of 31 occurrences right and **11 wrong**, and two of the eleven are dead
+citations of exactly the kind this audit exists to catch: `open ... in` succeeds for both, because a
+deleted or misspelled constant can still leave a populated namespace behind. Blessing them
+mechanically converts two loud failures into two silent ones, which the third check above says is
+the worse outcome — the same argument that made `Spf` and `Spec` a category rather than a pass.
+
+**A namespace is therefore an author-named category, not a resolution kind.** The author says "this
+is a namespace" in the pull request body and the reader can check it, which is what `IsEmbedding`
+and the two dead citations would not have survived. **Five of the six defects are fixed on the
+commit that records this**; `cChart` is not, because a `private` declaration has no spelling that
+resolves from outside the file that owns it. That is a sixth category if it is anything, and it
+needs its own measurement before it becomes one.
+
 ### The standing backlog
 
 `python3 scripts/citation_audit.py --tree` runs the same check over every comment in the tree. It
@@ -164,7 +230,7 @@ category (issue 1442):
 | :-- | --: | --: |
 | **no spelling resolves, in any namespace** | **459** | **1181** |
 | — dot-notation on a local: `I.FG` 40, `D.J` 17, `f.c` 15, `e.symm` 10 | 82 | 251 |
-| — a **namespace**, which is not one of the three resolution kinds | 12 | 26 |
+| — a **namespace**, an author-named category and not a resolution kind (above) | 12 | 26 |
 | — longer prose variables: `T_inv` 62, `U_n` 28, `hστ` 26, `hnode` 18 | 365 | 904 |
 | **some qualified spelling resolves** | **842** | **3115** |
 | — a field of a structure: `t_fac` 115, `cocycle` 74, `f_open` 29 | 49 | 535 |
@@ -185,7 +251,25 @@ Three things that partition shows and a frequency histogram does not.
   their bare name owned by two or more constants; hand-reading every one with at least five
   occurrences found **five that resolve to a declaration the prose does not mean** — `inv` 31,
   `map` 14, `Hom.mk` 12, `IsClosedImmersion` 8, `IsSeparated` 8. These are invisible to the audit
-  by construction. Issue 1444 has the list and the sites.
+  by construction. Issue 1444 fixed all five.
+
+  **Two more escaped that pass, one at each end of its threshold** (issue 1476). `Hom.ext'` has
+  **2** occurrences, so the ≥5 filter never reached it — and one of the two sat on a line issue
+  1444 itself rewrote, three lines above a proof that spells it `FormalScheme.Hom.ext'`. `Inv` has
+  **26**, comfortably above the threshold, and was passed over anyway because it reads as prose:
+  it is the `…Inv` name fragment, and bare it resolves to Mathlib's `Inv` class. So the sweep needs
+  **no occurrence threshold**, and it has to be re-run over the added lines of one's *own* diff:
+  the audit's `UNRESOLVED` list cannot drive it, because a wrong referent is by definition
+  something the audit passed.
+
+**One known blind spot in the figures, so nobody re-derives it.** `BACKTICKED` is
+`` `[^`\n]+` ``, which cannot match a backticked span that wraps across a line — and after such a
+span the backticks *re-pair off by one* for the rest of that comment, so tokens after it are
+mis-read rather than merely missed. **617 comment lines in 196 files carry an odd number of
+backticks**, 1.4% of the tree's comment lines. It cost a real token: bare `Inv` at
+`TateOverlapInversionIso.lean:47` is invisible to `--tree`, which sees 26 of the file family's 27.
+Every figure above is therefore a lower bound, and a `--diff` run is exposed to the same thing on
+any hunk that wraps a backticked span.
 
 Clearing the backlog is not a prerequisite for anything. The convention binds the diff; the
 tree-wide number is there so that the backlog is a known quantity rather than a surprise.

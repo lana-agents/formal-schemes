@@ -12,13 +12,13 @@ Fix an adic base `(R, I)` with `I` finitely generated and Noetherian `R`, and a 
 genuine 𝔾m-**inversion** transition `annulusChartTransitionInvSpf` (issue 437,
 `FormalSchemes.TateOverlapInversionIso`, `X ↦ Y⁻¹`, the Néron 2-gon gluing).
 
-This file delivers the **`Inv` analogue of the geometric adjacent-overlap crux**
+This file delivers the **`…Inv` analogue of the geometric adjacent-overlap crux**
 (`annulusOverlapChart_comp_structMap` / `annulusOverlapChartY_comp_structMap`,
 `FormalSchemes.TateChainStructMap`): on the `x`-overlap `Spf A{1/x}`, the open-immersion chart
 followed by the structural morphism `Spf A ⟶ Spf R` agrees with the corrected chart transition
 `annulusChartTransitionInvSpf` followed by the `y`-chart and the structural morphism. This is the
 load-bearing identity that the model rewire (issue 438b) consumes to keep the rerouted
-`tateCurveModelStructMap` green — it is the `Inv` replacement for the two crux lemmas the current
+`tateCurveModelStructMap` green — it is the `…Inv` replacement for the two crux lemmas the current
 `tateCurveModelStructMap` cites off the diagonal.
 
 Everything here is **purely additive**: no existing declaration is modified. The proof mirrors the
@@ -32,7 +32,7 @@ flip crux verbatim (collapse both sides to a single `FormalSpectrum.locallyRinge
   `annulusOverlapInversion_symm_isAdicHom` (issue 437);
 
 and the underlying ring identity `annulusChartTransition_comp_awayCompletionHom` replaced by the
-`Inv` analogue `annulusChartTransitionInv_comp_awayCompletionHom` below. Crucially, that ring
+`…Inv` analogue `annulusChartTransitionInv_comp_awayCompletionHom` below. Crucially, that ring
 identity is **not** proved through the localization level (the inversion is only `R`-linear, *not*
 `annulusLoc`-linear — this is exactly the geometric content of the model fix): it is built at the
 `R` level from issue 437's `annulusOverlapInversion_symm_comp_algebraMap`.
@@ -71,7 +71,7 @@ set_option maxHeartbeats 1600000 in
 /-- **The 𝔾m-inversion overlap transition fixes the image of the base `R`** (ring level). The
 inverse completed inversion transition `A[y⁻¹]^∧ →+* A[x⁻¹]^∧`, conjugated by the two chart-domain
 completion transports and precomposed with the structural map `R → A → A{1/y}`, equals the
-structural map `R → A → A{1/x}`. This is the `Inv` analogue of
+structural map `R → A → A{1/x}`. This is the `…Inv` analogue of
 `annulusChartTransition_comp_awayCompletionHom`; unlike the flip version it goes through the
 `R`-level linearity `annulusOverlapInversion_symm_comp_algebraMap` (issue 437), since the inversion
 is only `R`-linear, not `annulusLoc`-linear. -/
@@ -136,7 +136,7 @@ set_option maxHeartbeats 1600000 in
 /-- **The geometric adjacent-overlap crux for the 𝔾m-inversion gluing (forward step).** On the
 `x`-overlap `Spf A{1/x}`, the open-immersion chart followed by the structural morphism agrees with
 the corrected chart transition `Spf A{1/x} ≅ Spf A{1/y}` (`annulusChartTransitionInvSpf`) followed
-by the `y`-chart and the structural morphism. `Inv` analogue of
+by the `y`-chart and the structural morphism. `…Inv` analogue of
 `annulusOverlapChart_comp_structMap`: both sides collapse to a single `locallyRingedSpaceMap` and
 match by `locallyRingedSpaceMap_congr` fed by `annulusChartTransitionInv_comp_awayCompletionHom`. -/
 theorem annulusOverlapChart_comp_structMap_inv [TopologicalSpace R] [IsAdicRing I]

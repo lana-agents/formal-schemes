@@ -19,7 +19,7 @@ realising `X ↦ Y⁻¹` (the genuine Néron 2-gon gluing, contrasting the coord
 `annulusOverlapTransition` which realises `X ↦ Y` and yields the *non-separated*
 line-with-doubled-origin). This file promotes that ring isomorphism to the **geometric** level,
 mirroring the existing flip pipeline (`FormalSchemes.TateOverlapTransitionIso`,
-`FormalSchemes.TateChartTransition`) verbatim with an `Inv` suffix. Everything here is **purely
+`FormalSchemes.TateChartTransition`) verbatim with an `…Inv` suffix. Everything here is **purely
 additive**: no existing declaration is modified, so nothing downstream breaks. This is the safe
 prerequisite that the model rewire (issue 435c) will consume to make `𝔈_q = tateCurveModel`
 separated.
@@ -39,12 +39,12 @@ separated.
 * `annulusOverlapInversion_symm_comp_algebraMap`: the **`R`-linearity crux** at the ring level — the
   inverse inversion transition composed with `R → A[y⁻¹]^∧` equals `R → A[x⁻¹]^∧`.
   This is the load-bearing ring identity for the geometric structural-map compatibility of the
-  corrected model (the `Inv` analogue of `annulusOverlapTransitionInv_comp_algebraMap`).
+  corrected model (the `…Inv` analogue of `annulusOverlapTransitionInv_comp_algebraMap`).
 
 **Scope.** This delivers the geometric transition iso for the corrected (inversion) Tate gluing and
 the ring-level `R`-linearity crux that its structural-map compatibility rests on. The full geometric
 structural-map crux `annulusOverlapChart ≫ s = annulusChartTransitionInvSpf.hom ≫
-annulusOverlapChartY ≫ s` (the `Inv` analogue of `annulusOverlapChart_comp_structMap`,
+annulusOverlapChartY ≫ s` (the `…Inv` analogue of `annulusOverlapChart_comp_structMap`,
 `FormalSchemes.TateChainStructMap`) is the responsibility of the model rewire (issue 435c), where it
 is consumed by `tateCurveModelStructMap`.
 
@@ -223,7 +223,7 @@ def annulusChartTransitionInvSpf :
 /-- **The `R`-linearity crux of the inversion transition** (ring level): the inverse inversion
 transition `A[y⁻¹]^∧ →+* A[x⁻¹]^∧` composed with the structural map `R → A[y⁻¹]^∧` equals the
 structural map `R → A[x⁻¹]^∧`; i.e. the corrected transition is a morphism of `R`-algebras. This is
-the `Inv` analogue of `annulusOverlapTransitionInv_comp_algebraMap` and the ring-level reason the
+the `…Inv` analogue of `annulusOverlapTransitionInv_comp_algebraMap` and the ring-level reason the
 per-patch structural morphisms of the corrected model agree on the overlaps. -/
 theorem annulusOverlapInversion_symm_comp_algebraMap :
     (annulusOverlapInversion R I q hI).symm.toRingHom.comp

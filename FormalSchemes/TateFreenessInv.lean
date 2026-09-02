@@ -13,10 +13,10 @@ Tate parameter `q ∈ I`. The `q^ℤ`-period action `tateInvPeriodAction : ℤ �
 (`FormalSchemes.TateActionInv`) sends `n` to the `n`-fold shift `σⁿ` of the **inversion-glued**
 formal Tate chain `T_inv = tateChainInv R I q hq hI` (`FormalSchemes.TateChainInvGlue`).
 
-This file is the `Inv` analogue of `FormalSchemes.TateFreeness` and
+This file is the `…Inv` analogue of `FormalSchemes.TateFreeness` and
 `FormalSchemes.TateFreenessAdjacent` taken together: for `I ≠ ⊤` the action is **free**, i.e.
 `σⁿ = 𝟙 ⇒ n = 0`, equivalently `tateInvPeriodAction` is injective. As in
-`FormalSchemes.TateShiftInv`, `Inv` refers throughout to the **chain** — the one glued by the
+`FormalSchemes.TateShiftInv`, `…Inv` refers throughout to the **chain** — the one glued by the
 𝔾m-inversion — never to the direction of a shift. Nothing in the swap-chain files is touched; the
 two chains coexist until the migration of issue 606 lands in full.
 
@@ -50,7 +50,7 @@ Concretely: `(tateChainInvLRSGlueData …).toGlueData.f i j` and its swap-chain 
 **definitionally equal** — `CategoryTheory.GlueData.ofGlueData'` builds `f` out of `U`, `V` and `f`
 only — so `tateChainInv_range_glueF_forward` could be discharged by `rfl`-transport from
 `tateChain_range_glueF_forward`. It deliberately is not. Routing this file through
-`FormalSchemes.TateFreenessAdjacent` would make the `Inv` subtree depend on files the migration of
+`FormalSchemes.TateFreenessAdjacent` would make the `…Inv` subtree depend on files the migration of
 issue 606 exists in order to retire, and it would rest the argument on a defeq between two large
 glue-datum definitions. The proofs below are therefore self-contained mirrors; the sharing is
 recorded here as a fact about the objects rather than exploited as a proof device.

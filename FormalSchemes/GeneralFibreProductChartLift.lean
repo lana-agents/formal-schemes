@@ -13,7 +13,7 @@ set_option synthInstance.maxHeartbeats 1000000
 two-sided fibre product `X ×_{Spf R} Y` of two affine-charted glued formal schemes `X` (charts
 `Spf(A i)`, `i : JX`) and `Y` (charts `Spf(B j)`, `j : JY`) over the affine adic base `Spf R`, glued
 from the double completed-tensor charts `Spf(A_{p.1} ⊗̂_R B_{p.2})` (`p : JX × JY`), with glue
-inclusions `formalGlueData.ι p`. `FormalSchemes.GeneralFibreProductBothProjectionLeft`/`Right`
+inclusions `formalGlueData.ι p`. `FormalSchemes.GeneralFibreProductBothProjectionLeft`/`…Right`
 build the projections `pr₁ : X ×_{Spf R} Y ⟶ X` and `pr₂ : X ×_{Spf R} Y ⟶ Y` into the exposed
 glued factors.
 

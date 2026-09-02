@@ -15,12 +15,12 @@ nilpotent Tate parameter `q ∈ I`. The inversion-glued formal Tate chain
 the shift automorphism `tateInvShiftIso : T_inv ≅ T_inv` (`FormalSchemes.TateShiftInv`) sends the
 patch `U_n` to `U_{n+1}`.
 
-This file is the `Inv` analogue of `FormalSchemes.TateAction` (and of the single result of
+This file is the `…Inv` analogue of `FormalSchemes.TateAction` (and of the single result of
 `FormalSchemes.TateActionQuotient`): it packages the `q^ℤ`-action on `T_inv` and its defining
 geometric properties. Nothing in the swap-chain files is touched; the two chains coexist until the
 migration of issue 606 lands in full.
 
-As in `FormalSchemes.TateShiftInv`, `Inv` here refers to the **chain** (glued by the 𝔾m-inversion),
+As in `FormalSchemes.TateShiftInv`, `…Inv` here refers to the **chain** (glued by the 𝔾m-inversion),
 never to the direction of a shift.
 
 ## What this file provides
@@ -81,7 +81,7 @@ theorem tateInvShiftAut_inv :
 
 /-- **The `q^ℤ`-period action** of the inversion-glued formal Tate chain: the group homomorphism
 `ℤ → Aut T_inv`, `n ↦ σⁿ`, sending the additive generator to the shift automorphism
-`tateInvShiftAut`. `Inv` analogue of `tatePeriodAction`. -/
+`tateInvShiftAut`. `…Inv` analogue of `tatePeriodAction`. -/
 def tateInvPeriodAction :
     Multiplicative ℤ →* CategoryTheory.Aut (tateChainInv R I q hq hI).toLocallyRingedSpace :=
   zpowersHom _ (tateInvShiftAut R I q hq hI)
@@ -199,7 +199,7 @@ theorem tateInvShift_properlyDiscontinuous (n : ULift.{u} ℤ) (k : ℤ)
 `tateChainInvStructMap : T_inv ⟶ Spf R` is invariant under the `q^ℤ`-period action
 `tateInvPeriodAction`: every power `σⁿ` of the shift automorphism commutes with it
 (`tateInvShiftAut_zpow_comp_structMap`). Consequently it descends through any quotient of `T_inv`
-by the action, in particular through `𝔈_q = T_inv / ⟨σ²⟩`. `Inv` analogue of
+by the action, in particular through `𝔈_q = T_inv / ⟨σ²⟩`. `…Inv` analogue of
 `tateChainStructMap_isActionInvariant`. -/
 theorem tateChainInvStructMap_isActionInvariant :
     IsActionInvariant (tateInvPeriodAction R I q hq hI) (tateChainInvStructMap R I q hq hI) := by

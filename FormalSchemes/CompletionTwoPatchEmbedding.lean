@@ -19,9 +19,9 @@ is injective, let alone a homeomorphism onto that image. This file does, for the
 
 ## The argument
 
-`IsClosedEmbedding` is `IsEmbedding` together with a closed range, and the closed range is already
-available (`isClosed_range_completionTwoPatchToScheme_base`). So the whole content is
-`IsEmbedding`, and it is obtained from
+`Topology.IsClosedEmbedding` is `Topology.IsEmbedding` together with a closed range, and the
+closed range is already available (`isClosed_range_completionTwoPatchToScheme_base`). So the whole
+content is `Topology.IsEmbedding`, and it is obtained from
 `Topology.isEmbedding_of_iSup_eq_top_of_preimage_subset_range` rather than by proving injectivity
 and the inducing property separately. That lemma asks for
 
@@ -53,11 +53,11 @@ immersion **exactly**, as `D(f̂)`.
 
 ## Non-vacuity
 
-`IsClosedEmbedding` of a map out of an empty space is trivially true, and a closed embedding onto
-the whole space says nothing, so two things are recorded. The hypothesis stack is satisfiable, in
-this cluster's usual idiom — gluing `Spec R` to itself along `D(f)`, for arbitrary `K` and `f` —
-and `not_surjective_completionTwoPatchToScheme_base` says the closed subset is **proper** as soon
-as `Spec A` has a prime containing `a` but not `I`.
+`Topology.IsClosedEmbedding` of a map out of an empty space is trivially true, and a closed
+embedding onto the whole space says nothing, so two things are recorded. The hypothesis stack is
+satisfiable, in this cluster's usual idiom — gluing `Spec R` to itself along `D(f)`, for arbitrary
+`K` and `f` — and `not_surjective_completionTwoPatchToScheme_base` says the closed subset is
+**proper** as soon as `Spec A` has a prime containing `a` but not `I`.
 
 That last statement is general rather than an instance on purpose. The concrete geometry in which
 the image is neither `∅` nor everything — `𝔸¹_ℚ` doubled along `D(X)` and completed at the point

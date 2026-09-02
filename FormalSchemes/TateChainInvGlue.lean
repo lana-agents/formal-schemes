@@ -123,7 +123,7 @@ end Finding
 
 /-- The transition `t i j : V(i, j) ⟶ V(j, i)` of the **inversion-glued** Tate chain: the geometric
 𝔾m-inversion chart transition `annulusChartTransitionInvSpf : Spf A{1/x} ≅ Spf A{1/y}` forward
-(`.hom`) and backward (`.inv`), the empty map otherwise. `Inv` analogue of `tateT`. -/
+(`.hom`) and backward (`.inv`), the empty map otherwise. `…Inv` analogue of `tateT`. -/
 def tateTInv (hI : I.FG) (i j : ULift.{u} ℤ) : tateV R I q i j ⟶ tateV R I q j i :=
   if h1 : j.down - i.down = 1 then
     eqToHom (tateV_forward R I q h1) ≫ (annulusChartTransitionInvSpf R I q hI).hom ≫
@@ -230,7 +230,7 @@ set_option maxHeartbeats 1600000 in
 /-- **Abstract criterion for gluing a family of morphisms out of the inversion-glued Tate chain.**
 A family `k i : Spf A ⟶ Y` is compatible with the gluing (i.e. satisfies the obligation of
 `FormalScheme.GlueData.glueMorphisms`) as soon as the `x`- and `y`-charts agree with `k` over the
-𝔾m-inversion chart transition on each adjacent pair. `Inv` analogue of
+𝔾m-inversion chart transition on each adjacent pair. `…Inv` analogue of
 `tateChain_glueMorphisms_compat` (`FormalSchemes.TateShift`). The four-case split is the whole
 content: diagonal via `t_id`, far via initiality of the empty overlap, adjacent via `hf` / `hb`.
 `tateChainInvStructMap` below is the instance at `k = annulusStructMap`, and
