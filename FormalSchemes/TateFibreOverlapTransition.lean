@@ -114,8 +114,8 @@ Two smaller ones, both hit here:
   `isDefEq`. Pin the equation as a local `have … := rfl` at the small `A →ₐ[R] A` level and rewrite
   with that (`hid` below).
 * `refine (Iso.eq_inv_comp _).1 (coprod.hom_ext ?_ ?_)`, the one-liner
-  `tateOverlapChartIso_transition_comm` (`TateXGluedIso.lean:285`) uses, leaves the second summand
-  goal timing out in *synthesize pending MVars*. Split it into two `refine`s.
+  `tateOverlapChartIso_transition_comm` (`FormalSchemes.TateXGluedIso`) uses, leaves the second
+  summand goal timing out in *synthesize pending MVars*. Split it into two `refine`s.
 
 ## References
 
@@ -204,7 +204,7 @@ theorem annulusFibreChartBridgeXY_eq :
 /-! ### The ring-level crux, and its tensored spelling -/
 
 /-- **704's crux in the `AlgHom` spelling.** `annulusOverlapProjX_comp_transitionAlg`
-(`TateXGluedIso.lean:231`) is stated for `RingHom`s; `CompletedTensorProduct.mapSpf` consumes
+(`FormalSchemes.TateXGluedIso`) is stated for `RingHom`s; `CompletedTensorProduct.mapSpf` consumes
 `AlgHom`s, and both projections are already `R`-algebra maps, so the upgrade is pointwise. -/
 theorem annulusOverlapProjXₐ_comp_transitionAlg (hq : q ∈ I) (hI : I.FG) :
     (annulusOverlapProjXₐ R I q hq).comp (tateOverlapTransitionAlg R I q hq hI).toAlgHom =
