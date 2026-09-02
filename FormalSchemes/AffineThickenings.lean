@@ -51,7 +51,7 @@ the statement one is trying to prove.
 
 Asking at every level costs nothing wherever the tree can supply the hypothesis at all:
 `hasAffineThickenings_top` and `hasAffineThickenings_basicOpen` are unconditional, and
-`hasAffineThickenings_rangeOpen_of_range_eq_basicOpenChart` covers precisely the case in which
+`hasAffineThickenings_opensRange_of_range_eq_basicOpenChart` covers precisely the case in which
 `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` already settles the openness half. So the
 hypothesis is not vacuous, and it does not exclude the one case that is known.
 
@@ -86,8 +86,6 @@ Those are the sketch's first two inputs, `Bₙ₊₁ ↠ Bₙ` and `B ↠ B₀`.
 
 * `FormalSpectrum.HasAffineThickenings I U`: every `thickeningOpen I n U` is an affine open of
   `Spec (R ⧸ I ^ (n + 1))`.
-* `FormalSpectrum.rangeOpen`: the image of an open immersion of formal spectra, as an open of
-  `Spf R`.
 * `FormalSpectrum.sectionsPi`: the level-`n` component
   `Γ (U, O_{Spf R}) ⟶ Γ (U, thickeningSheaf I n)`.
 
@@ -100,16 +98,16 @@ Those are the sketch's first two inputs, `Bₙ₊₁ ↠ Bₙ` and `B ↠ B₀`.
 * `FormalSpectrum.HasAffineThickenings.isAffineOpen`: the hypothesis unpacked at one level.
 * `FormalSpectrum.hasAffineThickenings_top`, `FormalSpectrum.hasAffineThickenings_basicOpen`,
   `FormalSpectrum.hasAffineThickenings_of_range_eq_basicOpenChart`,
-  `FormalSpectrum.hasAffineThickenings_rangeOpen_of_range_eq_basicOpenChart`: the hypothesis holds
-  unconditionally on `⊤`, on every basic open, and on the range of any open immersion whose range
-  is that of a basic-open chart.
+  `FormalSpectrum.hasAffineThickenings_opensRange_of_range_eq_basicOpenChart`: the hypothesis
+  holds unconditionally on `⊤`, on every basic open, and on the range of any open immersion whose
+  range is that of a basic-open chart. The range is taken as
+  `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.opensRange`, which
+  `FormalSchemes.OpenImmersionIsoOfRangeEq` already provides at the locally-ringed-space level.
 * `FormalSpectrum.surjective_stepSheafHom_app`, `FormalSpectrum.surjective_sectionsPi_zero`: the
   tower is surjective, and so is the reduction map on sections.
 * `FormalSpectrum.surjective_sectionsPi_zero_top`,
   `FormalSpectrum.surjective_sectionsPi_zero_basicOpen`: the two hypothesis-free instances of that
   surjection.
-* `FormalSpectrum.isOpen_range_base`: the image of an open immersion of formal spectra is open.
-
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.12.
@@ -264,23 +262,7 @@ variable {I}
 
 section OpenImmersion
 
-variable (I)
-variable {B : Type u} [CommRing B] [TopologicalSpace B] (J : Ideal B) [IsAdicRing J]
-
-omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J] in
-/-- The image of an open immersion of formal spectra is an open subset of `Spf R`. -/
-theorem isOpen_range_base (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
-    [h : LocallyRingedSpace.IsOpenImmersion m] : IsOpen (Set.range m.base) :=
-  h.base_open.isOpen_range
-
-/-- The image of an open immersion of formal spectra, as an open of `Spf R`. This is the open
-subset the openness half of `FormalSchemes.AdicCofinalOpenImmersion` is about, and the one
-`FormalSpectrum.isCofinal_map_of_range_eq` shows the cofinality depends on. -/
-def rangeOpen (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
-    [LocallyRingedSpace.IsOpenImmersion m] : Opens (FormalSpectrum I) :=
-  ⟨Set.range m.base, isOpen_range_base I J m⟩
-
-variable {I J}
+variable {B : Type u} [CommRing B] [TopologicalSpace B] {J : Ideal B} [IsAdicRing J]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- An open of `Spf R` that is the range of a basic-open chart has affine thickenings. -/
@@ -299,11 +281,11 @@ omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J] in
 for an open immersion whose range is that of a basic-open chart — for an arbitrary presentation of
 that open. `HasAffineThickenings` holds there too, so the hypothesis this file introduces does not
 exclude the one case the tree can discharge. -/
-theorem hasAffineThickenings_rangeOpen_of_range_eq_basicOpenChart (hI : I.FG) (f : R)
+theorem hasAffineThickenings_opensRange_of_range_eq_basicOpenChart (hI : I.FG) (f : R)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (hrange : Set.range m.base = Set.range (basicOpenChart I f).base) :
-    HasAffineThickenings I (rangeOpen I J m) :=
+    HasAffineThickenings I (LocallyRingedSpace.IsOpenImmersion.opensRange m) :=
   hasAffineThickenings_of_range_eq_basicOpenChart hI f hrange
 
 end OpenImmersion
