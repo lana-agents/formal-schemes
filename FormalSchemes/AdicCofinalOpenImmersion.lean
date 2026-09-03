@@ -119,12 +119,18 @@ because both cut out `U`.
   `FormalSpectrum.isCofinal_map_of_hasAffineThickenings` is the cofinality it and the nilpotence
   half assemble to.
 
-**What is still open is the hypothesis**, and nothing else: whether the range of an arbitrary
-affine open immersion has affine thickenings. That input — that the reduction of the open is an
-affine *scheme*, not merely a quasi-compact spectral space, and that its infinitesimal thickenings
-are affine too — is not currently derivable on this tree from
-`LocallyRingedSpace.IsOpenImmersion` alone, and `FormalSchemes.AffineThickenings` says why the
-level-`0` case does not obviously give the rest.
+**The hypothesis is no longer open.** `FormalSpectrum.hasAffineThickenings_opensRange`
+(`FormalSchemes.AffineThickeningsOpenImmersion`) proves that the range of an arbitrary affine open
+immersion has affine thickenings, with no hypothesis on `I`, on `J` or on the range. So the whole
+of the route above is unconditional, and `FormalSpectrum.isCofinal_map_of_openImmersion` is EGA I
+10.12's statement outright.
+
+The paragraph this replaces said the input *"that the reduction of the open is an affine scheme,
+not merely a quasi-compact spectral space"* was not derivable from
+`LocallyRingedSpace.IsOpenImmersion` alone. It is, and the derivation does not go through the
+reduction: the span that the affineness criterion needs is produced in `B` and pushed forward to
+every level of the tower at once. `FormalSchemes.AffineThickeningsOpenImmersion` has the argument
+and the correction to `FormalSchemes.AffineThickenings`'s account of why it could not work.
 
 ## Main results
 

@@ -110,20 +110,23 @@ conservativity — and both are now closed, neither of them in this file.
   `IsTopFiniteTypeHom.exists_refinement` in this file is the `X`-side and does not do it — it
   keeps `𝒱` fixed.
 
-  What that leaves untouched, and what is genuinely still open, is the statement conservativity
-  used to be reduced to: that an *arbitrary* affine open of `Spf I` is tf-type over `(R, I)`.
-  It is EGA I 10.12's own business rather than 10.13's. Since issue 1207 that statement is
+  What that leaves untouched is the statement conservativity used to be reduced to: that an
+  *arbitrary* affine open of `Spf I` is tf-type over `(R, I)`. It is EGA I 10.12's own business
+  rather than 10.13's. Since issue 1207 that statement is
   `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
   (`FormalSchemes.AffineOpenTopFiniteType`) — built from the basic-open case
   (`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`),
   affine-locality (`IsTopologicallyFiniteType.of_span_awayCompletion`,
-  `FormalSchemes.TopFiniteTypeAffineLocal`, issue 1202) and its cofinality-tolerant form. But it
-  carries one hypothesis this tree cannot yet discharge: that the open immersion presenting the
-  affine open is **adic up to cofinality**, `Ideal.IsCofinal J (I · B)`. The on-the-nose form of
-  that is *false* (`FormalSchemes.AdicOnSections`); the cofinality form is its invariant repair
-  and is what remains. The chart identification, which this bullet used to name as the missing
-  ingredient, is `FormalSpectrum.spfAlgEquivOfComm` (`FormalSchemes.SpfIsoOverBase`) — the same
-  slack the composition law above had to absorb.
+  `FormalSchemes.TopFiniteTypeAffineLocal`, issue 1202) and its cofinality-tolerant form. It
+  carried one hypothesis — that the open immersion presenting the affine open is **adic up to
+  cofinality**, `Ideal.IsCofinal J (I · B)`, the on-the-nose form of which is *false*
+  (`FormalSchemes.AdicOnSections`) — and **that hypothesis is now discharged**:
+  `FormalSpectrum.isCofinal_map_of_openImmersion` and
+  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`
+  (`FormalSchemes.AffineThickeningsOpenImmersion`). So EGA I 10.12's affine case is closed and
+  this bullet no longer names an open question. The chart identification, which this bullet used
+  to name as the missing ingredient before that, is `FormalSpectrum.spfAlgEquivOfComm`
+  (`FormalSchemes.SpfIsoOverBase`) — the same slack the composition law above had to absorb.
 
 So `IsTopFiniteTypeHom` is landed with its neighbourhood basis, its reduction from the affine
 case, EGA I 10.13's composition law, and — elsewhere — its converse. Nothing in *this* file should
