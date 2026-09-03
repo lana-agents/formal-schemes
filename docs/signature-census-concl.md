@@ -165,6 +165,13 @@ Each is a separate row. The elaborated witness for each is in `scripts/census_co
    is `RestrictedPowerSeries.fg_of_presentation` (`FormalSchemes.TopFiniteTypeTrans`) applied to
    the presentation inside the tf-type witness. The general form does not use surjectivity of the
    presentation, which is the whole of the difference. Incomparable modules again.
+
+   *Resolved by row 1544.* The incomparability was not the obstacle it looks like: the shared
+   content of the two is `IsTopologicallyFiniteType.map_eq_of_presentation`
+   (`FormalSchemes.TopFiniteType`), which is upstream of **both**, and each of the two was one
+   `Ideal.FG.map` away from it. The general form now lives beside that lemma as
+   `IsTopologicallyFiniteType.fg_of_presentation`, and the special form cites it. The bucket
+   still has two members and is unchanged in size, class and key; it is now *declared*.
 4. **B31 (duplicate).** `CompletedTensorProduct.idealOfDefinition_fg`
    (`FormalSchemes.AffineFibreProductLRS`) and
    `CompletedTensorAwayInterchange.idealOfDefinition_fg`

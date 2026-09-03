@@ -77,6 +77,17 @@ theorem map_eq_of_presentation {n : ℕ} {ψ : RestrictedPowerSeries R I n →�
   congr 1
   exact (ψ.comp_algebraMap).symm
 
+/-- **The ideal carried by a presentation is finitely generated** when the base ideal is: it is
+the extension `I·A`, by `IsTopologicallyFiniteType.map_eq_of_presentation`, and an extension of a
+finitely generated ideal is finitely generated.
+
+The surjectivity of `ψ` is not used, which is the whole of the difference from
+`AlgebraicGeometry.IsTopologicallyFiniteType.fg` (`FormalSchemes.TopFiniteTypeBasis`), the same
+statement at the presentation a tf-type witness carries. -/
+theorem fg_of_presentation (hI : I.FG) {n : ℕ} {ψ : RestrictedPowerSeries R I n →ₐ[R] A}
+    (hL : (RestrictedPowerSeries.idealOfDefinition R I n).map ψ.toRingHom = L) : L.FG :=
+  map_eq_of_presentation hL ▸ hI.map _
+
 /-- A tf-type algebra whose presentation has adically closed kernel is a complete adic ring
 with ideal of definition `L`: quotients of complete adic rings by closed ideals are complete
 adic rings. In the noetherian setting the closedness hypothesis is automatic (Artin–Rees);

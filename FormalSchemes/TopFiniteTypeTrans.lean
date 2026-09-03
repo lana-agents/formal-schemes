@@ -116,13 +116,10 @@ variable (hI : I.FG) (ψ : RestrictedPowerSeries R I n →ₐ[R] A)
 variable (hL : (idealOfDefinition R I n).map ψ.toRingHom = L)
 
 include hI hL in
-/-- The distinguished ideal of a tf-type algebra is finitely generated. -/
-theorem fg_of_presentation : L.FG := hL ▸ ((hI.map _).map _).map _
-
-include hI hL in
 theorem isAdicComplete_of_presentation :
     IsAdicComplete (idealOfDefinition A L m) (RestrictedPowerSeries A L m) :=
-  (RestrictedPowerSeries.isAdicRing A L m (fg_of_presentation hI ψ hL)).toIsAdicComplete
+  (RestrictedPowerSeries.isAdicRing A L m
+    (IsTopologicallyFiniteType.fg_of_presentation hI hL)).toIsAdicComplete
 
 omit hI in
 include hL in
@@ -308,7 +305,8 @@ theorem presentationHom_surjective (hψ : Function.Surjective ψ) :
         RingHom.ker (AdicCompletion.evalₐ
           (L.map (algebraMap A (MvPolynomial (Fin m) A))) 1).toRingHom :=
       RingHom.mem_ker.mpr hev
-    rwa [AdicCompletion.ker_evalₐ _ ((fg_of_presentation hI ψ hL).map _) 1, pow_one] at hmem
+    rwa [AdicCompletion.ker_evalₐ _
+      ((IsTopologicallyFiniteType.fg_of_presentation hI hL).map _) 1, pow_one] at hmem
   rw [RingHom.coe_comp, Function.comp_apply, Ideal.Quotient.mk_eq_mk_iff_sub_mem, hJ, ht, hofw]
   have hneg := neg_mem hker
   rwa [neg_sub] at hneg
