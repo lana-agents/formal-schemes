@@ -32,10 +32,10 @@ then shrunk over one basic open:
   **identity of `Spf I`** produces `c : S` and `d : R` with
   `Set.range (basicOpenChart K c ≫ t) = Set.range (basicOpenChart I d)` and the image of `x` in
   the left-hand side — that is, a basic open of the chart which is also a basic open of `Spf I`.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange`
-  (`FormalSchemes.AwayBaseChangeTopFiniteType`) makes `A{1/c}^` tf-type over
-  `(S{1/c}^, K{1/c}^)`, and `FormalSpectrum.basicOpenChart_comp_structMap_baseChange`
-  (`FormalSchemes.AwayChartStructMap`) is the square that keeps the factorisation.
+* `IsTopologicallyFiniteType.awayCompletion_baseChange`
+  (`FormalSchemes.AwayBaseChangeTopFiniteType`) makes `A{1/c}^` tf-type over `(S{1/c}^, K{1/c}^)`,
+  and `FormalSpectrum.basicOpenChart_comp_structMap_baseChange` (`FormalSchemes.AwayChartStructMap`)
+  is the square that keeps the factorisation.
 * `FormalSpectrum.map_preimage_basicOpen` (`FormalSchemes.SpfMap`) puts `x` in the shrunk source
   chart: the structural morphism pulls `D(c)` back to `D(c · A)`.
 
@@ -53,13 +53,11 @@ re-presenting the refined target chart on the base ring `R{1/d}^`, which would n
 ring, so that lemma is not on this tree.
 
 **It is not needed, and this file does not prove it.** The refined chart keeps the presentation
-`S{1/c}^` that `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange` already
-delivers, because
+`S{1/c}^` that `IsTopologicallyFiniteType.awayCompletion_baseChange` already delivers, because
 `IsTopFiniteTypeHomOn.isRelativelyTopFiniteType_of_basicOpen` constrains the *range* of a target
-chart and not its presentation — which is exactly what
-`FormalSpectrum.isCofinal_map_of_range_eq` (`FormalSchemes.AdicCofinalOpenImmersion`) bought. So
-no isomorphism of formal spectra is used here at all, only a range equality, and
-`FormalSpectrum.exists_basicOpenChart_inter_iso` is never called.
+chart and not its presentation — which is exactly what `FormalSpectrum.isCofinal_map_of_range_eq`
+(`FormalSchemes.AdicCofinalOpenImmersion`) bought. So no isomorphism of formal spectra is used here
+at all, only a range equality, and `FormalSpectrum.exists_basicOpenChart_inter_iso` is never called.
 
 ## What is *not* proved
 
@@ -170,10 +168,9 @@ The three ingredients, in the order they are used:
 `FormalSpectrum.exists_basicOpenChart_le_affine_inter` (`FormalSchemes.TwoChartBasicOpen`) for the
 common basic open — the second morphism handed to it is the identity, which is what makes the
 resulting open basic in `Spf I` rather than merely in the chart;
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange`
-(`FormalSchemes.AwayBaseChangeTopFiniteType`) for the shrunk algebra; and
-`FormalSpectrum.basicOpenChart_comp_structMap_baseChange` (`FormalSchemes.AwayChartStructMap`) for
-the square. The point stays in the shrunk source chart by
+`IsTopologicallyFiniteType.awayCompletion_baseChange` (`FormalSchemes.AwayBaseChangeTopFiniteType`)
+for the shrunk algebra; and `FormalSpectrum.basicOpenChart_comp_structMap_baseChange`
+(`FormalSchemes.AwayChartStructMap`) for the square. The point stays in the shrunk source chart by
 `FormalSpectrum.map_preimage_basicOpen` (`FormalSchemes.SpfMap`), which computes the preimage of
 `D(c)` under the structural morphism. -/
 theorem nonempty_basicTargetChart {f : X ⟶ FormalScheme.Spf I} (hI : I.FG)
@@ -489,8 +486,8 @@ every `g : R` and with no hypothesis beyond `I.FG`.
 Every hypothesis is discharged at a named object, so this is an application and not a restatement:
 `AlgebraicGeometry.FormalScheme.isRelativelyTopFiniteType_basicOpenChart`
 (`FormalSchemes.ConservativityTopFiniteType`) supplies the second factor, and it is *not*
-`AlgebraicGeometry.IsTopologicallyFiniteType.structHom` of anything on the nose — recognising it as
-one is what `FormalSpectrum.structMap_eq_generalCofinalSpfIso_comp` does, and it fails `rfl` — so
+`IsTopologicallyFiniteType.structHom` of anything on the nose — recognising it as one is what
+`FormalSpectrum.structMap_eq_generalCofinalSpfIso_comp` does, and it fails `rfl` — so
 `AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType.comp_structHom`
 (`FormalSchemes.RelativeTopFiniteTypeTrans`) does not apply to it. -/
 theorem isRelativelyTopFiniteType_comp_basicOpenChart (hI : I.FG) (g : R) {W : FormalScheme.{u}} :

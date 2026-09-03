@@ -82,8 +82,8 @@ the extension `I·A`, by `IsTopologicallyFiniteType.map_eq_of_presentation`, and
 finitely generated ideal is finitely generated.
 
 The surjectivity of `ψ` is not used, which is the whole of the difference from
-`AlgebraicGeometry.IsTopologicallyFiniteType.fg` (`FormalSchemes.TopFiniteTypeBasis`), the same
-statement at the presentation a tf-type witness carries. -/
+`IsTopologicallyFiniteType.fg` (`FormalSchemes.TopFiniteTypeBasis`), the same statement at the
+presentation a tf-type witness carries. -/
 theorem fg_of_presentation (hI : I.FG) {n : ℕ} {ψ : RestrictedPowerSeries R I n →ₐ[R] A}
     (hL : (RestrictedPowerSeries.idealOfDefinition R I n).map ψ.toRingHom = L) : L.FG :=
   map_eq_of_presentation hL ▸ hI.map _

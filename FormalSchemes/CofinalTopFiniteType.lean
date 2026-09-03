@@ -50,7 +50,7 @@ fixes the *base* ideal it extends. In particular no property of the completion b
   second half of what a composite needs.
 * `IsTopologicallyFiniteType.pow` and `IsTopologicallyFiniteType.self_pow`: the transport applied
   to a positive power of the base ideal. The second is a closed statement about an arbitrary
-  complete adic ring, obtained from `AlgebraicGeometry.IsTopologicallyFiniteType.self`.
+  complete adic ring, obtained from `IsTopologicallyFiniteType.self`.
 
 ## References
 
@@ -140,20 +140,14 @@ theorem IsTopologicallyFiniteType.pow (hA : IsTopologicallyFiniteType R I A L) {
   hA.ofCofinal (Ideal.IsCofinal.pow I hk)
 
 /-- **A complete adic ring is topologically of finite type over itself against any positive power
-of its ideal of definition.** `AlgebraicGeometry.IsTopologicallyFiniteType.self` gives the case
-`k = 1`; the general case is `IsTopologicallyFiniteType.pow`, and the extension
-`Ideal.map (algebraMap R R)` collapses because the structural map is the identity.
-
-Note the namespace: the predicate and most of its API are root-level — including
-`IsTopologicallyFiniteType.trans` (`FormalSchemes.TopFiniteTypeTrans`) and everything added here —
-but `AlgebraicGeometry.IsTopologicallyFiniteType.self` (`FormalSchemes.AwayTopFiniteType`) and
-`AlgebraicGeometry.IsTopologicallyFiniteType.structHom` sit inside `AlgebraicGeometry`. The
-qualifications in this file are therefore not uniform, and that is not a typo.
+of its ideal of definition.** `IsTopologicallyFiniteType.self` gives the case `k = 1`; the general
+case is `IsTopologicallyFiniteType.pow`, and the extension `Ideal.map (algebraMap R R)` collapses
+because the structural map is the identity.
 
 An application rather than a restatement: the hypothesis mentions `I` and the conclusion mentions
 `I ^ k`, so the two sides are not the same statement and the proof genuinely runs the transport
 through a change of presentation. -/
 theorem IsTopologicallyFiniteType.self_pow [IsAdicComplete I R] {k : ℕ} (hk : k ≠ 0) :
     IsTopologicallyFiniteType R (I ^ k) R (I ^ k) := by
-  have h := (AlgebraicGeometry.IsTopologicallyFiniteType.self (I := I)).pow hk
+  have h := (IsTopologicallyFiniteType.self (I := I)).pow hk
   rwa [Algebra.algebraMap_self, Ideal.map_id] at h

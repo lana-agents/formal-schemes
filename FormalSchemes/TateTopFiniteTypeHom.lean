@@ -26,13 +26,12 @@ is a hypothesis of the Tate statement already, so nothing new is assumed.
 Why this is worth a declaration rather than a remark: a predicate stated as an existential over
 covers can be satisfied vacuously, and this tree's practice is to land non-vacuity as a theorem.
 The three witnesses now on the tree exercise different things and none subsumes another.
-`AlgebraicGeometry.IsTopologicallyFiniteType.isTopFiniteTypeHom` is the affine local model, with
-one chart on each side. `AlgebraicGeometry.FormalScheme.isTopFiniteTypeHom_id` has a genuinely
-multi-chart cover on **both** sides as soon as the formal scheme it is handed is not affine, but
-its finiteness data is the identity presentation
-(`AlgebraicGeometry.IsTopologicallyFiniteType.self`), so it says nothing about the tf-type
-condition. This one has a **non-affine source** and finiteness data that is not an identity — and
-a one-chart target, since it comes through the base-affine reduction, which uses
+`IsTopologicallyFiniteType.isTopFiniteTypeHom` is the affine local model, with one chart on each
+side. `AlgebraicGeometry.FormalScheme.isTopFiniteTypeHom_id` has a genuinely multi-chart cover on
+**both** sides as soon as the formal scheme it is handed is not affine, but its finiteness data is
+the identity presentation (`IsTopologicallyFiniteType.self`), so it says nothing about the tf-type
+condition. This one has a **non-affine source** and finiteness data that is not an identity — and a
+one-chart target, since it comes through the base-affine reduction, which uses
 `AlgebraicGeometry.FormalScheme.OpenCover.self`.
 
 A witness with a multi-chart target cover **and** non-identity finiteness data was for a long time

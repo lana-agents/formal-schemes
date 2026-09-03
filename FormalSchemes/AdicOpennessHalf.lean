@@ -77,7 +77,7 @@ the range of a basic-open chart; the general case is carried as a hypothesis thr
 no hypothesis on `I`, `J` or the range. So every theorem below has an unconditional companion
 there: `FormalSpectrum.le_radical_map_of_openImmersion`,
 `FormalSpectrum.isCofinal_map_of_openImmersion` — EGA I 10.12 — and
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`.
+`IsTopologicallyFiniteType.of_openImmersion`.
 
 The route that discharges it is *not* the one the paragraph replaced here expected. It does not go
 via "the reduction is affine, hence so is every nilpotent thickening", which would be Serre's
@@ -114,13 +114,12 @@ it records to `FormalSchemes.AffineThickenings`'s account.
 * `FormalSpectrum.le_radical_map_of_range_eq_basicOpenChart`: the basic-open case, which
   `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` already knew by a different route.
 
-  Both of these, and `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_univ`
-  below, are special cases of the unconditional forms in
-  `FormalSchemes.AffineThickeningsOpenImmersion`; they are kept because they are upstream of it.
-  Each says so in its own docstring.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings`,
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_univ`: conservativity's
-  affine step, under the hypothesis and unconditionally-when-onto.
+  Both of these, and `IsTopologicallyFiniteType.of_openImmersion_range_eq_univ` below, are special
+  cases of the unconditional forms in `FormalSchemes.AffineThickeningsOpenImmersion`; they are kept
+  because they are upstream of it. Each says so in its own docstring.
+* `IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings`,
+  `IsTopologicallyFiniteType.of_openImmersion_range_eq_univ`: conservativity's affine step, under
+  the hypothesis and unconditionally-when-onto.
 * `FormalSpectrum.le_radical_pow_of_range_eq_univ`: non-vacuity, `I ≤ √(I ^ 2)` read off a
   presentation of `Spf R` at `I ^ 2`.
 
@@ -563,10 +562,10 @@ variable [Algebra R B]
 `Spf I` presented by an open immersion whose range has affine thickenings is topologically of
 finite type over `(R, I)`.
 
-This is `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_le_radical` with its
-hypothesis discharged by `FormalSpectrum.le_radical_map_of_hasAffineThickenings`. -/
-theorem IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings (hI : I.FG) (hJ : J.FG)
-    (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+This is `IsTopologicallyFiniteType.of_openImmersion_of_le_radical` with its hypothesis discharged by
+`FormalSpectrum.le_radical_map_of_hasAffineThickenings`. -/
+theorem _root_.IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings (hI : I.FG)
+    (hJ : J.FG) (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (halg : algebraMap R B = globalSectionsMap I J m)
     (hU : HasAffineThickenings I (LocallyRingedSpace.IsOpenImmersion.opensRange m)) :
@@ -576,10 +575,10 @@ theorem IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings (hI :
 
 /-- **Unconditionally, for an open immersion that is onto.**
 
-**Now a special case** of `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`
+**Now a special case** of `IsTopologicallyFiniteType.of_openImmersion`
 (`FormalSchemes.AffineThickeningsOpenImmersion`), which does not use `hrange`. Kept because it is
 upstream of that file and cannot cite it. -/
-theorem IsTopologicallyFiniteType.of_openImmersion_range_eq_univ (hI : I.FG) (hJ : J.FG)
+theorem _root_.IsTopologicallyFiniteType.of_openImmersion_range_eq_univ (hI : I.FG) (hJ : J.FG)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (halg : algebraMap R B = globalSectionsMap I J m)

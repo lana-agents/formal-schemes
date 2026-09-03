@@ -36,9 +36,9 @@ open cover of a locally tf-type formal scheme can be refined to a tf-type affine
 Refining inside an affine chart `Spf L` lands on a **basic open** `D(g)`, whose chart ring is the
 completed localization `L{1/g}`. So the statement was out of reach until issue 807 proved that a
 basic open of a tf-type formal affine is again tf-type
-(`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`,
-`FormalSchemes.AwayTopFiniteType`). Everything else here is the proof of
-`exists_affineChart_subset` run again with that extra fact carried along.
+(`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`). Everything else
+here is the proof of `FormalScheme.exists_affineChart_subset` run again with that extra fact
+carried along.
 
 Note the finite generation hypothesis `hI : I.FG` on the base ideal: it is what makes `L` finitely
 generated (`L = I·A` for a tf-type `A`) and it is a hypothesis of
@@ -106,7 +106,7 @@ it is the extension `I·A`.
 This is `IsTopologicallyFiniteType.fg_of_presentation` (`FormalSchemes.TopFiniteType`) at the
 presentation the predicate carries. That form is the general one — it takes the presentation
 directly and never uses its surjectivity, which is the only hypothesis discarded here. -/
-theorem _root_.AlgebraicGeometry.IsTopologicallyFiniteType.fg {A : Type u} [CommRing A]
+theorem _root_.IsTopologicallyFiniteType.fg {A : Type u} [CommRing A]
     [Algebra R A] {L : Ideal A} (h : IsTopologicallyFiniteType R I A L) (hI : I.FG) : L.FG := by
   obtain ⟨n, ψ, _, hL⟩ := h
   exact _root_.IsTopologicallyFiniteType.fg_of_presentation hI hL

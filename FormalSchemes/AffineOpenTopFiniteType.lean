@@ -15,7 +15,7 @@ isolated below.
 > of an affine open of `Spf I`. If `J` is cofinal with `I · B`, then `B` is topologically of
 > finite type over `(R, I)`.
 
-That is `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`.
+That is `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`.
 
 ## What each ingredient does
 
@@ -29,9 +29,9 @@ The proof is an application of three landed results and nothing else.
   `R`-linear, so `IsTopologicallyFiniteType.ofAlgEquiv` can carry
   `IsTopologicallyFiniteType.awayCompletion_base` — the statement that `R{1/f}^` is tf-type over
   `(R, I)` — from the ambient chart to the chart of `B`.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal`
-  (`FormalSchemes.CofinalTopFiniteTypeAffineLocal`) assembles `B` from those charts. Its
-  cofinality tolerance is what the hypothesis `Ideal.IsCofinal J (I · B)` feeds.
+* `IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal`
+  (`FormalSchemes.CofinalTopFiniteTypeAffineLocal`) assembles `B` from those charts. Its cofinality
+  tolerance is what the hypothesis `Ideal.IsCofinal J (I · B)` feeds.
 
 No quasi-compactness of the open appears, and none is needed: the charts are collected into a set
 `s` of *all* elements of `B` whose chart is tf-type, and `RingHom.OfLocalizationSpanTarget`
@@ -43,10 +43,10 @@ performs the reduction to a finite subset inside `of_span_awayCompletion`.
 cofinality**. It is now a *theorem* —
 `FormalSpectrum.isCofinal_map_of_openImmersion` (`FormalSchemes.AffineThickeningsOpenImmersion`),
 under `I.FG` and `J.FG` and nothing else, whence
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion` is this file's theorem with the
-hypothesis gone. It remains a hypothesis *here*, and the reasons below are why it had to be one
-rather than an oversight; they are still worth reading, because the first of them is a standing
-refutation of the statement one is tempted to prove instead:
+`IsTopologicallyFiniteType.of_openImmersion` is this file's theorem with the hypothesis gone. It
+remains a hypothesis *here*, and the reasons below are why it had to be one rather than an
+oversight; they are still worth reading, because the first of them is a standing refutation of the
+statement one is tempted to prove instead:
 
 * Its on-the-nose form `I · B ≤ J` — adicity of an open immersion on global sections — is
   **false**. `FormalSchemes.AdicOnSections` records the refutation (issue 460): `IsAdicRing J`
@@ -73,8 +73,8 @@ formal spectra, so `FormalSpectrum.isCofinal_map_of_le_radical` reduces the hypo
 the single containment `J ≤ √(I · B)`; and
 `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` discharges it outright when the open is
 basic, which is what
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen` consumes. The
-general affine open is settled by `FormalSchemes.AffineThickeningsOpenImmersion`, through
+`IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen` consumes. The general affine open is
+settled by `FormalSchemes.AffineThickeningsOpenImmersion`, through
 `FormalSpectrum.hasAffineThickenings_opensRange` and the openness half
 `FormalSpectrum.le_radical_map_of_hasAffineThickenings` of `FormalSchemes.AdicOpennessHalf`.
 
@@ -82,12 +82,10 @@ general affine open is settled by `FormalSchemes.AffineThickeningsOpenImmersion`
 
 * `FormalSpectrum.sup_eq_top_of_forall_exists_mem_basicOpen`: a family of basic opens covering
   `Spf J`, read as an ideal-theoretic statement in `B`.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`: **the affine open
-  is tf-type.**
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_basicOpenChart`: non-vacuity — the hypotheses
-  are simultaneously satisfiable at a basic-open chart of `Spf I`, where the cofinality hypothesis
-  is an equality and the conclusion is `IsTopologicallyFiniteType.awayCompletion_base` reached by
-  the covering route.
+* `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`: **the affine open is tf-type.**
+* `IsTopologicallyFiniteType.of_basicOpenChart`: non-vacuity — the hypotheses are simultaneously
+  satisfiable at a basic-open chart of `Spf I`, where the cofinality hypothesis is an equality and
+  the conclusion is `IsTopologicallyFiniteType.awayCompletion_base` reached by the covering route.
 
 ## References
 
@@ -108,8 +106,8 @@ some `g ∈ s`, then `s` together with `J` generates the unit ideal of `B`.
 Passing to `B ⧸ J` turns the covering statement into `Ideal.span (s mod J) = ⊤`
 (`PrimeSpectrum.iSup_basicOpen_eq_top_iff`), and `Ideal.comap_map_of_surjective` brings it back
 up, adding exactly the kernel `J`. This is the converse of the reading of `Ideal.span s ⊔ L = ⊤`
-that `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`'s docstring gives, and
-it is what lets a geometric cover discharge that theorem's hypothesis. -/
+that `IsTopologicallyFiniteType.of_span_awayCompletion`'s docstring gives, and it is what lets a
+geometric cover discharge that theorem's hypothesis. -/
 theorem sup_eq_top_of_forall_exists_mem_basicOpen {B : Type u} [CommRing B] (J : Ideal B)
     (s : Set B) (h : ∀ x : FormalSpectrum J, ∃ g ∈ s, x ∈ basicOpen J g) :
     Ideal.span s ⊔ J = ⊤ := by
@@ -151,7 +149,7 @@ Every point of `Spf J` is covered by a basic open of `Spf J` that is simultaneou
 of `Spf I`; over such a chart the two presentations are isomorphic as `R`-algebras, so the chart
 inherits tf-type from `IsTopologicallyFiniteType.awayCompletion_base`, and affine-locality
 assembles `B`. -/
-theorem IsTopologicallyFiniteType.of_openImmersion_of_isCofinal (hI : I.FG)
+theorem _root_.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal (hI : I.FG)
     (hJ : J.FG) (m : FormalSpectrum.locallyRingedSpaceObj J ⟶
       FormalSpectrum.locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
@@ -200,20 +198,20 @@ theorem IsTopologicallyFiniteType.of_openImmersion_of_isCofinal (hI : I.FG)
     fun g hg => hg
 
 /-- **Non-vacuity.** The hypotheses of
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` are simultaneously
+`IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` are simultaneously
 satisfiable at a basic-open chart `Spf R{1/f}^ ⟶ Spf I`, which is an open immersion
 (`FormalSpectrum.isOpenImmersion_basicOpenChart`) whose ideal of definition is on the nose the
 extension of `I` (`FormalSpectrum.map_algebraMap_awayCompletion`), so the cofinality hypothesis is
 satisfied by reflexivity.
 
 This is an application, not a restatement. Its conclusion agrees with
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_base`
-(`FormalSchemes.AwayTopFiniteType`), which is proved by an entirely different route — the explicit
-presentation `awayEval` with one extra variable — whereas the proof here covers `D(f)` by basic
-opens of itself and reassembles. It is not closed by `rfl`: the two sides are the same proposition
-reached through `RingHom.finiteType_ofLocalizationSpanTarget`, and the covering is by the whole
-set `{g | …}` rather than by `{1}`. -/
-theorem IsTopologicallyFiniteType.of_basicOpenChart (hI : I.FG) (f : R) :
+`IsTopologicallyFiniteType.awayCompletion_base` (`FormalSchemes.AwayTopFiniteType`), which is proved
+by an entirely different route — the explicit presentation `awayEval` with one extra variable —
+whereas the proof here covers `D(f)` by basic opens of itself and reassembles. It is not closed by
+`rfl`: the two sides are the same proposition reached through
+`RingHom.finiteType_ofLocalizationSpanTarget`, and the covering is by the whole set `{g | …}` rather
+than by `{1}`. -/
+theorem _root_.IsTopologicallyFiniteType.of_basicOpenChart (hI : I.FG) (f : R) :
     IsTopologicallyFiniteType R I (FormalSpectrum.awayCompletion I f)
       (I.map (algebraMap R (FormalSpectrum.awayCompletion I f))) := by
   haveI := FormalSpectrum.isAdicRing_awayCompletionIdeal I f hI

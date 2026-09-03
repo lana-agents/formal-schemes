@@ -282,6 +282,9 @@ Tree-wide it moves **14 distinct tokens over 31 occurrences** out of `UNRESOLVED
 * **Two dead citations** — a declaration that does not exist:
   `AlgebraicGeometry.IsTopologicallyFiniteType` (it is `IsTopologicallyFiniteType`, at the root)
   and `CategoryTheory.Limits.Multicoequalizer` (Mathlib renamed the object to `multicoequalizer`).
+  Issue **1554** has since moved the twenty-nine lemmas that populated the first of those two
+  namespaces to the root as well, so that prefix now names nothing at all and `open ... in` fails
+  on it outright. The measurement below is the one taken when it still resolved.
 
 So the pass rate is 20 of 31 occurrences right and **11 wrong**, and two of the eleven are dead
 citations of exactly the kind this audit exists to catch: `open ... in` succeeds for both, because a

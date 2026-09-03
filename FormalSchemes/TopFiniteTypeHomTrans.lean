@@ -662,12 +662,11 @@ theorem IsTopFiniteTypeHom.comp_chartMap {W : FormalScheme.{u}} (𝒰 : OpenCove
 the general predicate at both factors.
 
 The minimal non-vacuity witness for the composition law: both factors are tf-type morphisms by
-`AlgebraicGeometry.IsTopologicallyFiniteType.isTopFiniteTypeHom`
-(`FormalSchemes.TopFiniteTypeHom`), and `trans` composes them. It is an application and not a
-restatement — `AlgebraicGeometry.IsTopologicallyFiniteType.structHom_trans`
-(`FormalSchemes.RelativeTopFiniteTypeTrans`) identifies the composite with the structural morphism
-of the composed algebra, but that identification is not what is used here and the covers the two
-sides are witnessed against are different. -/
+`IsTopologicallyFiniteType.isTopFiniteTypeHom` (`FormalSchemes.TopFiniteTypeHom`), and `trans`
+composes them. It is an application and not a restatement —
+`IsTopologicallyFiniteType.structHom_trans` (`FormalSchemes.RelativeTopFiniteTypeTrans`) identifies
+the composite with the structural morphism of the composed algebra, but that identification is not
+what is used here and the covers the two sides are witnessed against are different. -/
 theorem isTopFiniteTypeHom_structHom_comp {S : Type u} [CommRing S] [TopologicalSpace S]
     {K : Ideal S} [IsAdicRing K] (hK : K.FG)
     {B : Type u} [CommRing B] [TopologicalSpace B] [Algebra S B] {M : Ideal B} [IsAdicRing M]

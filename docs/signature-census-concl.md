@@ -161,9 +161,9 @@ Each is a separate row. The elaborated witness for each is in `scripts/census_co
    `IsPrecomplete.of_isCofinal` (`FormalSchemes.CofinalAdicRing`). The two modules are
    incomparable — neither imports the other — and the general form is additionally
    polymorphic in the module's universe where the special one is not.
-3. **B63.** `AlgebraicGeometry.IsTopologicallyFiniteType.fg` (`FormalSchemes.TopFiniteTypeBasis`)
-   is `RestrictedPowerSeries.fg_of_presentation` (`FormalSchemes.TopFiniteTypeTrans`) applied to
-   the presentation inside the tf-type witness. The general form does not use surjectivity of the
+3. **B63.** `IsTopologicallyFiniteType.fg` (`FormalSchemes.TopFiniteTypeBasis`) is
+   `RestrictedPowerSeries.fg_of_presentation` (`FormalSchemes.TopFiniteTypeTrans`) applied to the
+   presentation inside the tf-type witness. The general form does not use surjectivity of the
    presentation, which is the whole of the difference. Incomparable modules again.
 
    *Resolved by row 1544.* The incomparability was not the obstacle it looks like: the shared
@@ -172,6 +172,10 @@ Each is a separate row. The elaborated witness for each is in `scripts/census_co
    `Ideal.FG.map` away from it. The general form now lives beside that lemma as
    `IsTopologicallyFiniteType.fg_of_presentation`, and the special form cites it. The bucket
    still has two members and is unchanged in size, class and key; it is now *declared*.
+
+   Row **1554** has since moved the whole `IsTopologicallyFiniteType` API to the root namespace,
+   so the special form's spelling above is one namespace shorter than the census read it. Nothing
+   else about this finding moves: a rename changes no conclusion, hence no bucket.
 4. **B31 (duplicate).** `CompletedTensorProduct.idealOfDefinition_fg`
    (`FormalSchemes.AffineFibreProductLRS`) and
    `CompletedTensorAwayInterchange.idealOfDefinition_fg`
@@ -191,16 +195,15 @@ Each is a separate row. The elaborated witness for each is in `scripts/census_co
 6. **B09 / B13 / B17, one cluster, and a row is already open on it.** Three of PR #519's four
    unconditional results — `FormalSpectrum.le_radical_map_of_openImmersion`,
    `FormalSpectrum.isCofinal_map_of_openImmersion` and
-   `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`
-   (`FormalSchemes.AffineThickeningsOpenImmersion`) — strictly subsume **five** declarations that
-   were already on the tree, listed under those three buckets. All five live *upstream* of the
-   file that subsumes them, so none can cite it; the remedy is a note on each, not a deletion.
-   Filed as row **1547** by #519's reviewer before this document was re-measured, so **no new row
-   here** — it is counted in the tally and named in the findings because a census that silently
-   omitted its largest S cluster would be wrong, not because it is unfiled. The five are
-   `le_radical_map_of_range_eq_basicOpenChart`, `le_radical_map_of_range_eq_univ`,
-   `isCofinal_map_of_range_eq_basicOpenChart`, `of_openImmersion_range_eq_univ` and
-   `of_openImmersion_range_eq_basicOpen`.
+   `IsTopologicallyFiniteType.of_openImmersion` (`FormalSchemes.AffineThickeningsOpenImmersion`) —
+   strictly subsume **five** declarations that were already on the tree, listed under those three
+   buckets. All five live *upstream* of the file that subsumes them, so none can cite it; the remedy
+   is a note on each, not a deletion. Filed as row **1547** by #519's reviewer before this document
+   was re-measured, so **no new row here** — it is counted in the tally and named in the findings
+   because a census that silently omitted its largest S cluster would be wrong, not because it is
+   unfiled. The five are `le_radical_map_of_range_eq_basicOpenChart`,
+   `le_radical_map_of_range_eq_univ`, `isCofinal_map_of_range_eq_basicOpenChart`,
+   `of_openImmersion_range_eq_univ` and `of_openImmersion_range_eq_basicOpen`.
 
    The fourth unconditional result, `FormalSpectrum.hasAffineThickenings_opensRange`, subsumes
    **nothing**, and B47 — where it meets

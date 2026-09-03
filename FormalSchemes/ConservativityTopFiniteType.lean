@@ -15,11 +15,11 @@ is the converse at `Y = FormalScheme.Spf I`, and this file is its assembly: the 
 "every chart of the target cover is adic up to cofinality" to "the two notions agree".
 
 The algebra was already there —
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
-(`FormalSchemes.AffineOpenTopFiniteType`) makes the ring of a target chart tf-type over `(R, I)`,
-`IsTopologicallyFiniteType.trans` (`FormalSchemes.TopFiniteTypeTrans`) stacks the chart algebra on
-top of it, and `IsTopologicallyFiniteType.ofCofinal` (`FormalSchemes.CofinalTopFiniteType`) aligns
-the two base ideals. What was missing is **geometric**, and is the first result below.
+`IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` (`FormalSchemes.AffineOpenTopFiniteType`)
+makes the ring of a target chart tf-type over `(R, I)`, `IsTopologicallyFiniteType.trans`
+(`FormalSchemes.TopFiniteTypeTrans`) stacks the chart algebra on top of it, and
+`IsTopologicallyFiniteType.ofCofinal` (`FormalSchemes.CofinalTopFiniteType`) aligns the two base
+ideals. What was missing is **geometric**, and is the first result below.
 
 ## The geometric step
 
@@ -75,8 +75,7 @@ The refinement does not go through
 each target chart against the identity of `Spf I` with
 `FormalSpectrum.exists_basicOpenChart_le_affine_inter` (`FormalSchemes.TwoChartBasicOpen`) and
 carries the source chart along by `FormalSpectrum.map_preimage_basicOpen` and
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange`
-(`FormalSchemes.AwayBaseChangeTopFiniteType`).
+`IsTopologicallyFiniteType.awayCompletion_baseChange` (`FormalSchemes.AwayBaseChangeTopFiniteType`).
 
 `IsAdicOpenImmersionProperty I` itself — issue 1218's goal 2, EGA I 10.12 — is **not** settled by
 any of this and remains open.
@@ -203,7 +202,7 @@ the very cover `𝒰`, unrefined.
 Per chart `j` of `𝒰` the witness supplies a base `(S, K)`, an algebra `A` tf-type over it, and a
 factorisation through the target chart `t = e'.inv ≫ 𝒱.map i`. The proof runs four steps:
 
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
+* `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
   (`FormalSchemes.AffineOpenTopFiniteType`) makes `S` tf-type over `(R, I)`, with ideal `I · S`;
 * `IsTopologicallyFiniteType.ofCofinal` (`FormalSchemes.CofinalTopFiniteType`) moves `A` from the
   base ideal `K` to the cofinal `I · S`, replacing `L` by `(I · S) · A`;
@@ -369,10 +368,10 @@ theorem isRelativelyTopFiniteType_of_isTopFiniteTypeHomOn_self {X : FormalScheme
 
 /-- **An open immersion of formal spectra with basic range is relatively tf-type, as the morphism
 it is.** Not merely: its ring is tf-type over `(R, I)`, which is
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`
+`IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`
 (`FormalSchemes.AdicCofinalOpenImmersion`) and says nothing about `m`. The content added here is
-that `m` *itself* factors as the comparison isomorphism followed by a structural morphism, which
-is `FormalSpectrum.structMap_eq_generalCofinalSpfIso_comp`.
+that `m` *itself* factors as the comparison isomorphism followed by a structural morphism, which is
+`FormalSpectrum.structMap_eq_generalCofinalSpfIso_comp`.
 
 That factorisation is not definitional — `m` is an arbitrary morphism of locally ringed spaces and
 the right-hand side is built from `algebraMap R B` — so this is an application of the geometric

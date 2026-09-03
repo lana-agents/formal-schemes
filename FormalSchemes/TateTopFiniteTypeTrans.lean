@@ -69,7 +69,7 @@ variable (R₀ : Type u) [CommRing R₀] (I₀ : Ideal R₀) (n : ℕ)
 /-- The polydisc's ideal of definition is finitely generated when the base ideal is: it is the
 extension `I₀·R₀{X₁, …, Xₙ}`. -/
 theorem idealOfDefinition_fg (hI₀ : I₀.FG) : (idealOfDefinition R₀ I₀ n).FG :=
-  AlgebraicGeometry.IsTopologicallyFiniteType.fg (isTopologicallyFiniteType R₀ I₀ n) hI₀
+  IsTopologicallyFiniteType.fg (isTopologicallyFiniteType R₀ I₀ n) hI₀
 
 variable {R₀ I₀}
 
