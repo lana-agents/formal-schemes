@@ -6,7 +6,113 @@ set_option linter.style.header false
 /-!
 # The openness half of adicity, over an open whose thickenings are affine
 
-PLACEHOLDER DOCSTRING
+`FormalSchemes.AdicCofinalOpenImmersion` splits the adicity of an affine open immersion of formal
+spectra into two containments and settles one of them. For an open immersion
+`m : Spf J ⟶ Spf I` with `algebraMap R B = globalSectionsMap I J m`:
+
+* `I · B ≤ √J` — the **nilpotence** half — is `FormalSpectrum.map_le_radical_of_hom`,
+  unconditional, for an arbitrary morphism;
+* `J ≤ √(I · B)` — the **openness** half — was open in general, and is what this file proves,
+  under one hypothesis: that the infinitesimal thickenings of the range of `m` are affine opens
+  of the thickenings of `Spf R` (`FormalSpectrum.HasAffineThickenings`,
+  `FormalSchemes.AffineThickenings`).
+
+That was the last unformalised step of the sketch recorded in
+`FormalSchemes.AdicCofinalOpenImmersion`'s module docstring — *"`√(ker (B ↠ B₀)) = √J` because
+both cut out `U`"* — whose earlier steps are `FormalSchemes.AffineThickenings`,
+`FormalSchemes.ThickeningTowerKernel` and `FormalSpectrum.ker_sectionsPi_zero`
+(`FormalSchemes.TowerLimitKernel`). **It does not prove that the hypothesis holds at an arbitrary
+affine open immersion**; that question is `FormalSchemes.AffineThickenings`'s and is untouched
+here. See "What is still open" below.
+
+## The argument
+
+Write `U = Set.range m.base`, an open of `Spf R`, and `Γ (U, O_{Spf R})` for its sections. The
+statement to prove is an equality of closed subsets of `Spec B`, `V (I · B) = V (J)`, of which one
+inclusion is the nilpotence half. The other is proved by identifying **both** sets with the points
+of `U`.
+
+1. **Every point of `U` names a prime of the sections ring.** The stalk of `O_{Spf R}` at `x` is
+   local, so `FormalSpectrum.sectionsPrime` — the contraction of its maximal ideal along the germ
+   map — is a prime of `Γ (U, O_{Spf R})`, and a section lies in it exactly when its germ at `x`
+   is not a unit.
+
+2. **Over an affine reduction those are all of them.** Invertibility of a germ of `O_{Spf R}` is
+   decided at level `0` of the tower (`FormalSpectrum.isUnit_of_isUnit_stalkProj`), level `0` is
+   the structure sheaf of `Spec (R ⧸ I)`, and over an affine open a scheme's stalk is the
+   localization of its sections at `IsAffineOpen.primeIdealOf` — a bijection between the points
+   of the open and the primes of its sections. So the primes of `Γ (U, O_{Spf R})` containing the
+   kernel of the reduction map are exactly the `FormalSpectrum.sectionsPrime`s
+   (`FormalSpectrum.exists_mem_eq_sectionsPrime`). This is the one place affineness is used, and
+   only at level `0`.
+
+3. **The kernel of the reduction map is `I · Γ (U, O_{Spf R})`.** That is
+   `FormalSpectrum.ker_sectionsPi_zero_eq_sectionsOpenIdeal`, which needs affineness at *every*
+   level and `I.FG`.
+
+4. **`m` identifies `Γ (U, O_{Spf R})` with `B`**, by `FormalSpectrum.rangeSectionsHom`, carrying
+   `FormalSpectrum.sectionsOpenIdeal I U` to `I · B`.
+
+5. **`m` carries the prime at `m y` to the point `y`.** For an arbitrary morphism of formal
+   spectra the stalk map is local, so it neither creates nor destroys invertibility of a germ
+   (`FormalSpectrum.mem_sectionsPrime_c_app_res_iff`); and at the top open the prime at a point is
+   the point itself (`FormalSpectrum.mem_sectionsPrime_top_iff`, which is
+   `FormalSpectrum.isUnit_germ_top_iff` of `FormalSchemes.SpfGammaBase` restated).
+
+Steps 1, 4 and 5 use no affineness and no finite generation; 5 uses no open immersion either. The
+open immersion enters in exactly two places: the range is an *open*, so that step 2 has an open to
+be affine over, and `FormalSpectrum.rangeSectionsHom` is *surjective*, which is what lets step 5's
+equality of contracted primes be cancelled.
+
+## What is still open
+
+The hypothesis. `FormalSpectrum.HasAffineThickenings` is unconditional on `⊤`
+(`FormalSpectrum.hasAffineThickenings_top`), on every basic open
+(`FormalSpectrum.hasAffineThickenings_basicOpen`), and on the range of an open immersion that is
+the range of a basic-open chart — and is not known for an arbitrary affine open immersion.
+`FormalSchemes.AffineThickenings` explains why the reduction being affine does not obviously give
+it at every level: that is a nilpotent thickening of an affine open being affine, whose standard
+proof is Serre's cohomological criterion, which Mathlib does not have.
+
+So the row's question *"is an affine open immersion of formal spectra adic up to cofinality?"* is
+now exactly the question *"does the range of an affine open immersion have affine thickenings?"*,
+and nothing else. That is a strictly smaller statement — it is about the reduction of the open
+alone, mentions neither `B` nor `J`, and is a question about schemes rather than about formal
+schemes.
+
+## Main definitions
+
+* `FormalSpectrum.sectionsPrime`: the prime of `Γ (U, O_{Spf R})` at a point of `U`.
+* `FormalSpectrum.rangeSectionsHom`: the identification of the sections over the range of an open
+  immersion with the global sections of its source.
+
+## Main results
+
+* `FormalSpectrum.mem_sectionsPrime_iff_mem_primeIdealOf`,
+  `FormalSpectrum.exists_mem_eq_sectionsPrime`: over an open whose reduction is affine, the primes
+  of the sections ring containing the kernel of the reduction map are exactly the primes at points
+  of the open.
+* `FormalSpectrum.mem_sectionsPrime_c_app_res_iff`, `FormalSpectrum.mem_sectionsPrime_top_iff`: the
+  prime at a point transports along an arbitrary morphism of formal spectra, and at the top open it
+  is the point.
+* `FormalSpectrum.le_radical_map_of_hasAffineThickenings`: **the openness half.**
+* `FormalSpectrum.isCofinal_map_of_hasAffineThickenings`: hence `I · B` is an ideal of definition
+  of `B` up to cofinality — the row's statement, under the hypothesis.
+* `FormalSpectrum.le_radical_map_of_range_eq_univ`: **unconditionally, for an open immersion that
+  is onto** — the hypothesis discharges itself through
+  `FormalSpectrum.hasAffineThickenings_top`.
+* `FormalSpectrum.le_radical_map_of_range_eq_basicOpenChart`: the basic-open case, which
+  `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` already knew by a different route.
+* `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings`,
+  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_univ`: conservativity's
+  affine step, under the hypothesis and unconditionally-when-onto.
+* `FormalSpectrum.le_radical_pow_of_range_eq_univ`: non-vacuity, `I ≤ √(I ^ 2)` read off a
+  presentation of `Spf R` at `I ^ 2`.
+
+## References
+
+* [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.12, §10.13.
+* [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.3.
 -/
 
 noncomputable section
@@ -30,6 +136,10 @@ def sectionsPrime (U : Opens (FormalSpectrum I)) (x : FormalSpectrum I) (hx : x 
     (IsLocalRing.maximalIdeal ((structureSheaf I).presheaf.stalk x))
   isPrime := Ideal.IsPrime.comap _
 
+/-- **Membership in the prime at `x` is non-invertibility of the germ at `x`.** This is the whole
+content of `FormalSpectrum.sectionsPrime`: the stalk is local
+(`FormalSpectrum.isLocalRing_structureSheaf_stalk`), and an element of a local ring lies in the
+maximal ideal exactly when it is not a unit. -/
 theorem mem_sectionsPrime_iff (U : Opens (FormalSpectrum I)) (x : FormalSpectrum I) (hx : x ∈ U)
     (s : ((structureSheaf I).presheaf.obj (op U) : Type u)) :
     s ∈ (sectionsPrime I U x hx).asIdeal ↔
@@ -38,6 +148,11 @@ theorem mem_sectionsPrime_iff (U : Opens (FormalSpectrum I)) (x : FormalSpectrum
 
 variable (U : Opens (FormalSpectrum I)) (x : FormalSpectrum I)
 
+/-- **Invertibility of a germ of `O_{Spf R}` is decided at level `0` of the tower.** One direction
+is functoriality; the other is `FormalSpectrum.isUnit_of_isUnit_stalkProj`, which is where the
+locality of the tower is spent. The level-`0` component of a section over `U` is
+`FormalSpectrum.sectionsPi`, and `TopCat.Presheaf.stalkFunctor_map_germ_apply` is what identifies
+its germ with the projection of the germ. -/
 theorem isUnit_germ_iff_isUnit_sectionsPi_zero (hx : x ∈ U)
     (s : ((structureSheaf I).presheaf.obj (op U) : Type u)) :
     IsUnit (((structureSheaf I).presheaf.germ U x hx).hom s) ↔
@@ -52,6 +167,17 @@ theorem isUnit_germ_iff_isUnit_sectionsPi_zero (hx : x ∈ U)
 def thickeningPoint (hx : x ∈ U) : (thickeningOpen I 0 U : Type u) :=
   ⟨(thickeningTopIso I 0).hom x, hom_mem_thickeningOpen I 0 x hx⟩
 
+/-- **Over an open whose reduction is affine, the prime at `x` is the contraction of Mathlib's
+`IsAffineOpen.primeIdealOf`.** Only level `0` of `FormalSpectrum.HasAffineThickenings` is used
+here.
+
+Three identifications in a row: the germ is decided at level `0`
+(`FormalSpectrum.isUnit_germ_iff_isUnit_sectionsPi_zero`); the level-`0` sheaf is the structure
+sheaf of `Spec (R ⧸ I)` transported along `FormalSpectrum.thickeningTopIso`, so its germs are
+germs there (`FormalSpectrum.thickeningStalkIso_hom_germ`); and over an affine open the stalk is
+the localization of the sections at `IsAffineOpen.primeIdealOf`
+(`IsAffineOpen.isLocalization_stalk`), where invertibility of the image of a section is avoidance
+of the prime (`IsLocalization.AtPrime.isUnit_to_map_iff`). -/
 theorem mem_sectionsPrime_iff_mem_primeIdealOf
     (hU : IsAffineOpen (X := Spec (CommRingCat.of (R ⧸ I ^ (0 + 1)))) (thickeningOpen I 0 U))
     (hx : x ∈ U) (s : ((structureSheaf I).presheaf.obj (op U) : Type u)) :
@@ -164,6 +290,9 @@ theorem top_le_map_opensRange :
       (Opens.map m.base).obj (LocallyRingedSpace.IsOpenImmersion.opensRange m) :=
   fun y _ => Set.mem_range_self y
 
+/-- The sheaf component of an open immersion at its own range is an isomorphism: this is the
+`c_iso` field of `PresheafedSpace.IsOpenImmersion` at the source open `⊤`, whose image is the
+range. -/
 theorem isIso_c_app_opensRange :
     IsIso (m.c.app (op (LocallyRingedSpace.IsOpenImmersion.opensRange m))) := by
   have h1 : LocallyRingedSpace.IsOpenImmersion.opensRange m = hm.base_open.functor.obj ⊤ := by
@@ -182,6 +311,14 @@ def rangeSectionsHom :
         (homOfLE (top_le_map_opensRange I J m)).op).hom).comp
       (m.c.app (op (LocallyRingedSpace.IsOpenImmersion.opensRange m))).hom)
 
+/-- **`FormalSpectrum.rangeSectionsHom` is surjective.** Its three factors are: the sheaf
+component of an open immersion at its range (`FormalSpectrum.isIso_c_app_opensRange`); the
+restriction along `⊤ ≤ m ⁻¹ (range m)`, which is an isomorphism because the two opens are equal
+and `Opens` is a preorder; and `FormalSpectrum.globalSectionsEquiv`.
+
+Surjectivity is the only thing the open-immersion hypothesis is used for in
+`FormalSpectrum.le_radical_map_of_hasAffineThickenings` beyond the range being open — everything
+else in this file holds for an arbitrary morphism of formal spectra. -/
 theorem surjective_rangeSectionsHom : Function.Surjective (rangeSectionsHom I J m) := by
   haveI := isIso_c_app_opensRange I J m
   haveI : IsIso (homOfLE (top_le_map_opensRange I J m)) :=
@@ -248,6 +385,8 @@ theorem res_c_app_opensRange (s : ((structureSheaf I).presheaf.obj
     exact h
   exact h2
 
+/-- **The identification carries the structural map of the sections ring to the algebra map.**
+This is what makes `FormalSpectrum.sectionsOpenIdeal` at the range correspond to `I · B`. -/
 theorem rangeSectionsHom_sectionsOpenHom (r : R) :
     rangeSectionsHom I J m
         (sectionsOpenHom I (LocallyRingedSpace.IsOpenImmersion.opensRange m) r) =
@@ -291,8 +430,118 @@ theorem le_radical_map_of_hasAffineThickenings
   rw [comap_rangeSectionsHom_toPrimeSpectrum]
   exact (congrArg PrimeSpectrum.asIdeal hp).symm
 
+/-- **The openness half over an open immersion that is onto, with no affineness hypothesis.**
+`FormalSpectrum.hasAffineThickenings_top` is unconditional, so when the range of `m` is everything
+the hypothesis of `FormalSpectrum.le_radical_map_of_hasAffineThickenings` discharges itself. -/
+theorem le_radical_map_of_range_eq_univ
+    (halg : algebraMap R B = globalSectionsMap I J m) (hI : I.FG)
+    (hrange : Set.range m.base = Set.univ) :
+    J ≤ (I.map (algebraMap R B)).radical := by
+  refine le_radical_map_of_hasAffineThickenings I J m halg hI ?_
+  have htop : LocallyRingedSpace.IsOpenImmersion.opensRange m = ⊤ :=
+    Opens.ext (by rw [LocallyRingedSpace.IsOpenImmersion.coe_opensRange, hrange]; rfl)
+  rw [htop]
+  exact hasAffineThickenings_top I
+
+/-- **The openness half over an open immersion whose range is that of a basic-open chart.**
+
+This is `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart`'s containment, reached by a
+different route: that theorem transports the on-the-nose equality
+`FormalSpectrum.map_algebraMap_awayCompletion` along presentation-independence, and this one runs
+the sections argument of this file on the same open. -/
+theorem le_radical_map_of_range_eq_basicOpenChart
+    (halg : algebraMap R B = globalSectionsMap I J m) (hI : I.FG) (f : R)
+    (hrange : Set.range m.base = Set.range (basicOpenChart I f).base) :
+    J ≤ (I.map (algebraMap R B)).radical :=
+  le_radical_map_of_hasAffineThickenings I J m halg hI
+    (hasAffineThickenings_opensRange_of_range_eq_basicOpenChart hI f m hrange)
+
+/-- **`I · B` is an ideal of definition of `B`, up to cofinality**, over an open immersion whose
+range has affine thickenings: the assembly of this file's openness half with the unconditional
+nilpotence half `FormalSpectrum.map_le_radical_of_hom`, through
+`FormalSpectrum.isCofinal_map_of_le_radical`. -/
+theorem isCofinal_map_of_hasAffineThickenings (hI : I.FG) (hJ : J.FG)
+    (halg : algebraMap R B = globalSectionsMap I J m)
+    (hU : HasAffineThickenings I (LocallyRingedSpace.IsOpenImmersion.opensRange m)) :
+    Ideal.IsCofinal J (I.map (algebraMap R B)) :=
+  isCofinal_map_of_le_radical I J hI hJ m halg
+    (le_radical_map_of_hasAffineThickenings I J m halg hI hU)
+
+
 end Algebra
 
 end Openness
 
+section NonVacuity
+
+variable (I)
+
+/-!
+### Non-vacuity
+-/
+
+/-- **Non-vacuity, through a genuinely non-reflexive instance.** The `Spf`-functoriality morphism
+of `RingHom.id R` presents `Spf R` at `I` over its presentation at `I ^ 2`; it is an isomorphism
+(`FormalSpectrum.isIso_locallyRingedSpaceMapId`) hence an open immersion that is onto, its action
+on global sections is `RingHom.id R` (`FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap`),
+and the containment `FormalSpectrum.le_radical_map_of_range_eq_univ` returns for it is `I ≤ √(I ^
+2)`. That is not reflexivity, and it is not closed by `rfl`.
+
+The conclusion is of course independently provable, and that is the point: it is a check that the
+machinery of this file returns the right answer on an instance whose answer is known by other
+means, on a morphism that is not an identity and at a presentation that is not the one the
+statement is about. -/
+theorem le_radical_pow_of_range_eq_univ (hI : I.FG) : I ≤ (I ^ 2).radical := by
+  have hle : I ^ 2 ≤ I := Ideal.pow_le_self two_ne_zero
+  have hIsq : (I ^ 2).FG := hI.pow
+  haveI : IsAdicRing (I ^ 2) := IsAdicRing.of_isCofinal (Ideal.IsCofinal.pow I two_ne_zero)
+  set w := locallyRingedSpaceMap (I ^ 2) I (RingHom.id R) (le_comap_id_of_le (I ^ 2) I hle)
+    with hw
+  haveI : IsIso w := isIso_locallyRingedSpaceMapId (I ^ 2) I hle hIsq hI
+  haveI : LocallyRingedSpace.IsOpenImmersion w := inferInstance
+  have hrange : Set.range w.base = Set.univ :=
+    Set.range_eq_univ.mpr fun y =>
+      ⟨(asIso w).inv.base y, LocallyRingedSpace.iso_inv_base_hom_base_apply (asIso w) y⟩
+  have halg : algebraMap R R = globalSectionsMap (I ^ 2) I w := by
+    rw [hw, globalSectionsMap_locallyRingedSpaceMap, Algebra.algebraMap_self]
+  have h := le_radical_map_of_range_eq_univ (I ^ 2) I w halg hIsq hrange
+  rwa [Algebra.algebraMap_self, Ideal.map_id] at h
+
+end NonVacuity
+
 end FormalSpectrum
+
+namespace AlgebraicGeometry
+
+open FormalSpectrum
+
+variable {R : Type u} [CommRing R] {I : Ideal R} [TopologicalSpace R] [IsAdicRing I]
+variable {B : Type u} [CommRing B] [TopologicalSpace B] {J : Ideal B} [IsAdicRing J]
+variable [Algebra R B]
+
+/-- **Conservativity's affine step, over an open whose thickenings are affine.** An affine open of
+`Spf I` presented by an open immersion whose range has affine thickenings is topologically of
+finite type over `(R, I)`.
+
+This is `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_le_radical` with its
+hypothesis discharged by `FormalSpectrum.le_radical_map_of_hasAffineThickenings`. -/
+theorem IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings (hI : I.FG) (hJ : J.FG)
+    (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+    [LocallyRingedSpace.IsOpenImmersion m]
+    (halg : algebraMap R B = globalSectionsMap I J m)
+    (hU : HasAffineThickenings I (LocallyRingedSpace.IsOpenImmersion.opensRange m)) :
+    IsTopologicallyFiniteType R I B (I.map (algebraMap R B)) :=
+  IsTopologicallyFiniteType.of_openImmersion_of_le_radical hI hJ m halg
+    (le_radical_map_of_hasAffineThickenings I J m halg hI hU)
+
+/-- **Unconditionally, for an open immersion that is onto.** -/
+theorem IsTopologicallyFiniteType.of_openImmersion_range_eq_univ (hI : I.FG) (hJ : J.FG)
+    (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+    [LocallyRingedSpace.IsOpenImmersion m]
+    (halg : algebraMap R B = globalSectionsMap I J m)
+    (hrange : Set.range m.base = Set.univ) :
+    IsTopologicallyFiniteType R I B (I.map (algebraMap R B)) :=
+  IsTopologicallyFiniteType.of_openImmersion_of_le_radical hI hJ m halg
+    (le_radical_map_of_range_eq_univ I J m halg hI hrange)
+
+end AlgebraicGeometry
