@@ -253,7 +253,7 @@ No row. Listed because a declared subsumption is still an asserted one, and each
 ### What this census structurally cannot see
 
 The first three are unchanged from 1534 and worth not rediscovering. The fourth was found by row
-1542 while acting on Finding 4 below, after this document was written, and filed as row 1563.
+1542 while acting on Finding 4 above, after this document was written, and filed as row 1563.
 
 * The **proof-shaped** class — one construction appearing once as a declaration and once as an
   inline `refine`, row 1510's instance B. A signature scan sees declarations; it has no access to
@@ -268,7 +268,7 @@ The first three are unchanged from 1534 and worth not rediscovering. The fourth 
 * Anything a **pinned argument** distinguishes — the same property one turn over. A copy of a
   statement written at a fixed argument prints a different conclusion, so it lands under a
   different key and shares a bucket with nothing. Measured: the duplicate bucket of Finding 4
-  below had a **third** member that never appeared in it,
+  above had a **third** member that never appeared in it,
   `AlgebraicGeometry.tensorIdealOfDefinition_fg`
   (`FormalSchemes.TateSelfProductAdicOverBase`), which is
   `CompletedTensorProduct.idealOfDefinition_fg` with `A` pinned to `annulusAlgebra R I q` and a
@@ -278,11 +278,12 @@ The first three are unchanged from 1534 and worth not rediscovering. The fourth 
   and records why the copy is not retired — so the miss here was the tool's, not the reader's.
 
 **The absence of a bucket is not evidence of absence.** *A bucket is a question, not a finding* is
-this document's rule for what a bucket does say; this is its converse, and it is the more expensive
-half. Reading a bucket and closing it closes the **key**, not the statement: a declaration can be a
-verbatim instance of another and never appear beside it. So no count in this document is an upper
-bound on how much of this tree is duplicated. They are counts of collisions under one printed form,
-and the four classes above are where duplication goes when it does not collide.
+`scripts/signature_scan.py`'s rule for what a bucket does say; this is its converse, and it is the
+more expensive half. Reading a bucket and closing it closes the **key**, not the statement: a
+declaration can be a verbatim instance of another and never appear beside it. So no count in this
+document is an upper bound on how much of this tree is duplicated. They are counts of collisions
+under one printed form, and the four classes above are where duplication goes when it does not
+collide.
 
 ## Every bucket
 
