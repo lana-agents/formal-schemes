@@ -39,12 +39,24 @@ universe u
 
 open CategoryTheory Topology AlgebraicGeometry
 
-/-! ## Undeclared subsumptions
+/-! ## Subsumptions that were undeclared when the census read them
 
-Nothing on the tree records these; each is a row's worth of work.  -/
+Nothing on the tree recorded these when they were read, and each was a row's worth of work.  All
+six rows have landed; every docstring below names the one that acted on it and what it did.
+
+The `example`s are unchanged and stay: what they check is that one declaration's statement is
+closed by another, and that does not depend on whether a docstring names the pair.  Two of the six
+rows ended in a deletion, so two of the buckets these came from no longer exist — the `example`
+outlives the bucket, which is the point of keeping it here.  -/
 
 /-- **B27.** `FormalSpectrum.isUnit_stalk_of_isUnit_zero` is
-`FormalSpectrum.isUnit_of_isUnit_stalkProj` at `n = 0`. -/
+`FormalSpectrum.isUnit_of_isUnit_stalkProj` at `n = 0`.
+
+Row 1541 acted on this.  Neither declaration moved and neither was deleted: each docstring now
+names the other and says which way the implication runs.  The relation is a ladder rung rather
+than a corollary — the general form is proved *from* the special one — so the special form could
+never have cited it, and a note in both directions is the whole of the repair.  The bucket
+survives at the same size, class and key, and is now a *declared* pair. -/
 example {R : Type u} [CommRing R] (I : Ideal R) (x : FormalSpectrum I)
     (a : (FormalSpectrum.structureSheaf I).presheaf.stalk x)
     (h : IsUnit ((FormalSpectrum.stalkProj I x 0).hom a)) : IsUnit a :=
@@ -223,7 +235,9 @@ example {S : Type u} [CommRing S] (I : Ideal S) [IsHausdorff I S] {x y : S}
 Each `example` restates an older declaration's type verbatim and closes it with the unconditional
 form from `FormalSchemes.AffineThickeningsOpenImmersion`.  The dropped binders show up as
 unused-variable warnings, and those warnings are the finding; the linter is switched off in this
-section so that silence remains this file's result.  Row 1547 carries the repair.
+section so that silence remains this file's result.  Row 1547 landed the repair: each of the five
+declarations restated below now carries a **Now a special case** paragraph naming the general form
+and saying that it is kept because it is upstream of it and cannot cite it.
 
 No `variable` block is in scope here, deliberately: see the note in this file's header.  Every
 binder is spelled out, so a binder the target does not have cannot be added without the source
