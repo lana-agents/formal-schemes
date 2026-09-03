@@ -102,16 +102,16 @@ kind it is filed under the most actionable.
 | class | buckets | declarations |
 |---|---|---|
 | N — noise | 19 | 62 |
-| F — family or ladder | 49 | 143 |
+| F — family or ladder | 50 | 145 |
 | R — deliberate second route | 4 | 10 |
-| S — strictly-stronger pair | 17 | 65 |
+| S — strictly-stronger pair | 16 | 63 |
 | D — duplicate | 2 | 4 |
 | **total** | **91** | **284** |
 
 ## The result that matters
 
-**Reading the `--key concl` half was not a formality: it produced six subsumptions that nothing
-on the tree records, and the class row 1538 nominated for dispatch as noise turns out to hold
+**Reading the `--key concl` half was not a formality: it produced six findings that nothing on
+the tree records, and the class row 1538 nominated for dispatch as noise turns out to hold
 five buckets that are not noise, four of them subsumptions.**
 
 Row 1538 listed 19 buckets whose printed key is a bare equation or one-symbol predicate and
@@ -181,20 +181,29 @@ Each is a separate row. The elaborated witness for each is in `scripts/census_co
    closed range, so both are corollaries. One row, one file, one edit: the closed-range forms need
    nothing from `FormalSchemes.GeneralSeparatedRange` and could be stated upstream beside the
    forms they subsume.
-6. **B09 / B13 / B17 / B47, one cluster, and a row is already open on it.** PR #519's four
-   unconditional results — `FormalSpectrum.hasAffineThickenings_opensRange`,
-   `..._le_radical_map_of_openImmersion`, `..._isCofinal_map_of_openImmersion` and
+6. **B09 / B13 / B17, one cluster, and a row is already open on it.** Three of PR #519's four
+   unconditional results — `FormalSpectrum.le_radical_map_of_openImmersion`,
+   `FormalSpectrum.isCofinal_map_of_openImmersion` and
    `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`
-   (`FormalSchemes.AffineThickeningsOpenImmersion`) — strictly subsume **six** declarations that
-   were already on the tree, listed under those four buckets. All six live *upstream* of the file
-   that subsumes them, so none can cite it; the remedy is a note on each, not a deletion. Filed as
-   row **1547** by #519's reviewer before this document was re-measured, so **no new row here** —
-   it is counted in the tally and named in the findings because a census that silently omitted its
-   largest S cluster would be wrong, not because it is unfiled. The six are
-   `hasAffineThickenings_opensRange_of_range_eq_basicOpenChart`,
+   (`FormalSchemes.AffineThickeningsOpenImmersion`) — strictly subsume **five** declarations that
+   were already on the tree, listed under those three buckets. All five live *upstream* of the
+   file that subsumes them, so none can cite it; the remedy is a note on each, not a deletion.
+   Filed as row **1547** by #519's reviewer before this document was re-measured, so **no new row
+   here** — it is counted in the tally and named in the findings because a census that silently
+   omitted its largest S cluster would be wrong, not because it is unfiled. The five are
    `le_radical_map_of_range_eq_basicOpenChart`, `le_radical_map_of_range_eq_univ`,
    `isCofinal_map_of_range_eq_basicOpenChart`, `of_openImmersion_range_eq_univ` and
    `of_openImmersion_range_eq_basicOpen`.
+
+   The fourth unconditional result, `FormalSpectrum.hasAffineThickenings_opensRange`, subsumes
+   **nothing**, and B47 — where it meets
+   `hasAffineThickenings_opensRange_of_range_eq_basicOpenChart` — is **F**, not S. See the
+   per-bucket note on B47 below: the older member is `omit`-ted of all four of
+   `[TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J]` and the newer one
+   needs all four, so the two hypothesis sets are incomparable in both directions. An earlier
+   revision of this document counted it as a sixth subsumption; that was wrong, and how the
+   mistake survived an `example` is recorded in the header of
+   `scripts/census_concl_checks.lean`.
 
 ### Declared: a docstring already names the relation
 
@@ -298,7 +307,7 @@ Class letters as above. `n` is the number of declarations in the bucket.
 | B44 | 2 | F | `CategoryTheory.IsIso (D.desc k h)` |
 | B45 | 2 | N | `CategoryTheory.IsIso f` |
 | B46 | 2 | D | `CompletedTensorProduct.idealOfDefinition R I A A ≤   Ideal.comap ...` |
-| B47 | 2 | S | `FormalSpectrum.HasAffineThickenings I (AlgebraicGeometry.LocallyR...` |
+| B47 | 2 | F | `FormalSpectrum.HasAffineThickenings I (AlgebraicGeometry.LocallyR...` |
 | B48 | 2 | F | `FormalSpectrum.HasAffineThickenings I U` |
 | B49 | 2 | F | `FormalSpectrum.arbSheafComponent I J f g =   AdicCompletion.mapCo...` |
 | B50 | 2 | S | `Function.Injective ⇑(algebraMap R (RestrictedLaurentSeries R I))` |
@@ -403,8 +412,17 @@ statements at two parallel constructions, and read in a line each.
 * **B40** (F, n=2) Parallel statements at `ChartedCompletionDatum` and `ChartedSchemeDatum`.
 * **B46** (D, n=2) One statement, two declarations, four unused instance binders on one of them.
   Documented.
-* **B47** (S, n=2) New with #519: `hasAffineThickenings_opensRange` is the unconditional form of
-  `..._of_range_eq_basicOpenChart`. Finding 6.
+* **B47** (F, n=2) New with #519, and **not** a subsumption in either direction.
+  `hasAffineThickenings_opensRange_of_range_eq_basicOpenChart` carries
+  `omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J]` and is stated
+  over bare `CommRing`s; `hasAffineThickenings_opensRange` needs all four, so it cannot close the
+  older statement — the restatement fails at `failed to synthesize instance TopologicalSpace R`,
+  not at the mathematics. The gap is not closable by an `omit` on the newer one either: I
+  measured it, and `omit [TopologicalSpace R] [IsAdicRing I] in` above
+  `hasAffineThickenings_opensRange` makes its own proof fail, at `bijective_rangeSectionsHom`,
+  with the same missing `TopologicalSpace R`; `[IsAdicRing J]` is load-bearing too, through
+  `Ideal.eq_top_of_sup_eq_top_of_isAdicComplete J`. Two incomparable criteria, which is B48's
+  shape.
 * **B48** (F, n=2) New with #519: a span criterion and a basic-open-chart criterion for one
   predicate. Neither subsumes the other — the chart form goes through
   `hasAffineThickenings_basicOpen`, not through a span.

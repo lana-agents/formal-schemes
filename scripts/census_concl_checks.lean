@@ -19,6 +19,18 @@ ordering and renumbers when master grows a bucket, so re-derive it rather than t
 This file is not part of the library and nothing imports it.  It is kept next to the probe that
 found the pairs so that a successor can re-check the claims after the tree moves, rather than
 re-reading the census to find out whether they still hold.
+
+One trap, walked into once and recorded here so that it is not walked into twice.  Inside a
+`variable` block an `example` silently acquires whatever section binders its *proof term* needs,
+so "restates the declaration's type verbatim" is not visible in the source: a binder the target
+does **not** have can be added without the source showing it, and no linter reports an added
+binder — only a dropped one.  An earlier revision of this file claimed
+`FormalSpectrum.hasAffineThickenings_opensRange_of_range_eq_basicOpenChart` was subsumed on the
+strength of such an `example`; the target is `omit`-ted of four instances the subsuming form
+needs, so the claim was false and the check could not see it.  Verbatim-ness has to be checked
+against `ppExpr` of the target's environment type.  Where the pairs are new and the risk is
+live — the `Subsumed519` section below — every binder is therefore spelled out and no `variable`
+block is in scope, so an added instance shows up as a diff.
 -/
 import FormalSchemes
 
@@ -171,12 +183,19 @@ example {S : Type u} [CommRing S] (I : Ideal S) [IsHausdorff I S] {x y : S}
     (h : ∀ n : ℕ, Ideal.Quotient.mk (I ^ n) x = Ideal.Quotient.mk (I ^ n) y) : x = y :=
   IsHausdorff.eq_of_mk_pow_succ_eq I fun n => h (n + 1)
 
-/-! ### B09 / B13 / B17 / B47: the six declarations PR #519 subsumed
+/-! ### B09 / B13 / B17: the five declarations PR #519 subsumed
 
 Each `example` restates an older declaration's type verbatim and closes it with the unconditional
 form from `FormalSchemes.AffineThickeningsOpenImmersion`.  The dropped binders show up as
-unused-variable warnings, and those warnings are the finding; the linter is switched off in these
-two sections so that silence remains this file's result.  Row 1547 carries the repair.
+unused-variable warnings, and those warnings are the finding; the linter is switched off in this
+section so that silence remains this file's result.  Row 1547 carries the repair.
+
+No `variable` block is in scope here, deliberately: see the note in this file's header.  Every
+binder is spelled out, so a binder the target does not have cannot be added without the source
+saying so.  The fourth of #519's unconditional results, `hasAffineThickenings_opensRange`,
+subsumes nothing and has no `example` here — its bucket B47 pairs it with a statement that is
+`omit`-ted of `[TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J]`, all four
+of which it needs, so the two are incomparable and the bucket is F.
 -/
 
 section Subsumed519
@@ -185,57 +204,43 @@ set_option linter.unusedVariables false
 
 open FormalSpectrum
 
-variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
-variable {B : Type u} [CommRing B] [TopologicalSpace B] (J : Ideal B) [IsAdicRing J]
-
-/-- **B47.** `hasAffineThickenings_opensRange_of_range_eq_basicOpenChart` needs neither `I.FG`
-nor the range being a chart's. -/
-example (hI : I.FG) (f : R) (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
-    [LocallyRingedSpace.IsOpenImmersion m]
-    (hrange : Set.range m.base = Set.range (basicOpenChart I f).base) :
-    HasAffineThickenings I (LocallyRingedSpace.IsOpenImmersion.opensRange m) :=
-  hasAffineThickenings_opensRange I J m
-
-variable [Algebra R B]
-
-/-- **B17.** `le_radical_map_of_range_eq_basicOpenChart` is the general form. -/
-example (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
-    [LocallyRingedSpace.IsOpenImmersion m]
+/-- **B17.** `le_radical_map_of_range_eq_basicOpenChart` is `le_radical_map_of_openImmersion`
+with `f` and the range condition deleted. -/
+example {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
+    {B : Type u} [CommRing B] [TopologicalSpace B] (J : Ideal B) [IsAdicRing J]
+    (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+    [LocallyRingedSpace.IsOpenImmersion m] [Algebra R B]
     (halg : algebraMap R B = globalSectionsMap I J m) (hI : I.FG) (f : R)
     (hrange : Set.range m.base = Set.range (basicOpenChart I f).base) :
     J ≤ (I.map (algebraMap R B)).radical :=
   le_radical_map_of_openImmersion I J m halg hI
 
 /-- **B17.** So is `le_radical_map_of_range_eq_univ`. -/
-example (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
-    [LocallyRingedSpace.IsOpenImmersion m]
+example {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
+    {B : Type u} [CommRing B] [TopologicalSpace B] (J : Ideal B) [IsAdicRing J]
+    (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+    [LocallyRingedSpace.IsOpenImmersion m] [Algebra R B]
     (halg : algebraMap R B = globalSectionsMap I J m) (hI : I.FG)
     (hrange : Set.range m.base = Set.univ) :
     J ≤ (I.map (algebraMap R B)).radical :=
   le_radical_map_of_openImmersion I J m halg hI
 
-/-- **B13.** `isCofinal_map_of_range_eq_basicOpenChart` is the general form. -/
-example (hI : I.FG) (hJ : J.FG) (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+/-- **B13.** `isCofinal_map_of_range_eq_basicOpenChart` is
+`isCofinal_map_of_openImmersion` with `f` and the range condition deleted. -/
+example {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
+    {B : Type u} [CommRing B] [TopologicalSpace B] (J : Ideal B) [IsAdicRing J] [Algebra R B]
+    (hI : I.FG) (hJ : J.FG) (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (halg : algebraMap R B = globalSectionsMap I J m) (f : R)
     (hrange : Set.range m.base = Set.range (basicOpenChart I f).base) :
     Ideal.IsCofinal J (I.map (algebraMap R B)) :=
   isCofinal_map_of_openImmersion I J m halg hI hJ
 
-end Subsumed519
-
-section Subsumed519TfType
-
-set_option linter.unusedVariables false
-
-open FormalSpectrum
-
-variable {R : Type u} [CommRing R] {I : Ideal R} [TopologicalSpace R] [IsAdicRing I]
-variable {B : Type u} [CommRing B] [TopologicalSpace B] {J : Ideal B} [IsAdicRing J]
-variable [Algebra R B]
-
-/-- **B09.** `IsTopologicallyFiniteType.of_openImmersion_range_eq_univ` is the general form. -/
-example (hI : I.FG) (hJ : J.FG) (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+/-- **B09.** `IsTopologicallyFiniteType.of_openImmersion_range_eq_univ` is
+`IsTopologicallyFiniteType.of_openImmersion` with the range condition deleted. -/
+example {R : Type u} [CommRing R] {I : Ideal R} [TopologicalSpace R] [IsAdicRing I]
+    {B : Type u} [CommRing B] [TopologicalSpace B] {J : Ideal B} [IsAdicRing J] [Algebra R B]
+    (hI : I.FG) (hJ : J.FG) (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (halg : algebraMap R B = globalSectionsMap I J m)
     (hrange : Set.range m.base = Set.univ) :
@@ -243,14 +248,16 @@ example (hI : I.FG) (hJ : J.FG) (m : locallyRingedSpaceObj J ⟶ locallyRingedSp
   IsTopologicallyFiniteType.of_openImmersion hI hJ m halg
 
 /-- **B09.** So is `IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`. -/
-example (hI : I.FG) (hJ : J.FG) (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
+example {R : Type u} [CommRing R] {I : Ideal R} [TopologicalSpace R] [IsAdicRing I]
+    {B : Type u} [CommRing B] [TopologicalSpace B] {J : Ideal B} [IsAdicRing J] [Algebra R B]
+    (hI : I.FG) (hJ : J.FG) (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (halg : algebraMap R B = globalSectionsMap I J m) (f : R)
     (hrange : Set.range m.base = Set.range (basicOpenChart I f).base) :
     IsTopologicallyFiniteType R I B (I.map (algebraMap R B)) :=
   IsTopologicallyFiniteType.of_openImmersion hI hJ m halg
 
-end Subsumed519TfType
+end Subsumed519
 
 /-! ### B02: the separatedness ladder over `AlgebraicGeometry.FormalScheme.affineCover` -/
 
