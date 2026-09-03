@@ -61,14 +61,6 @@ variable [TopologicalSpace (CompletedTensorProduct R I A B)]
   [IsAdicRing (idealOfDefinition R I A B)]
 variable {S : Type u} [CommRing S] [TopologicalSpace S] {L : Ideal S} [IsAdicRing L]
 
-set_option linter.unusedSectionVars false in
-/-- The ideal of definition of `A ⊗̂_R B` is finitely generated when `I` is: it is the extension
-`I·(A ⊗̂_R B)` (`idealOfDefinition_eq_map`), and the image of a finitely generated ideal is finitely
-generated. This is the `J.FG` hypothesis the Spf–Γ round-trip consumes on the target side. -/
-theorem idealOfDefinition_fg (hI : I.FG) : (idealOfDefinition R I A B).FG := by
-  rw [idealOfDefinition_eq_map]
-  exact hI.map _
-
 /-- **Full locally-ringed-space uniqueness of the fibre-product mediating morphism** (EGA I 10.7,
 for affine-formal-spectrum sources). Two *arbitrary* morphisms of locally ringed spaces
 `f₁, f₂ : Spf S ⟶ Spf (A ⊗̂_R B)` with continuous global-sections maps
@@ -87,7 +79,7 @@ theorem fibreLift_unique_lrs (hI : I.FG) (hL : L.FG)
     (hpr₁ : f₁ ≫ fibrePr₁ = f₂ ≫ fibrePr₁)
     (hpr₂ : f₁ ≫ fibrePr₂ = f₂ ≫ fibrePr₂) :
     f₁ = f₂ := by
-  have hK : (idealOfDefinition R I A B).FG := idealOfDefinition_fg hI
+  have hK : (idealOfDefinition R I A B).FG := idealOfDefinition_fg R I A B hI
   -- Recognise each `fᵢ` as `Spf` of its global-sections map (`Spf ∘ Γ = id`, issue 96).
   have e₁ := locallyRingedSpaceMap_globalSectionsMap
     (idealOfDefinition R I A B) L hK hL f₁ hf₁
