@@ -286,12 +286,28 @@ theorem hasAffineThickenings_of_range_eq_basicOpenChart (hI : I.FG) (f : R)
   exact hasAffineThickenings_basicOpen I f
 
 omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J] in
-/-- **The hypothesis holds in the one case where the openness half is already known.**
+/-- **The hypothesis holds where the openness half was first known.**
 
 `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` settles the cofinality, unconditionally,
 for an open immersion whose range is that of a basic-open chart — for an arbitrary presentation of
 that open. `HasAffineThickenings` holds there too, so the hypothesis this file introduces does not
-exclude the one case the tree can discharge. -/
+exclude the case the tree could discharge when this file was written.
+
+**Not a special case, despite appearances.** `FormalSpectrum.hasAffineThickenings_opensRange`
+(`FormalSchemes.AffineThickeningsOpenImmersion`) proves the same conclusion for an arbitrary
+affine open immersion and uses none of `hI`, `f` or `hrange` — but it carries
+`[TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J]`, all four of which the
+`omit` above this docstring drops. That `omit` is available because
+`FormalSpectrum.locallyRingedSpaceObj`, `FormalSpectrum.structureSheaf` and
+`FormalSpectrum.HasAffineThickenings` never use the adic structure, so this is a statement about
+an arbitrary commutative ring and ideal, where the general form is one about an adic ring: it
+needs `[IsAdicRing J]` through `Ideal.eq_top_of_sup_eq_top_of_isAdicComplete`. The two hypothesis
+sets are **incomparable**, and no `omit` on the general form closes the gap.
+
+Wherever `R` and `B` do carry their adic structures the general form covers this one, and that is
+every call site on the tree — there is exactly one,
+`FormalSpectrum.le_radical_map_of_range_eq_basicOpenChart` in `FormalSchemes.AdicOpennessHalf`,
+which has all four. -/
 theorem hasAffineThickenings_opensRange_of_range_eq_basicOpenChart (hI : I.FG) (f : R)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]

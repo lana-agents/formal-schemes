@@ -368,9 +368,13 @@ open. The hypothesis is on the range and not on `m` itself, which is what makes 
 restatement of the chart case: `(B, J)` is arbitrary, and in particular `J` need not be `I · B`
 nor even contained in it.
 
-This is the largest class of opens for which the openness half is currently settled. It is not all
-of them: an affine open of `Spf I` need not be basic, and covering it by basic opens does not
-suffice — see the module docstring. -/
+This was the largest class of opens for which the openness half was settled when it was written:
+an affine open of `Spf I` need not be basic, and covering it by basic opens does not suffice by
+itself — see the module docstring.
+
+**Now a special case** of `FormalSpectrum.isCofinal_map_of_openImmersion`
+(`FormalSchemes.AffineThickeningsOpenImmersion`), which settles every affine open and uses neither
+`f` nor `hrange`. Kept because it is upstream of that file and cannot cite it. -/
 theorem isCofinal_map_of_range_eq_basicOpenChart (hI : I.FG) (hJ : J.FG)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
@@ -425,8 +429,13 @@ chart, `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` discharges the 
 This is strictly more than `AlgebraicGeometry.IsTopologicallyFiniteType.of_basicOpenChart`
 (`FormalSchemes.AffineOpenTopFiniteType`), which is the case `m = FormalSpectrum.basicOpenChart I
 f` on the nose: here `(B, J)` is an arbitrary presentation of the same open, so `J` is pinned only
-up to cofinality, which is the strongest thing an open immersion determines. It is the first
-unconditional case of conservativity's affine step. -/
+up to cofinality, which is the strongest thing an open immersion determines. It was the first
+unconditional case of conservativity's affine step.
+
+**Now a special case** of `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`
+(`FormalSchemes.AffineThickeningsOpenImmersion`), which drops the restriction to a basic range and
+uses neither `f` nor `hrange`. Kept because it is upstream of that file and cannot cite it — and
+because three module docstrings name it as the first unconditional case. -/
 theorem IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen (hI : I.FG) (hJ : J.FG)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]

@@ -137,20 +137,6 @@ theorem thickeningOpen_mono (n : ℕ) {U V : Opens (FormalSpectrum I)} (h : U �
   fun _ hx => h hx
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **The basic opens of `Spf R` are a neighbourhood basis**, in the form the criterion below
-consumes: a point of an open lies in a `FormalSpectrum.basicOpen` inside it.
-
-`FormalSpectrum.isBasis_basicOpen` (`FormalSchemes.SpfGammaRoundTrip`) is the tree's own
-`TopologicalSpace.Opens.IsBasis` packaging of `FormalSpectrum.isTopologicalBasis_basicOpen`, and
-`TopologicalSpace.Opens.isBasis_iff_nbhd` is that packaging's point of existing — so nothing here
-goes back to `PrimeSpectrum.isBasis_basic_opens`. -/
-theorem exists_basicOpen_le (U : Opens (FormalSpectrum I)) (x : FormalSpectrum I) (hx : x ∈ U) :
-    ∃ f : R, x ∈ basicOpen I f ∧ basicOpen I f ≤ U := by
-  obtain ⟨_, ⟨f, rfl⟩, hxV, hVU⟩ :=
-    TopologicalSpace.Opens.isBasis_iff_nbhd.mp (isBasis_basicOpen I) hx
-  exact ⟨f, hxV, hVU⟩
-
-omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The basic open cut out at level `n` by the structural section attached to `f : R`.**
 `FormalSpectrum.thickeningSectionsMk` is, definitionally, the restriction to
 `FormalSpectrum.thickeningOpen` of the global section of `Spec (R ⧸ I ^ (n + 1))` attached to the

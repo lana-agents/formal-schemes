@@ -113,6 +113,11 @@ it records to `FormalSchemes.AffineThickenings`'s account.
   `FormalSpectrum.hasAffineThickenings_top`.
 * `FormalSpectrum.le_radical_map_of_range_eq_basicOpenChart`: the basic-open case, which
   `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` already knew by a different route.
+
+  Both of these, and `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_univ`
+  below, are special cases of the unconditional forms in
+  `FormalSchemes.AffineThickeningsOpenImmersion`; they are kept because they are upstream of it.
+  Each says so in its own docstring.
 * `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings`,
   `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_univ`: conservativity's
   affine step, under the hypothesis and unconditionally-when-onto.
@@ -459,7 +464,11 @@ theorem le_radical_map_of_hasAffineThickenings
 
 /-- **The openness half over an open immersion that is onto, with no affineness hypothesis.**
 `FormalSpectrum.hasAffineThickenings_top` is unconditional, so when the range of `m` is everything
-the hypothesis of `FormalSpectrum.le_radical_map_of_hasAffineThickenings` discharges itself. -/
+the hypothesis of `FormalSpectrum.le_radical_map_of_hasAffineThickenings` discharges itself.
+
+**Now a special case** of `FormalSpectrum.le_radical_map_of_openImmersion`
+(`FormalSchemes.AffineThickeningsOpenImmersion`), which does not use `hrange`. Kept because it is
+upstream of that file and cannot cite it. -/
 theorem le_radical_map_of_range_eq_univ
     (halg : algebraMap R B = globalSectionsMap I J m) (hI : I.FG)
     (hrange : Set.range m.base = Set.univ) :
@@ -475,7 +484,11 @@ theorem le_radical_map_of_range_eq_univ
 This is `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart`'s containment, reached by a
 different route: that theorem transports the on-the-nose equality
 `FormalSpectrum.map_algebraMap_awayCompletion` along presentation-independence, and this one runs
-the sections argument of this file on the same open. -/
+the sections argument of this file on the same open.
+
+**Now a special case** of `FormalSpectrum.le_radical_map_of_openImmersion`
+(`FormalSchemes.AffineThickeningsOpenImmersion`), which uses neither `f` nor `hrange`. Kept
+because it is upstream of that file and cannot cite it. -/
 theorem le_radical_map_of_range_eq_basicOpenChart
     (halg : algebraMap R B = globalSectionsMap I J m) (hI : I.FG) (f : R)
     (hrange : Set.range m.base = Set.range (basicOpenChart I f).base) :
@@ -561,7 +574,11 @@ theorem IsTopologicallyFiniteType.of_openImmersion_of_hasAffineThickenings (hI :
   IsTopologicallyFiniteType.of_openImmersion_of_le_radical hI hJ m halg
     (le_radical_map_of_hasAffineThickenings I J m halg hI hU)
 
-/-- **Unconditionally, for an open immersion that is onto.** -/
+/-- **Unconditionally, for an open immersion that is onto.**
+
+**Now a special case** of `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`
+(`FormalSchemes.AffineThickeningsOpenImmersion`), which does not use `hrange`. Kept because it is
+upstream of that file and cannot cite it. -/
 theorem IsTopologicallyFiniteType.of_openImmersion_range_eq_univ (hI : I.FG) (hJ : J.FG)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
