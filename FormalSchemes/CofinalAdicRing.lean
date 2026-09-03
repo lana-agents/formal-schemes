@@ -14,8 +14,9 @@ that `IsAdicRing` transports too and `FormalScheme.Spf` can be formed at either 
 ## Why the hypothesis is a cofinality and not a containment
 
 `IsHausdorff.of_le` transfers `IsHausdorff` only *downwards*: it takes `K ≤ I` as a hypothesis and
-concludes for the smaller ideal. That is enough for `IsAdicRing.mul` below, which manufactures the
-nested ideal `I * J` and only ever descends into it. It is not enough for a transport, where the
+concludes for the smaller ideal. That was enough for `IsAdicRing.mul` below while that lemma built
+its completeness by hand, and is no longer used by it: the product ideal is cofinal with `I`, so the
+transport covers it in one step. It is not enough for a transport, where the
 two ideals arrive from independent witnesses with no containment between them — for instance the
 ideal of definition of a chart of `Y` coming from `f` and the one coming from `g`, in EGA I
 10.13's composition law.
@@ -35,7 +36,8 @@ other containment `I ^ (c + 1) ≤ K`.
 * `IsHausdorff.of_isCofinal`, `IsPrecomplete.of_isCofinal`, `IsAdicComplete.of_isCofinal`: the
   three completeness conditions transfer between cofinal ideals, with no containment hypothesis.
 * `IsHausdorff.of_le`: the downward form of the first, which needs only `K ≤ I`. Kept because a
-  containment is not a cofinality, so `IsHausdorff.of_isCofinal` does not subsume it.
+  containment is not a cofinality, so `IsHausdorff.of_isCofinal` does not subsume it — and kept
+  although nothing on the tree calls it; its docstring says why.
 * `IsAdicRing.of_isCofinal`: **the transport** — an ideal cofinal with an ideal of definition is
   itself an ideal of definition.
 * `IsAdicRing.mul`: the product of two ideals of definition is an ideal of definition. This is the
@@ -56,8 +58,20 @@ variable {R : Type u} [CommRing R] {M : Type v} [AddCommGroup M] [Module R M]
 /-- **`IsHausdorff` is antitone in the ideal.** If `K ≤ I` and `M` is `I`-adically Hausdorff, then
 `M` is `K`-adically Hausdorff: an element in every `K ^ n • ⊤` lies in every `I ^ n • ⊤`.
 
-Not subsumed by `IsHausdorff.of_isCofinal` below: `K ≤ I` alone is not a cofinality, and the site
-that uses this one (`IsAdicRing.mul`) has the reverse containment only as a power. -/
+Not subsumed by `IsHausdorff.of_isCofinal` below, and not derivable from it: `K ≤ I` alone is not
+a cofinality, and the two hypotheses are independent — neither implies the other. The conclusion
+census read this pair and classified it in those words, as a *family* and not a subsumption.
+
+**Nothing on the tree calls this**, since issue 1585 gave `IsAdicRing.mul` below its one-step
+proof through `IsAdicRing.of_isCofinal`. Kept, on the test the tree applies rather than on the
+consumer count: issue 1426 deleted four zero-consumer names because *"their content is one
+`congrArg` off a morphism-level identity that keeps its own consumers, so deleting them loses no
+fact"*, and issue 805 deleted an API whose hypothesis was unreachable. Neither test is met here —
+no surviving statement yields this one in a step, which is exactly what the independence above
+says. It is also Mathlib-shaped and absent from Mathlib, whose neighbours
+(`IsHausdorff.of_map`, `IsHausdorff.of_isLocalRing`, `IsHausdorff.of_isDomain`,
+`IsHausdorff.congr_ringEquiv`) are none of them antitone in the ideal; upstreaming it is a
+separate row. -/
 theorem IsHausdorff.of_le {K I : Ideal R} (hKI : K ≤ I) [h : IsHausdorff I M] :
     IsHausdorff K M where
   haus' x hx :=
@@ -76,8 +90,9 @@ theorem IsHausdorff.of_isCofinal {K I : Ideal R} (h : Ideal.IsCofinal K I)
 
 /-- **`IsPrecomplete` transfers between cofinal ideals**, with no containment hypothesis. The
 downward form — `K ≤ I` together with a power `I ^ c ≤ K` — is this lemma applied to
-`Ideal.IsCofinal.of_le_of_pow_le`, and the one site that wants only the downward form,
-`IsAdicRing.mul` below, uses it so.
+`Ideal.IsCofinal.of_le_of_pow_le`, and is not stated separately anywhere on the tree. Its consumer
+is `IsAdicComplete.of_isCofinal` below; `IsAdicRing.mul` used to apply it directly at the
+containment `I * J ≤ I` and now reaches it through that lemma.
 
 A `K`-Cauchy sequence `f` need not be `I`-Cauchy, so the thinned sequence `n ↦ f ((a + 1) * n)` is
 used instead: `K ^ ((a + 1) * m) = (K ^ (a + 1)) ^ m ≤ I ^ m`. Its `I`-adic limit `L` is a `K`-adic
@@ -126,12 +141,17 @@ theorem IsAdicRing.of_isCofinal {R : Type u} [CommRing R] [TopologicalSpace R] {
   toIsAdicComplete := IsAdicComplete.of_isCofinal (Ideal.IsCofinal.symm h)
   isAdic := Ideal.IsCofinal.isAdic h IsAdicRing.isAdic
 
-/-- **The product of two ideals of definition is an ideal of definition.** It is nested below both,
-and cofinal with both because some power of each lies in the other (`IsAdic.exists_pow_le`), so the
-adic topology it defines is the given one; completeness is `IsHausdorff.of_le` and
-`IsPrecomplete.of_isCofinal` at the containment `I * J ≤ I`, the latter read as a cofinality by
-`Ideal.IsCofinal.of_le_of_pow_le`. The transfer has to be algebraic: `IsAdic.isAdicComplete_iff`
+/-- **The product of two ideals of definition is an ideal of definition.** It is nested below `I`,
+and some power of `I` lies in it because some power of `I` lies in `J` (`IsAdic.exists_pow_le`);
+those two containments *are* a cofinality (`Ideal.IsCofinal.of_le_of_pow_le`), so this is
+`IsAdicRing.of_isCofinal` above at that witness. One step gives both halves: the topology by
+`Ideal.IsCofinal.isAdic` and the completeness by `IsAdicComplete.of_isCofinal`, where assembling
+them by hand took `IsAdic.of_le_of_pow_le`, `IsHausdorff.of_le` and `IsPrecomplete.of_isCofinal`
+separately. The transfer has to be algebraic either way: `IsAdic.isAdicComplete_iff`
 would need a `UniformSpace R` instance, which the adic-ring setting does not carry.
+
+`J`'s only role is to supply the power: the statement is symmetric in the two ideals, but the
+proof descends into `I` and never into `J`.
 
 This is the ideal `FormalSpectrum.generalCofinalSpfIso`
 (`FormalSchemes.CofinalSheafComparisonGeneral`) factors through, stated here so that the
@@ -141,23 +161,9 @@ that construction.
 Not an instance: `I * J` is not a pattern instance search can key on without looping. -/
 theorem IsAdicRing.mul {R : Type u} [CommRing R] [TopologicalSpace R] (I J : Ideal R)
     [IsAdicRing I] [IsAdicRing J] : IsAdicRing (I * J) := by
-  have hIadic : IsAdic I := IsAdicRing.isAdic
-  have hJadic : IsAdic J := IsAdicRing.isAdic
-  haveI : IsTopologicalRing R := hIadic.isTopologicalRing
+  obtain ⟨m, hm⟩ := IsAdic.exists_pow_le (IsAdicRing.isAdic (I := J)) (IsAdicRing.isAdic (I := I))
   have hKI : (I * J : Ideal R) ≤ I := Ideal.mul_le_right
-  have hIcK : ∃ c : ℕ, I ^ (c + 1) ≤ I * J := by
-    obtain ⟨m, hm⟩ := IsAdic.exists_pow_le hJadic hIadic
-    refine ⟨m, ?_⟩
-    rw [pow_succ]
-    calc I ^ m * I ≤ J * I := Ideal.mul_mono hm le_rfl
-      _ = I * J := mul_comm J I
-  have hK_adic : IsAdic (I * J) := by
-    obtain ⟨c, hc⟩ := hIcK
-    exact IsAdic.of_le_of_pow_le (is_ideal_adic_pow hIadic (Nat.succ_pos c)) hc
-      (Ideal.pow_right_mono hKI (c + 1))
-  haveI : IsAdicComplete (I * J) R := by
-    obtain ⟨c, hc⟩ := hIcK
-    exact { toIsHausdorff := IsHausdorff.of_le hKI
-            toIsPrecomplete :=
-              IsPrecomplete.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le hKI hc) }
-  exact { isAdic := hK_adic }
+  refine IsAdicRing.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le hKI (n := m + 1) ?_).symm
+  rw [pow_succ]
+  calc I ^ m * I ≤ J * I := Ideal.mul_mono hm le_rfl
+    _ = I * J := mul_comm J I
