@@ -252,7 +252,8 @@ No row. Listed because a declared subsumption is still an asserted one, and each
 
 ### What this census structurally cannot see
 
-Unchanged from 1534, and worth not rediscovering:
+The first three are unchanged from 1534 and worth not rediscovering. The fourth was found by row
+1542 while acting on Finding 4 above, after this document was written, and filed as row 1563.
 
 * The **proof-shaped** class — one construction appearing once as a declaration and once as an
   inline `refine`, row 1510's instance B. A signature scan sees declarations; it has no access to
@@ -264,6 +265,27 @@ Unchanged from 1534, and worth not rediscovering:
   EGA I 10.6.10 share a conclusion and differ entirely in the datum they take about the target.
   `--key concl` groups them; reading them apart is a person's job, and that is why the bucket count
   is not the number to act on.
+* Anything a **pinned argument** distinguishes — the same property one turn over. A copy of a
+  statement written at a fixed argument prints a different conclusion, so it lands under a
+  different key and shares a bucket with nothing. Measured: the duplicate bucket of Finding 4
+  above had a **third** member that never appeared in it,
+  `AlgebraicGeometry.tensorIdealOfDefinition_fg`
+  (`FormalSchemes.TateSelfProductAdicOverBase`), which is
+  `CompletedTensorProduct.idealOfDefinition_fg` with `A` pinned to `annulusAlgebra R I q` — an
+  application of it and not a variant, since the term
+  `CompletedTensorProduct.idealOfDefinition_fg R I (annulusAlgebra R I q) B hI` proves it as it
+  stands. `--key type` separates them too, so this is not a key to pick
+  differently; it is a limit of grouping declarations by a printed statement at all. The tree
+  already knew — `FormalSchemes.BothDatumFibreAdicOverBase`'s module docstring names the relation
+  and records why the copy is not retired — so the miss here was the tool's, not the reader's.
+
+**The absence of a bucket is not evidence of absence.** *A bucket is a question, not a finding* is
+`scripts/signature_scan.py`'s rule for what a bucket does say; this is its converse, and it is the
+more expensive half. Reading a bucket and closing it closes the **key**, not the statement: a
+declaration can be a verbatim instance of another and never appear beside it. So no count in this
+document is an upper bound on how much of this tree is duplicated. They are counts of collisions
+under one printed form, and the four classes above are where duplication goes when it does not
+collide.
 
 ## Every bucket
 
