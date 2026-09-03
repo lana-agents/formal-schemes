@@ -111,13 +111,6 @@ def equivSpfIso (hI : I.FG) :
 
 /-! ### The open immersion onto the basic open `D(f̄)` -/
 
-/-- The ideal of definition of `C = A ⊗̂_R B` is finitely generated when `I` is: it is the
-extension `I·C`. -/
-theorem idealOfDefinition_fg (hI : I.FG) :
-    (CompletedTensorProduct.idealOfDefinition R I A B).FG := by
-  rw [CompletedTensorProduct.idealOfDefinition_eq_map]
-  exact hI.map _
-
 /-- **The interchange open immersion** `Spf IL ⟶ Spf C`: the isomorphism of formal spectra
 `equivSpfIso` followed by the affine basic-open chart of `C` at `f̄ = inl f`. This is the overlap
 datum realising `Spf((A{1/f}) ⊗̂_R B)` as the open subscheme `D(f̄) ⊆ Spf(A ⊗̂_R B)`. -/
@@ -138,7 +131,7 @@ theorem isOpenImmersion_interchangeOpenImmersion (hI : I.FG) :
     LocallyRingedSpace.IsOpenImmersion (interchangeOpenImmersion (B := B) I f hI) := by
   haveI := FormalSpectrum.isOpenImmersion_basicOpenChart
     (CompletedTensorProduct.idealOfDefinition R I A B) (CompletedTensorProduct.inl R I A B f)
-    (idealOfDefinition_fg I hI)
+    (CompletedTensorProduct.idealOfDefinition_fg R I A B hI)
   unfold interchangeOpenImmersion
   infer_instance
 
@@ -158,6 +151,7 @@ theorem range_interchangeOpenImmersion_base (hI : I.FG) :
         (FormalSpectrum.basicOpenChart (CompletedTensorProduct.idealOfDefinition R I A B)
           (CompletedTensorProduct.inl R I A B f)).base := rfl
   rw [hbase, TopCat.coe_comp, Set.range_comp, Set.range_eq_univ.mpr hsurj, Set.image_univ]
-  exact FormalSpectrum.range_basicOpenChart_base _ _ (idealOfDefinition_fg I hI)
+  exact FormalSpectrum.range_basicOpenChart_base _ _
+    (CompletedTensorProduct.idealOfDefinition_fg R I A B hI)
 
 end CompletedTensorAwayInterchange

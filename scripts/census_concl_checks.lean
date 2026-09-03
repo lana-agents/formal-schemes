@@ -80,7 +80,17 @@ example {R : Type u} [CommRing R] {I : Ideal R} {A : Type u} [CommRing A] [Algeb
 
 /-- **B31.** `CompletedTensorProduct.idealOfDefinition_fg` and
 `CompletedTensorAwayInterchange.idealOfDefinition_fg` are one statement; the first carries six
-instance binders it does not use. -/
+instance binders it does not use.
+
+Row 1542 acted on this.  `CompletedTensorAwayInterchange.idealOfDefinition_fg` is **deleted** —
+that name no longer exists anywhere in the library, and the mention of it above is history.  The
+two modules were incomparable, so neither copy could cite the other where it stood; the surviving
+statement is `CompletedTensorProduct.idealOfDefinition_fg`, rehomed to
+`FormalSchemes.CompletedTensor` beside `CompletedTensorProduct.isAdicRing`.  That is where
+`CompletedTensorProduct.idealOfDefinition` is defined and both former homes import it, and the
+survivor carries no instance binder its conclusion does not mention.  The bucket is a singleton
+now, and the example below is the binder-carrying statement the first copy had, proved by the
+survivor. -/
 example {R : Type u} [CommRing R] {I : Ideal R} {A B : Type u} [CommRing A] [CommRing B]
     [Algebra R A] [Algebra R B] [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A]
     [IsAdicRing (Ideal.map (algebraMap R A) I)] [TopologicalSpace B]
@@ -88,7 +98,7 @@ example {R : Type u} [CommRing R] {I : Ideal R} {A B : Type u} [CommRing A] [Com
     [TopologicalSpace (CompletedTensorProduct R I A B)]
     [IsAdicRing (CompletedTensorProduct.idealOfDefinition R I A B)] (hI : I.FG) :
     (CompletedTensorProduct.idealOfDefinition R I A B).FG :=
-  CompletedTensorAwayInterchange.idealOfDefinition_fg I hI
+  CompletedTensorProduct.idealOfDefinition_fg R I A B hI
 
 /-- **B06.** A closed embedding has closed range, so
 `AlgebraicGeometry.FormalScheme.isClosedImmersion_of_isSplitMono` is

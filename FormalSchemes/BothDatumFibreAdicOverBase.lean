@@ -67,7 +67,7 @@ arguments first.
 `tateSelfProductInv_adicOverBase` (`FormalSchemes.TateSelfProductAdicOverBase`) is this file's
 `adicOverBase_fibreStructMap` for the Tate self-product's hand-built glue datum, and
 `tensorIdealOfDefinition_fg` there is `CompletedTensorProduct.idealOfDefinition_fg`
-(`FormalSchemes.AffineFibreProductLRS`) with `A` pinned to the annulus. Neither is retired here:
+(`FormalSchemes.CompletedTensor`) with `A` pinned to the annulus. Neither is retired here:
 that is a deletion in the style of issues 805/812 and it touches the Tate tower.
 
 ## Main results
@@ -193,7 +193,8 @@ theorem adicOverBase_fibreStructMap
     CompletedTensorProduct.isAdicRing R I (D.A p.1) (D.B p.2) hI
   refine ⟨CompletedTensorProduct R I (D.A p.1) (D.B p.2), inferInstance, inferInstance,
     idealOfDefinition R I (D.A p.1) (D.B p.2), inferInstance,
-    D.formalGlueData.ι p, CompletedTensorProduct.idealOfDefinition_fg hI, ⟨y, hy⟩,
+    D.formalGlueData.ι p,
+    CompletedTensorProduct.idealOfDefinition_fg R I (D.A p.1) (D.B p.2) hI, ⟨y, hy⟩,
     FormalScheme.GlueData.ι_isOpenImmersion _ p, ?_⟩
   have hmap : D.formalGlueData.ι p ≫ (D.pr₁ hV hf ht ≫ D.xStructMap) =
       FormalSpectrum.locallyRingedSpaceMap I

@@ -27,6 +27,9 @@ tensor product composed with the continuous-extension machinery of
   `A ⊗[R] B` at the extension of `I`.
 * `CompletedTensorProduct.isAdicRing`: it is a complete adic ring (for `I` finitely generated),
   so its formal spectrum is an affine formal scheme.
+* `CompletedTensorProduct.idealOfDefinition_fg`: its ideal of definition is finitely generated
+  (for `I` finitely generated) — the hypothesis its basic-open charts and the Spf–Γ round-trip ask
+  for.
 * `CompletedTensorProduct.inl`, `inr`: the canonical `R`-algebra maps from the two factors.
 * `CompletedTensorProduct.lift`: the universal property (existence direction) — a pair of
   `R`-algebra maps into a complete adic `R`-algebra, whose images of `I` land in the ideal of
@@ -71,6 +74,14 @@ abbrev idealOfDefinition : Ideal (CompletedTensorProduct R I A B) :=
 formal spectrum is an affine formal scheme. -/
 theorem isAdicRing (hI : I.FG) : IsAdicRing (idealOfDefinition R I A B) :=
   AdicCompletion.isAdicRing_map _ (hI.map _)
+
+/-- The ideal of definition of the completed tensor product is **finitely generated** when `I` is:
+`CompletedTensorProduct.idealOfDefinition` abbreviates the extension of `I` along
+`R → A ⊗[R] B → A ⊗̂_R B`, and the image of a finitely generated ideal is finitely generated.
+This is the finite-generation hypothesis that the basic-open charts of `Spf (A ⊗̂_R B)` and the
+Spf–Γ round-trip consume on the target side. -/
+theorem idealOfDefinition_fg (hI : I.FG) : (idealOfDefinition R I A B).FG :=
+  (hI.map (algebraMap R (A ⊗[R] B))).map _
 
 /-- The canonical `R`-algebra map from the first factor. -/
 def inl : A →ₐ[R] CompletedTensorProduct R I A B :=
