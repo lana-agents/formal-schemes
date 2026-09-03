@@ -50,12 +50,18 @@ example {R : Type u} [CommRing R] (I : Ideal R) (x : FormalSpectrum I)
     (h : IsUnit ((FormalSpectrum.stalkProj I x 0).hom a)) : IsUnit a :=
   FormalSpectrum.isUnit_of_isUnit_stalkProj I x 0 a h
 
-/-- **B62.** `IsPrecomplete.of_cofinal`'s two containments are a `Ideal.IsCofinal`, so it is
-`IsPrecomplete.of_isCofinal`.  The general form is moreover polymorphic in the module's universe
-and this one is not. -/
+/-- **B62.** The downward `IsPrecomplete` transfer — `K ≤ I` together with a power `I ^ c ≤ K` —
+has for its two containments a `Ideal.IsCofinal`, so it is `IsPrecomplete.of_isCofinal` at
+`Ideal.IsCofinal.of_le_of_pow_le`.  The general form is moreover polymorphic in the module's
+universe and the downward one was not.
+
+Row 1543 acted on this.  The separate downward statement, in
+`FormalSchemes.CofinalSheafComparisonGeneral`, is deleted; its two call sites there and in
+`FormalSchemes.CofinalStructMap` now build the cofinality.  The example below is what that
+statement said, and it still holds. -/
 example {R : Type u} [CommRing R] {M : Type u} [AddCommGroup M] [Module R M] {K I : Ideal R}
     (hle : K ≤ I) {c : ℕ} (hc : I ^ c ≤ K) [IsPrecomplete I M] : IsPrecomplete K M :=
-  IsPrecomplete.of_isCofinal ⟨⟨1, by simpa using hle⟩, ⟨c, hc⟩⟩
+  IsPrecomplete.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le hle hc)
 
 /-- **B63.** `AlgebraicGeometry.IsTopologicallyFiniteType.fg` is
 `IsTopologicallyFiniteType.fg_of_presentation` at the presentation the tf-type witness carries;

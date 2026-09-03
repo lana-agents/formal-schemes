@@ -73,7 +73,8 @@ variable [IsAdicRing I] [IsAdicRing J]
 /-- **The product of two ideals of definition is an ideal of definition.** It is nested below both,
 and cofinal with both because some power of each lies in the other
 (`IsAdic.exists_pow_le`), so the adic topology it defines is the given one; completeness is
-`IsHausdorff.of_le` and `IsPrecomplete.of_cofinal` at the containment `I * J ≤ I`.
+`IsHausdorff.of_le` and `IsPrecomplete.of_isCofinal` at the containment `I * J ≤ I`, the latter
+read as a cofinality by `Ideal.IsCofinal.of_le_of_pow_le`.
 
 The proof is the opening of `FormalSpectrum.generalCofinalSpfIso`, extracted so that the
 factorisation of that isomorphism through `Spf (I * J)` can be *stated*
@@ -98,7 +99,8 @@ theorem isAdicRing_mul : IsAdicRing (I * J) := by
   haveI : IsAdicComplete (I * J) R := by
     obtain ⟨c, hc⟩ := hIcK
     exact { toIsHausdorff := IsHausdorff.of_le hKI
-            toIsPrecomplete := IsPrecomplete.of_cofinal hKI hc }
+            toIsPrecomplete :=
+              IsPrecomplete.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le hKI hc) }
   exact { isAdic := hK_adic }
 
 /-- **The ideal-independence isomorphism factors through the product ideal.** True by `rfl`: the
