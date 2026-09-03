@@ -22,6 +22,15 @@ a quasi-compact spectral space"*, "not currently derivable on this tree from
 sketch consumes, and proves the first two of its three inputs from it. **It does not prove the
 openness half**, and nothing here should be read as claiming it.
 
+**Status.** The quoted "not currently derivable" is superseded.
+`FormalSpectrum.hasAffineThickenings_opensRange`
+(`FormalSchemes.AffineThickeningsOpenImmersion`) proves that the range of an arbitrary affine open
+immersion of formal spectra has affine thickenings, with no hypothesis at all. Everything this
+file states about *itself* is unchanged — the hypothesis is still a hypothesis here, and this file
+still does not prove the openness half — but the hypothesis is no longer an open question, and
+the paragraph below headed "Why at every level" has one sentence that the later file refutes and
+that is corrected in place.
+
 ## The affineness is a predicate, not data
 
 The tree's standing convention, in `FormalSchemes.SpfHomScheme`,
@@ -46,8 +55,17 @@ not have. The elementary criterion it does have,
 `AlgebraicGeometry.isAffine_of_isAffineOpen_basicOpen` (Stacks 01QF), cannot be substituted: it
 needs `Ideal.span s = ⊤` in `Γ (X, ⊤)`, and a cover of `X` by its own basic opens does **not** give
 that when `X` is not already affine — `𝔸² ∖ {0}` is covered by `D(x) ∪ D(y)` while `span {x, y}` is
-not `⊤` in `k[x, y]`. Recovering the span is exactly the surjectivity of `Γ (Uₙ) → Γ (U₀)`, i.e.
-the statement one is trying to prove.
+not `⊤` in `k[x, y]`.
+
+That much is right. The sentence that used to follow it — *"recovering the span is exactly the
+surjectivity of `Γ (Uₙ) → Γ (U₀)`, i.e. the statement one is trying to prove"* — is **false**, and
+`FormalSchemes.AffineThickeningsOpenImmersion` is the refutation. The span does not have to be
+recovered at the level the criterion is applied at: a ring map carries a spanning family to a
+spanning family, so a span in `Γ (U, O_{Spf R})` pushes forward to every `Γ (Uₙ)` at once through
+`FormalSpectrum.sectionsPi`, and no surjectivity is involved. What the span needs is a source, and
+for the range of an open immersion the source is `B` — see
+`FormalSpectrum.span_globalSectionsMap_eq_top`. `𝔸² ∖ {0}` is not a counterexample to *that*
+argument because it is not the range of an open immersion from a formal spectrum.
 
 Asking at every level costs nothing wherever the tree can supply the hypothesis at all:
 `hasAffineThickenings_top` and `hasAffineThickenings_basicOpen` are unconditional, and
@@ -77,10 +95,12 @@ Those are the sketch's first two inputs, `Bₙ₊₁ ↠ Bₙ` and `B ↠ B₀`.
   of the closed immersion, and identifying it with the extension of `Iⁿ⁺¹` needs quasi-coherence,
   which is not used anywhere in this file.
 * **Any claim that `HasAffineThickenings` holds for an arbitrary open immersion of formal spectra.**
-  That is the open question, restated: this file moves it from "the affineness of the reduction is
-  not expressible" to "the affineness is a predicate, unconditional on basic opens, and unknown in
-  general". The openness half `J ≤ √(I · B)` is untouched, and so is everything in
-  `FormalSchemes.AdicCofinalOpenImmersion`.
+  It does hold — `FormalSpectrum.hasAffineThickenings_opensRange` — but that is proved in
+  `FormalSchemes.AffineThickeningsOpenImmersion`, downstream of this file and of
+  `FormalSchemes.AdicOpennessHalf`, and not here. What this file contributes to it is the
+  observation that the affineness is a **predicate** rather than data, which is what makes the
+  statement expressible at all. The openness half `J ≤ √(I · B)` is untouched here, and so is
+  everything in `FormalSchemes.AdicCofinalOpenImmersion`.
 
 ## Main definitions
 

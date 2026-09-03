@@ -40,7 +40,13 @@ performs the reduction to a finite subset inside `of_span_awayCompletion`.
 ## The one hypothesis, and why it is a hypothesis
 
 `Ideal.IsCofinal J (I.map (algebraMap R B))` says the open immersion is **adic up to
-cofinality**. It is not derivable on this tree, and it is not an oversight:
+cofinality**. It is now a *theorem* —
+`FormalSpectrum.isCofinal_map_of_openImmersion` (`FormalSchemes.AffineThickeningsOpenImmersion`),
+under `I.FG` and `J.FG` and nothing else, whence
+`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion` is this file's theorem with the
+hypothesis gone. It remains a hypothesis *here*, and the reasons below are why it had to be one
+rather than an oversight; they are still worth reading, because the first of them is a standing
+refutation of the statement one is tempted to prove instead:
 
 * Its on-the-nose form `I · B ≤ J` — adicity of an open immersion on global sections — is
   **false**. `FormalSchemes.AdicOnSections` records the refutation (issue 460): `IsAdicRing J`
@@ -67,8 +73,10 @@ formal spectra, so `FormalSpectrum.isCofinal_map_of_le_radical` reduces the hypo
 the single containment `J ≤ √(I · B)`; and
 `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` discharges it outright when the open is
 basic, which is what
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen` consumes. What
-remains open is the general affine open.
+`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen` consumes. The
+general affine open is settled by `FormalSchemes.AffineThickeningsOpenImmersion`, through
+`FormalSpectrum.hasAffineThickenings_opensRange` and the openness half
+`FormalSpectrum.le_radical_map_of_hasAffineThickenings` of `FormalSchemes.AdicOpennessHalf`.
 
 ## Main results
 

@@ -22,8 +22,9 @@ That was the last unformalised step of the sketch recorded in
 both cut out `U`"* — whose earlier steps are `FormalSchemes.AffineThickenings`,
 `FormalSchemes.ThickeningTowerKernel` and `FormalSpectrum.ker_sectionsPi_zero`
 (`FormalSchemes.TowerLimitKernel`). **It does not prove that the hypothesis holds at an arbitrary
-affine open immersion**; that question is `FormalSchemes.AffineThickenings`'s and is untouched
-here. See "What is still open" below.
+affine open immersion**; that is proved downstream, in
+`FormalSchemes.AffineThickeningsOpenImmersion`, and is untouched here. See "What this file leaves
+to its successor" below.
 
 ## The argument
 
@@ -64,21 +65,26 @@ open immersion enters in exactly two places: the range is an *open*, so that ste
 be affine over, and `FormalSpectrum.rangeSectionsHom` is *surjective*, which is what lets step 5's
 equality of contracted primes be cancelled.
 
-## What is still open
+## What this file leaves to its successor
 
-The hypothesis. `FormalSpectrum.HasAffineThickenings` is unconditional on `⊤`
-(`FormalSpectrum.hasAffineThickenings_top`), on every basic open
+The hypothesis, and nothing else. Within this file `FormalSpectrum.HasAffineThickenings` is
+unconditional on `⊤` (`FormalSpectrum.hasAffineThickenings_top`), on every basic open
 (`FormalSpectrum.hasAffineThickenings_basicOpen`), and on the range of an open immersion that is
-the range of a basic-open chart — and is not known for an arbitrary affine open immersion.
-`FormalSchemes.AffineThickenings` explains why the reduction being affine does not obviously give
-it at every level: that is a nilpotent thickening of an affine open being affine, whose standard
-proof is Serre's cohomological criterion, which Mathlib does not have.
+the range of a basic-open chart; the general case is carried as a hypothesis throughout.
 
-So the row's question *"is an affine open immersion of formal spectra adic up to cofinality?"* is
-now exactly the question *"does the range of an affine open immersion have affine thickenings?"*,
-and nothing else. That is a strictly smaller statement — it is about the reduction of the open
-alone, mentions neither `B` nor `J`, and is a question about schemes rather than about formal
-schemes.
+**It is now discharged**, by `FormalSpectrum.hasAffineThickenings_opensRange`
+(`FormalSchemes.AffineThickeningsOpenImmersion`), for an arbitrary affine open immersion and with
+no hypothesis on `I`, `J` or the range. So every theorem below has an unconditional companion
+there: `FormalSpectrum.le_radical_map_of_openImmersion`,
+`FormalSpectrum.isCofinal_map_of_openImmersion` — EGA I 10.12 — and
+`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`.
+
+The route that discharges it is *not* the one the paragraph replaced here expected. It does not go
+via "the reduction is affine, hence so is every nilpotent thickening", which would be Serre's
+cohomological criterion and is still absent from Mathlib. It produces the spanning family that
+`AlgebraicGeometry.isAffineOpen_of_isAffineOpen_basicOpen` asks for in `B` itself and pushes it
+forward to every level of the tower at once; see that file's module docstring, and the correction
+it records to `FormalSchemes.AffineThickenings`'s account.
 
 ## Main definitions
 
