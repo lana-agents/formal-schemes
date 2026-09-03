@@ -11,17 +11,22 @@ lies in the other, and `Ideal.IsCofinal.isAdic` already says that cofinality tra
 about the ideal and not about the topology it induces. This file supplies the missing half, so
 that `IsAdicRing` transports too and `FormalScheme.Spf` can be formed at either ideal.
 
-## Why it is not `IsPrecomplete.of_cofinal`
+## Why the hypothesis is a cofinality and not a containment
 
-`IsHausdorff.of_le` and `IsPrecomplete.of_cofinal`
-(`FormalSchemes.CofinalSheafComparisonGeneral`) already transfer completeness, but only
-*downwards*: both take `K ≤ I` as a hypothesis and conclude for the smaller ideal. That is enough
-for `FormalSpectrum.generalCofinalSpfIso`, which manufactures the nested ideal `I * J` and only
-ever descends into it. It is not enough for a transport, where the two ideals arrive from
-independent witnesses with no containment between them — for instance the ideal of definition of
-a chart of `Y` coming from `f` and the one coming from `g`, in EGA I 10.13's composition law.
+`IsHausdorff.of_le` (`FormalSchemes.CofinalSheafComparisonGeneral`, which imports this file)
+transfers `IsHausdorff` only *downwards*: it takes `K ≤ I` as a hypothesis and concludes for the
+smaller ideal. That is enough for `FormalSpectrum.generalCofinalSpfIso`, which manufactures the
+nested ideal `I * J` and only ever descends into it. It is not enough for a transport, where the
+two ideals arrive from independent witnesses with no containment between them — for instance the
+ideal of definition of a chart of `Y` coming from `f` and the one coming from `g`, in EGA I
+10.13's composition law.
 
-The proofs here are the cofinal reindexings of those two. A `K`-Cauchy sequence is no longer
+Nothing is lost by asking for the stronger hypothesis, because a containment `K ≤ I` carrying a
+power `I ^ c ≤ K` *is* a cofinality (`Ideal.IsCofinal.of_le_of_pow_le`): the downward form of
+`IsPrecomplete.of_isCofinal` is that lemma at that witness, and is not stated separately anywhere
+on the tree.
+
+The cofinal proofs are reindexings of the downward ones. A `K`-Cauchy sequence is no longer
 `I`-Cauchy on the nose, so it is first thinned to the subsequence `n ↦ f ((a + 1) * n)`, where
 `K ^ (a + 1) ≤ I`; its `I`-adic limit is then also the `K`-adic limit of the original, by the
 other containment `I ^ (c + 1) ≤ K`.
@@ -56,8 +61,10 @@ theorem IsHausdorff.of_isCofinal {K I : Ideal R} (h : Ideal.IsCofinal K I)
     rw [pow_mul]
     exact Ideal.pow_right_mono ha n
 
-/-- **`IsPrecomplete` transfers between cofinal ideals**, with no containment hypothesis — the
-cofinal reindexing of `IsPrecomplete.of_cofinal`.
+/-- **`IsPrecomplete` transfers between cofinal ideals**, with no containment hypothesis. The
+downward form — `K ≤ I` together with a power `I ^ c ≤ K` — is this lemma applied to
+`Ideal.IsCofinal.of_le_of_pow_le`, and the two sites that want only the downward form, in
+`FormalSchemes.CofinalSheafComparisonGeneral` and `FormalSchemes.CofinalStructMap`, use it so.
 
 A `K`-Cauchy sequence `f` need not be `I`-Cauchy, so the thinned sequence `n ↦ f ((a + 1) * n)` is
 used instead: `K ^ ((a + 1) * m) = (K ^ (a + 1)) ^ m ≤ I ^ m`. Its `I`-adic limit `L` is a `K`-adic

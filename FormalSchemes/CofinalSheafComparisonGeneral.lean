@@ -1,3 +1,4 @@
+import FormalSchemes.CofinalAdicRing
 import FormalSchemes.CofinalSheafComparisonIso
 import FormalSchemes.LargestIdealOfDefinition
 
@@ -27,14 +28,18 @@ The work is in exhibiting `K = I * J` as an ideal of definition (`IsAdicRing K`)
   (`IsAdic K`), via `is_ideal_adic_pow` + `IsAdic.of_le_of_pow_le`.
 * `K`-adic completeness is transferred from `I`-adic completeness purely algebraically:
   `IsHausdorff` is antitone in the ideal (`IsHausdorff.of_le`, only `K ≤ I` needed) and
-  `IsPrecomplete` transfers under cofinality (`IsPrecomplete.of_cofinal`, using `I ^ c ≤ K`). We
-  cannot route through `IsAdic.isAdicComplete_iff` here, as that requires a `UniformSpace R`
-  instance not present in the adic-ring setting.
+  `IsPrecomplete` transfers under cofinality — `IsPrecomplete.of_isCofinal`
+  (`FormalSchemes.CofinalAdicRing`), applied to the cofinality that
+  `Ideal.IsCofinal.of_le_of_pow_le` builds out of `K ≤ I` and `I ^ c ≤ K`. We cannot route through
+  `IsAdic.isAdicComplete_iff` here, as that requires a `UniformSpace R` instance not present in
+  the adic-ring setting.
 
 ## Main definitions and results
 
-* `IsHausdorff.of_le`, `IsPrecomplete.of_cofinal`: cofinality transfer of the adic-completeness
-  components (general commutative-algebra lemmas; candidates for Mathlib / an earlier file).
+* `IsHausdorff.of_le`: the `IsHausdorff` half of the transfer, which needs only `K ≤ I` (a general
+  commutative-algebra lemma; a candidate for Mathlib / an earlier file). The `IsPrecomplete` half
+  is not restated here: it is `IsPrecomplete.of_isCofinal` (`FormalSchemes.CofinalAdicRing`) at a
+  containment read as a cofinality.
 * `FormalSpectrum.generalCofinalSpfIso`: the isomorphism `Spf_I R ≅ Spf_J R` for two arbitrary
   ideals of definition `I`, `J`.
 
@@ -60,26 +65,6 @@ theorem IsHausdorff.of_le {K I : Ideal R} (hKI : K ≤ I) [h : IsHausdorff I M] 
     IsHausdorff K M where
   haus' x hx :=
     h.haus x fun n => (hx n).mono (Submodule.smul_mono_left (Ideal.pow_right_mono hKI n))
-
-/-- **`IsPrecomplete` transfers under cofinality.** If `K ≤ I` and some power `I ^ c ≤ K` (so the
-`K`- and `I`-adic filtrations are cofinal), then `I`-adic precompleteness implies `K`-adic
-precompleteness. A `K`-Cauchy sequence is a fortiori `I`-Cauchy, so has an `I`-adic limit `L`; the
-same `L` is a `K`-adic limit after reindexing through the cofinality bound. -/
-theorem IsPrecomplete.of_cofinal {K I : Ideal R} (hKI : K ≤ I) {c : ℕ} (hc : I ^ c ≤ K)
-    [h : IsPrecomplete I M] : IsPrecomplete K M where
-  prec' f hf := by
-    have hfI : ∀ {m n : ℕ}, m ≤ n → f m ≡ f n [SMOD (I ^ m • ⊤ : Submodule R M)] :=
-      fun {_ _} hmn => (hf hmn).mono (Submodule.smul_mono_left (Ideal.pow_right_mono hKI _))
-    obtain ⟨L, hL⟩ := h.prec' f hfI
-    refine ⟨L, fun n => ?_⟩
-    have hIeK : I ^ (c + 1) ≤ K := (Ideal.pow_le_pow_right (Nat.le_succ c)).trans hc
-    have hle : n ≤ (c + 1) * n := Nat.le_mul_of_pos_left n (Nat.succ_pos c)
-    have h1 : f n ≡ f ((c + 1) * n) [SMOD (K ^ n • ⊤ : Submodule R M)] := hf hle
-    have hInK : (I ^ ((c + 1) * n) : Ideal R) ≤ K ^ n := by
-      rw [pow_mul]; exact Ideal.pow_right_mono hIeK n
-    have h2 : f ((c + 1) * n) ≡ L [SMOD (K ^ n • ⊤ : Submodule R M)] :=
-      (hL ((c + 1) * n)).mono (Submodule.smul_mono_left hInK)
-    exact h1.trans h2
 
 end CompletenessTransfer
 
@@ -118,7 +103,8 @@ def generalCofinalSpfIso (hI : I.FG) (hJ : J.FG) :
   haveI : IsAdicComplete (I * J) R := by
     obtain ⟨c, hc⟩ := hIcK
     exact { toIsHausdorff := IsHausdorff.of_le hKI
-            toIsPrecomplete := IsPrecomplete.of_cofinal hKI hc }
+            toIsPrecomplete :=
+              IsPrecomplete.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le hKI hc) }
   haveI : IsAdicRing (I * J) := { isAdic := hK_adic }
   have hK_fg : (I * J).FG := hI.mul hJ
   exact (cofinalSpfIso (I * J) I hKI hK_fg hI).symm ≪≫ cofinalSpfIso (I * J) J hKJ hK_fg hJ
