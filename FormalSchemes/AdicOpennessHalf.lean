@@ -48,7 +48,7 @@ of `U`.
 
 3. **The kernel of the reduction map is `I · Γ (U, O_{Spf R})`.** That is
    `FormalSpectrum.ker_sectionsPi_zero_eq_sectionsOpenIdeal`, which needs affineness at *every*
-   level and `I.FG`.
+   level and finite generation of `I` (`Ideal.FG`).
 
 4. **`m` identifies `Γ (U, O_{Spf R})` with `B`**, by `FormalSpectrum.rangeSectionsHom`, carrying
    `FormalSpectrum.sectionsOpenIdeal I U` to `I · B`.
@@ -295,7 +295,7 @@ theorem top_le_map_opensRange :
 
 omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J] in
 /-- The sheaf component of an open immersion at its own range is an isomorphism: this is the
-`c_iso` field of `PresheafedSpace.IsOpenImmersion` at the source open `⊤`, whose image is the
+`PresheafedSpace.IsOpenImmersion.c_iso` field at the source open `⊤`, whose image is the
 range. -/
 theorem isIso_c_app_opensRange :
     IsIso (m.c.app (op (LocallyRingedSpace.IsOpenImmersion.opensRange m))) := by
