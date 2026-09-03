@@ -39,14 +39,13 @@ square below the two factorisations cannot be composed.
 case the square is therefore two instances of `FormalSpectrum.locallyRingedSpaceMap_comp`, both
 computing `locallyRingedSpaceMap` of `algebraMap R A` read as a composite in the two possible ways
 — nothing about the structure sheaves is unfolded. The general case follows by running the nested
-one at the ideal `I * J`, which is where `FormalSpectrum.isAdicRing_mul` is needed.
+one at the ideal `I * J`, which is where `IsAdicRing.mul` (`FormalSchemes.CofinalAdicRing`) is
+needed.
 
 ## Main results
 
-* `FormalSpectrum.isAdicRing_mul`: the product of two ideals of definition is an ideal of
-  definition — the nested ideal `FormalSpectrum.generalCofinalSpfIso` factors through, extracted
-  from its proof so that the factorisation can be stated.
-* `FormalSpectrum.generalCofinalSpfIso_eq`: that factorisation, as an equation.
+* `FormalSpectrum.generalCofinalSpfIso_eq`: the factorisation of the ideal-independence
+  isomorphism through `Spf (I * J)`, as an equation.
 * `FormalSpectrum.structMap_comp_cofinalSpfIso_inv`: **the square, nested case.**
 * `FormalSpectrum.structMap_comp_generalCofinalSpfIso_inv`: **the square, general case.**
 * `FormalSpectrum.globalSectionsMap_generalCofinalSpfIso_hom`: the comparison is the identity on
@@ -70,45 +69,13 @@ namespace FormalSpectrum
 variable {R : Type u} [CommRing R] [TopologicalSpace R] (I J : Ideal R)
 variable [IsAdicRing I] [IsAdicRing J]
 
-/-- **The product of two ideals of definition is an ideal of definition.** It is nested below both,
-and cofinal with both because some power of each lies in the other
-(`IsAdic.exists_pow_le`), so the adic topology it defines is the given one; completeness is
-`IsHausdorff.of_le` and `IsPrecomplete.of_isCofinal` at the containment `I * J ≤ I`, the latter
-read as a cofinality by `Ideal.IsCofinal.of_le_of_pow_le`.
-
-The proof is the opening of `FormalSpectrum.generalCofinalSpfIso`, extracted so that the
-factorisation of that isomorphism through `Spf (I * J)` can be *stated*
-(`FormalSpectrum.generalCofinalSpfIso_eq`) rather than only used inside its own construction.
-
-Not an instance: `I * J` is not a pattern instance search can key on without looping. -/
-theorem isAdicRing_mul : IsAdicRing (I * J) := by
-  have hIadic : IsAdic I := IsAdicRing.isAdic
-  have hJadic : IsAdic J := IsAdicRing.isAdic
-  haveI : IsTopologicalRing R := hIadic.isTopologicalRing
-  have hKI : (I * J : Ideal R) ≤ I := Ideal.mul_le_right
-  have hIcK : ∃ c : ℕ, I ^ (c + 1) ≤ I * J := by
-    obtain ⟨m, hm⟩ := IsAdic.exists_pow_le hJadic hIadic
-    refine ⟨m, ?_⟩
-    rw [pow_succ]
-    calc I ^ m * I ≤ J * I := Ideal.mul_mono hm le_rfl
-      _ = I * J := mul_comm J I
-  have hK_adic : IsAdic (I * J) := by
-    obtain ⟨c, hc⟩ := hIcK
-    exact IsAdic.of_le_of_pow_le (is_ideal_adic_pow hIadic (Nat.succ_pos c)) hc
-      (Ideal.pow_right_mono hKI (c + 1))
-  haveI : IsAdicComplete (I * J) R := by
-    obtain ⟨c, hc⟩ := hIcK
-    exact { toIsHausdorff := IsHausdorff.of_le hKI
-            toIsPrecomplete :=
-              IsPrecomplete.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le hKI hc) }
-  exact { isAdic := hK_adic }
-
-/-- **The ideal-independence isomorphism factors through the product ideal.** True by `rfl`: the
-`have`s inside `FormalSpectrum.generalCofinalSpfIso`'s construction are all proofs of `Prop`s —
-including the `IsAdicRing (I * J)` instance, since `IsAdicRing` is a `Prop` class — so proof
-irrelevance identifies them with the ones supplied here. -/
+/-- **The ideal-independence isomorphism factors through the product ideal.** True by `rfl`: this
+is `FormalSpectrum.generalCofinalSpfIso`'s own right-hand side, with the `IsAdicRing (I * J)`
+instance supplied here instead of by the `haveI` inside it. `IsAdicRing` is a `Prop` class, so
+proof irrelevance identifies the two. Stated because the squares below rewrite along the
+factorisation, whereas the `def` only uses it. -/
 theorem generalCofinalSpfIso_eq (hI : I.FG) (hJ : J.FG) :
-    haveI := isAdicRing_mul I J
+    haveI := IsAdicRing.mul I J
     generalCofinalSpfIso I J hI hJ =
       (cofinalSpfIso (I * J) I Ideal.mul_le_right (hI.mul hJ) hI).symm ≪≫
         cofinalSpfIso (I * J) J Ideal.mul_le_left (hI.mul hJ) hJ := rfl
@@ -157,8 +124,8 @@ theorem structMap_comp_generalCofinalSpfIso_inv (hI : I.FG) (hJ : J.FG)
     (hL : L.FG) (hM : M.FG) :
     IsTopologicallyFiniteType.structMap hJM ≫ (generalCofinalSpfIso I J hI hJ).inv =
       (generalCofinalSpfIso L M hL hM).inv ≫ IsTopologicallyFiniteType.structMap hIL := by
-  haveI := isAdicRing_mul I J
-  haveI := isAdicRing_mul L M
+  haveI := IsAdicRing.mul I J
+  haveI := IsAdicRing.mul L M
   have hKA : (I * J).map (algebraMap R A) = L * M := by
     rw [Ideal.map_mul, hIL, hJM]
   have hJside := structMap_comp_cofinalSpfIso_inv (I := I * J) (J := J) (L := L * M) (M := M)
@@ -221,7 +188,7 @@ morphism of formal spectra with continuous global-sections map is `Spf` of that 
 with the comparison changes nothing but the ideal. -/
 theorem globalSectionsMap_generalCofinalSpfIso_hom (hI : I.FG) (hJ : J.FG) :
     globalSectionsMap J I (generalCofinalSpfIso I J hI hJ).hom = RingHom.id R := by
-  haveI := isAdicRing_mul I J
+  haveI := IsAdicRing.mul I J
   rw [generalCofinalSpfIso_eq I J hI hJ]
   simp only [Iso.trans_hom, Iso.symm_hom]
   rw [globalSectionsMap_comp, globalSectionsMap_cofinalSpfIso_inv,
