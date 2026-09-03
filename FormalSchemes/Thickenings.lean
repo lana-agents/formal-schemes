@@ -65,9 +65,11 @@ image of a germ in the level-`n` thickening sheaf is a unit, the germ is a unit.
 This is `FormalSpectrum.isUnit_stalk_of_isUnit_zero` (`FormalSchemes.Spf`) with the level
 generalised from `0`, and it is proved by reducing to it: the level-`n` projection factors the
 level-`0` one along the tower. The two stand together rather than one replacing the other — the
-level-`0` form is this proof's base case, and it is what `FormalSchemes.SpfMap` uses, that file
-being upstream of this one. Where both are in scope, prefer this one, as
-`FormalSchemes.SpfGammaBase` and `FormalSchemes.AdicOpennessHalf` already do at `n = 0`. -/
+level-`0` form is this proof's base case, and it is what `FormalSchemes.SpfMap` uses: that module
+and this one are incomparable in the import graph — it reaches `FormalSchemes.Spf` through
+`FormalSchemes.FormalScheme` and never imports this file — so it cannot cite this form. Where both
+are in scope, prefer this one, as `FormalSchemes.SpfGammaBase` and
+`FormalSchemes.AdicOpennessHalf` already do at `n = 0`. -/
 theorem isUnit_of_isUnit_stalkProj (a : (structureSheaf I).presheaf.stalk x)
     (h : IsUnit ((stalkProj I x n).hom a)) : IsUnit a := by
   refine isUnit_stalk_of_isUnit_zero I x a ?_
