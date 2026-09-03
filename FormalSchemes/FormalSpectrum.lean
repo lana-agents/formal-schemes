@@ -150,6 +150,19 @@ theorem isTopologicalBasis_basicOpen :
   rw [h]
   exact PrimeSpectrum.isTopologicalBasis_basic_opens
 
+/-- **The basic opens are a neighbourhood basis**, in the `TopologicalSpace.Opens` form: a point
+of an open lies in a basic open contained in it.
+
+This is `FormalSpectrum.isTopologicalBasis_basicOpen` fed to
+`TopologicalSpace.IsTopologicalBasis.exists_subset_of_mem_open`, which is an idiom several files
+downstream had inlined. It is stated here, beside the basis lemma, so that they can cite it. -/
+theorem exists_basicOpen_le (U : TopologicalSpace.Opens (FormalSpectrum I))
+    (x : FormalSpectrum I) (hx : x ∈ U) :
+    ∃ f : R, x ∈ basicOpen I f ∧ basicOpen I f ≤ U := by
+  obtain ⟨_, ⟨f, rfl⟩, hxf, hfU⟩ :=
+    (isTopologicalBasis_basicOpen I).exists_subset_of_mem_open hx U.2
+  exact ⟨f, hxf, hfU⟩
+
 end BasicOpen
 
 /-!
