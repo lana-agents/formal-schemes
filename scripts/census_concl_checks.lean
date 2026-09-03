@@ -58,12 +58,19 @@ example {R : Type u} [CommRing R] {M : Type u} [AddCommGroup M] [Module R M] {K 
   IsPrecomplete.of_isCofinal ⟨⟨1, by simpa using hle⟩, ⟨c, hc⟩⟩
 
 /-- **B63.** `AlgebraicGeometry.IsTopologicallyFiniteType.fg` is
-`RestrictedPowerSeries.fg_of_presentation` at the presentation the tf-type witness carries; the
-latter does not use its surjectivity. -/
+`IsTopologicallyFiniteType.fg_of_presentation` at the presentation the tf-type witness carries;
+the latter does not use its surjectivity.
+
+Row 1544 acted on this. When the bucket was read, the general form sat in the
+RestrictedPowerSeries namespace in `FormalSchemes.TopFiniteTypeTrans`, which the special form
+cannot see; it now lives beside its own only input,
+`IsTopologicallyFiniteType.map_eq_of_presentation` (`FormalSchemes.TopFiniteType`), where the
+special form can and does cite it. The bucket survives — two declarations in two modules still
+conclude that the ideal is finitely generated — but it is now a *declared* pair. -/
 example {R : Type u} [CommRing R] {I : Ideal R} {A : Type u} [CommRing A] [Algebra R A]
     {L : Ideal A} (h : IsTopologicallyFiniteType R I A L) (hI : I.FG) : L.FG := by
   obtain ⟨n, ψ, _, hψ⟩ := h
-  exact RestrictedPowerSeries.fg_of_presentation hI ψ hψ
+  exact IsTopologicallyFiniteType.fg_of_presentation hI hψ
 
 /-- **B31.** `CompletedTensorProduct.idealOfDefinition_fg` and
 `CompletedTensorAwayInterchange.idealOfDefinition_fg` are one statement; the first carries six

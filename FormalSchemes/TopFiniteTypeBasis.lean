@@ -101,11 +101,15 @@ attribute [instance] TfTypeChart.commRing TfTypeChart.topologicalSpace TfTypeCha
 variable {R I}
 
 /-- The ideal of definition of a tf-type algebra is finitely generated when the base ideal is:
-it is the extension `I·A`. -/
+it is the extension `I·A`.
+
+This is `IsTopologicallyFiniteType.fg_of_presentation` (`FormalSchemes.TopFiniteType`) at the
+presentation the predicate carries. That form is the general one — it takes the presentation
+directly and never uses its surjectivity, which is the only hypothesis discarded here. -/
 theorem _root_.AlgebraicGeometry.IsTopologicallyFiniteType.fg {A : Type u} [CommRing A]
     [Algebra R A] {L : Ideal A} (h : IsTopologicallyFiniteType R I A L) (hI : I.FG) : L.FG := by
-  rw [← IsTopologicallyFiniteType.map_eq h]
-  exact hI.map _
+  obtain ⟨n, ψ, _, hL⟩ := h
+  exact _root_.IsTopologicallyFiniteType.fg_of_presentation hI hL
 
 /-- **Tf-type affine charts form a neighbourhood basis.** On a locally tf-type formal scheme, every
 point `x` lying in an open set `U` admits a tf-type affine open-immersion chart whose range is
