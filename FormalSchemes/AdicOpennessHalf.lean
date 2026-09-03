@@ -136,6 +136,7 @@ def sectionsPrime (U : Opens (FormalSpectrum I)) (x : FormalSpectrum I) (hx : x 
     (IsLocalRing.maximalIdeal ((structureSheaf I).presheaf.stalk x))
   isPrime := Ideal.IsPrime.comap _
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Membership in the prime at `x` is non-invertibility of the germ at `x`.** This is the whole
 content of `FormalSpectrum.sectionsPrime`: the stalk is local
 (`FormalSpectrum.isLocalRing_structureSheaf_stalk`), and an element of a local ring lies in the
@@ -247,6 +248,7 @@ section Transport
 
 variable {S : Type u} [CommRing S] [TopologicalSpace S] (K : Ideal S) [IsAdicRing K]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace S] [IsAdicRing K] in
 /-- **The prime at a point transports along any morphism of formal spectra.** -/
 theorem mem_sectionsPrime_c_app_res_iff
     (w : locallyRingedSpaceObj K ⟶ locallyRingedSpaceObj I)
@@ -284,12 +286,14 @@ variable {B : Type u} [CommRing B] [TopologicalSpace B] (J : Ideal B) [IsAdicRin
 variable (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
   [hm : LocallyRingedSpace.IsOpenImmersion m]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J] in
 /-- The preimage of the range of `m` is everything. -/
 theorem top_le_map_opensRange :
     (⊤ : Opens (FormalSpectrum J)) ≤
       (Opens.map m.base).obj (LocallyRingedSpace.IsOpenImmersion.opensRange m) :=
   fun y _ => Set.mem_range_self y
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J] in
 /-- The sheaf component of an open immersion at its own range is an isomorphism: this is the
 `c_iso` field of `PresheafedSpace.IsOpenImmersion` at the source open `⊤`, whose image is the
 range. -/
@@ -311,6 +315,7 @@ def rangeSectionsHom :
         (homOfLE (top_le_map_opensRange I J m)).op).hom).comp
       (m.c.app (op (LocallyRingedSpace.IsOpenImmersion.opensRange m))).hom)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **`FormalSpectrum.rangeSectionsHom` is surjective.** Its three factors are: the sheaf
 component of an open immersion at its range (`FormalSpectrum.isIso_c_app_opensRange`); the
 restriction along `⊤ ≤ m ⁻¹ (range m)`, which is an isomorphism because the two opens are equal
@@ -331,6 +336,7 @@ theorem surjective_rangeSectionsHom : Function.Surjective (rangeSectionsHom I J 
     (ConcreteCategory.bijective_of_isIso _).2
   exact (globalSectionsEquiv J).surjective.comp (h2.comp h1)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The identification carries the point of `Spf J` at `z` to the prime of the sections ring at
 `m z`.** -/
 theorem comap_rangeSectionsHom_toPrimeSpectrum (z : FormalSpectrum J) :
@@ -347,6 +353,7 @@ theorem comap_rangeSectionsHom_toPrimeSpectrum (z : FormalSpectrum J) :
     (LocallyRingedSpace.IsOpenImmersion.opensRange m) ⊤ (top_le_map_opensRange I J m) z trivial
     (Set.mem_range_self z) s).symm
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B] [IsAdicRing J] in
 /-- **Restricting a global section of `Spf R` to the range of `m` and transporting it to `B` is
 `FormalSpectrum.globalSectionsMap`.** -/
 theorem res_c_app_opensRange (s : ((structureSheaf I).presheaf.obj
@@ -417,7 +424,7 @@ theorem le_radical_map_of_hasAffineThickenings
       (sectionsPi I 0 (LocallyRingedSpace.IsOpenImmersion.opensRange m)).hom ≤ p.asIdeal := by
     rw [ker_sectionsPi_zero_eq_sectionsOpenIdeal I hU hI, sectionsOpenIdeal, hpdef]
     refine Ideal.map_le_iff_le_comap.mpr fun r hr => ?_
-    show rangeSectionsHom I J m (sectionsOpenHom I _ r) ∈ q.asIdeal
+    change rangeSectionsHom I J m (sectionsOpenHom I _ r) ∈ q.asIdeal
     rw [rangeSectionsHom_sectionsOpenHom, ← halg]
     exact hq (Ideal.mem_map_of_mem _ hr)
   obtain ⟨y, hy, hp⟩ :=
