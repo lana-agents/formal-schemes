@@ -86,14 +86,12 @@ sheaf-theoretic transport available at all, and once through
   of the *target* — which it does with this file's
   `FormalSpectrum.exists_basicOpenChart_le_affine_inter`, read against the identity of `Spf I`.
   This file is what both of them run on:
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
+  `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
   (`FormalSchemes.AffineOpenTopFiniteType`, issue 1207) applies
   `FormalSpectrum.exists_basicOpenChart_inter_iso` below at every point of the affine open, and
-  feeds the results to affine-locality
-  (`AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`,
-  `FormalSchemes.TopFiniteTypeAffineLocal`). What is missing is no longer the chart
-  identification but a hypothesis of that theorem: that the open immersion is adic up to
-  cofinality.
+  feeds the results to affine-locality (`IsTopologicallyFiniteType.of_span_awayCompletion`,
+  `FormalSchemes.TopFiniteTypeAffineLocal`). What is missing is no longer the chart identification
+  but a hypothesis of that theorem: that the open immersion is adic up to cofinality.
 * **A `FormalScheme.Hom`-level restatement.** None is given, and none is needed: a consumer
   holding `m : FormalScheme.Spf L ⟶ X` applies the results below to `m.toLRSHom`, since
   `FormalScheme.Hom` is a one-field wrapper and `(f ≫ g).toLRSHom = f.toLRSHom ≫ g.toLRSHom`

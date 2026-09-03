@@ -21,15 +21,15 @@ of `𝒰` a chart of `𝒱` and a chart of `𝒲`, two tf-type algebras `A` over
 `(S, K)`, and **one** identification `𝒱.obj i ≅ Spf M` of the middle chart, used by the
 factorisation of `f` and by that of `g` alike.
 `AlgebraicGeometry.FormalScheme.IsTfTypeTower.isTopFiniteTypeHomOn` composes it, and the proof is
-the tower identity `AlgebraicGeometry.IsTopologicallyFiniteType.structHom_trans`
-(`FormalSchemes.RelativeTopFiniteTypeTrans`) together with one `CategoryTheory.Iso.inv_hom_id`:
-the middle identification cancels against itself, which is exactly what a shared chart buys.
+the tower identity `IsTopologicallyFiniteType.structHom_trans`
+(`FormalSchemes.RelativeTopFiniteTypeTrans`) together with one `CategoryTheory.Iso.inv_hom_id`: the
+middle identification cancels against itself, which is exactly what a shared chart buys.
 
 `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHomOn.chartMap_comp` is the first consumer: **the
 restriction of a topologically finite-type morphism to a chart of its witnessing source cover is
 again topologically of finite type**. There the shared middle chart is available for free — `g`'s
 own identification of that chart is used on both sides, and the `f`-side algebra is
-`AlgebraicGeometry.IsTopologicallyFiniteType.self`.
+`IsTopologicallyFiniteType.self`.
 
 ## What this file does *not* prove, and what has since closed it
 
@@ -40,7 +40,7 @@ was not geometric. Both geometric ingredients existed:
 * `FormalSpectrum.exists_basicOpenChart_inter_iso` (`FormalSchemes.TwoChartBasicOpen`) refines two
   affine charts of `Y` to a common basic open and returns an **isomorphism of the two refined
   charts commuting with their inclusions into `Y`**;
-* `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange`
+* `IsTopologicallyFiniteType.awayCompletion_baseChange`
   (`FormalSchemes.AwayBaseChangeTopFiniteType`) re-reads an `X`-chart tf-type over `(R, I)` as
   tf-type over the shrunk base `(R{1/c}^, I{1/c}^)`.
 
@@ -132,9 +132,9 @@ chart of `X` and the same chart of `Z`.
 **The cover of `X` is not refined**, which is what makes the proof bookkeeping. Two steps do the
 work: `CategoryTheory.Iso.inv_hom_id` cancels the shared middle identification `eY` — this is the
 step that fails when `f` and `g` identify the middle chart with two different affines — and
-`AlgebraicGeometry.IsTopologicallyFiniteType.structHom_trans`
-(`FormalSchemes.RelativeTopFiniteTypeTrans`) replaces the composite of the two structural
-morphisms by the structural morphism of `IsTopologicallyFiniteType.trans`.
+`IsTopologicallyFiniteType.structHom_trans` (`FormalSchemes.RelativeTopFiniteTypeTrans`) replaces
+the composite of the two structural morphisms by the structural morphism of
+`IsTopologicallyFiniteType.trans`.
 
 The `Algebra S A` and `IsScalarTower S B A` that `IsTopologicallyFiniteType.trans` needs are
 *constructed* from the composite ring map rather than inferred, as in
@@ -172,12 +172,12 @@ type.
 
 This is a genuine application of `AlgebraicGeometry.FormalScheme.IsTfTypeTower`, not a restatement
 of it: the tower it builds has `𝒱.obj i` as its own source cover, `A := B` with the identity
-finiteness datum `AlgebraicGeometry.IsTopologicallyFiniteType.self`, and — the point — takes for
-its shared middle identification the very isomorphism `g`'s witness supplies, which is why no
-identification of two affine charts is needed. The `f`-side equation collapses through
-`AlgebraicGeometry.IsTopologicallyFiniteType.structHom_self`
-(`FormalSchemes.TopFiniteTypeHom`), and the conclusion is a statement about a composite that the
-affine-target theory cannot reach, since neither `Y` nor `Z` is assumed affine. -/
+finiteness datum `IsTopologicallyFiniteType.self`, and — the point — takes for its shared middle
+identification the very isomorphism `g`'s witness supplies, which is why no identification of two
+affine charts is needed. The `f`-side equation collapses through
+`IsTopologicallyFiniteType.structHom_self` (`FormalSchemes.TopFiniteTypeHom`), and the conclusion is
+a statement about a composite that the affine-target theory cannot reach, since neither `Y` nor `Z`
+is assumed affine. -/
 theorem IsTopFiniteTypeHomOn.chartMap_comp {g : Y ⟶ Z} {𝒲 : OpenCover Z} {𝒱 : OpenCover Y}
     (hg : IsTopFiniteTypeHomOn g 𝒲 𝒱) (i : 𝒱.J) : IsTopFiniteTypeHom (𝒱.map i ≫ g) := by
   refine IsTfTypeTower.isTopFiniteTypeHom (𝒲 := 𝒲) (𝒱 := 𝒱)

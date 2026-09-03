@@ -7,12 +7,11 @@ set_option linter.style.header false
 /-!
 # Affine-locality of topological finite type, at an ideal given only up to cofinality
 
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`
-(`FormalSchemes.TopFiniteTypeAffineLocal`, issue 1202) assembles a tf-type algebra from a cover of
-it by tf-type basic opens, but it pins the ideal of definition of the assembled ring **on the
-nose**: it carries `I · A = L` as a hypothesis, and `IsTopologicallyFiniteType.map_eq`
-(`FormalSchemes.TopFiniteType`) means it could not do otherwise. This file relaxes that to
-`Ideal.IsCofinal L (I · A)`.
+`IsTopologicallyFiniteType.of_span_awayCompletion` (`FormalSchemes.TopFiniteTypeAffineLocal`, issue
+1202) assembles a tf-type algebra from a cover of it by tf-type basic opens, but it pins the ideal
+of definition of the assembled ring **on the nose**: it carries `I · A = L` as a hypothesis, and
+`IsTopologicallyFiniteType.map_eq` (`FormalSchemes.TopFiniteType`) means it could not do otherwise.
+This file relaxes that to `Ideal.IsCofinal L (I · A)`.
 
 ## Why the relaxation is not optional
 
@@ -67,10 +66,9 @@ with no hypothesis beyond `I.FG` and `J.FG`.
 ## Main results
 
 * `Ideal.sup_eq_top_of_pow_le`: the cover condition is invariant under cofinality.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal`: **the
-  relaxation.**
-* `AlgebraicGeometry.IsTopologicallyFiniteType.self_of_two_charts_pow`: non-vacuity, through a
-  genuinely non-reflexive cofinality — the two-chart cover of `Spf I` read against `I ^ 2`.
+* `IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal`: **the relaxation.**
+* `IsTopologicallyFiniteType.self_of_two_charts_pow`: non-vacuity, through a genuinely non-reflexive
+  cofinality — the two-chart cover of `Spf I` read against `I ^ 2`.
 
 ## References
 
@@ -113,10 +111,10 @@ pins the ideal of a tf-type algebra to the extension of the base ideal, so no st
 against `L` could be true. What survives is that the two are cofinal, which is the hypothesis, so
 the adic topology of `A` is unchanged.
 
-As in `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`, `s` is an **arbitrary**
-set: `RingHom.OfLocalizationSpanTarget` performs the reduction to a finite subset, so no
+As in `IsTopologicallyFiniteType.of_span_awayCompletion`, `s` is an **arbitrary** set:
+`RingHom.OfLocalizationSpanTarget` performs the reduction to a finite subset, so no
 quasi-compactness hypothesis is needed here or upstream of here. -/
-theorem IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal (hI : I.FG)
+theorem _root_.IsTopologicallyFiniteType.of_span_awayCompletion_of_isCofinal (hI : I.FG)
     [IsAdicComplete L A] (hcof : Ideal.IsCofinal L (I.map (algebraMap R A))) (s : Set A)
     (hspan : Ideal.span s ⊔ L = ⊤)
     (H : ∀ g ∈ s, IsTopologicallyFiniteType R I (FormalSpectrum.awayCompletion L g)
@@ -138,15 +136,16 @@ topologically of finite type over itself, recovered from the two-chart cover
 `Spf I = D(a) ∪ D(1 - a)` read against the ideal `I ^ 2` rather than against `I`.
 
 This exercises the whole relaxation rather than only its statement: `I ^ 2` is not `I · R`, so
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion` does not apply; the
-completeness instance is produced by `IsAdicComplete.pow` (`FormalSchemes.CofinalAdicComplete`),
-the cover condition by `Ideal.sup_eq_top_of_pow_le`, and each chart hypothesis by transporting
+`IsTopologicallyFiniteType.of_span_awayCompletion` does not apply; the completeness instance is
+produced by `IsAdicComplete.pow` (`FormalSchemes.CofinalAdicComplete`), the cover condition by
+`Ideal.sup_eq_top_of_pow_le`, and each chart hypothesis by transporting
 `IsTopologicallyFiniteType.awayCompletion_base` — which is stated against `I` — across
 `AdicCompletion.cofinalAlgEquiv`. The conclusion `IsTopologicallyFiniteType R I R I` agrees with
 `IsTopologicallyFiniteType.self`, proved by the unrelated zero-variable presentation, and is not
 closed by `rfl`: the chart algebras are completions of localizations of `R`, at a *square* of the
 ideal of definition. -/
-theorem IsTopologicallyFiniteType.self_of_two_charts_pow [IsAdicComplete I R] (hI : I.FG) (a : R) :
+theorem _root_.IsTopologicallyFiniteType.self_of_two_charts_pow [IsAdicComplete I R] (hI : I.FG)
+    (a : R) :
     IsTopologicallyFiniteType R I R I := by
   haveI : IsAdicComplete (I ^ 2) R := IsAdicComplete.pow (M := R) two_ne_zero
   have hself : I.map (algebraMap R R) = I := by rw [Algebra.algebraMap_self, Ideal.map_id]

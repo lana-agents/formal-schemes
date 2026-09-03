@@ -18,8 +18,8 @@ witness that the transfer is not vacuous.
 it. The corollary below does that once. `I` and `I ^ k` are different ideals with the same
 completions, which is the same example that refutes the on-the-nose form of
 `FormalSpectrum.isCofinal_map_spfIsoRingEquiv` (`FormalSchemes.SpfIsoIdealRecovery`), and it is
-the shape in which `AlgebraicGeometry.IsTopologicallyFiniteType.self_of_two_charts_pow` exercises
-the relaxation against a cofinality that is not reflexive.
+the shape in which `IsTopologicallyFiniteType.self_of_two_charts_pow` exercises the relaxation
+against a cofinality that is not reflexive.
 
 ## Main results
 

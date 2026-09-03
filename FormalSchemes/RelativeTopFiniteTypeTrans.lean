@@ -73,11 +73,10 @@ two theorems that justify it, only the second is still open:
   the unit ideal and each localisation `S_{gᵢ}` is of finite type over `R`, then so is `S`" —
   which this bullet used
   to name as the missing ingredient — is, since issue 1202,
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`
-  (`FormalSchemes.TopFiniteTypeAffineLocal`), on top of the basic-open case
-  `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`
+  `IsTopologicallyFiniteType.of_span_awayCompletion` (`FormalSchemes.TopFiniteTypeAffineLocal`), on
+  top of the basic-open case `IsTopologicallyFiniteType.awayCompletion`
   (`FormalSchemes.AwayTopFiniteType`). Issue 1207 then assembled the affine-open statement itself,
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
+  `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
   (`FormalSchemes.AffineOpenTopFiniteType`), including the identification of the two chart
   presentations of a basic open `D(f)` of an affine open `V` — which does hold only up to an
   equivalent ideal of definition, and is `FormalSpectrum.spfAlgEquivOfComm`
@@ -87,24 +86,22 @@ two theorems that justify it, only the second is still open:
 Both of §10.13's blockers are now closed, so this file's closing sentence no longer holds anything
 back; what remains open is EGA I 10.12, not 10.13.
 
-## A namespace warning, because it is not a mistake to be fixed
+## The namespace, no longer a warning
 
-`IsTopologicallyFiniteType` and its API — `IsTopologicallyFiniteType.map_eq`,
-`IsTopologicallyFiniteType.structMap`, `IsTopologicallyFiniteType.trans` — live at the **root**,
-because `FormalSchemes.TopFiniteType` declares them there.
-`AlgebraicGeometry.IsTopologicallyFiniteType.structHom` lives one namespace in, because
-`FormalSchemes.RelativeTopFiniteType` declares it inside `AlgebraicGeometry`. The lemmas below
-follow their subjects: `IsTopologicallyFiniteType.structMap_comp` is at root and
-`AlgebraicGeometry.IsTopologicallyFiniteType.structHom_trans` is not. A
-`#check @AlgebraicGeometry.IsTopologicallyFiniteType.structMap` reports the constant as unknown
-when it is perfectly present.
+`IsTopologicallyFiniteType` and its whole API — `IsTopologicallyFiniteType.map_eq`,
+`IsTopologicallyFiniteType.structMap`, `IsTopologicallyFiniteType.trans`,
+`IsTopologicallyFiniteType.structHom` — live at the **root**, where `FormalSchemes.TopFiniteType`
+declares the predicate. This file used to be the sharpest witness that they did not: it held
+`IsTopologicallyFiniteType.structMap_comp` at the root and
+`IsTopologicallyFiniteType.structHom_trans` one namespace in, and said so here. Both are at the
+root now, and so is everything they cite.
 
 ## Main results
 
 * `IsTopologicallyFiniteType.structMap_comp`: the structural morphisms of a tower compose to the
   structural morphism of the composite, as locally ringed spaces.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.structHom_trans`: the same one level up, for
-  `structHom` and `trans`.
+* `IsTopologicallyFiniteType.structHom_trans`: the same one level up, for
+  `IsTopologicallyFiniteType.structHom` and `IsTopologicallyFiniteType.trans`.
 * `AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType.comp_structHom`: **the headline** —
   EGA I 10.13's composition law in the generality the base-affine notion admits.
 * `AlgebraicGeometry.FormalScheme.IsAffineTopFiniteType.trans`,
@@ -162,7 +159,7 @@ It is also the coherence check for `IsRelativelyTopFiniteType.comp_structHom` be
 `IsTopologicallyFiniteType.isRelativelyTopFiniteType`, that theorem lands on
 `structHom hB ≫ structHom hA`, and this identity is what says the object it lands on is the one
 the affine theory already had. -/
-theorem IsTopologicallyFiniteType.structHom_trans (hI : I.FG)
+theorem _root_.IsTopologicallyFiniteType.structHom_trans (hI : I.FG)
     (hA : IsTopologicallyFiniteType R I A L) (hB : IsTopologicallyFiniteType A L B M) :
     IsTopologicallyFiniteType.structHom hB ≫ IsTopologicallyFiniteType.structHom hA =
       IsTopologicallyFiniteType.structHom (hA.trans hI hB) :=

@@ -24,9 +24,8 @@ Spf A{1/(c·A)}^ --chart--> Spf A
 ```
 
 commutes. This is the geometric counterpart of
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange_of_algebraMap_eq`, whose
-algebra structure it is stated relative to: the vertical map on the left is `Spf` of
-`FormalSpectrum.awayBaseHom`.
+`IsTopologicallyFiniteType.awayCompletion_baseChange_of_algebraMap_eq`, whose algebra structure it
+is stated relative to: the vertical map on the left is `Spf` of `FormalSpectrum.awayBaseHom`.
 
 The proof does not unfold a structure sheaf. `FormalSpectrum.basicOpenChart` and
 `IsTopologicallyFiniteType.structMap` are both `FormalSpectrum.locallyRingedSpaceMap`, so the
@@ -61,9 +60,9 @@ commutes with the structural morphisms, the left-hand vertical being `Spf` of
 
 Stated relative to a supplied `Algebra (R{1/c}^) (A{1/(c·A)}^)` and the identification `halg` of
 its structure map with `awayBaseHom`, exactly as
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange_of_algebraMap_eq` is: there
-is no canonical such instance, the two rings being completions of localisations of two different
-rings at two different elements.
+`IsTopologicallyFiniteType.awayCompletion_baseChange_of_algebraMap_eq` is: there is no canonical
+such instance, the two rings being completions of localisations of two different rings at two
+different elements.
 
 The two readings of the composite `R → R{1/c}^ → A{1/(c·A)}^ = R → A → A{1/(c·A)}^` are identified
 by `FormalSpectrum.awayBaseHom_comp_algebraMap` against

@@ -27,11 +27,9 @@ A{1/(c·A)}^  is tf-type over  (R{1/c}^, I{1/c}^).
 This is the **base-side** away statement. The tree already had two others, and all three must stay
 apart:
 
-* `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion` (`FormalSchemes.AwayTopFiniteType`)
-  is the **source**-side statement: `A{1/g}^` is tf-type over the *unchanged* base `(R, I)`, for
-  `g : A`.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_base` is that one's specialisation
-  `A = R`, `L = I`.
+* `IsTopologicallyFiniteType.awayCompletion` (`FormalSchemes.AwayTopFiniteType`) is the
+  **source**-side statement: `A{1/g}^` is tf-type over the *unchanged* base `(R, I)`, for `g : A`.
+* `IsTopologicallyFiniteType.awayCompletion_base` is that one's specialisation `A = R`, `L = I`.
 * This file moves the **base**: both rings are localized, at `c : R` downstairs and at its image
   `algebraMap R A c` upstairs, and the conclusion is a tf-type statement over a *new* base ring.
 
@@ -53,8 +51,8 @@ different elements. The structure has to be built, and this file builds it:
 * `FormalSpectrum.awayBaseAlgebra`: the induced algebra structure, which the theorem below installs
   with `letI`.
 
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange_of_algebraMap_eq` is the
-form for a caller who already holds an algebra structure — for instance the one an
+`IsTopologicallyFiniteType.awayCompletion_baseChange_of_algebraMap_eq` is the form for a caller who
+already holds an algebra structure — for instance the one an
 `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHomOn` datum existentially supplies — and can
 identify its structure map with `FormalSpectrum.awayBaseHom`.
 
@@ -94,7 +92,7 @@ composite, which is a surjective `R{1/c}^`-algebra map.
   definition of `R ⊗̂_R A` onto `I·A`. The tree had `CompletedTensorProduct.unitEquiv_inl` and
   `CompletedTensorProduct.unitEquiv_inr`, the unitor on elements, but nothing on the ideal.
 * `FormalSpectrum.awayBaseHom` and `FormalSpectrum.awayBaseAlgebra`, described above.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange`: the theorem.
+* `IsTopologicallyFiniteType.awayCompletion_baseChange`: the theorem.
 * `RestrictedPowerSeries.isTopologicallyFiniteType_awayCompletion_baseChange`: the polydisc
   instance — `R{X₁, …, Xₙ}{1/c}^` is tf-type over `(R{1/c}^, I{1/c}^)`.
 
@@ -504,14 +502,14 @@ topologically of finite type over `(R{1/c}^, I{1/c}^)`.
 This is the form for a caller who already holds an algebra structure — for instance the one an
 `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHomOn` datum existentially supplies — and can
 identify its structure map with `FormalSpectrum.awayBaseHom`. The unprimed
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange` below is the form that
-installs the structure itself.
+`IsTopologicallyFiniteType.awayCompletion_baseChange` below is the form that installs the structure
+itself.
 
 Every chart type below is spelled `FormalSpectrum.awayCompletion` in full. That is not decoration:
 inside a declaration whose name lies in the `IsTopologicallyFiniteType` namespace, a bare
 `awayCompletion` resolves to the *source*-side theorem
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion` instead. -/
-theorem IsTopologicallyFiniteType.awayCompletion_baseChange_of_algebraMap_eq
+`IsTopologicallyFiniteType.awayCompletion` instead. -/
+theorem _root_.IsTopologicallyFiniteType.awayCompletion_baseChange_of_algebraMap_eq
     (hI : I.FG) (h : IsTopologicallyFiniteType R I A L) (c : R)
     [Algebra (FormalSpectrum.awayCompletion I c)
       (FormalSpectrum.awayCompletion L (algebraMap R A c))]
@@ -550,18 +548,17 @@ type over `(R, I)` with ideal of definition `L = I·A` and `c : R`, then the com
 of the base, for the algebra structure `FormalSpectrum.awayBaseAlgebra`.
 
 This is the base-side companion of
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`, which localizes the *source* `A` and
-keeps the base `(R, I)` fixed, and of its specialisation
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_base`, which is that source-side
-statement at `A = R`. Here **both** rings are localized: `R` at `c` and `A` at the image
-`algebraMap R A c`.
+`IsTopologicallyFiniteType.awayCompletion`, which localizes the *source* `A` and keeps the base
+`(R, I)` fixed, and of its specialisation `IsTopologicallyFiniteType.awayCompletion_base`, which is
+that source-side statement at `A = R`. Here **both** rings are localized: `R` at `c` and `A` at the
+image `algebraMap R A c`.
 
 The hypothesis `[IsAdicComplete (I.map (algebraMap R A)) A]` is what the left unitor
 `CompletedTensorProduct.unitEquiv` needs, and it is not implied by the tf-type predicate — a
 presentation is only known to make `A` complete once its kernel is adically closed
 (`IsTopologicallyFiniteType.isAdicRing`). In the geometric setting it is free: there `Spf A` is an
 affine formal scheme, so `A` carries `IsAdicRing L`. -/
-theorem IsTopologicallyFiniteType.awayCompletion_baseChange (hI : I.FG)
+theorem _root_.IsTopologicallyFiniteType.awayCompletion_baseChange (hI : I.FG)
     (h : IsTopologicallyFiniteType R I A L) (c : R) :
     letI := FormalSpectrum.awayBaseAlgebra c hI h.map_eq
     IsTopologicallyFiniteType (FormalSpectrum.awayCompletion I c)
@@ -583,9 +580,9 @@ variable {R : Type u} [CommRing R] {I : Ideal R}
 finite type over `(R{1/c}^, I{1/c}^)`, for `c : R` a *base* element.
 
 The first consumer of
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange`, and a non-vacuity witness
-for it: the conclusion is a genuinely new statement about a genuinely new ring, and its proof does
-nothing but instantiate the theorem at the polydisc's identity presentation
+`IsTopologicallyFiniteType.awayCompletion_baseChange`, and a non-vacuity witness for it: the
+conclusion is a genuinely new statement about a genuinely new ring, and its proof does nothing but
+instantiate the theorem at the polydisc's identity presentation
 (`RestrictedPowerSeries.isTopologicallyFiniteType`). The polydisc is complete
 (`RestrictedPowerSeries.isAdicRing`), which is what discharges the theorem's standing
 `IsAdicComplete` hypothesis. -/
@@ -603,7 +600,7 @@ theorem isTopologicallyFiniteType_awayCompletion_baseChange (hI : I.FG) (n : ℕ
   letI : IsAdicComplete (I.map (algebraMap R (RestrictedPowerSeries R I n)))
       (RestrictedPowerSeries R I n) :=
     idealOfDefinition_eq_map R I n ▸ (isAdicRing R I n hI).toIsAdicComplete
-  AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_baseChange hI
+  IsTopologicallyFiniteType.awayCompletion_baseChange hI
     (isTopologicallyFiniteType R I n) c
 
 end RestrictedPowerSeries

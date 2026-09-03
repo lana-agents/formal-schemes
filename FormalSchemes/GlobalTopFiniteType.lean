@@ -75,7 +75,7 @@ def IsLocallyTopFiniteType (X : FormalScheme.{u}) : Prop :=
 variable {R I}
 
 /-- The affine formal scheme `Spf L` of a tf-type algebra is affine tf-type over `(R, I)`. -/
-theorem _root_.AlgebraicGeometry.IsTopologicallyFiniteType.isAffineTopFiniteType
+theorem _root_.IsTopologicallyFiniteType.isAffineTopFiniteType
     {A : Type u} [CommRing A] [TopologicalSpace A] [Algebra R A] {L : Ideal A} [IsAdicRing L]
     (h : IsTopologicallyFiniteType R I A L) :
     IsAffineTopFiniteType R I (FormalScheme.Spf L) :=
@@ -106,7 +106,7 @@ theorem IsAffineTopFiniteType.isLocallyTopFiniteType {Y : FormalScheme.{u}}
   ⟨OpenCover.self Y, fun _ => h⟩
 
 /-- `Spf L` of a tf-type algebra is locally tf-type over `(R, I)`. -/
-theorem _root_.AlgebraicGeometry.IsTopologicallyFiniteType.isLocallyTopFiniteType
+theorem _root_.IsTopologicallyFiniteType.isLocallyTopFiniteType
     {A : Type u} [CommRing A] [TopologicalSpace A] [Algebra R A] {L : Ideal A} [IsAdicRing L]
     (h : IsTopologicallyFiniteType R I A L) :
     IsLocallyTopFiniteType R I (FormalScheme.Spf L) :=

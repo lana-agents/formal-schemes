@@ -10,13 +10,12 @@ set_option linter.style.header false
 > If the basic opens `D(g)`, `g ∈ s`, cover `Spf L` and each chart algebra `A{1/g}^` is
 > topologically of finite type over `(R, I)`, then so is `A`.
 
-That is `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`. It is the adic
-analogue of the algebra theorem "if `g₁, …, gₙ` generate the unit ideal and every `S_{gᵢ}` is of
-finite type over `R`, then so is `S`", which is the statement
-`FormalSchemes.RelativeTopFiniteTypeTrans` named as the missing general case and which
-`FormalSchemes.TopFiniteTypeHom` and `FormalSchemes.TwoChartBasicOpen` recorded as absent. Those
-three module docstrings are the whole of the tree's record of the gap, and all three are amended
-alongside this file: it is absent no longer.
+That is `IsTopologicallyFiniteType.of_span_awayCompletion`. It is the adic analogue of the algebra
+theorem "if `g₁, …, gₙ` generate the unit ideal and every `S_{gᵢ}` is of finite type over `R`, then
+so is `S`", which is the statement `FormalSchemes.RelativeTopFiniteTypeTrans` named as the missing
+general case and which `FormalSchemes.TopFiniteTypeHom` and `FormalSchemes.TwoChartBasicOpen`
+recorded as absent. Those three module docstrings are the whole of the tree's record of the gap, and
+all three are amended alongside this file: it is absent no longer.
 
 ## The route, and why it is not the expected one
 
@@ -69,10 +68,10 @@ So the obstruction is no longer an algebra theorem; it is the chart-identificati
 
 * `AlgebraicGeometry.awayCompletionResidueEquiv_comp_residueRingHom_algebraMap`: the special fibre
   of a basic-open chart, over the base rather than over `A`.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_span_awayCompletion`: **affine-locality.**
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_awayCompletion_compl`: the two-chart case, which
-  needs no side condition.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.self_of_two_charts`: non-vacuity.
+* `IsTopologicallyFiniteType.of_span_awayCompletion`: **affine-locality.**
+* `IsTopologicallyFiniteType.of_awayCompletion_compl`: the two-chart case, which needs no side
+  condition.
+* `IsTopologicallyFiniteType.self_of_two_charts`: non-vacuity.
 
 ## References
 
@@ -142,7 +141,7 @@ The proof is `isTopologicallyFiniteType_iff_finiteType_residueRingHom` in both d
 once to turn each chart hypothesis into finite type of an ordinary ring map, once to turn the
 conclusion back — with `RingHom.finiteType_ofLocalizationSpanTarget` in between. Completeness of
 `A` is used, in the backward direction only. -/
-theorem IsTopologicallyFiniteType.of_span_awayCompletion (hI : I.FG) [IsAdicComplete L A]
+theorem _root_.IsTopologicallyFiniteType.of_span_awayCompletion (hI : I.FG) [IsAdicComplete L A]
     (h : I.map (algebraMap R A) = L) (s : Set A) (hspan : Ideal.span s ⊔ L = ⊤)
     (H : ∀ g ∈ s, IsTopologicallyFiniteType R I
       (FormalSpectrum.awayCompletion L g) (awayCompletionIdeal L g)) :
@@ -165,7 +164,7 @@ theorem IsTopologicallyFiniteType.of_span_awayCompletion (hI : I.FG) [IsAdicComp
 /-- **The two-chart case**, which carries no side condition at all: `a` and `1 - a` generate the
 unit ideal of `A` for every `a`, so the two basic opens `D(a)` and `D(1 - a)` cover `Spf L`
 whatever `a` is. -/
-theorem IsTopologicallyFiniteType.of_awayCompletion_compl (hI : I.FG) [IsAdicComplete L A]
+theorem _root_.IsTopologicallyFiniteType.of_awayCompletion_compl (hI : I.FG) [IsAdicComplete L A]
     (h : I.map (algebraMap R A) = L) (a : A)
     (H₀ : IsTopologicallyFiniteType R I
       (FormalSpectrum.awayCompletion L a) (awayCompletionIdeal L a))
@@ -195,7 +194,8 @@ The conclusion is `IsTopologicallyFiniteType.self`, proved independently and by 
 are simultaneously satisfiable at a cover with more than one chart, the instance is not closed by
 `rfl` — `awayCompletion I a` is the completion of a localization, not `R` — and the two routes
 agree. -/
-theorem IsTopologicallyFiniteType.self_of_two_charts [IsAdicComplete I R] (hI : I.FG) (a : R) :
+theorem _root_.IsTopologicallyFiniteType.self_of_two_charts [IsAdicComplete I R] (hI : I.FG)
+    (a : R) :
     IsTopologicallyFiniteType R I R I :=
   IsTopologicallyFiniteType.of_awayCompletion_compl (A := R) (L := I) hI
     (by rw [Algebra.algebraMap_self, Ideal.map_id]) a

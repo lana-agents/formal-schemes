@@ -58,13 +58,14 @@ polydisc over a tf-type algebra is tf-type — followed by `IsTopologicallyFinit
 
 Nothing on this tree consumes `trans` yet, and it is worth recording why rather than inventing a
 consumer. The natural candidate is issue 807's
-`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion` (a basic-open chart of a tf-type
-formal affine is tf-type): iterating it looks like a job for transitivity, but it is already stated
-over the base `(R, I)` rather than over `(A, L)`, so it iterates on its own. What transitivity does
-give is a second proof of it — `trans` applied to `awayCompletion_base` at `(A, L)` — but only
-under the extra hypothesis `[IsAdicComplete L A]`, which `awayCompletion_base` needs and
-`awayCompletion` does not. That is strictly weaker, so it is not landed here and 807's direct proof
-stands.
+`IsTopologicallyFiniteType.awayCompletion` (a basic-open chart of a tf-type formal affine is
+tf-type): iterating it looks like a job for transitivity, but it is already stated over the base
+`(R, I)` rather than over `(A, L)`, so it iterates on its own. What transitivity does give is a
+second proof of it — `IsTopologicallyFiniteType.trans` applied to
+`IsTopologicallyFiniteType.awayCompletion_base` at `(A, L)` — but only under the extra hypothesis
+`[IsAdicComplete L A]`, which that lemma needs and `IsTopologicallyFiniteType.awayCompletion` does
+not.
+That is strictly weaker, so it is not landed here and 807's direct proof stands.
 
 The declaration that will want `trans` is the composition law for the *morphism-level* finite-type
 notion (`FormalSchemes.RelativeTopFiniteType`), which does not exist yet; it is issue 62's own

@@ -7,9 +7,9 @@ set_option linter.style.header false
 /-!
 # Adicity of a morphism of formal spectra, up to cofinality
 
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
-(`FormalSchemes.AffineOpenTopFiniteType`) says an affine open of `Spf I` is topologically of
-finite type over `(R, I)`, and carries exactly one hypothesis:
+`IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` (`FormalSchemes.AffineOpenTopFiniteType`)
+says an affine open of `Spf I` is topologically of finite type over `(R, I)`, and carries exactly
+one hypothesis:
 
 > for an open immersion `m : Spf J ⟶ Spf I` with `algebraMap R B = globalSectionsMap I J m`,
 > `Ideal.IsCofinal J (I.map (algebraMap R B))`.
@@ -64,13 +64,12 @@ immersion is a statement about `V (J)` and its image in `V (I)`.
   if `Set.range m.base` is the range of a basic-open chart `Spf R{1/f}^ ⟶ Spf I`, then the
   cofinality holds, because on the chart the containment is an *equality*
   (`FormalSpectrum.map_algebraMap_awayCompletion`) and the previous item transports it. Hence
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`:
-  conservativity's affine step is **unconditional** over a basic open, for an arbitrary
-  presentation of it.
+  `IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`: conservativity's affine step is
+  **unconditional** over a basic open, for an arbitrary presentation of it.
 * **The consumer's hypothesis is one containment, not a cofinality.**
   `FormalSpectrum.isCofinal_map_of_le_radical` and
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_le_radical` take `J ≤ √(I · B)`
-  and supply the rest.
+  `IsTopologicallyFiniteType.of_openImmersion_of_le_radical` take `J ≤ √(I · B)` and supply the
+  rest.
 
 ## The candidate counterexample that does not exist
 
@@ -145,14 +144,13 @@ and the correction to `FormalSchemes.AffineThickenings`'s account of why it coul
 * `FormalSpectrum.isCofinal_map_of_range_eq`,
   `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart`: presentation-independence, and the
   basic-open case.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_le_radical`,
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`: the two
-  consumers.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_sq_of_openImmersion`: non-vacuity
-  for the basic-open case, at `D(t) = D(t * t)` — a presentation that is not the chart itself.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.self_of_openImmersion_pow`: non-vacuity, through
-  the comparison isomorphism `Spf (I ^ 2) ≅ Spf I`, where the openness hypothesis is a genuinely
-  non-reflexive containment.
+* `IsTopologicallyFiniteType.of_openImmersion_of_le_radical`,
+  `IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`: the two consumers.
+* `IsTopologicallyFiniteType.awayCompletion_sq_of_openImmersion`: non-vacuity for the basic-open
+  case, at `D(t) = D(t * t)` — a presentation that is not the chart itself.
+* `IsTopologicallyFiniteType.self_of_openImmersion_pow`: non-vacuity, through the comparison
+  isomorphism `Spf (I ^ 2) ≅ Spf I`, where the openness hypothesis is a genuinely non-reflexive
+  containment.
 
 ## References
 
@@ -212,8 +210,8 @@ formal spectra `m : Spf J ⟶ Spf I` whose action on global sections is the `R`-
 
 **Neither an open immersion nor any finiteness is used**, and that is the reusable fact: this is
 half of the cofinality hypothesis of
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`, available for free
-and for every morphism.
+`IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`, available for free and for every
+morphism.
 
 A prime of `B` containing `J` is a point `y` of `Spf J` (`FormalSpectrum.range_toPrimeSpectrum`);
 its contraction along `globalSectionsMap I J m` is the point `m.base y` of `Spf I`
@@ -269,9 +267,9 @@ cofinality to it, its point-set content, and the class of opens for which it *is
 -/
 
 /-- **The cofinality, given the openness half alone.** The hypothesis of
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` is a cofinality, which
-is two containments of powers in opposite directions; this reduces it to the single containment
-`J ≤ √(I · B)`, since the other direction is `FormalSpectrum.map_le_radical_of_hom` and is free.
+`IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` is a cofinality, which is two containments
+of powers in opposite directions; this reduces it to the single containment `J ≤ √(I · B)`, since
+the other direction is `FormalSpectrum.map_le_radical_of_hom` and is free.
 
 `Ideal.IsCofinal.of_radical_eq` (`FormalSchemes.CofinalIdeal`) is the bridge and is where both
 `hI` and `hJ` are spent. Note the hypothesis is stated at `J` rather than at `J.radical`:
@@ -406,13 +404,13 @@ variable {B : Type u} [CommRing B] [TopologicalSpace B] {J : Ideal B} [IsAdicRin
 variable [Algebra R B]
 
 /-- **An affine open of `Spf I` is topologically of finite type over `(R, I)`, given only the
-openness half.** `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
+openness half.** `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`
 (`FormalSchemes.AffineOpenTopFiniteType`) with its cofinality hypothesis replaced by the single
 containment `J ≤ √(I · B)`, through `FormalSpectrum.isCofinal_map_of_le_radical`.
 
 The conclusion's ideal is `I · B` and could not be `J`: `IsTopologicallyFiniteType.map_eq` pins
 it. -/
-theorem IsTopologicallyFiniteType.of_openImmersion_of_le_radical (hI : I.FG) (hJ : J.FG)
+theorem _root_.IsTopologicallyFiniteType.of_openImmersion_of_le_radical (hI : I.FG) (hJ : J.FG)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (halg : algebraMap R B = globalSectionsMap I J m)
@@ -424,19 +422,19 @@ theorem IsTopologicallyFiniteType.of_openImmersion_of_le_radical (hI : I.FG) (hJ
 /-- **A basic affine open of `Spf I` is topologically of finite type over `(R, I)`, with no
 hypothesis beyond finite generation.** If the range of the open immersion is that of a basic-open
 chart, `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` discharges the hypothesis of
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` outright.
+`IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` outright.
 
-This is strictly more than `AlgebraicGeometry.IsTopologicallyFiniteType.of_basicOpenChart`
-(`FormalSchemes.AffineOpenTopFiniteType`), which is the case `m = FormalSpectrum.basicOpenChart I
-f` on the nose: here `(B, J)` is an arbitrary presentation of the same open, so `J` is pinned only
-up to cofinality, which is the strongest thing an open immersion determines. It was the first
+This is strictly more than `IsTopologicallyFiniteType.of_basicOpenChart`
+(`FormalSchemes.AffineOpenTopFiniteType`), which is the case `m = FormalSpectrum.basicOpenChart I f`
+on the nose: here `(B, J)` is an arbitrary presentation of the same open, so `J` is pinned only up
+to cofinality, which is the strongest thing an open immersion determines. It was the first
 unconditional case of conservativity's affine step.
 
-**Now a special case** of `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`
+**Now a special case** of `IsTopologicallyFiniteType.of_openImmersion`
 (`FormalSchemes.AffineThickeningsOpenImmersion`), which drops the restriction to a basic range and
 uses neither `f` nor `hrange`. Kept because it is upstream of that file and cannot cite it — and
 because three module docstrings name it as the first unconditional case. -/
-theorem IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen (hI : I.FG) (hJ : J.FG)
+theorem _root_.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen (hI : I.FG) (hJ : J.FG)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (halg : algebraMap R B = globalSectionsMap I J m) (f : R)
@@ -448,7 +446,7 @@ theorem IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen (hI : I.FG
 /-- **Non-vacuity for the basic-open case, at a presentation that is not the chart itself.**
 `D(t) = D(t * t)`, so `Spf R{1/(t * t)}^ ⟶ Spf I` is an open immersion whose range is that of the
 chart at `t`, and
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen` applies with
+`IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen` applies with
 `f := t` and `(B, J) := (R{1/(t * t)}^, awayCompletionIdeal I (t * t))`.
 
 This is an application and not a restatement: the two rings are completions of two *different*
@@ -460,10 +458,10 @@ would be `rfl`. It is the same witness that
 
 Every `FormalSpectrum.awayCompletion*` name here carries its namespace prefix even though the file
 opens `FormalSpectrum`: a declaration named `IsTopologicallyFiniteType.…` opens that namespace for
-its own elaboration, and `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion` then shadows
-`FormalSpectrum.awayCompletion`. The resulting error is
-`failed to synthesize CommRing (Ideal R)`, which does not name the shadowed identifier. -/
-theorem IsTopologicallyFiniteType.awayCompletion_sq_of_openImmersion (hI : I.FG) (t : R) :
+its own elaboration, and `IsTopologicallyFiniteType.awayCompletion` then shadows
+`FormalSpectrum.awayCompletion`. The resulting error is `failed to synthesize CommRing (Ideal R)`,
+which does not name the shadowed identifier. -/
+theorem _root_.IsTopologicallyFiniteType.awayCompletion_sq_of_openImmersion (hI : I.FG) (t : R) :
     IsTopologicallyFiniteType R I (FormalSpectrum.awayCompletion I (t * t))
       (I.map (algebraMap R (FormalSpectrum.awayCompletion I (t * t)))) := by
   haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal I t) :=
@@ -490,7 +488,7 @@ immersion, its action on global sections is the identity of `R`, and the opennes
 has to satisfy is `I ^ 2 ≤ √I`, which is not reflexivity and is not closed by `rfl`.
 
 That is the bar for anything about `Ideal.IsCofinal`, in the sense of
-`AlgebraicGeometry.IsTopologicallyFiniteType.self_of_two_charts_pow`
+`IsTopologicallyFiniteType.self_of_two_charts_pow`
 (`FormalSchemes.CofinalTopFiniteTypeAffineLocal`), whose conclusion this shares and whose route it
 does not: that one covers `Spf (I ^ 2)` by the two charts `D(a)` and `D(1 - a)`, this one runs the
 whole open-immersion machinery on a single open immersion which happens to be an isomorphism.
@@ -499,7 +497,7 @@ whole open-immersion machinery on a single open immersion which happens to be an
 of `FormalSpectrum.locallyRingedSpaceMap` at `RingHom.id R`, so
 `FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap` and
 `FormalSpectrum.globalSectionsMap_comp` identify it with the identity. -/
-theorem IsTopologicallyFiniteType.self_of_openImmersion_pow (hI : I.FG) :
+theorem _root_.IsTopologicallyFiniteType.self_of_openImmersion_pow (hI : I.FG) :
     IsTopologicallyFiniteType R I R (I.map (algebraMap R R)) := by
   haveI : IsAdicRing (I ^ 2) := IsAdicRing.of_isCofinal (Ideal.IsCofinal.pow I two_ne_zero)
   have hle : I ^ 2 ≤ I := Ideal.pow_le_self two_ne_zero

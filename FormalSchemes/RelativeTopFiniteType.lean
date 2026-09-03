@@ -61,7 +61,7 @@ variable {R : Type u} [CommRing R] {I : Ideal R} [TopologicalSpace R] [IsAdicRin
 /-- The structural morphism `Spf L ⟶ Spf R` of a tf-type adic `R`-algebra `A` (ideal of
 definition `L`), packaged as a morphism of formal schemes. It is the `FormalScheme.Hom` wrapper
 of the locally-ringed-space structural map `IsTopologicallyFiniteType.structMap`. -/
-def IsTopologicallyFiniteType.structHom {A : Type u} [CommRing A] [TopologicalSpace A]
+def _root_.IsTopologicallyFiniteType.structHom {A : Type u} [CommRing A] [TopologicalSpace A]
     [Algebra R A] {L : Ideal A} [IsAdicRing L] (h : IsTopologicallyFiniteType R I A L) :
     FormalScheme.Spf L ⟶ FormalScheme.Spf I :=
   FormalScheme.Hom.mk (IsTopologicallyFiniteType.structMap h.map_eq)
@@ -84,7 +84,7 @@ def IsRelativelyTopFiniteType {X : FormalScheme.{u}} (f : X ⟶ FormalScheme.Spf
 
 /-- The affine structural morphism `Spf L ⟶ Spf R` of a tf-type algebra is relatively tf-type:
 it is witnessed by the one-object self-cover with the identity identification. -/
-theorem _root_.AlgebraicGeometry.IsTopologicallyFiniteType.isRelativelyTopFiniteType
+theorem _root_.IsTopologicallyFiniteType.isRelativelyTopFiniteType
     {A : Type u} [CommRing A] [TopologicalSpace A] [Algebra R A] {L : Ideal A} [IsAdicRing L]
     (h : IsTopologicallyFiniteType R I A L) :
     IsRelativelyTopFiniteType R I (IsTopologicallyFiniteType.structHom h) :=

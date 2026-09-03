@@ -30,12 +30,12 @@ variables gives a presentation of `A{1/g}^` by `n + 1`.
 
 ## Main results
 
-* `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`: the theorem above.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.self`: a complete adic ring is tf-type over itself
-  (the zero-variable presentation).
-* `AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion_base`: the specialisation to
-  `A = R`, `L = I`, which is the shape `FormalSpectrum.basicOpenChart` charts on `Spf R` appear in.
-  It needs `[IsAdicComplete I R]`, inherited from `self`.
+* `IsTopologicallyFiniteType.awayCompletion`: the theorem above.
+* `IsTopologicallyFiniteType.self`: a complete adic ring is tf-type over itself (the zero-variable
+  presentation).
+* `IsTopologicallyFiniteType.awayCompletion_base`: the specialisation to `A = R`, `L = I`, which is
+  the shape `FormalSpectrum.basicOpenChart` charts on `Spf R` appear in. It needs
+  `[IsAdicComplete I R]`, inherited from `IsTopologicallyFiniteType.self`.
 * `Ideal.map_algebraMap_of_tower`: transitivity of ideal extension along a tower, stated for the
   reason in the next-but-one section. The `awayCompletion`-specific consequences that used to sit
   beside it — `awayCompletionIdeal_eq_map_algebraMap` and `map_algebraMap_awayCompletion` — moved
@@ -233,7 +233,7 @@ theorem awayEval_comp_coordIncl (hI : I.FG) (h : I.map (algebraMap R A) = L)
 /-- **A basic-open chart of a topologically-finite-type formal affine is topologically of finite
 type** (EGA I §10.13): if `A` is tf-type over `(R, I)` with ideal of definition `L`, then so is the
 completed localization `A{1/g}^`, with one extra variable. -/
-theorem IsTopologicallyFiniteType.awayCompletion (hI : I.FG)
+theorem _root_.IsTopologicallyFiniteType.awayCompletion (hI : I.FG)
     (hA : IsTopologicallyFiniteType R I A L) :
     IsTopologicallyFiniteType R I (FormalSpectrum.awayCompletion L g)
       (awayCompletionIdeal L g) := by
@@ -266,7 +266,7 @@ Arguably this belongs beside `RestrictedPowerSeries.isTopologicallyFiniteType` i
 below and this issue was scoped to be purely additive. Note the completeness hypothesis is
 genuinely necessary — with `I` non-nilpotent and `R` not `I`-adically complete, `R` is *not* a
 quotient of any `R{X₁, …, Xₙ}`. -/
-theorem IsTopologicallyFiniteType.self [IsAdicComplete I R] :
+theorem _root_.IsTopologicallyFiniteType.self [IsAdicComplete I R] :
     IsTopologicallyFiniteType R I R I := by
   have hIL : I.map (algebraMap R R) ≤ I := by
     rw [Algebra.algebraMap_self, Ideal.map_id]
@@ -284,7 +284,8 @@ theorem IsTopologicallyFiniteType.self [IsAdicComplete I R] :
 over `(R, I)`. The specialisation `A = R`, `L = I` of
 `IsTopologicallyFiniteType.awayCompletion`, and the shape in which the charts of
 `FormalSpectrum.basicOpenChart` on `Spf R` occur. -/
-theorem IsTopologicallyFiniteType.awayCompletion_base [IsAdicComplete I R] (hI : I.FG) (f : R) :
+theorem _root_.IsTopologicallyFiniteType.awayCompletion_base [IsAdicComplete I R] (hI : I.FG)
+    (f : R) :
     IsTopologicallyFiniteType R I (FormalSpectrum.awayCompletion I f)
       (awayCompletionIdeal I f) :=
   IsTopologicallyFiniteType.awayCompletion (A := R) (L := I) f hI

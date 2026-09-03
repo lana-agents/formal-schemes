@@ -31,11 +31,11 @@ affine-local — the statement three module docstrings on this tree recorded as 
 (`FormalSchemes.TopFiniteTypeHom`, `FormalSchemes.RelativeTopFiniteTypeTrans` and
 `FormalSchemes.TwoChartBasicOpen`, all three amended alongside these two files).
 
-The predicate itself is root-level, and so are some of its lemmas
-(`IsTopologicallyFiniteType.map_eq`, `IsTopologicallyFiniteType.trans`); others
-(`AlgebraicGeometry.IsTopologicallyFiniteType.awayCompletion`,
-`AlgebraicGeometry.IsTopologicallyFiniteType.self`) sit in `AlgebraicGeometry`. The split is
-historical rather than principled; the declarations below follow the second convention.
+The predicate and its API are root-level, where `FormalSchemes.TopFiniteType` declares the
+predicate, and so are the declarations below. The split that used to leave
+`IsTopologicallyFiniteType.map_eq` and `IsTopologicallyFiniteType.trans` at the root while sending
+`IsTopologicallyFiniteType.awayCompletion` and `IsTopologicallyFiniteType.self` into
+`AlgebraicGeometry` was historical rather than principled, and is gone.
 
 ## The two directions
 
@@ -77,8 +77,8 @@ affine-locality, and how far it goes towards conservativity of
 
 * `AlgebraicGeometry.quotient_apply_algebraMap_eq_eval₂`: a presentation, read on the special
   fibre.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.finiteType_residueRingHom` and
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_finiteType_residueRingHom`: the two directions.
+* `IsTopologicallyFiniteType.finiteType_residueRingHom` and
+  `IsTopologicallyFiniteType.of_finiteType_residueRingHom`: the two directions.
 * `AlgebraicGeometry.surjective_of_quotient_surjective`: surjectivity of a presentation is a
   condition on the special fibre.
 * `AlgebraicGeometry.isTopologicallyFiniteType_iff_finiteType_residueRingHom`: **the
@@ -145,7 +145,7 @@ in `L`.
 Only the surjectivity of the presentation and the identity `(I·R{X}).map ψ = L` are used; the
 adic topology of `A` plays no role, which is why this direction needs no completeness
 hypothesis. -/
-theorem IsTopologicallyFiniteType.finiteType_residueRingHom (hI : I.FG)
+theorem _root_.IsTopologicallyFiniteType.finiteType_residueRingHom (hI : I.FG)
     (hIL : I ≤ L.comap (algebraMap R A)) (hA : IsTopologicallyFiniteType R I A L) :
     (FormalSpectrum.residueRingHom I L (algebraMap R A) hIL).FiniteType := by
   obtain ⟨n, ψ, hψ, hL⟩ := hA
@@ -204,8 +204,9 @@ uses none of this: it is `I·R{X}` pushed along an `R`-algebra map to `I·A`.
 Completeness of `A` is not a technical convenience — a non-complete `A` is a quotient of no
 `R{X₁, …, Xₙ}` at all (compare `IsTopologicallyFiniteType.self`,
 `FormalSchemes.AwayTopFiniteType`). -/
-theorem IsTopologicallyFiniteType.of_finiteType_residueRingHom (hI : I.FG) [IsAdicComplete L A]
-    (h : I.map (algebraMap R A) = L) (hIL : I ≤ L.comap (algebraMap R A))
+theorem _root_.IsTopologicallyFiniteType.of_finiteType_residueRingHom (hI : I.FG)
+    [IsAdicComplete L A] (h : I.map (algebraMap R A) = L)
+    (hIL : I ≤ L.comap (algebraMap R A))
     (hft : (FormalSpectrum.residueRingHom I L (algebraMap R A) hIL).FiniteType) :
     IsTopologicallyFiniteType R I A L := by
   letI : Algebra (R ⧸ I) (A ⧸ L) :=

@@ -63,16 +63,19 @@ example {R : Type u} [CommRing R] {M : Type u} [AddCommGroup M] [Module R M] {K 
     (hle : K ≤ I) {c : ℕ} (hc : I ^ c ≤ K) [IsPrecomplete I M] : IsPrecomplete K M :=
   IsPrecomplete.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le hle hc)
 
-/-- **B63.** `AlgebraicGeometry.IsTopologicallyFiniteType.fg` is
-`IsTopologicallyFiniteType.fg_of_presentation` at the presentation the tf-type witness carries;
-the latter does not use its surjectivity.
+/-- **B63.** `IsTopologicallyFiniteType.fg` is `IsTopologicallyFiniteType.fg_of_presentation`
+at the presentation the tf-type witness carries; the latter does not use its surjectivity.
 
 Row 1544 acted on this. When the bucket was read, the general form sat in the
 RestrictedPowerSeries namespace in `FormalSchemes.TopFiniteTypeTrans`, which the special form
 cannot see; it now lives beside its own only input,
 `IsTopologicallyFiniteType.map_eq_of_presentation` (`FormalSchemes.TopFiniteType`), where the
 special form can and does cite it. The bucket survives — two declarations in two modules still
-conclude that the ideal is finitely generated — but it is now a *declared* pair. -/
+conclude that the ideal is finitely generated — but it is now a *declared* pair.
+
+Row 1554 acted on this too, in a way that changes no bucket: the special form used to be spelled
+one namespace in, and the whole `IsTopologicallyFiniteType` API is now at the root. The example
+below is unchanged, because it never named the namespace. -/
 example {R : Type u} [CommRing R] {I : Ideal R} {A : Type u} [CommRing A] [Algebra R A]
     {L : Ideal A} (h : IsTopologicallyFiniteType R I A L) (hI : I.FG) : L.FG := by
   obtain ⟨n, ψ, _, hψ⟩ := h

@@ -52,11 +52,11 @@ only place other than the range being open.
   adic up to cofinality**, `Ideal.IsCofinal J (I.map (algebraMap R B))`, needing `I.FG` and `J.FG`.
   This is EGA I 10.12's statement, and the on-the-nose form `I · B ≤ J` is false — see
   `FormalSchemes.AdicOnSections` for the counterexample `Spf (y ^ 2) ≅ Spf (y)`.
-* `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion` — conservativity's affine step:
-  an arbitrary affine open of `Spf I`, presented by any open immersion, is topologically of finite
-  type over `(R, I)`. `FormalSchemes.AffineOpenTopFiniteType`'s
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` is where the
-  cofinality was consumed and this is its hypothesis discharged.
+* `IsTopologicallyFiniteType.of_openImmersion` — conservativity's affine step: an arbitrary affine
+  open of `Spf I`, presented by any open immersion, is topologically of finite type over `(R, I)`.
+  `FormalSchemes.AffineOpenTopFiniteType`'s
+  `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` is where the cofinality was consumed and
+  this is its hypothesis discharged.
 
 ## Main results
 
@@ -320,11 +320,11 @@ variable [Algebra R B]
 arbitrary open immersion of formal spectra, is topologically of finite type over `(R, I)`.
 
 `FormalSchemes.AffineOpenTopFiniteType`'s
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` reduced this to a
-cofinality, and `FormalSpectrum.isCofinal_map_of_openImmersion` supplies it. Compare
-`AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`, which is this
-statement for an open immersion whose range is basic. -/
-theorem IsTopologicallyFiniteType.of_openImmersion (hI : I.FG) (hJ : J.FG)
+`IsTopologicallyFiniteType.of_openImmersion_of_isCofinal` reduced this to a cofinality, and
+`FormalSpectrum.isCofinal_map_of_openImmersion` supplies it. Compare
+`IsTopologicallyFiniteType.of_openImmersion_range_eq_basicOpen`, which is this statement for an open
+immersion whose range is basic. -/
+theorem _root_.IsTopologicallyFiniteType.of_openImmersion (hI : I.FG) (hJ : J.FG)
     (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
     [LocallyRingedSpace.IsOpenImmersion m]
     (halg : algebraMap R B = globalSectionsMap I J m) :

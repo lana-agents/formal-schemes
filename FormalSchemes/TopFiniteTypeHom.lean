@@ -122,11 +122,11 @@ conservativity — and both are now closed, neither of them in this file.
   cofinality**, `Ideal.IsCofinal J (I · B)`, the on-the-nose form of which is *false*
   (`FormalSchemes.AdicOnSections`) — and **that hypothesis is now discharged**:
   `FormalSpectrum.isCofinal_map_of_openImmersion` and
-  `AlgebraicGeometry.IsTopologicallyFiniteType.of_openImmersion`
-  (`FormalSchemes.AffineThickeningsOpenImmersion`). So EGA I 10.12's affine case is closed and
-  this bullet no longer names an open question. The chart identification, which this bullet used
-  to name as the missing ingredient before that, is `FormalSpectrum.spfAlgEquivOfComm`
-  (`FormalSchemes.SpfIsoOverBase`) — the same slack the composition law above had to absorb.
+  `IsTopologicallyFiniteType.of_openImmersion` (`FormalSchemes.AffineThickeningsOpenImmersion`). So
+  EGA I 10.12's affine case is closed and this bullet no longer names an open question. The chart
+  identification, which this bullet used to name as the missing ingredient before that, is
+  `FormalSpectrum.spfAlgEquivOfComm` (`FormalSchemes.SpfIsoOverBase`) — the same slack the
+  composition law above had to absorb.
 
 So `IsTopFiniteTypeHom` is landed with its neighbourhood basis, its reduction from the affine
 case, EGA I 10.13's composition law, and — elsewhere — its converse. Nothing in *this* file should
@@ -205,7 +205,7 @@ theorem IsRelativelyTopFiniteType.isTopFiniteTypeHom {f : X ⟶ FormalScheme.Spf
 
 /-- The structural morphism `Spf L ⟶ Spf R` of a tf-type algebra is topologically of finite type
 as a morphism — the affine local model instantiating the predicate. -/
-theorem _root_.AlgebraicGeometry.IsTopologicallyFiniteType.isTopFiniteTypeHom
+theorem _root_.IsTopologicallyFiniteType.isTopFiniteTypeHom
     {A : Type u} [CommRing A] [TopologicalSpace A] [Algebra R A] {L : Ideal A} [IsAdicRing L]
     (hI : I.FG) (h : IsTopologicallyFiniteType R I A L) :
     IsTopFiniteTypeHom (IsTopologicallyFiniteType.structHom h) :=
@@ -288,7 +288,7 @@ are `FormalSpectrum.locallyRingedSpaceMap` — of `algebraMap R R` on the left, 
 `RingHom.id R` — so this is `FormalSpectrum.locallyRingedSpaceMap_id` after
 `Algebra.algebraMap_self`, glued by `FormalSpectrum.locallyRingedSpaceMap_congr`, which is needed
 because `locallyRingedSpaceMap` carries a proof *about* the homomorphism being rewritten. -/
-theorem _root_.AlgebraicGeometry.IsTopologicallyFiniteType.structHom_self :
+theorem _root_.IsTopologicallyFiniteType.structHom_self :
     IsTopologicallyFiniteType.structHom (IsTopologicallyFiniteType.self (R := R) (I := I)) =
       𝟙 (FormalScheme.Spf I) := by
   refine Hom.ext' (Eq.trans ?_ (FormalSpectrum.locallyRingedSpaceMap_id I))
