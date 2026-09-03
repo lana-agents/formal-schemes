@@ -43,8 +43,8 @@ of `U`.
    localization of its sections at `IsAffineOpen.primeIdealOf` — a bijection between the points
    of the open and the primes of its sections. So the primes of `Γ (U, O_{Spf R})` containing the
    kernel of the reduction map are exactly the `FormalSpectrum.sectionsPrime`s
-   (`FormalSpectrum.exists_mem_eq_sectionsPrime`). This is the one place affineness is used, and
-   only at level `0`.
+   (`FormalSpectrum.exists_mem_eq_sectionsPrime`). This is the only place *this file* spends
+   affineness, and it spends only level `0`; step 3's imported input spends it at every level.
 
 3. **The kernel of the reduction map is `I · Γ (U, O_{Spf R})`.** That is
    `FormalSpectrum.ker_sectionsPi_zero_eq_sectionsOpenIdeal`, which needs affineness at *every*
