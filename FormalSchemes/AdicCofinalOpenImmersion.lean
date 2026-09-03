@@ -96,25 +96,35 @@ are precisely the primes the openness half is about. Descending the containment 
 along `B → ∏ B{1/gᵢ}^` would instead need `I · B` to be the sections of a subsheaf, which is a
 statement about the structure sheaf and not about the ideals.
 
-## What the openness half probably needs, and this is a sketch, not a proof
+## What the openness half needs — the route, now formalised
 
-Recorded so the next worker does not re-derive it. Its first three steps have since been
-formalised, under the hypothesis that the thickenings of the open are affine
-(`FormalSpectrum.HasAffineThickenings`, `FormalSchemes.AffineThickenings`): the surjections and
-the kernel computation are `FormalSchemes.AffineThickenings` and
-`FormalSchemes.ThickeningTowerKernel`, and the successive approximation is
-`FormalSpectrum.ker_sectionsPi_zero` (`FormalSchemes.TowerLimitKernel`). **The last step below is
-still a sketch** — that `√(ker (B ↠ B₁)) = √J` because both cut out `U` — and so is the claim
-that the affineness hypothesis holds at an arbitrary open immersion.
+Recorded so the next worker does not re-derive it. **Every step of it is now a theorem**, under
+the hypothesis that the thickenings of the open are affine
+(`FormalSpectrum.HasAffineThickenings`, `FormalSchemes.AffineThickenings`); the sentences below
+are kept because they are the shape of the argument, not because anything in them is still open.
 Write `B` as the inverse limit of `Bₙ = Γ (U, 𝒪_{Spec (R ⧸ Iⁿ)})`. If `U` is an affine open of
 `Spec (R ⧸ I)` then each `Uₙ` is affine — it is a nilpotent thickening of `U` — so the transition
 maps `Bₙ₊₁ → Bₙ` are surjective, `B ↠ Bₙ`, and `ker (Bₙ₊₁ → Bₙ) = Iⁿ · Bₙ₊₁`. Successive
 approximation against a finite generating set of `I`, using completeness of `B` for the filtration
 `ker (B → Bₙ)`, then gives `ker (B ↠ B₁) = I · B` **on the nose**, and `√(ker (B ↠ B₁)) = √J`
-because both cut out `U`. So the openness half is presumably true, its proof is sheaf-theoretic
-rather than ideal-theoretic, and the input it needs — that the reduction of the open is an affine
-*scheme*, not merely a quasi-compact spectral space — is not currently derivable on this tree from
-`LocallyRingedSpace.IsOpenImmersion` alone.
+because both cut out `U`.
+
+* The surjections are `FormalSchemes.AffineThickenings`, the kernel of one step is
+  `FormalSchemes.ThickeningTowerKernel`, and the successive approximation is
+  `FormalSpectrum.ker_sectionsPi_zero` (`FormalSchemes.TowerLimitKernel`).
+* The last step — *"because both cut out `U`"* — is
+  `FormalSpectrum.le_radical_map_of_hasAffineThickenings`
+  (`FormalSchemes.AdicOpennessHalf`), which reads both `V (I · B)` and `V (J)` off the points of
+  `U` through the germs of `𝒪_{Spf R}`; and
+  `FormalSpectrum.isCofinal_map_of_hasAffineThickenings` is the cofinality it and the nilpotence
+  half assemble to.
+
+**What is still open is the hypothesis**, and nothing else: whether the range of an arbitrary
+affine open immersion has affine thickenings. That input — that the reduction of the open is an
+affine *scheme*, not merely a quasi-compact spectral space, and that its infinitesimal thickenings
+are affine too — is not currently derivable on this tree from
+`LocallyRingedSpace.IsOpenImmersion` alone, and `FormalSchemes.AffineThickenings` says why the
+level-`0` case does not obviously give the rest.
 
 ## Main results
 

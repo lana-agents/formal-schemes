@@ -29,6 +29,7 @@ import FormalSchemes.AdicOnOpenSections
 import FormalSchemes.AdicOnOpenSectionsPointwise
 import FormalSchemes.AdicOnSections
 import FormalSchemes.AdicOnSectionsDescent
+import FormalSchemes.AdicOpennessHalf
 import FormalSchemes.AdicOverBaseChart
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
