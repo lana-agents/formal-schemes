@@ -23,7 +23,8 @@ file refutes. The span does not have to come from the level the criterion is app
 from the **formal** sections ring, and it is pushed forward:
 
 1. `Γ (range m, O_{Spf R})` is `B`, by `FormalSpectrum.rangeSectionsHom`, which is not merely
-   surjective but bijective (`FormalSpectrum.bijective_rangeSectionsHom`).
+   surjective but bijective — `FormalSpectrum.bijective_rangeSectionsHom`, of
+   `FormalSchemes.AdicOpennessHalf`, where the surjective half it generalises already lived.
 2. The basic opens `D(f) ⊆ range m` cover `range m`, so their images cover `Spf J`; membership
    transports along `m` by `FormalSpectrum.base_toPrimeSpectrum_eq`. A cover of `Spf J` by basic
    opens is the ideal-theoretic statement `Ideal.span s ⊔ J = ⊤`
@@ -64,8 +65,6 @@ only place other than the range being open.
   affine thickenings. This is the only place where
   `AlgebraicGeometry.isAffineOpen_of_isAffineOpen_basicOpen` is used, and it mentions no
   morphism.
-* `FormalSpectrum.bijective_rangeSectionsHom`: the identification of `Γ (range m, O_{Spf R})` with
-  `B` is bijective, not merely surjective.
 * `Ideal.eq_top_of_sup_eq_top_of_isAdicComplete`: an ideal of definition of a complete ring is
   superfluous in a sup — the step that turns a cover of `Spf J`, which only ever sees `B ⧸ J`,
   into a spanning family of `B`.
@@ -138,17 +137,17 @@ theorem thickeningOpen_mono (n : ℕ) {U V : Opens (FormalSpectrum I)} (h : U �
   fun _ hx => h hx
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **The basic opens of `Spf R` are a neighbourhood basis.** `FormalSpectrum I` is
-`PrimeSpectrum (R ⧸ I)`, whose basic opens are a basis
-(`PrimeSpectrum.isBasis_basic_opens`), and every residue class is a residue
-(`Ideal.Quotient.mk_surjective`), so each of them is a `FormalSpectrum.basicOpen`. -/
+/-- **The basic opens of `Spf R` are a neighbourhood basis**, in the form the criterion below
+consumes: a point of an open lies in a `FormalSpectrum.basicOpen` inside it.
+
+`FormalSpectrum.isBasis_basicOpen` (`FormalSchemes.SpfGammaRoundTrip`) is the tree's own
+`TopologicalSpace.Opens.IsBasis` packaging of `FormalSpectrum.isTopologicalBasis_basicOpen`, and
+`TopologicalSpace.Opens.isBasis_iff_nbhd` is that packaging's point of existing — so nothing here
+goes back to `PrimeSpectrum.isBasis_basic_opens`. -/
 theorem exists_basicOpen_le (U : Opens (FormalSpectrum I)) (x : FormalSpectrum I) (hx : x ∈ U) :
     ∃ f : R, x ∈ basicOpen I f ∧ basicOpen I f ≤ U := by
-  obtain ⟨V, ⟨r, hr⟩, hxV, hVU⟩ :=
-    TopologicalSpace.Opens.isBasis_iff_nbhd.mp
-      (PrimeSpectrum.isBasis_basic_opens (R := R ⧸ I)) (U := U) (x := x) hx
-  obtain ⟨f, rfl⟩ := Ideal.Quotient.mk_surjective r
-  subst hr
+  obtain ⟨_, ⟨f, rfl⟩, hxV, hVU⟩ :=
+    TopologicalSpace.Opens.isBasis_iff_nbhd.mp (isBasis_basicOpen I) hx
   exact ⟨f, hxV, hVU⟩
 
 omit [TopologicalSpace R] [IsAdicRing I] in
@@ -228,23 +227,6 @@ variable (I)
 variable {B : Type u} [CommRing B] [TopologicalSpace B] (J : Ideal B) [IsAdicRing J]
 variable (m : locallyRingedSpaceObj J ⟶ locallyRingedSpaceObj I)
   [hm : LocallyRingedSpace.IsOpenImmersion m]
-
-omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **`FormalSpectrum.rangeSectionsHom` is bijective**, not merely surjective
-(`FormalSpectrum.surjective_rangeSectionsHom`): all three of its factors are isomorphisms.
-Injectivity is what lets a spanning family of `B` be pulled back to one of `Γ (range m, O_{Spf R})`
-rather than only pushed forward. -/
-theorem bijective_rangeSectionsHom : Function.Bijective (rangeSectionsHom I J m) := by
-  haveI := isIso_c_app_opensRange I J m
-  haveI : IsIso (homOfLE (top_le_map_opensRange I J m)) :=
-    ⟨homOfLE le_top, Subsingleton.elim _ _, Subsingleton.elim _ _⟩
-  have h1 : Function.Bijective
-      (m.c.app (op (LocallyRingedSpace.IsOpenImmersion.opensRange m))).hom :=
-    ConcreteCategory.bijective_of_isIso _
-  have h2 : Function.Bijective (((structureSheaf J).presheaf.map
-      (homOfLE (top_le_map_opensRange I J m)).op).hom) :=
-    ConcreteCategory.bijective_of_isIso _
-  exact (globalSectionsEquiv J).bijective.comp (h2.comp h1)
 
 /-- The family of elements of `R` whose basic open lies inside the range of `m`. -/
 def rangeBasicOpens : Set R :=
