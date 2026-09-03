@@ -45,6 +45,9 @@ and that is `ColimitTarget.chartSpfHomAmbient_eq`, one file back.
 * `FormalSpectrum.ColimitTarget.existsUnique_hom_thickeningMap`: EGA I 10.6.10 at a cover by
   targets of the colimit property.
 * `FormalSpectrum.isThickeningColimitTarget_of_cover`: the property is local on the target.
+* `FormalSpectrum.isThickeningColimitTarget_iff_forall_exists_mem`: **the same as an
+  equivalence** — with `FormalSpectrum.IsThickeningColimitTarget.restrict` supplying the converse,
+  a space has the property exactly when each point has one neighbourhood that does.
 * `FormalSpectrum.ColimitTarget.range_spfHomOfFamily_le`: **the image of the glued morphism lies
   in the union of the target opens the chart data was supplied with**, with no use of any covering
   hypothesis on the target — `hcov` covers the *source*.
@@ -237,6 +240,29 @@ theorem isThickeningColimitTarget_of_cover {ι : Type u} (U : ι → Opens X.toT
   intro S _ _ J _ hJ F
   obtain ⟨g, hg, -⟩ := ColimitTarget.existsUnique_hom_thickeningMap J F.1 F.2 hJ U hU Y e hY
   exact ⟨g, Subtype.ext (funext hg)⟩
+
+/-- **The colimit property is local on the target.** A locally ringed space is a target of the
+colimit property exactly when every point has *some* open neighbourhood whose restriction is one.
+
+Both halves are already stated: `isThickeningColimitTarget_of_cover` above assembles the property
+from a cover, and `FormalSpectrum.IsThickeningColimitTarget.restrict`
+(`FormalSchemes.ThickeningColimitTarget`) takes it down to an arbitrary open. What the equivalence
+adds is the direction a *reduction* needs — a cover is what a construction supplies, whereas a
+question about one point wants to be moved onto one open around that point, and until `restrict`
+existed that move was unavailable in either direction.
+
+The cover used in the backward direction is indexed by the points of `X` and its pieces are the
+restrictions themselves, so the identifications are `Iso.refl`: nothing is transported. -/
+theorem isThickeningColimitTarget_iff_forall_exists_mem :
+    IsThickeningColimitTarget X ↔ ∀ x : X, ∃ U : Opens X.toTopCat, x ∈ U ∧
+      IsThickeningColimitTarget (X.restrict U.isOpenEmbedding) := by
+  refine ⟨fun hX x => ⟨⊤, trivial, IsThickeningColimitTarget.restrict hX ⊤⟩, fun h => ?_⟩
+  choose U hU hcol using h
+  refine isThickeningColimitTarget_of_cover U ?_ (fun x => X.restrict (U x).isOpenEmbedding)
+    (fun x => Iso.refl _) hcol
+  refine Opens.ext (Set.eq_univ_of_forall fun x => ?_)
+  rw [Opens.coe_iSup]
+  exact Set.mem_iUnion.2 ⟨x, hU x⟩
 
 variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
 variable (f : ∀ n : ℕ, Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1))) ⟶ X)

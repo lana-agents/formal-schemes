@@ -87,7 +87,7 @@ theorem hasAffineChartAt_of_mem_tateInvOverlap
     LocallyRingedSpace.HasAffineChartAt Q (π.base x) :=
   LocallyRingedSpace.hasAffineChartAt_of_isProperlyDiscontinuousOn
     (tateChainInv_locallyFG R I q hq hI) h
-    (U := ⟨tateInvOverlap R I q hq hI i, isOpen_tateInvOverlap R I q hq hI i⟩)
+    (U := tateInvOverlapOpens R I q hq hI i)
     (tateInvOverlap_isProperlyDiscontinuousOn R I q hq hI i) hx
 
 omit [TopologicalSpace R] [IsAdicRing I] in

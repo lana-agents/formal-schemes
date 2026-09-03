@@ -54,6 +54,11 @@ has no hypothesis on the *source* ideal at all — and simply ignores the argume
 
 * `FormalSpectrum.isThickeningColimitTarget_spec`: `Spec B` has it.
 * `FormalSpectrum.isThickeningColimitTarget_spf`: `Spf L` has it, for `L.FG`.
+* `FormalSpectrum.IsThickeningColimitTarget.of_iso`: it transports along an isomorphism.
+* `FormalSpectrum.IsThickeningColimitTarget.restrict`: **every open subspace of such a target is
+  one** — a producer that hands back neither a formal spectrum nor a cover by them.
+* `FormalSpectrum.isThickeningColimitTarget_of_isOpenImmersion`: the same, for an open immersion
+  in place of an `Opens`.
 * `FormalSpectrum.thickeningRestrictionEquivOfColimitTarget`: the colimit property of `Spf R` at
   such a target, as a bijection — injectivity is free, so the predicate is the whole of it.
 
@@ -102,6 +107,69 @@ theorem isThickeningColimitTarget_spf {C : Type u} [CommRing C] [TopologicalSpac
     [IsAdicRing L] (hL : L.FG) : IsThickeningColimitTarget (locallyRingedSpaceObj L) := by
   intro S _ _ J _ _
   exact surjective_restrictToThickeningsLRS_spf J L hL
+
+/-- **The property transports along an isomorphism of the target.** A compatible family into `X`
+becomes one into `Y` by postcomposition with `e.hom`, and the morphism out of `Spf S` that `Y`
+supplies is carried back by `e.inv`.
+
+It is needed because every *supply* of the property on this tree is stated at a named space
+(`Spec B`, `Spf L`) while every *consumer* — `isThickeningColimitTarget_of_cover` and the chart
+data of `FormalSchemes.SpfHomColimitTarget` — asks for it at a restriction `X|_U`, and the two are
+related by an isomorphism rather than by equality. -/
+theorem IsThickeningColimitTarget.of_iso {X Y : LocallyRingedSpace.{u}}
+    (hY : IsThickeningColimitTarget Y) (e : X ≅ Y) : IsThickeningColimitTarget X := by
+  intro S _ _ J _ hJ F
+  obtain ⟨g, hg⟩ := hY J hJ ⟨fun n => F.1 n ≫ e.hom, fun n => by rw [← Category.assoc, F.2 n]⟩
+  refine ⟨g ≫ e.inv, Subtype.ext (funext fun n => ?_)⟩
+  have hn := congrFun (congrArg Subtype.val hg) n
+  simp only [restrictToThickeningsLRS] at hn ⊢
+  rw [← Category.assoc, hn, Category.assoc, e.hom_inv_id, Category.comp_id]
+
+/-- **An open subspace of a target of the colimit property is one.** No hypothesis on `X` beyond
+the property itself, and none at all on the open.
+
+The argument is that `|Spf S|` is the space of the *first* thickening. The base map of
+`thickeningMap S 0` is the homeomorphism `thickeningTopIso` — that is
+`FormalSpectrum.commonBase_comp_thickeningMap` — so a morphism `g : Spf S ⟶ X` has the same image
+as the level-`0` member of the family it restricts to. Here that member factors through
+`X.ofRestrict V.isOpenEmbedding` by construction, so `g`'s image lies in `V` and
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.lift` produces the factorisation. That the
+factorisation restricts to the given family is then forced by the inclusion being a monomorphism,
+so no uniqueness clause is used.
+
+Note the direction: `isThickeningColimitTarget_of_cover` (`FormalSchemes.SpfHomColimitTarget`)
+assembles the property *upwards* from a cover, and this takes it *downwards* to a single open;
+together they say the property is local, which is
+`FormalSpectrum.isThickeningColimitTarget_iff_forall_exists_mem`. -/
+theorem IsThickeningColimitTarget.restrict {X : LocallyRingedSpace.{u}}
+    (hX : IsThickeningColimitTarget X) (V : Opens X.toTopCat) :
+    IsThickeningColimitTarget (X.restrict V.isOpenEmbedding) := by
+  intro S _ _ J _ hJ F
+  obtain ⟨g, hg⟩ := hX J hJ ⟨fun n => F.1 n ≫ X.ofRestrict V.isOpenEmbedding, fun n => by
+    rw [← Category.assoc, F.2 n]⟩
+  have hgn : ∀ n, thickeningMap J n ≫ g = F.1 n ≫ X.ofRestrict V.isOpenEmbedding :=
+    fun n => congrFun (congrArg Subtype.val hg) n
+  have hrange : Set.range g.base ⊆ Set.range (X.ofRestrict V.isOpenEmbedding).base := by
+    rw [← commonBase_comp_thickeningMap J g 0, hgn 0]
+    rintro _ ⟨y, rfl⟩
+    exact ⟨_, rfl⟩
+  refine ⟨LocallyRingedSpace.IsOpenImmersion.lift _ g hrange, Subtype.ext (funext fun n => ?_)⟩
+  simp only [restrictToThickeningsLRS]
+  rw [← cancel_mono (X.ofRestrict V.isOpenEmbedding), Category.assoc,
+    LocallyRingedSpace.IsOpenImmersion.lift_fac]
+  exact hgn n
+
+/-- **The source of an open immersion into such a target is one**: `restrict` at the range of the
+immersion, read back along
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOpensRange`
+(`FormalSchemes.OpenImmersionIsoOfRangeEq`). This is the form the property is consumed in when the
+open arrives as the range of a morphism rather than as an `Opens`. -/
+theorem isThickeningColimitTarget_of_isOpenImmersion {X Y : LocallyRingedSpace.{u}}
+    (hY : IsThickeningColimitTarget Y) (j : X ⟶ Y) [LocallyRingedSpace.IsOpenImmersion j] :
+    IsThickeningColimitTarget X :=
+  IsThickeningColimitTarget.of_iso
+    (IsThickeningColimitTarget.restrict hY (LocallyRingedSpace.IsOpenImmersion.opensRange j))
+    (LocallyRingedSpace.IsOpenImmersion.isoRestrictOpensRange j).symm
 
 variable {S : Type u} [CommRing S] [TopologicalSpace S] (J : Ideal S) [IsAdicRing J]
 
