@@ -266,7 +266,15 @@ def stalkProj (n : ℕ) :
     (limit.π (structureSheafFunctor I) ⟨n⟩).hom
 
 /-- A germ of `O_{Spf R}` at `x` whose level-`0` part is invertible in the stalk of the
-level-`0` thickening sheaf is invertible. -/
+level-`0` thickening sheaf is invertible.
+
+`FormalSpectrum.isUnit_of_isUnit_stalkProj` (`FormalSchemes.Thickenings`) is the same statement at
+an arbitrary level `n`, and is strictly stronger. It is *downstream* of this one because it is
+**proved from** it: the level-`n` projection factors the level-`0` one along the tower, so the
+general case reduces to this case. This is therefore the base case and not a corollary — deleting
+it in favour of the general form would make that form circular. It is also the only one of the two
+that `FormalSchemes.SpfMap` can reach, since that file does not import
+`FormalSchemes.Thickenings`. Where both are in scope, prefer the general form. -/
 theorem isUnit_stalk_of_isUnit_zero (a : (structureSheaf I).presheaf.stalk x)
     (h : IsUnit ((stalkProj I x 0).hom a)) : IsUnit a := by
   obtain ⟨U, hxU, s, rfl⟩ := TopCat.Presheaf.exists_germ_eq _ a
