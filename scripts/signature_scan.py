@@ -33,7 +33,7 @@ does not.  Run both.
 ## What a bucket means, and what it does not
 
 **A bucket is a question, not a finding.** On `9dbf476`, under `--key type`, 55 of the 86 buckets
-span more than one module and *none* survived being read:
+with two or more members span more than one module and *none* survived being read:
 
 * A **`def` bucket** usually holds one construction at several parameters -- `tateChain` and
   `tateChainInv`, `swapFirstSummandXY` and its `...Inv`, the five glue data.  Identical types
@@ -50,24 +50,39 @@ from __future__ import annotations
 
 import argparse
 import collections
+import re
 import sys
 
 # Names Lean generates for us.  `Name.isInternalDetail` catches most of it in the extractor; these
-# are the shapes that survive it, 512 of 6226 declarations on `9dbf476`.
-AUTO = ("congr_simp", "eq_def", "injEq", "noConfusion", "sizeOf", "_proof_", ".eq_",
+# are the shapes that survive it, 490 of 6226 declarations on `9dbf476`.
+#
+# Every entry here has to be checked against the tree, not guessed: a substring that also occurs in
+# an authored name silently shrinks the population this script is a census of.  `".eq_"` was such an
+# entry.  It was meant for the equation lemmas `Foo.eq_1`, `Foo.eq_2`, of which this environment
+# contains **none** -- `Name.isInternalDetail` has already taken them -- and it dropped 22 authored
+# theorems instead, every declaration whose name begins `eq_` inside a namespace
+# (`RestrictedPowerSeries.eq_zero_of_coeff_eq_zero`, `IsHausdorff.eq_of_mk_pow_eq`, ...).  Two
+# cross-module `--key concl` buckets were invisible for that reason alone.  `EQN` below is the
+# precise form of what it was reaching for.
+AUTO = ("congr_simp", "eq_def", "injEq", "noConfusion", "sizeOf", "_proof_",
         ".match_", "brecOn", "below", "binductionOn", "toCtorIdx", "casesOn", "recOn")
+
+# An equation lemma: a final component `eq_` followed by digits.  Anchored, so `eq_zero_of_...`
+# is not one.
+EQN = re.compile(r"\.eq_[0-9]+$")
 
 # A conclusion that is a sort says nothing: `def A : Type u` would collide with every other
 # type-valued definition in the library.  `?` is the extractor's marker for a conclusion it could
 # not print, and it must not be allowed to collide with itself either.
 def is_sortish(concl: str) -> bool:
     """True for a conclusion that carries no statement."""
-    return concl in ("Prop", "?") or concl.startswith("Type ") or concl.startswith("Sort ")
+    return (concl in ("Prop", "?", "Type", "Sort")
+            or concl.startswith("Type ") or concl.startswith("Sort "))
 
 
 def is_auto(name: str) -> bool:
     """True for a name Lean generated rather than an author."""
-    return any(a in name for a in AUTO)
+    return any(a in name for a in AUTO) or EQN.search(name) is not None
 
 
 def read(path):
@@ -128,9 +143,12 @@ def report(path: str, key: str, cross_only: bool) -> int:
 def selftest() -> int:
     bad = 0
     names = [("AlgebraicGeometry.foo.congr_simp", True), ("Foo.eq_def", True),
-             ("Foo.mk.injEq", True), ("FormalSpectrum.sectionsMk", False),
+             ("Foo.mk.injEq", True), ("Foo.eq_1", True), ("Foo.eq_12", True),
+             ("FormalSpectrum.sectionsMk", False),
              ("FormalSpectrum.sectionsOpenHom", False),
-             ("IsTopologicallyFiniteType.self_of_two_charts", False)]
+             ("IsTopologicallyFiniteType.self_of_two_charts", False),
+             ("RestrictedPowerSeries.eq_zero_of_coeff_eq_zero", False),
+             ("IsHausdorff.eq_of_mk_pow_eq", False), ("Foo.eq_top_of_bar", False)]
     got = [(n, is_auto(n)) for n, _ in names]
     ok = got == names
     bad += not ok
@@ -139,6 +157,7 @@ def selftest() -> int:
         print("        want %r\n        got  %r" % (names, got))
 
     concls = [("Type u_1", True), ("Prop", True), ("Sort u", True), ("?", True),
+              ("Type", True), ("Sort", True),
               ("R ->+* X", False), ("Ideal self.K", False)]
     got = [(c, is_sortish(c)) for c, _ in concls]
     ok = got == concls
