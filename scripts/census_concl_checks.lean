@@ -92,13 +92,21 @@ example {R : Type u} [CommRing R] {I : Ideal R} {A B : Type u} [CommRing A] [Com
 
 /-- **B06.** A closed embedding has closed range, so
 `AlgebraicGeometry.FormalScheme.isClosedImmersion_of_isSplitMono` is
-`AlgebraicGeometry.FormalScheme.isClosedImmersion_of_isClosed_range_of_isSplitMono`. -/
+`AlgebraicGeometry.FormalScheme.isClosedImmersion_of_isClosed_range_of_isSplitMono`.
+
+Row 1545 acted on this.  When the bucket was read, the closed-range criterion sat in
+`FormalSchemes.GeneralSeparatedRange`, which the closed-embedding one cannot see; the whole
+retraction-and-split-mono block now lives in `FormalSchemes.ClosedImmersionSplitMono` beside the
+statements it sharpens, and the closed-embedding criterion is the application below, verbatim.  The
+bucket survives — two declarations still conclude that the morphism is a closed immersion — but it
+is now a *declared* pair, and one of the two is the other by definition. -/
 example {X Y : FormalScheme} (f : X ⟶ Y) [IsSplitMono f]
     (h : IsClosedEmbedding ⇑(ConcreteCategory.hom (FormalScheme.Hom.toLRSHom f).base)) :
     FormalScheme.IsClosedImmersion f :=
   FormalScheme.isClosedImmersion_of_isClosed_range_of_isSplitMono f h.isClosed_range
 
-/-- **B06.** The same for the retraction form. -/
+/-- **B06.** The same for the retraction form, and with the same resolution: the closed-embedding
+criterion is now the application below. -/
 example {X Y : FormalScheme} (f : X ⟶ Y) (r : Y ⟶ X) (hr : f ≫ r = 𝟙 X)
     (h : IsClosedEmbedding ⇑(ConcreteCategory.hom (FormalScheme.Hom.toLRSHom f).base)) :
     FormalScheme.IsClosedImmersion f :=
