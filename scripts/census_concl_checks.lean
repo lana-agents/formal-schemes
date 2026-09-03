@@ -28,9 +28,10 @@ binder — only a dropped one.  An earlier revision of this file claimed
 `FormalSpectrum.hasAffineThickenings_opensRange_of_range_eq_basicOpenChart` was subsumed on the
 strength of such an `example`; the target is `omit`-ted of four instances the subsuming form
 needs, so the claim was false and the check could not see it.  Verbatim-ness has to be checked
-against `ppExpr` of the target's environment type.  Where the pairs are new and the risk is
-live — the `Subsumed519` section below — every binder is therefore spelled out and no `variable`
-block is in scope, so an added instance shows up as a diff.
+against the type Lean stores for the target, printed from the environment, not against the source
+of the `example`.  Where the pairs are new and the risk is live — the #519 section below — every
+binder is therefore spelled out and no `variable` block is in scope, so an added instance shows up
+as a diff.
 -/
 import FormalSchemes
 
