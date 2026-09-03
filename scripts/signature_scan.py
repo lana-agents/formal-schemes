@@ -32,11 +32,14 @@ does not.  Run both.
 
 The third miss belongs to **both** keys and is the one to keep in mind: a copy of a statement
 written at a **pinned argument** does not share the key of the general form, so it lands in no
-bucket with it.  Measured on issue 1563.  `AlgebraicGeometry.tensorIdealOfDefinition_fg`
-(`FormalSchemes.TateSelfProductAdicOverBase`) is `CompletedTensorProduct.idealOfDefinition_fg`
-with `A` pinned to `annulusAlgebra R I q`, character-identical proof and all; its conclusion
-prints as `(CompletedTensorProduct.idealOfDefinition R I (annulusAlgebra R I q) B).FG` against
-the general `(CompletedTensorProduct.idealOfDefinition R I A B).FG`.  Two keys, two singletons,
+bucket with it.  Measured by row 1542; recorded on issue 1563.
+`AlgebraicGeometry.tensorIdealOfDefinition_fg` (`FormalSchemes.TateSelfProductAdicOverBase`) is
+`CompletedTensorProduct.idealOfDefinition_fg` with `A` pinned to `annulusAlgebra R I q` -- an
+application of it and not a variant: the term
+`CompletedTensorProduct.idealOfDefinition_fg R I (annulusAlgebra R I q) B hI` proves the copy's
+statement as it stands.  Its conclusion prints as
+`(CompletedTensorProduct.idealOfDefinition R I (annulusAlgebra R I q) B).FG` against the general
+`(CompletedTensorProduct.idealOfDefinition R I A B).FG`.  Two keys, two singletons,
 no collision to report -- and `--key type`, which hashes the whole type, separates them too.
 Insensitivity to binders and sensitivity to arguments are the same property: what lets the
 conclusion key see `sectionsMk` is what hides this, so there is no key to choose instead, and

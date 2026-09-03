@@ -271,8 +271,10 @@ The first three are unchanged from 1534 and worth not rediscovering. The fourth 
   above had a **third** member that never appeared in it,
   `AlgebraicGeometry.tensorIdealOfDefinition_fg`
   (`FormalSchemes.TateSelfProductAdicOverBase`), which is
-  `CompletedTensorProduct.idealOfDefinition_fg` with `A` pinned to `annulusAlgebra R I q` and a
-  character-identical proof. `--key type` separates them too, so this is not a key to pick
+  `CompletedTensorProduct.idealOfDefinition_fg` with `A` pinned to `annulusAlgebra R I q` — an
+  application of it and not a variant, since the term
+  `CompletedTensorProduct.idealOfDefinition_fg R I (annulusAlgebra R I q) B hI` proves it as it
+  stands. `--key type` separates them too, so this is not a key to pick
   differently; it is a limit of grouping declarations by a printed statement at all. The tree
   already knew — `FormalSchemes.BothDatumFibreAdicOverBase`'s module docstring names the relation
   and records why the copy is not retired — so the miss here was the tool's, not the reader's.
