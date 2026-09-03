@@ -1,6 +1,5 @@
 import FormalSchemes.CofinalAdicRing
 import FormalSchemes.CofinalSheafComparisonIso
-import FormalSchemes.LargestIdealOfDefinition
 
 set_option linter.style.header false
 

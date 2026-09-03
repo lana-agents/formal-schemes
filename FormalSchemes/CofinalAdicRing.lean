@@ -130,7 +130,8 @@ theorem IsAdicRing.of_isCofinal {R : Type u} [CommRing R] [TopologicalSpace R] {
 and cofinal with both because some power of each lies in the other (`IsAdic.exists_pow_le`), so the
 adic topology it defines is the given one; completeness is `IsHausdorff.of_le` and
 `IsPrecomplete.of_isCofinal` at the containment `I * J ≤ I`, the latter read as a cofinality by
-`Ideal.IsCofinal.of_le_of_pow_le`.
+`Ideal.IsCofinal.of_le_of_pow_le`. The transfer has to be algebraic: `IsAdic.isAdicComplete_iff`
+would need a `UniformSpace R` instance, which the adic-ring setting does not carry.
 
 This is the ideal `FormalSpectrum.generalCofinalSpfIso`
 (`FormalSchemes.CofinalSheafComparisonGeneral`) factors through, stated here so that the
