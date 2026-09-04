@@ -85,8 +85,11 @@ which `completionTwoPatchToScheme` is. At the affine index the conjunction is wr
 `formalCompletion.toStalk_comp_stalkMap_toSpec` computes the stalk map on the image of
 `AlgebraicGeometry.StructureSheaf.toStalk` and
 `formalCompletion.isClosedImmersionToSpec_iff_surjective_stalkMap` records that the topological
-half is free. Whether it holds is open there and is not expected to hold in general; the two-patch
-form of the question is not written down anywhere yet.
+half is free. There it is **decided, in the negative**:
+`formalCompletion.not_forall_isClosedImmersionToSpec`
+(`FormalSchemes.CompletionToSpecNotClosedImmersion`) refutes the general statement, with `ℚ[X]`
+completed at `(X)` as the witness. Which `R` and `I` it does hold for is open, and the two-patch
+form of the question is still not written down anywhere.
 
 **No `ℚ[X]` witness is used here, deliberately.** `not_surjective_completionTwoPatchToScheme_base`
 states properness of the closed subset for an arbitrary two-patch datum, which is stronger than an
