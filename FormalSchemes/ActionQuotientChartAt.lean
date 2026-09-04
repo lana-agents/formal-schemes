@@ -67,6 +67,18 @@ theorem hasAffineChartAt_of_formalScheme (X : FormalScheme.{u}) (x : X) :
     HasAffineChartAt X.toLocallyRingedSpace x :=
   X.exists_openImmersion x
 
+/-- **Carrying a formal scheme structure is having a chart at every point**, as an `Iff`. The two
+implications are `formalSchemeOfHasAffineChartAt` (`FormalSchemes.Gluing`) and
+`hasAffineChartAt_of_formalScheme`; naming the equivalence is what lets a reduction stated in
+charts be read as a statement about the object, and back, without the transport across
+`FormalScheme.toLocallyRingedSpace` being written out at each site. -/
+theorem exists_formalScheme_iff_forall_hasAffineChartAt (Z : LocallyRingedSpace.{u}) :
+    (∃ X : FormalScheme.{u}, X.toLocallyRingedSpace = Z) ↔ ∀ z : Z, HasAffineChartAt Z z := by
+  constructor
+  · rintro ⟨X, rfl⟩ z
+    exact hasAffineChartAt_of_formalScheme X z
+  · exact fun h => ⟨formalSchemeOfHasAffineChartAt Z h, rfl⟩
+
 section Quotient
 
 variable {G : Type v} [Group G] [Small.{u} G] {X : FormalScheme.{u}}

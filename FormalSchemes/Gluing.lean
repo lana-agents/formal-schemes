@@ -172,6 +172,25 @@ theorem hasAffineChartAt_of_isoRestrict {X : LocallyRingedSpace.{u}} (U : Opens 
     iso_hom_base_inv_base_apply]
   rfl
 
+/-- **A chart on an open subspace is a chart on the whole space.** Composing the chart of
+`X|_U` with `X.ofRestrict U.isOpenEmbedding` — an open immersion, as is any composite of two —
+leaves the range where it was, inside `U`.
+
+This is the weaker hypothesis `hasAffineChartAt_of_isoRestrict` is the affine case of: there the
+open *is* a formal spectrum, here it merely has a chart at the one point in question. So a
+question about charts on `X` restricted to an open never becomes harder by being asked on the
+open. -/
+theorem hasAffineChartAt_of_restrict {X : LocallyRingedSpace.{u}} (U : Opens X.toTopCat)
+    {y : X} (hy : y ∈ U)
+    (h : HasAffineChartAt (X.restrict U.isOpenEmbedding) ⟨y, hy⟩) : HasAffineChartAt X y := by
+  obtain ⟨C, _, _, L, _, f, ⟨z, hz⟩, hf⟩ := h
+  haveI := hf
+  refine ⟨C, inferInstance, inferInstance, L, inferInstance,
+    f ≫ X.ofRestrict U.isOpenEmbedding, ⟨z, ?_⟩, inferInstance⟩
+  simp only [comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp, ContinuousMap.comp_apply]
+  rw [hz]
+  rfl
+
 end LocallyRingedSpace
 
 namespace FormalScheme
