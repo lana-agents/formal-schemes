@@ -70,9 +70,16 @@ This file makes that identification and draws the two consequences that are free
   `AlgebraicGeometry.preimage_transitionInv_comp_chart_tateInvNodeChartLocus`
   (`FormalSchemes.TateInvNodeChartDomain`) say the transition matches the part of the domain the
   `x`-chart sees with the part the `y`-chart sees; that failure would be the Néron 1-gon's two
-  glued points. **None of that is proved here**, and no two distinct points of the chain with the
-  same image are exhibited. A successor who wants it should land it as a theorem from those two
-  preimage lemmas rather than cite this paragraph.
+  glued points. **None of that is proved here.** It is proved downstream, and by a different
+  route: `AlgebraicGeometry.not_isOpenImmersion_tateInvNodeChartAmbientHom_of_ne_top`
+  (`FormalSchemes.TateInvNodeChartAmbientNotInjective`) exhibits two distinct points of
+  `D(x + y − 1)` with one image in the quotient — the generic points of the two branches through a
+  node, taken from `FormalSchemes.TateInvPeriodNodePoint` rather than from the two preimage lemmas
+  above — so this morphism is not injective, hence not an open immersion, whenever `I ≠ ⊤`. That
+  refutes the candidate for the open immersion
+  `AlgebraicGeometry.exists_formalScheme_of_openImmersion_spf_quotientIdeal_of_isLeftRegular_base`
+  asks for whose range is *equal* to the required set; it says nothing about `hnode`, which asks
+  only for *some* open immersion with a range containing it.
 * **Nothing here says the subring is nonzero, proper, or larger than the image of `R`.** This
   file adds no element of it. The image of the base ring is in it, at every open `S`
   (`AlgebraicGeometry.sectionsOpenHom_algebraMap_mem_tateInvChartAnnulusSubring`,
