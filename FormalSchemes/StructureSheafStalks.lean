@@ -54,20 +54,25 @@ claim that it is**.
 ## What is *not* proved here
 
 **Whether `FormalSpectrum.stalkToLimit` is an isomorphism.** Nothing here decides
-`FormalSpectrum.IsStalkLimit`, in either direction, and it should not be assumed either way. Read
-concretely the two sides are `colim` over the basic opens `D(f)` containing `x` of
-`AdicCompletion (I·R_f) R_f` on the left — by `FormalSpectrum.sectionsBasicOpenEquiv` and
-`FormalSpectrum.isTopologicalBasis_basicOpen` — and the limit of the tower on the right, so the
-question is whether completion commutes with that filtered colimit. That is the positive stalk half
-of EGA I 10.8 and it is the larger piece of work; naming the map is what lets it be stated.
+`FormalSpectrum.IsStalkLimit`, in either direction, and it should not be assumed either way. That is
+the positive stalk half of EGA I 10.8 and it is the larger piece of work; naming the map is what
+lets it be stated.
+
+Informally — and **no declaration below says this**, so it is a reading and not a theorem — the
+left-hand side is a colimit over the basic opens `D(f)` containing `x` of
+`AdicCompletion (I·R_f) R_f`, since `FormalSpectrum.sectionsBasicOpenEquiv` computes the sections
+there and `FormalSpectrum.isTopologicalBasis_basicOpen` says those opens are a basis; so the
+question is whether completion commutes with that filtered colimit. Neither that identification of
+the left-hand side nor any consequence of it is proved here.
 
 **The passage from `Localization.AtPrime` of a quotient to a quotient of `Localization.AtPrime`.**
 `thickeningStalkLocalizationEquiv` presents level `n` as a localization of `R ⧸ I ^ (n + 1)`; to
 read the limit as an adic completion of the *stalk* `O_{Spec R, x}` one wants that localization
 identified with `R_p ⧸ I ^ (n + 1) · R_p`, and then
 `AdicCompletion.towerLimitRingEquiv` — the bridge `FormalSchemes.Sections` uses for the sections
-tower — would apply. Mathlib carries `IsLocalization` machinery over quotients but no packaged
-statement of that identification, so it is not proved here and no declaration below depends on it.
+tower — would apply. Mathlib carries `IsLocalization` machinery over quotients, but a search of it
+turned up no packaged form of that identification; it is not proved here and no declaration below
+depends on it. Anyone continuing should re-run that search before writing the lemma by hand.
 
 **Non-vacuity is not an issue for the statements below**, because they take the point `x` as an
 argument: `FormalSpectrum.IsStalkLimit I x` is a condition at a given point and there is nothing
