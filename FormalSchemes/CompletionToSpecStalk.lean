@@ -8,21 +8,26 @@ set_option linter.style.header false
 `formalCompletion.toSpec` is a **closed embedding on underlying spaces**
 (`formalCompletion.isClosedEmbedding_toSpec_base`, EGA I 10.8), and the two files that carry that
 statement to a glued index — `FormalSchemes.CompletionTwoPatchEmbedding` and
-`FormalSchemes.ChartedCompletionEmbedding` — both stop there, on the ground that the
-*scheme-theoretic* closed immersion could not be asked at all: `AlgebraicGeometry.FormalScheme`'s
-closed-immersion predicate is about morphisms of formal schemes, and the target here is not one.
+`FormalSchemes.ChartedCompletionEmbedding` — both stop there, correctly and by scope: both are
+about underlying topological spaces throughout.
 
-That reason is wrong, and this file is the demonstration. The predicate is unavailable; the
-**question** is not. `formalCompletion.toSpec` is a morphism of
-`AlgebraicGeometry.LocallyRingedSpace` — its target is
-`AlgebraicGeometry.Spec.locallyRingedSpaceObj` of `R` — and
+What made the *scheme-theoretic* closed immersion look unaskable at any index is a fact about a
+**predicate**, not about the question. `AlgebraicGeometry.FormalScheme.IsClosedImmersion` is a
+predicate on morphisms of formal schemes and the target here is an honest scheme, so it does not
+apply. But `formalCompletion.toSpec` is a morphism of `AlgebraicGeometry.LocallyRingedSpace` — its
+target is `AlgebraicGeometry.Spec.locallyRingedSpaceObj` of `R` — and
 `AlgebraicGeometry.LocallyRingedSpace.Hom.stalkMap` is defined for any such morphism. So the
 conjunction *closed embedding on the base, and surjective on stalks* can be written down as it
-stands, and `formalCompletion.IsClosedImmersionToSpec` below writes it. This is the same
-raw-conjunction idiom as
+stands, and `formalCompletion.IsClosedImmersionToSpec` below writes it.
+
+This is the same raw-conjunction idiom as
 `FormalSpectrum.isClosedEmbedding_base_and_surjective_stalkMap_of_surjective`
-(`FormalSchemes.ClosedImmersionSections`), which states exactly this pair unpackaged in a file
-where the packaged predicate *is* available.
+(`FormalSchemes.ClosedImmersionSections`), which states exactly this pair unpackaged. The reason
+differs, and conflating the two would misread the precedent: there the packaging does not exist yet
+at that point in the import order — `FormalSchemes.ClosedImmersion` imports that file and not the
+other way round, and `FormalSchemes.ClosedImmersionSections` never mentions
+`AlgebraicGeometry.FormalScheme.IsClosedImmersion` — whereas here it exists and cannot apply. What
+carries over is the idiom, not a choice made with the packaged alternative in scope.
 
 ## Main results
 
@@ -164,7 +169,15 @@ theorem isClosedImmersionToSpec_iff_surjective_stalkMap (hI : I.FG) :
 /-- **For `I ≠ ⊤` the stalk half of `formalCompletion.IsClosedImmersionToSpec` quantifies over a
 nonempty set**, so it is not a condition that holds because there is nothing to check. The image of
 `formalCompletion.toSpec` is `V(I)` (`formalCompletion.range_toSpec_base`), which is nonempty
-exactly when `I ≠ ⊤`. -/
+exactly when `I ≠ ⊤`.
+
+This is the third instance on the tree of `FormalSpectrum.nonempty_iff_ne_top`
+(`FormalSchemes.TateInvNodeChartSpfNonempty`), after `annulus_formalSpectrum_nonempty` and
+`FormalSpectrum.nonempty_twoAdic`, and it is not a duplicate of it: the content here is the
+*transport*, from `I ≠ ⊤` in `R` to nonemptiness of the formal spectrum of
+`AdicCompletion.idealOfDefinition I` in the completion. Going through the general statement instead
+lands on `AdicCompletion.idealOfDefinition I ≠ ⊤`, which is not on the tree; the route through
+`formalCompletion.range_toSpec_base` avoids needing it. -/
 theorem nonempty_formalSpectrum_of_ne_top (hI : I.FG) (hItop : I ≠ ⊤) :
     Nonempty (FormalSpectrum (AdicCompletion.idealOfDefinition I)) := by
   have hne : (PrimeSpectrum.zeroLocus (I : Set R)).Nonempty := by

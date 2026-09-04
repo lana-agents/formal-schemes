@@ -82,7 +82,8 @@ here is an honest scheme — so that predicate does not apply.
 asked: both conjuncts are statements about a morphism of `AlgebraicGeometry.LocallyRingedSpace`,
 which `completionTwoPatchToScheme` is. At the affine index the conjunction is written out as
 `formalCompletion.IsClosedImmersionToSpec` (`FormalSchemes.CompletionToSpecStalk`), where
-`formalCompletion.toStalk_comp_stalkMap_toSpec` computes the stalk map and
+`formalCompletion.toStalk_comp_stalkMap_toSpec` computes the stalk map on the image of
+`AlgebraicGeometry.StructureSheaf.toStalk` and
 `formalCompletion.isClosedImmersionToSpec_iff_surjective_stalkMap` records that the topological
 half is free. Whether it holds is open there and is not expected to hold in general; the two-patch
 form of the question is not written down anywhere yet.

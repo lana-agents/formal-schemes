@@ -60,8 +60,9 @@ whose target here is an honest scheme, so it does not apply — but that is a fa
 predicate, not about the question. Both conjuncts are statements about a morphism of
 `AlgebraicGeometry.LocallyRingedSpace`, and at the affine index they are written out as
 `formalCompletion.IsClosedImmersionToSpec` (`FormalSchemes.CompletionToSpecStalk`), together with
-`formalCompletion.toStalk_comp_stalkMap_toSpec` computing the stalk map there. Deciding it is open
-at every index, and it is not expected to hold in general.
+`formalCompletion.toStalk_comp_stalkMap_toSpec` computing the stalk map there on the image of
+`AlgebraicGeometry.StructureSheaf.toStalk`. Deciding it is open at every index, and it is not
+expected to hold in general.
 
 Also out of scope, and unchanged by this file: whether `ChartedCompletionDatum.completionGlued` is
 affine (`FormalSchemes.CompletionTwoPatchDoubled` explains why no topological argument can decide
