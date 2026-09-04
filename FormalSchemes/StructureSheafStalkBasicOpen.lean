@@ -42,9 +42,10 @@ question — the positive stalk half of EGA I 10.8 — is exactly as open as it 
 **The colimit itself, as a categorical statement.** The finality of the basic opens containing `x`
 in `TopologicalSpace.OpenNhds x`, which is what would let
 `CategoryTheory.Functor.Final.colimitIso` transport `TopCat.Presheaf.stalk`, is not proved. A search
-for a ready-made "stalk over a basis" lemma turned up nothing usable — `Mathlib`'s
-`Topology/Category/TopCat/OpenNhds.lean` has no `Final` or `IsFiltered` declaration and no
-occurrence of "basis", and `Topology/Sheaves/Stalks.lean` uses `Functor.Final` once, for
+for a ready-made "stalk over a basis" lemma turned up nothing usable: in Mathlib,
+`Topology/Category/TopCat/OpenNhds.lean` declares no `CategoryTheory.Functor.Final` or
+`CategoryTheory.IsFiltered` instance and does not mention a basis, and
+`Topology/Sheaves/Stalks.lean` uses `CategoryTheory.Functor.Final` once, for
 `TopologicalSpace.OpenNhds.map`. **That is a negative search result, not a theorem**, and a
 successor who wants the categorical form should re-run it before writing one by hand.
 
@@ -65,8 +66,9 @@ Both proofs are the same two moves: take what Mathlib's germ API gives over an a
 with `FormalSpectrum.isTopologicalBasis_basicOpen` and
 `TopologicalSpace.IsTopologicalBasis.exists_subset_of_mem_open`, transporting the section along the
 restriction. In the second proof the two restriction morphisms produced that way are not
-syntactically the ones in the statement; they are equal because morphisms of `Opens` are a
-subsingleton, which is what the local `key` is for.
+syntactically the ones in the statement; they are equal because morphisms of
+`TopologicalSpace.Opens` are a subsingleton, which is what the local step proved by
+`Subsingleton.elim` inside the proof is for.
 
 Neither statement needs `IsAdicRing`, or even a topology on `R`: they are facts about the sheaf on
 the space `FormalSpectrum I` and about that space's basis.
