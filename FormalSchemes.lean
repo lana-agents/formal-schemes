@@ -69,6 +69,7 @@ import FormalSchemes.AwayCompletionNested
 import FormalSchemes.AwayCompletionNestedNaturality
 import FormalSchemes.AwayCompletionRegular
 import FormalSchemes.AwayCompletionResiduePow
+import FormalSchemes.AwayCompletionRestrict
 import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.AwayCompletionSurjective
 import FormalSchemes.AwayCongrAlgebraMap

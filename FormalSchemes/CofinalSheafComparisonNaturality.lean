@@ -34,10 +34,22 @@ This is piece (a) of the deferred goal-1 sheaf-iso roadmap named in the docstrin
 
 We honestly note that the fully general **basis-restriction** naturality (for an arbitrary basic
 inclusion `D(g) ⊆ D(f)`, needed for the complete sheaf gluing over the whole distinguished basis)
-remains a follow-up: there is no canonical ring map `R_f → R_g` for a general `D(g) ⊆ D(f)`, so it
-cannot be reduced to `awayCompletionHom_eq_restrict`; it requires the completed-localization
-transition isomorphism (`awayCompletionAwayEquiv`) intertwining the two adic completions of the
-iterated localizations. Only the `f = 1`, i.e. `⊤ → D(g)`, case is settled here.
+remains a follow-up. Only the `f = 1`, i.e. `⊤ → D(g)`, case is settled here, and it is settled by
+`awayCompletionHom_eq_restrict`, to which the general case does **not** reduce: there is no
+canonical ring map `R_f → R_g` for a general `D(g) ⊆ D(f)`, since the inclusion is a condition on
+residues modulo `I` and does not put `g` in the radical of `f`.
+
+**The absence of `R_f → R_g` is not itself the obstruction, and this paragraph used to suggest that
+it was.** After completing, the map does exist: `FormalSpectrum.awayCompletionRestrict`
+(`FormalSchemes.AwayCompletionRestrict`) is a canonical `R{1/f} →+* R{1/g}` for any
+`basicOpen I g ≤ basicOpen I f`, because `f` becomes a unit modulo `I·R_g` and hence in the complete
+ring `R{1/g}`. What is still open is the *identification* of the structure-sheaf restriction with
+it — the restriction is named, conjugated by `sectionsBasicOpenEquiv`, as
+`FormalSpectrum.basicOpenRes` (`FormalSchemes.BasicOpenRestriction`), and no declaration equates the
+two. Note also that `FormalSpectrum.awayCompletionAwayEquiv`, which this paragraph used to name as
+the tool the general case requires, assumes `f` is already a unit in `Localization.Away g` — the
+strictly stronger *scheme*-theoretic hypothesis — so it does not apply to a general basic inclusion
+of `Spf R`.
 
 ## Main results
 
