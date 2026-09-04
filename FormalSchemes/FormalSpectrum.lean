@@ -38,6 +38,9 @@ ringed space it makes `Spf R` into is `FormalSpectrum.locallyRingedSpaceObj`
   exactly the primes of `R` containing the ideal of definition `I`.
 * `FormalSpectrum.instSpectralSpace`: `Spf R` is a spectral space, i.e. it is quasi-compact,
   T0, sober, quasi-separated, and its quasi-compact opens form a basis, just like `Spec R`.
+* `FormalSpectrum.isTopologicalBasis_basicOpen`, `FormalSpectrum.isBasis_basicOpen` and
+  `FormalSpectrum.exists_basicOpen_le`: the basic opens are a basis, in the three forms the rest of
+  the library asks for — of sets, of `TopologicalSpace.Opens`, and as a shrinking statement.
 * `FormalSpectrum.continuous_map`, `FormalSpectrum.map_id`, `FormalSpectrum.map_comp`:
   `FormalSpectrum.map` is continuous and functorial.
 * `FormalSpectrum.toPrimeSpectrum_map`: `FormalSpectrum.map` commutes with the inclusions
@@ -149,6 +152,19 @@ theorem isTopologicalBasis_basicOpen :
       exact ⟨f, rfl⟩
   rw [h]
   exact PrimeSpectrum.isTopologicalBasis_basic_opens
+
+/-- The basic opens `D(f)`, `f ∈ R`, viewed as a family of `TopologicalSpace.Opens (Spf R)`, form
+an `TopologicalSpace.Opens.IsBasis`. This repackages `FormalSpectrum.isTopologicalBasis_basicOpen`,
+which is stated for the underlying *sets*, in the form that Mathlib's `Opens`-indexed API asks for —
+`TopCat.Sheaf.hom_ext`, `TopCat.Sheaf.isIso_iff_isIso_basis` and the `IsBasis` section of
+`Mathlib/Topology/Sheaves/Stalks.lean` all take it.
+
+It lives here, beside the basis lemma and for the same reason as
+`FormalSpectrum.exists_basicOpen_le`, so that files at any depth can cite it rather than restate two
+lines. -/
+theorem isBasis_basicOpen : TopologicalSpace.Opens.IsBasis (Set.range (basicOpen I)) := by
+  rw [TopologicalSpace.Opens.IsBasis, ← Set.range_comp]
+  exact isTopologicalBasis_basicOpen I
 
 /-- **The basic opens are a neighbourhood basis**, in the `TopologicalSpace.Opens` form: a point
 of an open lies in a basic open contained in it.

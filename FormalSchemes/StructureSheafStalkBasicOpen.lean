@@ -22,8 +22,10 @@ facts a colimit description exists in order to provide:
 * two sections over basic opens with the same germ at `x` already agree over a smaller basic open.
 
 Together they say that the canonical maps `AdicCompletion (I · R_f) R_f ⟶ O_{Spf R, x}`, over the
-`f` with `x ∈ D(f)`, are jointly surjective and identify exactly the pairs that agree on a smaller
-basic open — which is the colimit, spelled without a colimit.
+`f` with `x ∈ D(f)`, are jointly surjective, and that two sections with the same image already agree
+on a smaller basic open — which is the colimit, spelled without a colimit. The converse of the
+second, that sections agreeing on a smaller basic open have the same germ, is
+`TopCat.Presheaf.germ_res_apply` and is not restated below.
 
 ## Main results
 
@@ -41,13 +43,20 @@ question — the positive stalk half of EGA I 10.8 — is exactly as open as it 
 
 **The colimit itself, as a categorical statement.** The finality of the basic opens containing `x`
 in `TopologicalSpace.OpenNhds x`, which is what would let
-`CategoryTheory.Functor.Final.colimitIso` transport `TopCat.Presheaf.stalk`, is not proved. A search
-for a ready-made "stalk over a basis" lemma turned up nothing usable: in Mathlib,
-`Topology/Category/TopCat/OpenNhds.lean` declares no `CategoryTheory.Functor.Final` or
-`CategoryTheory.IsFiltered` instance and does not mention a basis, and
-`Topology/Sheaves/Stalks.lean` uses `CategoryTheory.Functor.Final` once, for
+`CategoryTheory.Functor.Final.colimitIso` transport `TopCat.Presheaf.stalk`, is not proved, and
+Mathlib does not have it: `Topology/Category/TopCat/OpenNhds.lean` declares no
+`CategoryTheory.Functor.Final` or `CategoryTheory.IsFiltered` instance and does not mention a basis,
+and `Topology/Sheaves/Stalks.lean` uses `CategoryTheory.Functor.Final` once, for
 `TopologicalSpace.OpenNhds.map`. **That is a negative search result, not a theorem**, and a
 successor who wants the categorical form should re-run it before writing one by hand.
+
+What Mathlib *does* have, and what the two theorems below are specialisations of, is the
+`∃`-statement form of the same idea: `TopCat.Presheaf.exists_mem_germ_eq_of_isBasis` and
+`TopCat.Presheaf.germ_eq_of_isBasis`, in the `IsBasis` section of `Topology/Sheaves/Stalks.lean`,
+proved for an arbitrary `TopologicalSpace.Opens.IsBasis`. They are what the proofs below call. The
+work left over is naming the `f` — the general form produces an anonymous member of the basis, and
+`FormalSpectrum.sectionsBasicOpenEquiv` needs the element of `R` that indexes it, which is why these
+statements are worth having separately.
 
 **The separation statement in terms of adic completions.** `FormalSpectrum.exists_basicOpen_res_eq`
 is stated on sections rather than on `AdicCompletion (I · R_f) R_f`, because the restriction map
@@ -61,14 +70,18 @@ own.
 
 ## Implementation notes
 
-Both proofs are the same two moves: take what Mathlib's germ API gives over an arbitrary open
-(`TopCat.Presheaf.exists_germ_eq`, `TopCat.Presheaf.germ_eq`), then shrink the open to a basic one
-with `FormalSpectrum.isTopologicalBasis_basicOpen` and
-`TopologicalSpace.IsTopologicalBasis.exists_subset_of_mem_open`, transporting the section along the
-restriction. In the second proof the two restriction morphisms produced that way are not
-syntactically the ones in the statement; they are equal because morphisms of
-`TopologicalSpace.Opens` are a subsingleton, which is what the local step proved by
-`Subsingleton.elim` inside the proof is for.
+Both proofs are three lines: apply the Mathlib lemma at `FormalSpectrum.isBasis_basicOpen`, then
+destructure. The membership field of the Mathlib statements is `U ∈ Set.range (basicOpen I)`, so it
+destructures directly to `⟨f, rfl⟩` and the `f` the statements below quantify over falls out with no
+bridging lemma; that is the whole of the specialisation.
+
+`FormalSpectrum.isBasis_basicOpen` is the `TopologicalSpace.Opens.IsBasis` repackaging of
+`FormalSpectrum.isTopologicalBasis_basicOpen`. It had been stated in
+`FormalSchemes.SpfGammaRoundTrip`, far past the point where it is first useful; this file moves it
+beside the basis lemma in `FormalSchemes.FormalSpectrum`, whose `FormalSpectrum.exists_basicOpen_le`
+already exists for the same reason. The alternative — restating its two lines here — would have put
+a second copy of a landed lemma on the tree, and importing `FormalSchemes.SpfGammaRoundTrip` instead
+would have taken this leaf's transitive closure from 7 modules to 32 for the sake of them.
 
 Neither statement needs `IsAdicRing`, or even a topology on `R`: they are facts about the sheaf on
 the space `FormalSpectrum I` and about that space's basis.
@@ -90,18 +103,17 @@ namespace FormalSpectrum
 variable {R : Type u} [CommRing R] (I : Ideal R)
 
 /-- **Every germ of `O_{Spf R}` at `x` comes from a section over a basic open containing `x`.**
-`TopCat.Presheaf.exists_germ_eq` produces a section over some open neighbourhood; the basic opens
-are a basis (`FormalSpectrum.isTopologicalBasis_basicOpen`), so the neighbourhood may be shrunk to
-one of them, and `TopCat.Presheaf.germ_res_apply` says the restricted section has the same germ. -/
+`TopCat.Presheaf.exists_mem_germ_eq_of_isBasis` at `FormalSpectrum.isBasis_basicOpen`, whose basis
+is a `Set.range`, so its anonymous member of the basis destructures to the `f` this statement
+quantifies over. -/
 theorem exists_basicOpen_germ_eq (x : FormalSpectrum I)
     (t : ToType ((structureSheaf I).presheaf.stalk x)) :
     ∃ (f : R) (hx : x ∈ basicOpen I f) (s : ToType ((structureSheaf I).presheaf.obj
       (op (basicOpen I f)))), ((structureSheaf I).presheaf.germ (basicOpen I f) x hx) s = t := by
-  obtain ⟨U, hU, s, rfl⟩ := (structureSheaf I).presheaf.exists_germ_eq t
-  obtain ⟨v, ⟨f, rfl⟩, hxv, hvU⟩ :=
-    (isTopologicalBasis_basicOpen I).exists_subset_of_mem_open hU U.isOpen
-  exact ⟨f, hxv, ((structureSheaf I).presheaf.map (homOfLE hvU).op) s,
-    TopCat.Presheaf.germ_res_apply _ (homOfLE hvU) x hxv s⟩
+  obtain ⟨U, hxU, ⟨f, rfl⟩, s, hs⟩ :=
+    TopCat.Presheaf.exists_mem_germ_eq_of_isBasis (isBasis_basicOpen I)
+      (structureSheaf I).presheaf x t
+  exact ⟨f, hxU, s, hs⟩
 
 /-- **Every germ comes from an element of a completed localization.**
 `FormalSpectrum.exists_basicOpen_germ_eq` with the section read through
@@ -122,8 +134,8 @@ theorem exists_adicCompletion_germ_eq (x : FormalSpectrum I)
   exact hs
 
 /-- **Two sections over basic opens with the same germ agree over a smaller basic open.**
-`TopCat.Presheaf.germ_eq` produces some open on which they agree; shrinking it to a basic one is
-the same move as in `FormalSpectrum.exists_basicOpen_germ_eq`.
+`TopCat.Presheaf.germ_eq_of_isBasis` at `FormalSpectrum.isBasis_basicOpen`, destructured the same
+way as in `FormalSpectrum.exists_basicOpen_germ_eq`.
 
 This is the separation half of the colimit description: with
 `FormalSpectrum.exists_adicCompletion_germ_eq` it says that the stalk is exactly the filtered
@@ -138,17 +150,8 @@ theorem exists_basicOpen_res_eq (x : FormalSpectrum I) {f g : R}
       (heg : basicOpen I e ≤ basicOpen I g),
       ((structureSheaf I).presheaf.map (homOfLE hef).op) s =
         ((structureSheaf I).presheaf.map (homOfLE heg).op) t := by
-  obtain ⟨W, hxW, iU, iV, hst⟩ := (structureSheaf I).presheaf.germ_eq x hf hg s t h
-  obtain ⟨v, ⟨e, rfl⟩, hxv, hvW⟩ :=
-    (isTopologicalBasis_basicOpen I).exists_subset_of_mem_open hxW W.isOpen
-  refine ⟨e, hxv, (homOfLE hvW).le.trans iU.le, (homOfLE hvW).le.trans iV.le, ?_⟩
-  have key : ∀ {A B : (Opens (FormalSpectrum I))ᵒᵖ} (i j : A ⟶ B)
-      (z : ToType ((structureSheaf I).presheaf.obj A)),
-      ((structureSheaf I).presheaf.map i) z = ((structureSheaf I).presheaf.map j) z := by
-    intro A B i j z
-    rw [Subsingleton.elim i j]
-  have h2 := congrArg (fun z => ((structureSheaf I).presheaf.map (homOfLE hvW).op) z) hst
-  simp only [← ConcreteCategory.comp_apply, ← Functor.map_comp] at h2
-  exact ((key _ (iU.op ≫ (homOfLE hvW).op) s).trans h2).trans (key _ _ t)
+  obtain ⟨W, hxW, ⟨e, rfl⟩, hWf, hWg, he⟩ :=
+    TopCat.Presheaf.germ_eq_of_isBasis (isBasis_basicOpen I) (structureSheaf I).presheaf x hf hg h
+  exact ⟨e, hxW, hWf, hWg, he⟩
 
 end FormalSpectrum
