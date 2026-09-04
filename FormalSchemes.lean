@@ -327,6 +327,7 @@ import FormalSchemes.SpfTargetColimit
 import FormalSchemes.SpfTargetSurjective
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
+import FormalSchemes.StructureSheafStalks
 import FormalSchemes.TargetBasicRefinement
 import FormalSchemes.TateAction
 import FormalSchemes.TateActionInv
