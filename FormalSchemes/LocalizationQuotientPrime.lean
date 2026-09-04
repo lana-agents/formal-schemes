@@ -19,10 +19,11 @@ a localization of `R ⧸ K` at `Algebra.algebraMapSubmonoid (R ⧸ K) M` — spe
 submonoid `M`. All that changes is the identification of the image submonoid, which for a prime
 complement is `IsLocalization.algebraMapSubmonoid_primeCompl_comap` below.
 
-It sits in its own file rather than beside its `Away` sibling because
-`FormalSchemes.LocalizationQuotient` is imported, transitively, by 457 of the 506 modules of this
-library; a statement with no consumer yet does not justify recompiling them. Merging the two files
-is a dedup question for whenever something downstream of `FormalSchemes.Sections` needs this.
+It sits in its own file rather than beside its `Localization.Away` sibling because
+`FormalSchemes.LocalizationQuotient` is imported, transitively, by 458 of the 508 modules of this
+library, against 1 for this one; a statement with a single consumer does not justify recompiling
+them. Merging the two files is a dedup question for whenever something downstream of
+`FormalSchemes.Sections` needs this.
 
 The statement is phrased against an arbitrary prime `p` of `R` together with a hypothesis
 `P.comap (Ideal.Quotient.mk K) = p`, rather than against `P.comap (Ideal.Quotient.mk K)` itself.
@@ -41,8 +42,9 @@ below does not, and the consumer must be able to name one ring `A` for all level
 
 ## References
 
-`FormalSchemes.LocalizationQuotient`, whose `Away` statements this file mirrors declaration for
-declaration, and `IsLocalization.of_surjective` in Mathlib, which is the fact both rest on.
+`FormalSchemes.LocalizationQuotient`, whose `Localization.Away` statements this file mirrors
+declaration for declaration, and `IsLocalization.of_surjective` in Mathlib, which is the fact both
+rest on.
 -/
 
 namespace IsLocalization
