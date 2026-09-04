@@ -32,12 +32,19 @@ generality, and this statement cannot be made without one.
 
 ## Implementation notes
 
-The mathematics is two rewrites; the work is instance data, and there are four pieces of it. A
-topology on `R` and `IsAdicRing I` are needed for `FormalSpectrum.basicOpenRes` to exist at all,
-since it is a restriction map of the structure sheaf of `Spf R`. `IsAdicRing` on each of
-`FormalSpectrum.awayCompletionIdeal I f` and `awayCompletionIdeal I g` is needed for
+The mathematics is two rewrites; the work is instance data, and there are four pieces of it, from
+two different places. `IsAdicRing` on each of `FormalSpectrum.awayCompletionIdeal I f` and
+`awayCompletionIdeal I g` is what makes the statements below *elaborate*: it is needed for
 `FormalSpectrum.globalSectionsMap` at those two rings, because
 `FormalSpectrum.globalSectionsEquiv` (`FormalSchemes.Sections`) is stated for adic rings.
+
+A topology on `R` and `IsAdicRing I` are needed by the *proofs*, and by neither side of either
+equation. `FormalSpectrum.basicOpenRes` (`FormalSchemes.BasicOpenRestriction`) carries neither of
+them — it is declared in a section that has both, but it does not use them, and its elaborated
+signature takes only the ideal and the inclusion. What carries them is what the proofs rewrite
+with: `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict` and
+`FormalSpectrum.le_comap_basicOpenRes` (`FormalSchemes.BasicOpenRestrictionIdentification`) are
+both stated under a topology on `R` with `IsAdicRing I`.
 
 The topology on `R{1/f}` is not a hypothesis: `FormalSpectrum.awayCompletion I f` is an
 `AdicCompletion`, and the adic topology of the extended ideal is already an instance on it
