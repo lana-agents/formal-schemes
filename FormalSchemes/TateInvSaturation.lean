@@ -57,10 +57,14 @@ at every point, and the missing chart has to come from somewhere else. What this
 that the chart has to be glued to an **open** already-charted locus, and that the set it has to
 cover is the image of a single saturation.
 
-Also not proved, and deliberately: that the two sets of
-`image_base_tateInvSaturate_union_compl_eq_univ` are **disjoint**. Only that they cover. A chain
-point lying in two patches can be in both saturations, and disjointness is not what the reduction
-consumes.
+Also not proved here, and deliberately: that the two sets of
+`image_base_tateInvSaturate_union_compl_eq_univ` are **disjoint**. This file proves only that they
+cover, because disjointness is not what the reduction consumes. It is not open:
+`AlgebraicGeometry.disjoint_image_base_tateInvSaturate_nodeLocus`
+(`FormalSchemes.TateInvNodeLocus`) proves it one file downstream, and with it that the cover is a
+partition and that the uncharted set is closed. That really is disjointness of *these* two sets and
+not of a neighbouring pair: `AlgebraicGeometry.tateInvNodeLocus` is by definition the complement of
+`AlgebraicGeometry.tateInvChartLocus`.
 
 Nothing here weakens `LocallyRingedSpace.IsProperlyDiscontinuousOn`,
 `LocallyRingedSpace.IsFreeProperlyDiscontinuous` or

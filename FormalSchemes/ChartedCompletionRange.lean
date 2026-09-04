@@ -63,9 +63,14 @@ already says the second completion chart is empty as a space.
   `AlgebraicGeometry.ChartedSchemeDatum.specι_base_notMem_range_specι`
   (`FormalSchemes.ChartedSchemeDatumChartOverlap`), and the properness statement it yields is
   `..ChartedCompletionDatum.notMem_range_toScheme_base`.
-* No closed embedding. `FormalSchemes/CompletionTwoPatchClosed.lean` prices that even two patches
-  down, where it needs injectivity of the base map and hence the converse of
-  `FormalSchemes/CompletionTwoPatchDoubled.lean`'s overlap analysis. Still open at both indices.
+* No closed embedding **here**, and it is no longer open at either index. It needs injectivity of
+  the base map and hence the converse of `FormalSchemes.CompletionTwoPatchDoubled`'s overlap
+  analysis, which is `formalCompletion.mem_range_basicOpenImmersion`
+  (`FormalSchemes.CompletionBasicOpenMap`); the two statements are
+  `AlgebraicGeometry.isClosedEmbedding_completionTwoPatchToScheme_base`
+  (`FormalSchemes.CompletionTwoPatchEmbedding`) two patches down and
+  `AlgebraicGeometry.ChartedCompletionDatum.isClosedEmbedding_toScheme_base`
+  (`FormalSchemes.ChartedCompletionEmbedding`) at an arbitrary index.
 
 ## References
 

@@ -19,7 +19,13 @@ approximation itself**: over an open with affine thickenings and for a finitely 
 
 Nothing here touches the openness half. The sketch's remaining step — that
 `√(ker (B ↠ B₀)) = √J`, because both cut out the same subset — is a statement about the *two*
-presentations of the open and is not attempted; see "What this does not do" below.
+presentations of the open and is not attempted here; see "What this does not do" below. It is
+still unproved — but it is also no longer needed, which is the more useful thing to know. The
+openness half it was a route to is settled without it:
+`FormalSpectrum.le_radical_map_of_hasAffineThickenings` (`FormalSchemes.AdicOpennessHalf`, the one
+module importing this one) runs off the statement below and concludes the single inclusion
+`J ≤ √(I · B)`, under the same `FormalSpectrum.HasAffineThickenings` hypothesis and with no
+equality of radicals anywhere in it.
 
 ## The argument, and the one place it is delicate
 

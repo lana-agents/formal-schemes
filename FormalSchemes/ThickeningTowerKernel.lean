@@ -201,8 +201,10 @@ thickenings the transition map of the tower of sections has kernel `Iⁿ⁺¹ ·
 
 `FormalSchemes.AffineThickenings` supplies the other two inputs, `Bₙ₊₁ ↠ Bₙ`
 (`FormalSpectrum.surjective_stepSheafHom_app`) and `B ↠ B₀`
-(`FormalSpectrum.surjective_sectionsPi_zero`). The limit step that would turn the three into
-`ker (B ↠ B₀) = I · B` is not proved anywhere; see this module's docstring. -/
+(`FormalSpectrum.surjective_sectionsPi_zero`). The limit step that turns the three into
+`ker (B ↠ B₀) = I · B` is not proved here; it is `FormalSpectrum.ker_sectionsPi_zero`
+(`FormalSchemes.TowerLimitKernel`), over the same open and with `Ideal.FG` added. See this module's
+docstring. -/
 theorem ker_stepSheafHom_app {U : Opens (FormalSpectrum I)} (hU : HasAffineThickenings I U)
     (n : ℕ) :
     RingHom.ker ((stepSheafHom I n).hom.app (op U)).hom
