@@ -63,6 +63,14 @@ structure sheaf has to be brought in — `CategoryTheory.exists_actionQuotientπ
 over sub-opens of `V`, which is why those two are expected to transfer; **that expectation is not
 discharged anywhere here.**
 
+It is discharged in `FormalSchemes.ActionQuotientRestrictSections`, which imports this file:
+`CategoryTheory.IsActionQuotient.exists_c_app_eq_iff_forall` carries the existence half to an
+arbitrary presentation — the uniqueness half needed no carrying, being already
+`CategoryTheory.IsActionQuotient.injective_c_app` — and
+`AlgebraicGeometry.LocallyRingedSpace.exists_c_app_restrictπ_eq_iff_forall` carries both across the
+restriction, for opens `W ≤ V` of the quotient. That is an input to the sheaf half and not the
+sheaf half itself: the three obligations above are open after it as they are here.
+
 **Anything about the node chart, its outstanding hypothesis, or the Tate curve.** This file is at
 `AlgebraicGeometry.LocallyRingedSpace` level and mentions no ring, ideal or spectrum. What lands
 does not produce a chart at the node locus and settles nothing on the node-chart row; it is
