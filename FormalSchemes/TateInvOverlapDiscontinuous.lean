@@ -49,6 +49,7 @@ none.
 
 * `AlgebraicGeometry.tateInvOverlap`: the overlap `W_i = U_i ∩ U_{i+1}`, as the `ι i`-image of the
   `x`-chart locus of the annulus.
+* `AlgebraicGeometry.tateInvOverlapOpens`: the same set as an `Opens` of the chain.
 * `AlgebraicGeometry.tateInvOverlap_eq_image_chartY`: the same set is the `ι (i+1)`-image of the
   `y`-chart locus — the glue condition, read on ranges.
 * `AlgebraicGeometry.tateInvOverlap_eq_range_ι_inter`: `W_i` is the intersection `U_i ∩ U_{i+1}`,
@@ -171,6 +172,23 @@ is an open map. -/
 theorem isOpen_tateInvOverlap (i : ULift.{u} ℤ) : IsOpen (tateInvOverlap R I q hq hI i) :=
   ((tateChainInvFormalGlueData R I q hq hI).ι_isOpenImmersion i).base_open.isOpenMap _
     (isOpenImmersion_annulusOverlapChart R I q hI).base_open.isOpen_range
+
+/-- **The overlap as an `Opens` of the chain.** `tateInvOverlap` packaged with
+`isOpen_tateInvOverlap`, so that the constructions that need an open rather than an open set —
+`LocallyRingedSpace.restrict`, and the `U` argument of
+`AlgebraicGeometry.LocallyRingedSpace.isOpenImmersion_ofRestrict_comp_of_stalk_iso` — name the
+same object rather than each rebuilding the pair. -/
+def tateInvOverlapOpens (i : ULift.{u} ℤ) :
+    TopologicalSpace.Opens (tateChainInv R I q hq hI).toLocallyRingedSpace :=
+  ⟨tateInvOverlap R I q hq hI i, isOpen_tateInvOverlap R I q hq hI i⟩
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+@[simp]
+theorem coe_tateInvOverlapOpens (i : ULift.{u} ℤ) :
+    (tateInvOverlapOpens R I q hq hI i :
+        Set (tateChainInv R I q hq hI).toLocallyRingedSpace) =
+      tateInvOverlap R I q hq hI i :=
+  rfl
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The overlap seen from the other patch.** For `j = i + 1`, the set `W_i` is also the
