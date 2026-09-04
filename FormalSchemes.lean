@@ -157,6 +157,7 @@ import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionNestedBasicOpenMap
 import FormalSchemes.CompletionSheafComparison
 import FormalSchemes.CompletionToSpec
+import FormalSchemes.CompletionToSpecStalk
 import FormalSchemes.CompletionTwoPatchClosed
 import FormalSchemes.CompletionTwoPatchDoubled
 import FormalSchemes.CompletionTwoPatchEmbedding
