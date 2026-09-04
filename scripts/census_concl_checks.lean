@@ -68,8 +68,10 @@ has for its two containments a `Ideal.IsCofinal`, so it is `IsPrecomplete.of_isC
 universe and the downward one was not.
 
 Row 1543 acted on this.  The separate downward statement, in
-`FormalSchemes.CofinalSheafComparisonGeneral`, is deleted; its two call sites there and in
-`FormalSchemes.CofinalStructMap` now build the cofinality.  The example below is what that
+`FormalSchemes.CofinalSheafComparisonGeneral`, is deleted; the two call sites it had then, in that
+file and in `FormalSchemes.CofinalStructMap`, were rewritten to build the cofinality.  Row 1557 has
+since made them one: both were the same `IsAdicRing (I * J)` block, which exists once as
+`IsAdicRing.mul` (`FormalSchemes.CofinalAdicRing`).  The example below is what the deleted
 statement said, and it still holds. -/
 example {R : Type u} [CommRing R] {M : Type u} [AddCommGroup M] [Module R M] {K I : Ideal R}
     (hle : K ≤ I) {c : ℕ} (hc : I ^ c ≤ K) [IsPrecomplete I M] : IsPrecomplete K M :=

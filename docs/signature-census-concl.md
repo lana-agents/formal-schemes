@@ -119,6 +119,18 @@ shifts each of the labels after it up by one and B62 leaving shifts them again: 
 label in this document is not the label a re-run prints. That is why each finding is keyed to its
 **finding number** and to declaration names, and why the repair paragraphs cite no `B`-number.
 
+One row since has moved a figure, and by the *rehome* mechanism named above rather than by a
+deletion — the case the paragraph above says none of the six was. Row **1557** (PR #529) made the
+duplicated `IsAdicRing (I * J)` block a single lemma, `IsAdicRing.mul`, and moved
+`IsHausdorff.of_le` into `FormalSchemes.CofinalAdicRing` with it. On `3b2c426`, against the
+`c5b5c48` column above: declarations extracted **6260** and population bucketed **5676**, both
+unchanged, buckets with two or more members **274**, unchanged — and `>= 2 / cross / theorem`
+**274 / 200 / 88**. The bucket that left the cross-module count is `IsHausdorff K M`, which still
+has both its members and its class; they are simply both in one module now, so the filter stops
+printing it. Nothing was deleted on net: `FormalSpectrum.isAdicRing_mul` went and `IsAdicRing.mul`
+arrived, and neither conclusion was a shared key. **A rehome moves a span, not a population** — the
+one figure in this section that a repair can move without any statement changing.
+
 ## Classification
 
 Five classes. Every bucket is in exactly one; where a bucket contains members of more than one
@@ -230,12 +242,22 @@ statement is closed by another, which does not depend on whether a docstring nam
    `FormalSchemes.CofinalSheafComparisonGeneral` costs **one import and two modules** of closure,
    which is not a wall, so the downward statement was **deleted**.
    `IsPrecomplete.of_cofinal` no longer exists — the name above is a historical citation and
-   resolves to nothing — and its two call sites, `generalCofinalSpfIso` in that file and
-   `FormalSpectrum.isAdicRing_mul` in `FormalSchemes.CofinalStructMap`, now
-   read `IsPrecomplete.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le …)`. The import went in with
-   the deletion, so the sentence above about the two modules being incomparable is true of the
-   tree the census read and false of the tree today. **The bucket does not shrink; it vanishes**:
-   a bucket needs two members, so `IsPrecomplete K M` is no longer a key of this census at all.
+   resolves to nothing — and the two call sites it had then, `generalCofinalSpfIso` in that file
+   and `FormalSpectrum.isAdicRing_mul` in `FormalSchemes.CofinalStructMap`, were rewritten to
+   read `IsPrecomplete.of_isCofinal (Ideal.IsCofinal.of_le_of_pow_le …)`. That row's import went
+   in with its deletion, so the sentence above about the two modules being incomparable is true of
+   the tree the census read and false of the tree today. **The bucket does not shrink; it
+   vanishes**: a bucket needs two members, so `IsPrecomplete K M` is no longer a key of this
+   census at all.
+
+   Row **1557** (PR #529) has since made those two call sites **one**, and neither of the names
+   above survives it. They were the same `IsAdicRing (I * J)` block written out twice;
+   `FormalSpectrum.isAdicRing_mul` was deleted with the duplication and `generalCofinalSpfIso` no
+   longer contains the block, which now exists once as `IsAdicRing.mul`
+   (`FormalSchemes.CofinalAdicRing`) — the single site that reads the cofinality form today. That
+   row moved no bucket of this census: the deleted declaration's conclusion was not a shared key,
+   and the scan's only movement was `IsHausdorff K M` becoming intra-module, which is a span and
+   not a population — see "Drift since the reading".
 3. **B63.** `IsTopologicallyFiniteType.fg` (`FormalSchemes.TopFiniteTypeBasis`) is
    `RestrictedPowerSeries.fg_of_presentation` (`FormalSchemes.TopFiniteTypeTrans`) applied to the
    presentation inside the tf-type witness. The general form does not use surjectivity of the
