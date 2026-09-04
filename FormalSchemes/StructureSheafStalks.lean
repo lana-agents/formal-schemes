@@ -27,8 +27,10 @@ claim that it is**.
 * the cone compatibility, as a **named** lemma at an arbitrary pair `m ≤ n`. The same computation
   exists on the tree already, as a proof-local `have` against level `0` inside
   `FormalSpectrum.isUnit_of_isUnit_stalkProj` (`FormalSchemes.Thickenings`). That `have` is
-  deliberately left where it is: rerouting it means recompiling that file's reverse closure to
-  replace three lines, which is a dedup question and not this file's;
+  deliberately left where it is: `FormalSchemes.Thickenings` sits directly over
+  `FormalSchemes.Spf`, as this file does, so rerouting it would add an import edge and recompile
+  that file's reverse closure to replace a nine-line pair of `have`s — a dedup question, and not
+  this file's;
 * the comparison map and the question it poses;
 * the identification of the tower's level `n` with a localization of `R ⧸ I ^ (n + 1)`.
 
@@ -70,9 +72,12 @@ the left-hand side nor any consequence of it is proved here.
 read the limit as an adic completion of the *stalk* `O_{Spec R, x}` one wants that localization
 identified with `R_p ⧸ I ^ (n + 1) · R_p`, and then
 `AdicCompletion.towerLimitRingEquiv` — the bridge `FormalSchemes.Sections` uses for the sections
-tower — would apply. Mathlib carries `IsLocalization` machinery over quotients, but a search of it
-turned up no packaged form of that identification; it is not proved here and no declaration below
-depends on it. Anyone continuing should re-run that search before writing the lemma by hand.
+tower — would apply. It is not proved here and no declaration below depends on it, but the
+ingredients are on hand: `IsLocalization.of_surjective` is the general statement that
+`S ⧸ K.map (algebraMap R S)` is a localization of `R ⧸ K` at the image of the localizing submonoid,
+and `IsLocalization.away_quotient` (`FormalSchemes.LocalizationQuotient`) is already its
+`Submonoid.powers f` specialisation on this tree. What the prime case adds is the matching
+description of the image of a prime complement, which this file does not prove.
 
 **Non-vacuity is not an issue for the statements below**, because they take the point `x` as an
 argument: `FormalSpectrum.IsStalkLimit I x` is a condition at a given point and there is nothing
@@ -129,9 +134,10 @@ functor to `CategoryTheory.Limits.limit.w`.
 
 The `m = 0` case of this computation already occurs on the tree, as a proof-local `have` inside
 `FormalSpectrum.isUnit_of_isUnit_stalkProj` (`FormalSchemes.Thickenings`), where it factors the
-level-`0` projection through the level-`n` one. That occurrence is deliberately left alone: this
-file is downstream of it, so rerouting it would mean recompiling that file's reverse closure to
-replace three lines. -/
+level-`0` projection through the level-`n` one. That occurrence is deliberately left alone:
+`FormalSchemes.Thickenings` is not downstream of this file — the two sit side by side directly over
+`FormalSchemes.Spf` — so rerouting it would add an import edge and recompile that file's reverse
+closure to replace a nine-line pair of `have`s. -/
 theorem stalkProj_comp_stalkTower_map {m n : ℕ} (h : m ≤ n) :
     stalkProj I x n ≫ (stalkTower I x).map (homOfLE h).op = stalkProj I x m := by
   have hw : limit.π (structureSheafFunctor I) ⟨n⟩ ≫
