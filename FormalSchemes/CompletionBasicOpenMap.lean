@@ -54,6 +54,10 @@ map is `AdicCompletion.completionToLocCompletion`, which is *by definition*
   functorial `formalCompletion.map` of `R → R_f`.
 * `formalCompletion.basicOpenImmersion_comp_toSpec`: the `toSpec` square over a basic open
   commutes.
+* `formalCompletion.mem_range_basicOpenImmersion_iff`: a point of `Spf R^` is in the range of the
+  basic-open immersion **iff** it lies over a prime of `Spec R` avoiding `f`, together with its
+  two directional corollaries `formalCompletion.mem_range_basicOpenImmersion` and
+  `formalCompletion.notMem_range_basicOpenImmersion`.
 
 ## References
 
@@ -169,5 +173,45 @@ theorem basicOpenImmersion_comp_toSpec :
   rw [basicOpenImmersion_eq_map]
   exact map_comp_toSpec hI (hI.map (algebraMap R (Localization.Away f)))
     (algebraMap R (Localization.Away f)) (le_of_eq rfl)
+
+/-! ### The range of the immersion, read through `formalCompletion.toSpec`
+
+`formalCompletion.range_basicOpenImmersion` (`FormalSchemes.CompletionBasicOpen`) computes the
+range of the basic-open completion immersion as the basic open `D(f̂)` of `Spf R^`; the
+`formalCompletion.toSpec` square above is what turns that into a statement about the ambient
+`Spec R`, and the two directions of it are what a gluing argument needs on either side of a chart
+boundary. -/
+
+/-- **A point of `Spf R^` is in `D(f̂)` exactly when it lies over a prime avoiding `f`.**
+
+The range of the basic-open completion immersion is `D(f̂)`
+(`formalCompletion.range_basicOpenImmersion`), and the base map of `formalCompletion.toSpec` is
+`Spec` of the residue map `R →+* R^ ⧸ I·R^` (`formalCompletion.toSpec_base_eq_comap`), which
+sends `f` to the residue of `f̂`. So the two conditions are the same condition, and the
+membership statement is `FormalSpectrum.mem_basicOpen` read at `f̂`. -/
+theorem mem_range_basicOpenImmersion_iff
+    (x : FormalSpectrum (AdicCompletion.idealOfDefinition I)) :
+    x ∈ Set.range (basicOpenImmersion I hI f).toLRSHom.base ↔
+      f ∉ ((toSpec R I hI).base x).asIdeal := by
+  rw [range_basicOpenImmersion, toSpec_base_eq_comap]
+  exact FormalSpectrum.mem_basicOpen _ _ _
+
+/-- **A point of `Spf R^` lying over a prime not containing `f` is in `D(f̂)`.** The direction of
+`formalCompletion.mem_range_basicOpenImmersion_iff` that carries a point of one chart into an
+overlap. -/
+theorem mem_range_basicOpenImmersion
+    (x : FormalSpectrum (AdicCompletion.idealOfDefinition I))
+    (hx : f ∉ ((toSpec R I hI).base x).asIdeal) :
+    x ∈ Set.range (basicOpenImmersion I hI f).toLRSHom.base :=
+  (mem_range_basicOpenImmersion_iff I hI f x).mpr hx
+
+/-- **A point of `Spf R^` lying over a prime containing `f` is outside `D(f̂)`.** The direction of
+`formalCompletion.mem_range_basicOpenImmersion_iff` that keeps a point out of an overlap, and
+hence exhibits it as doubled by a gluing along that overlap. -/
+theorem notMem_range_basicOpenImmersion
+    (x : FormalSpectrum (AdicCompletion.idealOfDefinition I))
+    (hx : f ∈ ((toSpec R I hI).base x).asIdeal) :
+    x ∉ Set.range (basicOpenImmersion I hI f).toLRSHom.base :=
+  fun hmem => (mem_range_basicOpenImmersion_iff I hI f x).mp hmem hx
 
 end formalCompletion

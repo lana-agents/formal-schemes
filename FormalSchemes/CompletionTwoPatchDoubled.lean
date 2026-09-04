@@ -1,3 +1,4 @@
+import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.CompletionToSpec
 import FormalSchemes.GlueDataImageInter
@@ -62,8 +63,6 @@ geometric fact underneath that claim.
 
 ## Main results
 
-* `formalCompletion.notMem_range_basicOpenImmersion`: a point of `Spf R^` lying over a prime of
-  `Spec R` containing `f` is outside the completed basic open `D(f̂)`.
 * `formalCompletion.exists_toSpec_base_eq`: every prime of `Spec R` containing `I` is hit by
   `formalCompletion.toSpec`.
 * `AlgebraicGeometry.range_completionTwoPatchLRSGlueData_f_false_true`: the `A`-side overlap
@@ -92,19 +91,6 @@ universe u
 namespace formalCompletion
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (hI : I.FG) (f : R)
-
-/-- **A point of `Spf R^` lying over a prime containing `f` is outside `D(f̂)`.** The range of the
-basic-open completion immersion is `D(f̂)` (`range_basicOpenImmersion`), and the base map of
-`toSpec` is `Spec` of the residue map `R →+* R^ ⧸ I·R^` (`toSpec_base_eq_comap`), which sends `f`
-to the residue of `f̂`; so lying over a prime containing `f` is exactly failing to be in `D(f̂)`. -/
-theorem notMem_range_basicOpenImmersion
-    (x : FormalSpectrum (AdicCompletion.idealOfDefinition I))
-    (hx : f ∈ ((toSpec R I hI).base x).asIdeal) :
-    x ∉ Set.range (basicOpenImmersion I hI f).toLRSHom.base := by
-  rw [range_basicOpenImmersion]
-  rw [toSpec_base_eq_comap] at hx
-  intro hmem
-  exact (FormalSpectrum.mem_basicOpen _ _ _).mp hmem hx
 
 /-- **Every prime of `Spec R` containing `I` comes from a point of the completion.** This is
 `range_toSpec_base` — the image of `toSpec` is `V(I)` — read as an existence statement. -/

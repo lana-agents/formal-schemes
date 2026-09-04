@@ -59,10 +59,13 @@ a prime of `V(J) ∩ D(b)` corresponds under `θ` to one of `V(I·A_a) = V(I) �
 — from `hθ`, an equality of ideals in the localizations, to a statement about primes — is
 `AlgebraicGeometry.comap_θ_preimage_zeroLocus` (`FormalSchemes.CompletionTwoPatchSupport`), which
 is downstream of this file and carries the argument sketched above to its conclusion in
-`FormalSchemes.CompletionTwoPatchClosed`. Injectivity of the base map is left open; its
-mixed-chart case needs a converse to the overlap analysis of
-`FormalSchemes.CompletionTwoPatchDoubled`, namely that a point of `Spf A^` lying over `D(a)` is in
-the overlap chart, and that is what still blocks the closed embedding.
+`FormalSchemes.CompletionTwoPatchClosed`. Injectivity of the base map is not proved here either,
+and it is not open: the converse of the overlap analysis of
+`FormalSchemes.CompletionTwoPatchDoubled` — a point of `Spf A^` lying over `D(a)` is in the
+overlap chart — is `formalCompletion.mem_range_basicOpenImmersion`, and with it
+`AlgebraicGeometry.injective_completionTwoPatchToScheme_base` and
+`AlgebraicGeometry.isClosedEmbedding_completionTwoPatchToScheme_base`
+(`FormalSchemes.CompletionTwoPatchEmbedding`) are downstream of this file.
 
 That the glued completion is *genuinely* glued — its two charts meet only over `D(â)`, so a point
 outside the overlap is doubled — is `FormalSchemes.CompletionTwoPatchDoubled` and is deliberately
