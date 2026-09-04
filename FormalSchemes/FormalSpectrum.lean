@@ -156,8 +156,8 @@ theorem isTopologicalBasis_basicOpen :
 /-- The basic opens `D(f)`, `f ∈ R`, viewed as a family of `TopologicalSpace.Opens (Spf R)`, form
 an `TopologicalSpace.Opens.IsBasis`. This repackages `FormalSpectrum.isTopologicalBasis_basicOpen`,
 which is stated for the underlying *sets*, in the form that Mathlib's `Opens`-indexed API asks for —
-`TopCat.Sheaf.hom_ext`, `TopCat.Sheaf.isIso_iff_isIso_basis` and the `IsBasis` section of
-`Mathlib/Topology/Sheaves/Stalks.lean` all take it.
+`TopCat.Sheaf.hom_ext`, `TopCat.Sheaf.isIso_iff_isIso_basis` and
+`TopCat.Presheaf.exists_mem_germ_eq_of_isBasis` all take it.
 
 It lives here, beside the basis lemma and for the same reason as
 `FormalSpectrum.exists_basicOpen_le`, so that files at any depth can cite it rather than restate two

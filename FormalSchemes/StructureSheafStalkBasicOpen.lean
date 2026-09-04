@@ -52,8 +52,8 @@ successor who wants the categorical form should re-run it before writing one by 
 
 What Mathlib *does* have, and what the two theorems below are specialisations of, is the
 `∃`-statement form of the same idea: `TopCat.Presheaf.exists_mem_germ_eq_of_isBasis` and
-`TopCat.Presheaf.germ_eq_of_isBasis`, in the `IsBasis` section of `Topology/Sheaves/Stalks.lean`,
-proved for an arbitrary `TopologicalSpace.Opens.IsBasis`. They are what the proofs below call. The
+`TopCat.Presheaf.germ_eq_of_isBasis`, both in `Topology/Sheaves/Stalks.lean` and both proved for an
+arbitrary `TopologicalSpace.Opens.IsBasis`. They are what the proofs below call. The
 work left over is naming the `f` — the general form produces an anonymous member of the basis, and
 `FormalSpectrum.sectionsBasicOpenEquiv` needs the element of `R` that indexes it, which is why these
 statements are worth having separately.
