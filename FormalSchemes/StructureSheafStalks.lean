@@ -198,9 +198,12 @@ def levelPrime (n : ℕ) : PrimeSpectrum (R ⧸ I ^ (n + 1)) :=
 localization at the corresponding prime.
 
 This is as far as the identification goes here. Turning `Localization.AtPrime` of a quotient into a
-quotient of `Localization.AtPrime` — which is what would make the limit of this tower an adic
-completion of `O_{Spec R, x}` — has no packaged form in Mathlib and is not proved below; see the
-module docstring. -/
+quotient of `Localization.AtPrime` — which is what makes the limit of this tower an adic completion
+of `O_{Spec R, x}` — is not proved below, but it is not missing either: it is
+`Localization.atPrimeQuotientEquiv` (`FormalSchemes.LocalizationQuotientPrime`), a specialisation
+of Mathlib's `IsLocalization.of_surjective`, and `FormalSpectrum.stalkTowerLevelEquiv`
+(`FormalSchemes.StructureSheafStalkLevels`) applies it to this equivalence. See the module
+docstring for the ingredients. -/
 def thickeningStalkLocalizationEquiv (n : ℕ) :
     ((thickeningSheaf I n).presheaf.stalk x : Type u) ≃+*
       Localization.AtPrime (levelPrime I x n).asIdeal :=
