@@ -58,14 +58,15 @@ Do not read the title of this file as that identification.
 
 What is available towards it: both maps satisfy the same locality-free square over `R`, by
 `awayCompletionRestrict_comp_awayCompletionHom` here and by
-`FormalSpectrum.basicOpenRes_comp_awayCompletionHom` there. That square alone does not determine
-either of them, since the image of `R` is not dense enough to pin a map out of a completion on the
-nose. What has to be added to it is one continuity bound, and only on the sheaf side:
-`FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict_of_le_comap`
-(`FormalSchemes.AwayCompletionRestrictUnique`) derives the identification from the single
-hypothesis that `basicOpenRes` carries `awayCompletionIdeal I f` into `awayCompletionIdeal I g`.
-That hypothesis is not proved anywhere on this tree, so the identification is still open — but it
-is open by one bound and not by a comparison of the two maps.
+`FormalSpectrum.basicOpenRes_comp_awayCompletionHom` there. **That is enough, and the
+identification is landed downstream** as `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict`
+(`FormalSchemes.BasicOpenRestrictionIdentification`), for `I` finitely generated. What an earlier
+version of this paragraph missed is that a map under `R` carries the ideal of definition across for
+free — the ideal of definition of `R{1/f}` *is* the extension of `I` along `awayCompletionHom I f`,
+by `map_awayCompletionHom` — so the continuity hypothesis that the uniqueness statement needs is
+not an extra property to be proved of the sheaf-side map at all
+(`FormalSpectrum.map_eq_of_comp_awayCompletionHom`, same file). Nothing below states the
+identification; it is stated where both maps are in scope.
 
 **Uniqueness of the map is not proved below, and is not open.** Two ring maps `R{1/f} → R{1/g}`
 agreeing on the image of `R` agree on the image of `Localization.Away f`, since the image of `f` is

@@ -59,23 +59,26 @@ work left over is naming the `f` — the general form produces an anonymous memb
 statements are worth having separately.
 
 **The separation statement in terms of adic completions.** `FormalSpectrum.exists_basicOpen_res_eq`
-is stated on sections rather than on `AdicCompletion (I · R_f) R_f`, because for a general inclusion
-`D(g) ⊆ D(f)` the restriction map `Γ(D(f)) ⟶ Γ(D(g))` is identified with no *computed* map of adic
-completions on the tree. It is named as one: `FormalSpectrum.basicOpenRes`
-(`FormalSchemes.BasicOpenRestriction`) is that restriction conjugated by
-`FormalSpectrum.sectionsBasicOpenEquiv` on both sides, and
-`FormalSpectrum.basicOpenRes_comp_awayCompletionHom` pins it on the image of `R` — but nothing
-identifies it with a map built from the localizations, which is what the upgrade below would need.
-The case `f = 1` **is** landed: `FormalSpectrum.awayCompletionHom_eq_restrict`
+is stated on sections rather than on `AdicCompletion (I · R_f) R_f`, and at the time it was written
+that was forced: for a general inclusion `D(g) ⊆ D(f)` the restriction map `Γ(D(f)) ⟶ Γ(D(g))` was
+identified with no computed map of adic completions on the tree. **It is now.**
+`FormalSpectrum.basicOpenRes` (`FormalSchemes.BasicOpenRestriction`) is that restriction conjugated
+by `FormalSpectrum.sectionsBasicOpenEquiv` on both sides, and
+`FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict`
+(`FormalSchemes.BasicOpenRestrictionIdentification`) identifies it, for `I` finitely generated, with
+`FormalSpectrum.awayCompletionRestrict` (`FormalSchemes.AwayCompletionRestrict`) — the canonical
+`R{1/f} →+* R{1/g}` built from the localizations. The special case `f = 1` was landed earlier and
+independently: `FormalSpectrum.awayCompletionHom_eq_restrict`
 (`FormalSchemes.SpfGammaSheafComponentArbComp`) reads the restriction `Γ(⊤) ⟶ Γ(D(g))`, through
 `FormalSpectrum.globalSectionsEquiv` and `FormalSpectrum.sectionsBasicOpenEquiv`, as the
-completed-localization structure map `FormalSpectrum.awayCompletionHom`. The general case is
-already named as an open follow-up by `FormalSchemes.CofinalSheafComparisonNaturality`, whose
-docstring says why it does not reduce to that one — there is no canonical `R_f → R_g` for a general
-`D(g) ⊆ D(f)` — and that it wants `FormalSpectrum.awayCompletionAwayEquiv`
-(`FormalSchemes.AwayCompletionAway`), the isomorphism `R{1/g} ≃+* R_f{1/ḡ}`, to intertwine the two
-completions. Supplying the identification would upgrade the second theorem below, and it is a row of
-its own rather than a gap nobody has looked at.
+completed-localization structure map `FormalSpectrum.awayCompletionHom`.
+
+So the upgrade of the second theorem below to completion form is now available and is not attempted
+here: it belongs in this file, needs `Ideal.FG`, and would be a rewrite of its conclusion along that
+identification. Note that the reason the general case was expected to be hard — that there is no
+canonical `R_f → R_g` for a general `D(g) ⊆ D(f)` — is true of the *localizations* and was never the
+obstruction for the completions; `FormalSchemes.CofinalSheafComparisonNaturality` records that
+correction.
 
 ## Implementation notes
 
