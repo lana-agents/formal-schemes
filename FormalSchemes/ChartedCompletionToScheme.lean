@@ -52,8 +52,13 @@ completion datum through `toChartedSchemeDatum`.
   (`AlgebraicGeometry.ChartedCompletionDatum.preimage_range_toScheme_base`, where `hθ` is first
   spent) and `FormalSchemes.ChartedCompletionClosed`
   (`..isClosed_range_toScheme_base`), mirroring `FormalSchemes.CompletionTwoPatchSupport` and
-  `FormalSchemes.CompletionTwoPatchClosed`. **No closed-embedding statement** exists at either
-  index; that one needs injectivity of the base map and is unmeasured even for two patches.
+  `FormalSchemes.CompletionTwoPatchClosed`. Nothing **here** makes
+  `AlgebraicGeometry.ChartedCompletionDatum.toScheme` a closed embedding either; that needs
+  injectivity of the base map, and it is
+  `AlgebraicGeometry.ChartedCompletionDatum.isClosedEmbedding_toScheme_base`
+  (`FormalSchemes.ChartedCompletionEmbedding`) at this index, mirroring
+  `AlgebraicGeometry.isClosedEmbedding_completionTwoPatchToScheme_base`
+  (`FormalSchemes.CompletionTwoPatchEmbedding`) two patches down.
 * Nothing **here** promotes `specGlued` to `AlgebraicGeometry.Scheme`;
   `FormalSchemes.ChartedSchemeDatumScheme` does, as a separate carve, and retypes
   `toScheme` there as `AlgebraicGeometry.ChartedCompletionDatum.toSchemeHom`. That promotion

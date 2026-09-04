@@ -66,9 +66,15 @@ all of the projective line as soon as `R` is nontrivial.
   this file rather than in it: `FormalSchemes.ChartedCompletionClosed` runs
   `FormalSchemes.CompletionTwoPatchClosed`'s complement argument at an arbitrary index off the
   statement below. Nothing else is needed from the mathematics; that file is topology.
-* **`Topology.IsClosedEmbedding`.** Priced as out of reach even two patches down, where it needs
-  injectivity of the base map and hence the converse of
-  `FormalSchemes.CompletionTwoPatchDoubled`'s overlap analysis. Unmeasured at both indices.
+* **`Topology.IsClosedEmbedding` is not proved here, and is no longer out of reach at either
+  index.** It needs injectivity of the base map, whose mixed-chart case needs the converse of
+  `FormalSchemes.CompletionTwoPatchDoubled`'s overlap analysis; that converse is
+  `formalCompletion.mem_range_basicOpenImmersion` (`FormalSchemes.CompletionBasicOpenMap`). Two
+  patches down the statement is
+  `AlgebraicGeometry.isClosedEmbedding_completionTwoPatchToScheme_base`
+  (`FormalSchemes.CompletionTwoPatchEmbedding`), and at an arbitrary index it is
+  `AlgebraicGeometry.ChartedCompletionDatum.isClosedEmbedding_toScheme_base`
+  (`FormalSchemes.ChartedCompletionEmbedding`), a leaf downstream of this file.
 
 ## Main results
 
