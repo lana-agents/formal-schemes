@@ -260,6 +260,7 @@ import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LiftedBasicOpenCover
 import FormalSchemes.LimitUnits
 import FormalSchemes.LocalizationQuotient
+import FormalSchemes.LocalizationQuotientPrime
 import FormalSchemes.LocalizationSplitOfNilpotentMul
 import FormalSchemes.LocallyFG
 import FormalSchemes.LocallyRingedSpaceGlueDesc
@@ -328,6 +329,7 @@ import FormalSchemes.SpfTargetColimit
 import FormalSchemes.SpfTargetSurjective
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
+import FormalSchemes.StructureSheafStalkLevels
 import FormalSchemes.StructureSheafStalks
 import FormalSchemes.TargetBasicRefinement
 import FormalSchemes.TateAction
