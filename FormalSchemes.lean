@@ -85,6 +85,7 @@ import FormalSchemes.BasicOpenImmersion
 import FormalSchemes.BasicOpenImmersionAssembly
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.BasicOpenImmersionSheaf
+import FormalSchemes.BasicOpenRestriction
 import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartSpfHomColimitTarget

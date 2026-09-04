@@ -60,8 +60,13 @@ statements are worth having separately.
 
 **The separation statement in terms of adic completions.** `FormalSpectrum.exists_basicOpen_res_eq`
 is stated on sections rather than on `AdicCompletion (I · R_f) R_f`, because for a general inclusion
-`D(g) ⊆ D(f)` the restriction map `Γ(D(f)) ⟶ Γ(D(g))` is identified with no map of adic completions
-on the tree. The case `f = 1` **is** landed: `FormalSpectrum.awayCompletionHom_eq_restrict`
+`D(g) ⊆ D(f)` the restriction map `Γ(D(f)) ⟶ Γ(D(g))` is identified with no *computed* map of adic
+completions on the tree. It is named as one: `FormalSpectrum.basicOpenRes`
+(`FormalSchemes.BasicOpenRestriction`) is that restriction conjugated by
+`FormalSpectrum.sectionsBasicOpenEquiv` on both sides, and
+`FormalSpectrum.basicOpenRes_comp_awayCompletionHom` pins it on the image of `R` — but nothing
+identifies it with a map built from the localizations, which is what the upgrade below would need.
+The case `f = 1` **is** landed: `FormalSpectrum.awayCompletionHom_eq_restrict`
 (`FormalSchemes.SpfGammaSheafComponentArbComp`) reads the restriction `Γ(⊤) ⟶ Γ(D(g))`, through
 `FormalSpectrum.globalSectionsEquiv` and `FormalSpectrum.sectionsBasicOpenEquiv`, as the
 completed-localization structure map `FormalSpectrum.awayCompletionHom`. The general case is
