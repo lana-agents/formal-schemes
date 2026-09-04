@@ -57,19 +57,25 @@ price of insisting the chart's ring be `Γ (T_inv/⟨σ⟩, V)` rather than any 
 
 ## What this does **not** settle
 
-**`hnode` is still open.** Nothing here produces a chart, an open immersion or an isomorphism; the
-node-locus image is exactly where the tree has no chart and, by
-`AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`
-(`FormalSchemes.TateInvPeriodNodePoint`), cannot get one from a separating open. What the
-equivalence adds is that a successor may pick **any** ring and **any** open containing that image,
-and owes no completeness, finite-generation or regularity statement about
+**`hnode` is still open.** Nothing here produces a chart, an open immersion or an isomorphism, and
+the node-locus image is exactly where the tree has no chart. The one route that is closed is the
+global one: for `I ≠ ⊤` the action is not free and properly discontinuous
+(`AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`,
+`FormalSchemes.TateInvPeriodNodePoint`), so `LocallyRingedSpace.freeActionQuotientFormalScheme`
+cannot supply the charts. That is a single negation, witnessed at *one* node; nothing on the tree
+says that every point of the node-locus image fails to have a separating open. What the equivalence
+adds is that a successor may pick **any** ring and **any** open containing that image, and owes no
+completeness, finite-generation or regularity statement about
 `AlgebraicGeometry.tateInvNodeChartAwaySubring` on the way.
 
-Nor is the node-locus image small: `AlgebraicGeometry.tateInvNodeLocus` is a homeomorphic copy of
-`Spf R` (`AlgebraicGeometry.tateInvNodeLocusHomeomorph`, `FormalSchemes.TateInvNodeLocus`), not a
-point, and `AlgebraicGeometry.image_base_tateInvSaturate_nodeLocus_nonempty` records that for
-`I ≠ ⊤` the right-hand side of the equivalence quantifies over a nonempty set — so the equivalence
-does not hold because there is nothing to check.
+Nor is the right-hand side vacuous:
+`AlgebraicGeometry.image_base_tateInvSaturate_nodeLocus_nonempty` records that for `I ≠ ⊤` it
+quantifies over a nonempty set, so the equivalence does not hold because there is nothing to
+check. Nonemptiness is all that is claimed of that image and all the equivalence needs. The only
+statement on this tree about its size is
+`AlgebraicGeometry.tateInvNodeLocusHomeomorph` (`FormalSchemes.TateInvNodeLocus`), which
+identifies it with the node locus of a *single patch* and with no other space — in particular it
+is not a lower bound, and the image can be a single point.
 
 ## References
 
@@ -104,10 +110,13 @@ point of the quotient either carries a chart or lies in that image, and
 discharged.
 
 It is `AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChart` with the hypothesis moved
-off the model patch, and it is weaker than
-`AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChartLocus`
-(`FormalSchemes.TateInvNodeChartDomain`), which asks for charts on the image of the saturation of
-the whole of `D(x + y − 1)` rather than of the node locus inside it. -/
+off the model patch, and its hypothesis is the *weaker* of two — so it is the **stronger**
+statement. `AlgebraicGeometry.tateInvPeriodQuotientFormalSchemeOfNodeChartLocus`
+(`FormalSchemes.TateInvNodeChartDomain`) asks for charts on the image of the saturation of the
+whole of `D(x + y − 1)`, and `AlgebraicGeometry.tateInvNodeLocus_subset_tateInvNodeChartLocus`
+puts the node locus inside that, so this theorem asks for charts on less. Rerouting that
+definition through this one is a genuine dedup and is not done here: it lives upstream of this
+file. -/
 theorem hasAffineChartAt_of_nodeLocus
     (h : IsActionQuotient (tateInvPeriodAction R I q hq hI) π)
     (hnode : ∀ z ∈ ⇑π.base '' tateInvSaturate R I q hq hI (tateInvNodeLocus R I q),

@@ -28,6 +28,9 @@ the Tate chain, obtained by gluing formal annuli.
   spectrum gives a chart at each of its points. This is the converse of
   `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`, and it is the whole content of
   `FormalScheme.exists_openImmersion`.
+* `LocallyRingedSpace.hasAffineChartAt_of_restrict`: the same statement with the identification
+  weakened to a chart — an open of `X` that merely *has* a chart at a point gives one on `X` at
+  that point. `LocallyRingedSpace.hasAffineChartAt_of_isoRestrict` is its affine case.
 * `FormalScheme.exists_openImmersion`: every point of a formal scheme is in the range of an
   open immersion from an affine formal scheme.
 * `LocallyRingedSpace.IsOpenImmersion.formalScheme`: the converse; the local criterion.

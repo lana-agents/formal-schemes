@@ -38,6 +38,9 @@ the nodes, and this file is what lets the rest of the chain be dealt with anyway
 
 * `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_formalScheme`: every point of a formal
   scheme has a chart, so `HasAffineChartAt` is characteristic and not merely sufficient.
+* `AlgebraicGeometry.LocallyRingedSpace.exists_formalScheme_iff_forall_hasAffineChartAt`: that
+  implication and `LocallyRingedSpace.formalSchemeOfHasAffineChartAt` (`FormalSchemes.Gluing`)
+  packaged as an `Iff`, so a reduction stated in charts is read as a statement about the object.
 * `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_isProperlyDiscontinuousOn`: **the
   pointwise chart theorem** — a separating open around `x` gives a chart of `Q` at `π x`.
 * `AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme_eq_ofHasAffineChartAt`:
