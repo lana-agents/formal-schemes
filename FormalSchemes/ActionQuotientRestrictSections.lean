@@ -42,27 +42,26 @@ the other one, in a file that predates it.
 ## What is *not* proved here
 
 **`CategoryTheory.IsActionQuotient` for the restricted projection at
-`AlgebraicGeometry.LocallyRingedSpace` level**, which is what row 1618 asks for and what
-`FormalSchemes.ActionQuotientRestrict` leaves open. That file proves the statement after
-`AlgebraicGeometry.LocallyRingedSpace.forgetToTop`; this one proves the section-level description
-the sheaf half was expected to need. Neither of them builds the morphism of locally ringed spaces,
-and this file does not shorten that construction by itself.
+`AlgebraicGeometry.LocallyRingedSpace` level.** `FormalSchemes.ActionQuotientRestrict` proves the
+statement after `AlgebraicGeometry.LocallyRingedSpace.forgetToTop`; this one proves the
+section-level description. Neither of them produces the morphism of locally ringed spaces. That is
+`AlgebraicGeometry.LocallyRingedSpace.isActionQuotient_restrictπ`
+(`FormalSchemes.ActionQuotientRestrictQuotient`), which imports this file and consumes both halves.
 
-One route the two files suggest — and it is a **route, not a theorem: nothing here tests any part
-of it** — is to compare `Q|_V` with the coequalizer `X|_{π⁻¹ V} / G` of the restricted action
-(`AlgebraicGeometry.LocallyRingedSpace.restrictAction`) rather than to build a descent by hand.
-The comparison morphism exists, by the universal property of that coequalizer applied to
-`AlgebraicGeometry.LocallyRingedSpace.isActionInvariant_restrictπ`, and that much was checked by
-elaborating it: the coequalizer's instances are found from `Small.{u} G` alone. Nothing past that
-point was checked. What it would take to make the comparison an isomorphism is not written down
-anywhere, and what one might expect of its base map from
-`AlgebraicGeometry.LocallyRingedSpace.base_isQuotientMap_restrictπ` and
-`AlgebraicGeometry.LocallyRingedSpace.base_eq_iff_restrictπ` is an expectation, not a lemma.
+The route it takes is the one this section used to describe as **a route and not a theorem**:
+compare `Q|_V` with the coequalizer `X|_{π⁻¹ V} / G` of the restricted action
+(`AlgebraicGeometry.LocallyRingedSpace.restrictAction`) rather than build a descent by hand. The
+comparison morphism is `AlgebraicGeometry.LocallyRingedSpace.restrictπComparison`, and it is an
+isomorphism: on underlying spaces because both projections are action quotients in `TopCat`, and on
+sections because both have the same image and are injective there.
 
-That route would also need something this file deliberately avoids: a translation between
+The one thing that route needs and this file deliberately avoids is a translation between
 invariance under `AlgebraicGeometry.LocallyRingedSpace.restrictAction` and invariance under `a`.
 Every statement below is phrased in terms of sections of `X` and invariance under `a`, so none of
-them needs that translation, and none of them supplies it.
+them needs that translation, and **none of them supplies it**; it is
+`AlgebraicGeometry.LocallyRingedSpace.isInvariantSection_ofRestrict_c_app_iff`, in the successor
+file, and `AlgebraicGeometry.LocallyRingedSpace.exists_c_app_restrictπ_eq_iff_isInvariantSection`
+there is the payoff below moved inside the restriction by it.
 
 ## Implementation notes
 
