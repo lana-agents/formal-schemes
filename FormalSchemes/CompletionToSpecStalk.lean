@@ -51,8 +51,13 @@ carries over is the idiom, not a choice made with the packaged alternative in sc
 `O_{Spec R, f x} ⟶ O_{Spf R^, x}`, i.e. *along* the completion, in the direction that adds elements,
 and `formalCompletion.toStalk_comp_stalkMap_toSpec` says precisely that everything in its image
 comes from `R` — through `algebraMap R (AdicCompletion I R)` — after inverting what is invertible
-at `x`. Whether that exhausts the stalk is a question about the completion map, and the expected
-answer is no whenever the relevant local ring of `R` is not already adically complete.
+at `x`. Whether that exhausts the stalk is a question about the completion map.
+
+It does not exhaust it in general: `formalCompletion.not_forall_isClosedImmersionToSpec`
+(`FormalSchemes.CompletionToSpecNotClosedImmersion`) refutes the general statement, by a cardinality
+argument at `ℚ[X]` completed at `(X)` which uses none of this file's computations. What is still
+undecided is which `R` and `I` it *does* hold for — the expected answer being those whose relevant
+local rings are already adically complete, of which nothing is proved anywhere.
 
 Also not here: the *positive* stalk half of EGA I 10.8 — that the stalk of the completion is the
 completion of the stalk — and the universal property of the completion. Neither is touched, and a

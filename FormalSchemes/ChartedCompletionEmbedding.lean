@@ -61,8 +61,11 @@ predicate, not about the question. Both conjuncts are statements about a morphis
 `AlgebraicGeometry.LocallyRingedSpace`, and at the affine index they are written out as
 `formalCompletion.IsClosedImmersionToSpec` (`FormalSchemes.CompletionToSpecStalk`), together with
 `formalCompletion.toStalk_comp_stalkMap_toSpec` computing the stalk map there on the image of
-`AlgebraicGeometry.StructureSheaf.toStalk`. Deciding it is open at every index, and it is not
-expected to hold in general.
+`AlgebraicGeometry.StructureSheaf.toStalk`. At that index it is **decided, in the negative**, by
+`formalCompletion.not_forall_isClosedImmersionToSpec`
+(`FormalSchemes.CompletionToSpecNotClosedImmersion`), whose witness is `ℚ[X]` completed at `(X)`.
+Which `R` and `I` it does hold for is open, and at the glued indices — including this one — the
+question is still unwritten.
 
 Also out of scope, and unchanged by this file: whether `ChartedCompletionDatum.completionGlued` is
 affine (`FormalSchemes.CompletionTwoPatchDoubled` explains why no topological argument can decide
