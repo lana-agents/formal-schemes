@@ -68,8 +68,15 @@ not.
 That is strictly weaker, so it is not landed here and 807's direct proof stands.
 
 The declaration that will want `trans` is the composition law for the *morphism-level* finite-type
-notion (`FormalSchemes.RelativeTopFiniteType`), which does not exist yet; it is issue 62's own
-remaining item and is deliberately out of scope for this file.
+notion, and that notion now exists:
+`AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType` (`FormalSchemes.RelativeTopFiniteType`)
+over an affine base and `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom`
+(`FormalSchemes.TopFiniteTypeHom`) at a general target, with the composition laws
+`AlgebraicGeometry.FormalScheme.IsLocallyTopFiniteType.trans`
+(`FormalSchemes.RelativeTopFiniteTypeTrans`) and
+`AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
+(`FormalSchemes.TopFiniteTypeHomTrans`). Assembling *this* file's `trans` into them is still out of
+scope here; `FormalSchemes.RelativeTopFiniteTypeTrans` records what is left of issue 62's item.
 
 ## References
 

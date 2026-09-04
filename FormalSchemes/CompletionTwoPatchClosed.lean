@@ -47,15 +47,21 @@ use `hθ`, and this one does — through the two chart preimages.
 
 ## Scope
 
-**`Topology.IsClosedEmbedding` is not attempted.** It is `Topology.IsEmbedding` plus closed range,
-and `Topology.IsEmbedding` needs **injectivity** of the base map of
-`completionTwoPatchToScheme`, together with the inducing property.
-The mixed-chart case of injectivity needs the converse of
-`FormalSchemes/CompletionTwoPatchDoubled.lean`'s overlap analysis — *a point of `Spf A^` lying
-over `D(a)` is in the overlap chart*. `SpecTwoPatchNonAffine.lean`'s
-`preimage_range_specTwoPatchι₁` is the scheme-side analogue of exactly that statement, so the
-completion-side version should now be transcribable rather than invented; but it is unmeasured and
-belongs in its own carve.
+**`Topology.IsClosedEmbedding` is not proved here, and is no longer open.** It is
+`Topology.IsEmbedding` plus the closed range this file supplies, and `Topology.IsEmbedding` needs
+**injectivity** of the base map of `completionTwoPatchToScheme`, together with the inducing
+property. The mixed-chart case of injectivity needs the converse of
+`FormalSchemes.CompletionTwoPatchDoubled`'s overlap analysis — *a point of `Spf A^` lying over
+`D(a)` is in the overlap chart* — which was transcribed from
+`AlgebraicGeometry.preimage_range_specTwoPatchι₁`
+(`FormalSchemes.SpecTwoPatchNonAffine`), the scheme-side analogue this paragraph pointed at, and
+now lives as `formalCompletion.mem_range_basicOpenImmersion`
+(`FormalSchemes.CompletionBasicOpenMap`). The carve happened:
+`AlgebraicGeometry.injective_completionTwoPatchToScheme_base` and
+`AlgebraicGeometry.isClosedEmbedding_completionTwoPatchToScheme_base` are in
+`FormalSchemes.CompletionTwoPatchEmbedding`, downstream of this file, and the arbitrary-index twin
+is `AlgebraicGeometry.ChartedCompletionDatum.isClosedEmbedding_toScheme_base`
+(`FormalSchemes.ChartedCompletionEmbedding`).
 
 The affine `formalCompletion.isClosedEmbedding_toSpec_base` (`FormalSchemes/CompletionToSpec.lean`)
 is already on master and is *not* used here: this proof goes through the chart preimages, not

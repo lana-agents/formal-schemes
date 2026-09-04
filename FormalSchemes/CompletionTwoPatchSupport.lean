@@ -83,14 +83,19 @@ prove.
 
 ## Scope
 
-**`IsClosed` and `Topology.IsClosedEmbedding` are not attempted.** With this file, closedness of
-the range is `V(I)` and `V(J)` being closed plus *"a subset of a space is closed when its preimage
-under each member of an open cover is closed"* — true, but not stated anywhere in this development
-for the `LocallyRingedSpace` carrier, and worth its own carve. `Topology.IsClosedEmbedding`
-additionally needs **injectivity** of the base map of `completionTwoPatchToScheme`, whose
-mixed-chart case needs the converse of
-`FormalSchemes/CompletionTwoPatchDoubled.lean`'s overlap analysis (a point of `Spf A^` lying over
-`D(a)` is in the overlap chart) and is unpriced.
+**`IsClosed` and `Topology.IsClosedEmbedding` are not attempted *here*, and neither is open.**
+With this file, closedness of the range is `V(I)` and `V(J)` being closed plus *"a subset of a
+space is closed when its preimage under each member of an open cover is closed"* — true, and still
+not stated anywhere in this development for the `LocallyRingedSpace` carrier, but the carve it was
+waiting for happened: `AlgebraicGeometry.isClosed_range_completionTwoPatchToScheme_base`
+(`FormalSchemes.CompletionTwoPatchClosed`) runs that argument off the statement below.
+`Topology.IsClosedEmbedding` additionally needs **injectivity** of the base map of
+`completionTwoPatchToScheme`, whose mixed-chart case needs the converse of
+`FormalSchemes.CompletionTwoPatchDoubled`'s overlap analysis (a point of `Spf A^` lying over
+`D(a)` is in the overlap chart); that converse is
+`formalCompletion.mem_range_basicOpenImmersion` (`FormalSchemes.CompletionBasicOpenMap`), and the
+embedding is `AlgebraicGeometry.isClosedEmbedding_completionTwoPatchToScheme_base`
+(`FormalSchemes.CompletionTwoPatchEmbedding`).
 
 Two shortcuts to closedness that cannot work, recorded so they are not retried: the source is
 quasi-compact (`FormalSchemes/CompletionCompact.lean`) so its image is compact — but `specTwoPatch`

@@ -31,14 +31,18 @@ infinite, and `D(2)`, `D(3)` is the smallest genuinely two-piece cover of it.
 ## What the cover is for beyond non-vacuity
 
 It is also the shape umbrella 59's remaining assembly needs: a cover of `Spf R` by basic-open charts
-`D(r)`, each of which is `Spf R{1/r}`. Nothing on the tree builds one — `affineCover`,
-`OpenCover.ofAffineCharts`, `LiftedBasicOpenCover` and the refined covers of the
-`GeneralFibreProduct*` line are all differently shaped — and the general construction, with one
-basic open through each point chosen by `exists_basicOpen_refinement` so that each lies over an
-affine open of the target, is a separate row. This is that construction at one concrete `R` and one
-concrete pair of elements, and the two obligations it discharges
+`D(r)`, each of which is `Spf R{1/r}`. No cover on the tree had that shape when this file was
+written — `AlgebraicGeometry.FormalScheme.affineCover`,
+`AlgebraicGeometry.FormalScheme.OpenCover.ofAffineCharts`,
+`AlgebraicGeometry.FormalScheme.liftedBasicCover` and the refined covers of the
+`GeneralFibreProduct*` line all cover a *general* formal scheme from its local-affineness data —
+and the general construction was a separate row. That row landed:
+`FormalSpectrum.basicOpenCover` (`FormalSchemes.SpfBasicOpenCover`) is this construction at an
+arbitrary `R` and an arbitrary family; that file's docstring records that the two agree field by
+field. Neither module imports the other. This file is the construction at one
+concrete `R` and one concrete pair of elements, and the two obligations it discharges
 (`isOpenImmersion_basicOpenChart` for the maps, `range_mapTop_basicOpen` for the covering
-condition) are the same two the general one will.
+condition) are the same two the general one discharges.
 
 ## Main definitions and results
 
