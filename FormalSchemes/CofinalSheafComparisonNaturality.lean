@@ -43,10 +43,15 @@ residues modulo `I` and does not put `g` in the radical of `f`.
 it was.** After completing, the map does exist: `FormalSpectrum.awayCompletionRestrict`
 (`FormalSchemes.AwayCompletionRestrict`) is a canonical `R{1/f} →+* R{1/g}` for any
 `basicOpen I g ≤ basicOpen I f`, because `f` becomes a unit modulo `I·R_g` and hence in the complete
-ring `R{1/g}`. What is still open is the *identification* of the structure-sheaf restriction with
-it — the restriction is named, conjugated by `sectionsBasicOpenEquiv`, as
-`FormalSpectrum.basicOpenRes` (`FormalSchemes.BasicOpenRestriction`), and no declaration equates the
-two. Note also that `FormalSpectrum.awayCompletionAwayEquiv`, which this paragraph used to name as
+ring `R{1/g}`. **The identification of the structure-sheaf restriction with it is landed too**, and
+an intermediate version of this paragraph called it still open: the restriction is named,
+conjugated by `sectionsBasicOpenEquiv`, as `FormalSpectrum.basicOpenRes`
+(`FormalSchemes.BasicOpenRestriction`), and
+`FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict`
+(`FormalSchemes.BasicOpenRestrictionIdentification`) equates the two for `I` finitely generated. So
+the basis-restriction naturality this paragraph opened is no longer blocked on a ring map: what
+remains of it is the naturality square itself, not the identification of its right-hand edge.
+Note also that `FormalSpectrum.awayCompletionAwayEquiv`, which this paragraph used to name as
 the tool the general case requires, assumes `f` is already a unit in `Localization.Away g` — the
 strictly stronger *scheme*-theoretic hypothesis — so it does not apply to a general basic inclusion
 of `Spf R`.

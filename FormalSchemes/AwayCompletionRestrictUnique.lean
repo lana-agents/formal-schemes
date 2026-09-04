@@ -45,19 +45,30 @@ computation through `RingSplit.adicAwayUnitEquiv'`:
   is the canonical restriction.
 * `FormalSpectrum.awayCompletionRestrict_eq_awayCompletionMulHomLeft`: the nested instance.
 * `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict_of_le_comap`: **conditional.** If the
-  structure-sheaf restriction is continuous in the same sense, it is `awayCompletionRestrict`.
+  structure-sheaf restriction is continuous in the same sense, it is `awayCompletionRestrict`. The
+  hypothesis is discharged, and the identification stated unconditionally, in
+  `FormalSchemes.BasicOpenRestrictionIdentification`.
 
 ## What is *not* proved here
 
-**The hypothesis of the last item is not discharged.** `FormalSpectrum.basicOpenRes`
-(`FormalSchemes.BasicOpenRestriction`) is the structure-sheaf restriction
-`Γ(D(f)) ⟶ Γ(D(g))` conjugated by `FormalSpectrum.sectionsBasicOpenEquiv`, and nothing on this tree
-says that it carries `awayCompletionIdeal I f` into `awayCompletionIdeal I g`. Proving that — and
-hence the unconditional identification `basicOpenRes I hle = awayCompletionRestrict I f g hI hle`,
-which is what two threads on this tree are asking for — is deliberately left alone here, because it
-is a statement about the sections identification rather than about these two ring maps. What this
-file contributes to it is the reduction: **the whole identification follows from that one continuity
-bound**, with no level-by-level comparison of the two maps.
+**The hypothesis of the last item is not discharged here — but it is not an obstruction, and an
+earlier version of this paragraph said it was.** It said that discharging it "is a statement about
+the sections identification rather than about these two ring maps". That is false. The ideal of
+definition of `R{1/f}` is the extension of `I` along `FormalSpectrum.awayCompletionHom I f`
+(`FormalSpectrum.map_awayCompletionHom`, `FormalSchemes.BasicOpenChart`), so *any* ring map
+`R{1/f} →+* R{1/g}` under `R` carries it onto the ideal of definition of `R{1/g}` by `Ideal.map_map`
+alone — nothing about `FormalSpectrum.sectionsBasicOpenEquiv` enters. Downstream,
+`FormalSpectrum.le_comap_basicOpenRes` (`FormalSchemes.BasicOpenRestrictionIdentification`)
+discharges the hypothesis in two lines and
+`FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict` states the unconditional identification
+that two threads on this tree were asking for.
+
+So `FormalSpectrum.awayCompletionRestrict_unique`'s ideal hypothesis is **redundant**: its other
+hypothesis implies it. The two-hypothesis form is kept because it is the direct instance of
+`FormalSpectrum.awayCompletion_hom_ext`, whose own two hypotheses are *not* redundant — that
+statement assumes only that `F` and `G` agree after `awayCompletionHom I f`, and from agreement
+alone neither map is known to be continuous. The square-only form is
+`FormalSpectrum.eq_awayCompletionRestrict_of_comp_awayCompletionHom`, downstream.
 
 Nothing here says anything about `FormalSpectrum.IsStalkLimit`, stalks, germs or colimits.
 
@@ -230,10 +241,12 @@ variable [TopologicalSpace R] [IsAdicRing I]
 the square over `R`, by `FormalSpectrum.basicOpenRes_comp_awayCompletionHom`. So the only thing
 between it and `awayCompletionRestrict` is that it carry the ideal of definition across.
 
-**The hypothesis is not discharged anywhere in this file**, and nothing on the tree discharges it;
-it is a statement about `sectionsBasicOpenEquiv`, not about these two ring maps. What is claimed
-here is only that it is *sufficient* — so the identification needs no level-by-level comparison of
-the two maps, only this bound. -/
+**The hypothesis is not discharged anywhere in this file**, and what is claimed here is only that
+it is *sufficient* — so the identification needs no level-by-level comparison of the two maps, only
+this bound. It is discharged in two lines downstream, by
+`FormalSpectrum.le_comap_basicOpenRes` (`FormalSchemes.BasicOpenRestrictionIdentification`), which
+observes that every map under `R` carries the ideal of definition across; the unconditional
+identification is `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict` there. -/
 theorem basicOpenRes_eq_awayCompletionRestrict_of_le_comap (hI : I.FG)
     (hle : basicOpen I g ≤ basicOpen I f)
     (hcont : awayCompletionIdeal I f ≤

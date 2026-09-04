@@ -47,24 +47,27 @@ morphism of formal spectra the same way and no further.
 ## What is *not* proved here
 
 **That `basicOpenRes` is any particular map of completed localizations.** The square above
-determines it on the image of `R{1/f}`'s defining ring `R`, and nothing here determines it beyond
-that. For the special case `f = 1` there is nothing left to determine, and that case is landed:
-`FormalSpectrum.awayCompletionHom_eq_restrict` (`FormalSchemes.SpfGammaSheafComponentArbComp`) says
-the restriction `Γ(⊤) ⟶ Γ(D(g))`, read through `FormalSpectrum.globalSectionsEquiv` and
-`sectionsBasicOpenEquiv`, is exactly `awayCompletionHom I g`. For a general `f` the residue is a
-level-by-level computation of the kind `FormalSchemes.BasicOpenImmersionSheaf` and
-`FormalSchemes.BasicOpenImmersionAssembly` carry out for the chart's sheaf component, and this file
-deliberately does not attempt it.
+determines it on the image of `R{1/f}`'s defining ring `R`, and nothing *here* determines it beyond
+that. For the special case `f = 1` there is nothing left to determine, and that case is landed in
+this file's own import closure: `FormalSpectrum.awayCompletionHom_eq_restrict`
+(`FormalSchemes.SpfGammaSheafComponentArbComp`) says the restriction `Γ(⊤) ⟶ Γ(D(g))`, read through
+`FormalSpectrum.globalSectionsEquiv` and `sectionsBasicOpenEquiv`, is exactly
+`awayCompletionHom I g`.
 
-The shape a full identification would take, for the record: `FormalSpectrum.chartComponent`
-(`FormalSchemes.BasicOpenImmersionSheaf`) is the affine chart's sheaf component on `D(g)`,
-conjugated by `sectionsBasicOpenEquiv` on both sides, and is bijective when `I` is `Ideal.FG` and
-`f` is a unit in `Localization.Away g` (`IsUnit`), by
-`FormalSpectrum.bijective_chartComponent` (`FormalSchemes.BasicOpenImmersionAssembly`). Naturality
-of the chart's component along `D(g) ≤ D(f)` expresses `chartComponent I f g` composed with
-`basicOpenRes` through the chart's component at `D(f)` itself, whose source open has the whole of
-`Spf R{1/f}` as preimage; identifying *that* component with the global-sections identification is
-the step that is missing, and it is not supplied here.
+**For a general `f` the identification is landed too, downstream**, as
+`FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict`
+(`FormalSchemes.BasicOpenRestrictionIdentification`): for `I` finitely generated, `basicOpenRes` is
+`FormalSpectrum.awayCompletionRestrict` (`FormalSchemes.AwayCompletionRestrict`), the canonical map
+built from the algebra of the localizations. An earlier version of this paragraph predicted that the
+residue would be a level-by-level computation of the kind
+`FormalSchemes.BasicOpenImmersionSheaf` and `FormalSchemes.BasicOpenImmersionAssembly` carry out for
+the chart's sheaf component, routed through `FormalSpectrum.chartComponent` and
+`FormalSpectrum.bijective_chartComponent`. That
+prediction was wrong: the square above is enough, because a map under `R` carries the ideal of
+definition across for free (`FormalSpectrum.map_basicOpenRes`) and is therefore continuous, and a
+continuous map under `R` is unique (`FormalSpectrum.awayCompletion_hom_ext`,
+`FormalSchemes.AwayCompletionRestrictUnique`). What this file does not do is state that; it is
+stated where the two ingredients are both in scope.
 
 **Anything about stalks.** No germ, colimit or stalk comparison appears below. In particular nothing
 here says anything about `FormalSpectrum.IsStalkLimit`.
