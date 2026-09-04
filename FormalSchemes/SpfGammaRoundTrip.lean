@@ -60,14 +60,6 @@ theorem arbSheafComponent_eq_modelSheafComponent (hI : I.FG) (hJ : J.FG)
   rw [arbSheafComponent_eq_mapCompletion I J hI hJ f g hφ,
     modelSheafComponent_eq_mapCompletion I J (globalSectionsMap I J f) hφ g hI hJ]
 
-omit [TopologicalSpace R] [IsAdicRing I] in
-/-- The basic opens `D(g)`, `g ∈ R`, viewed as a family of `Opens (Spf R)`, form an `Opens.IsBasis`
-of the topology of `Spf R`. Repackages `isTopologicalBasis_basicOpen` in the `Opens.IsBasis`
-formulation required by `TopCat.Sheaf.hom_ext`. -/
-theorem isBasis_basicOpen : Opens.IsBasis (Set.range (basicOpen I)) := by
-  rw [Opens.IsBasis, ← Set.range_comp]
-  exact isTopologicalBasis_basicOpen I
-
 /-- **The sheaf `c`-components of `f` and of the reconstructed morphism agree on a basic open.**
 Cancelling the outer `sectionsBasicOpenEquiv` isomorphisms from
 `arbSheafComponent_eq_modelSheafComponent`, the component of `f` on `D(g)`, restricted along

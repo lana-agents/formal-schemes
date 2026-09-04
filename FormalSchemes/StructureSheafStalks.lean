@@ -60,12 +60,15 @@ claim that it is**.
 the positive stalk half of EGA I 10.8 and it is the larger piece of work; naming the map is what
 lets it be stated.
 
-Informally — and **no declaration below says this**, so it is a reading and not a theorem — the
-left-hand side is a colimit over the basic opens `D(f)` containing `x` of
+Informally — and **no declaration below says this**, so it is a reading and not a theorem *here* —
+the left-hand side is a colimit over the basic opens `D(f)` containing `x` of
 `AdicCompletion (I·R_f) R_f`, since `FormalSpectrum.sectionsBasicOpenEquiv` computes the sections
 there and `FormalSpectrum.isTopologicalBasis_basicOpen` says those opens are a basis; so the
-question is whether completion commutes with that filtered colimit. Neither that identification of
-the left-hand side nor any consequence of it is proved here.
+question is whether completion commutes with that filtered colimit. That reading is a theorem
+elsewhere on the tree: `FormalSpectrum.exists_adicCompletion_germ_eq` and
+`FormalSpectrum.exists_basicOpen_res_eq` (`FormalSchemes.StructureSheafStalkBasicOpen`) are its
+surjectivity and separation halves, stated without a colimit being formed. Whether completion
+commutes with it is not proved there either, and no consequence of the reading is proved here.
 
 **The passage from `Localization.AtPrime` of a quotient to a quotient of `Localization.AtPrime`.**
 `thickeningStalkLocalizationEquiv` presents level `n` as a localization of `R ⧸ I ^ (n + 1)`; to
