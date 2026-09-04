@@ -56,8 +56,8 @@ polydisc over a tf-type algebra is tf-type — followed by `IsTopologicallyFinit
 
 ## What wants transitivity, and what turns out not to
 
-Nothing on this tree consumes `trans` yet, and it is worth recording why rather than inventing a
-consumer. The natural candidate is issue 807's
+`IsTopologicallyFiniteType.trans` landed here without a consumer, and it is worth recording which
+candidates turn out not to want it rather than inventing one. The natural candidate is issue 807's
 `IsTopologicallyFiniteType.awayCompletion` (a basic-open chart of a tf-type formal affine is
 tf-type): iterating it looks like a job for transitivity, but it is already stated over the base
 `(R, I)` rather than over `(A, L)`, so it iterates on its own. What transitivity does give is a
@@ -71,12 +71,16 @@ The declaration that will want `trans` is the composition law for the *morphism-
 notion, and that notion now exists:
 `AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType` (`FormalSchemes.RelativeTopFiniteType`)
 over an affine base and `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom`
-(`FormalSchemes.TopFiniteTypeHom`) at a general target, with the composition laws
-`AlgebraicGeometry.FormalScheme.IsLocallyTopFiniteType.trans`
+(`FormalSchemes.TopFiniteTypeHom`) at a general target, with the morphism-level composition laws
+`AlgebraicGeometry.FormalScheme.IsRelativelyTopFiniteType.comp_structHom`
 (`FormalSchemes.RelativeTopFiniteTypeTrans`) and
 `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`
-(`FormalSchemes.TopFiniteTypeHomTrans`). Assembling *this* file's `trans` into them is still out of
-scope here; `FormalSchemes.RelativeTopFiniteTypeTrans` records what is left of issue 62's item.
+(`FormalSchemes.TopFiniteTypeHomTrans`). The first of those is the consumer: its proof replaces the
+tf-type witness of each chart by `IsTopologicallyFiniteType.trans` and changes nothing else. Do not
+reach instead for `AlgebraicGeometry.FormalScheme.IsLocallyTopFiniteType.trans`, in that same
+module — it is the *object-level* companion, as its home file labels it, and has no morphism in its
+statement. Assembling *this* file's `trans` into them is done there, not here;
+`FormalSchemes.RelativeTopFiniteTypeTrans` records what is left of issue 62's item.
 
 ## References
 

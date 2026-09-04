@@ -59,11 +59,12 @@ cover is the image of a single saturation.
 
 Also not proved here, and deliberately: that the two sets of
 `image_base_tateInvSaturate_union_compl_eq_univ` are **disjoint**. This file proves only that they
-cover — a chain point lying in two patches can be in both saturations, and disjointness is not
-what the reduction consumes. It is not open:
+cover, because disjointness is not what the reduction consumes. It is not open:
 `AlgebraicGeometry.disjoint_image_base_tateInvSaturate_nodeLocus`
 (`FormalSchemes.TateInvNodeLocus`) proves it one file downstream, and with it that the cover is a
-partition and that the uncharted set is closed.
+partition and that the uncharted set is closed. That really is disjointness of *these* two sets and
+not of a neighbouring pair: `AlgebraicGeometry.tateInvNodeLocus` is by definition the complement of
+`AlgebraicGeometry.tateInvChartLocus`.
 
 Nothing here weakens `LocallyRingedSpace.IsProperlyDiscontinuousOn`,
 `LocallyRingedSpace.IsFreeProperlyDiscontinuous` or
