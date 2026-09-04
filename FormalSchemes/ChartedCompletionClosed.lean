@@ -36,10 +36,14 @@ argument must use `hθ`, and this one does — through the chart preimages.
 
 ## Scope
 
-**`Topology.IsClosedEmbedding` is not attempted**, at either index. It is `Topology.IsEmbedding`
-plus closed range, and that needs injectivity of `D.toScheme.base`, whose mixed-chart case needs
-the converse of `FormalSchemes.CompletionTwoPatchDoubled`'s overlap analysis — unmeasured even for
-two patches, where that file's Scope section prices it.
+**`Topology.IsClosedEmbedding` is not proved here, and no longer needs to be priced.** It is
+`Topology.IsEmbedding` plus the closed range this file supplies, and the embedding half is
+`AlgebraicGeometry.ChartedCompletionDatum.isClosedEmbedding_toScheme_base`
+(`FormalSchemes.ChartedCompletionEmbedding`), a downstream leaf. The mixed-chart case that made
+the statement look expensive — two points in *different* charts of `X_{/Y}` with one image in `X`
+— is discharged there by the covering criterion, off
+`formalCompletion.mem_range_basicOpenImmersion`, the converse of the overlap analysis of
+`FormalSchemes.CompletionTwoPatchDoubled`.
 
 ## Main results
 

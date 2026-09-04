@@ -89,6 +89,7 @@ import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
 import FormalSchemes.ChartedCompletionClosed
 import FormalSchemes.ChartedCompletionDatum
+import FormalSchemes.ChartedCompletionEmbedding
 import FormalSchemes.ChartedCompletionRange
 import FormalSchemes.ChartedCompletionSupport
 import FormalSchemes.ChartedCompletionToScheme

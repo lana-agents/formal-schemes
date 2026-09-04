@@ -48,8 +48,10 @@ and they run: a point of `X_{/Y}` lying over the `A`-chart of `X` is either alre
 (`completionTwoPatch_glue_condition₁`) carries it over into the `A`-chart.
 
 `formalCompletion.mem_range_basicOpenImmersion` is the converse of
-`FormalSchemes/CompletionTwoPatchDoubled.lean`'s `notMem_range_basicOpenImmersion`, and it is
-three lines because `range_basicOpenImmersion` computes the range of the basic-open completion
+`formalCompletion.notMem_range_basicOpenImmersion`, and both are one line off the shared
+`formalCompletion.mem_range_basicOpenImmersion_iff` in `FormalSchemes.CompletionBasicOpenMap`,
+which is where the basic-open immersion first meets `formalCompletion.toSpec`. That iff is
+available at all because `formalCompletion.range_basicOpenImmersion` computes the range of the
 immersion **exactly**, as `D(f̂)`.
 
 ## Non-vacuity
@@ -86,8 +88,6 @@ completion, and the stalk half of 10.8.
 
 ## Main results
 
-* `formalCompletion.mem_range_basicOpenImmersion`: a point of `Spf R^` lying over a prime **not**
-  containing `f` is in `D(f̂)`.
 * `AlgebraicGeometry.preimage_range_specTwoPatchι₀_subset` and `..._ι₁_subset`: **a point of
   `X_{/Y}` lying over a chart of `X` is in the corresponding chart of `X_{/Y}`.**
 * `AlgebraicGeometry.isEmbedding_completionTwoPatchToScheme_base`,
@@ -108,25 +108,6 @@ noncomputable section
 open CategoryTheory Topology TopologicalSpace
 
 universe u
-
-namespace formalCompletion
-
-variable {R : Type u} [CommRing R] (I : Ideal R) (hI : I.FG) (f : R)
-
-/-- **A point of `Spf R^` lying over a prime not containing `f` is in `D(f̂)`.** This is the
-converse of `formalCompletion.notMem_range_basicOpenImmersion`, and it is available because
-`range_basicOpenImmersion` computes the range of the basic-open completion immersion exactly: the
-base map of `toSpec` is `Spec` of the residue map `R →+* R^ ⧸ I·R^`, which sends `f` to the
-residue of `f̂`, so lying over a prime avoiding `f` is exactly membership in `D(f̂)`. -/
-theorem mem_range_basicOpenImmersion
-    (x : FormalSpectrum (AdicCompletion.idealOfDefinition I))
-    (hx : f ∉ ((toSpec R I hI).base x).asIdeal) :
-    x ∈ Set.range (basicOpenImmersion I hI f).toLRSHom.base := by
-  rw [range_basicOpenImmersion]
-  rw [toSpec_base_eq_comap] at hx
-  exact (FormalSpectrum.mem_basicOpen _ _ _).mpr hx
-
-end formalCompletion
 
 namespace AlgebraicGeometry
 
