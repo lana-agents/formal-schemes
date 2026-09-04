@@ -73,9 +73,16 @@ independently: `FormalSpectrum.awayCompletionHom_eq_restrict`
 `FormalSpectrum.globalSectionsEquiv` and `FormalSpectrum.sectionsBasicOpenEquiv`, as the
 completed-localization structure map `FormalSpectrum.awayCompletionHom`.
 
-So the upgrade of the second theorem below to completion form is now available and is not attempted
-here: it belongs in this file, needs `Ideal.FG`, and would be a rewrite of its conclusion along that
-identification. Note that the reason the general case was expected to be hard — that there is no
+So the upgrade of the second theorem below to completion form is landed, in
+`FormalSchemes.StructureSheafStalkBasicOpenCompletion`:
+`FormalSpectrum.exists_basicOpen_awayCompletionRestrict_eq` states it against
+`FormalSpectrum.awayCompletionRestrict` and needs `Ideal.FG`, while
+`FormalSpectrum.exists_basicOpen_basicOpenRes_eq` states it against `FormalSpectrum.basicOpenRes`
+and needs nothing this file does not — an earlier version of this paragraph predicted the upgrade
+would need `Ideal.FG` outright, and only half of it does. It is a separate leaf, not an addition
+here, for the reason the implementation notes below give about `FormalSchemes.SpfGammaRoundTrip`:
+importing the identification would take this file's transitive closure from 7 modules to 41.
+Note that the reason the general case was expected to be hard — that there is no
 canonical `R_f → R_g` for a general `D(g) ⊆ D(f)` — is true of the *localizations* and was never the
 obstruction for the completions; `FormalSchemes.CofinalSheafComparisonNaturality` records that
 correction.

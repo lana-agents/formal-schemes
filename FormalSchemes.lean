@@ -336,6 +336,7 @@ import FormalSchemes.SpfTargetSurjective
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
 import FormalSchemes.StructureSheafStalkBasicOpen
+import FormalSchemes.StructureSheafStalkBasicOpenCompletion
 import FormalSchemes.StructureSheafStalkLevels
 import FormalSchemes.StructureSheafStalks
 import FormalSchemes.TargetBasicRefinement
