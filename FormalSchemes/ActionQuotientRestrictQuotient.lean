@@ -90,7 +90,8 @@ the row is in the implementation notes.
 that rather than asserting it**: no declaration below mentions `AlgebraicGeometry.FormalScheme`, and
 the import closure of this leaf is 82 project modules, containing neither
 `FormalSchemes.OpenFormalSubscheme` — where `AlgebraicGeometry.FormalScheme.restrictOpen` and its
-`LocallyFG` hypothesis live — nor `FormalSchemes.ActionQuotientFormalScheme`. This confirms at a
+`AlgebraicGeometry.FormalScheme.LocallyFG` hypothesis live — nor
+`FormalSchemes.ActionQuotientFormalScheme`. This confirms at a
 third and larger closure what `FormalSchemes.ActionQuotientRestrict` and
 `FormalSchemes.ActionQuotientRestrictSections` measured at 72 and 77, and it does **not** contradict
 `FormalSchemes.ActionQuotientFormalScheme`'s "not removable" paragraph, which is about producing an
@@ -98,15 +99,15 @@ affine chart inside a separating open and is correct about its own subject.
 
 `CategoryTheory.IsActionQuotient.ofIso` is **not** here: it is a statement of the categorical
 interface and it is in `FormalSchemes.ActionQuotient`, beside
-`CategoryTheory.IsActionQuotient.uniqueUpToIso`, which it generalises in the direction this file
+`CategoryTheory.IsActionQuotient.uniqueUpToIso`, which it completes in the direction this file
 needs. That file has a reverse closure of 77 modules, so the placement is not free; it is chosen
-because a general categorical lemma parked in a `AlgebraicGeometry.LocallyRingedSpace` leaf is the
-stranding the node-chart rows were filed about, and because `uniqueUpToIso` without `ofIso` is an
-interface with a hole in it.
+because a general categorical lemma parked in an `AlgebraicGeometry.LocallyRingedSpace` leaf is the
+stranding the node-chart rows were filed about, and because the interface has a hole in it without
+the converse transport.
 
 **`AlgebraicGeometry.LocallyRingedSpace.isIso_of_isIso_base_of_isIso_c_app` overlaps with a chain
 that is already written out inline**, in `FormalSchemes.CofinalSheafComparisonIso`'s
-`AlgebraicGeometry.Spf.isIso_locallyRingedSpaceMapId`: `NatIso.isIso_of_isIso_app`, then
+`FormalSpectrum.isIso_locallyRingedSpaceMapId`: `NatIso.isIso_of_isIso_app`, then
 `AlgebraicGeometry.PresheafedSpace.isIso_of_components`, then two reflections. It is **not**
 rerouted through this one: the two modules are incomparable in the import order — this leaf's
 closure is 82 modules and does not contain `FormalSchemes.CofinalSheafComparisonIso`, whose own

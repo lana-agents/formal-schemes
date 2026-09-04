@@ -140,10 +140,11 @@ end UniqueUpToIso
 /-- **Being a quotient transports along an isomorphism of the target.** If `π₁ : X ⟶ Q₁` exhibits
 `Q₁` as `X / G` and `e : Q₁ ≅ Q₂` carries `π₁` to `π₂`, then `π₂` exhibits `Q₂` as `X / G` too.
 
-`uniqueUpToIso` is the converse direction — two quotients are isomorphic — and this is what makes
-that an equivalence rather than a one-way construction: it is how a quotient built by hand is
-recognised in an object that has been shown isomorphic to a known one, which is the shape of every
-proof that some concretely given morphism is a quotient projection. -/
+`CategoryTheory.IsActionQuotient.uniqueUpToIso` is the converse direction — two quotients are
+isomorphic — and this is what makes that an equivalence rather than a one-way construction: it is
+how a quotient built by hand is recognised in an object that has been shown isomorphic to a known
+one, which is the shape of every proof that some concretely given morphism is a quotient
+projection. -/
 def ofIso {Q₁ Q₂ : C} {π₁ : X ⟶ Q₁} {π₂ : X ⟶ Q₂} (h : IsActionQuotient a π₁) (e : Q₁ ≅ Q₂)
     (he : π₁ ≫ e.hom = π₂) : IsActionQuotient a π₂ where
   isInvariant g := by rw [← he, ← assoc, h.isInvariant g]
