@@ -82,6 +82,7 @@ import FormalSchemes.BasicOpenChartImage
 import FormalSchemes.BasicOpenChartOverlap
 import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.BasicOpenChartRestrict
+import FormalSchemes.BasicOpenChartRestrictSections
 import FormalSchemes.BasicOpenCoverVanishing
 import FormalSchemes.BasicOpenDisjointUnion
 import FormalSchemes.BasicOpenImmersion

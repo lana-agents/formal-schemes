@@ -59,18 +59,14 @@ statement below is derived from `FormalSpectrum.awayCompletionRestrict_comp_away
 the functoriality of `FormalSpectrum.locallyRingedSpaceMap`, neither of which mentions the
 structure sheaf, and nothing below is stated about global sections.
 
-The corresponding statement *is* now available and is deliberately left to a successor:
-`FormalSpectrum.globalSectionsMap_locallyRingedSpaceMap` (`FormalSchemes.SpfGamma`) computes the
-action of `FormalSpectrum.locallyRingedSpaceMap` on global sections as the ring map it was built
-from, and `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict`
-(`FormalSchemes.BasicOpenRestrictionIdentification`) says that ring map is the structure-sheaf
-restriction, so
-`globalSectionsMap _ _ (basicOpenChartRestrict I f g hI hle) = basicOpenRes I hle` follows from the
-two. It is not stated here because `FormalSpectrum.globalSectionsMap` needs `IsAdicRing` on the
-target ideal of definition, hence a topology on `awayCompletion I g` and
-`FormalSpectrum.isAdicRing_awayCompletionIdeal` (`FormalSchemes.BasicOpenChart`) — instance data
-that no statement below carries — and because it would add two modules to this file's imports for
-one corollary about sections, which is not what this file is about.
+The corresponding statement is `FormalSpectrum.globalSectionsMap_basicOpenChartRestrict`
+(`FormalSchemes.BasicOpenChartRestrictSections`), and it is downstream of this file rather than in
+it. Stating it needs `IsAdicRing` on both ideals of definition, for
+`FormalSpectrum.globalSectionsMap`; proving it needs a topology on `R` with `IsAdicRing I`, which
+is what `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict`
+(`FormalSchemes.BasicOpenRestrictionIdentification`) is stated under — instance data no statement
+below carries, and which would change the generality of the statements here if it were added to
+the `variable` block. That file supplies it at each statement instead.
 
 **A `CategoryTheory.Functor` out of the poset of basic opens.** The identity and chain laws below
 are equations between morphisms; nothing packages them, because no consumer wants the packaged
