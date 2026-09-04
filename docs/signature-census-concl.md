@@ -119,9 +119,9 @@ shifts each of the labels after it up by one and B62 leaving shifts them again: 
 label in this document is not the label a re-run prints. That is why each finding is keyed to its
 **finding number** and to declaration names, and why the repair paragraphs cite no `B`-number.
 
-One row since has moved a figure, and by the *rehome* mechanism named above rather than by a
-deletion — the case the paragraph above says none of the six was. Row **1557** (PR #529) made the
-duplicated `IsAdicRing (I * J)` block a single lemma, `IsAdicRing.mul`, and moved
+Two rows since have moved a figure. The first did it by the *rehome* mechanism named above rather
+than by a deletion — the case the paragraph above says none of the six was. Row **1557** (PR #529)
+made the duplicated `IsAdicRing (I * J)` block a single lemma, `IsAdicRing.mul`, and moved
 `IsHausdorff.of_le` into `FormalSchemes.CofinalAdicRing` with it. On `3b2c426`, against the
 `c5b5c48` column above: declarations extracted **6260** and population bucketed **5676**, both
 unchanged, buckets with two or more members **274**, unchanged — and `>= 2 / cross / theorem`
@@ -130,6 +130,22 @@ has both its members and its class; they are simply both in one module now, so t
 printing it. Nothing was deleted on net: `FormalSpectrum.isAdicRing_mul` went and `IsAdicRing.mul`
 arrived, and neither conclusion was a shared key. **A rehome moves a span, not a population** — the
 one figure in this section that a repair can move without any statement changing.
+
+The second did move a population, and dissolved a bucket of the reading. Row **1585** (PR #533)
+took `IsAdicRing.mul`'s one-step proof through `IsAdicRing.of_isCofinal`, which left
+`IsHausdorff.of_le` with no consumer, and then **deleted** it: the statement is Mathlib's
+`IsHausdorff.of_map` at `S = R`, one `simpa` over `Ideal.map_id`, so keeping it stated here was
+keeping a Mathlib lemma under a second name. The name above is from here on a historical citation
+and resolves to nothing. Measured against a same-run `301475c` baseline of **6260 / 5676** and
+`>= 2 / cross / theorem` **274 / 200 / 88**: declarations extracted **6259**, population bucketed
+**5675**, and **273 / 200 / 88**. B61's `IsHausdorff K M` is not a key of this census any more —
+a bucket needs two members and one of the two was never this tree's to state. That is *not* a
+subsumption: the class **F** reading of the pair stands, `K ≤ I` still not being a cofinality and
+`IsHausdorff.of_isCofinal` still not yielding the containment form. **What dissolved this bucket
+was outside the tree**, which is the one mechanism a scan restricted to this project's
+declarations cannot see. Row 1197's PR #532 lands fifteen further declarations around the same
+time, so the totals above are this row's delta from that baseline and not the tree's totals after
+both.
 
 ## Classification
 
@@ -254,8 +270,11 @@ statement is closed by another, which does not depend on whether a docstring nam
    above survives it. They were the same `IsAdicRing (I * J)` block written out twice;
    `FormalSpectrum.isAdicRing_mul` was deleted with the duplication and `generalCofinalSpfIso` no
    longer contains the block, which now exists once as `IsAdicRing.mul`
-   (`FormalSchemes.CofinalAdicRing`) — the single site that reads the cofinality form today. That
-   row moved no bucket of this census: the deleted declaration's conclusion was not a shared key,
+   (`FormalSchemes.CofinalAdicRing`), which read the cofinality form directly until row **1585**
+   gave it a one-step proof through `IsAdicRing.of_isCofinal`; the site that reads
+   `IsPrecomplete.of_isCofinal` today is `IsAdicComplete.of_isCofinal`, one lemma up in the same
+   file, and `IsAdicRing.mul` reaches it through that. Row 1557 itself moved no bucket of this
+   census: the deleted declaration's conclusion was not a shared key,
    and the scan's only movement was `IsHausdorff K M` becoming intra-module, which is a span and
    not a population — see "Drift since the reading".
 3. **B63.** `IsTopologicallyFiniteType.fg` (`FormalSchemes.TopFiniteTypeBasis`) is
