@@ -54,9 +54,15 @@ that reads like a transparency problem and is not one.
 
 **The scheme-theoretic closed immersion is not attempted**, exactly as in the two-patch file:
 everything here is about underlying topological spaces, and a closed immersion additionally asks
-for surjectivity of the map of structure sheaves on stalks. `FormalScheme.IsClosedImmersion` is a
-predicate on morphisms of *formal* schemes, whose target here is an honest scheme; that mismatch
-has to be resolved before the question can be posed.
+for surjectivity of the map of structure sheaves on stalks.
+`AlgebraicGeometry.FormalScheme.IsClosedImmersion` is a predicate on morphisms of *formal* schemes,
+whose target here is an honest scheme, so it does not apply — but that is a fact about the
+predicate, not about the question. Both conjuncts are statements about a morphism of
+`AlgebraicGeometry.LocallyRingedSpace`, and at the affine index they are written out as
+`formalCompletion.IsClosedImmersionToSpec` (`FormalSchemes.CompletionToSpecStalk`), together with
+`formalCompletion.toStalk_comp_stalkMap_toSpec` computing the stalk map there on the image of
+`AlgebraicGeometry.StructureSheaf.toStalk`. Deciding it is open at every index, and it is not
+expected to hold in general.
 
 Also out of scope, and unchanged by this file: whether `ChartedCompletionDatum.completionGlued` is
 affine (`FormalSchemes.CompletionTwoPatchDoubled` explains why no topological argument can decide

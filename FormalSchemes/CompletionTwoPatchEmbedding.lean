@@ -72,11 +72,21 @@ exhibits both halves: the image contains the centre of the completion and misses
 
 ## Scope
 
-**The scheme-theoretic closed immersion is not attempted.** Everything here is about underlying
-topological spaces. A closed immersion additionally asks for surjectivity of the map of structure
-sheaves on stalks, and `FormalSchemes/ClosedImmersion.lean`'s predicate is about morphisms of
-*formal* schemes, whose target here is an honest scheme; that mismatch has to be resolved before
-the question can even be posed.
+**The scheme-theoretic closed immersion is not attempted here.** Everything in this file is about
+underlying topological spaces. A closed immersion additionally asks for surjectivity of the map of
+structure sheaves on stalks, and `AlgebraicGeometry.FormalScheme.IsClosedImmersion`
+(`FormalSchemes.ClosedImmersion`) is a predicate on morphisms of *formal* schemes, whose target
+here is an honest scheme — so that predicate does not apply.
+
+**That is a fact about the predicate and not about the question**, which needs no packaging to be
+asked: both conjuncts are statements about a morphism of `AlgebraicGeometry.LocallyRingedSpace`,
+which `completionTwoPatchToScheme` is. At the affine index the conjunction is written out as
+`formalCompletion.IsClosedImmersionToSpec` (`FormalSchemes.CompletionToSpecStalk`), where
+`formalCompletion.toStalk_comp_stalkMap_toSpec` computes the stalk map on the image of
+`AlgebraicGeometry.StructureSheaf.toStalk` and
+`formalCompletion.isClosedImmersionToSpec_iff_surjective_stalkMap` records that the topological
+half is free. Whether it holds is open there and is not expected to hold in general; the two-patch
+form of the question is not written down anywhere yet.
 
 **No `ℚ[X]` witness is used here, deliberately.** `not_surjective_completionTwoPatchToScheme_base`
 states properness of the closed subset for an arbitrary two-patch datum, which is stronger than an
