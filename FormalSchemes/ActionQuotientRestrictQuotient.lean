@@ -107,12 +107,15 @@ the converse transport.
 
 **`AlgebraicGeometry.LocallyRingedSpace.isIso_of_isIso_base_of_isIso_c_app` overlaps with a chain
 that is already written out inline**, in `FormalSchemes.CofinalSheafComparisonIso`'s
-`FormalSpectrum.isIso_locallyRingedSpaceMapId`: `NatIso.isIso_of_isIso_app`, then
-`AlgebraicGeometry.PresheafedSpace.isIso_of_components`, then two reflections. It is **not**
-rerouted through this one: the two modules are incomparable in the import order — this leaf's
-closure is 82 modules and does not contain `FormalSchemes.CofinalSheafComparisonIso`, whose own
-closure is 37 and does not contain this leaf's imports — so removing the overlap means rehoming one
-of them, which is a dedup question and not this file's.
+`FormalSpectrum.isIso_locallyRingedSpaceMapId`:
+`AlgebraicGeometry.PresheafedSpace.isIso_of_components` and then two reflections. Those steps are
+the whole of the overlap; the two proofs reach that lemma's hypothesis differently, since that one
+already holds an isomorphism of sheaves and pushes it through `TopCat.Sheaf.forget`, where this one
+holds the components and assembles them with `CategoryTheory.NatIso.isIso_of_isIso_app`. It is
+**not** rerouted through this one: the two modules are incomparable in the import order — this
+leaf's closure is 82 modules and does not contain `FormalSchemes.CofinalSheafComparisonIso`, whose
+own closure is 37 and does not contain this leaf's imports — so removing the overlap means rehoming
+one of them, which is a dedup question and not this file's.
 
 Every transport between two opens that are equal but not definitionally so is discharged by
 `AlgebraicGeometry.LocallyRingedSpace.presheaf_map_congr`
@@ -148,16 +151,14 @@ section Basic
 
 /-- **Every open of a restriction comes from an open below the restricting one.** The witness is
 the image of `O` under the open-map functor of the embedding, which is contained in `V` because
-every point of it lies in `V`, and pulls back to `O` because the embedding is injective. -/
+every point of it lies in `V`, and pulls back to `O` by `TopologicalSpace.Opens.map_functor_eq'`,
+Mathlib's statement that the functor of an open embedding is a section of taking preimages. -/
 theorem exists_le_preimage_eq (Y : LocallyRingedSpace.{u}) (V : Opens Y.toTopCat)
     (O : Opens (Y.restrict V.isOpenEmbedding).toTopCat) :
     ∃ W : Opens Y.toTopCat, W ≤ V ∧
-      (Opens.map (Y.ofRestrict V.isOpenEmbedding).base).obj W = O := by
-  refine ⟨V.isOpenEmbedding.isOpenMap.functor.obj O, ?_, ?_⟩
-  · rintro _ ⟨y, _, rfl⟩
-    exact y.2
-  · ext y
-    exact ⟨fun ⟨z, hz, hzy⟩ => (Subtype.val_injective hzy) ▸ hz, fun hy => ⟨y, hy, rfl⟩⟩
+      (Opens.map (Y.ofRestrict V.isOpenEmbedding).base).obj W = O :=
+  ⟨V.isOpenEmbedding.isOpenMap.functor.obj O, by rintro _ ⟨y, _, rfl⟩; exact y.2,
+    TopologicalSpace.Opens.map_functor_eq' _ V.isOpenEmbedding O⟩
 
 /-- **A morphism of locally ringed spaces with an invertible base map and invertible comparison
 maps is an isomorphism.** `AlgebraicGeometry.PresheafedSpace.isIso_of_components` reflected back
