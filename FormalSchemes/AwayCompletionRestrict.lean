@@ -58,17 +58,31 @@ Do not read the title of this file as that identification.
 
 What is available towards it: both maps satisfy the same locality-free square over `R`, by
 `awayCompletionRestrict_comp_awayCompletionHom` here and by
-`FormalSpectrum.basicOpenRes_comp_awayCompletionHom` there. That does not determine either of them,
-since the image of `R` is not dense enough to pin a map out of a completion on the nose — see
-"uniqueness" below.
+`FormalSpectrum.basicOpenRes_comp_awayCompletionHom` there. That square alone does not determine
+either of them, since the image of `R` is not dense enough to pin a map out of a completion on the
+nose. What has to be added to it is one continuity bound, and only on the sheaf side:
+`FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict_of_le_comap`
+(`FormalSchemes.AwayCompletionRestrictUnique`) derives the identification from the single
+hypothesis that `basicOpenRes` carries `awayCompletionIdeal I f` into `awayCompletionIdeal I g`.
+That hypothesis is not proved anywhere on this tree, so the identification is still open — but it
+is open by one bound and not by a comparison of the two maps.
 
-**Uniqueness of the map is also not proved.** Two ring maps `R{1/f} → R{1/g}` agreeing on the image
-of `R` agree on the image of `Localization.Away f`, since the image of `f` is invertible in the
-target; but that image is only *dense*, so uniqueness needs a continuity hypothesis that nothing
-here supplies. Nothing below should be read as a uniqueness statement.
+**Uniqueness of the map is not proved below, and is not open.** Two ring maps `R{1/f} → R{1/g}`
+agreeing on the image of `R` agree on the image of `Localization.Away f`, since the image of `f` is
+invertible in the target; but that image is only *dense*, so uniqueness needs a continuity
+hypothesis. **That hypothesis is `le_comap_awayCompletionRestrict`, which this file proves**, and
+the extensionality principle that consumes it is `AdicCompletion.hom_ext_of_continuous`
+(`FormalSchemes.AdicExtend`). `FormalSpectrum.awayCompletion_hom_ext` and
+`FormalSpectrum.awayCompletionRestrict_unique` (`FormalSchemes.AwayCompletionRestrictUnique`) put
+the two together: `awayCompletionRestrict` is the unique ring map that carries the ideal of
+definition across and restricts to `awayCompletionHom I g` on the image of `R`. Nothing *below* is
+a uniqueness statement; that file's are.
 
-**Transitivity** along `D(h) ⊆ D(g) ⊆ D(f)` is not proved either, for the same reason: with no
-uniqueness principle it is a direct computation through two `RingSplit.adicAwayUnitEquiv'`s.
+**Transitivity** along `D(h) ⊆ D(g) ⊆ D(f)` is likewise not proved below. It does not need the
+direct computation through two `RingSplit.adicAwayUnitEquiv'`s that an earlier version of this
+paragraph proposed: `FormalSpectrum.awayCompletionRestrict_comp` gets it from uniqueness, together
+with `awayCompletionRestrict_self` and the identification of every completed localization map under
+`R` with this one.
 
 ## Implementation notes
 
