@@ -75,11 +75,12 @@ notes for the measurement.
 
 **`AlgebraicGeometry.FormalScheme.LocallyFG` has no bearing on any statement in this file, and the
 proofs measure that rather than assert it**: no declaration here mentions
-`AlgebraicGeometry.FormalScheme` at all, and the file's whole import closure is
-`FormalSchemes.ActionQuotientCarrier` and `FormalSchemes.OpenImmersionIsoOfRangeEq`, neither of
-which reaches `FormalSchemes.OpenFormalSubscheme`. This does **not** contradict
-`FormalSchemes.ActionQuotientFormalScheme`'s "not removable" paragraph, which is about a different
-problem: producing an *affine chart* inside a separating open, through
+`AlgebraicGeometry.FormalScheme` at all, and neither of the file's two imports,
+`FormalSchemes.ActionQuotientCarrier` and `FormalSchemes.OpenImmersionIsoOfRangeEq`, reaches
+`FormalSchemes.OpenFormalSubscheme` — transitively, not only directly: the file's own import
+closure is 72 project modules and `FormalSchemes.OpenFormalSubscheme` is not one of them. This
+does **not** contradict `FormalSchemes.ActionQuotientFormalScheme`'s "not removable" paragraph,
+which is about a different problem: producing an *affine chart* inside a separating open, through
 `AlgebraicGeometry.FormalScheme.restrictOpen` and the local criterion for being a formal scheme.
 Restricting a quotient is not that problem, and the hypothesis does not follow the construction
 into it. Whether the missing sheaf half also avoids it is untested, because that half is unwritten.
