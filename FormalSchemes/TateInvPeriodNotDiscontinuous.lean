@@ -48,6 +48,9 @@ topological ingredient is `LocallyRingedSpace.not_isFreeProperlyDiscontinuous_of
 ## Main results
 
 * `AlgebraicGeometry.annulusOverlapChart_comp_ι`
+* `AlgebraicGeometry.base_ι_annulusOverlapChart_eq`: that glue condition evaluated at a point, which
+  is the form both this file's reduction and
+  `FormalSchemes.TateInvNodeChartAmbientNotInjective` consume.
 * `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction_of_specializes`
 
 ## References
@@ -97,6 +100,30 @@ theorem annulusOverlapChart_comp_ι {i j : ULift.{u} ℤ} (h : j.down - i.down =
   simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
   exact (cancel_epi _).mp key.symm
 
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The glue condition of the chain, read at one point.** The `x`-chart image of `v` seen in the
+patch `U_0` is the transported `y`-chart image of `v` seen in the patch `U_1`. This is
+`annulusOverlapChart_comp_ι` at `i = 0`, `j = 1`, evaluated at `v`; the reduction below uses it to
+compare specializations, and `FormalSchemes.TateInvNodeChartAmbientNotInjective` uses it at a point
+where the two images are *equal* in the quotient. -/
+theorem base_ι_annulusOverlapChart_eq
+    (v : locallyRingedSpaceObj
+      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))) :
+    ((tateChainInvFormalGlueData R I q hq hI).ι ⟨(0 : ℤ)⟩).base
+        ((annulusOverlapChart R I q).base v) =
+      ((tateChainInvFormalGlueData R I q hq hI).ι ⟨(1 : ℤ)⟩).base
+        ((annulusOverlapChartY R I q).base
+          ((annulusChartTransitionInvSpf R I q hI).hom.base v)) := by
+  have h1 := annulusOverlapChart_comp_ι R I q hq hI
+    (i := ⟨(0 : ℤ)⟩) (j := ⟨(1 : ℤ)⟩) (by norm_num)
+  have h2 : (annulusOverlapChart R I q ≫
+        (tateChainInvFormalGlueData R I q hq hI).ι ⟨(0 : ℤ)⟩).base v =
+      ((annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
+        (tateChainInvFormalGlueData R I q hq hI).ι ⟨(1 : ℤ)⟩).base v := by rw [h1]
+  simp only [LocallyRingedSpace.comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp,
+    ContinuousMap.coe_comp, Function.comp_apply] at h2
+  exact h2
+
 /-- **The single-patch reduction of the period-`q` question.** Suppose some point `v` of the
 `x`-overlap `Spf A{1/x}` has both of its images in the patch `Spf A` — the `x`-chart image, and the
 `y`-chart image of its transition — specializing to one and the same point `N`. Then the `q^ℤ`-shift
@@ -119,20 +146,7 @@ theorem not_isFreeProperlyDiscontinuous_tateInvPeriodAction_of_specializes
       ((annulusChartTransitionInvSpf R I q hI).hom.base v) :
         locallyRingedSpaceObj _) ⤳ N) :
     ¬ LocallyRingedSpace.IsFreeProperlyDiscontinuous (tateInvPeriodAction R I q hq hI) := by
-  have hglue : ((tateChainInvFormalGlueData R I q hq hI).ι ⟨(0 : ℤ)⟩).base
-        ((annulusOverlapChart R I q).base v) =
-      ((tateChainInvFormalGlueData R I q hq hI).ι ⟨(1 : ℤ)⟩).base
-        ((annulusOverlapChartY R I q).base
-          ((annulusChartTransitionInvSpf R I q hI).hom.base v)) := by
-    have h1 := annulusOverlapChart_comp_ι R I q hq hI
-      (i := ⟨(0 : ℤ)⟩) (j := ⟨(1 : ℤ)⟩) (by norm_num)
-    have h2 : (annulusOverlapChart R I q ≫
-          (tateChainInvFormalGlueData R I q hq hI).ι ⟨(0 : ℤ)⟩).base v =
-        ((annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
-          (tateChainInvFormalGlueData R I q hq hI).ι ⟨(1 : ℤ)⟩).base v := by rw [h1]
-    simp only [LocallyRingedSpace.comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp,
-      ContinuousMap.coe_comp, Function.comp_apply] at h2
-    exact h2
+  have hglue := base_ι_annulusOverlapChart_eq R I q hq hI v
   have hshift : ∀ p : locallyRingedSpaceObj (annulusIdealOfDefinition R I q),
       (tateInvPeriodAction R I q hq hI (Multiplicative.ofAdd (1 : ℤ))).hom.base
         (((tateChainInvFormalGlueData R I q hq hI).ι ⟨(0 : ℤ)⟩).base p) =

@@ -29,14 +29,9 @@ rather than cited as a paragraph. This file lands it.
   branch points are the two images, in the model patch, of the *one* point
   `annulusOverlapGenericPoint` of the overlap `Spf A{1/x}` — the `x`-chart image and the
   transported `y`-chart image. This is where `FormalSchemes.TateInvPeriodNodePoint`'s two
-  `annulusChartEvalLaurentFibre_comp_*` identities are spent; the specialization statements that
-  file draws from them are not used.
-* **`AlgebraicGeometry.base_ι_annulusOverlapChart_eq`**: the glue condition of the chain, applied
-  at one point — `ι ⟨0⟩` of the `x`-chart image is `ι ⟨1⟩` of the transported `y`-chart image.
-  It was proved inline inside
-  `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction_of_specializes`; here it
-  is a lemma, because this file spends it on an *equality* of the two images in the quotient rather
-  than on a comparison of specializations.
+  `annulusChartEvalLaurentFibre_comp_*` identities are spent, together with its
+  `AlgebraicGeometry.annulusOverlapChartY_base_transition_eq_comap_annulusTransitionedChartY`; the
+  specialization statements that file draws from the same identities are not used.
 * **`AlgebraicGeometry.base_actionQuotientπ_ι_annulusBranchXPoint_eq`**: the two branch points have
   the **same** image in the quotient. `base_ι_eq_of_isActionQuotient` moves patch `1` back onto
   patch `0`; the shift is what identifies them, exactly as the Néron 1-gon glues `0` to `∞`.
@@ -226,23 +221,9 @@ theorem annulusOverlapChartY_base_transition_annulusOverlapGenericPoint :
         ((annulusChartTransitionInvSpf R I q hI).hom.base
           (annulusOverlapGenericPoint R I q hI 𝔭 h𝔭)) =
       annulusBranchYPoint R I q 𝔭 h𝔭 hq := by
-  have h : (annulusOverlapChartY R I q).base
-      ((annulusChartTransitionInvSpf R I q hI).hom.base
-        (annulusOverlapGenericPoint R I q hI 𝔭 h𝔭)) =
-      PrimeSpectrum.comap (Ideal.quotientMap
-        (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
-        (annulusTransitionedChartY R I q hI) (annulusTransitionedChartY_le_comap R I q hI))
-        (annulusOverlapGenericPoint R I q hI 𝔭 h𝔭) := by
-    -- The same substitution-at-abstract-rings step as in
-    -- `not_isFreeProperlyDiscontinuous_tateInvPeriodAction_of_prime`, for the same reason: proving
-    -- the identity in place would make the kernel unfold `AdicCompletion.congrIdealₐ`.
-    rw [annulusChartTransitionInvSpf_hom_eq]
-    exact (congrFun (FormalSpectrum.map_comp _ _ _
-      (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q))
-      (annulusChartTransitionInvAlg R I q hI).symm.toRingHom
-      (le_comap_awayCompletionHom _ _) (annulusChartTransitionInvAlg_symm_le_comap R I q hI)
-      (annulusTransitionedChartY_le_comap R I q hI)) _).symm
-  rw [h, annulusOverlapGenericPoint, ← PrimeSpectrum.comap_comp_apply,
+  rw [annulusOverlapChartY_base_transition_eq_comap_annulusTransitionedChartY R I q hI
+      (annulusOverlapGenericPoint R I q hI 𝔭 h𝔭),
+    annulusOverlapGenericPoint, ← PrimeSpectrum.comap_comp_apply,
     annulusChartEvalLaurentFibre_comp_transitionedChartY R I q hI 𝔭 h𝔭 hq,
     PrimeSpectrum.comap_comp_apply, annulusBranchYPoint]
   refine congrArg _ (PrimeSpectrum.ext ?_)
@@ -253,37 +234,6 @@ theorem annulusOverlapChartY_base_transition_annulusOverlapGenericPoint :
     (LaurentPolynomial.invert.injective.comp Polynomial.toLaurent_injective)
 
 end Chart
-
-section Glue
-
-variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I) (hI : I.FG)
-
-omit [TopologicalSpace R] [IsAdicRing I] in
-include hq hI in
-/-- **The glue condition of the chain, read at one point.** The `x`-chart image of `v` seen in the
-patch `U_0` is the transported `y`-chart image of `v` seen in the patch `U_1`. This is
-`annulusOverlapChart_comp_ι` at `i = 0`, `j = 1`, evaluated; it was proved inline inside
-`not_isFreeProperlyDiscontinuous_tateInvPeriodAction_of_specializes`, and is stated here because
-the present file needs it at a different pair of points. -/
-theorem base_ι_annulusOverlapChart_eq
-    (v : locallyRingedSpaceObj
-      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))) :
-    ((tateChainInvFormalGlueData R I q hq hI).ι ⟨(0 : ℤ)⟩).base
-        ((annulusOverlapChart R I q).base v) =
-      ((tateChainInvFormalGlueData R I q hq hI).ι ⟨(1 : ℤ)⟩).base
-        ((annulusOverlapChartY R I q).base
-          ((annulusChartTransitionInvSpf R I q hI).hom.base v)) := by
-  have h1 := annulusOverlapChart_comp_ι R I q hq hI
-    (i := ⟨(0 : ℤ)⟩) (j := ⟨(1 : ℤ)⟩) (by norm_num)
-  have h2 : (annulusOverlapChart R I q ≫
-        (tateChainInvFormalGlueData R I q hq hI).ι ⟨(0 : ℤ)⟩).base v =
-      ((annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
-        (tateChainInvFormalGlueData R I q hq hI).ι ⟨(1 : ℤ)⟩).base v := by rw [h1]
-  simp only [LocallyRingedSpace.comp_toHom, PresheafedSpace.comp_base, TopCat.hom_comp,
-    ContinuousMap.coe_comp, Function.comp_apply] at h2
-  exact h2
-
-end Glue
 
 section Quotient
 
@@ -406,7 +356,7 @@ include hq hI in
 merely denied to be equal: `D(x + y − 1)` carries two distinct points of the model patch with one
 image in the quotient. This is strictly stronger than
 `AlgebraicGeometry.nonempty_range_tateInvNodeChartAmbientHom`
-(`FormalSchemes.TateInvNodeChartSpfNonempty`), which it re-derives, and it needs the same `I ≠ ⊤`.
+(`FormalSchemes.TateInvNodeChartSpfNonempty`), which it implies, and it needs the same `I ≠ ⊤`.
 -/
 theorem exists_ne_and_base_actionQuotientπ_ι_eq (hItop : I ≠ ⊤)
     (h : IsActionQuotient (tateInvPeriodAction R I q hq hI) π) :
