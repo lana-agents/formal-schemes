@@ -29,6 +29,8 @@ An action of `G` on `X` by automorphisms is a monoid homomorphism `a : G →* Au
   out of the quotient* — two maps `Q ⟶ Z` agreeing after `π` are equal.
 * `CategoryTheory.IsActionQuotient.uniqueUpToIso`: the quotient object is unique up to a (canonical)
   isomorphism compatible with the two projections.
+* `CategoryTheory.IsActionQuotient.ofIso`: conversely, being a quotient transports along an
+  isomorphism of the target that intertwines the two projections.
 
 ## Design notes
 
@@ -134,6 +136,23 @@ theorem π_comp_uniqueUpToIso_inv : π₂ ≫ (uniqueUpToIso h₁ h₂).inv = π
   h₂.fac π₁ h₁.isInvariant
 
 end UniqueUpToIso
+
+/-- **Being a quotient transports along an isomorphism of the target.** If `π₁ : X ⟶ Q₁` exhibits
+`Q₁` as `X / G` and `e : Q₁ ≅ Q₂` carries `π₁` to `π₂`, then `π₂` exhibits `Q₂` as `X / G` too.
+
+`CategoryTheory.IsActionQuotient.uniqueUpToIso` is the converse direction — two quotients are
+isomorphic — and this is what makes that an equivalence rather than a one-way construction: it is
+how a quotient built by hand is recognised in an object that has been shown isomorphic to a known
+one, which is the shape of every proof that some concretely given morphism is a quotient
+projection. -/
+def ofIso {Q₁ Q₂ : C} {π₁ : X ⟶ Q₁} {π₂ : X ⟶ Q₂} (h : IsActionQuotient a π₁) (e : Q₁ ≅ Q₂)
+    (he : π₁ ≫ e.hom = π₂) : IsActionQuotient a π₂ where
+  isInvariant g := by rw [← he, ← assoc, h.isInvariant g]
+  desc f hf := e.inv ≫ h.desc f hf
+  fac f hf := by rw [← he, assoc, e.hom_inv_id_assoc, h.fac]
+  uniq f hf m hm := by
+    have h1 : e.hom ≫ m = h.desc f hf := h.uniq f hf _ (by rw [← assoc, he]; exact hm)
+    rw [← h1, e.inv_hom_id_assoc]
 
 end IsActionQuotient
 

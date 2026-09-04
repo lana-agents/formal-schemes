@@ -8,6 +8,7 @@ import FormalSchemes.ActionQuotientFormalScheme
 import FormalSchemes.ActionQuotientFunctor
 import FormalSchemes.ActionQuotientInvariantSections
 import FormalSchemes.ActionQuotientRestrict
+import FormalSchemes.ActionQuotientRestrictQuotient
 import FormalSchemes.ActionQuotientRestrictSections
 import FormalSchemes.ActionQuotientSectionInjective
 import FormalSchemes.ActionQuotientSections

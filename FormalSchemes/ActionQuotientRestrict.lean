@@ -15,7 +15,9 @@ the invariant-sections route to a chart on `T_inv/⟨σ⟩`, and nothing on this
 
 This file supplies the restricted action, the restricted projection, and the answer **on underlying
 topological spaces**. The answer in `AlgebraicGeometry.LocallyRingedSpace` itself is *not* proved
-here; the gap is stated precisely below rather than left for a reader to discover.
+here; it is proved in `FormalSchemes.ActionQuotientRestrictQuotient`, whose
+`AlgebraicGeometry.LocallyRingedSpace.isActionQuotient_restrictπ` is the full statement, and what
+this file leaves open is stated precisely below rather than left for a reader to discover.
 
 ## Main results
 
@@ -43,15 +45,18 @@ here; the gap is stated precisely below rather than left for a reader to discove
 **The statement in `AlgebraicGeometry.LocallyRingedSpace`**, which is what the row asks for. Of its
 four obligations, `CategoryTheory.IsActionQuotient.isInvariant` is proved
 (`AlgebraicGeometry.LocallyRingedSpace.isActionInvariant_restrictπ`) and the other three are not.
-What separates them is the structure sheaf and nothing else, and the split is sharp:
+What separates them is the structure sheaf and nothing else.
 
-* the *base map* of the descent of an invariant `f : X|_{π ⁻¹ V} ⟶ Z` exists and is
-  `AlgebraicGeometry.LocallyRingedSpace.descRestrictπ`;
-* what is missing is the map of sheaves `Z.presheaf ⟶ _ * (Q|_V).presheaf` and its naturality,
-  plus `IsLocalHom` on stalks. The last of these is not extra work once the first two are done: if
-  a composite of stalk maps is local and the second factor is local, so is the first, and the
-  composite here is `f`'s stalk map, which is local because `f` is a morphism of *locally* ringed
-  spaces.
+The two files above this one close that gap, and it is worth recording that they close it by a
+route this paragraph did not anticipate. An earlier version of it said that what was missing was
+the map of sheaves `Z.presheaf ⟶ _ * (Q|_V).presheaf` for an invariant `f : X|_{π ⁻¹ V} ⟶ Z`,
+together with its naturality and `IsLocalHom` on stalks — that is, that the descent had to be built
+by hand on top of `AlgebraicGeometry.LocallyRingedSpace.descRestrictπ`, which is its base map.
+**No such descent is built anywhere.** `FormalSchemes.ActionQuotientRestrictQuotient` instead
+compares `Q|_V` with the coequalizer of the restricted action and proves the comparison is an
+isomorphism, at which point the universal property transports. So `descRestrictπ` remains what it
+says it is — the descent of an invariant *continuous* map — and is not a first step towards the
+`AlgebraicGeometry.LocallyRingedSpace` statement.
 
 The sheaf half is where the tree's existing invariant-sections description of a quotient's
 structure sheaf has to be brought in — `CategoryTheory.exists_actionQuotientπ_c_app_eq_iff_forall`
@@ -68,8 +73,8 @@ It is discharged in `FormalSchemes.ActionQuotientRestrictSections`, which import
 arbitrary presentation — the uniqueness half needed no carrying, being already
 `CategoryTheory.IsActionQuotient.injective_c_app` — and
 `AlgebraicGeometry.LocallyRingedSpace.exists_c_app_restrictπ_eq_iff_forall` carries both across the
-restriction, for opens `W ≤ V` of the quotient. That is an input to the sheaf half and not the
-sheaf half itself: the three obligations above are open after it as they are here.
+restriction, for opens `W ≤ V` of the quotient. That is an input to the comparison and not the
+comparison itself, and the three obligations above are open after it as they are here.
 
 **Anything about the node chart, its outstanding hypothesis, or the Tate curve.** This file is at
 `AlgebraicGeometry.LocallyRingedSpace` level and mentions no ring, ideal or spectrum. What lands
@@ -408,7 +413,11 @@ descend uniquely.
 Existence is `AlgebraicGeometry.LocallyRingedSpace.descRestrictπ`, factorisation is
 `AlgebraicGeometry.LocallyRingedSpace.descRestrictπ_apply`, and uniqueness is surjectivity of the
 base map. **The corresponding statement in `AlgebraicGeometry.LocallyRingedSpace` itself is not
-proved here** — see this file's module docstring for what separates the two. -/
+proved here**; it is
+`AlgebraicGeometry.LocallyRingedSpace.isActionQuotient_restrictπ`
+(`FormalSchemes.ActionQuotientRestrictQuotient`), which consumes this one — the comparison
+morphism's base map is an isomorphism precisely because both projections are action quotients in
+`TopCat`. -/
 def isActionQuotient_forgetToTop_restrictπ (h : IsActionQuotient a π)
     (V : Opens Q.toTopCat) :
     IsActionQuotient (forgetToTop.mapAction
