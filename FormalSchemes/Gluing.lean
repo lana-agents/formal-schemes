@@ -33,6 +33,9 @@ the Tate chain, obtained by gluing formal annuli.
   that point. `LocallyRingedSpace.hasAffineChartAt_of_isoRestrict` is its affine case.
 * `FormalScheme.exists_openImmersion`: every point of a formal scheme is in the range of an
   open immersion from an affine formal scheme.
+* `LocallyRingedSpace.IsOpenImmersion.of_comp`: **two out of three** — if `v` and `u ≫ v` are
+  open immersions then so is `u`. Mathlib has this for `AlgebraicGeometry.Scheme`
+  (`AlgebraicGeometry.IsOpenImmersion.of_comp`) and not for `LocallyRingedSpace`.
 * `LocallyRingedSpace.IsOpenImmersion.formalScheme`: the converse; the local criterion.
 * `FormalScheme.GlueData`: glue data of formal schemes (a `LocallyRingedSpace.GlueData` whose
   pieces are formal schemes), and `FormalScheme.GlueData.gluedFormalScheme`, the glued formal
@@ -83,6 +86,36 @@ theorem uliftBool_not_pairwise_distinct {i j k : ULift.{u} Bool}
   cases i <;> cases j <;> cases k <;> simp_all
 
 namespace LocallyRingedSpace.IsOpenImmersion
+
+/-- **Two out of three for open immersions of locally ringed spaces.** If `v` and `u ≫ v` are open
+immersions, so is `u`.
+
+Mathlib proves this for schemes (`AlgebraicGeometry.IsOpenImmersion.of_comp`) and does not state it
+for `LocallyRingedSpace`; the scheme statement does not apply to a formal spectrum, which is not an
+`AlgebraicGeometry.Scheme`. The proof is the expected one and needs nothing scheme-theoretic: the
+base map is an open embedding by `Topology.IsOpenEmbedding.of_comp`, the base map of `v` being
+injective;
+each stalk map is an isomorphism because `LocallyRingedSpace.stalkMap_comp` factors the composite's
+stalk map through it and both of the other two are isomorphisms; and
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.of_stalk_iso` puts the two halves back
+together.
+
+Its first consumer is `FormalSpectrum.isOpenImmersion_basicOpenChartRestrict`
+(`FormalSchemes.BasicOpenChartRestrict`): a basic open of `Spf R` contained in another one is an
+open of that other one's affine chart. -/
+theorem of_comp {X Y Z : LocallyRingedSpace.{u}} (u : X ⟶ Y) (v : Y ⟶ Z)
+    [hv : LocallyRingedSpace.IsOpenImmersion v]
+    [huv : LocallyRingedSpace.IsOpenImmersion (u ≫ v)] :
+    LocallyRingedSpace.IsOpenImmersion u := by
+  have hbase : Topology.IsOpenEmbedding ⇑u.base :=
+    Topology.IsOpenEmbedding.of_comp _ hv.base_open (by simpa using huv.base_open)
+  have hstalk : ∀ x, IsIso (u.stalkMap x) := fun x => by
+    have h1 : IsIso (v.stalkMap (u.base x) ≫ u.stalkMap x) := by
+      rw [← LocallyRingedSpace.stalkMap_comp]
+      exact LocallyRingedSpace.IsOpenImmersion.stalk_iso (u ≫ v) x
+    haveI := h1
+    exact IsIso.of_isIso_comp_left (v.stalkMap (u.base x)) (u.stalkMap x)
+  exact LocallyRingedSpace.IsOpenImmersion.of_stalk_iso u hbase
 
 /-- **The formal-scheme condition is local**: a locally ringed space admitting, around every
 point, an open immersion from the formal spectrum of an adic ring is a formal scheme. This
