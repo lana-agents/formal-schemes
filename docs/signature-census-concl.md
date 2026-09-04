@@ -122,7 +122,8 @@ label in this document is not the label a re-run prints. That is why each findin
 Two rows since have moved a figure. The first did it by the *rehome* mechanism named above rather
 than by a deletion — the case the paragraph above says none of the six was. Row **1557** (PR #529)
 made the duplicated `IsAdicRing (I * J)` block a single lemma, `IsAdicRing.mul`, and moved
-`IsHausdorff.of_le` into `FormalSchemes.CofinalAdicRing` with it. On `3b2c426`, against the
+`IsHausdorff.of_le` into `FormalSchemes.CofinalAdicRing` with it — that second name is a
+historical citation here too, deleted by the row in the next paragraph. On `3b2c426`, against the
 `c5b5c48` column above: declarations extracted **6260** and population bucketed **5676**, both
 unchanged, buckets with two or more members **274**, unchanged — and `>= 2 / cross / theorem`
 **274 / 200 / 88**. The bucket that left the cross-module count is `IsHausdorff K M`, which still
@@ -266,16 +267,19 @@ statement is closed by another, which does not depend on whether a docstring nam
    vanishes**: a bucket needs two members, so `IsPrecomplete K M` is no longer a key of this
    census at all.
 
-   Row **1557** (PR #529) has since made those two call sites **one**, and neither of the names
-   above survives it. They were the same `IsAdicRing (I * J)` block written out twice;
-   `FormalSpectrum.isAdicRing_mul` was deleted with the duplication and `generalCofinalSpfIso` no
-   longer contains the block, which now exists once as `IsAdicRing.mul`
-   (`FormalSchemes.CofinalAdicRing`), which read the cofinality form directly until row **1585**
-   gave it a one-step proof through `IsAdicRing.of_isCofinal`; the site that reads
-   `IsPrecomplete.of_isCofinal` today is `IsAdicComplete.of_isCofinal`, one lemma up in the same
-   file, and `IsAdicRing.mul` reaches it through that. Row 1557 itself moved no bucket of this
-   census: the deleted declaration's conclusion was not a shared key,
-   and the scan's only movement was `IsHausdorff K M` becoming intra-module, which is a span and
+   Row **1557** (PR #529) has since made those two call sites **one**, and the two names fare
+   differently under it: one is dead and one is not. They were the same `IsAdicRing (I * J)` block
+   written out twice. `FormalSpectrum.isAdicRing_mul` was **deleted** with the duplication, so it
+   is from here on a historical citation and resolves to nothing, exactly as
+   `IsPrecomplete.of_cofinal` is in the paragraph above. `FormalSpectrum.generalCofinalSpfIso`
+   **survives**: it is a live `def` in `FormalSchemes.CofinalSheafComparisonGeneral`, cited from
+   five further modules, and all that changed is that it stopped containing the block. That block
+   now exists once as `IsAdicRing.mul` (`FormalSchemes.CofinalAdicRing`), which read the cofinality
+   form directly until row **1585** gave it a one-step proof through `IsAdicRing.of_isCofinal`;
+   the site that reads `IsPrecomplete.of_isCofinal` today is `IsAdicComplete.of_isCofinal`, one
+   lemma up in the same file, and `IsAdicRing.mul` reaches it through that. Row 1557 itself moved
+   no bucket of this census: the deleted declaration's conclusion was not a shared key, and the
+   scan's only movement was `IsHausdorff K M` becoming intra-module, which is a span and
    not a population — see "Drift since the reading".
 3. **B63.** `IsTopologicallyFiniteType.fg` (`FormalSchemes.TopFiniteTypeBasis`) is
    `RestrictedPowerSeries.fg_of_presentation` (`FormalSchemes.TopFiniteTypeTrans`) applied to the
