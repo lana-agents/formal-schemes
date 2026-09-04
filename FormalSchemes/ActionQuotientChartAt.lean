@@ -38,6 +38,9 @@ the nodes, and this file is what lets the rest of the chain be dealt with anyway
 
 * `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_formalScheme`: every point of a formal
   scheme has a chart, so `HasAffineChartAt` is characteristic and not merely sufficient.
+* `AlgebraicGeometry.LocallyRingedSpace.exists_formalScheme_iff_forall_hasAffineChartAt`: that
+  implication and `LocallyRingedSpace.formalSchemeOfHasAffineChartAt` (`FormalSchemes.Gluing`)
+  packaged as an `Iff`, so a reduction stated in charts is read as a statement about the object.
 * `AlgebraicGeometry.LocallyRingedSpace.hasAffineChartAt_of_isProperlyDiscontinuousOn`: **the
   pointwise chart theorem** — a separating open around `x` gives a chart of `Q` at `π x`.
 * `AlgebraicGeometry.LocallyRingedSpace.freeActionQuotientFormalScheme_eq_ofHasAffineChartAt`:
@@ -66,6 +69,18 @@ characteristic. This is `FormalScheme.exists_openImmersion`, whose conclusion is
 theorem hasAffineChartAt_of_formalScheme (X : FormalScheme.{u}) (x : X) :
     HasAffineChartAt X.toLocallyRingedSpace x :=
   X.exists_openImmersion x
+
+/-- **Carrying a formal scheme structure is having a chart at every point**, as an `Iff`. The two
+implications are `formalSchemeOfHasAffineChartAt` (`FormalSchemes.Gluing`) and
+`hasAffineChartAt_of_formalScheme`; naming the equivalence is what lets a reduction stated in
+charts be read as a statement about the object, and back, without the transport across
+`FormalScheme.toLocallyRingedSpace` being written out at each site. -/
+theorem exists_formalScheme_iff_forall_hasAffineChartAt (Z : LocallyRingedSpace.{u}) :
+    (∃ X : FormalScheme.{u}, X.toLocallyRingedSpace = Z) ↔ ∀ z : Z, HasAffineChartAt Z z := by
+  constructor
+  · rintro ⟨X, rfl⟩ z
+    exact hasAffineChartAt_of_formalScheme X z
+  · exact fun h => ⟨formalSchemeOfHasAffineChartAt Z h, rfl⟩
 
 section Quotient
 

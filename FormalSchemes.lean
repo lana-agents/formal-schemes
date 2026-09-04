@@ -398,6 +398,7 @@ import FormalSchemes.TateInvPeriodNotDiscontinuous
 import FormalSchemes.TateInvPeriodQuotientCharts
 import FormalSchemes.TateInvQuotientChartRing
 import FormalSchemes.TateInvQuotientColimitTarget
+import FormalSchemes.TateInvQuotientNodeLocusChart
 import FormalSchemes.TateInvQuotientSections
 import FormalSchemes.TateInvSaturation
 import FormalSchemes.TateInvSeparatingBot
