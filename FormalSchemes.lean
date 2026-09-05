@@ -38,6 +38,7 @@ import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AdicRingCat
 import FormalSchemes.AdicSectionsChart
+import FormalSchemes.AdicSectionsOverlap
 import FormalSchemes.AdicSectionsRestrictOpen
 import FormalSchemes.AdicSubringComplete
 import FormalSchemes.AdicSubringFinite
@@ -405,6 +406,7 @@ import FormalSchemes.TateInvNodeChartLegContinuous
 import FormalSchemes.TateInvNodeChartLegGeneral
 import FormalSchemes.TateInvNodeChartNontrivial
 import FormalSchemes.TateInvNodeChartOverlap
+import FormalSchemes.TateInvNodeChartOverlapAdic
 import FormalSchemes.TateInvNodeChartPatchChartAdic
 import FormalSchemes.TateInvNodeChartPrincipal
 import FormalSchemes.TateInvNodeChartPrincipalRegularBase

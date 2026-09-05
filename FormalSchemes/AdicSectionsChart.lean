@@ -154,7 +154,20 @@ described as the general form of the other.
 **No continuity family is discharged, and no witness of either predicate is produced.** This file
 changes the shape of what has to be supplied: from three families of bounds on charts nothing
 describes, to two existential conditions from which the charts *and* the bounds both come. Whether
-either condition holds anywhere is untouched, and a scheme satisfying neither is not excluded.
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` holds anywhere is untouched, and a scheme
+satisfying it is not exhibited.
+
+**The second of the two conditions is not independent, and the reason is downstream.**
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.overlapAdic`
+(`FormalSchemes.AdicSectionsOverlap`) proves
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic` for *every* witness, so
+`AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections` is a construction over one
+witness rather than two. It does **not** settle the merge question of the section above, which is
+about two unrelated witnesses; it uses that on an overlap the two base morphisms have the same
+global-sections homomorphism, which is exactly the independent agreement
+`AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG.pair_of_eq`'s docstring says the joint
+condition would become free from. The `s = t` form there is genuinely unusable, for the reason
+recorded there; the global-sections form is not, and the two are different statements.
 
 **`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` is strictly stronger than
 `AlgebraicGeometry.FormalScheme.LocallyFG`** —
