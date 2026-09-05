@@ -19,7 +19,7 @@ is an isomorphism. Hypotheses 1 and 3 are proved (`adicSectionsLocallyFG_nodeCha
 `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.overlapAdic`. This file takes the last one
 apart. It does **not** decide it.
 
-## The packaging comes off completely
+## The packaging comes off, and what is left when it has
 
 `CategoryTheory.IsActionQuotient.isIso_desc_iff` (`FormalSchemes.ActionQuotient`) says a mediating
 morphism is an isomorphism exactly when the invariant morphism it descends is *itself* a quotient
@@ -40,10 +40,14 @@ the same condition at a morphism out of an honest open of `T_inv/⟨σ⟩`:
 > the unique morphism with `restrictπ ≫ nodeChartQuotientHom = nodeChartAdicHom`,
 
 and `AlgebraicGeometry.isIso_desc_nodeChartAdicHom_iff` says hypothesis 4 is exactly that this is
-an isomorphism. No `CategoryTheory.actionQuotient`, no
-`CategoryTheory.IsActionQuotient.desc` and no `AlgebraicGeometry.FormalScheme` occurs in it. In
-words: **the node chart's open of the quotient is the formal spectrum of its own ring of sections,
-via the canonical comparison.**
+an isomorphism. What comes off is the descent packaging: neither
+`CategoryTheory.IsActionQuotient.desc` nor the coequalizer of the restricted action occurs in it.
+What does not come off, checked on the elaborated statement rather than read off the source:
+`CategoryTheory.actionQuotient` still occurs, at the *period* action, because the source is an open
+of `T_inv/⟨σ⟩` itself and that is the object in question, and
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` still occurs, as the type of the witness the
+morphism is built from. In words: **the node chart's open of the quotient is the formal spectrum
+of its own ring of sections, via the canonical comparison.**
 
 `AlgebraicGeometry.exists_formalScheme_of_isIso_nodeChartQuotientHom` restates the headline over
 that morphism.
@@ -346,9 +350,11 @@ together, by `CategoryTheory.IsActionQuotient.isIso_desc_iff_isIso_desc`. So hyp
 
 > the canonical comparison `(T_inv/⟨σ⟩)|_{V₀} ⟶ Spf (Γ (T_inv/⟨σ⟩, V₀))` is an isomorphism.
 
-Neither side of the right-hand statement mentions `CategoryTheory.actionQuotient`,
-`CategoryTheory.IsActionQuotient.desc` or `AlgebraicGeometry.FormalScheme`. This is the form in
-which the residue is to be attacked. -/
+The right-hand side mentions neither `CategoryTheory.IsActionQuotient.desc` nor the coequalizer of
+the restricted action. It does still mention `CategoryTheory.actionQuotient`, at the *period*
+action — the source is an open of `T_inv/⟨σ⟩`, which is what `hnode` is about and cannot be traded
+away — and it carries the `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` witness in its
+binders. This is the form in which the residue is to be attacked. -/
 theorem isIso_desc_nodeChartAdicHom_iff :
     IsIso ((isActionQuotient_actionQuotientπ (tateInvNodeChartRestrictedAction R I q hq hI)).desc
         (nodeChartAdicHom R I q hq hI hfgI hX)
