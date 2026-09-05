@@ -70,6 +70,13 @@ below refutes neither `hnode` nor the existence of the node chart.
   some chart family carries the three continuity families and the resulting morphism is invariant
   with an isomorphism for its descent.
 
+* `AlgebraicGeometry.spfHomContinuity_iff_nodeChartContinuous`,
+  `AlgebraicGeometry.nodeChartHom_eq_homOfSpfHomContinuity` and
+  `AlgebraicGeometry.globalSectionsHom_nodeChartHom`: the bridge to
+  `AlgebraicGeometry.FormalScheme.SpfHomContinuity` and
+  `AlgebraicGeometry.FormalScheme.homOfSpfHomContinuity` (`FormalSchemes.GlueHomToSpf`), and the
+  fact that the morphism induces `AlgebraicGeometry.nodeChartPsi` on global sections.
+
 ## What is *not* proved here
 
 **No continuity family is discharged, at any chart family, and nothing here says one can be.**
@@ -89,6 +96,21 @@ period action**, which `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateIn
 refutes globally.
 
 ## Implementation notes
+
+**The three families are the general bundle at this instance, and that is checked rather than
+asserted.** `AlgebraicGeometry.FormalScheme.SpfHomContinuity` (`FormalSchemes.GlueHomToSpf`) is
+these same three conditions over an arbitrary adic ring and an arbitrary *supplied* chart family;
+`AlgebraicGeometry.spfHomContinuity_iff_nodeChartContinuous` and
+`AlgebraicGeometry.nodeChartHom_eq_homOfSpfHomContinuity` record the correspondence, and both are
+proved by the anonymous constructor and `rfl` — the general construction chooses its overlap charts
+by `AlgebraicGeometry.FormalScheme.overlapChartOf`, which is `AlgebraicGeometry.nodeChartOcharts`
+on the nose.
+
+The three `abbrev`s are kept as they are rather than replaced by the structure's projections. They
+are fed straight back to `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom`, whose binders are
+the unfolded inequalities, and the bridge above means nothing is gained by restating them: a caller
+holding either form has the other for free.
+
 
 **Why the headline packages its five obligations inside one `∃` rather than taking them as
 arguments.** `AlgebraicGeometry.exists_formalScheme_of_isIso_desc` states its own hypothesis under
@@ -136,6 +158,10 @@ the charts *and* discharges the continuity the way
 here.
 
 ## References
+
+* `FormalSchemes/GlueHomToSpf.lean` — `AlgebraicGeometry.FormalScheme.SpfHomContinuity`,
+  `AlgebraicGeometry.FormalScheme.homOfSpfHomContinuity` and
+  `AlgebraicGeometry.FormalScheme.overlapChartOf`, the general forms this file instantiates.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4 (10.4.6), §10.6.
 * [Deligne–Rapoport, *Les schémas de modules de courbes elliptiques*], II.1 — the Néron 1-gon.
@@ -264,6 +290,53 @@ def nodeChartHom (hfgI : (tateInvNodeChartQuotientIdeal R I q hq hI).FG)
   FormalScheme.homOfGlobalSectionsHom (tateInvNodeChartQuotientIdeal R I q hq hI) charts hfg
     (nodeChartPsi R I q hq hI) hcont hfgI
     (nodeChartOcharts R I q hq hI charts hfg) (nodeChartOcharts_fg R I q hq hI charts hfg) hf hg
+
+/-! ### The bridge to the general construction -/
+
+/-- **The three families here are exactly `AlgebraicGeometry.FormalScheme.SpfHomContinuity` at
+this instance.** The general bundle (`FormalSchemes.GlueHomToSpf`) is the same three conditions
+over an arbitrary adic ring and an arbitrary supplied chart family; instantiating it at
+`AlgebraicGeometry.tateInvNodeChartQuotientIdeal` and `AlgebraicGeometry.nodeChartPsi` gives these.
+
+The proof is the anonymous constructor in both directions: the correspondence is definitional, not
+a transport, because `AlgebraicGeometry.nodeChartOcharts` and
+`AlgebraicGeometry.FormalScheme.overlapChartOf` unfold to the same term. So nothing is lost by
+stating the residue either way, and a caller may move between them for free. -/
+theorem spfHomContinuity_iff_nodeChartContinuous :
+    FormalScheme.SpfHomContinuity (tateInvNodeChartQuotientIdeal R I q hq hI) charts hfg
+        (nodeChartPsi R I q hq hI) ↔
+      ∃ hcont : NodeChartChartContinuous R I q hq hI charts,
+        NodeChartOverlapContinuousFst R I q hq hI charts hfg hcont ∧
+          NodeChartOverlapContinuousSnd R I q hq hI charts hfg hcont :=
+  ⟨fun d => ⟨d.cont, d.fst, d.snd⟩, fun ⟨hcont, hf, hg⟩ => ⟨hcont, hf, hg⟩⟩
+
+/-- **`AlgebraicGeometry.nodeChartHom` is the general construction at this instance.**
+`AlgebraicGeometry.FormalScheme.homOfSpfHomContinuity` (`FormalSchemes.GlueHomToSpf`) chooses the
+overlap charts by `AlgebraicGeometry.FormalScheme.overlapChartOf`, which is
+`AlgebraicGeometry.nodeChartOcharts` on the nose, so the two morphisms are equal by `rfl` and every
+lemma proved about the general one applies here. -/
+theorem nodeChartHom_eq_homOfSpfHomContinuity
+    (hfgI : (tateInvNodeChartQuotientIdeal R I q hq hI).FG)
+    (d : FormalScheme.SpfHomContinuity (tateInvNodeChartQuotientIdeal R I q hq hI) charts hfg
+      (nodeChartPsi R I q hq hI)) :
+    nodeChartHom R I q hq hI charts hfg hfgI d.cont d.fst d.snd =
+      FormalScheme.homOfSpfHomContinuity (tateInvNodeChartQuotientIdeal R I q hq hI) charts hfg
+        (nodeChartPsi R I q hq hI) hfgI d :=
+  rfl
+
+/-- **The morphism induces `AlgebraicGeometry.nodeChartPsi` on global sections**, which is what
+makes it the morphism that homomorphism was the candidate input for rather than an arbitrary one
+of the right type. A corollary of
+`AlgebraicGeometry.FormalScheme.globalSectionsHom_homOfSpfHomContinuity` through the equality
+above. -/
+theorem globalSectionsHom_nodeChartHom (hfgI : (tateInvNodeChartQuotientIdeal R I q hq hI).FG)
+    (d : FormalScheme.SpfHomContinuity (tateInvNodeChartQuotientIdeal R I q hq hI) charts hfg
+      (nodeChartPsi R I q hq hI)) :
+    globalSectionsHom (tateInvNodeChartQuotientIdeal R I q hq hI)
+        (nodeChartSaturationFormalScheme R I q hq hI).toLocallyRingedSpace
+        (nodeChartHom R I q hq hI charts hfg hfgI d.cont d.fst d.snd) =
+      nodeChartPsi R I q hq hI :=
+  FormalScheme.globalSectionsHom_homOfSpfHomContinuity _ charts hfg _ hfgI d
 
 end Instances
 
