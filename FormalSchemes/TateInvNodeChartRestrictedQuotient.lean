@@ -67,8 +67,8 @@ further step and is not taken here.
 * `AlgebraicGeometry.preimage_tateInvNodeChartQuotientOpens`: the preimage of `V₀` in the chain is
   the saturation of the node-chart locus.
 * `AlgebraicGeometry.tateInvNodeChartRestrictedAction`: the `σ`-action restricted to the
-  preimage of `V₀`, which is the open the target of the second and third reductions is a
-  coequalizer over.
+  preimage of `V₀` — the saturation of the node chart locus, by the lemma above — whose
+  coequalizer is the target of the second and third reductions.
 * `AlgebraicGeometry.isActionQuotient_restrictπ_tateInvNodeChartQuotientOpens` and
   `AlgebraicGeometry.tateInvNodeChartRestrictedActionQuotientIso`: `T_inv/⟨σ⟩ |_{V₀}` is the
   quotient of `T_inv |_{π ⁻¹ V₀}` by the restricted action, and is isomorphic to the coequalizer
@@ -113,10 +113,10 @@ across `AlgebraicGeometry.tateInvNodeChartQuotientSpfIso`; both of those are iso
 `AlgebraicGeometry.nonempty_iso_spf_away_iff`, and it means that refuting the third hypothesis
 **does** refute the first two.
 
-The one-way step is the first one, out of `hnode` itself, and the `Sufficient, and not equivalent`
-paragraph above is about exactly that step: what is discharged there is a containment of ranges,
-and nothing here or elsewhere on this tree recovers an isomorphism onto `V₀` from an open
-immersion whose range merely contains it. So a successor who refutes any one of the three
+The one-way step is the first one, out of `hnode` itself, and the *Sufficient, and not
+equivalent* paragraph above is about exactly that step: what is discharged there is a containment
+of ranges, and nothing here or elsewhere on this tree recovers an isomorphism onto `V₀` from an
+open immersion whose range merely contains it. So a successor who refutes any one of the three
 hypotheses has refuted all three and has **not** refuted `hnode`.
 
 Nothing here says the restricted quotient *is* affine formal, and nothing here bears on
