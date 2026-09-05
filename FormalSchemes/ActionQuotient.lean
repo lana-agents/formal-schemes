@@ -27,6 +27,10 @@ An action of `G` on `X` by automorphisms is a monoid homomorphism `a : G →* Au
 
 * `CategoryTheory.IsActionQuotient.hom_ext`: a quotient projection is epimorphic *among morphisms
   out of the quotient* — two maps `Q ⟶ Z` agreeing after `π` are equal.
+* `CategoryTheory.IsActionQuotient.exists_isIso_desc_of_iso`: an isomorphism `Z ≅ Q` is *the same
+  information as* an invariant `X ⟶ Z` whose mediating morphism is an isomorphism. This is the
+  converse of the trivial direction, and it is what makes those two descriptions of the quotient
+  interchangeable rather than merely one-way.
 * `CategoryTheory.IsActionQuotient.uniqueUpToIso`: the quotient object is unique up to a (canonical)
   isomorphism compatible with the two projections.
 * `CategoryTheory.IsActionQuotient.ofIso`: conversely, being a quotient transports along an
@@ -109,6 +113,25 @@ theorem hom_ext (hπ : IsActionQuotient a π) {Z : C} {m₁ m₂ : Q ⟶ Z}
     (h : π ≫ m₁ = π ≫ m₂) : m₁ = m₂ := by
   have hinv : IsActionInvariant a (π ≫ m₁) := hπ.isInvariant.comp m₁
   rw [hπ.uniq (π ≫ m₁) hinv m₁ rfl, hπ.uniq (π ≫ m₁) hinv m₂ h.symm]
+
+/-- **An isomorphism `Z ≅ Q` is the same information as an invariant morphism into `Z` whose
+mediating morphism is an isomorphism.** One direction is trivial: if `hπ.desc k hk` is an
+isomorphism then `Z` is isomorphic to `Q`. This is the other, and the witness is forced: the
+projection composed with the inverse isomorphism is invariant because the projection is, and
+`CategoryTheory.IsActionQuotient.uniq` identifies its mediating morphism with that inverse, which
+is an isomorphism.
+
+Stated as an existential rather than as an `Iff` because the two sides quantify over different
+things; a statement of the equivalence at a fixed pair of objects is exactly this together with the
+trivial direction. It is the reason a hypothesis "some invariant `k` descends to an isomorphism"
+may be substituted for a hypothesis "`Z` and `Q` are isomorphic" without weakening or strengthening
+it, which is how a mapping-*into*-`Z` problem is traded for an isomorphism problem. Compare
+`CategoryTheory.IsActionQuotient.ofIso`, which does the analogous job on the other side. -/
+theorem exists_isIso_desc_of_iso (hπ : IsActionQuotient a π) {Z : C} (e : Z ≅ Q) :
+    ∃ (k : X ⟶ Z) (hk : IsActionInvariant a k), IsIso (hπ.desc k hk) := by
+  refine ⟨π ≫ e.inv, hπ.isInvariant.comp _, ?_⟩
+  rw [← hπ.uniq _ (hπ.isInvariant.comp _) e.inv rfl]
+  infer_instance
 
 section UniqueUpToIso
 
