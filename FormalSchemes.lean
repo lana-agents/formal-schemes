@@ -340,6 +340,7 @@ import FormalSchemes.SpfTargetColimit
 import FormalSchemes.SpfTargetSurjective
 import FormalSchemes.StructureSheaf
 import FormalSchemes.StructureSheafSections
+import FormalSchemes.StructureSheafStalkAlgebraic
 import FormalSchemes.StructureSheafStalkBasicOpen
 import FormalSchemes.StructureSheafStalkBasicOpenCompletion
 import FormalSchemes.StructureSheafStalkComparison
