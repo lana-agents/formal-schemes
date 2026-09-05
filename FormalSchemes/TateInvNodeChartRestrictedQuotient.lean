@@ -4,7 +4,7 @@ import FormalSchemes.TateInvNodeChartQuotientSpf
 set_option linter.style.header false
 
 /-!
-# `hnode` is exactly the question whether the restricted quotient is affine formal
+# `hnode` reduces to one isomorphism: the restricted quotient being affine formal
 
 `AlgebraicGeometry.exists_formalScheme_of_openImmersion_spf_quotientIdeal_of_isLeftRegular_base`
 (`FormalSchemes.TateInvNodeChartQuotientSpf`) leaves `hnode` as one existential: an open immersion
@@ -13,26 +13,49 @@ set_option linter.style.header false
 f : Spf (tateInvNodeChartQuotientIdeal …) ⟶ T_inv/⟨σ⟩
 ```
 
-whose range contains `Set.range (tateInvNodeChartAmbientHom …).base`. This file removes the
-existential and the range condition, and leaves an isomorphism.
+whose range contains `Set.range (tateInvNodeChartAmbientHom …).base`. This file replaces that
+existential, and the range condition with it, by a **sufficient** condition carrying neither: one
+isomorphism.
 
 The reason it can is that the set to be covered is not merely contained in the named open
 `AlgebraicGeometry.tateInvNodeChartQuotientOpens` — it **is** that open, by
 `AlgebraicGeometry.range_tateInvNodeChartAmbientHom`, whose right-hand side is the very image the
-open is defined to be. So an open immersion with the required range is the inclusion of that open,
-and the whole residue is whether its source `T_inv/⟨σ⟩ |_{V₀}` is `Spf` of the ring the tree has
-already computed for it.
+open is defined to be. So the inclusion of that open is one open immersion meeting the range
+condition, and an isomorphism `Spf (tateInvNodeChartQuotientIdeal …) ≅ T_inv/⟨σ⟩ |_{V₀}` therefore
+suffices.
+
+**Sufficient, and not equivalent.** The condition being discharged is a containment, `⊆` and not
+`=` — `AlgebraicGeometry.LocallyRingedSpace.exists_isOpenImmersion_of_iso_restrict` takes it as
+`hT : T ⊆ ↑V` — so an open immersion whose range strictly contains `V₀` meets it just as well, and
+what such an `f` identifies with `Spf` of the ring is the restriction to the range of `f` rather
+than to `V₀`. No declaration here or elsewhere on this tree recovers the isomorphism from such an
+`f`. The reduction therefore narrows the residue rather than preserving it, and **refuting the
+isomorphism does not refute `hnode`.**
 
 Restricting further, `AlgebraicGeometry.LocallyRingedSpace.isActionQuotient_restrictπ`
 (`FormalSchemes.ActionQuotientRestrictQuotient`) says `T_inv/⟨σ⟩ |_{V₀}` is itself an action
 quotient — of `T_inv |_{π ⁻¹ V₀}`, which is the saturation of one patch's node-chart locus
-(`AlgebraicGeometry.preimage_tateInvNodeChartQuotientOpens`) — so the residue can be stated with
-no quotient of the whole chain in it at all, only the coequalizer of the restricted action. That
-is the invariant-sections shape issue 69's row asks for. The one candidate whose range is exactly
-that open — the morphism out of `Spf` of a single patch's chart ring — is refuted for `I ≠ ⊤` by
+(`AlgebraicGeometry.preimage_tateInvNodeChartQuotientOpens`) — so the *target* of the isomorphism
+becomes the coequalizer of an action on an open of the chain. That is the invariant-sections shape
+issue 69's row asks for. The one candidate whose range is exactly that open — the morphism out of
+`Spf` of a single patch's chart ring — is refuted for `I ≠ ⊤` by
 `AlgebraicGeometry.not_isOpenImmersion_tateInvNodeChartAmbientHom_of_ne_top`, which is a statement
 about that morphism and not about every open of the chain; what is left is a source built from
-sections invariant on the saturation, and the statement below is that hypothesis and nothing more.
+sections invariant on the saturation.
+
+**How much of `T_inv/⟨σ⟩` that removes, exactly.** Not all of it, and the printed statement is
+misleading about which part. The `Spf` in the hypothesis is `Spf` of
+`AlgebraicGeometry.tateInvNodeChartQuotientIdeal`, whose ring is `Γ (T_inv/⟨σ⟩, V₀)`: the quotient
+is in the hypothesis, in an implicit argument rather than on the page. The third reduction below
+moves that half off the quotient for real, across
+`AlgebraicGeometry.tateInvNodeChartQuotientSpfIso` (`FormalSchemes.TateInvNodeChartQuotientSpf`),
+landing on `Spf` of `AlgebraicGeometry.tateInvNodeChartAwaySubring` — a subring of one patch's
+away completion, with no quotient in it anywhere. The target half runs through the projection even
+there: `AlgebraicGeometry.tateInvNodeChartRestrictedAction` acts on the open
+`(Opens.map π.base).obj V₀`, which `AlgebraicGeometry.preimage_tateInvNodeChartQuotientOpens`
+identifies with the saturation only propositionally, so restating it on
+`AlgebraicGeometry.tateInvSaturateOpens` would change the type of the restricted space. That is a
+further step and is not taken here.
 
 ## Main results
 
@@ -54,6 +77,9 @@ sections invariant on the saturation, and the statement below is that hypothesis
 * `AlgebraicGeometry.exists_formalScheme_of_iso_actionQuotient_tateInvNodeChartRestrictedAction`:
   the same with the target rewritten as the coequalizer of
   `AlgebraicGeometry.tateInvNodeChartRestrictedAction`.
+* `AlgebraicGeometry.exists_formalScheme_of_iso_spf_away`: the same again with the *source*
+  rewritten as `Spf (tateInvNodeChartAwaySubring …)`, which is the form whose source names no
+  quotient at all.
 
 ## Implementation notes
 
@@ -65,11 +91,15 @@ the wrong way and the application does not typecheck.
 
 ## What is *not* proved here
 
-**`hnode` is still undecided, and nothing here attempts it.** No isomorphism is constructed: both
-reductions take one as a hypothesis. What changes is the shape of the hypothesis — from "there
-exists an open immersion with a prescribed range" to "one named restricted space is affine
-formal", and then to a statement about the coequalizer of an action on an open of the chain, with
-`T_inv/⟨σ⟩` no longer mentioned.
+**`hnode` is still undecided, and nothing here attempts it.** No isomorphism is constructed: all
+three reductions take one as a hypothesis. What changes is the shape of the hypothesis — from
+"there exists an open immersion with a prescribed range" to "one named restricted space is affine
+formal", then to a statement whose target is the coequalizer of an action on an open of the chain,
+and finally to one whose source is `Spf` of a subring of one patch's away completion.
+
+**None of the three is equivalent to the statement it reduces from.** Each is sufficient; the
+converses are not proved here and are nowhere on the tree. A successor who refutes the isomorphism
+has refuted these hypotheses and not `hnode`.
 
 Nothing here says the restricted quotient *is* affine formal, and nothing here bears on
 `AlgebraicGeometry.LocallyRingedSpace.IsFreeProperlyDiscontinuous` for the Tate action, which
@@ -206,6 +236,13 @@ of that theorem is not weakened here but met exactly:
 `AlgebraicGeometry.range_tateInvNodeChartAmbientHom` computes the set to be covered as the image
 of the saturation, which is by definition the open being restricted to.
 
+The hypothesis is **sufficient and not equivalent**: what is discharged is a containment of
+ranges, so an open immersion whose range strictly contains the open would meet it too, and no
+converse is proved. The non-vacuity it inherits is
+`AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartQuotientIdeal`
+(`FormalSchemes.TateInvNodeChartQuotientSpf`): for `I ≠ ⊤` the source of the hypothesised
+isomorphism has a point.
+
 **It does not decide `hnode`.** The isomorphism is a hypothesis, and no declaration on this tree
 produces one. -/
 theorem exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens (t : R)
@@ -234,22 +271,27 @@ theorem exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens (t : R
     (range_tateInvNodeChartAmbientHom R I q hq hI
       (isActionQuotient_actionQuotientπ (tateInvPeriodAction R I q hq hI))).le
 
-/-- **The same reduction with `T_inv/⟨σ⟩` removed from the hypothesis.** It is enough that the
-coequalizer of `AlgebraicGeometry.tateInvNodeChartRestrictedAction` — an action on an open of the
-chain, namely the saturation of the node chart locus by
+/-- **The same reduction with the target rewritten as a coequalizer on the chain.** It is enough
+that the coequalizer of `AlgebraicGeometry.tateInvNodeChartRestrictedAction` — an action on an
+open of the chain, namely the saturation of the node chart locus by
 `AlgebraicGeometry.preimage_tateInvNodeChartQuotientOpens` — is the formal spectrum of
 `AlgebraicGeometry.tateInvNodeChartQuotientIdeal`'s ring.
 
 `AlgebraicGeometry.tateInvNodeChartRestrictedActionQuotientIso` moves the hypothesis of
 `AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens` across, and
-that is the whole proof. What it buys is that the outstanding statement no longer mentions the
-quotient of the whole chain: it is a statement about invariant data on one saturated open, which
-is where the source has to come from once
+that is the whole proof. What it buys is on the **target** side: invariant data on one saturated
+open, which is where the source has to come from once
 `AlgebraicGeometry.not_isOpenImmersion_tateInvNodeChartAmbientHom_of_ne_top` has refuted, for
 `I ≠ ⊤`, the one morphism whose range is exactly that open. That refutation is about that morphism
 and about no other, and nothing here claims more of it.
 
-**It does not decide `hnode`.** -/
+The **source** side still carries the quotient and does not show it:
+`AlgebraicGeometry.tateInvNodeChartQuotientIdeal`'s ring is `Γ (T_inv/⟨σ⟩, V₀)`, which sits in an
+implicit argument. `AlgebraicGeometry.exists_formalScheme_of_iso_spf_away` below is the form in
+which that half loses the quotient too. The non-vacuity is the same one the reduction above
+inherits, `AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartQuotientIdeal`.
+
+**It does not decide `hnode`**, and it is sufficient rather than equivalent. -/
 theorem exists_formalScheme_of_iso_actionQuotient_tateInvNodeChartRestrictedAction (t : R)
     (ht : I = Ideal.span {t}) (hreg : IsLeftRegular t)
     (he :
@@ -265,5 +307,51 @@ theorem exists_formalScheme_of_iso_actionQuotient_tateInvNodeChartRestrictedActi
       X.toLocallyRingedSpace = actionQuotient (tateInvPeriodAction R I q hq hI) :=
   exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens R I q hq hI t ht hreg
     ⟨he.some ≪≫ tateInvNodeChartRestrictedActionQuotientIso R I q hq hI⟩
+
+/-- **The same reduction again, with the source off the quotient as well.** It is enough that the
+coequalizer of `AlgebraicGeometry.tateInvNodeChartRestrictedAction` is the formal spectrum of
+`AlgebraicGeometry.tateInvNodeChartAwaySubring` — a subring of
+`awayCompletion (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)`, built from one
+patch and naming no quotient at all.
+
+`AlgebraicGeometry.tateInvNodeChartQuotientSpfIso`
+(`FormalSchemes.TateInvNodeChartQuotientSpf`) is the identification of the two formal spectra, and
+composing with it is the whole proof. This is the form in which the claim "the outstanding
+statement is about one patch and one action on an open of the chain" is true of the source; on the
+target it is still `AlgebraicGeometry.tateInvNodeChartRestrictedAction`, whose open is *defined* as
+`(Opens.map (actionQuotientπ …).base).obj V₀` and is the saturation only by
+`AlgebraicGeometry.preimage_tateInvNodeChartQuotientOpens`. Restating the target on
+`AlgebraicGeometry.tateInvSaturateOpens` changes the type of the restricted space and is a further
+step, not done here.
+
+The non-vacuity inherited on this side is
+`AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartAwayIdeal`
+(`FormalSchemes.TateInvNodeChartSpfNonempty`): for `I ≠ ⊤` the source has a point.
+
+**It does not decide `hnode`**, and like the two reductions above it is sufficient rather than
+equivalent. -/
+theorem exists_formalScheme_of_iso_spf_away (t : R) (ht : I = Ideal.span {t})
+    (hreg : IsLeftRegular t)
+    (he :
+      letI : TopologicalSpace (tateInvNodeChartAwaySubring R I q hq hI) :=
+        (tateInvNodeChartAwayIdeal R I q hq hI).adicTopology
+      haveI : IsAdicRing (tateInvNodeChartAwayIdeal R I q hq hI) :=
+        isAdicRing_tateInvNodeChartAwayIdeal_of_principal_of_isLeftRegular_base R I q hq hI t ht
+          hreg
+      Nonempty (FormalSpectrum.locallyRingedSpaceObj (tateInvNodeChartAwayIdeal R I q hq hI) ≅
+        actionQuotient (tateInvNodeChartRestrictedAction R I q hq hI))) :
+    ∃ X : FormalScheme.{u},
+      X.toLocallyRingedSpace = actionQuotient (tateInvPeriodAction R I q hq hI) := by
+  letI : TopologicalSpace ((actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj
+      (op (tateInvNodeChartQuotientOpens R I q hq hI))) :=
+    (tateInvNodeChartQuotientIdeal R I q hq hI).adicTopology
+  haveI : IsAdicRing (tateInvNodeChartQuotientIdeal R I q hq hI) :=
+    isAdicRing_tateInvNodeChartQuotientIdeal_of_isLeftRegular_base R I q hq hI t ht hreg
+  letI : TopologicalSpace (tateInvNodeChartAwaySubring R I q hq hI) :=
+    (tateInvNodeChartAwayIdeal R I q hq hI).adicTopology
+  haveI : IsAdicRing (tateInvNodeChartAwayIdeal R I q hq hI) :=
+    isAdicRing_tateInvNodeChartAwayIdeal_of_principal_of_isLeftRegular_base R I q hq hI t ht hreg
+  exact exists_formalScheme_of_iso_actionQuotient_tateInvNodeChartRestrictedAction R I q hq hI t ht
+    hreg ⟨tateInvNodeChartQuotientSpfIso R I q hq hI ≪≫ he.some⟩
 
 end AlgebraicGeometry
