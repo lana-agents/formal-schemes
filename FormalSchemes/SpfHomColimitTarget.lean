@@ -340,23 +340,30 @@ theorem isThickeningColimitTarget_formalLineChart (b : Bool) :
     (awayCompletionIdeal_fg formalLineIdeal (formalLineElem b)
       (polyXIdeal_fg.map _))
 
-/-- **The witness of `isThickeningColimitTarget_of_cover`**: `Spf ℤ⟦X⟧` has the colimit property
-*through a two-piece formal cover*, with no `Spec` anywhere in the hypotheses.
+/-- **The witness of `FormalSpectrum.isThickeningColimitTarget_of_cover`**: `Spf ℤ⟦X⟧` has the
+colimit property *through a two-piece formal cover*, with no `Spec` anywhere in the hypotheses.
 
-It is also true directly, by `isThickeningColimitTarget_spf` — this space is a formal affine. That
-is the honest limit of the witness, and it is why the statement below is a *use* of the cover
-theorem rather than a new fact: what it exhibits is that the cover hypothesis is satisfiable by a
-cover that is genuinely formal and genuinely has more than one piece. -/
-theorem isThickeningColimitTarget_formalLine_of_cover :
-    IsThickeningColimitTarget (locallyRingedSpaceObj formalLineIdeal) :=
+It is an `example` and not a theorem, and the reason is worth stating, because this file used to
+carry it as a named theorem and claim more for it than is true.
+Its statement is **the same `Prop`** as `FormalSpectrum.isThickeningColimitTarget_formalLine`
+below — the two are proofs of one proposition, not two propositions — so no reading of them can say
+that "the two routes agree": by proof irrelevance there is nothing for two proofs of one `Prop` to
+agree or disagree about. Neither had a consumer, and issue 1739 kept the one with a name.
+
+What is genuinely exhibited here survives in full, because it is a property of the *elaboration*
+and not of the environment: the cover hypothesis of `isThickeningColimitTarget_of_cover` is
+satisfiable by a cover that is genuinely formal and genuinely has more than one piece. An `example`
+still checks that, and still breaks the build if it stops being true. -/
+example : IsThickeningColimitTarget (locallyRingedSpaceObj formalLineIdeal) :=
   isThickeningColimitTarget_of_cover formalLineFormalOpen iSup_basicOpen_formalLineElem _
     formalLineFormalChartIso isThickeningColimitTarget_formalLineChart
 
-/-- **The same target, without the cover.** `Spf ℤ⟦X⟧` is a formal affine, so
-`isThickeningColimitTarget_spf` gives the conclusion of
-`isThickeningColimitTarget_formalLine_of_cover` directly. Recording both is the point: they are
-the two entry points of `isThickeningColimitTarget_of_cover`, and that they agree at the one space
-where both apply is the check that the cover route computes the right thing.
+/-- **`Spf ℤ⟦X⟧` has the colimit property**, directly: it is a formal affine, so
+`FormalSpectrum.isThickeningColimitTarget_spf` applies. The `example` above reaches the same
+proposition through the two-piece formal cover instead, which is the honest limit of that witness —
+this target was never in doubt, and what the cover route exhibits is that
+`FormalSpectrum.isThickeningColimitTarget_of_cover`'s hypotheses are meetable, not that this space
+has the property.
 
 The ideal of definition is not `⊥` (`formalLineIdeal_ne_bot`), so the tower of thickenings being
 quantified over is not the constant one. -/

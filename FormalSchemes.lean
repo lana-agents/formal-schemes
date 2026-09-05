@@ -351,6 +351,7 @@ import FormalSchemes.StructureSheafStalkComparison
 import FormalSchemes.StructureSheafStalkLevels
 import FormalSchemes.StructureSheafStalkNilpotent
 import FormalSchemes.StructureSheafStalkPowerSeries
+import FormalSchemes.StructureSheafStalkPowerSeriesGeneric
 import FormalSchemes.StructureSheafStalks
 import FormalSchemes.TargetBasicRefinement
 import FormalSchemes.TateAction

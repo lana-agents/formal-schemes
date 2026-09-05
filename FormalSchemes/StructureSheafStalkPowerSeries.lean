@@ -105,10 +105,11 @@ through `FormalSpectrum.specIsoSpfBot`.
 ## Placement
 
 A new leaf over `FormalSchemes.StructureSheafStalkAlgebraic` and
-`FormalSchemes.StructureSheafStalkNilpotent`: forward closure **47** project modules besides
-itself, reverse closure **0**. The Mathlib import `Mathlib/RingTheory/PowerSeries/Inverse.lean` is
-new to this leaf's closure but not to the library's: it is already reached by the full
-`FormalSchemes` build, so it adds no build job.
+`FormalSchemes.StructureSheafStalkNilpotent`: forward closure **49** project modules besides itself
+(50 counted with itself), reverse closure **1**, the one consumer being
+`FormalSchemes.StructureSheafStalkPowerSeriesGeneric`. The Mathlib import
+`Mathlib/RingTheory/PowerSeries/Inverse.lean` is new to this leaf's closure but not to the
+library's: it is already reached by the full `FormalSchemes` build, so it adds no build job.
 
 `AdicCompletion.bijective_mapCompletion` mentions no formal geometry and would sit naturally in
 `FormalSchemes.Completion` beside `AdicCompletion.mapCompletion_id` and
