@@ -88,7 +88,7 @@ target is a formal spectrum, so `AlgebraicGeometry.nodeChartSaturationFormalSche
 in range, and the shape matches: the `ψ` it takes is a ring homomorphism into the global sections
 of the source, which is what `AlgebraicGeometry.nodeChartSectionsHom` becomes under `CommRingCat`'s
 `CategoryTheory.ConcreteCategory.hom`. But the shape is not the content. Its remaining arguments
-are, and **not one of them has been discharged or attempted here**:
+are, and **none of them has been discharged or attempted here**:
 
 * a family `charts` of affine charts of the source, and `hfg`, that each of their ideals of
   definition is finitely generated;
@@ -97,6 +97,18 @@ are, and **not one of them has been discharged or attempted here**:
 * a family `ocharts` of affine charts on every pairwise overlap of that cover, with `hofg` for
   their ideals, and the two families `hf` and `hg` of continuity conditions comparing the two
   restrictions on each overlap.
+
+**Of those, only the three continuity families are content**, and
+`FormalSchemes.TateInvNodeChartHomOfSections` says so with declarations: `hI` is
+`AlgebraicGeometry.fg_tateInvNodeChartQuotientIdeal_of_isLeftRegular_base`, `ocharts` and `hofg`
+are `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart` and `overlapChart_fg`, and `charts`
+with `hfg` are supplied by the caller — or by
+`AlgebraicGeometry.FormalScheme.LocallyFG.chart` at
+`AlgebraicGeometry.nodeChartSaturationFormalScheme_locallyFG` for a caller who has nothing better.
+`AlgebraicGeometry.nodeChartHom` there is the morphism built from what is left, and
+`AlgebraicGeometry.exists_formalScheme_of_isIso_desc_nodeChartHom` is this file's headline with
+that morphism in place of the quantified one. **Not one continuity family is discharged there
+either**, and reducing nine unchecked hypotheses to three moves nothing about `hnode`.
 
 `FormalSchemes.GlueHomToSpf`'s own module docstring says the continuity hypotheses there are
 "inherited, not incidental". **Anyone who claims the morphism exists must check it by producing
