@@ -386,9 +386,10 @@ theorem specStalkEquiv_algebraMap (r : R) :
 is carried by `FormalSpectrum.specStalkEquiv` to the extension of the ideal of definition in the
 stalk of `O_{Spec R}`. Together with that equivalence this says that the ring and the ideal in the
 target of `FormalSpectrum.stalkTowerLimitEquiv` are both data of `O_{Spec R}` at the image of `x`.
-It does **not** say that that target *is* the completion of the stalk of `O_{Spec R}`: nothing here
-or below transports `AdicCompletion` along `FormalSpectrum.specStalkEquiv`, and the module
-docstring says what that step would take.
+It is not by itself the statement that that target *is* the completion of the stalk of
+`O_{Spec R}`: that needs `AdicCompletion` carried along `FormalSpectrum.specStalkEquiv` too, which
+is `FormalSpectrum.specStalkAdicCompletionEquiv` below — and this equation is precisely what that
+transport consumes in order to name the ideal of its target.
 
 Stated in the `Ideal.map`-along-the-inverse direction, which is the shape Mathlib's
 `IsAdicComplete.congr_ringEquiv` and its `IsHausdorff.congr_ringEquiv` and
