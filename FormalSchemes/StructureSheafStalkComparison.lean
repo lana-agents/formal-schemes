@@ -171,9 +171,10 @@ The `n = 0` case of this rewrite is currently written inline in **four** proofs,
 `FormalSpectrum.isUnit_germ_top_iff` (`FormalSchemes.SpfGammaBase`),
 `FormalSpectrum.isLocalHom_stalkMap` (`FormalSchemes.SpfMap`, twice) and
 `FormalSpectrum.isUnit_germ_iff_isUnit_sectionsPi_zero` (`FormalSchemes.AdicOpennessHalf`, in the
-`symm` direction). Rerouting them onto this lemma is a separate row and a *move*, not a call: all
-four modules sit below this file, so the shared statement would have to live at or under
-`FormalSchemes.Spf`. It is not attempted here. -/
+`symm` direction). Rerouting them onto this lemma is a separate row and a *move*, not a call: three
+of the four sit below this file and `FormalSchemes.AdicOpennessHalf` is incomparable with it, but
+all four have `FormalSchemes.Spf` in their import closure, so the shared statement would have to
+live at or under `FormalSchemes.Spf`. It is not attempted here. -/
 theorem stalkProj_germ (n : ℕ) (U : Opens (FormalSpectrum I)) (hx : x ∈ U)
     (s : (structureSheaf I).presheaf.obj (op U)) :
     (stalkProj I x n).hom (((structureSheaf I).presheaf.germ U x hx).hom s) =
