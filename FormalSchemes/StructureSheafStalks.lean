@@ -75,12 +75,15 @@ commutes with it is not proved there either, and no consequence of the reading i
 read the limit as an adic completion of the *stalk* `O_{Spec R, x}` one wants that localization
 identified with `R_p ⧸ I ^ (n + 1) · R_p`, and then
 `AdicCompletion.towerLimitRingEquiv` — the bridge `FormalSchemes.Sections` uses for the sections
-tower — would apply. It is not proved here and no declaration below depends on it, but the
-ingredients are on hand: `IsLocalization.of_surjective` is the general statement that
-`S ⧸ K.map (algebraMap R S)` is a localization of `R ⧸ K` at the image of the localizing submonoid,
-and `IsLocalization.away_quotient` (`FormalSchemes.LocalizationQuotient`) is already its
-`Submonoid.powers f` specialisation on this tree. What the prime case adds is the matching
-description of the image of a prime complement, which this file does not prove.
+tower — applies. No declaration below does any of that, and it is not missing from the tree: the
+algebra is `IsLocalization.atPrime_quotient` and `Localization.atPrimeQuotientEquiv`
+(`FormalSchemes.LocalizationQuotientPrime`), the prime-complement input the away case did not need
+is `IsLocalization.algebraMapSubmonoid_primeCompl_comap` there, and
+`FormalSpectrum.stalkTowerLevelEquiv` and `FormalSpectrum.stalkTowerLimitEquiv`
+(`FormalSchemes.StructureSheafStalkLevels`) carry out the identification, and
+`FormalSpectrum.specStalkAdicCompletionEquiv` there reaches the adic completion of the stalk of
+`O_{Spec R}` itself. The docstring of `thickeningStalkLocalizationEquiv` below says the same thing
+at the declaration.
 
 **Non-vacuity is not an issue for the statements below**, because they take the point `x` as an
 argument: `FormalSpectrum.IsStalkLimit I x` is a condition at a given point and there is nothing
