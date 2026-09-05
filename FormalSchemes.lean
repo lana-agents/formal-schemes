@@ -39,7 +39,6 @@ import FormalSchemes.AdicRing
 import FormalSchemes.AdicRingCat
 import FormalSchemes.AdicSectionsChart
 import FormalSchemes.AdicSectionsInvariant
-import FormalSchemes.AdicSectionsOverlap
 import FormalSchemes.AdicSectionsRestrictOpen
 import FormalSchemes.AdicSubringComplete
 import FormalSchemes.AdicSubringFinite

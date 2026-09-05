@@ -7,11 +7,11 @@ set_option linter.style.header false
 # The node chart's adicity condition, restated on the chain
 
 `FormalSchemes.TateInvNodeChartAdicSections` reduces `hnode`, over a principal base ideal generated
-by a non-zero-divisor, to four things: a witness of
-`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` at `AlgebraicGeometry.nodeChartPsi`, a
-witness of `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`, an invariance and an
-isomorphism. **None of the four has ever been attempted at the source.** This file makes the first
-of them a question that can be attempted: it removes the quotient and the restriction from the
+by a non-zero-divisor, to three things: a witness of
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` at `AlgebraicGeometry.nodeChartPsi`, an
+invariance and an isomorphism — the cluster's hypotheses 1, 3 and 4, hypothesis 2 being free.
+**None of the three has ever been attempted at the source.** This file makes the first of them a
+question that can be attempted: it removes the quotient and the restriction from the
 statement, leaving an inequality of ideals in a chart ring of the *chain*.
 
 ## What the condition says after this file
@@ -115,23 +115,25 @@ contraction was thought to pose.
 
 **`hnode` is undecided, in both directions, and nothing here moves it.** Scoring the residue of
 `AlgebraicGeometry.exists_formalScheme_of_adicSections` as it stands after this file, its
-hypothesis is one `∃` bundling four things and **all four are open**:
+hypothesis is one `∃` bundling three things and **all three are open**:
 
 1. `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` at `AlgebraicGeometry.nodeChartPsi` —
    restated here, **not decided here**. What changed is the spelling: it is now an inequality of
    ideals in a chart ring of the chain, and it is an equivalence, so either answer to it is an
    answer to this hypothesis.
-2. `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic` — untouched. It is a condition
-   on charts of the *overlaps* of a cover, not on charts of the source, so nothing here applies to
-   it, and `FormalSchemes.AdicSectionsChart`'s module docstring records a further open question
-   about it.
 3. Invariance of `AlgebraicGeometry.nodeChartAdicHom` under
    `AlgebraicGeometry.tateInvNodeChartRestrictedAction` — untouched, and not attempted anywhere.
 4. `IsIso` of the descended morphism — untouched, and not attempted anywhere.
 
+The cluster's hypothesis 2, `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`, is
+**not** among them and the numbering above skips it deliberately: it holds for every witness of 1
+by `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.overlapAdic`, so the construction
+discharges it and no caller supplies it. `FormalSchemes.AdicSectionsChart`'s module docstring still
+records the *merge* question about pair witnesses as open.
+
 **Even a witness of the first would not move `hnode`.** The chain back runs through
 `AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens`, which is
-one-way, and 2, 3 and 4 would all still be open. Nothing here should be read as evidence for or
+one-way, and 3 and 4 would both still be open. Nothing here should be read as evidence for or
 against the node chart existing.
 
 **No chart of the chain inside the saturated locus is exhibited**, with or without the bound. The
@@ -227,8 +229,8 @@ theorem nodeChartPsi_eq :
 
 section Reduction
 
-/-- **The first of the four hypotheses of `AlgebraicGeometry.exists_formalScheme_of_adicSections`,
-as a condition on charts of the chain.** An equivalence: `AlgebraicGeometry.nodeChartPsi` is adic on
+/-- **Hypothesis 1 of `AlgebraicGeometry.exists_formalScheme_of_adicSections`, as a condition on
+charts of the chain.** An equivalence: `AlgebraicGeometry.nodeChartPsi` is adic on
 a neighbourhood basis exactly when every point of the saturated node-chart locus has a finitely
 generated affine chart of the **chain**, sitting inside that locus, along which the ideal of
 definition of the quotient's sections pulls back into the chart's own.

@@ -90,7 +90,7 @@ it fills its open-immersion field with an explicit `@`-application supplying
 `IsIso (𝟙 (FormalSpectrum.locallyRingedSpaceObj J))` at that position inside a structure literal.
 
 It lives here rather than beside either of its consumers because there are consumers on both sides
-of the tree — `FormalSchemes.AdicSectionsOverlap` and
+of the tree — `FormalSchemes.AdicSectionsChart` and
 `FormalSchemes.GeneralSeparatedChartCodiagonal` are import-incomparable — and this is the file that
 defines the predicate. -/
 theorem adicOverBaseLocallyFG_Spf {S : Type u} [CommRing S] [TopologicalSpace S] {J : Ideal S}
