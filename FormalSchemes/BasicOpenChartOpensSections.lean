@@ -58,7 +58,7 @@ is `⊤` and the conjugation is by `FormalSpectrum.globalSectionsEquiv`.
 * `AlgebraicGeometry.FormalScheme.AffineChart.ofPatchBasicOpen`: a basic-open chart of an affine
   patch, bundled as an `AlgebraicGeometry.FormalScheme.AffineChart` of the ambient.
 * `AlgebraicGeometry.FormalScheme.AffineChart.opensSectionsHom_ofPatchBasicOpen`: **its
-  `opensSectionsHom` is the patch's sheaf component followed by
+  chart-restriction is the patch's sheaf component followed by
   `FormalSpectrum.sectionsEquivOfEqBasicOpen`** — no chart, no `⊤` and no
   `AlgebraicGeometry.LocallyRingedSpace.sectionsMapOfRangeSubset` left on the right.
 
