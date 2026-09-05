@@ -35,7 +35,7 @@ plain ring homomorphism. Combining
 those homomorphisms is `awayCompletion (tateInvNodeChartQuotientIdeal …) g` — a completed
 localization of the invariant-sections ring, with no sheaf, no open and no category in it.
 
-## The quotient comes off the sheaf half as well
+## Both halves of the sheaf half move to the chain
 
 The target of `basicOpenSectionsHom … (nodeChartQuotientHom …) g` is
 `Γ ((T_inv/⟨σ⟩)|_{V₀}, (nodeChartQuotientHom …)⁻¹ D(g))`, which is not computable as it stands. But
@@ -60,8 +60,16 @@ Putting the three together (`AlgebraicGeometry.isIso_desc_nodeChartAdicHom_iff_b
 > `Γ (T_inv|_{π⁻¹V₀}, (nodeChartAdicHom …)⁻¹ D(g))` is injective with image the sections
 > invariant under `AlgebraicGeometry.tateInvNodeChartRestrictedAction`
 
-and the second conjunct contains no `CategoryTheory.IsActionQuotient.desc`, no coequalizer and no
-morphism out of a quotient.
+**What that costs and what it does not, read off the type Lean prints** for
+`AlgebraicGeometry.isIso_desc_nodeChartAdicHom_iff_base_and_chain` rather than off the source. The
+second conjunct mentions no `CategoryTheory.IsActionQuotient`, no
+`CategoryTheory.IsActionQuotient.desc` and **not** `AlgebraicGeometry.nodeChartQuotientHom`: the
+morphism out of the quotient survives only in the first conjunct. It does mention
+`CategoryTheory.actionQuotient`, exactly once, in the type of the index variable `g` — the family
+is indexed by `Γ (T_inv/⟨σ⟩, V₀)`, which is the ring hypothesis 4 is about and cannot be traded
+away — and it mentions `AlgebraicGeometry.tateInvNodeChartRestrictedAction`, the action restricted
+to the preimage of `V₀`, in the invariance condition. The space the sections live on is
+`AlgebraicGeometry.tateChainInv` restricted to that preimage.
 
 ## What still does not come off, and it is the point of this file to say so
 
@@ -70,6 +78,10 @@ preimage is taken along the base map of `AlgebraicGeometry.nodeChartAdicHom`, an
 description of that morphism on points is chart-by-chart with
 `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.chart` a `Classical.choice`. So a *concrete*
 computation of either clause at a proper `g` needs the same handle the space half needs.
+
+**The quotient does not disappear, only the morphism out of it does.** See the paragraph above for
+what the elaborated statement still contains; a reading of these files that says the sheaf half no
+longer mentions `T_inv/⟨σ⟩` is wrong.
 
 **So the two conjuncts of `AlgebraicGeometry.isIso_desc_nodeChartAdicHom_iff_base_and_c` are
 separate statements but not independent problems.** That is a reading of what is present and not a
@@ -196,11 +208,12 @@ open — a section of a quotient is determined by its pullback. So the two injec
 imply each other, in one direction because a composite that is injective has an injective right
 factor and in the other because injectives compose.
 
-**This removes the quotient from half of the sheaf half.** `AlgebraicGeometry.nodeChartAdicHom` is
-a morphism out of `T_inv|_{π⁻¹ V₀}`, the chain itself; no `CategoryTheory.actionQuotient` and no
-descent occurs on the left-hand side. What it does *not* remove is the open: both sides read
-sections over a preimage of `D(g)`, and those preimages are taken along base maps that are still
-undescribed. Nothing here decides either statement. -/
+**What this moves.** `AlgebraicGeometry.nodeChartAdicHom` is a morphism out of the chain restricted
+to `π⁻¹ V₀`, so the left-hand side names no morphism out of the quotient: reading the type Lean
+prints, `CategoryTheory.actionQuotient` occurs on the left only in the type of the index variable
+`g`, and `AlgebraicGeometry.nodeChartQuotientHom` does not occur there at all. What it does *not*
+move is the open: both sides read sections over a preimage of `D(g)`, and those preimages are taken
+along base maps that are still undescribed. Nothing here decides either statement. -/
 theorem injective_basicOpenSectionsHom_nodeChartAdicHom_iff
     (g : (actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj
       (op (tateInvNodeChartQuotientOpens R I q hq hI))) :
@@ -227,11 +240,13 @@ Both directions run through
 projection's comparison map at an arbitrary open of `(T_inv/⟨σ⟩)|_{V₀}` is exactly the invariant
 sections, together with `CategoryTheory.IsActionQuotient.injective_c_app` for the reverse.
 
-**With `AlgebraicGeometry.injective_basicOpenSectionsHom_nodeChartAdicHom_iff` this removes the
-quotient from the sheaf half entirely**: both halves of bijectivity are now statements about
-`AlgebraicGeometry.nodeChartAdicHom`, a morphism out of the chain, with `T_inv/⟨σ⟩` appearing only
-through the invariance condition and through the open the sections are taken over. Neither half is
-decided. -/
+**With `AlgebraicGeometry.injective_basicOpenSectionsHom_nodeChartAdicHom_iff` both halves of
+bijectivity are now statements about `AlgebraicGeometry.nodeChartAdicHom`, a morphism out of the
+chain.** `T_inv/⟨σ⟩` has not gone away: on the right-hand side it survives in the type of the index
+variable `g`, in `AlgebraicGeometry.tateInvNodeChartRestrictedAction`, and in the open the chain is
+restricted to. What has gone is the morphism out of it —
+`AlgebraicGeometry.nodeChartQuotientHom` does not occur on the right-hand side, which is what the
+printed type says. Neither half is decided. -/
 theorem surjective_basicOpenSectionsHom_nodeChartQuotientHom_iff
     (g : (actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj
       (op (tateInvNodeChartQuotientOpens R I q hq hI))) :
@@ -302,12 +317,16 @@ theorem bijective_basicOpenSectionsHom_nodeChartQuotientHom_iff
   invariant under `AlgebraicGeometry.tateInvNodeChartRestrictedAction`.
 
 `AlgebraicGeometry.isIso_desc_nodeChartAdicHom_iff_base_and_bijective` with
-`AlgebraicGeometry.bijective_basicOpenSectionsHom_nodeChartQuotientHom_iff` at each member. No
-`CategoryTheory.IsActionQuotient.desc`, no coequalizer and no morphism out of a quotient occurs in
-the second conjunct; what remains of `T_inv/⟨σ⟩` there is the *open* the sections are taken over,
-which is a preimage along the base map of the first conjunct. The equivalence is two-way, so a
-single `g` at which either clause fails refutes hypothesis 4 — and refuting hypothesis 4 does not
-refute `hnode`; see the module docstring. -/
+`AlgebraicGeometry.bijective_basicOpenSectionsHom_nodeChartQuotientHom_iff` at each member.
+
+**What the second conjunct does and does not mention**, read off the type Lean prints for this
+declaration: no `CategoryTheory.IsActionQuotient`, no `CategoryTheory.IsActionQuotient.desc`, and
+not `AlgebraicGeometry.nodeChartQuotientHom` — the morphism out of the quotient is confined to the
+first conjunct. `CategoryTheory.actionQuotient` does occur, once, in the type of `g`, and
+`AlgebraicGeometry.tateInvNodeChartRestrictedAction` occurs in the invariance condition.
+
+The equivalence is two-way, so a single `g` at which either clause fails refutes hypothesis 4 — and
+refuting hypothesis 4 does not refute `hnode`; see the module docstring. -/
 theorem isIso_desc_nodeChartAdicHom_iff_base_and_chain :
     IsIso ((isActionQuotient_actionQuotientπ (tateInvNodeChartRestrictedAction R I q hq hI)).desc
         (nodeChartAdicHom R I q hq hI hfgI hX)
