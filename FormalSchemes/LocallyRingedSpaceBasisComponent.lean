@@ -10,7 +10,7 @@ For a morphism `f : X ⟶ Y` of locally ringed spaces, the comparison
 `f.c : 𝒪_Y ⟶ f_* 𝒪_X` is a morphism of **sheaves** on `Y`, because the pushforward of a sheaf
 along a continuous map is a sheaf (`TopCat.Sheaf.pushforward_sheaf_of_sheaf`). A morphism of
 sheaves is an isomorphism as soon as its components on a basis of the topology are
-(`TopCat.Sheaf.isIso_iff_isIso_basis`), so the same is true of `f.c`:
+(`TopCat.Sheaf.isIso_iff_isIso_basis`), so the same is true of the comparison of `f`:
 
 > if `IsIso (f.c.app (op (B i)))` for every member of a basis `B` of `Opens Y`, then
 > `IsIso (f.c.app O)` for **every** open `O`.
@@ -36,17 +36,20 @@ they have consumers, and relocating them is a separate row.
 
 ## Route
 
-`f.c` is repackaged as a morphism of `TopCat.Sheaf` by `CategoryTheory.ObjectProperty.homMk`, since
+The comparison of `f` is repackaged as a morphism of `TopCat.Sheaf` by
+`CategoryTheory.ObjectProperty.homMk`, since
 `TopCat.Sheaf` is the full subcategory of presheaves cut out by the sheaf condition and its
 morphisms *are* the presheaf morphisms. `TopCat.Sheaf.isIso_iff_isIso_basis` then applies verbatim
-— its hypothesis is stated at `φ.hom.app`, which is `f.c.app` definitionally — and the instance
-`CategoryTheory.ObjectProperty.instIsIsoHom` carries the resulting `IsIso` back to `f.c`.
+— its hypothesis is stated at the components of the underlying presheaf morphism, which are the
+comparison's definitionally — and the instance of `CategoryTheory.ObjectProperty.FullSubcategory`
+saying that an inverted morphism is inverted on underlying morphisms carries the resulting `IsIso`
+back to the comparison.
 `CategoryTheory.NatTrans.isIso_iff_isIso_app` then reads off the components.
 
 ## Main results
 
-* `AlgebraicGeometry.LocallyRingedSpace.isIso_c_of_isBasis`: `f.c` is an isomorphism of presheaves
-  as soon as its components on a basis are.
+* `AlgebraicGeometry.LocallyRingedSpace.isIso_c_of_isBasis`: the comparison of `f` is an
+  isomorphism of presheaves as soon as its components on a basis are.
 * `AlgebraicGeometry.LocallyRingedSpace.isIso_c_app_iff_isBasis`: the `∀ i` and the `∀ O` forms of
   the sheaf half are equivalent.
 * `AlgebraicGeometry.LocallyRingedSpace.isIso_c_app_of_isBasis`: the direction a criterion
@@ -68,9 +71,9 @@ namespace AlgebraicGeometry.LocallyRingedSpace
 variable {X Y : LocallyRingedSpace.{u}}
 
 /-- **The comparison of a morphism of locally ringed spaces is an isomorphism as soon as it is one
-on a basis.** `f.c` is a morphism of sheaves — the pushforward of `𝒪_X` along `f.base` is a sheaf —
-so `TopCat.Sheaf.isIso_iff_isIso_basis` applies to it once it is repackaged as a morphism of the
-full subcategory `TopCat.Sheaf`, which changes nothing definitionally. -/
+on a basis.** The comparison of `f` is a morphism of sheaves — the pushforward of `𝒪_X` along its
+base map is a sheaf — so `TopCat.Sheaf.isIso_iff_isIso_basis` applies to it once it is repackaged
+as a morphism of the full subcategory `TopCat.Sheaf`, which changes nothing definitionally. -/
 theorem isIso_c_of_isBasis {ι : Type v} (f : X ⟶ Y) {B : ι → Opens Y.toTopCat}
     (hB : Opens.IsBasis (Set.range B)) (hi : ∀ i, IsIso (f.c.app (op (B i)))) :
     IsIso f.c :=

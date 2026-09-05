@@ -16,7 +16,7 @@ reads as a ring homomorphism
 > `FormalSpectrum.basicOpenSectionsHom I X f g : R{1/g} →+* Γ(X, f⁻¹ D(g))`
 
 with no sheaf on the source side, and it is `FormalSpectrum.globalSectionsHom`'s exact analogue —
-the component of `f.c` precomposed with the identification of the source ring.
+the comparison component of `f` precomposed with the identification of the source ring.
 
 The two facts this file exists for:
 
@@ -36,8 +36,8 @@ localizations of `R` and nothing else
 ## What is *not* proved here
 
 **Nothing about the target `Γ(X, f⁻¹ D(g))`.** The right-hand side of `basicOpenSectionsHom` is
-the sections of `X` over the **preimage** of `D(g)` along `f.base`, and this file gives no
-description of that open. For a source that is not itself a formal spectrum this is where the
+the sections of `X` over the **preimage** of `D(g)` along the base map of `f`, and this file gives
+no description of that open. For a source that is not itself a formal spectrum this is where the
 content is, and computing it needs the base map — which is exactly why the two halves of
 `AlgebraicGeometry.LocallyRingedSpace.isIso_iff_isIso_base_and_isIso_c_app` are not independent in
 practice even though the statement separates them (issue 1752).
@@ -94,7 +94,7 @@ theorem isIso_c_app_iff_basicOpen (X : LocallyRingedSpace.{u})
   LocallyRingedSpace.isIso_c_app_iff_isBasis f (isBasis_basicOpen I)
 
 /-- **Sections of a morphism into a formal spectrum over a basic open.** The ring homomorphism
-`R{1/g} →+* Γ(X, f⁻¹ D(g))` induced by `f : X ⟶ Spf R`: the component of `f.c` at `D(g)`
+`R{1/g} →+* Γ(X, f⁻¹ D(g))` induced by `f : X ⟶ Spf R`: the comparison component of `f` at `D(g)`
 precomposed with the identification `R{1/g} ≃+* Γ(Spf R, D(g))` of
 `FormalSpectrum.sectionsBasicOpenEquiv` (EGA I, 10.1.4).
 
@@ -167,7 +167,8 @@ is invertible exactly when, for every `g : R`, the sections homomorphism
 
 The left-hand side mentions no sheaf, no open of `Spf R` and no category: it is a family of ring
 homomorphisms out of the completed localizations of `R`, indexed by `R`. What it does still mention
-is `Γ(X, f⁻¹ D(g))`, whose open is taken along `f.base`; see the `## What is *not* proved here` of
+is `Γ(X, f⁻¹ D(g))`, whose open is taken along the base map of `f`; see the
+`## What is *not* proved here` of
 this file. -/
 theorem isIso_c_app_iff_bijective_basicOpenSectionsHom (X : LocallyRingedSpace.{u})
     (f : X ⟶ locallyRingedSpaceObj I) :
