@@ -100,8 +100,11 @@ own module says so. The genuinely sheaf-free form is one rewrite away and is **n
 `FormalSpectrum.awayCompletionRestrict` (`FormalSchemes.AwayCompletionRestrict`) for `I` finitely
 generated, which this file already assumes, but that lemma carries `[TopologicalSpace R]` and
 `IsAdicRing I` — two hypotheses nothing else here needs — and importing it adds **ten** modules to a
-closure of 35. The variant was elaborated to check that it exists; taking the trade is a separate
-row and is not taken here.
+closure of 35. **The trade is taken downstream, in `FormalSchemes.StructureSheafStalkAlgebraic`**,
+whose `FormalSpectrum.isStalkLimit_iff_awayCompletionRestrict` is the criterion with no sheaf in
+either half; the two instance hypotheses were checked there to be genuinely needed rather than
+section-variable residue, so they are a real cost and not a removable one, and this file stays free
+of them.
 
 **A colimit, as a categorical statement.** This file does not build one, and
 `FormalSchemes.StructureSheafStalkBasicOpen`'s recorded negative search result about
@@ -411,8 +414,9 @@ half of EGA I 10.8 at `x` holds exactly when the two explicit statements of
 `FormalSpectrum.surjective_stalkToAdicCompletion_iff` both hold. No stalk, germ, colimit or category
 occurs on the right-hand side, and no sheaf occurs in the surjectivity half. The injectivity half
 still names `FormalSpectrum.basicOpenRes`, which is the structure-sheaf restriction by definition;
-the module docstring records what replacing it by `FormalSpectrum.awayCompletionRestrict` would
-cost.
+the module docstring records what replacing it by `FormalSpectrum.awayCompletionRestrict` costs, and
+`FormalSpectrum.isStalkLimit_iff_awayCompletionRestrict`
+(`FormalSchemes.StructureSheafStalkAlgebraic`) is this statement after that replacement.
 
 **This is a reformulation and not an answer.** The two sides of the `Iff` are both undecided on this
 tree, in both directions, and the module docstring records the obstruction — the `g` produced at
