@@ -400,6 +400,7 @@ import FormalSchemes.TateInvNodeChartPrincipal
 import FormalSchemes.TateInvNodeChartPrincipalRegularBase
 import FormalSchemes.TateInvNodeChartQuotientOpen
 import FormalSchemes.TateInvNodeChartQuotientSpf
+import FormalSchemes.TateInvNodeChartRestrictedQuotient
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeChartSpf
 import FormalSchemes.TateInvNodeChartSpfFamily
