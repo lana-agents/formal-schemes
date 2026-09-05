@@ -84,6 +84,25 @@ this tree runs through `hf` and `hg` themselves. So
 overlap condition here; it records where the joint condition would become free if the agreement
 were ever proved independently.
 
+## Why the bridge to `AlgebraicGeometry.FormalScheme.SpfHomContinuity` runs one way only
+
+`AlgebraicGeometry.FormalScheme.SpfHomContinuity` (`FormalSchemes.GlueHomToSpf`) bundles the same
+three families over a supplied chart family, with the charts on the overlaps taken canonically by
+`AlgebraicGeometry.FormalScheme.overlapChartOf`. Holding one of those *and* the witnesses here
+gives the same morphism, by
+`AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections_eq_homOfSpfHomContinuity`.
+
+**The other direction is not available, and the obstruction is the one above.**
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic` gives the two bounds at the
+chart *its own* witness produces at a point of the overlap; the bundle asks for them at
+`AlgebraicGeometry.FormalScheme.overlapChartOf` at the same point, which is
+`AlgebraicGeometry.FormalScheme.LocallyFG.chart` of the overlap and is described by nothing. I
+reduced the two fields to their goals rather than reasoning about them: what is left is exactly a
+bound at one affine chart at a point given the bound at another affine chart at that point, which
+is the open-immersion-adic-on-sections statement issues 460/468/472/487 record as false in
+general. So the bundle is *not* weaker than the witnesses here, and neither predicate should be
+described as the general form of the other.
+
 ## Main definitions and results
 
 * `AlgebraicGeometry.FormalScheme.AffineChart.sectionsHom`: the chart-restriction of `ψ` at a
@@ -127,6 +146,9 @@ were ever proved independently.
   `AlgebraicGeometry.FormalScheme.adicSectionsLocallyFG_Spf`: the affine case. On
   `AlgebraicGeometry.FormalScheme.Spf J` the identity is a chart and the predicate is exactly
   continuity of `ψ`, so it is satisfiable.
+* `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections_eq_homOfSpfHomContinuity`:
+  the bridge to `AlgebraicGeometry.FormalScheme.SpfHomContinuity` (`FormalSchemes.GlueHomToSpf`) —
+  a caller holding that bundle as well gets this file's morphism from it, in one direction only.
 
 ## What is *not* proved here
 
@@ -643,6 +665,29 @@ theorem existsUnique_globalSectionsHom_eq_of_adicSections :
   existsUnique_globalSectionsHom_eq I hX.chart hX.fg_chart ψ hX.cont hI
     (fun i j => (hov i j).chart) (fun i j x => (hov i j).fg_chart x)
     (fun i j x => (hov i j).left x) (fun i j x => (hov i j).right x)
+
+/-- **The two routes build the same morphism.** A caller who *also* has the three continuity
+families at the canonical overlap charts — that is, an
+`AlgebraicGeometry.FormalScheme.SpfHomContinuity` (`FormalSchemes.GlueHomToSpf`) at the family
+this witness supplies — gets from that bundle the morphism this file builds from the overlap
+witness, and not a second one.
+
+It is an instance of
+`AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections_eq` at
+`AlgebraicGeometry.FormalScheme.overlapChartOf`. The two continuity proofs involved,
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.cont` and
+`AlgebraicGeometry.FormalScheme.SpfHomContinuity.cont`, are
+proofs of the same `Prop` and so are interchangeable by definitional proof irrelevance; no
+transport appears.
+
+**The converse fails on this tree**, and the module docstring says where: see the paragraph on the
+overlap condition below. -/
+theorem homOfGlobalSectionsHomOfAdicSections_eq_homOfSpfHomContinuity
+    (d : FormalScheme.SpfHomContinuity I hX.chart hX.fg_chart ψ) :
+    homOfGlobalSectionsHomOfAdicSections ψ hX hI hov =
+      homOfSpfHomContinuity I hX.chart hX.fg_chart ψ hI d :=
+  homOfGlobalSectionsHomOfAdicSections_eq ψ hX hI hov
+    (overlapChartOf hX.chart hX.fg_chart) (fg_overlapChartOf hX.chart hX.fg_chart) d.fst d.snd
 
 end AlgebraicGeometry.FormalScheme
 

@@ -94,6 +94,9 @@ scope note of `FormalSchemes.GlobalSectionsHom` for the same point on the faithf
   morphism into `Spf R` is determined by its restrictions to the charts. This is *not* a weakening
   of `hom_ext_of_globalSectionsHom`: that one compares global-sections homomorphisms and needs
   continuity, this one compares the restrictions themselves and needs none.
+* `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom_eq_of_ocharts`: the morphism does not
+  depend on the affine cover of the overlaps, only on the charts of `X` — so `ocharts` and `hofg`
+  carry the hypotheses `hf` and `hg` are stated at, and nothing else.
 
 ## References
 
@@ -340,6 +343,26 @@ theorem hom_ext_of_chart_comp (f g : X.toLocallyRingedSpace ⟶ locallyRingedSpa
     (h : ∀ x : X, (charts x).map ≫ f = (charts x).map ≫ g) : f = g :=
   (OpenCover.ofAffineCharts charts).hom_ext f g h
 
+/-- **The overlap data does not affect the morphism, only what has to be proved to build it.** Two
+choices of affine cover of the overlaps, each with its own pair of continuity families, give the
+same morphism `X ⟶ Spf R`.
+
+Both restrict, on the chart at each `x`, to
+`AlgebraicGeometry.FormalScheme.chartMap I charts ψ x (hcont x)` by
+`AlgebraicGeometry.FormalScheme.chart_comp_homOfGlobalSectionsHom`, and
+`AlgebraicGeometry.FormalScheme.hom_ext_of_chart_comp` says that determines a morphism into a
+formal spectrum. So `ocharts` and `hofg` are *bookkeeping for the hypotheses*: a caller who can
+discharge `hf` and `hg` on any cover of the overlaps gets the morphism the charts on `X`
+determine, whichever cover that was. The charts on `X` are not like this — `hcont` names them, and
+`AlgebraicGeometry.FormalScheme.chartMap` at a different family is a different morphism. -/
+theorem homOfGlobalSectionsHom_eq_of_ocharts (ocharts) (hofg) (hf) (hg)
+    (ocharts') (hofg') (hf') (hg') :
+    homOfGlobalSectionsHom I charts hfg ψ hcont hI ocharts hofg hf hg =
+      homOfGlobalSectionsHom I charts hfg ψ hcont hI ocharts' hofg' hf' hg' :=
+  hom_ext_of_chart_comp I charts _ _ fun x => by
+    rw [chart_comp_homOfGlobalSectionsHom I charts hfg ψ hcont hI ocharts hofg hf hg x,
+      chart_comp_homOfGlobalSectionsHom I charts hfg ψ hcont hI ocharts' hofg' hf' hg' x]
+
 end OfAffineCharts
 
 section SuppliedCharts
@@ -394,6 +417,20 @@ conditions at *that* family with nothing restated. See
 `AlgebraicGeometry.FormalScheme.LocallyFG.SpfHomContinuity` for the specialisation to the charts
 `AlgebraicGeometry.FormalScheme.LocallyFG` chooses, and for why it is offered rather than
 recommended.
+
+**The charts on the *overlaps* are chosen, and a caller who has better ones should not come through
+here.** `AlgebraicGeometry.FormalScheme.SpfHomContinuity.fst` and
+`AlgebraicGeometry.FormalScheme.SpfHomContinuity.snd` are bounds at
+`AlgebraicGeometry.FormalScheme.overlapChartOf`, which is
+`AlgebraicGeometry.FormalScheme.OpenCover.overlapChart` and so unfolds to
+`AlgebraicGeometry.FormalScheme.LocallyFG.chart` of the overlap — the family this module docstring
+describes as *available for a caller who has nothing better to supply*. This bundle is that caller.
+One who holds overlap charts carrying their own bounds —
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`
+(`FormalSchemes.AdicSectionsChart`) is the one on the tree — should pass them to
+`AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` directly and use
+`AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom_eq_of_ocharts`, which says the two routes
+build the same morphism.
 
 **None of the three is automatic.** `FormalSpectrum.spfGammaEquiv` inverts `Spf` only on the
 continuity-restricted subtype, which is why the module docstring calls these hypotheses inherited

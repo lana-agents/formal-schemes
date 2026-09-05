@@ -73,9 +73,10 @@ needed, is packaged: see `AdicRingCat.spfHomEquiv` (`FormalSchemes.SpfFullyFaith
   `AlgebraicGeometry.FormalScheme.continuous_homOfSpfHomContinuity` and
   `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq_of_spfHomContinuity`: the same
   three statements over `AlgebraicGeometry.FormalScheme.SpfHomContinuity`
-  (`FormalSchemes.GlueHomToSpf`), where the charts on the *overlaps* are chosen — they can be,
-  because no hypothesis names them — while the charts on `X` are still supplied. This is what
-  retires `ocharts` and `hofg` from the EGA I, 10.4.6 headline above.
+  (`FormalSchemes.GlueHomToSpf`), where the charts on the *overlaps* are chosen — no binder names
+  them, so they come off the headline — while the charts on `X` are still supplied. This is what
+  retires `ocharts` and `hofg` from the EGA I, 10.4.6 headline above. The bundled hypothesis still
+  asks for bounds at those chosen charts, which is why the general form above stays.
 * `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq_of_locallyFG_spfHomContinuity`
   and its two companions: the further specialisation in which the charts on `X` are chosen too. See
   `AlgebraicGeometry.FormalScheme.LocallyFG.SpfHomContinuity` for why that is offered rather than
@@ -318,8 +319,17 @@ include hfg hI d in
 the overlaps are `AlgebraicGeometry.FormalScheme.overlapChartOf` rather than supplied, so that the
 only hypotheses are finite generation of `I` and the three continuity families of
 `AlgebraicGeometry.FormalScheme.SpfHomContinuity`. **The charts on `X` are still supplied**; only
-the overlap charts are canonical, and they can be because no hypothesis of this statement names
-them.
+the overlap charts are canonical.
+
+They can be *taken off the binders* because no binder of this statement mentions them — that is
+what retires `ocharts` and `hofg` from the headline, and by
+`AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom_eq_of_ocharts` the morphism does not depend
+on them anyway. **They are not thereby unconstrained**: the bundled hypothesis still asks for
+bounds *at* them, and they are `AlgebraicGeometry.FormalScheme.overlapChartOf`, hence
+`AlgebraicGeometry.FormalScheme.LocallyFG.chart` of the overlap. A caller holding overlap charts
+that carry their own bounds should use
+`AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq` and supply them; see the
+docstring of `AlgebraicGeometry.FormalScheme.SpfHomContinuity`.
 
 The quantifier still ranges over the continuity-restricted subtype, and that restriction is still
 genuine; see the module docstring. -/

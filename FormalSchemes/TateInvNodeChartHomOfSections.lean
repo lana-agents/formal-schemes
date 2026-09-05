@@ -111,7 +111,6 @@ are fed straight back to `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom`
 the unfolded inequalities, and the bridge above means nothing is gained by restating them: a caller
 holding either form has the other for free.
 
-
 **Why the headline packages its five obligations inside one `∃` rather than taking them as
 arguments.** `AlgebraicGeometry.exists_formalScheme_of_isIso_desc` states its own hypothesis under
 `letI`/`haveI` for the adic topology on `Γ (T_inv/⟨σ⟩, V₀)` and for
