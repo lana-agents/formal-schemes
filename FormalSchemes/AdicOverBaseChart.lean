@@ -28,6 +28,8 @@ This file isolates that inheritance as reusable, base-relative infrastructure:
   open-immersion chart `f` that is *adic on global sections over the base* `s : X ⟶ Spf I`, i.e.
   `I ≤ J.comap (Γ (f ≫ s))`.
 * `FormalScheme.AdicOverBaseLocallyFG.locallyFG`: it refines `LocallyFG`.
+* `FormalScheme.adicOverBaseLocallyFG_Spf`: on `Spf J` the identity is a chart, so the whole
+  predicate is the single global bound on `Γ (g)`.
 * `FormalScheme.exists_affineChart_subset_adicOverBase`: on such an `X`, adic-over-base affine
   charts form a neighborhood basis — every point in an open `U` has a finitely generated affine
   chart contained in `U` that is adic on global sections over `s`. The basic-open refinement
@@ -78,6 +80,30 @@ theorem AdicOverBaseLocallyFG.locallyFG {X : FormalScheme.{u}}
   intro x
   obtain ⟨S, hS, hT, J, hJadic, f, hJfg, hmem, hoi, -⟩ := hX x
   exact ⟨S, hS, hT, J, hJadic, f, hJfg, hmem, hoi⟩
+
+set_option backward.isDefEq.respectTransparency false in
+/-- **On `Spf J` the identity is a chart, so adicity over a base is continuity of its
+global-sections map.** This is the adic-over-base counterpart of
+`AlgebraicGeometry.FormalScheme.adicSectionsLocallyFG_Spf` (`FormalSchemes.AdicSectionsChart`), and
+it fills its open-immersion field with an explicit `@`-application supplying
+`CategoryTheory.IsIso.id`, because instance synthesis does not find
+`IsIso (𝟙 (FormalSpectrum.locallyRingedSpaceObj J))` at that position inside a structure literal.
+
+It lives here rather than beside either of its consumers because there are consumers on both sides
+of the tree — `FormalSchemes.AdicSectionsOverlap` and
+`FormalSchemes.GeneralSeparatedChartCodiagonal` are import-incomparable — and this is the file that
+defines the predicate. -/
+theorem adicOverBaseLocallyFG_Spf {S : Type u} [CommRing S] [TopologicalSpace S] {J : Ideal S}
+    [IsAdicRing J] (hJ : J.FG)
+    (g : (FormalScheme.Spf J).toLocallyRingedSpace ⟶ FormalSpectrum.locallyRingedSpaceObj I)
+    (hg : I ≤ J.comap (FormalSpectrum.globalSectionsMap I J g)) :
+    AdicOverBaseLocallyFG (FormalScheme.Spf J) g := fun x =>
+  ⟨S, inferInstance, inferInstance, J, inferInstance, 𝟙 _, hJ, ⟨x, rfl⟩,
+    @LocallyRingedSpace.IsOpenImmersion.of_isIso _ _ (𝟙 _) (CategoryTheory.IsIso.id _),
+    by
+      have hid : (𝟙 (FormalSpectrum.locallyRingedSpaceObj J) ≫ g) = g := Category.id_comp g
+      rw [hid]
+      exact hg⟩
 
 /-- **Adic-over-base affine charts form a neighborhood basis.** On a scheme that is adic over the
 base `s : X ⟶ Spf I`, every point `x` in an open set `U` has a finitely generated affine

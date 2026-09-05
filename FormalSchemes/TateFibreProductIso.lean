@@ -42,8 +42,9 @@ The crux of the file is `ι_tateFibreProductHom`: **`Φ` carries the `c`-th Tate
 product chart `(c.1, c.2)`.** Both sides are morphisms out of the affine `Spf(A ⊗̂_R A)` into the
 general fibre product, and they have the same two projections, so `fibreLift_unique_adicOverBase`
 (issue 518) identifies them; its `AdicOverBaseLocallyFG` hypothesis is
-`FormalScheme.adicOverBaseLocallyFG_affine` (issue 778), for which an affine source needs only its
-identity chart, and the base morphism is `#276`'s per-chart structural morphism.
+`FormalScheme.adicOverBaseLocallyFG_Spf` (`FormalSchemes.AdicOverBaseChart`, issue 778), for which
+an affine source needs only its identity chart, and the base morphism is `#276`'s per-chart
+structural morphism.
 
 With that one lemma **both** round trips are `GlueData.hom_ext` and three rewrites each — no
 uniqueness argument is needed for either, because `Ψ` and `Φ` are now both known chartwise.
@@ -397,7 +398,7 @@ theorem ι_tateFibreProductHom (hq : q ∈ I) (hI : I.FG)
       (annulusAlgebra R I q) (annulusAlgebra R I q))
       (algebraMap R (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q)))
       CompletedTensorProduct.algebraMap_isAdicHom.le_comap)
-    (FormalScheme.adicOverBaseLocallyFG_affine
+    (FormalScheme.adicOverBaseLocallyFG_Spf
       (tensorIdealOfDefinition_fg R I q (annulusAlgebra R I q) hI) _ ?_) ?_ ?_ ?_
   · rw [globalSectionsMap_locallyRingedSpaceMap]
     exact CompletedTensorProduct.algebraMap_isAdicHom.le_comap
