@@ -69,18 +69,22 @@ scope note of `FormalSchemes.GlobalSectionsHom` for the same point on the faithf
   `comp_globalSectionsHom_homOfGlobalSectionsHom`.
 * `AlgebraicGeometry.FormalScheme.overlapChartOf` and
   `AlgebraicGeometry.FormalScheme.SpfHomContinuity`: given a supplied family of affine charts, the
-  charts on its overlaps are canonical — `OpenCover.overlapChart` at that cover — so the only
-  arguments of `homOfGlobalSectionsHom` left carrying content are its three continuity families.
-  `SpfHomContinuity` bundles those three, and
+  charts on its overlaps are canonical — `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart` at that cover — so the only
+  arguments of `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` left carrying content are its three continuity families.
+  `AlgebraicGeometry.FormalScheme.SpfHomContinuity` bundles those three, and
   `AlgebraicGeometry.FormalScheme.homOfSpfHomContinuity` is the construction over it, with
-  `chart_comp_homOfSpfHomContinuity`. **The chart family stays supplied**: a caller who builds one
+  `AlgebraicGeometry.FormalScheme.chart_comp_homOfSpfHomContinuity`. **The chart family stays
+  supplied**: a caller who builds one
   to order — from a neighbourhood basis recording the bound, as
   `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG` (`FormalSchemes.AdicOverBaseChart`) does —
   states the three conditions at it with nothing restated.
 * `AlgebraicGeometry.FormalScheme.LocallyFG.overlapChart` and
   `AlgebraicGeometry.FormalScheme.LocallyFG.SpfHomContinuity`: the specialisation to the charts
-  `LocallyFG` chooses, with `homOfGlobalSectionsHomOfLocallyFG`. Offered, **not recommended** —
-  `LocallyFG` is a `Prop` and its `chart` is `Exists.choose`, so proof irrelevance makes that family
+  `AlgebraicGeometry.FormalScheme.LocallyFG` chooses, with
+  `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfLocallyFG`. Offered, **not
+  recommended** — `AlgebraicGeometry.FormalScheme.LocallyFG` is a `Prop` and its
+  `AlgebraicGeometry.FormalScheme.LocallyFG.chart` is `Exists.choose`, so proof irrelevance makes
+  that family
   the only one reachable through the specialisation, and continuity at it is the shape
   `FormalSchemes.GeneralFibreProductLiftAdic` records as unreachable (issues 460/468/472/487, 805).
   Its docstring carries the warning and names the reachable form.
@@ -440,7 +444,8 @@ open OpenCover
 variable {X : FormalScheme.{u}}
 
 /-- **The overlap chart of the family `AlgebraicGeometry.FormalScheme.LocallyFG` chooses.** This is
-`AlgebraicGeometry.FormalScheme.overlapChartOf` at `LocallyFG.chart` and `LocallyFG.fg_chart`, and
+`AlgebraicGeometry.FormalScheme.overlapChartOf` at `AlgebraicGeometry.FormalScheme.LocallyFG.chart`
+and `AlgebraicGeometry.FormalScheme.LocallyFG.fg_chart`, and
 it is what `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq_of_locallyFG` — which
 is *already* stated at the chosen charts — needs for its `ocharts`. -/
 def LocallyFG.overlapChart (hX : X.LocallyFG) (i j : X)

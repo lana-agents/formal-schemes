@@ -160,7 +160,8 @@ here.
 ## References
 
 * `FormalSchemes/GlueHomToSpf.lean` — `AlgebraicGeometry.FormalScheme.SpfHomContinuity`,
-  `homOfSpfHomContinuity` and `overlapChartOf`, the general forms this file instantiates.
+  `AlgebraicGeometry.FormalScheme.homOfSpfHomContinuity` and
+  `AlgebraicGeometry.FormalScheme.overlapChartOf`, the general forms this file instantiates.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4 (10.4.6), §10.6.
 * [Deligne–Rapoport, *Les schémas de modules de courbes elliptiques*], II.1 — the Néron 1-gon.

@@ -361,7 +361,7 @@ include hI d in
 /-- **EGA I, 10.4.6 over a locally finitely generated source, with every chart chosen.** The form
 of `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq_of_locallyFG` in which
 `ocharts` and `hofg` are `AlgebraicGeometry.FormalScheme.LocallyFG.overlapChart` and
-`LocallyFG.fg_overlapChart` rather than supplied, so that the only hypotheses are finite generation
+`AlgebraicGeometry.FormalScheme.LocallyFG.fg_overlapChart` rather than supplied, so that the only hypotheses are finite generation
 of `I` and the three continuity families.
 
 Every chart here is a `Classical.choice`; see
