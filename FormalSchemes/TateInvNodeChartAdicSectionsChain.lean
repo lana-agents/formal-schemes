@@ -30,8 +30,8 @@ formal subscheme of the chain; the right-hand side quantifies over affine charts
 itself, sitting inside the saturated node-chart locus, and the ideal being bounded is
 `AlgebraicGeometry.tateInvNodeChartAwayIdeal` — an ideal of
 `AlgebraicGeometry.tateInvNodeChartAwaySubring`, a subring of `A{1/(x + y − 1)}`. No
-`AlgebraicGeometry.actionQuotient`, no
-`AlgebraicGeometry.FormalScheme.restrictOpen` and no `⊤` remain on the right.
+`CategoryTheory.actionQuotient`, no `AlgebraicGeometry.FormalScheme.restrictOpen` and no `⊤` remain
+on the right.
 
 **It is an equivalence.** A chart family for which the bound provably fails refutes the predicate,
 so this reduction is usable for a negative answer as well as a positive one — which was the point
@@ -168,8 +168,9 @@ namespace AlgebraicGeometry
 
 namespace LocallyRingedSpace
 
-/-- **The global sections of a restriction, as a section map.** Both sides are `Y.presheaf.map` of
-a morphism between two spellings of `V` in the poset `Opens Y`, so they agree; what the statement
+/-- **The global sections of a restriction, as a section map.** Both sides are the image, under the
+presheaf of `Y`, of a morphism between two spellings of `V` in the poset of opens, so they agree;
+what the statement
 buys is that a `ψ` built with `AlgebraicGeometry.LocallyRingedSpace.restrictTopSectionsIso` — which
 is how the tree spells "a section over `V`, read on the restriction" — is one the criterion of
 `FormalSchemes.AdicSectionsRestrictOpen` applies to. -/
@@ -257,7 +258,7 @@ theorem le_comap_tateInvNodeChartQuotientIdeal_iff {S : Type u} [CommRing S] (J 
         J.comap (g.comp (tateInvNodeChartQuotientRingEquiv R I q hq hI).symm) := by
   rw [tateInvNodeChartQuotientIdeal, Ideal.map_le_iff_le_comap, Ideal.comap_comap]
 
-/-- **The reduction, with no `AlgebraicGeometry.actionQuotient` in the ideal.** This is the form the
+/-- **The reduction, with no `CategoryTheory.actionQuotient` in the ideal.** This is the form the
 question should be attacked in: an inequality of ideals whose left-hand side is an ideal of
 `AlgebraicGeometry.tateInvNodeChartAwaySubring`, a named subring of a twice-completed localization,
 and whose right-hand side is the ideal of definition of a chart of the chain. -/

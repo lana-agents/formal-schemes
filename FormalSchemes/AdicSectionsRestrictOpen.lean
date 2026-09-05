@@ -42,22 +42,22 @@ inside `U` to a chart of `X.restrictOpen hX U` — this is
 `AlgebraicGeometry.FormalScheme.AffineChart.toAmbient` pushes a chart of the restriction forward,
 and `AlgebraicGeometry.FormalScheme.AffineChart.range_toAmbient` says the result lands in `U`. The
 two are inverse *for the purpose of the bound* — not literally, because the lift is
-`CategoryTheory.IsOpenImmersion.lift`, defined through a pullback — and that is all the equivalence
-needs.
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.lift`, defined through a pullback — and that
+is all the equivalence needs.
 
 ## The one piece of algebra
 
 Everything about `ψ` runs through
 `AlgebraicGeometry.LocallyRingedSpace.sectionsMapOfRangeSubset`: the section map of a morphism `f`
-over an open `U` containing its range, landing in the *global* sections of the source because
+over an open `U` containing the range of `f`, landing in the *global* sections of the source because
 `AlgebraicGeometry.opens_map_obj_eq_top_of_range_subset` says the preimage of `U` is everything.
 `AlgebraicGeometry.LocallyRingedSpace.sectionsMapOfRangeSubset_comp` is its functoriality, and it is
 the only computation here: with `f` the inclusion of the open subscheme and `g` a chart of the
 restriction, it turns the chart-restriction of `ψ` into the section map of the *composite* chart,
 which is a chart of `X`.
 
-Its proof is `CategoryTheory.NatTrans.naturality` of `f.c` at an `CategoryTheory.eqToHom` between
-two spellings of the same open, isolated as
+Its proof is `CategoryTheory.NatTrans.naturality` of the comparison map of `f` at an
+`CategoryTheory.eqToHom` between two spellings of the same open, isolated as
 `AlgebraicGeometry.LocallyRingedSpace.c_app_comp_map_eqToHom` so that the `subst` that discharges it
 happens once.
 
@@ -145,7 +145,7 @@ theorem c_app_comp_map_eqToHom {V W : LocallyRingedSpace.{u}} (g : V ⟶ W) {A B
   exact Category.comp_id _
 
 /-- **The section map of `f` over an open containing its range, read on global sections of the
-source.** This is `f.c.app` at `U` followed by the transport along
+source.** This is the comparison map of `f` at `U` followed by the transport along
 `AlgebraicGeometry.opens_map_obj_eq_top_of_range_subset`; the transport is what makes the target
 `Γ (W, ⊤)` rather than `Γ (W, f⁻¹ U)`, which is the side a chart-restriction of a homomorphism is
 stated on. -/
