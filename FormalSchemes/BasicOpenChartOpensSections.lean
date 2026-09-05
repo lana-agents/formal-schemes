@@ -10,8 +10,10 @@ set_option linter.style.header false
 `AlgebraicGeometry.FormalScheme.AffineChart.opensSectionsHom`
 (`FormalSchemes.AdicSectionsRestrictOpen`) reads a section over an open `U` of a formal scheme on a
 chart whose range is inside `U`. When the chart is a **basic-open chart of an affine patch** — the
-only shape in which charts of a glued formal scheme are ever produced — that reading has a second,
-completely different description: `FormalSpectrum.sectionsEquivOfEqBasicOpen`
+shape a chart of a glued formal scheme takes once it has been shrunk by
+`AlgebraicGeometry.FormalScheme.AffineChart.basicOpenRefine`, the *whole* patch being what
+`AlgebraicGeometry.FormalScheme.GlueData.gluedFormalScheme_locallyFG` produces on its own — that
+reading has a second, completely different description: `FormalSpectrum.sectionsEquivOfEqBasicOpen`
 (`FormalSchemes.AdicOnOpenSections`), which identifies `Γ (Spf R, D(f))` with `R{1/f}` by EGA I
 10.1.4 and mentions no chart at all.
 

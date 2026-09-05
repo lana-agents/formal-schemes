@@ -98,8 +98,9 @@ Nothing here should be read as evidence that the node chart exists.
 immersion and that refutation is untouched: `AlgebraicGeometry.theta_nodeChartPatchChart` is a
 statement about *section maps*, which neither implies nor is implied by anything about open
 immersions. In particular the subring inclusion appearing here is not a claim that the node chart's
-ring is the ambient one — `AlgebraicGeometry.tateInvNodeChartAwaySubring` is a proper subring as far
-as anything on this tree says, and `AlgebraicGeometry.tateInvNodeChartAwayIdeal` remains **not**
+ring is the ambient one — nothing on this tree decides whether
+`AlgebraicGeometry.tateInvNodeChartAwaySubring` is the whole of the ambient ring or a proper subring
+of it, in either direction, and `AlgebraicGeometry.tateInvNodeChartAwayIdeal` remains **not**
 shown to be an ideal of definition (`FormalSchemes.TateInvNodeChartAmbient` records that only
 Hausdorffness is proved of it).
 
