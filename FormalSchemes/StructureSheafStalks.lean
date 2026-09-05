@@ -80,8 +80,10 @@ algebra is `IsLocalization.atPrime_quotient` and `Localization.atPrimeQuotientEq
 (`FormalSchemes.LocalizationQuotientPrime`), the prime-complement input the away case did not need
 is `IsLocalization.algebraMapSubmonoid_primeCompl_comap` there, and
 `FormalSpectrum.stalkTowerLevelEquiv` and `FormalSpectrum.stalkTowerLimitEquiv`
-(`FormalSchemes.StructureSheafStalkLevels`) carry out the identification. The docstring of
-`thickeningStalkLocalizationEquiv` below says the same thing at the declaration.
+(`FormalSchemes.StructureSheafStalkLevels`) carry out the identification, and
+`FormalSpectrum.specStalkAdicCompletionEquiv` there reaches the adic completion of the stalk of
+`O_{Spec R}` itself. The docstring of `thickeningStalkLocalizationEquiv` below says the same thing
+at the declaration.
 
 **Non-vacuity is not an issue for the statements below**, because they take the point `x` as an
 argument: `FormalSpectrum.IsStalkLimit I x` is a condition at a given point and there is nothing
