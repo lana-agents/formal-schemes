@@ -59,9 +59,6 @@ No quotient is used: `π` is only assumed invariant, not assumed to exhibit `Q` 
   chart depends on the base morphism only through its global-sections homomorphism.
 * `AlgebraicGeometry.FormalScheme.isActionInvariant_homOfGlobalSectionsHomOfAdicSections_iff`:
   **the equivalence.**
-* `AlgebraicGeometry.LocallyRingedSpace.c_app_comp_sectionsMapOfRangeSubset`: the companion of
-  `AlgebraicGeometry.LocallyRingedSpace.sectionsMapOfRangeSubset_comp` that splits off the
-  *second* factor.
 * `AlgebraicGeometry.LocallyRingedSpace.sectionsMapOfRangeSubset_comp_c_app_of_invariant`: the
   section map of an invariant morphism is invariant on global sections.
 * `AlgebraicGeometry.LocallyRingedSpace.isActionInvariant_ofRestrict_comp`: an invariant morphism
@@ -96,20 +93,6 @@ open FormalSpectrum
 namespace AlgebraicGeometry.LocallyRingedSpace
 
 variable {X Q : LocallyRingedSpace.{u}}
-
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
-/-- **Splitting off the second factor of a section map.** `sectionsMapOfRangeSubset_comp` splits
-off the *first* factor and needs the range of the second to lie in `U`; this one splits off the
-second and needs the range of the first to lie in its preimage, which is the shape a section map
-built as "pull back along `π`, then read on a restriction" has. -/
-theorem c_app_comp_sectionsMapOfRangeSubset {W : LocallyRingedSpace.{u}} (g : W ⟶ X) (f : X ⟶ Q)
-    (U : Opens Q) (hg : Set.range g.base ⊆ ↑((Opens.map f.base).obj U))
-    (hgf : Set.range (g ≫ f).base ⊆ (U : Set Q)) :
-    f.c.app (op U) ≫ sectionsMapOfRangeSubset g ((Opens.map f.base).obj U) hg =
-      sectionsMapOfRangeSubset (g ≫ f) U hgf := by
-  rw [sectionsMapOfRangeSubset, sectionsMapOfRangeSubset, LocallyRingedSpace.comp_c_app]
-  exact (Category.assoc _ _ _).symm
 
 variable {G : Type v} [Monoid G]
 

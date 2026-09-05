@@ -105,8 +105,8 @@ set_option backward.isDefEq.respectTransparency false in
 projection's comparison map at `V₀` followed by
 `AlgebraicGeometry.LocallyRingedSpace.restrictTopSectionsIso`; that second factor is a section map
 by `AlgebraicGeometry.LocallyRingedSpace.restrictTopSectionsIso_inv_eq`, and
-`AlgebraicGeometry.LocallyRingedSpace.c_app_comp_sectionsMapOfRangeSubset` absorbs the first factor
-into it.
+`AlgebraicGeometry.LocallyRingedSpace.sectionsMapOfRangeSubset_comp_opens` absorbs the first
+factor into it.
 
 This is the only Tate-specific step of the file: everything after it is a general statement about
 invariant morphisms. -/
@@ -116,7 +116,7 @@ theorem nodeChartSectionsHom_eq :
         (LocallyRingedSpace.range_ofRestrict_comp_subset
           (actionQuotientπ (tateInvPeriodAction R I q hq hI))
           (tateInvNodeChartQuotientOpens R I q hq hI)) := by
-  rw [← LocallyRingedSpace.c_app_comp_sectionsMapOfRangeSubset _ _ _
+  rw [LocallyRingedSpace.sectionsMapOfRangeSubset_comp_opens _ _ _
     (le_of_eq (LocallyRingedSpace.range_ofRestrict _ _)), nodeChartSectionsHom,
     LocallyRingedSpace.restrictTopSectionsIso_inv_eq _ _
       (le_of_eq (LocallyRingedSpace.range_ofRestrict _ _))]

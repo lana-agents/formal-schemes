@@ -52,7 +52,8 @@ w ≫ Δ = fibreLift a b ≫ ι (i, j).
 Both sides have the same two projections — `w` on the left because `Δ` is a section of both
 (`diagonal'_comp_pr₁` / `_pr₂`), `w` on the right by `ι_pr₁` / `ι_pr₂` and the two presentations —
 so `fibreLift_unique_adicOverBase` (issue 518) identifies them; the adic-over-base hypothesis is
-`adicOverBaseLocallyFG_affine`, for which an affine source needs only its identity chart.
+`AlgebraicGeometry.FormalScheme.adicOverBaseLocallyFG_Spf` (`FormalSchemes.AdicOverBaseChart`), for
+which an affine source needs only its identity chart.
 
 Off the diagonal the two presentations of the overlap are the two structure maps, related by the
 glue relation `x_glue_rel` (`overlapChart_comp_ι_eq`); on the diagonal both are the identity. Since
@@ -112,38 +113,6 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum Topol
 open CompletedTensorAwayInterchange CompletedTensorProduct
 
 universe u
-
-/-! ### Two small pieces of general infrastructure -/
-
-namespace AlgebraicGeometry
-
-/-- The identity of a locally ringed space is an open immersion. Mathlib's `of_isIso` is not
-applicable by instance search here (it carries an unrelated open-immersion argument), so the
-underlying presheafed-space instance is invoked directly. -/
-theorem LocallyRingedSpace.isOpenImmersion_id (X : LocallyRingedSpace.{u}) :
-    LocallyRingedSpace.IsOpenImmersion (𝟙 X) := by
-  unfold LocallyRingedSpace.IsOpenImmersion
-  infer_instance
-
-namespace FormalScheme
-
-variable {R : Type u} [CommRing R] [TopologicalSpace R] {I : Ideal R} [IsAdicRing I]
-
-/-- **An affine formal scheme is adic over any base morphism that is adic on global sections.**
-The identity chart is a finitely generated affine open immersion covering all of `Spf L`, so the
-whole content of `AdicOverBaseLocallyFG` is the single global hypothesis `hs`. -/
-theorem adicOverBaseLocallyFG_affine {S : Type u} [CommRing S] [TopologicalSpace S]
-    {L : Ideal S} [IsAdicRing L] (hLfg : L.FG)
-    (s : (FormalScheme.Spf L).toLocallyRingedSpace ⟶ FormalSpectrum.locallyRingedSpaceObj I)
-    (hs : I ≤ L.comap (FormalSpectrum.globalSectionsMap I L s)) :
-    FormalScheme.AdicOverBaseLocallyFG (FormalScheme.Spf L) s := fun x =>
-  ⟨S, inferInstance, inferInstance, L, inferInstance,
-    𝟙 (FormalScheme.Spf L).toLocallyRingedSpace, hLfg, ⟨x, rfl⟩,
-    LocallyRingedSpace.isOpenImmersion_id _, (Category.id_comp s).symm ▸ hs⟩
-
-end FormalScheme
-
-end AlgebraicGeometry
 
 namespace AlgebraicGeometry
 
@@ -374,7 +343,7 @@ theorem chartLift_comp_diagonal'
     (ofFactors_hf DX DX σX σX hστX hστX hσcX hσcX)
     (ofFactors_ht DX DX σX σX hστX hστX hσcX hσcX)
     (Z := FormalScheme.Spf L) _ _ (locallyRingedSpaceMap I L (algebraMap R S) hbase)
-    (FormalScheme.adicOverBaseLocallyFG_affine hLfg _ ?_) ?_ ?_ ?_
+    (FormalScheme.adicOverBaseLocallyFG_Spf hLfg _ ?_) ?_ ?_ ?_
   · rw [globalSectionsMap_locallyRingedSpaceMap]
     exact hbase
   · -- both sides have first projection `w`

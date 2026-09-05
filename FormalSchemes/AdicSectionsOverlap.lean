@@ -70,9 +70,6 @@ computation.
 
 * `AlgebraicGeometry.FormalScheme.pair_of_globalSectionsHom_eq`: **the crux.** A pair witness needs
   only one adic-over-base witness and the agreement of the two base morphisms *on global sections*.
-* `AlgebraicGeometry.FormalScheme.adicOverBaseLocallyFG_Spf`: on `Spf J` the identity chart carries
-  the bound, so the condition there is exactly continuity of the base morphism's global-sections
-  map.
 * `AlgebraicGeometry.FormalScheme.adicOverBaseLocallyFG_ofOpenImmersion`: adicity over a base
   transports to the source of an open immersion.
 * `AlgebraicGeometry.FormalScheme.globalSectionsHom_pullback_fst_chartMap_eq`: the two morphisms
@@ -163,25 +160,6 @@ theorem pair_of_globalSectionsHom_eq (h : AdicOverBaseLocallyFG Y s)
 /-! ### Where the charts come from -/
 
 set_option backward.isDefEq.respectTransparency false in
-/-- **On `Spf J` the identity is a chart, so adicity over a base is continuity of its
-global-sections map.** This is the adic-over-base counterpart of
-`AlgebraicGeometry.FormalScheme.adicSectionsLocallyFG_Spf`, and it fills its open-immersion field
-the same way — with an explicit `@`-application supplying `CategoryTheory.IsIso.id`, because
-instance synthesis does not find `IsIso (𝟙 (FormalSpectrum.locallyRingedSpaceObj J))` at that
-position inside a structure literal. -/
-theorem adicOverBaseLocallyFG_Spf {S : Type u} [CommRing S] [TopologicalSpace S] {J : Ideal S}
-    [IsAdicRing J] (hJ : J.FG)
-    (g : (FormalScheme.Spf J).toLocallyRingedSpace ⟶ locallyRingedSpaceObj I)
-    (hg : I ≤ J.comap (globalSectionsMap I J g)) :
-    AdicOverBaseLocallyFG (FormalScheme.Spf J) g := fun x =>
-  ⟨S, inferInstance, inferInstance, J, inferInstance, 𝟙 _, hJ, ⟨x, rfl⟩,
-    @LocallyRingedSpace.IsOpenImmersion.of_isIso _ _ (𝟙 _) (CategoryTheory.IsIso.id _),
-    by
-      have hid : (𝟙 (locallyRingedSpaceObj J) ≫ g) = g := Category.id_comp g
-      rw [hid]
-      exact hg⟩
-
-set_option backward.isDefEq.respectTransparency false in
 /-- **Adicity over a base transports to the source of an open immersion.** The chart produced at a
 point of `W` is `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.lift` of an adic-over-base
 chart of the ambient that has first been cut down into the range of `j`
@@ -268,12 +246,13 @@ theorem globalSectionsMap_chartMap
 
 set_option backward.isDefEq.respectTransparency false in
 /-- **Each piece of the chart cover is adic over its own chart morphism**, by
-`AlgebraicGeometry.FormalScheme.adicOverBaseLocallyFG_Spf` at the identity chart: the bound asked
-for there is `AlgebraicGeometry.FormalScheme.chartMap`'s own defining continuity hypothesis. -/
+`AlgebraicGeometry.FormalScheme.adicOverBaseLocallyFG_Spf`
+(`FormalSchemes.AdicOverBaseChart`) at the identity chart: the bound asked for there is
+`AlgebraicGeometry.FormalScheme.chartMap`'s own defining continuity hypothesis. -/
 theorem adicOverBaseLocallyFG_chartMap (hfg : ∀ x, (charts x).I.FG)
     (hcont : ∀ x, I ≤ (charts x).I.comap (chartHom charts ψ x)) (x : X) :
     AdicOverBaseLocallyFG ((ofAffineCharts charts).obj x) (chartMap I charts ψ x (hcont x)) := by
-  refine adicOverBaseLocallyFG_Spf I (hfg x) _ ?_
+  refine adicOverBaseLocallyFG_Spf (hfg x) _ ?_
   rw [globalSectionsMap_chartMap]
   exact hcont x
 

@@ -174,10 +174,13 @@ inside `U`; a chart of a glued object factors through a patch inclusion whose ra
 `U`, and this is the form that case takes: the intermediate ring is the sections of the patch over
 the preimage of `U`, not its global sections.
 
-Nothing below uses it. It is here because it is the hinge of any patch-by-patch check of
-`AlgebraicGeometry.FormalScheme.adicSectionsLocallyFG_restrictOpen_iff` on a source presented by a
-`AlgebraicGeometry.FormalScheme.GlueData`, and it is the same one-line naturality as the variant
-above. -/
+Its consumer is `AlgebraicGeometry.nodeChartSectionsHom_eq`
+(`FormalSchemes.TateInvNodeChartInvariant`), where `f` is a quotient projection `π`, `g` is the
+inclusion of `π⁻¹ V₀` and the composite is the morphism whose section map the node chart's `ψ` is
+shown to be. Its original motivation is the secondary one and still stands: it is the hinge of any
+patch-by-patch check of `AlgebraicGeometry.FormalScheme.adicSectionsLocallyFG_restrictOpen_iff` on
+a source presented by a `AlgebraicGeometry.FormalScheme.GlueData`. Either way it is the same
+one-line naturality as the variant above. -/
 theorem sectionsMapOfRangeSubset_comp_opens {V W Y : LocallyRingedSpace.{u}} (g : V ⟶ W)
     (f : W ⟶ Y) (U : Opens Y)
     (hg : Set.range g.base ⊆ SetLike.coe ((Opens.map f.base).obj U))
