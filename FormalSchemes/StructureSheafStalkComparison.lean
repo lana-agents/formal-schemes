@@ -148,9 +148,16 @@ theorem evalₐ_stalkToAdicCompletion (n : ℕ) (t : (structureSheaf I).presheaf
 
 /-- **The level-`n` projection on a germ is the germ of the level-`n` component.**
 `FormalSpectrum.stalkProj` is the stalk functor applied to `CategoryTheory.Limits.limit.π`, so this
-is `TopCat.Presheaf.stalkFunctor_map_germ_apply`, exactly as in
-`FormalSpectrum.isUnit_stalk_of_isUnit_zero` (`FormalSchemes.Spf`), where the same rewrite occurs
-inline at level `0`. -/
+is `TopCat.Presheaf.stalkFunctor_map_germ_apply` at that morphism.
+
+The `n = 0` case of this rewrite is currently written inline in **four** proofs, each inside a
+`rw [show … from …]`: `FormalSpectrum.isUnit_stalk_of_isUnit_zero` (`FormalSchemes.Spf`),
+`FormalSpectrum.isUnit_germ_top_iff` (`FormalSchemes.SpfGammaBase`),
+`FormalSpectrum.isLocalHom_stalkMap` (`FormalSchemes.SpfMap`, twice) and
+`FormalSpectrum.isUnit_germ_iff_isUnit_sectionsPi_zero` (`FormalSchemes.AdicOpennessHalf`, in the
+`symm` direction). Rerouting them onto this lemma is a separate row and a *move*, not a call: all
+four modules sit below this file, so the shared statement would have to live at or under
+`FormalSchemes.Spf`. It is not attempted here. -/
 theorem stalkProj_germ (n : ℕ) (U : Opens (FormalSpectrum I)) (hx : x ∈ U)
     (s : (structureSheaf I).presheaf.obj (op U)) :
     (stalkProj I x n).hom (((structureSheaf I).presheaf.germ U x hx).hom s) =
