@@ -172,12 +172,13 @@ variable {X : FormalScheme.{u}} {f : X ⟶ FormalScheme.Spf I}
 finite type, every point `x` in an open `U` admits a tf-type affine chart contained in `U` that
 commutes with `f`.
 
-The relative analogue of `IsLocallyTopFiniteType.nonempty_tfTypeChart`, over the same shrinking
-step `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset` (`FormalSchemes.LocallyFG`),
-with the compatibility carried along: the piece's identification `e` is cancelled by `e.inv_hom_id`
-before the refinement starts, and what the basic-open refinement then has to preserve is exactly
-`basicOpenChartHom_comp_structHom`. That preservation, `basicOpenChartHom_comp`, is together with
-the `tfType` field all this lemma adds to the shared shrink. -/
+The relative analogue of `FormalScheme.IsLocallyTopFiniteType.nonempty_tfTypeChart`, over the same
+shrinking step `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset`
+(`FormalSchemes.LocallyFG`), with the compatibility carried along: the piece's identification `e`
+is cancelled by `Iso.inv_hom_id` before the refinement starts, and what the basic-open refinement
+then has to preserve is exactly `FormalScheme.basicOpenChartHom_comp_structHom`. That preservation,
+`FormalScheme.basicOpenChartHom_comp`, is together with `FormalScheme.TfTypeChart.tfType` all this
+lemma adds to the shared shrink. -/
 theorem IsRelativelyTopFiniteType.nonempty_relTfTypeChart
     (hf : IsRelativelyTopFiniteType R I f) (hI : I.FG) (x : X) (U : Set X) (hU : IsOpen U)
     (hxU : x ∈ U) : Nonempty (RelTfTypeChart R I f U x) := by

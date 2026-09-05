@@ -118,8 +118,9 @@ contained in `U`.
 
 The shrinking is `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset`
 (`FormalSchemes.LocallyFG`): bundle the witness the cover supplies as an
-`AlgebraicGeometry.FormalScheme.AffineChart` and shrink that. All this lemma adds is the `tfType`
-field of the refined chart, which is `IsTopologicallyFiniteType.awayCompletion`. -/
+`AlgebraicGeometry.FormalScheme.AffineChart` and shrink that. All this lemma adds is
+`FormalScheme.TfTypeChart.tfType` of the refined chart, which is
+`IsTopologicallyFiniteType.awayCompletion`. -/
 theorem IsLocallyTopFiniteType.nonempty_tfTypeChart {X : FormalScheme.{u}}
     (hX : IsLocallyTopFiniteType R I X) (hI : I.FG) (x : X) (U : Set X) (hU : IsOpen U)
     (hxU : x ∈ U) : Nonempty (TfTypeChart R I X U x) := by

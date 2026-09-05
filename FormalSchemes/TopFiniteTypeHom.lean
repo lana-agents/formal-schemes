@@ -414,14 +414,14 @@ variable {f : X ⟶ Y}
 `f` is topologically of finite type, every point `x` in an open `U` admits a tf-type chart
 contained in `U` and sitting over a chart of `𝒱`.
 
-The general-target analogue of `IsRelativelyTopFiniteType.nonempty_relTfTypeChart`, over the same
-shrinking step `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset`
-(`FormalSchemes.LocallyFG`): the chart's identification `e` cancels by `e.inv_hom_id` before the
+The general-target analogue of `FormalScheme.IsRelativelyTopFiniteType.nonempty_relTfTypeChart`,
+over the same shrinking step `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset`
+(`FormalSchemes.LocallyFG`): the chart's identification `e` cancels by `Iso.inv_hom_id` before the
 refinement starts, leaving a chart `m` sitting over the fixed tail `t = e'.inv ≫ 𝒱.map i`, and
-what the basic-open refinement then has to preserve is `basicOpenChartHom_comp_target` — which,
-with the `tfType` field, is all this lemma adds to the shared shrink. **The index `i` and the tail
-are unchanged by the refinement**, which is what lets the refined family be read against the same
-`𝒱`.
+what the basic-open refinement then has to preserve is
+`FormalScheme.basicOpenChartHom_comp_target` — which, with `FormalScheme.TfTypeChart.tfType`, is
+all this lemma adds to the shared shrink. **The index `i` and the tail are unchanged by the
+refinement**, which is what lets the refined family be read against the same `𝒱`.
 
 Stated at the unpacked cover data rather than at `IsTopFiniteTypeHom f`, because a caller
 refining a family of charts needs them all over one `𝒱`, and the existential in
