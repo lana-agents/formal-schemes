@@ -43,6 +43,14 @@ issue 69's row asks for. The one candidate whose range is exactly that open — 
 about that morphism and not about every open of the chain; what is left is a source built from
 sections invariant on the saturation.
 
+`AlgebraicGeometry.exists_formalScheme_of_isIso_desc`
+(`FormalSchemes.TateInvNodeChartDescent`) is where that shape is taken up. It replaces the
+isomorphism of the second reduction by an invariant morphism *into* the formal spectrum whose
+descent along the coequalizer is an isomorphism, which is the direction this tree has a
+construction for. That trade is an **equivalence** and not a further weakening, by
+`AlgebraicGeometry.exists_isIso_desc_tateInvNodeChartRestrictedAction_iff` in the same module; the
+one-way step in the chain remains the first reduction, for the reason given just above.
+
 **How much of `T_inv/⟨σ⟩` that removes, exactly.** Not all of it, and the printed statement is
 misleading about which part. The `Spf` in the hypothesis is `Spf` of
 `AlgebraicGeometry.tateInvNodeChartQuotientIdeal`, whose ring is `Γ (T_inv/⟨σ⟩, V₀)`: the quotient
