@@ -61,10 +61,12 @@ values on the image of `R`, because the source is a localization of `R ⧸ I ^ (
 * `FormalSpectrum.stalkToAdicCompletion` and
   `FormalSpectrum.isStalkLimit_iff_bijective_stalkToAdicCompletion`: the comparison map read into
   that completion, and `FormalSpectrum.IsStalkLimit` as the statement that it is bijective.
-* `FormalSpectrum.specStalkEquiv`, `FormalSpectrum.specStalkEquiv_algebraMap` and
+* `FormalSpectrum.specStalkEquiv`, `FormalSpectrum.specStalkEquiv_symm_algebraMap`,
+  `FormalSpectrum.specStalkEquiv_algebraMap` and
   `FormalSpectrum.map_pointIdeal_specStalkEquiv_symm`: **the localization of `R` at the prime under
   `x` is the stalk of `O_{Spec R}` there**, canonically — as a map under `R` — and
-  `FormalSpectrum.pointIdeal` is the extension of the ideal of definition to it.
+  `FormalSpectrum.pointIdeal` is the extension of the ideal of definition to it. The completion
+  itself is *not* carried across that equivalence; see the next section.
 
 ## What is *not* proved here
 
@@ -75,12 +77,22 @@ a statement about the comparison itself, with the single exception of
 `FormalSpectrum.isStalkLimit_iff_bijective_stalkToAdicCompletion`, which is an `Iff` between two
 undecided statements.
 
-**Whether the two sides of that `Iff` hold is still the only open thing here.** What used to be
-listed in this paragraph — that `R_p = Localization.AtPrime (pointPrime I x)` is the stalk of
-`O_{Spec R}` at the image of `x`, on which the reading of the headline rests — is now stated:
-`FormalSpectrum.specStalkEquiv` below, with `FormalSpectrum.map_pointIdeal_specStalkEquiv_symm`
-saying the ideal of definition matches too. So the reading is a theorem about two stalks and no
-longer prose.
+**The transport of the completion itself.** `FormalSpectrum.specStalkEquiv` below identifies
+`Localization.AtPrime (pointPrime I x)` with the stalk of `O_{Spec R}` at the image of `x`, and
+`FormalSpectrum.map_pointIdeal_specStalkEquiv_symm` says `FormalSpectrum.pointIdeal` is carried to
+the extension of the ideal of definition there — so the ring and the ideal appearing in the target
+of `FormalSpectrum.stalkTowerLimitEquiv` are both data of `O_{Spec R}` at that point. **No
+declaration below carries `AdicCompletion` itself across that equivalence**, so that target is
+still literally the completion of `Localization.AtPrime (pointPrime I x)`, and reading the headline
+as "the stalk of the completion is the completion of the stalk" is those two identifications plus
+one step that is not stated here — which is why the docstring of
+`FormalSpectrum.isStalkLimit_iff_bijective_stalkToAdicCompletion` still says *informally*. Mathlib
+transports the *predicates* along a `RingEquiv` — `IsAdicComplete.congr_ringEquiv` and its
+`IsHausdorff.congr_ringEquiv` and `IsPrecomplete.congr_ringEquiv` companions, all stated in the
+`Ideal.map` shape that `FormalSpectrum.map_pointIdeal_specStalkEquiv_symm` produces — but not the
+object. The tool for the object on this tree is `AdicCompletion.congrOfLevelEquiv`
+(`FormalSchemes.AdicCompletionCongrLevel`), which wants level equivalences intertwining the
+transition maps, so this is real work and not a rewrite.
 
 ## References
 
@@ -367,15 +379,18 @@ theorem specStalkEquiv_algebraMap (r : R) :
 
 /-- **The ideal matches as well**: `FormalSpectrum.pointIdeal`, which is `I · R_p` by definition,
 is carried by `FormalSpectrum.specStalkEquiv` to the extension of the ideal of definition in the
-stalk of `O_{Spec R}`. Together with that equivalence this says that the completion appearing in
-`FormalSpectrum.stalkTowerLimitEquiv` is the `I`-adic completion of `O_{Spec R}` at the image of
-`x`, so the reading of `FormalSpectrum.isStalkLimit_iff_bijective_stalkToAdicCompletion` as *the
-stalk of the completion is the completion of the stalk* is a statement about two stalks.
+stalk of `O_{Spec R}`. Together with that equivalence this says that the ring and the ideal in the
+target of `FormalSpectrum.stalkTowerLimitEquiv` are both data of `O_{Spec R}` at the image of `x`.
+It does **not** say that that target *is* the completion of the stalk of `O_{Spec R}`: nothing here
+or below transports `AdicCompletion` along `FormalSpectrum.specStalkEquiv`, and the module
+docstring says what that step would take.
 
-Stated in the `Ideal.map`-along-the-inverse direction. The `Ideal.comap`-along-the-equivalence
-form of the same fact is not interchangeable in practice: rewriting it with
-`Ideal.map_comap_of_equiv` fails, because the comparison forces the stalk's carrier type through
-`AlgebraicGeometry.Spec.structureSheaf` and the point does not have that type. -/
+Stated in the `Ideal.map`-along-the-inverse direction, which is the shape Mathlib's
+`IsAdicComplete.congr_ringEquiv` and its `IsHausdorff.congr_ringEquiv` and
+`IsPrecomplete.congr_ringEquiv` companions consume. The `Ideal.comap`-along-the-equivalence form of
+the same fact is not one rewrite away: `Ideal.map_comap_of_equiv` does not fire, because the
+comparison forces the stalk's carrier type through `AlgebraicGeometry.Spec.structureSheaf` and the
+point does not have that type. -/
 theorem map_pointIdeal_specStalkEquiv_symm :
     (pointIdeal I x).map ((specStalkEquiv I x).symm : _ →+* _) =
       I.map (algebraMap R ((structurePresheafInCommRingCat R).stalk (toPrimeSpectrum I x))) := by
