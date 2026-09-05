@@ -11,7 +11,7 @@ EGA I 10.8 at a point `x` of `Spf (R, I)`: the assertion that
 `FormalSpectrum.stalkToLimit I x` is an isomorphism, i.e. that the stalk of `O_{Spf R}` at `x` is
 the limit of the stalks of the thickenings. Every module on this tree that mentions it says in as
 many words that it is undecided, and a search over the whole library confirms that: every
-occurrence is its definition, one of the four `Iff`s that restate it, or a paragraph declining to
+occurrence is its definition, one of the five `Iff`s that restate it, or a paragraph declining to
 decide it.
 **No ring and no point had ever been supplied at which it is known to hold or to fail.**
 
