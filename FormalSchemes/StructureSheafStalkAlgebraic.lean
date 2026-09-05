@@ -20,9 +20,12 @@ This file removes it. `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict`
 (`FormalSchemes.BasicOpenRestrictionIdentification`) says that for `I` finitely generated the
 sheaf-theoretic restriction *is* the algebraically constructed
 `FormalSpectrum.awayCompletionRestrict` (`FormalSchemes.AwayCompletionRestrict`), and `Ideal.FG` is
-a hypothesis the criterion already carries. So the substitution is a rewrite, and after it the two
-sides of `FormalSpectrum.isStalkLimit_iff_awayCompletionRestrict` mention no sheaf, stalk, germ,
-colimit or category at all.
+a hypothesis the criterion already carries. So the substitution is a rewrite, and after it **both
+halves of the right-hand side** of `FormalSpectrum.isStalkLimit_iff_awayCompletionRestrict` mention
+no sheaf, stalk, germ, colimit or category at all. The left-hand side is
+`FormalSpectrum.IsStalkLimit` itself, which `FormalSchemes.StructureSheafStalks` defines as `IsIso`
+of `FormalSpectrum.stalkToLimit`; that is the notion being reformulated rather than part of the
+reformulation, and it stays sheaf-theoretic.
 
 ## What the rewrite costs
 
@@ -61,7 +64,7 @@ that `globalSectionsEquiv` needs both and the other three inherit them, and the 
 that would make the results below hypothesis-free does not exist as a signature change. What is
 *not* settled, and is a separate question with a separate answer, is whether
 `basicOpenRes_comp_awayCompletionHom` — an instance-free statement — admits an instance-free
-*proof* not routed through `Γ(⊤)`; nothing here attempts one, and its module has reverse closure 8.
+*proof* not routed through `Γ(⊤)`; nothing here attempts one, and its module has reverse closure 9.
 
 ## Placement, and the two options not taken
 
