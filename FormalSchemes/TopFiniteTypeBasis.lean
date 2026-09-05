@@ -37,8 +37,9 @@ Refining inside an affine chart `Spf L` lands on a **basic open** `D(g)`, whose 
 completed localization `L{1/g}`. So the statement was out of reach until issue 807 proved that a
 basic open of a tf-type formal affine is again tf-type
 (`IsTopologicallyFiniteType.awayCompletion`, `FormalSchemes.AwayTopFiniteType`). Everything else
-here is the proof of `FormalScheme.exists_affineChart_subset` run again with that extra fact
-carried along.
+here is the shrinking step `FormalScheme.exists_basicOpenRefine_subset`
+(`FormalSchemes.LocallyFG`), shared with `FormalScheme.exists_affineChart_subset` and with the
+adic-over-base and `ψ`-relative neighbourhood-basis lemmas, with that extra fact carried along.
 
 Note the finite generation hypothesis `hI : I.FG` on the base ideal: it is what makes `L` finitely
 generated (`L = I·A` for a tf-type `A`) and it is a hypothesis of
@@ -113,7 +114,12 @@ theorem _root_.IsTopologicallyFiniteType.fg {A : Type u} [CommRing A]
 
 /-- **Tf-type affine charts form a neighbourhood basis.** On a locally tf-type formal scheme, every
 point `x` lying in an open set `U` admits a tf-type affine open-immersion chart whose range is
-contained in `U`. -/
+contained in `U`.
+
+The shrinking is `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset`
+(`FormalSchemes.LocallyFG`): bundle the witness the cover supplies as an
+`AlgebraicGeometry.FormalScheme.AffineChart` and shrink that. All this lemma adds is the `tfType`
+field of the refined chart, which is `IsTopologicallyFiniteType.awayCompletion`. -/
 theorem IsLocallyTopFiniteType.nonempty_tfTypeChart {X : FormalScheme.{u}}
     (hX : IsLocallyTopFiniteType R I X) (hI : I.FG) (x : X) (U : Set X) (hU : IsOpen U)
     (hxU : x ∈ U) : Nonempty (TfTypeChart R I X U x) := by
@@ -134,41 +140,17 @@ theorem IsLocallyTopFiniteType.nonempty_tfTypeChart {X : FormalScheme.{u}}
     change (e.hom ≫ e.inv ≫ 𝒰.map (𝒰.f x)).toLRSHom.base y = x
     rw [← Category.assoc, e.hom_inv_id, Category.id_comp]
     exact hy
-  obtain ⟨x₀, hx₀⟩ := hxm
-  -- refine inside the affine chart: a basic open of `Spf L` around `x₀`
-  have hopen : IsOpen (m.base ⁻¹' U) := hU.preimage m.base.hom.continuous
-  have hmem : x₀ ∈ m.base ⁻¹' U := by
-    simp only [Set.mem_preimage, hx₀]; exact hxU
-  obtain ⟨v, ⟨g, rfl⟩, hx₀v, hvsub⟩ :=
-    (FormalSpectrum.isTopologicalBasis_basicOpen L).exists_subset_of_mem_open hmem hopen
   have hLfg : L.FG := IsTopologicallyFiniteType.fg hL hI
-  haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal L g) :=
-    FormalSpectrum.isAdicRing_awayCompletionIdeal L g hLfg
-  haveI : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart L g) :=
-    FormalSpectrum.isOpenImmersion_basicOpenChart L g hLfg
-  have hrange : Set.range (FormalSpectrum.basicOpenChart L g).base =
-      (FormalSpectrum.basicOpen L g : Set (FormalSpectrum L)) :=
-    FormalSpectrum.range_basicOpenChart_base L g hLfg
-  refine ⟨{ A := FormalSpectrum.awayCompletion L g
-            L := FormalSpectrum.awayCompletionIdeal L g
-            tfType := IsTopologicallyFiniteType.awayCompletion g hI hL
-            map := FormalSpectrum.basicOpenChart L g ≫ m
-            mem := ?_
-            subset := ?_ }⟩
-  · have hx₀mem : x₀ ∈ Set.range (FormalSpectrum.basicOpenChart L g).base := by
-      rw [hrange]; exact hx₀v
-    obtain ⟨w, hw⟩ := hx₀mem
-    refine ⟨w, ?_⟩
-    simp only [LocallyRingedSpace.comp_base, TopCat.comp_app]
-    rw [hw]; exact hx₀
-  · rw [LocallyRingedSpace.comp_base]
-    intro z hz
-    simp only [TopCat.comp_app, Set.mem_range] at hz
-    obtain ⟨w, rfl⟩ := hz
-    have hw : (FormalSpectrum.basicOpenChart L g).base w ∈
-        (FormalSpectrum.basicOpen L g : Set (FormalSpectrum L)) := by
-      rw [← hrange]; exact ⟨w, rfl⟩
-    exact hvsub hw
+  -- bundle the witness as an affine chart and shrink it into `U`
+  let c : AffineChart X x := { R := A, I := L, map := m, mem := hxm, isOpenImmersion := hm }
+  obtain ⟨g, hadic, hoi, hmem, hsub⟩ := exists_basicOpenRefine_subset c hLfg U hU hxU
+  exact ⟨{ A := FormalSpectrum.awayCompletion L g
+           L := FormalSpectrum.awayCompletionIdeal L g
+           tfType := IsTopologicallyFiniteType.awayCompletion g hI hL
+           map := (c.basicOpenRefine g hmem).map
+           mem := (c.basicOpenRefine g hmem).mem
+           subset := hsub
+           isOpenImmersion := (c.basicOpenRefine g hmem).isOpenImmersion }⟩
 
 /-- The unbundled form of `IsLocallyTopFiniteType.nonempty_tfTypeChart`, matching the shape of
 `FormalScheme.exists_affineChart_subset`. -/
