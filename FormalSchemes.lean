@@ -494,6 +494,7 @@ import FormalSchemes.ThickeningMapNatural
 import FormalSchemes.ThickeningNonDegenerateWitness
 import FormalSchemes.ThickeningTowerKernel
 import FormalSchemes.Thickenings
+import FormalSchemes.ThreeChartCoverAmbient
 import FormalSchemes.ThreeChartCoverCharts
 import FormalSchemes.ThreeChartCoverDatum
 import FormalSchemes.ThreeChartCoverOpenImmersion
