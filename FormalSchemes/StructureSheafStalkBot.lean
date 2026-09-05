@@ -10,8 +10,9 @@ set_option linter.style.header false
 EGA I 10.8 at a point `x` of `Spf (R, I)`: the assertion that
 `FormalSpectrum.stalkToLimit I x` is an isomorphism, i.e. that the stalk of `O_{Spf R}` at `x` is
 the limit of the stalks of the thickenings. Every module on this tree that mentions it says in as
-many words that it is undecided, and a `grep` over the library confirms that: every occurrence is
-its definition, one of the four `Iff`s that restate it, or a paragraph declining to decide it.
+many words that it is undecided, and a search over the whole library confirms that: every
+occurrence is its definition, one of the four `Iff`s that restate it, or a paragraph declining to
+decide it.
 **No ring and no point had ever been supplied at which it is known to hold or to fail.**
 
 This file supplies one, positively and for every commutative ring:
@@ -23,14 +24,17 @@ a point whenever `R` is nontrivial, so the predicate is **not vacuous**.
 
 At `⊥` every adic completion in the criterion is the ring it completes: `AdicCompletion ⊥ A` is
 `A` because `IsAdicComplete (⊥ : Ideal A) A` holds for every `A` with no hypotheses at all, and
-`FormalSpectrum.pointIdeal (⊥ : Ideal R) x` and `(⊥ : Ideal R).map (algebraMap R (R_f))` are both
-`⊥` by `Ideal.map_bot`. So `FormalSpectrum.isStalkLimit_iff_awayCompletion` degenerates to two
-standard facts about localizations, and this file proves exactly those two:
+both `FormalSpectrum.pointIdeal (⊥ : Ideal R) x` and the extension of `⊥` to
+`Localization.Away f` are `⊥` by `Ideal.map_bot`. So
+`FormalSpectrum.isStalkLimit_iff_awayCompletion` degenerates to two standard facts about
+localizations, and this file proves exactly those two:
 
-* *surjectivity* — every element of `R_p` is `r / s` with `s ∉ p`, which is the image of `r / s`
-  in `R_s`, and `s ∉ p` says exactly `x ∈ D(s)`;
-* *injectivity* — an element `r / f ^ n` of `R_f` dying in `R_p` has `g * r = 0` for some `g ∉ p`,
-  and then it dies already in `R_{f * g}`, an `R`-algebra in which `g` is invertible.
+* *surjectivity* — every element of `Localization.AtPrime (pointPrime I x)` is `r / s` with
+  `s ∉ pointPrime I x`, which is the image of the same fraction in `Localization.Away s`, and
+  `s ∉ pointPrime I x` says exactly `x ∈ D(s)`;
+* *injectivity* — an element `r / f ^ n` of `Localization.Away f` dying in
+  `Localization.AtPrime (pointPrime I x)` has `g * r = 0` for some `g ∉ pointPrime I x`, and then
+  it dies already in `Localization.Away (f * g)`, in which `g` is invertible.
 
 ## Which criterion this is proved against, and why not the other one
 
@@ -52,7 +56,7 @@ file's forward closure from **39** to **47** in exchange for nothing.
 
 `FormalSpectrum.basicOpenRes_comp_awayCompletionHom` carries `[TopologicalSpace R]` and
 `IsAdicRing I`. At `⊥` both are discharged **inside the proof**: `FormalSpectrum.IsStalkLimit`,
-`FormalSpectrum.FormalSpectrum`, `FormalSpectrum.basicOpen`, `FormalSpectrum.basicOpenRes` and
+`FormalSpectrum I`, `FormalSpectrum.basicOpen`, `FormalSpectrum.basicOpenRes` and
 `FormalSpectrum.awayCompletion` are all instance-free, so no statement below mentions a topology
 and a proof is free to pick one; the `⊥`-adic topology *is* the discrete topology, so
 `instIsAdicRingBotOfDiscreteTopology` (`FormalSchemes.AdicRing`) supplies `IsAdicRing ⊥` from
@@ -100,10 +104,10 @@ in either direction about it.
 `FormalSchemes.StructureSheafStalkComparison` records that an element killed by
 `FormalSpectrum.awayToAtPrimeCompletion` is killed at each level `n` by a `g` that may depend on
 `n`, while the injectivity half needs one `g` serving every level. At `⊥` the tower
-`R_p ⧸ (I · R_p) ^ (n + 1)` is the constant tower at `R_p` from level 0 on, so there are no levels
-to be uniform over and the difficulty is absent rather than defeated. A reader must **not** take
-this file as licence to restate the general question as open only in the Noetherian case: it is
-open at every nonzero ideal of definition, Noetherian or not.
+`R_p ⧸ (I · R_p) ^ (n + 1)` is constant at `Localization.AtPrime (pointPrime ⊥ x)` from level 0
+on, so there are no levels to be uniform over and the difficulty is absent rather than defeated. A
+reader must **not** take this file as licence to restate the general question as open only in the
+Noetherian case: it is open at every nonzero ideal of definition, Noetherian or not.
 
 **Nothing under a Noetherian hypothesis.** `Submodule.fg_bot` is the only finiteness fact used and
 it is free.
@@ -134,8 +138,8 @@ variable {R : Type u} [CommRing R]
 `FormalSpectrum.notMem_pointPrime_of_mem_basicOpen`. Both directions are definitional:
 `FormalSpectrum.pointPrime` is the contraction of the point's prime along `Ideal.Quotient.mk I`,
 and `FormalSpectrum.mem_basicOpen` is `Iff.rfl`. The tree carried only the forward direction; this
-is the other one, and it is what turns a denominator of a fraction in `R_p` into a basic open
-through `x`. -/
+is the other one, and it is what turns the denominator of a fraction in
+`Localization.AtPrime (pointPrime I x)` into a basic open through `x`. -/
 theorem mem_basicOpen_of_notMem_pointPrime (I : Ideal R) (x : FormalSpectrum I) {f : R}
     (hf : f ∉ pointPrime I x) : x ∈ basicOpen I f :=
   hf
@@ -216,11 +220,11 @@ end Restriction
 /-! ### `Spf (R, ⊥)`: every completion in the criterion is the ring it completes -/
 
 /-- The ideal of definition of the stalk tower is `⊥` when the ideal of definition is: it is the
-extension of `I` to `R_p`, and `Ideal.map_bot`. -/
+extension of `I` to `Localization.AtPrime (pointPrime I x)`, and `Ideal.map_bot`. -/
 theorem pointIdeal_bot (x : FormalSpectrum (⊥ : Ideal R)) : pointIdeal (⊥ : Ideal R) x = ⊥ := by
   rw [pointIdeal, Ideal.map_bot]
 
-/-- `R_p` is `⊥`-adically complete for the ideal of definition of the stalk tower at `⊥`. Every
+/-- The local ring is `⊥`-adically complete for the ideal of definition of the stalk tower. Every
 ring is `⊥`-adically complete with no hypotheses; the only work is transporting that along
 `FormalSpectrum.pointIdeal_bot`, which is possible because `IsAdicComplete` is a `Prop`. -/
 instance instIsAdicCompletePointIdealBot (x : FormalSpectrum (⊥ : Ideal R)) :
@@ -229,19 +233,20 @@ instance instIsAdicCompletePointIdealBot (x : FormalSpectrum (⊥ : Ideal R)) :
   rw [pointIdeal_bot]
   infer_instance
 
-/-- `R_f` is complete for the ideal of definition of `R{1/f}` at `⊥`, so `R{1/f}` is `R_f`. -/
+/-- `Localization.Away f` is complete for the ideal of definition of `R{1/f}` at `⊥`. -/
 instance instIsAdicCompleteAwayBot (f : R) :
     IsAdicComplete ((⊥ : Ideal R).map (algebraMap R (Localization.Away f)))
       (Localization.Away f) := by
   rw [Ideal.map_bot]
   infer_instance
 
-/-- **`R{1/f}` is `R_f` at `⊥`**, in the direction the surjectivity half needs. -/
+/-- **`R{1/f}` is `Localization.Away f` at `⊥`**, in the direction the surjectivity half needs. -/
 theorem surjective_algebraMap_awayCompletion_bot (f : R) :
     Function.Surjective (algebraMap (Localization.Away f) (awayCompletion (⊥ : Ideal R) f)) :=
   (AdicCompletion.ofAlgEquiv _).surjective
 
-/-- **The completion of `R_p` is `R_p` at `⊥`**, in the direction the injectivity half needs. -/
+/-- **The completion of `Localization.AtPrime (pointPrime ⊥ x)` is itself at `⊥`**, in the
+direction the injectivity half needs. -/
 theorem injective_algebraMap_atPrimeCompletion_bot (x : FormalSpectrum (⊥ : Ideal R)) :
     Function.Injective (algebraMap (Localization.AtPrime (pointPrime (⊥ : Ideal R) x))
       (AdicCompletion (pointIdeal (⊥ : Ideal R) x)
@@ -286,9 +291,10 @@ giving `R` the discrete topology, which is legitimate because the statement ment
 and the `⊥`-adic topology is the discrete one. See the module docstring; this is available at `⊥`
 and nowhere else.
 
-The mathematics is the standard fact: an element `r / f ^ n` of `R_f` dying in `R_p` has
-`g * r = 0` for some `g ∉ p` (`IsLocalization.mk'_eq_zero_iff`), and `D(f * g)` is then a basic
-open through `x` inside `D(f)` on which `g` is invertible, so the restriction kills it. -/
+The mathematics is the standard fact: an element `r / f ^ n` of `Localization.Away f` dying in
+`Localization.AtPrime (pointPrime ⊥ x)` has `g * r = 0` for some `g ∉ pointPrime ⊥ x`
+(`IsLocalization.mk'_eq_zero_iff`), and `D(f * g)` is then a basic open through `x` inside `D(f)`
+on which `g` is invertible, so the restriction kills it. -/
 theorem exists_basicOpenRes_eq_zero_bot (x : FormalSpectrum (⊥ : Ideal R)) (f : R)
     (hf : x ∈ basicOpen (⊥ : Ideal R) f) (a : awayCompletion (⊥ : Ideal R) f)
     (ha : awayToAtPrimeCompletion (⊥ : Ideal R) x Submodule.fg_bot hf a = 0) :
