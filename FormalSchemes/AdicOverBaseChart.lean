@@ -32,7 +32,10 @@ This file isolates that inheritance as reusable, base-relative infrastructure:
   charts form a neighborhood basis — every point in an open `U` has a finitely generated affine
   chart contained in `U` that is adic on global sections over `s`. The basic-open refinement
   preserves adicity-over-base (`AdicOnSections.le_comap_globalSectionsMap_basicOpenChart_comp`),
-  which is the whole content.
+  which is the whole content: the shrinking itself is
+  `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset` (`FormalSchemes.LocallyFG`),
+  shared with every other neighbourhood-basis lemma on the tree, and this file adds only the
+  transport.
 
 This is the base-relative strengthening of
 `AlgebraicGeometry.FormalScheme.exists_affineChart_subset` (`FormalSchemes.LocallyFG`), which takes
@@ -79,9 +82,13 @@ theorem AdicOverBaseLocallyFG.locallyFG {X : FormalScheme.{u}}
 /-- **Adic-over-base affine charts form a neighborhood basis.** On a scheme that is adic over the
 base `s : X ⟶ Spf I`, every point `x` in an open set `U` has a finitely generated affine
 open-immersion chart whose range is contained in `U` *and* which is adic on global sections over
-`s`. The chart is `basicOpenChart I₀ g ≫ m` for the adic-over-base witness `m` at `x`; the
-basic-open refinement preserves adicity-over-base by
-`le_comap_globalSectionsMap_basicOpenChart_comp`. -/
+`s`. The chart is `AlgebraicGeometry.FormalScheme.AffineChart.basicOpenRefine` of the
+adic-over-base witness at `x`; the shrinking step itself is
+`AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset` (`FormalSchemes.LocallyFG`), shared
+with `AlgebraicGeometry.FormalScheme.exists_affineChart_subset` and with the `ψ`-relative lemmas of
+`FormalSchemes.AdicSectionsChart`, and the only step proper to this lemma is the transport
+`FormalSpectrum.le_comap_globalSectionsMap_basicOpenChart_comp`, which is what makes the refinement
+preserve adicity-over-base. -/
 theorem exists_affineChart_subset_adicOverBase (X : FormalScheme.{u})
     (s : X.toLocallyRingedSpace ⟶ FormalSpectrum.locallyRingedSpaceObj I)
     (hX : AdicOverBaseLocallyFG X s) (x : X) (U : Set X) (hU : IsOpen U) (hxU : x ∈ U) :
@@ -90,48 +97,23 @@ theorem exists_affineChart_subset_adicOverBase (X : FormalScheme.{u})
       J.FG ∧ x ∈ Set.range f.base ∧ Set.range f.base ⊆ U ∧
         LocallyRingedSpace.IsOpenImmersion f ∧
         I ≤ J.comap (FormalSpectrum.globalSectionsMap I J (f ≫ s)) := by
-  obtain ⟨S₀, _, _, I₀, _, m, hI₀fg, ⟨x₀, hx₀⟩, hm, hadic⟩ := hX x
-  -- the preimage of `U` under the witness chart is an open set containing `x₀`
-  have hcont : Continuous m.base := m.base.hom.continuous
-  have hopen : IsOpen (m.base ⁻¹' U) := hU.preimage hcont
-  have hmem : x₀ ∈ m.base ⁻¹' U := by
-    simp only [Set.mem_preimage, hx₀]; exact hxU
-  obtain ⟨v, ⟨g, rfl⟩, hx₀v, hvsub⟩ :=
-    (isTopologicalBasis_basicOpen I₀).exists_subset_of_mem_open hmem hopen
-  haveI hJadic : IsAdicRing (FormalSpectrum.awayCompletionIdeal I₀ g) :=
-    FormalSpectrum.isAdicRing_awayCompletionIdeal I₀ g hI₀fg
-  haveI hoi : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart I₀ g) :=
-    FormalSpectrum.isOpenImmersion_basicOpenChart I₀ g hI₀fg
-  have hJfg : (FormalSpectrum.awayCompletionIdeal I₀ g).FG :=
-    FormalSpectrum.awayCompletionIdeal_fg I₀ g hI₀fg
-  have hrange : Set.range (FormalSpectrum.basicOpenChart I₀ g).base =
-      (FormalSpectrum.basicOpen I₀ g : Set (FormalSpectrum I₀)) :=
-    FormalSpectrum.range_basicOpenChart_base I₀ g hI₀fg
-  refine ⟨FormalSpectrum.awayCompletion I₀ g, inferInstance, inferInstance,
-    FormalSpectrum.awayCompletionIdeal I₀ g, hJadic,
-    FormalSpectrum.basicOpenChart I₀ g ≫ m, hJfg, ?_, ?_,
-    LocallyRingedSpace.IsOpenImmersion.comp _ _, ?_⟩
-  · -- `x` lies in the range of the composite: pick the preimage `y` of `x₀`
-    have hx₀mem : x₀ ∈ Set.range (FormalSpectrum.basicOpenChart I₀ g).base := by
-      rw [hrange]; exact hx₀v
-    obtain ⟨y, hy⟩ := hx₀mem
-    refine ⟨y, ?_⟩
-    simp only [LocallyRingedSpace.comp_base, TopCat.comp_app]
-    rw [hy]; exact hx₀
-  · -- the range of the composite is contained in `U`
-    rw [LocallyRingedSpace.comp_base]
-    intro z hz
-    simp only [TopCat.comp_app, Set.mem_range] at hz
-    obtain ⟨w, rfl⟩ := hz
-    have hw : (FormalSpectrum.basicOpenChart I₀ g).base w ∈
-        (FormalSpectrum.basicOpen I₀ g : Set (FormalSpectrum I₀)) := by
-      rw [← hrange]; exact ⟨w, rfl⟩
-    exact hvsub hw
-  · -- adic over the base: the basic-open refinement preserves adicity-over-`s`
-    have hassoc : (FormalSpectrum.basicOpenChart I₀ g ≫ m) ≫ s =
-        FormalSpectrum.basicOpenChart I₀ g ≫ (m ≫ s) := Category.assoc _ _ _
-    rw [hassoc]
-    exact FormalSpectrum.le_comap_globalSectionsMap_basicOpenChart_comp I I₀ g (m ≫ s) hadic
+  obtain ⟨S₀, _, _, I₀, _, m, hI₀fg, hmem₀, hm, hadic⟩ := hX x
+  -- bundle the adic-over-base witness as an affine chart and shrink it into `U`
+  let c : AffineChart X x := { R := S₀, I := I₀, map := m, mem := hmem₀, isOpenImmersion := hm }
+  obtain ⟨g, hadicg, hoi, hmem', hsub⟩ :=
+    exists_basicOpenRefine_subset c hI₀fg U hU hxU
+  refine ⟨FormalSpectrum.awayCompletion c.I g, inferInstance, inferInstance,
+    FormalSpectrum.awayCompletionIdeal c.I g, hadicg, (c.basicOpenRefine g hmem').map,
+    FormalSpectrum.awayCompletionIdeal_fg c.I g hI₀fg, (c.basicOpenRefine g hmem').mem, hsub,
+    hoi, ?_⟩
+  -- adic over the base: the basic-open refinement preserves adicity-over-`s`
+  have hassoc : (FormalSpectrum.basicOpenChart c.I g ≫ m) ≫ s =
+      FormalSpectrum.basicOpenChart c.I g ≫ (m ≫ s) := Category.assoc _ _ _
+  change I ≤ (FormalSpectrum.awayCompletionIdeal c.I g).comap
+    (FormalSpectrum.globalSectionsMap I (FormalSpectrum.awayCompletionIdeal c.I g)
+      ((FormalSpectrum.basicOpenChart c.I g ≫ m) ≫ s))
+  rw [hassoc]
+  exact FormalSpectrum.le_comap_globalSectionsMap_basicOpenChart_comp I c.I g (m ≫ s) hadic
 
 end AlgebraicGeometry.FormalScheme
 

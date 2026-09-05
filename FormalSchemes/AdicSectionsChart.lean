@@ -131,13 +131,12 @@ described as the general form of the other.
 * `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections_eq`: it is the *same*
   morphism `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` builds from any other overlap
   data at the same charts, so the overlap witness builds the morphism without pinning it down.
-* `AlgebraicGeometry.FormalScheme.AffineChart.basicOpenRefine` and
-  `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset`: the shrinking step, named — every
-  affine chart has a basic-open refinement inside any given open neighbourhood of its point.
 * `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicSections` and
   `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBasePair`: **the charts of both
   predicates really are neighbourhood bases**, which is what their docstrings' "on a neighbourhood
-  basis" refers to and what makes either checkable patch by patch. The transport lemmas are
+  basis" refers to and what makes either checkable patch by patch. Both are the shared shrinking
+  step `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset` (`FormalSchemes.LocallyFG`)
+  followed by a transport; the transport lemmas are
   `AlgebraicGeometry.FormalScheme.AffineChart.sectionsHom_basicOpenRefine`,
   `AlgebraicGeometry.FormalScheme.AffineChart.le_comap_sectionsHom_basicOpenRefine` and
   `AlgebraicGeometry.FormalScheme.AffineChart.le_comap_globalSectionsMap_basicOpenRefine`.
@@ -332,71 +331,6 @@ theorem AdicOverBaseLocallyFG.pair_of_eq (h : AdicOverBaseLocallyFG Y s) (hst : 
 section Refinement
 
 variable {Y : FormalScheme.{u}}
-
-/-- **The basic-open refinement of an affine chart, as an affine chart.** Composing a chart's open
-immersion with `FormalSpectrum.basicOpenChart` at some `g` of its ring gives a smaller chart
-around the same point: its ring is `FormalSpectrum.awayCompletion` and its ideal of definition is
-`FormalSpectrum.awayCompletionIdeal`, both at that `g`.
-
-This is the shrinking step of `AlgebraicGeometry.FormalScheme.exists_affineChart_subset` and of
-`AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase`, named so that the two
-lemmas below can say *which* chart they produce rather than only that one exists. The two instance
-arguments are not automatic — `FormalSpectrum.isOpenImmersion_basicOpenChart` needs the chart's
-ideal to be finitely generated — so a caller supplies them, normally from
-`AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset` below. -/
-def AffineChart.basicOpenRefine {y : Y} (c : AffineChart Y y) (g : c.R)
-    [IsAdicRing (awayCompletionIdeal c.I g)]
-    [LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map)]
-    (hmem : y ∈ Set.range (basicOpenChart c.I g ≫ c.map).base) : AffineChart Y y where
-  R := awayCompletion c.I g
-  I := awayCompletionIdeal c.I g
-  map := basicOpenChart c.I g ≫ c.map
-  mem := hmem
-
-/-- **Every chart can be shrunk into a given open**, with the refinement named. This is the whole
-topological content of `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase`,
-separated from what that lemma transports along it: the basic opens of the chart's own formal
-spectrum are a basis (`FormalSpectrum.isTopologicalBasis_basicOpen`), so one of them lands inside
-the preimage of the target open, and `FormalSpectrum.range_basicOpenChart_base` identifies its
-image.
-
-Nothing here mentions an ideal of definition on a base or a homomorphism on sections. That is the
-point: the two lemmas below differ only in what they carry across this step, and both carry it
-across the *same* `FormalSpectrum.basicOpenChart`. -/
-theorem exists_basicOpenRefine_subset {y : Y} (c : AffineChart Y y) (hfg : c.I.FG)
-    (U : Set Y) (hU : IsOpen U) (hyU : y ∈ U) :
-    ∃ (g : c.R) (_ : IsAdicRing (awayCompletionIdeal c.I g))
-      (_ : LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map))
-      (hmem : y ∈ Set.range (basicOpenChart c.I g ≫ c.map).base),
-      Set.range (c.basicOpenRefine g hmem).map.base ⊆ U := by
-  obtain ⟨y₀, hy₀⟩ := c.mem
-  have hopen : IsOpen (c.map.base ⁻¹' U) := hU.preimage c.map.base.hom.continuous
-  have hmem₀ : y₀ ∈ c.map.base ⁻¹' U := by
-    simp only [Set.mem_preimage, hy₀]; exact hyU
-  obtain ⟨v, ⟨g, rfl⟩, hy₀v, hvsub⟩ :=
-    (isTopologicalBasis_basicOpen c.I).exists_subset_of_mem_open hmem₀ hopen
-  haveI : IsAdicRing (awayCompletionIdeal c.I g) := isAdicRing_awayCompletionIdeal c.I g hfg
-  haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g) :=
-    isOpenImmersion_basicOpenChart c.I g hfg
-  haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map) :=
-    LocallyRingedSpace.IsOpenImmersion.comp _ _
-  have hrange : Set.range (basicOpenChart c.I g).base =
-      (basicOpen c.I g : Set (FormalSpectrum c.I)) := range_basicOpenChart_base c.I g hfg
-  obtain ⟨w₀, hw₀⟩ : y₀ ∈ Set.range (basicOpenChart c.I g).base := by
-    rw [hrange]; exact hy₀v
-  have hmem : y ∈ Set.range (basicOpenChart c.I g ≫ c.map).base := by
-    refine ⟨w₀, ?_⟩
-    simp only [LocallyRingedSpace.comp_base, TopCat.comp_app]
-    rw [hw₀]; exact hy₀
-  refine ⟨g, ‹_›, ‹_›, hmem, ?_⟩
-  change Set.range (basicOpenChart c.I g ≫ c.map).base ⊆ U
-  rw [LocallyRingedSpace.comp_base]
-  intro z hz
-  simp only [TopCat.comp_app, Set.mem_range] at hz
-  obtain ⟨w, rfl⟩ := hz
-  have hw : (basicOpenChart c.I g).base w ∈ (basicOpen c.I g : Set (FormalSpectrum c.I)) := by
-    rw [← hrange]; exact ⟨w, rfl⟩
-  exact hvsub hw
 
 section Sections
 
