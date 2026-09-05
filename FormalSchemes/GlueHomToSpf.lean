@@ -69,8 +69,10 @@ scope note of `FormalSchemes.GlobalSectionsHom` for the same point on the faithf
   `comp_globalSectionsHom_homOfGlobalSectionsHom`.
 * `AlgebraicGeometry.FormalScheme.overlapChartOf` and
   `AlgebraicGeometry.FormalScheme.SpfHomContinuity`: given a supplied family of affine charts, the
-  charts on its overlaps are canonical — `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart` at that cover — so the only
-  arguments of `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` left carrying content are its three continuity families.
+  charts on its overlaps are canonical — `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart`
+  at that cover — so the only arguments of
+  `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` left carrying content are its three
+  continuity families.
   `AlgebraicGeometry.FormalScheme.SpfHomContinuity` bundles those three, and
   `AlgebraicGeometry.FormalScheme.homOfSpfHomContinuity` is the construction over it, with
   `AlgebraicGeometry.FormalScheme.chart_comp_homOfSpfHomContinuity`. **The chart family stays
@@ -479,7 +481,8 @@ says in so many words: do not reintroduce such a hypothesis in a new constructio
 
 **The reachable form is one door down**, and is not built here:
 `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG` (`FormalSchemes.AdicOverBaseChart`) is
-`LocallyFG` with the adic-over-base bound added to the chart it produces,
+`AlgebraicGeometry.FormalScheme.LocallyFG` with the adic-over-base bound added to the chart it
+produces,
 `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase` makes such a chart
 available at every point, and
 `AlgebraicGeometry.BothChartedFibreDatumXY.adicBothCharts`
