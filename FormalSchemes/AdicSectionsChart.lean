@@ -65,6 +65,14 @@ adic on sections, and that is the statement `FormalSchemes.GeneralFibreProductLi
 false in general (issues 460/468/472/487). So the obvious route is blocked at the same place the
 `hs` problem was, and no route around it is offered here.
 
+**What is *not* blocked is refining a pair witness**, and it is worth separating the two.
+`AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBasePair` below shrinks a pair
+witness into any given open with **both** bounds intact, because a pair witness hands over a single
+chart carrying both, and `FormalSpectrum.le_comap_globalSectionsMap_basicOpenChart_comp` then
+applies to it twice along the *same* `FormalSpectrum.basicOpenChart`. Nothing about open immersions
+being adic on sections is needed for that. So the open question is the **merge** — two unrelated
+witnesses into one — and not the refinement.
+
 `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG.pair_of_eq` is the one cheap sufficient
 condition: if the two base morphisms are *equal*, one witness serves. That is not circular but it
 is close to it, and it is worth seeing why. The two base morphisms on the `(i, j)` overlap are
@@ -104,6 +112,21 @@ were ever proved independently.
 * `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections_eq`: it is the *same*
   morphism `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` builds from any other overlap
   data at the same charts, so the overlap witness builds the morphism without pinning it down.
+* `AlgebraicGeometry.FormalScheme.AffineChart.basicOpenRefine` and
+  `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset`: the shrinking step, named — every
+  affine chart has a basic-open refinement inside any given open neighbourhood of its point.
+* `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicSections` and
+  `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBasePair`: **the charts of both
+  predicates really are neighbourhood bases**, which is what their docstrings' "on a neighbourhood
+  basis" refers to and what makes either checkable patch by patch. The transport lemmas are
+  `AlgebraicGeometry.FormalScheme.AffineChart.sectionsHom_basicOpenRefine`,
+  `AlgebraicGeometry.FormalScheme.AffineChart.le_comap_sectionsHom_basicOpenRefine` and
+  `AlgebraicGeometry.FormalScheme.AffineChart.le_comap_globalSectionsMap_basicOpenRefine`.
+* `AlgebraicGeometry.FormalScheme.AffineChart.ofSpf`,
+  `AlgebraicGeometry.FormalScheme.AffineChart.sectionsHom_ofSpf` and
+  `AlgebraicGeometry.FormalScheme.adicSectionsLocallyFG_Spf`: the affine case. On
+  `AlgebraicGeometry.FormalScheme.Spf J` the identity is a chart and the predicate is exactly
+  continuity of `ψ`, so it is satisfiable.
 
 ## What is *not* proved here
 
@@ -117,6 +140,19 @@ either condition holds anywhere is untouched, and a scheme satisfying neither is
 `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.locallyFG` is the one-way projection and
 there is no converse, since a `AlgebraicGeometry.FormalScheme.LocallyFG` witness carries no bound.
 Reading the two as interchangeable is the error this whole file exists to avoid.
+
+## Implementation notes
+
+`AlgebraicGeometry.FormalScheme.AffineChart.sectionsHom_basicOpenRefine` is **not** `rfl`: both
+sides pass through `FormalSpectrum.globalSectionsEquiv` and its inverse, and those cancel only
+propositionally. The `rfl` at the end of its proof closes what is left after that cancellation, and
+starting from `rfl` alone and reading the failure as the statement being false would be wrong.
+
+`AlgebraicGeometry.FormalScheme.AffineChart.ofSpf` fills its `isOpenImmersion` field with an
+explicit `@`-application supplying `CategoryTheory.IsIso.id`. Instance synthesis does **not** find
+`IsIso (𝟙 (FormalSpectrum.locallyRingedSpaceObj J))` at that position, and neither a `haveI` nor a
+`letI` ahead of the structure literal makes it available there, although the same synthesis
+succeeds at the top level of a section. Supplying the instance argument by position is what works.
 
 ## References
 
@@ -267,6 +303,242 @@ theorem AdicOverBaseLocallyFG.pair_of_eq (h : AdicOverBaseLocallyFG Y s) (hst : 
   intro y
   obtain ⟨S, _, _, J, _, f, hJfg, hmem, hoi, hadic⟩ := h y
   exact ⟨{ R := S, I := J, map := f, mem := hmem }, hJfg, hadic, hadic⟩
+
+/-! ### The charts of both predicates really are a neighbourhood basis -/
+
+section Refinement
+
+variable {Y : FormalScheme.{u}}
+
+/-- **The basic-open refinement of an affine chart, as an affine chart.** Composing a chart's open
+immersion with `FormalSpectrum.basicOpenChart` at some `g` of its ring gives a smaller chart
+around the same point: its ring is `FormalSpectrum.awayCompletion` and its ideal of definition is
+`FormalSpectrum.awayCompletionIdeal`, both at that `g`.
+
+This is the shrinking step of `AlgebraicGeometry.FormalScheme.exists_affineChart_subset` and of
+`AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase`, named so that the two
+lemmas below can say *which* chart they produce rather than only that one exists. The two instance
+arguments are not automatic — `FormalSpectrum.isOpenImmersion_basicOpenChart` needs the chart's
+ideal to be finitely generated — so a caller supplies them, normally from
+`AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset` below. -/
+def AffineChart.basicOpenRefine {y : Y} (c : AffineChart Y y) (g : c.R)
+    [IsAdicRing (awayCompletionIdeal c.I g)]
+    [LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map)]
+    (hmem : y ∈ Set.range (basicOpenChart c.I g ≫ c.map).base) : AffineChart Y y where
+  R := awayCompletion c.I g
+  I := awayCompletionIdeal c.I g
+  map := basicOpenChart c.I g ≫ c.map
+  mem := hmem
+
+/-- **Every chart can be shrunk into a given open**, with the refinement named. This is the whole
+topological content of `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase`,
+separated from what that lemma transports along it: the basic opens of the chart's own formal
+spectrum are a basis (`FormalSpectrum.isTopologicalBasis_basicOpen`), so one of them lands inside
+the preimage of the target open, and `FormalSpectrum.range_basicOpenChart_base` identifies its
+image.
+
+Nothing here mentions an ideal of definition on a base or a homomorphism on sections. That is the
+point: the two lemmas below differ only in what they carry across this step, and both carry it
+across the *same* `FormalSpectrum.basicOpenChart`. -/
+theorem exists_basicOpenRefine_subset {y : Y} (c : AffineChart Y y) (hfg : c.I.FG)
+    (U : Set Y) (hU : IsOpen U) (hyU : y ∈ U) :
+    ∃ (g : c.R) (_ : IsAdicRing (awayCompletionIdeal c.I g))
+      (_ : LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map))
+      (hmem : y ∈ Set.range (basicOpenChart c.I g ≫ c.map).base),
+      Set.range (c.basicOpenRefine g hmem).map.base ⊆ U := by
+  obtain ⟨y₀, hy₀⟩ := c.mem
+  have hopen : IsOpen (c.map.base ⁻¹' U) := hU.preimage c.map.base.hom.continuous
+  have hmem₀ : y₀ ∈ c.map.base ⁻¹' U := by
+    simp only [Set.mem_preimage, hy₀]; exact hyU
+  obtain ⟨v, ⟨g, rfl⟩, hy₀v, hvsub⟩ :=
+    (isTopologicalBasis_basicOpen c.I).exists_subset_of_mem_open hmem₀ hopen
+  haveI : IsAdicRing (awayCompletionIdeal c.I g) := isAdicRing_awayCompletionIdeal c.I g hfg
+  haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g) :=
+    isOpenImmersion_basicOpenChart c.I g hfg
+  haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map) :=
+    LocallyRingedSpace.IsOpenImmersion.comp _ _
+  have hrange : Set.range (basicOpenChart c.I g).base =
+      (basicOpen c.I g : Set (FormalSpectrum c.I)) := range_basicOpenChart_base c.I g hfg
+  obtain ⟨w₀, hw₀⟩ : y₀ ∈ Set.range (basicOpenChart c.I g).base := by
+    rw [hrange]; exact hy₀v
+  have hmem : y ∈ Set.range (basicOpenChart c.I g ≫ c.map).base := by
+    refine ⟨w₀, ?_⟩
+    simp only [LocallyRingedSpace.comp_base, TopCat.comp_app]
+    rw [hw₀]; exact hy₀
+  refine ⟨g, ‹_›, ‹_›, hmem, ?_⟩
+  change Set.range (basicOpenChart c.I g ≫ c.map).base ⊆ U
+  rw [LocallyRingedSpace.comp_base]
+  intro z hz
+  simp only [TopCat.comp_app, Set.mem_range] at hz
+  obtain ⟨w, rfl⟩ := hz
+  have hw : (basicOpenChart c.I g).base w ∈ (basicOpen c.I g : Set (FormalSpectrum c.I)) := by
+    rw [← hrange]; exact ⟨w, rfl⟩
+  exact hvsub hw
+
+section Sections
+
+variable (ψ)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The chart-restriction of `ψ` along a basic-open refinement factors through the refinement.**
+It is `FormalSpectrum.globalSectionsMap` of the basic-open chart, applied to the chart-restriction
+along the original chart.
+
+This is the `ψ`-relative counterpart of
+`FormalSpectrum.le_comap_globalSectionsMap_basicOpenChart_comp`, which is what
+`AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase` uses in the base-relative
+case, and it is the only new algebra in this section. **It is not `rfl`**: the two
+`FormalSpectrum.globalSectionsEquiv` round-trips cancel only propositionally. -/
+theorem AffineChart.sectionsHom_basicOpenRefine {x : X} (c : AffineChart X x) (g : c.R)
+    [IsAdicRing (awayCompletionIdeal c.I g)]
+    [LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map)]
+    (hmem : x ∈ Set.range (basicOpenChart c.I g ≫ c.map).base) :
+    (c.basicOpenRefine g hmem).sectionsHom ψ =
+      (globalSectionsMap c.I (awayCompletionIdeal c.I g)
+        (basicOpenChart c.I g)).comp (c.sectionsHom ψ) := by
+  change AffineChart.sectionsHom ψ
+      ({ R := awayCompletion c.I g, I := awayCompletionIdeal c.I g,
+         map := basicOpenChart c.I g ≫ c.map, mem := hmem } : AffineChart X x) = _
+  ext a
+  simp only [AffineChart.sectionsHom, RingHom.comp_apply, RingEquiv.toRingHom_eq_coe,
+    RingHom.coe_coe, globalSectionsMap_apply, RingEquiv.symm_apply_apply,
+    LocallyRingedSpace.comp_c_app]
+  rfl
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The `ψ`-bound travels to the refinement.** Immediate from the factorisation above and
+`FormalSpectrum.basicOpenChart_le_comap_globalSectionsMap`. -/
+theorem AffineChart.le_comap_sectionsHom_basicOpenRefine {x : X} (c : AffineChart X x) (g : c.R)
+    [IsAdicRing (awayCompletionIdeal c.I g)]
+    [LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map)]
+    (hmem : x ∈ Set.range (basicOpenChart c.I g ≫ c.map).base)
+    (hc : I ≤ c.I.comap (c.sectionsHom ψ)) :
+    I ≤ (c.basicOpenRefine g hmem).I.comap ((c.basicOpenRefine g hmem).sectionsHom ψ) := by
+  rw [AffineChart.sectionsHom_basicOpenRefine]
+  intro a ha
+  simp only [Ideal.mem_comap]
+  exact basicOpenChart_le_comap_globalSectionsMap c.I g (hc ha)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The charts of `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` are a neighbourhood
+basis**: every point of an open `U` has a witness chart whose range is contained in `U`. This is
+what the phrase "on a neighbourhood basis" in that predicate's own docstring refers to, and it is
+the `ψ`-relative analogue of
+`AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase`.
+
+Without it the predicate could only be used at a point. A source that is an *open* of something
+else — `AlgebraicGeometry.nodeChartSaturationFormalScheme` is
+`AlgebraicGeometry.FormalScheme.restrictOpen` of the Tate chain — needs charts cut down into that
+open before they are charts of the source at all, so this is the lemma any patch-by-patch check of
+the predicate goes through. -/
+theorem exists_affineChart_subset_adicSections (hX : AdicSectionsLocallyFG I ψ) (x : X)
+    (U : Set X) (hU : IsOpen U) (hxU : x ∈ U) :
+    ∃ c : AffineChart X x, c.I.FG ∧ Set.range c.map.base ⊆ U ∧
+      I ≤ c.I.comap (c.sectionsHom ψ) := by
+  obtain ⟨c, hfg, hcont⟩ := hX x
+  obtain ⟨g, _, _, hmem, hsub⟩ := exists_basicOpenRefine_subset c hfg U hU hxU
+  exact ⟨c.basicOpenRefine g hmem, awayCompletionIdeal_fg c.I g hfg, hsub,
+    c.le_comap_sectionsHom_basicOpenRefine ψ g hmem hcont⟩
+
+end Sections
+
+section Pair
+
+variable {s t : Y.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I}
+
+/-- **A bound over one base morphism travels to a basic-open refinement.**
+`FormalSpectrum.le_comap_globalSectionsMap_basicOpenChart_comp` after re-associating; the
+refinement's structure morphism is the basic-open chart followed by the original one. -/
+theorem AffineChart.le_comap_globalSectionsMap_basicOpenRefine {y : Y} (c : AffineChart Y y)
+    (g : c.R) [IsAdicRing (awayCompletionIdeal c.I g)]
+    [LocallyRingedSpace.IsOpenImmersion (basicOpenChart c.I g ≫ c.map)]
+    (hmem : y ∈ Set.range (basicOpenChart c.I g ≫ c.map).base)
+    (hc : I ≤ c.I.comap (globalSectionsMap I c.I (c.map ≫ s))) :
+    I ≤ (c.basicOpenRefine g hmem).I.comap
+      (globalSectionsMap I (c.basicOpenRefine g hmem).I
+        ((c.basicOpenRefine g hmem).map ≫ s)) := by
+  change I ≤ (awayCompletionIdeal c.I g).comap
+    (globalSectionsMap I (awayCompletionIdeal c.I g) ((basicOpenChart c.I g ≫ c.map) ≫ s))
+  rw [Category.assoc]
+  exact le_comap_globalSectionsMap_basicOpenChart_comp I c.I g (c.map ≫ s) hc
+
+/-- **The charts of `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG` are a neighbourhood
+basis too**, with *both* bounds surviving the shrink. This is what the phrase "on a neighbourhood
+basis" in that predicate's docstring refers to.
+
+**It does not settle the open question of this file's module docstring, and it sharpens it.** A
+pair witness hands over one chart carrying both bounds, so
+`FormalSpectrum.le_comap_globalSectionsMap_basicOpenChart_comp` applies to it twice along the
+*same* `FormalSpectrum.basicOpenChart` — once with `c.map ≫ s`, once with `c.map ≫ t` — and
+nothing about open immersions being adic on sections is needed. What is open is only the *merge*:
+turning two separate `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG` witnesses, whose
+charts are unrelated, into one pair witness. Refining a pair witness is free; producing one from
+two singles is the question. -/
+theorem exists_affineChart_subset_adicOverBasePair (h : AdicOverBasePairLocallyFG I Y s t) (y : Y)
+    (U : Set Y) (hU : IsOpen U) (hyU : y ∈ U) :
+    ∃ c : AffineChart Y y, c.I.FG ∧ Set.range c.map.base ⊆ U ∧
+      I ≤ c.I.comap (globalSectionsMap I c.I (c.map ≫ s)) ∧
+      I ≤ c.I.comap (globalSectionsMap I c.I (c.map ≫ t)) := by
+  obtain ⟨c, hfg, hl, hr⟩ := h y
+  obtain ⟨g, _, _, hmem, hsub⟩ := exists_basicOpenRefine_subset c hfg U hU hyU
+  exact ⟨c.basicOpenRefine g hmem, awayCompletionIdeal_fg c.I g hfg, hsub,
+    c.le_comap_globalSectionsMap_basicOpenRefine g hmem hl,
+    c.le_comap_globalSectionsMap_basicOpenRefine g hmem hr⟩
+
+end Pair
+
+end Refinement
+
+/-! ### The affine case, where a witness bottoms out -/
+
+section Affine
+
+variable {S : Type u} [CommRing S] [TopologicalSpace S] (J : Ideal S) [IsAdicRing J]
+
+/-- **The identity chart on an affine formal scheme.** `AlgebraicGeometry.FormalScheme.Spf J` is
+`FormalSpectrum.locallyRingedSpaceObj J` with a `local_affine` field added, definitionally, so the
+identity morphism is an open immersion of the affine model onto the whole of it and is a chart at
+every point.
+
+The `isOpenImmersion` field is supplied by an explicit application rather than left to instance
+search: `IsIso (𝟙 _)` is not found by synthesis at this position, and neither `haveI` nor `letI`
+ahead of the structure literal registers it — see the implementation note. -/
+def AffineChart.ofSpf (x : FormalScheme.Spf J) : AffineChart (FormalScheme.Spf J) x :=
+  { R := S, I := J, map := 𝟙 _, mem := ⟨x, rfl⟩,
+    isOpenImmersion :=
+      @LocallyRingedSpace.IsOpenImmersion.of_isIso _ _ (𝟙 (locallyRingedSpaceObj J))
+        (CategoryTheory.IsIso.id _) }
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The chart-restriction of `ψ` at the identity chart is `ψ` itself**, read through
+`FormalSpectrum.globalSectionsEquiv`. So on an affine formal scheme the condition
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` asks of a chart carries no chart-dependence
+at all: it is the ordinary continuity of `ψ`. -/
+theorem AffineChart.sectionsHom_ofSpf
+    (ψ : R →+* (FormalScheme.Spf J).presheaf.obj (op (⊤ : Opens (FormalScheme.Spf J))))
+    (x : FormalScheme.Spf J) :
+    (AffineChart.ofSpf J x).sectionsHom ψ = (globalSectionsEquiv J).toRingHom.comp ψ := by
+  ext a
+  simp only [AffineChart.sectionsHom, AffineChart.ofSpf, RingEquiv.toRingHom_eq_coe]
+  rfl
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **An affine formal scheme is adic over a continuous `ψ` on a neighbourhood basis**, with the
+identity chart as the witness at every point. This is where a witness of
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` bottoms out: a chart *is* an affine formal
+spectrum, and on one the predicate is exactly continuity of `ψ`.
+
+**It says nothing about any non-affine source**, and in particular nothing about
+`AlgebraicGeometry.nodeChartSaturationFormalScheme`. What it does is exhibit the predicate as
+satisfiable, which nothing on this tree previously did — a predicate with no known instance is
+indistinguishable from a false one, and this one is neither. -/
+theorem adicSectionsLocallyFG_Spf (hJ : J.FG)
+    (ψ : R →+* (FormalScheme.Spf J).presheaf.obj (op (⊤ : Opens (FormalScheme.Spf J))))
+    (hψ : I ≤ J.comap ((globalSectionsEquiv J).toRingHom.comp ψ)) :
+    AdicSectionsLocallyFG I ψ := fun x =>
+  ⟨AffineChart.ofSpf J x, hJ, by rw [AffineChart.sectionsHom_ofSpf]; exact hψ⟩
+
+end Affine
 
 /-! ### The construction -/
 

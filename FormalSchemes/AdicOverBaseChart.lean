@@ -34,9 +34,12 @@ This file isolates that inheritance as reusable, base-relative infrastructure:
   preserves adicity-over-base (`AdicOnSections.le_comap_globalSectionsMap_basicOpenChart_comp`),
   which is the whole content.
 
-This is the base-relative strengthening of `LocallyFG.exists_affineChart_subset`; a datum-level
-witness `AdicOverBaseLocallyFG D.xGlued D.xStructMap` (`BothDatumAdicOverBase.lean`) then supplies
-the diagonal's refined charts with their missing adic-over-base bound.
+This is the base-relative strengthening of
+`AlgebraicGeometry.FormalScheme.exists_affineChart_subset` (`FormalSchemes.LocallyFG`), which takes
+its `LocallyFG` witness as an explicit argument rather than living in that predicate's namespace; a
+datum-level witness `AdicOverBaseLocallyFG D.xGlued D.xStructMap`
+(`FormalSchemes.BothDatumAdicOverBase`) then supplies the diagonal's refined charts with their
+missing adic-over-base bound.
 
 ## References
 
