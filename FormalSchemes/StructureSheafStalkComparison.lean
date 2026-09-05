@@ -76,14 +76,16 @@ here should be read as evidence in either direction.
 of definition appears below, and that one is present only because `AdicCompletion.mapCompletion`
 requires its target ideal to be finitely generated.
 
-**The obstruction, stated so that it is not rediscovered.** `R_p` is the filtered colimit of the
-`R_{f g}` over `g ∉ p`, so an element of `FormalSpectrum.awayCompletion I f` killed by
+**The obstruction, stated so that it is not rediscovered.** The localization
+`Localization.AtPrime (pointPrime I x)` is the filtered colimit of the localizations away from
+`f * g` over `g ∉ p`, so an element of `FormalSpectrum.awayCompletion I f` killed by
 `FormalSpectrum.awayToAtPrimeCompletion` is killed *at each level `n` separately*, by a `g` that may
 depend on `n`. The injectivity half of `FormalSpectrum.isStalkLimit_iff_awayCompletion` asks for one
 `g` that works at every level. **That non-uniformity in `n` is the whole difficulty of the stalk
 half of EGA I 10.8**, and no argument below addresses it. The surjectivity half has the same shape:
-an element of the completion of `R_p` is a compatible system of level data, each of which descends
-to some `R_{f g}`, with no reason for a single `g` to serve all of them.
+an element of the completion of that localization is a compatible system of level data, each of
+which descends to a localization away from some `f * g`, with no reason for a single `g` to serve
+all of them.
 
 **A colimit, as a categorical statement.** This file does not build one, and
 `FormalSchemes.StructureSheafStalkBasicOpen`'s recorded negative search result about
@@ -100,7 +102,8 @@ closure 355, so weakening its signature is a separate measured decision and is n
 
 The membership `x ∈ FormalSpectrum.basicOpen I f` and the non-membership
 `f ∉ FormalSpectrum.pointPrime I x` are definitionally the same statement, since
-`FormalSpectrum.pointPrime` is the contraction of `x.asIdeal` along `Ideal.Quotient.mk I`, so
+`FormalSpectrum.pointPrime` is the contraction along `Ideal.Quotient.mk I` of the prime
+`PrimeSpectrum.asIdeal` of the point, so
 `FormalSpectrum.notMem_pointPrime_of_mem_basicOpen` needs no bridging lemma beyond
 `FormalSpectrum.mem_basicOpen`.
 
@@ -159,7 +162,8 @@ theorem stalkProj_germ (n : ℕ) (U : Opens (FormalSpectrum I)) (hx : x ∈ U)
 /-! ### The localization map `R_f →+* R_p` -/
 
 /-- **A point of a basic open avoids `f` in the prime below it.** `FormalSpectrum.pointPrime I x` is
-the contraction of `x.asIdeal` along `Ideal.Quotient.mk I`, so this is
+the contraction along `Ideal.Quotient.mk I` of the prime `PrimeSpectrum.asIdeal` of the point, so
+this is
 `FormalSpectrum.mem_basicOpen` with no further bridging. -/
 theorem notMem_pointPrime_of_mem_basicOpen {f : R} (hf : x ∈ basicOpen I f) :
     f ∉ pointPrime I x := by
@@ -190,9 +194,9 @@ theorem awayToAtPrime_algebraMap {f : R} (hf : x ∈ basicOpen I f) (r : R) :
   IsLocalization.Away.lift_eq f (isUnit_algebraMap_atPrime_of_mem_basicOpen I x hf) r
 
 /-- **`FormalSpectrum.awayToAtPrime` carries the ideal of definition onto the ideal of definition**:
-the extension of `I` to `R_f` maps onto `FormalSpectrum.pointIdeal I x`. It is an equality rather
-than a containment because both ideals are the extension of `I` along a map under `R`, so
-`Ideal.map_map` and `FormalSpectrum.awayToAtPrime_algebraMap` identify them outright. -/
+the extension of `I` to `Localization.Away f` maps onto `FormalSpectrum.pointIdeal I x`. It is an
+equality rather than a containment because both ideals are the extension of `I` along a map under
+`R`, so `Ideal.map_map` and `FormalSpectrum.awayToAtPrime_algebraMap` identify them outright. -/
 theorem map_awayToAtPrime {f : R} (hf : x ∈ basicOpen I f) :
     (I.map (algebraMap R (Localization.Away f))).map (awayToAtPrime I x hf) = pointIdeal I x := by
   rw [Ideal.map_map, pointIdeal]
