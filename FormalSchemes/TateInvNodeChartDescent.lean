@@ -83,12 +83,12 @@ nothing on this tree produces it.
 
 In particular, whether that morphism can be obtained from
 `AlgebraicGeometry.nodeChartSectionsHom` by `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom`
-is **unchecked**. That construction's source is a locally finitely generated formal scheme and its
-target is a formal spectrum, so `AlgebraicGeometry.nodeChartSaturationFormalScheme` puts the source
-in range, and the shape matches: the `ψ` it takes is a ring homomorphism into the global sections
-of the source, which is what `AlgebraicGeometry.nodeChartSectionsHom` becomes under `CommRingCat`'s
-`CategoryTheory.ConcreteCategory.hom`. But the shape is not the content. Its remaining arguments
-are, and **not one of them has been discharged or attempted here**:
+is **not settled here**. That construction's source is a locally finitely generated formal scheme
+and its target is a formal spectrum, so `AlgebraicGeometry.nodeChartSaturationFormalScheme` puts
+the source in range, and the shape matches: the `ψ` it takes is a ring homomorphism into the global
+sections of the source, which is what `AlgebraicGeometry.nodeChartSectionsHom` becomes under
+`CommRingCat`'s `CategoryTheory.ConcreteCategory.hom`. But the shape is not the content. Its
+remaining arguments are, and **none of them is discharged or attempted in this file**:
 
 * a family `charts` of affine charts of the source, and `hfg`, that each of their ideals of
   definition is finitely generated;
@@ -98,9 +98,17 @@ are, and **not one of them has been discharged or attempted here**:
   their ideals, and the two families `hf` and `hg` of continuity conditions comparing the two
   restrictions on each overlap.
 
+**Five of the eight named above are settled elsewhere on the tree**, and a reader who takes that
+list for a list of open questions will over-count what is left.
+`FormalSchemes.TateInvNodeChartCandidateHom` supplies `charts`, `hfg`, `ocharts` and `hofg` from
+`AlgebraicGeometry.nodeChartSaturationFormalScheme_locallyFG` and `hI` from
+`AlgebraicGeometry.fg_tateInvNodeChartQuotientIdeal_of_isLeftRegular_base`, and constructs the
+morphism as `AlgebraicGeometry.nodeChartCandidateHom` over the three that remain. **Those three are
+`hcont`, `hf` and `hg`, and they are still unproved at this instance.**
+
 `FormalSchemes.GlueHomToSpf`'s own module docstring says the continuity hypotheses there are
 "inherited, not incidental". **Anyone who claims the morphism exists must check it by producing
-it**; that is a separate row and it is where the work is.
+it**, and producing it still means producing those three; that is where the work is.
 
 Nothing here bears on `AlgebraicGeometry.LocallyRingedSpace.IsFreeProperlyDiscontinuous` for the
 period action, which `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`
