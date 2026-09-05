@@ -26,10 +26,9 @@ fibre-product universal property) consumes.
 * `FormalScheme.AffineChart.basicOpenRefine` and `FormalScheme.exists_basicOpenRefine_subset`:
   **the shrinking step**, named and stated once — every affine chart has a basic-open refinement
   inside any given open neighbourhood of its point. It mentions no `FormalScheme.LocallyFG`
-  hypothesis, no
-  ideal of definition on a base and no homomorphism on sections, and every neighbourhood-basis
-  lemma on this tree is that step plus what it transports: `FormalScheme.exists_affineChart_subset`
-  below,
+  hypothesis, no ideal of definition on a base and no homomorphism on sections, and every
+  neighbourhood-basis lemma on this tree is that step plus what it transports:
+  `FormalScheme.exists_affineChart_subset` below,
   `FormalScheme.exists_affineChart_subset_adicOverBase` (`FormalSchemes.AdicOverBaseChart`) and
   the two `ψ`-relative lemmas of `FormalSchemes.AdicSectionsChart`.
 * `FormalScheme.exists_affineChart_subset`: on a `LocallyFG` scheme, every point `x` in an open
