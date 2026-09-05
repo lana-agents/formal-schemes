@@ -24,15 +24,15 @@ declarations already on the tree:
 * `ψ` is `AlgebraicGeometry.nodeChartSectionsHom` read through `CommRingCat`'s forgetful map, which
   is `AlgebraicGeometry.nodeChartPsi` below;
 * `hI` is `AlgebraicGeometry.fg_tateInvNodeChartQuotientIdeal_of_isLeftRegular_base`
-  (`FormalSchemes.TateInvNodeChartQuotientOpen`), under the `t`, `ht`, `hreg` this cluster's
-  reductions already carry;
+  (`FormalSchemes.TateInvNodeChartQuotientOpen`), under the principal-base and left-regularity
+  hypotheses this cluster's reductions already carry;
 * `ocharts` and `hofg` are `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart` and
   `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart_fg` (`FormalSchemes.GlueHomToSpf`), which
   exist for exactly this argument;
 * `charts` and `hfg` are supplied by the caller, and for a caller who has nothing better to supply
-  `AlgebraicGeometry.FormalScheme.LocallyFG.chart` and `LocallyFG.fg_chart`
-  (`FormalSchemes.GlobalSectionsHom`) give a family at once, since
-  `AlgebraicGeometry.nodeChartSaturationFormalScheme_locallyFG` is available.
+  `AlgebraicGeometry.FormalScheme.LocallyFG.chart` and
+  `AlgebraicGeometry.FormalScheme.LocallyFG.fg_chart` (`FormalSchemes.GlobalSectionsHom`) give a
+  family at once, since `AlgebraicGeometry.nodeChartSaturationFormalScheme_locallyFG` is available.
 
 **So the residue is `hcont`, `hf` and `hg` — three families, all of them continuity — and given
 them the morphism is constructed rather than hypothesised.** That is what this file records.
@@ -119,7 +119,8 @@ caller need not.
 **What the reachable form looks like, and why it is not attempted here.** The fix that library
 found was to choose the charts from a neighbourhood basis that already records the bound:
 `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG` (`FormalSchemes.AdicOverBaseChart`) is
-`LocallyFG` with the adic-over-base conjunct added to the chart it produces, and
+`AlgebraicGeometry.FormalScheme.LocallyFG` with the adic-over-base conjunct added to the chart it
+produces, and
 `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase` is what makes such a chart
 available. Two of the three families here are that predicate's continuity conjunct, at a supplied
 chart instead of an existential one: `AlgebraicGeometry.NodeChartOverlapContinuousFst` is it for
@@ -279,7 +280,8 @@ def nodeChartSaturationCharts (x : nodeChartSaturationFormalScheme R I q hq hI) 
   (nodeChartSaturationFormalScheme_locallyFG R I q hq hI).chart x
 
 /-- The ideal of definition of `AlgebraicGeometry.nodeChartSaturationCharts` is finitely generated,
-which is what choosing the chart through `LocallyFG` rather than through
+which is what choosing the chart through `AlgebraicGeometry.FormalScheme.LocallyFG` rather than
+through
 `AlgebraicGeometry.FormalScheme.AffineChart.choice` buys. -/
 theorem nodeChartSaturationCharts_fg (x : nodeChartSaturationFormalScheme R I q hq hI) :
     (nodeChartSaturationCharts R I q hq hI x).I.FG :=

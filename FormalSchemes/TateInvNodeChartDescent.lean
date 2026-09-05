@@ -101,9 +101,9 @@ are, and **none of them has been discharged or attempted here**:
 **Of those, only the three continuity families are content**, and
 `FormalSchemes.TateInvNodeChartHomOfSections` says so with declarations: `hI` is
 `AlgebraicGeometry.fg_tateInvNodeChartQuotientIdeal_of_isLeftRegular_base`, `ocharts` and `hofg`
-are `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart` and `overlapChart_fg`, and `charts`
-with `hfg` are supplied by the caller — or by
-`AlgebraicGeometry.FormalScheme.LocallyFG.chart` at
+are `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart` and
+`AlgebraicGeometry.FormalScheme.OpenCover.overlapChart_fg`, and `charts` with `hfg` are supplied by
+the caller — or by `AlgebraicGeometry.FormalScheme.LocallyFG.chart` at
 `AlgebraicGeometry.nodeChartSaturationFormalScheme_locallyFG` for a caller who has nothing better.
 `AlgebraicGeometry.nodeChartHom` there is the morphism built from what is left, and
 `AlgebraicGeometry.exists_formalScheme_of_isIso_desc_nodeChartHom` is this file's headline with
