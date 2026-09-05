@@ -414,12 +414,14 @@ variable {f : X ⟶ Y}
 `f` is topologically of finite type, every point `x` in an open `U` admits a tf-type chart
 contained in `U` and sitting over a chart of `𝒱`.
 
-The general-target analogue of `IsRelativelyTopFiniteType.nonempty_relTfTypeChart`, and the same
-proof: the chart's identification `e` cancels by `e.inv_hom_id` before the refinement starts,
-leaving a chart `m` sitting over the fixed tail `t = e'.inv ≫ 𝒱.map i`, and what the basic-open
-refinement then has to preserve is `basicOpenChartHom_comp_target`. **The index `i` and the tail
-are unchanged by the refinement**, which is what lets the refined family be read against the same
-`𝒱`.
+The general-target analogue of `FormalScheme.IsRelativelyTopFiniteType.nonempty_relTfTypeChart`,
+over the same shrinking step `AlgebraicGeometry.FormalScheme.exists_basicOpenRefine_subset`
+(`FormalSchemes.LocallyFG`): the chart's identification `e` cancels by `Iso.inv_hom_id` before the
+refinement starts, leaving a chart `m` sitting over the fixed tail `t = e'.inv ≫ 𝒱.map i`, and
+what the basic-open refinement then has to preserve is
+`FormalScheme.basicOpenChartHom_comp_target` — which, with `FormalScheme.TfTypeChart.tfType`, is
+all this lemma adds to the shared shrink. **The index `i` and the tail are unchanged by the
+refinement**, which is what lets the refined family be read against the same `𝒱`.
 
 Stated at the unpacked cover data rather than at `IsTopFiniteTypeHom f`, because a caller
 refining a family of charts needs them all over one `𝒱`, and the existential in
@@ -444,49 +446,25 @@ theorem nonempty_tfTypeHomChart_of_cover {𝒱 : OpenCover Y} {𝒰 : OpenCover 
     change (e.hom ≫ e.inv ≫ 𝒰.map (𝒰.f x)).toLRSHom.base y = x
     rw [← Category.assoc, e.hom_inv_id, Category.id_comp]
     exact hy
-  obtain ⟨x₀, hx₀⟩ := hxm
-  have hopen : IsOpen (m.base ⁻¹' U) := hU.preimage m.base.hom.continuous
-  have hmem : x₀ ∈ m.base ⁻¹' U := by
-    simp only [Set.mem_preimage, hx₀]; exact hxU
-  obtain ⟨v, ⟨g, rfl⟩, hx₀v, hvsub⟩ :=
-    (FormalSpectrum.isTopologicalBasis_basicOpen L).exists_subset_of_mem_open hmem hopen
   have hLfg : L.FG := IsTopologicallyFiniteType.fg hL hI
-  haveI : IsAdicRing (FormalSpectrum.awayCompletionIdeal L g) :=
-    FormalSpectrum.isAdicRing_awayCompletionIdeal L g hLfg
-  haveI : LocallyRingedSpace.IsOpenImmersion (FormalSpectrum.basicOpenChart L g) :=
-    FormalSpectrum.isOpenImmersion_basicOpenChart L g hLfg
-  have hrange : Set.range (FormalSpectrum.basicOpenChart L g).base =
-      (FormalSpectrum.basicOpen L g : Set (FormalSpectrum L)) :=
-    FormalSpectrum.range_basicOpenChart_base L g hLfg
-  refine ⟨{ R := R
-            I := I
-            fgI := hI
-            i := i
-            targetIso := e'
-            chart :=
-              { A := FormalSpectrum.awayCompletion L g
-                L := FormalSpectrum.awayCompletionIdeal L g
-                tfType := IsTopologicallyFiniteType.awayCompletion g hI hL
-                map := FormalSpectrum.basicOpenChart L g ≫ m
-                mem := ?_
-                subset := ?_ }
-            structCompat := ?_ }⟩
-  · have hx₀mem : x₀ ∈ Set.range (FormalSpectrum.basicOpenChart L g).base := by
-      rw [hrange]; exact hx₀v
-    obtain ⟨w, hw⟩ := hx₀mem
-    refine ⟨w, ?_⟩
-    simp only [LocallyRingedSpace.comp_base, TopCat.comp_app]
-    rw [hw]; exact hx₀
-  · rw [LocallyRingedSpace.comp_base]
-    intro z hz
-    simp only [TopCat.comp_app, Set.mem_range] at hz
-    obtain ⟨w, rfl⟩ := hz
-    have hw : (FormalSpectrum.basicOpenChart L g).base w ∈
-        (FormalSpectrum.basicOpen L g : Set (FormalSpectrum L)) := by
-      rw [← hrange]; exact ⟨w, rfl⟩
-    exact hvsub hw
-  · exact basicOpenChartHom_comp_target g (e.inv ≫ 𝒰.map (𝒰.f x)) (e'.inv ≫ 𝒱.map i) hL
-      (IsTopologicallyFiniteType.awayCompletion g hI hL) hmf
+  -- bundle the witness as an affine chart and shrink it into `U`
+  let c : AffineChart X x := { R := A, I := L, map := m, mem := hxm, isOpenImmersion := hm }
+  obtain ⟨g, hadic, hoi, hmem, hsub⟩ := exists_basicOpenRefine_subset c hLfg U hU hxU
+  exact ⟨{ R := R
+           I := I
+           fgI := hI
+           i := i
+           targetIso := e'
+           chart :=
+             { A := FormalSpectrum.awayCompletion L g
+               L := FormalSpectrum.awayCompletionIdeal L g
+               tfType := IsTopologicallyFiniteType.awayCompletion g hI hL
+               map := (c.basicOpenRefine g hmem).map
+               mem := (c.basicOpenRefine g hmem).mem
+               subset := hsub
+               isOpenImmersion := (c.basicOpenRefine g hmem).isOpenImmersion }
+           structCompat := basicOpenChartHom_comp_target g (e.inv ≫ 𝒰.map (𝒰.f x))
+             (e'.inv ≫ 𝒱.map i) hL (IsTopologicallyFiniteType.awayCompletion g hI hL) hmf }⟩
 
 /-! ### Assembling a cover from charts, and the refinement -/
 
