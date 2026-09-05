@@ -23,12 +23,14 @@ and `hg`, the input `ψ` being `AlgebraicGeometry.nodeChartSectionsHom` itself.
 lemmas it already has:
 
 * the affine charts of the source and the finite generation of their ideals of definition are
-  `AlgebraicGeometry.FormalScheme.LocallyFG.chart` and `LocallyFG.fg_chart`
+  `AlgebraicGeometry.FormalScheme.LocallyFG.chart` and
+  `AlgebraicGeometry.FormalScheme.LocallyFG.fg_chart`
   (`FormalSchemes.GlobalSectionsHom`), available because of
   `AlgebraicGeometry.nodeChartSaturationFormalScheme_locallyFG`;
 * the affine charts on the pairwise overlaps of that cover, and the finite generation of *their*
   ideals, are `AlgebraicGeometry.FormalScheme.LocallyFG.overlapChart` and
-  `LocallyFG.fg_overlapChart` (`FormalSchemes.GlueHomToSpf`), available for the same reason one
+  `AlgebraicGeometry.FormalScheme.LocallyFG.fg_overlapChart` (`FormalSchemes.GlueHomToSpf`),
+  available for the same reason one
   level down;
 * finite generation of the target's ideal is
   `AlgebraicGeometry.fg_tateInvNodeChartQuotientIdeal_of_isLeftRegular_base`
