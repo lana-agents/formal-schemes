@@ -22,8 +22,9 @@ nothing on the tree had checked: on the germ of a section over `D(f)`, the compa
 `AdicCompletion.mapCompletion` of the localization map `R_f →+* R_p`.
 
 The consequence is `FormalSpectrum.isStalkLimit_iff_awayCompletion`: `FormalSpectrum.IsStalkLimit`
-holds exactly when two explicit statements about completed localizations hold. Neither of them
-mentions a sheaf, a stalk, a germ, a limit or a category.
+holds exactly when two explicit statements about completed localizations hold. No stalk, germ,
+colimit or category occurs in either of them. **One sheaf-theoretic object does survive**, in the
+injectivity half only, and it is named below: `FormalSpectrum.basicOpenRes`.
 
 ## How the computation goes
 
@@ -61,8 +62,9 @@ Assembling the levels is `AdicCompletion.ext_evalₐ`, with level `0` a `Subsing
   open is the completed localization map.**
 * `FormalSpectrum.surjective_stalkToAdicCompletion_iff`,
   `FormalSpectrum.injective_stalkToAdicCompletion_iff` and
-  `FormalSpectrum.isStalkLimit_iff_awayCompletion`: the two halves and their conjunction, with no
-  sheaf in the statement.
+  `FormalSpectrum.isStalkLimit_iff_awayCompletion`: the two halves and their conjunction. The
+  surjectivity half is sheaf-free outright; the injectivity half names
+  `FormalSpectrum.basicOpenRes`, and the paragraph below says what that costs.
 
 ## What is *not* proved here
 
@@ -86,6 +88,20 @@ half of EGA I 10.8**, and no argument below addresses it. The surjectivity half 
 an element of the completion of that localization is a compatible system of level data, each of
 which descends to a localization away from some `f * g`, with no reason for a single `g` to serve
 all of them.
+
+**That the injectivity half is free of the structure sheaf.** It is not, and the claim should not
+be made. `FormalSpectrum.basicOpenRes` (`FormalSchemes.BasicOpenRestriction`) is *defined* as the
+restriction `Γ(D(f)) ⟶ Γ(D(e))` of `O_{Spf R}` conjugated by
+`FormalSpectrum.sectionsBasicOpenEquiv` on both sides, and inside this file's import closure nothing
+pins it further than the image of `R` (`FormalSpectrum.basicOpenRes_comp_awayCompletionHom`); its
+own module says so. The genuinely sheaf-free form is one rewrite away and is **not free**:
+`FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict`
+(`FormalSchemes.BasicOpenRestrictionIdentification`) replaces it by the purely algebraic
+`FormalSpectrum.awayCompletionRestrict` (`FormalSchemes.AwayCompletionRestrict`) for `I` finitely
+generated, which this file already assumes, but that lemma carries `[TopologicalSpace R]` and
+`IsAdicRing I` — two hypotheses nothing else here needs — and importing it adds **ten** modules to a
+closure of 35. The variant was elaborated to check that it exists; taking the trade is a separate
+row and is not taken here.
 
 **A colimit, as a categorical statement.** This file does not build one, and
 `FormalSchemes.StructureSheafStalkBasicOpen`'s recorded negative search result about
@@ -314,7 +330,7 @@ theorem stalkToAdicCompletion_germ_basicOpen (hI : I.FG) {f : R} (hf : x ∈ bas
       eval_sectionsBasicOpenEquiv]
     rfl
 
-/-! ### `IsStalkLimit` without a sheaf in it -/
+/-! ### `IsStalkLimit` as a statement about completed localizations -/
 
 /-- **The surjectivity half of `FormalSpectrum.IsStalkLimit`, as a statement about completed
 localizations.** The comparison map is surjective exactly when every element of
@@ -342,8 +358,9 @@ theorem surjective_stalkToAdicCompletion_iff (hI : I.FG) :
       ((sectionsBasicOpenEquiv I f).symm a), ?_⟩
     rw [stalkToAdicCompletion_germ_basicOpen I x hI hf, RingEquiv.apply_symm_apply, ha]
 
-/-- **The injectivity half of `FormalSpectrum.IsStalkLimit`, as a statement about completed
-localizations.** The comparison map is injective exactly when an element of `R{1/f}` killed by
+/-- **The injectivity half of `FormalSpectrum.IsStalkLimit`**, in terms of completed localizations
+and the structure-sheaf restriction between two basic opens. The comparison map is injective exactly
+when an element of `R{1/f}` killed by
 `FormalSpectrum.awayToAtPrimeCompletion` is already killed by restriction
 (`FormalSpectrum.basicOpenRes`) to some smaller basic open through `x`.
 
@@ -387,11 +404,14 @@ theorem injective_stalkToAdicCompletion_iff (hI : I.FG) :
     rw [← hs, ← TopCat.Presheaf.germ_res_apply (structureSheaf I).presheaf (homOfLE hle) x hxe s,
       hs0, map_zero]
 
-/-- **`FormalSpectrum.IsStalkLimit` with no sheaf in it.** The stalk half of EGA I 10.8 at `x` holds
-exactly when the two explicit statements about completed localizations of
+/-- **`FormalSpectrum.IsStalkLimit` as two statements about completed localizations.** The stalk
+half of EGA I 10.8 at `x` holds exactly when the two explicit statements of
 `FormalSpectrum.injective_stalkToAdicCompletion_iff` and
-`FormalSpectrum.surjective_stalkToAdicCompletion_iff` both hold. No sheaf, stalk, germ, limit or
-category occurs on the right-hand side.
+`FormalSpectrum.surjective_stalkToAdicCompletion_iff` both hold. No stalk, germ, colimit or category
+occurs on the right-hand side, and no sheaf occurs in the surjectivity half. The injectivity half
+still names `FormalSpectrum.basicOpenRes`, which is the structure-sheaf restriction by definition;
+the module docstring records what replacing it by `FormalSpectrum.awayCompletionRestrict` would
+cost.
 
 **This is a reformulation and not an answer.** The two sides of the `Iff` are both undecided on this
 tree, in both directions, and the module docstring records the obstruction — the `g` produced at
