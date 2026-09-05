@@ -81,6 +81,7 @@ import FormalSchemes.BaseChange
 import FormalSchemes.BasicOpenChart
 import FormalSchemes.BasicOpenChartComponent
 import FormalSchemes.BasicOpenChartImage
+import FormalSchemes.BasicOpenChartOpensSections
 import FormalSchemes.BasicOpenChartOverlap
 import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.BasicOpenChartRestrict
@@ -402,6 +403,7 @@ import FormalSchemes.TateInvNodeChartLegContinuous
 import FormalSchemes.TateInvNodeChartLegGeneral
 import FormalSchemes.TateInvNodeChartNontrivial
 import FormalSchemes.TateInvNodeChartOverlap
+import FormalSchemes.TateInvNodeChartPatchChartAdic
 import FormalSchemes.TateInvNodeChartPrincipal
 import FormalSchemes.TateInvNodeChartPrincipalRegularBase
 import FormalSchemes.TateInvNodeChartQuotientOpen
