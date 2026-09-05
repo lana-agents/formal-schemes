@@ -100,8 +100,9 @@ either.
 
 The criterion also says nothing about
 `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`, whose charts live on the
-overlaps of a cover and not on the source, and whose status
-`FormalSchemes.AdicSectionsChart`'s module docstring records as open.
+overlaps of a cover and not on the source. That predicate is not open — it holds for every witness
+by `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.overlapAdic` — but the *merge* question
+`FormalSchemes.AdicSectionsChart`'s module docstring records is, and nothing here bears on it.
 
 ## References
 

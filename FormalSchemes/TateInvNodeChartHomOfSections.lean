@@ -161,9 +161,12 @@ here. **It is taken in `FormalSchemes.TateInvNodeChartAdicSections`**, over the 
 `AlgebraicGeometry.NodeChartOverlapContinuousFst` and
 `AlgebraicGeometry.NodeChartOverlapContinuousSnd` at the charts that witness itself supplies.
 `AlgebraicGeometry.nodeChartAdicHom_eq_nodeChartHom` records that the resulting morphism
-is `AlgebraicGeometry.nodeChartHom` and not a new one. **No witness of either predicate is produced
-there either**, and the overlap one raises a further open question of its own, so nothing above is
-weakened by the successor: the three families remain undischarged at every chart family.
+is `AlgebraicGeometry.nodeChartHom` and not a new one. **No witness of
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` is produced there either** — the overlap
+predicate is not a hypothesis there, since
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.overlapAdic` supplies it from the first, and
+a further open question about *pair* witnesses remains. So nothing above is weakened by the
+successor: the three families remain undischarged at every chart family.
 
 ## References
 

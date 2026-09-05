@@ -1,5 +1,5 @@
 import FormalSchemes.ActionQuotientRestrict
-import FormalSchemes.AdicSectionsOverlap
+import FormalSchemes.AdicSectionsChart
 import FormalSchemes.AdicSectionsRestrictOpen
 
 set_option linter.style.header false
@@ -31,7 +31,7 @@ Both directions are cheap, and neither is a merge. Forwards, apply
 `AlgebraicGeometry.FormalScheme.globalSectionsHom_homOfGlobalSectionsHomOfAdicSections`.
 Backwards, `FormalSpectrum.hom_ext_of_globalSectionsHom` compares the two morphisms at the charts
 the witness supplies; the continuity hypothesis it asks of `(a g).hom ≫ k` is the one it asks of
-`k`, because — this is the observation `FormalSchemes.AdicSectionsOverlap` turns on —
+`k`, because — this is the observation `FormalSchemes.AdicSectionsChart` turns on —
 `FormalSpectrum.globalSectionsMap I J (c ≫ s)` sees `s` only through
 `FormalSpectrum.globalSectionsHom I _ s`
 (`FormalSpectrum.globalSectionsMap_comp_eq_of_globalSectionsHom_eq`).
@@ -150,7 +150,7 @@ global-sections homomorphism.** `FormalSpectrum.globalSectionsMap_eq_globalSecti
 `globalSectionsHom I Y s` with two fixed maps around it.
 
 This is the step `AlgebraicGeometry.FormalScheme.pair_of_globalSectionsHom_eq`
-(`FormalSchemes.AdicSectionsOverlap`) makes inline; it is stated here without an
+(`FormalSchemes.AdicSectionsChart`) makes inline; it is stated here without an
 `AlgebraicGeometry.FormalScheme.AffineChart` in it, because the use below is not at a chart of a
 neighbourhood basis but at a chart of a supplied family. -/
 theorem globalSectionsMap_comp_eq_of_globalSectionsHom_eq {Y : LocallyRingedSpace.{u}}
@@ -198,7 +198,7 @@ theorem isInvariantSectionsHom_iff_forall_apply :
     ext r
     exact h g r
 
-variable (hX : AdicSectionsLocallyFG I ψ) (hI : I.FG) (hov : hX.OverlapAdic ψ)
+variable (hX : AdicSectionsLocallyFG I ψ) (hI : I.FG)
 
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
@@ -221,7 +221,7 @@ a morphism built from `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.char
 `Classical.choice` and which nothing can name, while the right-hand side is a condition on `ψ` and
 the action. -/
 theorem isActionInvariant_homOfGlobalSectionsHomOfAdicSections_iff :
-    IsActionInvariant a (homOfGlobalSectionsHomOfAdicSections ψ hX hI hov) ↔
+    IsActionInvariant a (homOfGlobalSectionsHomOfAdicSections ψ hX hI) ↔
       IsInvariantSectionsHom a ψ := by
   constructor
   · intro h g
@@ -230,16 +230,16 @@ theorem isActionInvariant_homOfGlobalSectionsHomOfAdicSections_iff :
     exact hc
   · intro h g
     have hgs : globalSectionsHom I X.toLocallyRingedSpace
-          ((a g).hom ≫ homOfGlobalSectionsHomOfAdicSections ψ hX hI hov) =
+          ((a g).hom ≫ homOfGlobalSectionsHomOfAdicSections ψ hX hI) =
         globalSectionsHom I X.toLocallyRingedSpace
-          (homOfGlobalSectionsHomOfAdicSections ψ hX hI hov) := by
+          (homOfGlobalSectionsHomOfAdicSections ψ hX hI) := by
       rw [globalSectionsHom_comp, globalSectionsHom_homOfGlobalSectionsHomOfAdicSections]
       exact h g
     refine hom_ext_of_globalSectionsHom I hX.chart hX.fg_chart hI _ _ ?_
-      (continuous_homOfGlobalSectionsHomOfAdicSections ψ hX hI hov) hgs
+      (continuous_homOfGlobalSectionsHomOfAdicSections ψ hX hI) hgs
     intro x
     rw [globalSectionsMap_comp_eq_of_globalSectionsHom_eq I (hX.chart x).I _ _ _ hgs]
-    exact continuous_homOfGlobalSectionsHomOfAdicSections ψ hX hI hov x
+    exact continuous_homOfGlobalSectionsHomOfAdicSections ψ hX hI x
 
 end AlgebraicGeometry.FormalScheme
 
