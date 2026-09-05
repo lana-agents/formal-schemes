@@ -30,8 +30,11 @@ formal subscheme of the chain; the right-hand side quantifies over affine charts
 itself, sitting inside the saturated node-chart locus, and the ideal being bounded is
 `AlgebraicGeometry.tateInvNodeChartAwayIdeal` — an ideal of
 `AlgebraicGeometry.tateInvNodeChartAwaySubring`, a subring of `A{1/(x + y − 1)}`. No
-`CategoryTheory.actionQuotient`, no `AlgebraicGeometry.FormalScheme.restrictOpen` and no `⊤` remain
-on the right.
+`AlgebraicGeometry.FormalScheme.restrictOpen` and no `⊤` remain on the right, and the ideal on the
+left of the bound mentions the quotient nowhere. **The quotient has not left the statement**:
+`CategoryTheory.actionQuotientπ` is still there, inside the elided ring homomorphism the bound is
+taken along, and removing it is exactly the computation the next section records as not performed
+here.
 
 **It is an equivalence.** A chart family for which the bound provably fails refutes the predicate,
 so this reduction is usable for a negative answer as well as a positive one — which was the point
