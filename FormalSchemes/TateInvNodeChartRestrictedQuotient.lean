@@ -66,6 +66,9 @@ further step and is not taken here.
   implementation note.
 * `AlgebraicGeometry.preimage_tateInvNodeChartQuotientOpens`: the preimage of `V₀` in the chain is
   the saturation of the node-chart locus.
+* `AlgebraicGeometry.tateInvNodeChartRestrictedAction`: the `σ`-action restricted to the
+  preimage of `V₀`, which is the open the target of the second and third reductions is a
+  coequalizer over.
 * `AlgebraicGeometry.isActionQuotient_restrictπ_tateInvNodeChartQuotientOpens` and
   `AlgebraicGeometry.tateInvNodeChartRestrictedActionQuotientIso`: `T_inv/⟨σ⟩ |_{V₀}` is the
   quotient of `T_inv |_{π ⁻¹ V₀}` by the restricted action, and is isomorphic to the coequalizer
@@ -80,6 +83,10 @@ further step and is not taken here.
 * `AlgebraicGeometry.exists_formalScheme_of_iso_spf_away`: the same again with the *source*
   rewritten as `Spf (tateInvNodeChartAwaySubring …)`, which is the form whose source names no
   quotient at all.
+* `AlgebraicGeometry.nonempty_iso_actionQuotient_tateInvNodeChartRestrictedAction_iff` and
+  `AlgebraicGeometry.nonempty_iso_spf_away_iff`: the hypotheses of the three reductions are
+  **equivalent to one another**. Each rewriting moves the hypothesis across an isomorphism, so it
+  transports back as well as forward.
 
 ## Implementation notes
 
@@ -97,9 +104,20 @@ three reductions take one as a hypothesis. What changes is the shape of the hypo
 formal", then to a statement whose target is the coequalizer of an action on an open of the chain,
 and finally to one whose source is `Spf` of a subring of one patch's away completion.
 
-**None of the three is equivalent to the statement it reduces from.** Each is sufficient; the
-converses are not proved here and are nowhere on the tree. A successor who refutes the isomorphism
-has refuted these hypotheses and not `hnode`.
+**The three hypotheses are equivalent to one another, and none of them is equivalent to
+`hnode`.** The second is the first moved across
+`AlgebraicGeometry.tateInvNodeChartRestrictedActionQuotientIso` and the third is the second moved
+across `AlgebraicGeometry.tateInvNodeChartQuotientSpfIso`; both of those are isomorphisms, so
+`Nonempty (… ≅ …)` transports in either direction. That is
+`AlgebraicGeometry.nonempty_iso_actionQuotient_tateInvNodeChartRestrictedAction_iff` and
+`AlgebraicGeometry.nonempty_iso_spf_away_iff`, and it means that refuting the third hypothesis
+**does** refute the first two.
+
+The one-way step is the first one, out of `hnode` itself, and the `Sufficient, and not equivalent`
+paragraph above is about exactly that step: what is discharged there is a containment of ranges,
+and nothing here or elsewhere on this tree recovers an isomorphism onto `V₀` from an open
+immersion whose range merely contains it. So a successor who refutes any one of the three
+hypotheses has refuted all three and has **not** refuted `hnode`.
 
 Nothing here says the restricted quotient *is* affine formal, and nothing here bears on
 `AlgebraicGeometry.LocallyRingedSpace.IsFreeProperlyDiscontinuous` for the Tate action, which
@@ -271,6 +289,27 @@ theorem exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens (t : R
     (range_tateInvNodeChartAmbientHom R I q hq hI
       (isActionQuotient_actionQuotientπ (tateInvPeriodAction R I q hq hI))).le
 
+/-- **The second reduction's hypothesis is equivalent to the first's.** Both sides say that
+`Spf (tateInvNodeChartQuotientIdeal …)` is isomorphic to a space, and the two spaces are
+identified by `AlgebraicGeometry.tateInvNodeChartRestrictedActionQuotientIso`; composing with that
+isomorphism and with its inverse gives the two directions.
+
+The forward direction is the proof of
+`AlgebraicGeometry.exists_formalScheme_of_iso_actionQuotient_tateInvNodeChartRestrictedAction`
+below, and the converse is what is added here. Together they make the rewriting a change of
+description rather than a strengthening: refuting either side refutes both. -/
+theorem nonempty_iso_actionQuotient_tateInvNodeChartRestrictedAction_iff
+    [TopologicalSpace ((actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj
+      (op (tateInvNodeChartQuotientOpens R I q hq hI)))]
+    [IsAdicRing (tateInvNodeChartQuotientIdeal R I q hq hI)] :
+    Nonempty (FormalSpectrum.locallyRingedSpaceObj (tateInvNodeChartQuotientIdeal R I q hq hI) ≅
+        actionQuotient (tateInvNodeChartRestrictedAction R I q hq hI)) ↔
+      Nonempty (FormalSpectrum.locallyRingedSpaceObj (tateInvNodeChartQuotientIdeal R I q hq hI) ≅
+        (actionQuotient (tateInvPeriodAction R I q hq hI)).restrict
+          (tateInvNodeChartQuotientOpens R I q hq hI).isOpenEmbedding) :=
+  ⟨fun he => ⟨he.some ≪≫ tateInvNodeChartRestrictedActionQuotientIso R I q hq hI⟩,
+    fun he => ⟨he.some ≪≫ (tateInvNodeChartRestrictedActionQuotientIso R I q hq hI).symm⟩⟩
+
 /-- **The same reduction with the target rewritten as a coequalizer on the chain.** It is enough
 that the coequalizer of `AlgebraicGeometry.tateInvNodeChartRestrictedAction` — an action on an
 open of the chain, namely the saturation of the node chart locus by
@@ -291,7 +330,10 @@ implicit argument. `AlgebraicGeometry.exists_formalScheme_of_iso_spf_away` below
 which that half loses the quotient too. The non-vacuity is the same one the reduction above
 inherits, `AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartQuotientIdeal`.
 
-**It does not decide `hnode`**, and it is sufficient rather than equivalent. -/
+**It does not decide `hnode`.** Its hypothesis is *equivalent* to the one it rewrites, by
+`AlgebraicGeometry.nonempty_iso_actionQuotient_tateInvNodeChartRestrictedAction_iff` above; the
+step that is sufficient rather than equivalent is the one out of `hnode`, taken by
+`AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens`. -/
 theorem exists_formalScheme_of_iso_actionQuotient_tateInvNodeChartRestrictedAction (t : R)
     (ht : I = Ideal.span {t}) (hreg : IsLeftRegular t)
     (he :
@@ -307,6 +349,28 @@ theorem exists_formalScheme_of_iso_actionQuotient_tateInvNodeChartRestrictedActi
       X.toLocallyRingedSpace = actionQuotient (tateInvPeriodAction R I q hq hI) :=
   exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens R I q hq hI t ht hreg
     ⟨he.some ≪≫ tateInvNodeChartRestrictedActionQuotientIso R I q hq hI⟩
+
+/-- **The third reduction's hypothesis is equivalent to the second's.** The target is the same on
+both sides and the two sources are identified by
+`AlgebraicGeometry.tateInvNodeChartQuotientSpfIso`
+(`FormalSchemes.TateInvNodeChartQuotientSpf`), an isomorphism of formal spectra; composing with it
+and with its inverse gives the two directions.
+
+With `AlgebraicGeometry.nonempty_iso_actionQuotient_tateInvNodeChartRestrictedAction_iff` this
+makes the hypotheses of all three reductions in this file equivalent to one another. What none of
+them is equivalent to is `hnode`; see the module docstring. -/
+theorem nonempty_iso_spf_away_iff
+    [TopologicalSpace ((actionQuotient (tateInvPeriodAction R I q hq hI)).presheaf.obj
+      (op (tateInvNodeChartQuotientOpens R I q hq hI)))]
+    [IsAdicRing (tateInvNodeChartQuotientIdeal R I q hq hI)]
+    [TopologicalSpace (tateInvNodeChartAwaySubring R I q hq hI)]
+    [IsAdicRing (tateInvNodeChartAwayIdeal R I q hq hI)] :
+    Nonempty (FormalSpectrum.locallyRingedSpaceObj (tateInvNodeChartAwayIdeal R I q hq hI) ≅
+        actionQuotient (tateInvNodeChartRestrictedAction R I q hq hI)) ↔
+      Nonempty (FormalSpectrum.locallyRingedSpaceObj (tateInvNodeChartQuotientIdeal R I q hq hI) ≅
+        actionQuotient (tateInvNodeChartRestrictedAction R I q hq hI)) :=
+  ⟨fun he => ⟨tateInvNodeChartQuotientSpfIso R I q hq hI ≪≫ he.some⟩,
+    fun he => ⟨(tateInvNodeChartQuotientSpfIso R I q hq hI).symm ≪≫ he.some⟩⟩
 
 /-- **The same reduction again, with the source off the quotient as well.** It is enough that the
 coequalizer of `AlgebraicGeometry.tateInvNodeChartRestrictedAction` is the formal spectrum of
@@ -328,8 +392,10 @@ The non-vacuity inherited on this side is
 `AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartAwayIdeal`
 (`FormalSchemes.TateInvNodeChartSpfNonempty`): for `I ≠ ⊤` the source has a point.
 
-**It does not decide `hnode`**, and like the two reductions above it is sufficient rather than
-equivalent. -/
+**It does not decide `hnode`.** Its hypothesis is *equivalent* to the second reduction's by
+`AlgebraicGeometry.nonempty_iso_spf_away_iff` above, hence to the first's as well; the step that
+is sufficient rather than equivalent is the one out of `hnode`, taken by
+`AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens`. -/
 theorem exists_formalScheme_of_iso_spf_away (t : R) (ht : I = Ideal.span {t})
     (hreg : IsLeftRegular t)
     (he :
