@@ -69,6 +69,17 @@ needed, is packaged: see `AdicRingCat.spfHomEquiv` (`FormalSchemes.SpfFullyFaith
 * `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq`: **EGA I, 10.4.6 over a
   non-affine source** — a unique chart-wise continuous morphism `X ⟶ Spf R` induces `ψ`; and
   `existsUnique_globalSectionsHom_eq_of_locallyFG` over the charts `LocallyFG` supplies.
+* `AlgebraicGeometry.FormalScheme.globalSectionsHom_homOfSpfHomContinuity`,
+  `AlgebraicGeometry.FormalScheme.continuous_homOfSpfHomContinuity` and
+  `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq_of_spfHomContinuity`: the same
+  three statements over `AlgebraicGeometry.FormalScheme.SpfHomContinuity`
+  (`FormalSchemes.GlueHomToSpf`), where the charts on the *overlaps* are chosen — they can be,
+  because no hypothesis names them — while the charts on `X` are still supplied. This is what
+  retires `ocharts` and `hofg` from the EGA I, 10.4.6 headline above.
+* `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq_of_locallyFG_spfHomContinuity`
+  and its two companions: the further specialisation in which the charts on `X` are chosen too. See
+  `AlgebraicGeometry.FormalScheme.LocallyFG.SpfHomContinuity` for why that is offered rather than
+  recommended.
 
 ## References
 
@@ -277,6 +288,92 @@ theorem existsUnique_globalSectionsHom_eq_of_locallyFG :
   existsUnique_globalSectionsHom_eq I hX.chart hX.fg_chart ψ hcont hI ocharts hofg hf hg
 
 end LocallyFG
+
+section SpfHomContinuity
+
+open OpenCover
+
+variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
+variable (charts : ∀ x : X, AffineChart X x) (hfg : ∀ x, (charts x).I.FG)
+variable (ψ : R →+* X.presheaf.obj (op (⊤ : Opens X)))
+variable (hI : I.FG) (d : SpfHomContinuity I charts hfg ψ)
+
+/-- **The morphism built from `ψ` over a supplied chart family induces `ψ`.** The bundled form of
+`AlgebraicGeometry.FormalScheme.globalSectionsHom_homOfGlobalSectionsHom`. -/
+theorem globalSectionsHom_homOfSpfHomContinuity :
+    globalSectionsHom I X.toLocallyRingedSpace
+        (homOfSpfHomContinuity I charts hfg ψ hI d) = ψ :=
+  globalSectionsHom_homOfGlobalSectionsHom I charts hfg ψ d.cont hI _ _ d.fst d.snd
+
+/-- **It is itself continuous on each of the supplied charts**, so the `∃!` below is not vacuous.
+The bundled form of `AlgebraicGeometry.FormalScheme.continuous_homOfGlobalSectionsHom`. -/
+theorem continuous_homOfSpfHomContinuity (x : X) :
+    I ≤ (charts x).I.comap (globalSectionsMap I (charts x).I
+      ((charts x).map ≫ homOfSpfHomContinuity I charts hfg ψ hI d)) :=
+  continuous_homOfGlobalSectionsHom I charts hfg ψ d.cont hI _ _ d.fst d.snd x
+
+include hfg hI d in
+/-- **EGA I, 10.4.6 over a non-affine source, with the overlap charts chosen.** The form of
+`AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq` in which the affine charts on
+the overlaps are `AlgebraicGeometry.FormalScheme.overlapChartOf` rather than supplied, so that the
+only hypotheses are finite generation of `I` and the three continuity families of
+`AlgebraicGeometry.FormalScheme.SpfHomContinuity`. **The charts on `X` are still supplied**; only
+the overlap charts are canonical, and they can be because no hypothesis of this statement names
+them.
+
+The quantifier still ranges over the continuity-restricted subtype, and that restriction is still
+genuine; see the module docstring. -/
+theorem existsUnique_globalSectionsHom_eq_of_spfHomContinuity :
+    ∃! f : { f : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I //
+        ∀ x : X, I ≤ (charts x).I.comap
+          (globalSectionsMap I (charts x).I ((charts x).map ≫ f)) },
+      globalSectionsHom I X.toLocallyRingedSpace f.1 = ψ :=
+  existsUnique_globalSectionsHom_eq I charts hfg ψ d.cont hI
+    (overlapChartOf charts hfg) (fg_overlapChartOf charts hfg) d.fst d.snd
+
+end SpfHomContinuity
+
+section LocallyFGContinuity
+
+open OpenCover
+
+variable {R : Type u} [CommRing R] [TopologicalSpace R] (I : Ideal R) [IsAdicRing I]
+variable (hX : X.LocallyFG) (ψ : R →+* X.presheaf.obj (op (⊤ : Opens X)))
+variable (hI : I.FG) (d : LocallyFG.SpfHomContinuity I hX ψ)
+
+/-- The chosen-chart form of
+`AlgebraicGeometry.FormalScheme.globalSectionsHom_homOfSpfHomContinuity`. See
+`AlgebraicGeometry.FormalScheme.LocallyFG.SpfHomContinuity` for why a caller with a better chart
+family should use the supplied-family form instead. -/
+theorem globalSectionsHom_homOfGlobalSectionsHomOfLocallyFG :
+    globalSectionsHom I X.toLocallyRingedSpace
+        (homOfGlobalSectionsHomOfLocallyFG I hX ψ hI d) = ψ :=
+  globalSectionsHom_homOfSpfHomContinuity I hX.chart hX.fg_chart ψ hI d
+
+/-- The chosen-chart form of
+`AlgebraicGeometry.FormalScheme.continuous_homOfSpfHomContinuity`. -/
+theorem continuous_homOfGlobalSectionsHomOfLocallyFG (x : X) :
+    I ≤ (hX.chart x).I.comap (globalSectionsMap I (hX.chart x).I
+      ((hX.chart x).map ≫ homOfGlobalSectionsHomOfLocallyFG I hX ψ hI d)) :=
+  continuous_homOfSpfHomContinuity I hX.chart hX.fg_chart ψ hI d x
+
+include hI d in
+/-- **EGA I, 10.4.6 over a locally finitely generated source, with every chart chosen.** The form
+of `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq_of_locallyFG` in which
+`ocharts` and `hofg` are `AlgebraicGeometry.FormalScheme.LocallyFG.overlapChart` and
+`LocallyFG.fg_overlapChart` rather than supplied, so that the only hypotheses are finite generation
+of `I` and the three continuity families.
+
+Every chart here is a `Classical.choice`; see
+`AlgebraicGeometry.FormalScheme.LocallyFG.SpfHomContinuity`. -/
+theorem existsUnique_globalSectionsHom_eq_of_locallyFG_spfHomContinuity :
+    ∃! f : { f : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I //
+        ∀ x : X, I ≤ (hX.chart x).I.comap
+          (globalSectionsMap I (hX.chart x).I ((hX.chart x).map ≫ f)) },
+      globalSectionsHom I X.toLocallyRingedSpace f.1 = ψ :=
+  existsUnique_globalSectionsHom_eq_of_spfHomContinuity I hX.chart hX.fg_chart ψ hI d
+
+end LocallyFGContinuity
 
 end AlgebraicGeometry.FormalScheme
 
