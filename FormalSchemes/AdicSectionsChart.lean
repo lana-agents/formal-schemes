@@ -25,32 +25,37 @@ The fix issue 468 found for the diagonal, and issue 798 generalised, is not to p
 chosen chart but to **choose the chart from a neighbourhood basis that already records it**:
 `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG` (`FormalSchemes.AdicOverBaseChart`) is
 `AlgebraicGeometry.FormalScheme.LocallyFG` with the bound added to the chart it produces, and
-`AlgebraicGeometry.BothChartedFibreDatumXY.adicBothCharts` with `adicBothCharts_hs`
+`AlgebraicGeometry.BothChartedFibreDatumXY.adicBothCharts` with
+`AlgebraicGeometry.BothChartedFibreDatumXY.adicBothCharts_hs`
 (`FormalSchemes.GeneralFibreProductLiftAdic`) are the chosen family together with the continuity
 discharged from the same witness.
 
-This file runs that pattern for `homOfGlobalSectionsHom`. Two predicates carry all three families:
+This file runs that pattern for
+`AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom`. Two predicates carry all three families:
 
 * `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` — the `ψ`-relative analogue of
-  `AdicOverBaseLocallyFG`, which supplies `charts`, `hfg` **and** `hcont` from one witness;
-* `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG` — `AdicOverBaseLocallyFG` for **two**
-  base morphisms at once, which supplies `ocharts`, `hofg`, `hf` **and** `hg` on each overlap from
-  one witness.
+  `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG`, which supplies `charts`, `hfg` **and**
+  `hcont` from one witness;
+* `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG` — the same for **two** base morphisms
+  at once, which supplies `ocharts`, `hofg`, `hf` **and** `hg` on each overlap from one witness.
 
 `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections` is the construction over the
 two of them. Nothing in it asks a bound of a chart it did not produce.
 
 ## Why the overlap condition is about a *pair* of base morphisms, and what is open about it
 
-On the `(i, j)` overlap, `homOfGlobalSectionsHom` compares two morphisms into `Spf R` — the two
-projections followed by the chart morphisms at `i` and at `j` — and needs the *same* affine cover
-of the overlap to be adic over **both**. A witness for each separately gives two unrelated charts,
-so `AdicOverBaseLocallyFG` twice is not enough; `AdicOverBasePairLocallyFG` is the joint condition,
-in the same way that `AlgebraicGeometry.BothChartedFibreDatumXY.nonempty_adicBothChart` needs one
-chart to satisfy two range constraints at once rather than two charts satisfying one each.
+On the `(i, j)` overlap, `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` compares two
+morphisms into `Spf R` — the two projections followed by the chart morphisms at `i` and at `j` —
+and needs the *same* affine cover of the overlap to be adic over **both**. A witness for each
+separately gives two unrelated charts, so
+`AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG` twice is not enough; the pair condition is
+the joint form, in the same way that
+`AlgebraicGeometry.BothChartedFibreDatumXY.nonempty_adicBothChart` needs one chart to satisfy two
+range constraints at once rather than two charts satisfying one each.
 
 **Whether the joint condition follows from the two separate ones is open, and this file does not
-settle it.** `AdicOverBasePairLocallyFG.adicOverBase_left` and `_right` give one direction;
+settle it.** `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.adicOverBase_left` and
+`AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.adicOverBase_right` give one direction;
 the converse would need a common refinement of two adic-over-base charts that stays adic over both,
 and the refinement `AlgebraicGeometry.FormalScheme.exists_affineChart_subset_adicOverBase` provides
 is a *basic open* of one of them — for which
@@ -65,27 +70,36 @@ condition: if the two base morphisms are *equal*, one witness serves. That is no
 is close to it, and it is worth seeing why. The two base morphisms on the `(i, j)` overlap are
 equal — that is
 `AlgebraicGeometry.FormalScheme.OpenCover.pullback_fst_comp_eq_snd_comp`, the agreement
-`glueMorphisms` consumes — but the only proof of it on this tree runs through `hf` and `hg`
-themselves. So `pair_of_eq` cannot be used to discharge the overlap condition here; it records
-where the joint condition would become free if the agreement were ever proved independently.
+`AlgebraicGeometry.FormalScheme.OpenCover.glueMorphisms` consumes — but the only proof of it on
+this tree runs through `hf` and `hg` themselves. So
+`AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG.pair_of_eq` cannot be used to discharge the
+overlap condition here; it records where the joint condition would become free if the agreement
+were ever proved independently.
 
 ## Main definitions and results
 
 * `AlgebraicGeometry.FormalScheme.AffineChart.sectionsHom`: the chart-restriction of `ψ` at a
   single chart, definitionally `AlgebraicGeometry.FormalScheme.chartHom` of the family at that
-  point (`chartHom_eq_sectionsHom`).
-* `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG`, with `locallyFG`, `chart`, `fg_chart`
-  and `cont`.
-* `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG`, with `chart`, `fg_chart`, `left`,
-  `right`, `adicOverBase_left`, `adicOverBase_right`, and
+  point (`AlgebraicGeometry.FormalScheme.chartHom_eq_sectionsHom`).
+* `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG`, with
+  `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.locallyFG`,
+  `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.chart`,
+  `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.fg_chart` and
+  `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.cont`.
+* `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG`, with
+  `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.chart`,
+  `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.fg_chart`,
+  `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.left`,
+  `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.right`, the two
+  `adicOverBase` projections, and
   `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG.pair_of_eq`.
 * `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`: the overlap condition, one
-  `AdicOverBasePairLocallyFG` per pair of points.
+  pair witness per pair of points.
 * `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections`: **the construction**, with
-  `chart_comp_homOfGlobalSectionsHomOfAdicSections`,
-  `globalSectionsHom_homOfGlobalSectionsHomOfAdicSections`,
-  `continuous_homOfGlobalSectionsHomOfAdicSections` and
-  `existsUnique_globalSectionsHom_eq_of_adicSections`.
+  `AlgebraicGeometry.FormalScheme.chart_comp_homOfGlobalSectionsHomOfAdicSections`,
+  `AlgebraicGeometry.FormalScheme.globalSectionsHom_homOfGlobalSectionsHomOfAdicSections`,
+  `AlgebraicGeometry.FormalScheme.continuous_homOfGlobalSectionsHomOfAdicSections` and
+  `AlgebraicGeometry.FormalScheme.existsUnique_globalSectionsHom_eq_of_adicSections`.
 * `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections_eq`: it is the *same*
   morphism `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` builds from any other overlap
   data at the same charts, so the overlap witness builds the morphism without pinning it down.
@@ -97,9 +111,11 @@ changes the shape of what has to be supplied: from three families of bounds on c
 describes, to two existential conditions from which the charts *and* the bounds both come. Whether
 either condition holds anywhere is untouched, and a scheme satisfying neither is not excluded.
 
-**`AdicSectionsLocallyFG` is strictly stronger than `LocallyFG`** — `locallyFG` is the one-way
-projection and there is no converse, since a `LocallyFG` witness carries no bound. Reading the two
-as interchangeable is the error this whole file exists to avoid.
+**`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` is strictly stronger than
+`AlgebraicGeometry.FormalScheme.LocallyFG`** —
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.locallyFG` is the one-way projection and
+there is no converse, since a `AlgebraicGeometry.FormalScheme.LocallyFG` witness carries no bound.
+Reading the two as interchangeable is the error this whole file exists to avoid.
 
 ## References
 
@@ -122,7 +138,8 @@ variable {X : FormalScheme.{u}} (ψ : R →+* X.presheaf.obj (op (⊤ : Opens X)
 
 /-- **The chart-restriction of `ψ` at a single affine chart.** This is
 `AlgebraicGeometry.FormalScheme.chartHom` with the family replaced by one of its values; the two
-agree definitionally (`chartHom_eq_sectionsHom`), and this spelling is what lets the predicate
+agree definitionally (`AlgebraicGeometry.FormalScheme.chartHom_eq_sectionsHom`), and this
+spelling is what lets the predicate
 below quantify over a chart rather than over a family. -/
 def AffineChart.sectionsHom {x : X} (c : AffineChart X x) : R →+* c.R :=
   (globalSectionsEquiv c.I).toRingHom.comp
@@ -130,7 +147,8 @@ def AffineChart.sectionsHom {x : X} (c : AffineChart X x) : R →+* c.R :=
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `AlgebraicGeometry.FormalScheme.chartHom` of a family at `x` is
-`AffineChart.sectionsHom` of that family's value at `x`, on the nose. -/
+`AlgebraicGeometry.FormalScheme.AffineChart.sectionsHom` of that family's value at `x`, on the
+nose. -/
 theorem chartHom_eq_sectionsHom (charts : ∀ x : X, AffineChart X x) (x : X) :
     chartHom charts ψ x = (charts x).sectionsHom ψ :=
   rfl
@@ -141,9 +159,10 @@ affine open-immersion chart at which the chart-restriction of `ψ` is *already* 
 a base morphism's global-sections map — the shape that condition would take if there were a
 morphism `X ⟶ Spf R` to state it over, which there is not, because building one is the point.
 
-It is strictly stronger than `AlgebraicGeometry.FormalScheme.LocallyFG` (`locallyFG` below is the
-one-way projection): `LocallyFG` asks only that a finitely generated chart exist, and says nothing
-about `ψ` at it. -/
+It is strictly stronger than `AlgebraicGeometry.FormalScheme.LocallyFG`
+(`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.locallyFG` below is the one-way projection):
+that predicate asks only that a finitely generated chart exist, and says nothing about `ψ` at
+it. -/
 def AdicSectionsLocallyFG : Prop :=
   ∀ x : X, ∃ c : AffineChart X x, c.I.FG ∧ I ≤ c.I.comap (c.sectionsHom ψ)
 
@@ -158,19 +177,22 @@ theorem AdicSectionsLocallyFG.locallyFG (hX : AdicSectionsLocallyFG I ψ) : X.Lo
 
 /-- **The chart family the witness supplies.** Unlike
 `AlgebraicGeometry.FormalScheme.LocallyFG.chart`, this one arrives with its continuity bound
-already attached (`cont`), which is the whole difference. -/
+already attached (`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.cont`), which is the
+whole difference. -/
 def AdicSectionsLocallyFG.chart (hX : AdicSectionsLocallyFG I ψ) (x : X) : AffineChart X x :=
   (hX x).choose
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- The ideals of definition of `AdicSectionsLocallyFG.chart` are finitely generated: the `hfg`
+/-- The ideals of definition of `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.chart` are
+finitely generated: the `hfg`
 argument of `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom`. -/
 theorem AdicSectionsLocallyFG.fg_chart (hX : AdicSectionsLocallyFG I ψ) (x : X) :
     (hX.chart x).I.FG :=
   (hX x).choose_spec.1
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **The discharged `hcont`.** Each chart of `AdicSectionsLocallyFG.chart` carries the continuity
+/-- **The discharged `hcont`.** Each chart of
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.chart` carries the continuity
 of the chart-restriction of `ψ` by construction, so the first of
 `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom`'s three continuity families is not a
 hypothesis of anything below. -/
@@ -232,7 +254,7 @@ theorem AdicOverBasePairLocallyFG.adicOverBase_right (h : AdicOverBasePairLocall
   ⟨c.R, c.commRing, c.topR, c.I, c.adic, c.map, hfg, c.mem, c.isOpenImmersion, hr⟩
 
 /-- **The one cheap sufficient condition: equal base morphisms.** If `s = t` a single
-`AdicOverBaseLocallyFG` witness serves for both bounds.
+`AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG` witness serves for both bounds.
 
 This does *not* discharge the overlap condition below, and the module docstring says why: the two
 base morphisms there are indeed equal, by
@@ -251,8 +273,9 @@ open OpenCover
 
 variable (ψ)
 
-/-- **The overlap condition**: on every pairwise overlap of the cover `AdicSectionsLocallyFG`
-supplies, one witness adic over both of the morphisms
+/-- **The overlap condition**: on every pairwise overlap of the cover
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` supplies, one witness adic over both of the
+morphisms
 `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` compares there.
 
 Its two projections are that construction's `hf` and `hg`, and its chart family is the `ocharts`
@@ -269,8 +292,9 @@ variable (hX : AdicSectionsLocallyFG I ψ) (hI : I.FG) (hov : hX.OverlapAdic ψ)
 
 /-- **The morphism `X ⟶ Spf R` induced by `ψ`, with no `hs`-shaped hypothesis.** Every one of
 `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom`'s nine arguments is supplied from the two
-neighbourhood-basis witnesses: `charts`, `hfg`, `hcont` from `AdicSectionsLocallyFG`, and
-`ocharts`, `hofg`, `hf`, `hg` from `AdicSectionsLocallyFG.OverlapAdic`, leaving only finite
+neighbourhood-basis witnesses: `charts`, `hfg`, `hcont` from
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG`, and `ocharts`, `hofg`, `hf`, `hg` from
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`, leaving only finite
 generation of `I`.
 
 This is not a claim that the witnesses exist. It is the statement that, once they do, no further

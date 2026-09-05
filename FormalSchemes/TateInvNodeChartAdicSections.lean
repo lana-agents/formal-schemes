@@ -117,7 +117,7 @@ variable (hov : hX.OverlapAdic (nodeChartPsi R I q hq hI))
 
 /-- **The morphism into the node chart's formal spectrum, built from two neighbourhood-basis
 witnesses.** Every argument of `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHom` comes from
-`hX` and `hov` except finite generation of the target's ideal, which
+the two witnesses except finite generation of the target's ideal, which
 `AlgebraicGeometry.fg_tateInvNodeChartQuotientIdeal_of_isLeftRegular_base` supplies under the
 hypotheses this cluster's reductions already carry.
 
