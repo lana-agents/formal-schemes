@@ -28,8 +28,9 @@ filled in.
 
 ## What this changes and what it does not
 
-Hypotheses 3 and 4 could not previously be *stated* at the node chart: `nodeChartAdicHom` takes both
-a `hX` and a `hov` as arguments, so hypothesis 3 needs a witness of hypothesis 2 in its own type.
+Hypotheses 3 and 4 could not previously be *stated* at the node chart:
+`AlgebraicGeometry.nodeChartAdicHom` takes a witness of hypothesis 1 **and** a witness of
+hypothesis 2 as arguments, so hypothesis 3 needs both of them inside its own type.
 Both now have canonical arguments to be stated at, and
 `AlgebraicGeometry.exists_formalScheme_of_invariant_isIso` states them.
 
