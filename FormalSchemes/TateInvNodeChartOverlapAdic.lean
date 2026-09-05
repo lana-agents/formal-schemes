@@ -34,14 +34,18 @@ hypothesis 2 as arguments, so hypothesis 3 needs both of them inside its own typ
 Both now have canonical arguments to be stated at, and
 `AlgebraicGeometry.exists_formalScheme_of_invariant_isIso` states them.
 
-**That is a change in what can be asked, not in what is known.** Neither 3 nor 4 has ever been
-attempted, in either direction, and this file attempts neither.
+**That is a change in what can be asked, not in what is known**, and this file attempts neither.
+Hypothesis 3 was answered afterwards, affirmatively, in
+`FormalSchemes.TateInvNodeChartInvariant`; hypothesis 4 has still never been attempted, in either
+direction.
 
 ## What is *not* proved here
 
 **`hnode` is undecided, in both directions, and nothing here moves it.** Two of the four
-obligations of `AlgebraicGeometry.exists_formalScheme_of_adicSections` are now discharged and two
-are open; and even all four would only give the existence of the formal scheme, because the chain
+obligations of `AlgebraicGeometry.exists_formalScheme_of_adicSections` are discharged here and by
+`FormalSchemes.TateInvNodeChartPatchChartAdic`, and a third by
+`FormalSchemes.TateInvNodeChartInvariant`; hypothesis 4 is open, and even all four would only give
+the existence of the formal scheme, because the chain
 back through `AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens`
 is **one-way**. Nothing here should be read as evidence that the node chart exists.
 
