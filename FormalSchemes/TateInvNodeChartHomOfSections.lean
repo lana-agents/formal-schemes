@@ -133,7 +133,15 @@ the charts *and* discharges the continuity the way
 `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG.locallyFG` and
 `AlgebraicGeometry.BothChartedFibreDatumXY.adicBothCharts`
 (`FormalSchemes.GeneralFibreProductLiftAdic`) do one door down, is a separate step and is not taken
-here.
+here. **It is taken in `FormalSchemes.TateInvNodeChartAdicSections`**, over the two predicates
+`FormalSchemes.AdicSectionsChart` defines: the first family becomes
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` and the two overlap families become
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`, whose projections are exactly
+`AlgebraicGeometry.NodeChartOverlapContinuousFst` and `Snd` at the charts that witness itself
+supplies. `AlgebraicGeometry.nodeChartAdicHom_eq_nodeChartHom` records that the resulting morphism
+is `AlgebraicGeometry.nodeChartHom` and not a new one. **No witness of either predicate is produced
+there either**, and the overlap one raises a further open question of its own, so nothing above is
+weakened by the successor: the three families remain undischarged at every chart family.
 
 ## References
 
