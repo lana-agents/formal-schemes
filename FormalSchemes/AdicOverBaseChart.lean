@@ -98,7 +98,7 @@ theorem exists_affineChart_subset_adicOverBase (X : FormalScheme.{u})
         LocallyRingedSpace.IsOpenImmersion f ∧
         I ≤ J.comap (FormalSpectrum.globalSectionsMap I J (f ≫ s)) := by
   obtain ⟨S₀, _, _, I₀, _, m, hI₀fg, hmem₀, hm, hadic⟩ := hX x
-  -- bundle the adic-over-base witness as an `AffineChart` and shrink it into `U`
+  -- bundle the adic-over-base witness as an affine chart and shrink it into `U`
   let c : AffineChart X x := { R := S₀, I := I₀, map := m, mem := hmem₀, isOpenImmersion := hm }
   obtain ⟨g, hadicg, hoi, hmem', hsub⟩ :=
     exists_basicOpenRefine_subset c hI₀fg U hU hxU

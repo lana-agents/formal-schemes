@@ -25,9 +25,11 @@ fibre-product universal property) consumes.
 * `FormalScheme.locallyFG_Spf`: `Spf I` is `LocallyFG` when `I.FG`.
 * `FormalScheme.AffineChart.basicOpenRefine` and `FormalScheme.exists_basicOpenRefine_subset`:
   **the shrinking step**, named and stated once — every affine chart has a basic-open refinement
-  inside any given open neighbourhood of its point. It mentions no `LocallyFG` hypothesis, no
+  inside any given open neighbourhood of its point. It mentions no `FormalScheme.LocallyFG`
+  hypothesis, no
   ideal of definition on a base and no homomorphism on sections, and every neighbourhood-basis
-  lemma on this tree is that step plus what it transports: `exists_affineChart_subset` below,
+  lemma on this tree is that step plus what it transports: `FormalScheme.exists_affineChart_subset`
+  below,
   `FormalScheme.exists_affineChart_subset_adicOverBase` (`FormalSchemes.AdicOverBaseChart`) and
   the two `ψ`-relative lemmas of `FormalSchemes.AdicSectionsChart`.
 * `FormalScheme.exists_affineChart_subset`: on a `LocallyFG` scheme, every point `x` in an open
@@ -155,7 +157,7 @@ theorem exists_affineChart_subset (X : FormalScheme.{u}) (hX : X.LocallyFG) (x :
       J.FG ∧ x ∈ Set.range f.base ∧ Set.range f.base ⊆ U ∧
         LocallyRingedSpace.IsOpenImmersion f := by
   obtain ⟨R, _, _, I, _, m, hIfg, hmem, hm⟩ := hX x
-  -- bundle the witness as an `AffineChart`, then shrink it with `exists_basicOpenRefine_subset`
+  -- bundle the witness as an affine chart, then shrink it into `U`
   let c : AffineChart X x := { R := R, I := I, map := m, mem := hmem, isOpenImmersion := hm }
   obtain ⟨g, hadic, hoi, hmem', hsub⟩ := exists_basicOpenRefine_subset c hIfg U hU hxU
   exact ⟨awayCompletion c.I g, inferInstance, inferInstance, awayCompletionIdeal c.I g, hadic,
