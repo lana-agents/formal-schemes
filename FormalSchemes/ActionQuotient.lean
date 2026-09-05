@@ -31,6 +31,10 @@ An action of `G` on `X` by automorphisms is a monoid homomorphism `a : G →* Au
   information as* an invariant `X ⟶ Z` whose mediating morphism is an isomorphism. This is the
   converse of the trivial direction, and it is what makes those two descriptions of the quotient
   interchangeable rather than merely one-way.
+* `CategoryTheory.IsActionQuotient.isIso_desc_iff`: the mediating morphism of an invariant `k` is
+  an isomorphism exactly when `k` is itself a quotient projection — a statement about `k` with no
+  quotient object in it — and `CategoryTheory.IsActionQuotient.isIso_desc_iff_isIso_desc`, that the
+  condition therefore does not depend on the presentation descended along.
 * `CategoryTheory.IsActionQuotient.uniqueUpToIso`: the quotient object is unique up to a (canonical)
   isomorphism compatible with the two projections.
 * `CategoryTheory.IsActionQuotient.ofIso`: conversely, being a quotient transports along an
@@ -176,6 +180,46 @@ def ofIso {Q₁ Q₂ : C} {π₁ : X ⟶ Q₁} {π₂ : X ⟶ Q₂} (h : IsActio
   uniq f hf m hm := by
     have h1 : e.hom ≫ m = h.desc f hf := h.uniq f hf _ (by rw [← assoc, he]; exact hm)
     rw [← h1, e.inv_hom_id_assoc]
+
+/-- **A mediating morphism is an isomorphism exactly when the invariant morphism it descends is
+itself a quotient projection.** Left to right is
+`CategoryTheory.IsActionQuotient.ofIso` at the mediating morphism, whose intertwining hypothesis is
+`CategoryTheory.IsActionQuotient.fac`; right to left is
+`CategoryTheory.IsActionQuotient.uniqueUpToIso`, which the mediating morphism *is* — the two agree
+on the nose, because `CategoryTheory.IsActionInvariant` is a `Prop` and the invariance a quotient
+carries is therefore the one supplied.
+
+This is the two-way form of `CategoryTheory.IsActionQuotient.exists_isIso_desc_of_iso`: that one
+produces *some* invariant morphism descending to an isomorphism from an isomorphism of objects,
+while this one scores a *given* invariant morphism. The right-hand side names no quotient object
+and no mediating morphism, so a hypothesis "the descent of `k` is an isomorphism" — the shape a
+reduction to a quotient being affine ends in — is a statement about `k` alone. In particular it
+does not depend on which presentation of the quotient the descent was taken along; see
+`CategoryTheory.IsActionQuotient.isIso_desc_iff_isIso_desc`.
+
+`Nonempty` because `CategoryTheory.IsActionQuotient` carries the mediating morphism as data. -/
+theorem isIso_desc_iff (hπ : IsActionQuotient a π) {Z : C} (k : X ⟶ Z)
+    (hk : IsActionInvariant a k) :
+    IsIso (hπ.desc k hk) ↔ Nonempty (IsActionQuotient a k) := by
+  constructor
+  · intro h
+    exact ⟨hπ.ofIso (@asIso _ _ _ _ _ h) (hπ.fac k hk)⟩
+  · rintro ⟨hkq⟩
+    have hu : hπ.desc k hk = (IsActionQuotient.uniqueUpToIso hπ hkq).hom := rfl
+    rw [hu]
+    infer_instance
+
+/-- **Whether the descent of an invariant morphism is an isomorphism does not depend on the
+presentation of the quotient it is descended along.** Both sides say, by
+`CategoryTheory.IsActionQuotient.isIso_desc_iff`, that `k` is itself a quotient projection.
+
+It is what licenses replacing a descent along a coequalizer by a descent along a concretely given
+projection — the trade `AlgebraicGeometry.isIso_desc_nodeChartAdicHom_iff`
+(`FormalSchemes.TateInvNodeChartDescentIso`) makes. -/
+theorem isIso_desc_iff_isIso_desc {Q₁ Q₂ : C} {π₁ : X ⟶ Q₁} {π₂ : X ⟶ Q₂}
+    (h₁ : IsActionQuotient a π₁) (h₂ : IsActionQuotient a π₂) {Z : C} (k : X ⟶ Z)
+    (hk : IsActionInvariant a k) : IsIso (h₁.desc k hk) ↔ IsIso (h₂.desc k hk) := by
+  rw [h₁.isIso_desc_iff k hk, h₂.isIso_desc_iff k hk]
 
 end IsActionQuotient
 

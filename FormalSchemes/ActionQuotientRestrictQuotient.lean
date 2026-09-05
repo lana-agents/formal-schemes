@@ -71,7 +71,9 @@ one genuinely new piece of bookkeeping in this file.
   `FormalSchemes.ActionQuotientRestrictSections` be applied at an arbitrary open of the
   restriction.
 * `AlgebraicGeometry.LocallyRingedSpace.isIso_of_isIso_base_of_isIso_c_app`: a morphism of locally
-  ringed spaces with an invertible base map and invertible comparison maps is an isomorphism.
+  ringed spaces with an invertible base map and invertible comparison maps is an isomorphism, and
+  `AlgebraicGeometry.LocallyRingedSpace.isIso_iff_isIso_base_and_isIso_c_app`: the two halves are
+  necessary as well as sufficient.
 
 ## What is *not* proved here
 
@@ -174,6 +176,26 @@ theorem isIso_of_isIso_base_of_isIso_c_app {X Y : LocallyRingedSpace.{u}} (f : X
   haveI : IsIso (LocallyRingedSpace.forgetToSheafedSpace.map f) :=
     isIso_of_reflects_iso _ SheafedSpace.forgetToPresheafedSpace
   exact isIso_of_reflects_iso _ LocallyRingedSpace.forgetToSheafedSpace
+
+/-- **The two halves are also necessary**, so a morphism of locally ringed spaces is an isomorphism
+*exactly* when its base map and all of its comparison maps are. The forward direction pushes the
+isomorphism down the two forgetful functors and then reads off
+`AlgebraicGeometry.PresheafedSpace.base_isIso_of_iso` and
+`AlgebraicGeometry.PresheafedSpace.c_isIso_of_iso`.
+
+`AlgebraicGeometry.LocallyRingedSpace.isIso_of_isIso_base_of_isIso_c_app` is the direction that
+builds an isomorphism; this one is what lets a *refutation* of either half refute the isomorphism,
+which is what a reduction that means to be attacked in both directions needs. -/
+theorem isIso_iff_isIso_base_and_isIso_c_app {X Y : LocallyRingedSpace.{u}} (f : X ⟶ Y) :
+    IsIso f ↔ IsIso f.base ∧ ∀ O : (Opens Y.toTopCat)ᵒᵖ, IsIso (f.c.app O) := by
+  refine ⟨fun h => ?_, fun h => isIso_of_isIso_base_of_isIso_c_app f h.1 h.2⟩
+  haveI := h
+  haveI : IsIso f.toShHom.hom :=
+    (SheafedSpace.forgetToPresheafedSpace.mapIso
+      (LocallyRingedSpace.forgetToSheafedSpace.mapIso (asIso f))).isIso_hom
+  have hc : IsIso f.c := PresheafedSpace.c_isIso_of_iso f.toShHom.hom
+  exact ⟨PresheafedSpace.base_isIso_of_iso f.toShHom.hom,
+    fun O => @NatIso.isIso_app_of_isIso _ _ _ _ _ _ f.c hc O⟩
 
 end Basic
 

@@ -400,6 +400,7 @@ import FormalSchemes.TateInvNodeChartBaseGenerator
 import FormalSchemes.TateInvNodeChartBaseRegular
 import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDescent
+import FormalSchemes.TateInvNodeChartDescentIso
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
 import FormalSchemes.TateInvNodeChartHomExt
