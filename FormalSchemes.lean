@@ -37,6 +37,7 @@ import FormalSchemes.AdicOverBaseChart
 import FormalSchemes.AdicQuotient
 import FormalSchemes.AdicRing
 import FormalSchemes.AdicRingCat
+import FormalSchemes.AdicSectionsChart
 import FormalSchemes.AdicSubringComplete
 import FormalSchemes.AdicSubringFinite
 import FormalSchemes.AdicSubringPrincipal
@@ -384,6 +385,7 @@ import FormalSchemes.TateInvGlobalNormalForm
 import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvGlobalSections
 import FormalSchemes.TateInvInvariantSectionCollapse
+import FormalSchemes.TateInvNodeChartAdicSections
 import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvNodeChartAmbientNotInjective
 import FormalSchemes.TateInvNodeChartBaseGenerator
