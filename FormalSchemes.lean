@@ -393,6 +393,7 @@ import FormalSchemes.TateInvNodeChartDescent
 import FormalSchemes.TateInvNodeChartDomain
 import FormalSchemes.TateInvNodeChartGlue
 import FormalSchemes.TateInvNodeChartHomExt
+import FormalSchemes.TateInvNodeChartHomOfSections
 import FormalSchemes.TateInvNodeChartLegContinuous
 import FormalSchemes.TateInvNodeChartLegGeneral
 import FormalSchemes.TateInvNodeChartNontrivial
