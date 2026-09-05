@@ -419,7 +419,9 @@ conditions at *that* family with nothing restated. See
 recommended.
 
 **The charts on the *overlaps* are chosen, and a caller who has better ones should not come through
-here.** `fst` and `snd` are bounds at `AlgebraicGeometry.FormalScheme.overlapChartOf`, which is
+here.** `AlgebraicGeometry.FormalScheme.SpfHomContinuity.fst` and
+`AlgebraicGeometry.FormalScheme.SpfHomContinuity.snd` are bounds at
+`AlgebraicGeometry.FormalScheme.overlapChartOf`, which is
 `AlgebraicGeometry.FormalScheme.OpenCover.overlapChart` and so unfolds to
 `AlgebraicGeometry.FormalScheme.LocallyFG.chart` of the overlap — the family this module docstring
 describes as *available for a caller who has nothing better to supply*. This bundle is that caller.

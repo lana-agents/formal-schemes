@@ -84,7 +84,7 @@ this tree runs through `hf` and `hg` themselves. So
 overlap condition here; it records where the joint condition would become free if the agreement
 were ever proved independently.
 
-## Why the bridge to `SpfHomContinuity` runs one way only
+## Why the bridge to `AlgebraicGeometry.FormalScheme.SpfHomContinuity` runs one way only
 
 `AlgebraicGeometry.FormalScheme.SpfHomContinuity` (`FormalSchemes.GlueHomToSpf`) bundles the same
 three families over a supplied chart family, with the charts on the overlaps taken canonically by
@@ -675,7 +675,8 @@ witness, and not a second one.
 It is an instance of
 `AlgebraicGeometry.FormalScheme.homOfGlobalSectionsHomOfAdicSections_eq` at
 `AlgebraicGeometry.FormalScheme.overlapChartOf`. The two continuity proofs involved,
-`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.cont` and the bundle's `cont` field, are
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.cont` and
+`AlgebraicGeometry.FormalScheme.SpfHomContinuity.cont`, are
 proofs of the same `Prop` and so are interchangeable by definitional proof irrelevance; no
 transport appears.
 
