@@ -148,8 +148,9 @@ sides pass through `FormalSpectrum.globalSectionsEquiv` and its inverse, and tho
 propositionally. The `rfl` at the end of its proof closes what is left after that cancellation, and
 starting from `rfl` alone and reading the failure as the statement being false would be wrong.
 
-`AlgebraicGeometry.FormalScheme.AffineChart.ofSpf` fills its `isOpenImmersion` field with an
-explicit `@`-application supplying `CategoryTheory.IsIso.id`. Instance synthesis does **not** find
+`AlgebraicGeometry.FormalScheme.AffineChart.ofSpf` fills its
+`AlgebraicGeometry.FormalScheme.AffineChart.isOpenImmersion` field with an explicit `@`-application
+supplying `CategoryTheory.IsIso.id`. Instance synthesis does **not** find
 `IsIso (𝟙 (FormalSpectrum.locallyRingedSpaceObj J))` at that position, and neither a `haveI` nor a
 `letI` ahead of the structure literal makes it available there, although the same synthesis
 succeeds at the top level of a section. Supplying the instance argument by position is what works.
@@ -496,13 +497,14 @@ section Affine
 variable {S : Type u} [CommRing S] [TopologicalSpace S] (J : Ideal S) [IsAdicRing J]
 
 /-- **The identity chart on an affine formal scheme.** `AlgebraicGeometry.FormalScheme.Spf J` is
-`FormalSpectrum.locallyRingedSpaceObj J` with a `local_affine` field added, definitionally, so the
-identity morphism is an open immersion of the affine model onto the whole of it and is a chart at
-every point.
+`FormalSpectrum.locallyRingedSpaceObj J` with an `AlgebraicGeometry.FormalScheme.local_affine`
+field added, definitionally, so the identity morphism is an open immersion of the affine model onto
+the whole of it, and is a chart at every point.
 
-The `isOpenImmersion` field is supplied by an explicit application rather than left to instance
-search: `IsIso (𝟙 _)` is not found by synthesis at this position, and neither `haveI` nor `letI`
-ahead of the structure literal registers it — see the implementation note. -/
+The `AlgebraicGeometry.FormalScheme.AffineChart.isOpenImmersion` field is supplied by an explicit
+application rather than left to instance search: `IsIso (𝟙 _)` is not found by synthesis at this
+position, and neither `haveI` nor `letI` ahead of the structure literal registers it — see the
+implementation note. -/
 def AffineChart.ofSpf (x : FormalScheme.Spf J) : AffineChart (FormalScheme.Spf J) x :=
   { R := S, I := J, map := 𝟙 _, mem := ⟨x, rfl⟩,
     isOpenImmersion :=
