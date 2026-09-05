@@ -351,10 +351,14 @@ merely happens to appear in the target of the comparison.
 Two spellings have to be got right and neither is guessable. Mathlib's isomorphism runs the other
 way — its type is `Localization.AtPrime x.asIdeal ≃ₐ[R] …` with the *stalk* as the target — so
 `.symm` is needed, and it is an `AlgEquiv`, not a categorical isomorphism, so it is
-`AlgEquiv.toRingEquiv` and not `CategoryTheory.Iso.commRingCatIsoToRingEquiv` that converts it. The
-stalk itself must be taken of `AlgebraicGeometry.structurePresheafInCommRingCat`: the point here is
-a `PrimeSpectrum R`, and the sheaf `AlgebraicGeometry.Spec.structureSheaf` lives over the
-`TopCat` carrier, so applying its presheaf at this point does not typecheck. -/
+`AlgEquiv.toRingEquiv` and not `CategoryTheory.Iso.commRingCatIsoToRingEquiv` that converts it.
+
+The stalk is taken of `AlgebraicGeometry.structurePresheafInCommRingCat`, whose carrier is
+`AlgebraicGeometry.PrimeSpectrum.Top` while the point here is a `PrimeSpectrum R`. Those two are
+definitionally equal, so the point is accepted and the spelling through
+`AlgebraicGeometry.Spec.structureSheaf` — which is that presheaf together with its sheaf condition
+— elaborates to a definitionally equal statement. The distinction only bites inside a `rw`, which
+works at a reduced transparency; see `FormalSpectrum.map_pointIdeal_specStalkEquiv_symm`. -/
 def specStalkEquiv :
     ((structurePresheafInCommRingCat R).stalk (toPrimeSpectrum I x) : Type u) ≃+*
       Localization.AtPrime (pointPrime I x) :=
@@ -388,9 +392,12 @@ docstring says what that step would take.
 Stated in the `Ideal.map`-along-the-inverse direction, which is the shape Mathlib's
 `IsAdicComplete.congr_ringEquiv` and its `IsHausdorff.congr_ringEquiv` and
 `IsPrecomplete.congr_ringEquiv` companions consume. The `Ideal.comap`-along-the-equivalence form of
-the same fact is not one rewrite away: `Ideal.map_comap_of_equiv` does not fire, because the
-comparison forces the stalk's carrier type through `AlgebraicGeometry.Spec.structureSheaf` and the
-point does not have that type. -/
+the same fact is not one rewrite away: `Ideal.map_comap_of_equiv` applied to the inverse has
+`Ideal.comap` along a doubly inverted equivalence on its right-hand side, so rewriting backwards
+with it does not match a goal stated along the equivalence itself, and the failure additionally
+reports the goal as not type-correct at the `instances` transparency, where the carrier
+`AlgebraicGeometry.PrimeSpectrum.Top` of the stalk's presheaf and the `PrimeSpectrum R` the point
+lives in are no longer interchangeable. -/
 theorem map_pointIdeal_specStalkEquiv_symm :
     (pointIdeal I x).map ((specStalkEquiv I x).symm : _ →+* _) =
       I.map (algebraMap R ((structurePresheafInCommRingCat R).stalk (toPrimeSpectrum I x))) := by
