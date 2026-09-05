@@ -110,21 +110,6 @@ theorem annulusOverlapProjY_comp_awayCompletionHom (hq : q ∈ I) :
     RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, awayCompletionHom,
     AssociatedGraded.algebraMap_eq_of, h]
 
-/-! ### The `le_comap` side conditions -/
-
-/-- A ring map between two away completions of `A` that is a map **under `A`** carries the ideal of
-definition of the source into that of the target.
-
-Stated generically in `S`, `f`, `g` and `φ` rather than at the Tate annulus: the proof is the
-`Ideal.map_map` bookkeeping around `map_awayCompletionHom`, and instantiating it later keeps the
-concrete completion types out of the elaborator's way. -/
-theorem le_comap_of_comp_awayCompletionHom {S : Type u} [CommRing S] (K : Ideal S) (f g : S)
-    (φ : awayCompletion K f →+* awayCompletion K g)
-    (hφ : φ.comp (awayCompletionHom K f) = awayCompletionHom K g) :
-    awayCompletionIdeal K f ≤ (awayCompletionIdeal K g).comap φ := by
-  rw [← Ideal.map_le_iff_le_comap, ← map_awayCompletionHom K f, Ideal.map_map, hφ,
-    map_awayCompletionHom]
-
 /-! ### The two summand inclusions -/
 
 /-- **The `x`-summand of the overlap, as an affine morphism**: `Spf` of the first projection of the
@@ -138,7 +123,7 @@ def annulusOverlapSummandX (hq : q ∈ I) :
     (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q + overlapY R I q))
     (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
     (annulusOverlapProjX R I q hq)
-    (le_comap_of_comp_awayCompletionHom _ _ _ _
+    (le_comap_of_comp_awayCompletionHom _
       (annulusOverlapProjX_comp_awayCompletionHom R I q hq))
 
 /-- **The `y`-summand of the overlap, as an affine morphism**. -/
@@ -151,7 +136,7 @@ def annulusOverlapSummandY (hq : q ∈ I) :
     (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q + overlapY R I q))
     (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
     (annulusOverlapProjY R I q hq)
-    (le_comap_of_comp_awayCompletionHom _ _ _ _
+    (le_comap_of_comp_awayCompletionHom _
       (annulusOverlapProjY_comp_awayCompletionHom R I q hq))
 
 /-- **The `x`-summand lies over the chart at `x + y`**: composing it with the basic-open chart at

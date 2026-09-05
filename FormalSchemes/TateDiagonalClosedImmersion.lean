@@ -30,19 +30,24 @@ Nothing but assemble. Both halves are already on master:
   local-at-target on the four-chart cover — the mixed charts being the hard case, where the
   preimage is the union of the two graphs of the 𝔾m-inversion transition;
 * the sheaf half is `tateSelfProductDiagonal_surjective_stalkMap`
-  (`FormalSchemes/TateSeparated.lean`), from the per-chart factorisation through the affine
-  diagonal `diagChart` and the surjectivity of the codiagonal.
+  (`FormalSchemes/TateSeparated.lean`), which is the section identity `Δ ≫ pr₁ = 𝟙` and nothing
+  else — see the next section.
 
 The statement's shape mirrors the affine `CompletedTensorProduct.diagonal_isClosedImmersion`
 (`FormalSchemes/ClosedImmersionSections.lean`).
 
 ## The sheaf half is free
 
-`tateSelfProductDiagonal_surjective_stalkMap_of_pr₁` re-derives the stalk half from the section
-identity `Δ ≫ pr₁ = 𝟙` alone, with no stalk computation, via
-`AlgebraicGeometry.surjective_stalkMap_of_retraction`. So the genuine content of separatedness for
-the Tate model — as for any diagonal — is purely topological: it lives entirely in the closed
+The stalk half follows from the section identity `Δ ≫ pr₁ = 𝟙` alone, with no stalk computation,
+via `AlgebraicGeometry.surjective_stalkMap_of_retraction`. So the genuine content of separatedness
+for the Tate model — as for any diagonal — is purely topological: it lives entirely in the closed
 embedding, and the closed embedding lives entirely in the mixed charts.
+
+This file used to record that observation as a second theorem, whose statement was **identical**
+to `tateSelfProductDiagonal_surjective_stalkMap`'s and which nothing consumed. Issue 1739 removed
+the duplicate the only way that keeps the better proof: the retraction argument is now the proof of
+`tateSelfProductDiagonal_surjective_stalkMap` itself, in `FormalSchemes/TateSeparated.lean`, and
+the fifty-line codiagonal computation it used to carry is gone.
 
 ## Not here: the `FormalScheme.IsClosedImmersion` predicate
 
@@ -56,8 +61,6 @@ is a separate job. Once it is done, `FormalScheme.isClosedImmersion_of_retractio
 ## Main results
 
 * `AlgebraicGeometry.restrictPreimage_diagonal`: the uniform four-chart local-at-target form.
-* `AlgebraicGeometry.tateSelfProductDiagonal_surjective_stalkMap_of_pr₁`: the stalk half from the
-  retraction.
 * `AlgebraicGeometry.tateSelfProductDiagonal_isClosedImmersion`: the capstone.
 
 ## References
@@ -95,20 +98,6 @@ theorem restrictPreimage_diagonal (hq : q ∈ I) (hI : I.FG) (p : ULift (Bool ×
         (tateSelfProductDiagonal R I q hq hI).base) :=
   Set.restrictPreimage_isClosedEmbedding _
     (isClosedEmbedding_tateSelfProductDiagonal_base R I q hq hI)
-
-omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **The stalk half of the closed immersion, for free from the section identity.** The diagonal is
-a section of the first projection (`tateSelfProductDiagonal_comp_pr₁`), and a morphism of locally
-ringed spaces with a retraction has surjective stalk maps
-(`surjective_stalkMap_of_retraction`): the identity's stalk map factors through it.
-
-This re-proves `tateSelfProductDiagonal_surjective_stalkMap` with no stalk computation and no
-reference to the codiagonal — a Tate-level instance of the general fact that separatedness is a
-purely topological condition on a split mono. -/
-theorem tateSelfProductDiagonal_surjective_stalkMap_of_pr₁ (hq : q ∈ I) (hI : I.FG) :
-    ∀ y, Function.Surjective ((tateSelfProductDiagonal R I q hq hI).stalkMap y).hom :=
-  surjective_stalkMap_of_retraction (tateSelfProductDiagonal R I q hq hI)
-    (tateSelfProductPr₁ R I q hq hI) (tateSelfProductDiagonal_comp_pr₁ R I q hq hI)
 
 /-- **The glued diagonal of the Tate curve model is a closed immersion** (EGA I §10.15): its base
 map is a closed topological embedding (`isClosedEmbedding_tateSelfProductDiagonal_base`) and all of

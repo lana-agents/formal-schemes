@@ -33,7 +33,9 @@ already shows that the map they induce does not depend on them up to the resulti
 
 * `Ideal.IsCofinal`: some power of each ideal is contained in the other.
 * `Ideal.IsCofinal.refl`, `Ideal.IsCofinal.symm`, `Ideal.IsCofinal.trans`: it is an equivalence
-  relation, packaged as `Ideal.isCofinal_equivalence`.
+  relation, packaged as `Ideal.isCofinal_equivalence`. `Ideal.IsCofinal.rfl` is `refl` with the
+  ideal implicit, Mathlib's standard companion; see its docstring for why a duplicate-statement
+  scan flags the pair and why both are correct.
 * `Ideal.IsCofinal.pow`: `I` is cofinal with `I ^ n` for `n ≠ 0` — the standard example, and the
   one that makes the relation non-trivial.
 * `Ideal.IsCofinal.map`: cofinality is preserved by extension along a ring homomorphism.
@@ -80,6 +82,15 @@ theorem exists_pow_succ_le (h : IsCofinal I J) : ∃ m : ℕ, I ^ (m + 1) ≤ J 
 theorem refl (I : Ideal R) : IsCofinal I I :=
   ⟨⟨1, (pow_one I).le⟩, ⟨1, (pow_one I).le⟩⟩
 
+/-- `Ideal.IsCofinal.refl` with the ideal implicit — Mathlib's `refl`/`rfl` pair, as for `le_refl`
+and `le_rfl`.
+
+The two have the **same type up to binder annotations**, so
+`scripts/symm_duplicate_statement_scan.lean` reports them as a duplicate group: `Lean.Expr`'s `BEq`
+is alpha-equivalence and discards binder annotations, which is the right default for a duplicate
+probe and is why that report carries a `[BINDER-DIFF]` tag. Issue 1739 examined the group and
+**kept both, unchanged**; the explicit/implicit split is the point of the convention, not an
+accident. -/
 theorem rfl : IsCofinal I I := .refl I
 
 @[symm]
