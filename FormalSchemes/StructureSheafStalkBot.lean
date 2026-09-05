@@ -62,9 +62,14 @@ and a proof is free to pick one; the `⊥`-adic topology *is* the discrete topol
 `instIsAdicRingBotOfDiscreteTopology` (`FormalSchemes.AdicRing`) supplies `IsAdicRing ⊥` from
 `DiscreteTopology R`, which every ring admits.
 
-**This removes those hypotheses at `⊥` and nowhere else, and must not be read as doing more.** For
-a general ideal of definition `IsAdicRing I` is a real condition on `I` and no choice of topology
-makes it hold, so the trick has no analogue above `⊥`. Whether
+**This must not be read as making the general case instance-free**, but the reason is narrower
+than an earlier version of this paragraph claimed. `IsAdicRing I` extends `IsAdicComplete I R` and
+adds `IsAdic I`, which is the assertion that the ambient topology *is* `Ideal.adicTopology I`; so a
+choice of topology discharges the `IsAdic` half by `rfl` at **every** ideal, not only at `⊥`
+(`isAdicRing_adicTopology`, `FormalSchemes.StructureSheafStalkNilpotent`). What no topology
+supplies is `IsAdicComplete I R`, which is a condition on `I` and `R`. The manoeuvre therefore
+reaches exactly as far as `I`-adic completeness does — here, and at every nilpotent ideal of
+definition (`FormalSpectrum.isStalkLimit_of_isNilpotent`, same module) — and no further. Whether
 `FormalSpectrum.basicOpenRes_comp_awayCompletionHom` — whose statement is instance-free — admits an
 instance-free *proof* at a general `I` is the question `FormalSchemes.StructureSheafStalkAlgebraic`
 records as open, and nothing here answers it.
@@ -73,13 +78,16 @@ carries both hypotheses.
 
 ## Placement
 
-A new leaf over `FormalSchemes.StructureSheafStalkComparison` and
-`FormalSchemes.AwayCompletionRestrict`: forward closure **39**, reverse closure **0**, so nothing
-on the tree rebuilds for it. `FormalSchemes.AwayCompletionRestrict` is the second import and buys
-three modules; what it buys is `FormalSpectrum.isUnit_awayCompletionHom_of_basicOpen_le`, and the
-special case needed below — that `f` and `g` are invertible in `R{1/f * g}` — is elementary enough
-to reprove, which would save those three modules at the price of a second proof of a lemma the tree
-already has. The reuse is the better trade at three modules; it would not be at thirty.
+A leaf over `FormalSchemes.StructureSheafStalkComparison` and
+`FormalSchemes.AwayCompletionRestrict`: forward closure **39**, reverse closure **1** — only
+`FormalSchemes.StructureSheafStalkNilpotent`, which widens the value below to every nilpotent
+ideal of definition and reuses the general-`I` lemmas here rather than reproving them.
+
+`FormalSchemes.AwayCompletionRestrict` is the second import and buys three modules; what it buys
+is `FormalSpectrum.isUnit_awayCompletionHom_of_basicOpen_le`, and the special case needed below —
+that `f` and `g` are invertible in `R{1/f * g}` — is elementary enough to reprove, which would
+save those three modules at the price of a second proof of a lemma the tree already has. The
+reuse is the better trade at three modules; it would not be at thirty.
 
 ## Main results
 
@@ -288,8 +296,8 @@ theorem exists_awayToAtPrimeCompletion_eq_bot (x : FormalSpectrum (⊥ : Ideal R
 /-- **The injectivity half at `⊥`**, and it carries no topology either: the two hypotheses that
 `FormalSpectrum.basicOpenRes_eq_zero_of_mul_eq_zero` needs are discharged inside the proof by
 giving `R` the discrete topology, which is legitimate because the statement mentions no topology
-and the `⊥`-adic topology is the discrete one. See the module docstring; this is available at `⊥`
-and nowhere else.
+and the `⊥`-adic topology is the discrete one. See the module docstring; the manoeuvre is
+available wherever `R` is adically complete for the ideal of definition, which at `⊥` is free.
 
 The mathematics is the standard fact: an element `r / f ^ n` of `Localization.Away f` dying in
 `Localization.AtPrime (pointPrime ⊥ x)` has `g * r = 0` for some `g ∉ pointPrime ⊥ x`
