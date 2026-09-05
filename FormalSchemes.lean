@@ -343,6 +343,7 @@ import FormalSchemes.StructureSheafSections
 import FormalSchemes.StructureSheafStalkAlgebraic
 import FormalSchemes.StructureSheafStalkBasicOpen
 import FormalSchemes.StructureSheafStalkBasicOpenCompletion
+import FormalSchemes.StructureSheafStalkBot
 import FormalSchemes.StructureSheafStalkComparison
 import FormalSchemes.StructureSheafStalkLevels
 import FormalSchemes.StructureSheafStalks
