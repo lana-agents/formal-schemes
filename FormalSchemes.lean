@@ -388,6 +388,7 @@ import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvNodeChartAmbientNotInjective
 import FormalSchemes.TateInvNodeChartBaseGenerator
 import FormalSchemes.TateInvNodeChartBaseRegular
+import FormalSchemes.TateInvNodeChartCandidateHom
 import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDescent
 import FormalSchemes.TateInvNodeChartDomain
