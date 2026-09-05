@@ -13,6 +13,11 @@ Consequently a family of ring isomorphisms `B ⧸ Kⁿ ≃+* C ⧸ Lⁿ` compati
 maps induces an isomorphism `AdicCompletion K B ≃+* AdicCompletion L C`
 (`AdicCompletion.congrOfLevelEquiv`). No finite-generation or Noetherian hypothesis is involved.
 
+The first application is the smallest one: a ring isomorphism `f : B ≃+* C` gives such a family by
+descending `f` to the thickenings, so completion is functorial in a ring isomorphism
+(`AdicCompletion.congrRingEquiv`). The compatibility with the transition maps is `rfl` on
+representatives, which is what makes that cheap.
+
 The application here is the second half of the observation that a completed localization only sees
 `D(f)` *inside the formal spectrum*: if `s : B` has invertible image in every thickening `B ⧸ Kⁿ`
 — equivalently, `D(s) = Spf (B, K)` — then localizing at `s` does not change the completion,
@@ -30,6 +35,12 @@ definition).
 
 * `AdicCompletion.congrOfLevelEquiv`: a compatible family of isomorphisms of thickenings induces an
   isomorphism of completions, with `evalₐ_congrOfLevelEquiv` and `congrOfLevelEquiv_of`.
+* `AdicCompletion.congrRingEquiv`: **a ring isomorphism `f : B ≃+* C` induces
+  `AdicCompletion K B ≃+* AdicCompletion (K.map f) C`**, with
+  `AdicCompletion.evalₐ_congrRingEquiv` and `AdicCompletion.congrRingEquiv_of`. Mathlib
+  transports the predicates `IsAdicComplete`, `IsHausdorff` and
+  `IsPrecomplete` along a `RingEquiv` (`IsAdicComplete.congr_ringEquiv` and companions) but not the
+  completion itself; the ideal is written `K.map f` here so that the two compose.
 * `RingSplit.isUnit_mk_pow_of_isUnit_mk`: a unit modulo `K` is a unit modulo every `Kⁿ`.
 * `RingSplit.adicAwayUnitEquiv`: `AdicCompletion K B ≃+* B{1/s}^` when `s` is invertible in every
   thickening, and `RingSplit.adicAwayUnitEquiv'`, its level-`1` form.
@@ -126,6 +137,52 @@ theorem congrOfLevelEquiv_of
     congrOfLevelEquiv K L e he (of K B b) = of L C c := by
   refine ext_evalₐ fun n => ?_
   rw [evalₐ_congrOfLevelEquiv, evalₐ_of, evalₐ_of, hbc]
+
+/-! ### Transport along a ring isomorphism -/
+
+variable (f : B ≃+* C)
+
+/-- The level-`n` component of `AdicCompletion.congrRingEquiv`: a ring isomorphism `f : B ≃+* C`
+carries `K ^ n` onto `(K.map f) ^ n`, so it descends to the thickenings.
+
+This has to be a named definition rather than an inline family: `AdicCompletion.congrOfLevelEquiv`
+takes the compatibility as an argument whose statement mentions the family, and that argument
+cannot be synthesised against an anonymous one. -/
+def ringEquivLevel (n : ℕ) : B ⧸ K ^ n ≃+* C ⧸ (K.map (f : B →+* C)) ^ n :=
+  Ideal.quotientEquiv (K ^ n) ((K.map (f : B →+* C)) ^ n) f (by rw [← Ideal.map_pow])
+
+/-- The level isomorphisms of `AdicCompletion.ringEquivLevel` intertwine the transition maps
+`Ideal.Quotient.factorPow`. On a representative both sides are the class of `f b`, so this is
+`rfl` after `Quotient.inductionOn`. -/
+theorem ringEquivLevel_step {m n : ℕ} (hle : m ≤ n) (z : B ⧸ K ^ n) :
+    Ideal.Quotient.factorPow (K.map (f : B →+* C)) hle (ringEquivLevel K f n z) =
+      ringEquivLevel K f m (Ideal.Quotient.factorPow K hle z) := by
+  induction z using Quotient.inductionOn with
+  | h b => rfl
+
+/-- **Adic completion transports along a ring isomorphism**: `f : B ≃+* C` induces
+`AdicCompletion K B ≃+* AdicCompletion (K.map f) C`. This is
+`AdicCompletion.congrOfLevelEquiv` applied to `AdicCompletion.ringEquivLevel` and
+`AdicCompletion.ringEquivLevel_step`, and it needs no hypothesis on `K`, `B`, `C` or `f`.
+
+The ideal on the target side is written `K.map f`, which is the shape Mathlib's predicate-level
+transports `IsAdicComplete.congr_ringEquiv`, `IsHausdorff.congr_ringEquiv` and
+`IsPrecomplete.congr_ringEquiv` take, so the two compose. -/
+def congrRingEquiv : AdicCompletion K B ≃+* AdicCompletion (K.map (f : B →+* C)) C :=
+  congrOfLevelEquiv K (K.map (f : B →+* C)) (ringEquivLevel K f)
+    (fun hle z => ringEquivLevel_step K f hle z)
+
+@[simp]
+theorem evalₐ_congrRingEquiv (n : ℕ) (z : AdicCompletion K B) :
+    evalₐ (K.map (f : B →+* C)) n (congrRingEquiv K f z) =
+      ringEquivLevel K f n (evalₐ K n z) :=
+  evalₐ_congrOfLevelEquiv _ _ _ _ n z
+
+/-- `AdicCompletion.congrRingEquiv` acts on the image of `B` as `f` does. -/
+theorem congrRingEquiv_of (b : B) :
+    congrRingEquiv K f (of K B b) = of (K.map (f : B →+* C)) C (f b) :=
+  congrOfLevelEquiv_of _ _ _ _ b (f b) (fun n => by
+    rw [ringEquivLevel, Ideal.quotientEquiv_mk])
 
 end AdicCompletion
 
