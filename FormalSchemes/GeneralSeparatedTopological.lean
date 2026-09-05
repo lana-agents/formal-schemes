@@ -22,10 +22,13 @@ diagonal is a section of the first projection (`diagonal'_comp_pr₁`, issue 487
 formal reasons. Separatedness of a datum-presented formal scheme is therefore *equivalent* to the
 topological statement that the diagonal's base map is a closed embedding.
 
-This is the general analogue of the Tate-specific stalk computation
-`tateSelfProductDiagonal_surjective_stalkMap` (issue 410), which established the same fact for the
-two-chart Tate model by descending along the charts to the affine diagonal. Nothing of that shape is
-needed: no cover of the source, no affine section surjectivity, no Noetherian hypothesis.
+This is the general analogue of `tateSelfProductDiagonal_surjective_stalkMap` (issue 410), the same
+fact for the two-chart Tate model. That one was originally a stalk computation, descending along
+the charts to the affine diagonal and through the surjective codiagonal; issue 1739 replaced its
+proof with the retraction argument this file generalises, because a second theorem with an
+identical statement and that very proof had accumulated downstream. Nothing of the computational
+shape is needed here either: no cover of the source, no affine section surjectivity, no Noetherian
+hypothesis.
 
 ## Main results
 

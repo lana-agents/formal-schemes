@@ -50,10 +50,11 @@ two maps merely *agreeing* after `awayCompletionHom I f` neither ideal bound fol
 
 ## Main results
 
-* `FormalSpectrum.map_eq_of_comp_awayCompletionHom` and
-  `FormalSpectrum.le_comap_of_comp_awayCompletionHom`: a ring map `R{1/f} →+* R{1/g}` under `R`
+* `FormalSpectrum.map_eq_of_comp_awayCompletionHom`: a ring map `R{1/f} →+* R{1/g}` under `R`
   carries the ideal of definition of `R{1/f}` **onto** that of `R{1/g}`. No `Ideal.FG`, no
-  topology.
+  topology. Its contraction `FormalSpectrum.le_comap_of_comp_awayCompletionHom` is **not** here:
+  it was proved twice on this tree, in two namespaces and two import-incomparable files, and
+  issue 1739 moved the survivor to `FormalSchemes.BasicOpenChart`, which defines every name in it.
 * `FormalSpectrum.eq_awayCompletionRestrict_of_comp_awayCompletionHom`: for `I` finitely generated,
   such a map is `FormalSpectrum.awayCompletionRestrict`.
 * `FormalSpectrum.map_basicOpenRes`, `FormalSpectrum.le_comap_basicOpenRes`: the structure-sheaf
@@ -130,19 +131,12 @@ theorem map_eq_of_comp_awayCompletionHom {f g : R}
     (awayCompletionIdeal I f).map F = awayCompletionIdeal I g := by
   rw [← map_awayCompletionHom I f, Ideal.map_map, hF, map_awayCompletionHom]
 
-/-- The contracted form of `FormalSpectrum.map_eq_of_comp_awayCompletionHom`. -/
-theorem le_comap_of_comp_awayCompletionHom {f g : R}
-    {F : awayCompletion I f →+* awayCompletion I g}
-    (hF : F.comp (awayCompletionHom I f) = awayCompletionHom I g) :
-    awayCompletionIdeal I f ≤ (awayCompletionIdeal I g).comap F :=
-  Ideal.map_le_iff_le_comap.mp (map_eq_of_comp_awayCompletionHom I hF).le
-
 /-- **A ring map `R{1/f} →+* R{1/g}` under `R` is `FormalSpectrum.awayCompletionRestrict`**, with no
 hypothesis beyond `Ideal.FG` and the square. This is
 `FormalSpectrum.awayCompletionRestrict_unique` (`FormalSchemes.AwayCompletionRestrictUnique`) with
-its ideal hypothesis discharged by `FormalSpectrum.le_comap_of_comp_awayCompletionHom`; that
-hypothesis is therefore redundant there, and every statement of that file which supplies both may
-supply only the square. -/
+its ideal hypothesis discharged by `FormalSpectrum.le_comap_of_comp_awayCompletionHom`
+(`FormalSchemes.BasicOpenChart`); that hypothesis is therefore redundant there, and every statement
+of that file which supplies both may supply only the square. -/
 theorem eq_awayCompletionRestrict_of_comp_awayCompletionHom {f g : R} (hI : I.FG)
     (hle : basicOpen I g ≤ basicOpen I f) {F : awayCompletion I f →+* awayCompletion I g}
     (hF : F.comp (awayCompletionHom I f) = awayCompletionHom I g) :

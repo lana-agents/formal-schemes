@@ -89,6 +89,28 @@ theorem le_comap_awayCompletionHom :
     I ≤ (awayCompletionIdeal I f).comap (awayCompletionHom I f) :=
   Ideal.map_le_iff_le_comap.mp (map_awayCompletionHom I f).le
 
+/-- **A ring map `R{1/f} →+* R{1/g}` under `R` carries the ideal of definition of the source into
+that of the target.** It is `FormalSpectrum.map_awayCompletionHom` twice with `Ideal.map_map`
+between them: extending `I` along `F ∘ awayCompletionHom I f` is extending it along
+`awayCompletionHom I g`, which the hypothesis names.
+
+It lives here rather than beside either of its consumers because they are import-incomparable —
+`FormalSchemes.TateOverlapSummandAffine` and `FormalSchemes.BasicOpenRestrictionIdentification`
+each carried a copy, in different namespaces, and neither file is in the other's closure. This is
+the file that defines every name in the statement, so it is in both closures already and the move
+adds no import to either (issue 1739).
+
+`FormalSchemes.BasicOpenRestrictionIdentification` proves the sharper
+`FormalSpectrum.map_eq_of_comp_awayCompletionHom`, an equality of ideals rather than a
+containment, and that one stays there: it needs nothing from this file that this lemma does not,
+but it is not the shape `FormalSpectrum.locallyRingedSpaceMap` consumes. -/
+theorem le_comap_of_comp_awayCompletionHom {f g : R}
+    {F : awayCompletion I f →+* awayCompletion I g}
+    (hF : F.comp (awayCompletionHom I f) = awayCompletionHom I g) :
+    awayCompletionIdeal I f ≤ (awayCompletionIdeal I g).comap F := by
+  rw [← Ideal.map_le_iff_le_comap, ← map_awayCompletionHom I f, Ideal.map_map, hF,
+    map_awayCompletionHom]
+
 /-- **`R{1/f}` is a complete adic ring** for `I` finitely generated, with `I·R{1/f}` as ideal of
 definition — so `Spf R{1/f}` is an affine formal scheme and the affine-target colimit property
 applies to it.

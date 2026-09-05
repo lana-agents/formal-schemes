@@ -71,7 +71,10 @@ So the obstruction is no longer an algebra theorem; it is the chart-identificati
 * `IsTopologicallyFiniteType.of_span_awayCompletion`: **affine-locality.**
 * `IsTopologicallyFiniteType.of_awayCompletion_compl`: the two-chart case, which needs no side
   condition.
-* `IsTopologicallyFiniteType.self_of_two_charts`: non-vacuity.
+* Non-vacuity is recorded as an **`example`**, not a theorem: its statement was a duplicate of
+  `IsTopologicallyFiniteType.self_of_two_charts_pow`
+  (`FormalSchemes.CofinalTopFiniteTypeAffineLocal`), which is the named survivor. See the section
+  of the same name below for why the elaboration is still worth carrying.
 
 ## References
 
@@ -182,20 +185,30 @@ theorem _root_.IsTopologicallyFiniteType.of_awayCompletion_compl (hI : I.FG) [Is
     · exact H₀
     · exact H₁
 
-/-- **Non-vacuity.** A complete adic `(R, I)` is topologically of finite type over itself,
-recovered from the genuine two-chart cover `Spf I = D(a) ∪ D(1 - a)` for an arbitrary `a : R`:
-both charts are tf-type by `IsTopologicallyFiniteType.awayCompletion_base`
-(`FormalSchemes.AwayTopFiniteType`) and `IsTopologicallyFiniteType.of_awayCompletion_compl`
-glues them.
+/-! ### Non-vacuity
+
+A complete adic `(R, I)` is topologically of finite type over itself, recovered from the genuine
+two-chart cover `Spf I = D(a) ∪ D(1 - a)` for an arbitrary `a : R`: both charts are tf-type by
+`IsTopologicallyFiniteType.awayCompletion_base` (`FormalSchemes.AwayTopFiniteType`) and
+`IsTopologicallyFiniteType.of_awayCompletion_compl` glues them.
 
 The conclusion is `IsTopologicallyFiniteType.self`, proved independently and by a different route
 (the zero-variable presentation). That is the point: the hypotheses of
-`IsTopologicallyFiniteType.of_span_awayCompletion`
-are simultaneously satisfiable at a cover with more than one chart, the instance is not closed by
-`rfl` — `awayCompletion I a` is the completion of a localization, not `R` — and the two routes
-agree. -/
-theorem _root_.IsTopologicallyFiniteType.self_of_two_charts [IsAdicComplete I R] (hI : I.FG)
-    (a : R) :
+`IsTopologicallyFiniteType.of_span_awayCompletion` are simultaneously satisfiable at a cover with
+more than one chart, and the instance is not closed by `rfl` — `awayCompletion I a` is the
+completion of a localization, not `R`.
+
+**It is an `example`, and that is the whole of issue 1739's disposition here.** It used to be a
+named theorem whose type was **identical** to that of
+`IsTopologicallyFiniteType.self_of_two_charts_pow`
+(`FormalSchemes.CofinalTopFiniteTypeAffineLocal`) — same conclusion *and* same hypotheses — so the
+environment carried one statement twice. Neither had a consumer; the named one survives downstream
+because two other files cite it in prose and because its route, the two-chart cover read against a
+cofinality that is not reflexive, is the one that is not obtainable from the other. What is worth
+keeping here is the *elaboration*, and an `example` keeps all of it: it still exercises
+`IsTopologicallyFiniteType.of_awayCompletion_compl`, it still fails the build if that lemma's
+hypotheses stop being satisfiable, and it adds no declaration. -/
+example [IsAdicComplete I R] (hI : I.FG) (a : R) :
     IsTopologicallyFiniteType R I R I :=
   IsTopologicallyFiniteType.of_awayCompletion_compl (A := R) (L := I) hI
     (by rw [Algebra.algebraMap_self, Ideal.map_id]) a

@@ -252,14 +252,14 @@ theorem annulusOverlapSummandX_comp_transitionSpf (hq : q ∈ I) (hI : I.FG) :
       (φ := (tateOverlapTransitionAlg R I q hq hI).toRingHom)
       (ψ := annulusOverlapProjX R I q hq)
       (hIK := le_comap_comp _ _ (tateOverlapTransitionAlg_le_comap R I q hq hI)
-        (le_comap_of_comp_awayCompletionHom _ _ _ _
+        (le_comap_of_comp_awayCompletionHom _
           (annulusOverlapProjX_comp_awayCompletionHom R I q hq))),
     annulusChartTransitionInvSpf_hom_eq, annulusOverlapSummandY,
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (φ := annulusOverlapProjY R I q hq)
       (ψ := (annulusChartTransitionInvAlg R I q hI).symm.toRingHom)
       (hIK := le_comap_comp _ _
-        (le_comap_of_comp_awayCompletionHom _ _ _ _
+        (le_comap_of_comp_awayCompletionHom _
           (annulusOverlapProjY_comp_awayCompletionHom R I q hq))
         (annulusChartTransitionInvAlg_symm_le_comap R I q hI))]
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _

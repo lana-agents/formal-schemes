@@ -143,7 +143,13 @@ produced by `IsAdicComplete.pow` (`FormalSchemes.CofinalAdicComplete`), the cove
 `AdicCompletion.cofinalAlgEquiv`. The conclusion `IsTopologicallyFiniteType R I R I` agrees with
 `IsTopologicallyFiniteType.self`, proved by the unrelated zero-variable presentation, and is not
 closed by `rfl`: the chart algebras are completions of localizations of `R`, at a *square* of the
-ideal of definition. -/
+ideal of definition.
+
+`FormalSchemes.TopFiniteTypeAffineLocal` records the same conclusion from the two-chart cover read
+against `I` itself. That used to be a theorem whose type was **identical** to this one — same
+hypotheses, same conclusion — and issue 1739 made it an `example` there and kept this one named:
+neither had a consumer, but two other files cite this one in prose, and its route through a
+cofinality that is not reflexive is the one the other cannot supply. -/
 theorem _root_.IsTopologicallyFiniteType.self_of_two_charts_pow [IsAdicComplete I R] (hI : I.FG)
     (a : R) :
     IsTopologicallyFiniteType R I R I := by
