@@ -90,8 +90,9 @@ were ever proved independently.
   `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.chart`,
   `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.fg_chart`,
   `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.left`,
-  `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.right`, the two
-  `adicOverBase` projections, and
+  `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.right`,
+  `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.adicOverBase_left`,
+  `AlgebraicGeometry.FormalScheme.AdicOverBasePairLocallyFG.adicOverBase_right`, and
   `AlgebraicGeometry.FormalScheme.AdicOverBaseLocallyFG.pair_of_eq`.
 * `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`: the overlap condition, one
   pair witness per pair of points.
