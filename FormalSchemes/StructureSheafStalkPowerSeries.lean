@@ -85,14 +85,17 @@ it. A reader must not read "the first value at a non-nilpotent ideal of definiti
 question is decided", and must not restate the general question as open only in the Noetherian case
 — `k⟦X⟧` is Noetherian, and so is `R⟦X⟧` for `R` Noetherian.
 
-**The direction the general case is expected to fail in is stated here as an expectation and is
-not proved.** The surjectivity half at `R = ℤ` and the generic point of `Spec ℤ` asks for every
-element of the target to come from a single basic open; the sections over the basic open `D(m)` are
-an `(X)`-adic completion of a localization of `ℤ⟦X⟧`, so an element of the target with a
-denominator growing with the degree has no single `m` serving all degrees. **That computation is
-not carried out below, no declaration below asserts it, and it is recorded only so that the next
-attempt starts at the right point.** It is a statement about a *non-closed* point, so it is
-consistent with everything this file proves.
+**The direction the general case fails in is stated here as an expectation and is not proved
+below.** The surjectivity half at `R = ℤ` and the generic point of `Spec ℤ` asks for every element
+of the target to come from a single basic open; the sections over the basic open `D(m)` are an
+`(X)`-adic completion of a localization of `ℤ⟦X⟧`, so an element of the target with a denominator
+growing with the degree has no single `m` serving all degrees. **That computation is not carried
+out below and no declaration below asserts it**; it is carried out in
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, where
+`FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint` confirms the expectation and refutes
+`FormalSpectrum.IsStalkLimit` at that point. It is a statement about a *non-closed* point, so it is
+consistent with everything this file proves — in particular
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` is untouched by it.
 
 **Nothing under a Noetherian hypothesis.** `Ideal.FG` of the ideal of definition is the only
 finiteness assumption, and it is inherited from the criteria being applied; `Ideal.span {X}` is
@@ -106,8 +109,9 @@ through `FormalSpectrum.specIsoSpfBot`.
 
 A new leaf over `FormalSchemes.StructureSheafStalkAlgebraic` and
 `FormalSchemes.StructureSheafStalkNilpotent`: forward closure **49** project modules besides itself
-(50 counted with itself), reverse closure **1**, the one consumer being
-`FormalSchemes.StructureSheafStalkPowerSeriesGeneric`. The Mathlib import
+(50 counted with itself), reverse closure **2**, the two consumers being
+`FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`. The Mathlib import
 `Mathlib/RingTheory/PowerSeries/Inverse.lean` is new to this leaf's closure but not to the
 library's: it is already reached by the full `FormalSchemes` build, so it adds no build job.
 
