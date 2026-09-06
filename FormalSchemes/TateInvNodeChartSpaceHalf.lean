@@ -90,9 +90,13 @@ of the node locus, of the annulus algebras or of the `σ`-action.
 `AlgebraicGeometry.isIso_desc_nodeChartAdicHom_iff_base_and_nonvanishing` states them, and
 `AlgebraicGeometry.nonvanishingSectionsHom` is not touched.
 
-**A description of a preimage is still not a description of the base map on points.** Nothing here
-produces a formula for the base map of `AlgebraicGeometry.nodeChartAdicHom` at a point of the
-chain. `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.chart` is still a `Classical.choice`,
+**A description of a preimage is still not, on its own, a description of the base map on points.**
+Nothing here produces a formula for the base map of `AlgebraicGeometry.nodeChartAdicHom` at a point
+of the chain. One exists on the tree and it comes from evaluating the germ rather than from any
+handle on preimages: `AlgebraicGeometry.eq_base_nodeChartAdicHom_nodeChartPatchChartLift`
+(`FormalSchemes.TateInvNodeChartPatchChartGerm`) pins the image point at every point of every patch
+chart. It decides no clause below.
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.chart` is still a `Classical.choice`,
 so `Classical.choice` appears in `#print axioms` of everything below; that is the ambient one and
 not a new one.
 
