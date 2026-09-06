@@ -20,6 +20,16 @@ This file proves those two identifications and finishes.
 false at `(X) ⊆ ℤ⟦X⟧` at the generic point.** It is the first negative value of the predicate
 anywhere.
 
+**And the refutation is sharp.** The predicate is a conjunction, and a conjunction can be false
+for a boring reason — both halves failing. Here the injectivity half **holds**, at this point and
+indeed at the generic point of every domain
+(`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`), so
+`FormalSpectrum.IsStalkLimit` fails at `(X) ⊆ ℤ⟦X⟧` for exactly one reason, recorded as
+`FormalSpectrum.injective_and_not_surjective_powerSeriesXIntGenericPoint`. The same two
+identifications give both: read through them the comparison map is `PowerSeries.map` of
+`ℤ[1/m] → ℚ`, which is injective coefficient by coefficient and misses `1 / p` for every prime
+`p > |m|`.
+
 ## The two identifications
 
 * `FormalSpectrum.awayCompletionEquivPowerSeriesAway`: **`R⟦X⟧{1/f} ≃+* R[1/m]⟦X⟧`**, where `m` is
@@ -64,8 +74,12 @@ pathology"; what it shows is that the naked statement, at an arbitrary point of 
 `Spf`, is false, and that any true form of the stalk half needs a hypothesis this tree's predicate
 does not carry. **Which hypothesis is not determined here** and no repair is proposed.
 
-**Nothing about the injectivity half.** It is not attempted, at this point or any other, and the
-counterexample says nothing about it: it refutes the conjunction by refuting surjectivity.
+**Nothing about the injectivity half away from the generic point.** The half is proved below, at
+the generic point of every domain, and that is the whole of what is claimed for it: it is
+attempted at no other point, at no other ideal of definition, and in no generality that would
+bear on EGA I 10.8's own statement. The counterexample proper still says nothing about it —
+`FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint` refutes the conjunction by refuting
+surjectivity alone, and the two halves are established by separate arguments below.
 
 **No general statement about `IsStalkLimit` at a non-closed point.** The proof uses `ℤ` through
 `FormalSpectrum.unitFractionSeries` and the infinitude of the primes. The two identifications hold
@@ -118,8 +132,19 @@ every `^import` line over the 539 modules under `FormalSchemes/`. It adds no Mat
   every power of `(X)`, though not in `R⟦X⟧[1/f]`.
 * `FormalSpectrum.unitFractionSeries`, `FormalSpectrum.unitFractionSeries_notMem_range`: the
   witness and the arithmetic that defeats every `m`.
+* `FormalSpectrum.injective_awayToFractionRing`: `R[1/m] → Frac R` is injective for `m ≠ 0` in a
+  domain.
+* `FormalSpectrum.injective_awayToAtPrimeCompletion_powerSeriesXGenericPoint`: **the comparison
+  map at the generic point is injective**, at every domain and every `f` with `constantCoeff f ≠
+  0`.
+* `FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`: **the
+  injectivity half holds** at the generic point of every domain.
 * `FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint`: **`FormalSpectrum.IsStalkLimit` is
   false at `(X) ⊆ ℤ⟦X⟧` at the generic point.**
+* `FormalSpectrum.not_surjective_powerSeriesXIntGenericPoint`: **the surjectivity half fails** at
+  `ℤ`, which is the whole of the previous statement.
+* `FormalSpectrum.injective_and_not_surjective_powerSeriesXIntGenericPoint`: **the refutation is
+  sharp** — the injectivity half holds and the surjectivity half fails.
 
 ## References
 
@@ -962,6 +987,72 @@ theorem atPrimeCompletionEquiv_awayToAtPrimeCompletion (f : PowerSeries R)
   rw [← Ideal.map_map, map_awayToPowerSeriesAway]
   exact (map_powerSeriesXIdeal_map _).le
 
+/-! ### The injectivity half at the generic point
+
+The refutation above kills a conjunction, and this section is what stops it from being a boring
+one: the injectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` holds at
+the generic point of every domain, so at `(X) ⊆ ℤ⟦X⟧` the predicate fails in the surjectivity
+half only.
+-/
+
+/-- **`FormalSpectrum.awayToFractionRing` is injective** for `m ≠ 0` in a domain: `R[1/m]` really
+does sit inside `Frac R`, as the fractions whose denominators are powers of `m`.
+
+`IsLocalization.injective_iff_map_algebraMap_eq` reduces injectivity of a ring map out of a
+localization to a statement about the structural map alone, and there both sides say `x = y`: the
+source by `IsLocalization.injective` at `Submonoid.powers m ≤ nonZeroDivisors R`, the target by
+`IsFractionRing.injective`. -/
+theorem injective_awayToFractionRing (m : R) (hm : m ≠ 0) :
+    Function.Injective (awayToFractionRing R m hm) := by
+  rw [IsLocalization.injective_iff_map_algebraMap_eq (M := Submonoid.powers m)]
+  intro x y
+  rw [awayToFractionRing_algebraMap, awayToFractionRing_algebraMap]
+  refine ⟨fun h => congrArg _ (IsLocalization.injective (Localization.Away m)
+      (powers_le_nonZeroDivisors_of_noZeroDivisors hm) h),
+    fun h => congrArg _ (IsFractionRing.injective R (FractionRing R) h)⟩
+
+/-- **The comparison map at the generic point is injective**, at every domain and every `f` with
+`constantCoeff f ≠ 0`. This is more than the injectivity half asks for: the half is content with
+a section that dies after restriction to a smaller basic open, and this says the section is
+already `0`.
+
+It is `FormalSpectrum.atPrimeCompletionEquiv_awayToAtPrimeCompletion` read as a statement about
+maps rather than about elements. That lemma is an equation between *applications*, and the step
+from it to injectivity of the comparison is the only place this argument could go wrong quietly:
+it goes through because `FormalSpectrum.awayCompletionEquivPowerSeriesAway` and
+`FormalSpectrum.atPrimeCompletionEquivFractionPowerSeries` are `RingEquiv`s, hence injective, and
+because `PowerSeries.map` of an injective ring map is injective (`PowerSeries.map_injective`, in
+Mathlib). -/
+theorem injective_awayToAtPrimeCompletion_powerSeriesXGenericPoint (f : PowerSeries R)
+    (hf : powerSeriesXGenericPoint R ∈ basicOpen (powerSeriesXIdeal R) f)
+    (hm : constantCoeff f ≠ 0) :
+    Function.Injective (awayToAtPrimeCompletion (powerSeriesXIdeal R)
+      (powerSeriesXGenericPoint R) (fg_powerSeriesXIdeal R) hf) := by
+  intro a b hab
+  refine (awayCompletionEquivPowerSeriesAway f).injective
+    (PowerSeries.map_injective _ (injective_awayToFractionRing R (constantCoeff f) hm) ?_)
+  rw [← atPrimeCompletionEquiv_awayToAtPrimeCompletion R f hf hm a,
+    ← atPrimeCompletionEquiv_awayToAtPrimeCompletion R f hf hm b, hab]
+
+/-- **The injectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` holds**,
+at the generic point of every domain.
+
+The half asks for *some* smaller basic open on which the section already vanishes; the previous
+lemma gives that the section is `0` outright, so `e = f` and `le_rfl` serve. All that is used of
+`FormalSpectrum.awayCompletionRestrict` here is that it is a ring homomorphism and therefore
+sends `0` to `0`; in particular nothing below claims that restriction along `le_rfl` is the
+identity, which is a separate question about `FormalSchemes.AwayCompletionRestrict`. -/
+theorem exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint (f : PowerSeries R)
+    (hf : constantCoeff f ≠ 0) (a : awayCompletion (powerSeriesXIdeal R) f)
+    (ha : awayToAtPrimeCompletion (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)
+      (fg_powerSeriesXIdeal R) ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) a = 0) :
+    ∃ e, ∃ (_ : constantCoeff e ≠ 0)
+      (hle : basicOpen (powerSeriesXIdeal R) e ≤ basicOpen (powerSeriesXIdeal R) f),
+      awayCompletionRestrict (powerSeriesXIdeal R) f e (fg_powerSeriesXIdeal R) hle a = 0 :=
+  have ha0 : a = 0 :=
+    injective_awayToAtPrimeCompletion_powerSeriesXGenericPoint R f _ hf (by rw [ha, map_zero])
+  ⟨f, hf, le_rfl, by rw [ha0, map_zero]⟩
+
 end Generic
 
 /-! ### The counterexample at `ℤ` -/
@@ -1030,27 +1121,28 @@ theorem unitFractionSeries_notMem_range (m : ℤ) (hm : m ≠ 0)
     Nat.le_of_dvd (Int.natAbs_pos.mpr hm) (hp.dvd_of_dvd_pow hdvdNat)
   omega
 
-/-- **`FormalSpectrum.IsStalkLimit` is false at `(X) ⊆ ℤ⟦X⟧` at the generic point.**
+/-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` fails at
+`ℤ`.**
 
-This is the first negative value of the predicate anywhere: the three values on the tree before it
-— `FormalSpectrum.isStalkLimit_bot`, `FormalSpectrum.isStalkLimit_of_isNilpotent` and
-`FormalSpectrum.isStalkLimit_powerSeriesX_field` — are all positive, and all at points where the
-colimit over basic opens does not move.
+It fails exactly where `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` isolated the
+difficulty: not at any one level of the stalk tower, where
+`FormalSpectrum.exists_awayToAtPrimeLevel_eq` says there is never an obstruction, but in the
+passage to the limit, where one `f` must serve every level at once. Read through the two
+identifications the half says every element of `ℚ⟦X⟧` lies in `ℤ[1/m]⟦X⟧` for a single `m ≠ 0`,
+and `FormalSpectrum.unitFractionSeries` does not.
 
-The surjectivity half fails, and it fails exactly where
-`FormalSchemes.StructureSheafStalkPowerSeriesGeneric` isolated the difficulty: not at any one level
-of the stalk tower, where `FormalSpectrum.exists_awayToAtPrimeLevel_eq` says there is never an
-obstruction, but in the passage to the limit, where one `f` must serve every level at once. Read
-through the two identifications the half says every element of `ℚ⟦X⟧` lies in `ℤ[1/m]⟦X⟧` for a
-single `m ≠ 0`, and `FormalSpectrum.unitFractionSeries` does not.
-
-**What this does not say.** It does not say `FormalSpectrum.IsStalkLimit` is false — the three
-positive values stand, and this is one point of one ring. It says nothing about EGA I 10.8, whose
-hypotheses this tree's predicate does not carry; see the module docstring. -/
-theorem not_isStalkLimit_powerSeriesXIntGenericPoint :
-    ¬ IsStalkLimit (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ) := by
-  intro h
-  obtain ⟨-, hsurj⟩ := (isStalkLimit_powerSeriesXGenericPoint_iff ℤ).mp h
+This is stated separately from
+`FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint` because it is strictly more
+informative: it names the half that fails, and the other half holds
+(`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`). -/
+theorem not_surjective_powerSeriesXIntGenericPoint :
+    ¬ ∀ b : AdicCompletion (pointIdeal (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ))
+        (Localization.AtPrime (pointPrime (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ))),
+      ∃ f, ∃ (hf : constantCoeff f ≠ 0),
+        ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ)
+          (fg_powerSeriesXIdeal ℤ)
+          ((mem_basicOpen_powerSeriesXGenericPoint_iff ℤ f).mpr hf) a = b := by
+  intro hsurj
   obtain ⟨f, hf, a, ha⟩ := hsurj
     ((atPrimeCompletionEquivFractionPowerSeries ℤ).symm unitFractionSeries)
   refine unitFractionSeries_notMem_range (constantCoeff f) hf
@@ -1058,6 +1150,52 @@ theorem not_isStalkLimit_powerSeriesXIntGenericPoint :
   rw [← atPrimeCompletionEquiv_awayToAtPrimeCompletion ℤ f
       ((mem_basicOpen_powerSeriesXGenericPoint_iff ℤ f).mpr hf) hf a, ha,
     RingEquiv.apply_symm_apply]
+
+/-- **`FormalSpectrum.IsStalkLimit` is false at `(X) ⊆ ℤ⟦X⟧` at the generic point.**
+
+This is the first negative value of the predicate anywhere: the three values on the tree before it
+— `FormalSpectrum.isStalkLimit_bot`, `FormalSpectrum.isStalkLimit_of_isNilpotent` and
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` — are all positive, and all at points where the
+colimit over basic opens does not move.
+
+The whole of the failure is the surjectivity half
+(`FormalSpectrum.not_surjective_powerSeriesXIntGenericPoint`), which is all this proof uses.
+
+**What this does not say.** It does not say `FormalSpectrum.IsStalkLimit` is false — the three
+positive values stand, and this is one point of one ring. It says nothing about EGA I 10.8, whose
+hypotheses this tree's predicate does not carry; see the module docstring. -/
+theorem not_isStalkLimit_powerSeriesXIntGenericPoint :
+    ¬ IsStalkLimit (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ) := fun h =>
+  not_surjective_powerSeriesXIntGenericPoint
+    ((isStalkLimit_powerSeriesXGenericPoint_iff ℤ).mp h).2
+
+/-- **The refutation is sharp: `FormalSpectrum.IsStalkLimit` fails at `(X) ⊆ ℤ⟦X⟧` in the
+surjectivity half only.** The two conjuncts below are, verbatim, the two components of
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` at `R = ℤ`: the first holds and the
+second does not.
+
+A conjunction can be false for a boring reason, and this says that is not what happened. The
+injectivity half is not merely true here by accident of the point: it holds at the generic point
+of every domain, by
+`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`, and what defeats
+the predicate is that `ℚ⟦X⟧` is not the union of the `ℤ[1/m]⟦X⟧`. -/
+theorem injective_and_not_surjective_powerSeriesXIntGenericPoint :
+    (∀ (f : PowerSeries ℤ) (hf : constantCoeff f ≠ 0)
+        (a : awayCompletion (powerSeriesXIdeal ℤ) f),
+        awayToAtPrimeCompletion (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ)
+            (fg_powerSeriesXIdeal ℤ)
+            ((mem_basicOpen_powerSeriesXGenericPoint_iff ℤ f).mpr hf) a = 0 →
+          ∃ e, ∃ (_ : constantCoeff e ≠ 0)
+            (hle : basicOpen (powerSeriesXIdeal ℤ) e ≤ basicOpen (powerSeriesXIdeal ℤ) f),
+            awayCompletionRestrict (powerSeriesXIdeal ℤ) f e (fg_powerSeriesXIdeal ℤ) hle a = 0) ∧
+      ¬ ∀ b : AdicCompletion (pointIdeal (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ))
+          (Localization.AtPrime (pointPrime (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ))),
+        ∃ f, ∃ (hf : constantCoeff f ≠ 0),
+          ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ)
+            (fg_powerSeriesXIdeal ℤ)
+            ((mem_basicOpen_powerSeriesXGenericPoint_iff ℤ f).mpr hf) a = b :=
+  ⟨exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint ℤ,
+    not_surjective_powerSeriesXIntGenericPoint⟩
 
 end Int
 
