@@ -116,7 +116,7 @@ from their **hypotheses** — one asks for a family no element is divisible by, 
 factorisation — and not from any factorisation theory of the ultrapower, which is not developed
 here.
 
-**The ultrafilter hypothesis is not analysed.** `Filter.Ultrafilter.eventually_or` is what makes the
+**The ultrafilter hypothesis is not analysed.** `Ultrafilter.eventually_or` is what makes the
 ring a domain and `(φ : Filter ℕ) ≤ Filter.atTop` is what makes the diagonal product work; that the
 second is equivalent to `φ` being non-principal is not proved, and no ultrafilter other than
 `Filter.hyperfilter ℕ` is exhibited.
@@ -129,11 +129,11 @@ construction and nothing below appeals to any model-theoretic property of it. In
 
 `FormalSpectrum.coe_dvd_coe_of_eventually_dvd_intUltrapower` produces its cofactor as the pointwise
 integer quotient `fun i => b i / a i`, which is a total function and equal to the wanted cofactor
-where the divisibility holds; that is why no `choose` over the large set appears. `Int.ediv` is used
+where the divisibility holds; that is why no choice over the large set is made. `Int.ediv` is used
 for nothing else.
 
 **`CommRing ℤ` has to be in scope for `CommRing (Filter.Germ ↑φ ℤ)` to be synthesized**, and a file
-importing only `Mathlib.Order.Filter.Germ.Basic` reports *failed to synthesize `CommRing
+importing only `Mathlib/Order/Filter/Germ/Basic.lean` reports *failed to synthesize `CommRing
 (l.Germ ℤ)`* while finding `AddCommMonoid` — the missing instance is the one on `ℤ`, and the error
 names the germ ring instead. Any project import supplies it, so nothing has to be done about it
 here; it is recorded because the error message points at the wrong object.
@@ -152,13 +152,13 @@ are the ones this file argues do not apply, and importing them would be four mod
 statements that are only discussed.
 
 **This leaf adds exactly one module to the project's Mathlib closure**,
-`Mathlib.Order.Filter.Germ.Basic`, measured by walking `import` and `public import` over Mathlib's
-sources from every `import Mathlib…` line under `FormalSchemes/`: 2726 modules at base and 2727 at
-head. `Mathlib.Order.Filter.Ultrafilter.Basic` (for `Filter.hyperfilter` and
-`Filter.Ultrafilter.eventually_or`) and `Mathlib.Data.Nat.Prime.Infinite` (for
+`Mathlib/Order/Filter/Germ/Basic.lean`, measured by walking `import` and `public import` over
+Mathlib's sources from every `import Mathlib…` line under `FormalSchemes/`: 2726 modules at base
+and 2727 at head. `Mathlib/Order/Filter/Ultrafilter/Basic.lean` (for `Filter.hyperfilter` and
+`Ultrafilter.eventually_or`) and `Mathlib/Data/Nat/Prime/Infinite.lean` (for
 `Nat.exists_infinite_primes`) are already in it and are reached through the import above.
-`Mathlib.Order.Filter.FilterProduct`, the ultraproduct file, is **not** imported: it supplies the
-field structure of an ultrapower of a field, and neither half below needs it.
+`Mathlib/Order/Filter/FilterProduct.lean`, the ultraproduct file, is **not** imported: it supplies
+the field structure of an ultrapower of a field, and neither half below needs it.
 
 ## References
 
@@ -265,14 +265,14 @@ theorem coe_ne_zero_intUltrapower {f : ℕ → ℤ} (hf : ∀ i, f i ≠ 0) :
   exact hf i hi
 
 /-- **A nonzero germ is nonzero on a set of the ultrafilter.** This is the first of the two places
-where the filter has to be an ultrafilter: `Filter.Ultrafilter.eventually_not` turns the *failure*
+where the filter has to be an ultrafilter: `Ultrafilter.eventually_not` turns the *failure*
 of eventual vanishing into eventual non-vanishing, which is false at a general filter. -/
 theorem eventually_ne_zero_intUltrapower {f : ℕ → ℤ} (hf : (f : IntUltrapower φ) ≠ 0) :
     ∀ᶠ i in (φ : Filter ℕ), f i ≠ 0 :=
   Ultrafilter.eventually_not.mpr fun h => hf ((coe_eq_zero_iff_intUltrapower φ f).mpr h)
 
 /-- **The ultrapower has no zero divisors**, which is the second and last place the ultrafilter is
-used for its own sake: `Filter.Ultrafilter.eventually_or` splits *eventually one of the two factors
+used for its own sake: `Ultrafilter.eventually_or` splits *eventually one of the two factors
 vanishes* into *one of the two vanishes eventually*. Over a filter that is not an ultrafilter the
 germ ring has zero divisors and nothing in this file survives. -/
 instance : NoZeroDivisors (IntUltrapower φ) where
