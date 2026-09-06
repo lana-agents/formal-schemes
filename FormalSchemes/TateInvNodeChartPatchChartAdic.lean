@@ -86,10 +86,16 @@ four conditions, the hypothesis of `AlgebraicGeometry.exists_formalScheme_of_adi
    discharges it. That is not progress on 3 or 4, and `FormalSchemes.AdicSectionsChart`'s module
    docstring still records the *merge* question about pair witnesses as open.
 3. Invariance of `AlgebraicGeometry.nodeChartAdicHom` under
-   `AlgebraicGeometry.tateInvNodeChartRestrictedAction` — **open**, not attempted anywhere.
-4. `IsIso` of the descended morphism — **open**, not attempted anywhere.
+   `AlgebraicGeometry.tateInvNodeChartRestrictedAction` — **not proved here**, and proved by
+   `AlgebraicGeometry.isActionInvariant_nodeChartAdicHom`
+   (`FormalSchemes.TateInvNodeChartInvariant`) at any witness.
+4. `IsIso` of the descended morphism — **open**, and not attempted here. It is taken apart
+   without being decided by `FormalSchemes.TateInvNodeChartDescentIso`,
+   `FormalSchemes.TateInvNodeChartDescentBasicOpen`,
+   `FormalSchemes.TateInvNodeChartBasicOpenPreimage` and
+   `FormalSchemes.TateInvNodeChartSpaceHalf`.
 
-Hypotheses 3 and 4 are open, and the chain back to `hnode` runs through
+Hypothesis 4 is open, and the chain back to `hnode` runs through
 `AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens`, which is
 **one-way**: even all four would give the existence of the formal scheme and not the converse.
 Nothing here should be read as evidence that the node chart exists.

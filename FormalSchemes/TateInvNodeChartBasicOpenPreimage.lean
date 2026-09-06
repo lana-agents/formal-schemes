@@ -82,12 +82,19 @@ member of a basis of the target, plus the two consequences that a basis affords:
 (`AlgebraicGeometry.base_nodeChartQuotientHom_restrictπ_eq_iff`) and which basic opens meet the
 image (`AlgebraicGeometry.exists_mem_preimage_basicOpen_nodeChartQuotientHom_iff`).
 
-**The space half is not decided, and only its injectivity clause is reached.** `IsIso …base` needs
-the base map to be bijective *and* open. Preimages of a basis of the **target** determine fibres
-and continuity; they do not determine the image and they say nothing about images of opens of the
-source. So surjectivity and openness of `(nodeChartQuotientHom …).base` are untouched, and no Lean
-statement below mentions either. That is the obstruction, and it is structural rather than a gap in
-effort: the handle this file adds is a handle on preimages.
+**The space half is not decided, and of its clauses this file reaches only injectivity.**
+`IsIso …base` needs the base map to be bijective *and* open. Preimages of a basis of the **target**
+determine fibres and continuity; they do not determine the image and they say nothing about images
+of opens of the source, so no statement below mentions surjectivity or openness of
+`(nodeChartQuotientHom …).base`. That is structural rather than a gap in effort: the handle this
+file adds is a handle on preimages.
+
+Those two clauses are reached by a different route, and not by a handle on preimages:
+`AlgebraicGeometry.surjective_base_nodeChartQuotientHom_iff` and
+`AlgebraicGeometry.isOpenMap_base_nodeChartQuotientHom_iff`
+(`FormalSchemes.TateInvNodeChartSpaceHalf`) transfer both across the restricted projection onto
+`AlgebraicGeometry.nodeChartAdicHom`, because that projection's base map is an open surjection.
+**Neither is decided there either**, and the space half stays open.
 
 **No germ is computed.** Every statement below trades one undecided condition for another; each
 right-hand side asks whether `AlgebraicGeometry.nodeChartPsi g` is invertible at a point of the
@@ -258,8 +265,12 @@ is, when the family of non-vanishing loci separates the orbits.
 the surjectivity of the restricted projection's base map
 (`AlgebraicGeometry.LocallyRingedSpace.base_surjective_restrictπ`).
 
-**This is one of the two conditions in `IsIso …base` and not both**: surjectivity and openness of
-the base map are untouched; see the module docstring. -/
+**This is one of the two conditions in `IsIso …base` and not both.** Surjectivity and openness of
+the base map are `AlgebraicGeometry.surjective_base_nodeChartQuotientHom_iff` and
+`AlgebraicGeometry.isOpenMap_base_nodeChartQuotientHom_iff`
+(`FormalSchemes.TateInvNodeChartSpaceHalf`), which move them onto
+`AlgebraicGeometry.nodeChartAdicHom` without deciding either;
+`AlgebraicGeometry.isIso_base_nodeChartQuotientHom_iff` is this clause and those two together. -/
 theorem injective_base_nodeChartQuotientHom_iff :
     Function.Injective (nodeChartQuotientHom R I q hq hI hfgI hX).base ↔
       ∀ x y : (nodeChartSaturationFormalScheme R I q hq hI).toLocallyRingedSpace,
