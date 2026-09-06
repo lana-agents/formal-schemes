@@ -116,8 +116,9 @@ of them.
 `AdicCompletion.ext_evalₐ` (Mathlib) are both used below and both were written from scratch before
 being found; the second needs no finiteness hypothesis at all. The existing
 `AdicCompletion.evalₐ_mapCompletion` takes a finite generation hypothesis on the *source* ideal and
-an explicit continuity bound, neither of which its conclusion needs — but its module has reverse
-closure 355, so weakening its signature is a separate measured decision and is not taken here.
+an explicit continuity bound, neither of which its conclusion needs — but its module
+`FormalSchemes.BasicOpenImmersion` has reverse closure 382, so weakening its signature is a
+separate measured decision and is not taken here.
 
 The membership `x ∈ FormalSpectrum.basicOpen I f` and the non-membership
 `f ∉ FormalSpectrum.pointPrime I x` are definitionally the same statement, since

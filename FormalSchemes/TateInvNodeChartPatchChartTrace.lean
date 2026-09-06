@@ -124,7 +124,7 @@ A leaf over `FormalSchemes.TateInvNodeChartPatchChartGerm`, which already import
 `FormalSchemes.TateInvNodeChartBasicOpenPreimage`, so both inputs are reached by one import:
 forward closure **264** project modules besides itself, reverse closure **1** — the leaf
 `FormalSchemes.TateInvNodeChartSpaceHalfTrace`, which substitutes the restatement below into the
-space half — counted by walking every `^import FormalSchemes.` line over the 554 modules under
+space half — counted by walking every `^import FormalSchemes.` line over the 557 modules under
 `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository
 root is outside the walk).
 

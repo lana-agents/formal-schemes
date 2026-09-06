@@ -239,8 +239,8 @@ modules besides itself on top of this file's closure, 43 including it, and nothi
 ## Implementation notes
 
 The five `AdicCompletion` lemmas at the top of the file mention no formal geometry and would sit
-naturally in `FormalSchemes.Completion`, whose reverse closure is 440 of the project's 552 modules
-against this leaf's 0. They are kept here on the disposition
+naturally in `FormalSchemes.Completion`, whose reverse closure is 445 of the project's 557 modules
+against this file's 3. They are kept here on the disposition
 `FormalSchemes.StructureSheafStalkPowerSeries` recorded for
 `AdicCompletion.bijective_mapCompletion` — which is the same shape and is still in that leaf — and
 because every consumer is in this file. **If a second file needs
@@ -260,19 +260,21 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 Over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
 `FormalSchemes.CountableLocalization`: forward closure **52** project modules besides itself (53
-counted with itself), reverse closure **2** —
+counted with itself), reverse closure **3** —
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which carries the classification at prime
-ideals, and
-`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` over it, which instantiates the refuting
-criterion at a ring of integers — counted by walking every `^import` line over the 556 modules under
-`FormalSchemes/` (a module is not counted in its own closure, and the aggregator at the repository
-root is outside the walk). The classification section keeps the criteria it glues
-in one file rather than putting them one module apart: both of its directions are theorems above
+ideals, and over it
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting
+criterion at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which
+instantiates it at a local domain — counted by walking every `^import` line over the 557 modules
+under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator at the
+repository root is outside the walk). The classification section keeps the criteria it glues in one
+file rather than putting them one module apart: both of its directions are theorems above
 it, all three of its cases are theorems below it, and the prose it makes stale is this
 docstring's. The collapse section is placed on the same ground, one section further down.
 
-The second import is the one the collapse section adds, and it is a **Mathlib-only leaf** —
-forward closure 0, reverse closure 4 — holding one statement that was already on the tree:
+The second import is the one the collapse section adds, and it is the **Mathlib-only leaf**
+`FormalSchemes.CountableLocalization`, whose forward closure is 0 and whose reverse closure is 5 —
+holding one statement that was already on the tree:
 `Localization.countable_of_countable`, moved out of
 `FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has
 forward closure 25, is not in this file's closure and does not have this file in its own, so

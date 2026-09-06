@@ -109,7 +109,7 @@ affine chart inside a separating open and is correct about its own subject.
 `CategoryTheory.IsActionQuotient.ofIso` is **not** here: it is a statement of the categorical
 interface and it is in `FormalSchemes.ActionQuotient`, beside
 `CategoryTheory.IsActionQuotient.uniqueUpToIso`, which it completes in the direction this file
-needs. That file has a reverse closure of 77 modules, so the placement is not free; it is chosen
+needs. That file has a reverse closure of 95 modules, so the placement is not free; it is chosen
 because a general categorical lemma parked in an `AlgebraicGeometry.LocallyRingedSpace` leaf is the
 stranding the node-chart rows were filed about, and because the interface has a hole in it without
 the converse transport.
@@ -138,7 +138,7 @@ section below would be too, but `IsInvariantSection` is declared under `[Group G
 consumes a monoid form — the file's own theorems need a group from
 `AlgebraicGeometry.LocallyRingedSpace.isActionQuotient_forgetToTop` onwards — so the hypothesis is
 carried rather than the predicate generalised; generalising it is a one-line change in
-`FormalSchemes.ActionInvariantExtension`, whose reverse closure is 49 modules, and it should be
+`FormalSchemes.ActionInvariantExtension`, whose reverse closure is 65 modules, and it should be
 made when something wants it and not before.
 
 ## References
