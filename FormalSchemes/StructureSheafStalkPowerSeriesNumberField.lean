@@ -93,8 +93,10 @@ half is known to fail. Which hypothesis makes the general statement true is unde
 below bears on it.
 
 **Nothing here says `FormalSpectrum.IsStalkLimit` varies across a single formal spectrum.** That
-needs a **local** domain failing the denominator condition, and none is on this tree; no ring of
-integers of a number field is local.
+needs a **local** domain failing the denominator condition, and no ring of integers of a number
+field is local. One is built on the sibling leaf
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal`, out of the same arbitrary-domain criterion and
+over a ring nothing here reaches.
 
 **No individual number field is instantiated, and none is wanted.**
 `FormalSpectrum.not_hasBoundedDenominators_ringOfIntegers` is a statement about every `K` and needs
@@ -115,7 +117,7 @@ collapse, not `[UniqueFactorizationMonoid R]` from the element classification, n
 
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which holds the refuting
 criterion this file instantiates: forward closure **54** project modules besides itself, reverse
-closure **0**, counted by walking every `^import FormalSchemes.` line over the 556 modules under
+closure **0**, counted by walking every `^import FormalSchemes.` line over the 557 modules under
 `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository root
 is outside the walk).
 
