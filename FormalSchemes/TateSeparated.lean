@@ -960,43 +960,6 @@ theorem mono_tateSelfProductDiagonal (hq : q ∈ I) (hI : I.FG) :
   haveI := isSplitMono_tateSelfProductDiagonal R I q hq hI
   inferInstance
 
-/-! ### Surjectivity of the stalk maps of the glued diagonal -/
-
-/-- Surjectivity of the underlying ring hom is preserved by composition in `CommRingCat`. -/
-theorem surjective_hom_comp {X Y Z : CommRingCat} {f : X ⟶ Y} {g : Y ⟶ Z}
-    (hf : Function.Surjective f.hom) (hg : Function.Surjective g.hom) :
-    Function.Surjective (f ≫ g).hom := by
-  rw [CommRingCat.hom_comp, RingHom.coe_comp]
-  exact hg.comp hf
-
-/-- An open immersion of locally ringed spaces has surjective (indeed bijective) stalk maps. -/
-theorem surjective_stalkMap_of_isOpenImmersion {X Y : LocallyRingedSpace} (f : X ⟶ Y)
-    [LocallyRingedSpace.IsOpenImmersion f] (x : X) :
-    Function.Surjective (f.stalkMap x).hom :=
-  ((ConcreteCategory.isIso_iff_bijective _).mp inferInstance).surjective
-
-/-- Surjectivity of stalk maps is stable under composition: if `g` is surjective on the stalk over
-`f x` and `f` is surjective on the stalk over `x`, then so is `f ≫ g`. -/
-theorem surjective_stalkMap_comp {X Y Z : LocallyRingedSpace} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X)
-    (hg : Function.Surjective (g.stalkMap (f.base x)).hom)
-    (hf : Function.Surjective (f.stalkMap x).hom) :
-    Function.Surjective ((f ≫ g).stalkMap x).hom := by
-  rw [LocallyRingedSpace.stalkMap_comp]
-  exact surjective_hom_comp hg hf
-
-/-- Surjectivity of stalk maps is local on the source along open immersions: if `f` is an open
-immersion and `f ≫ g` has a surjective stalk map at `x`, then `g` has a surjective stalk map at
-`f x`. The chart stalk map `f.stalkMap x` is an isomorphism, so it can be cancelled on the right. -/
-theorem surjective_stalkMap_of_comp {X Y Z : LocallyRingedSpace} (f : X ⟶ Y)
-    [LocallyRingedSpace.IsOpenImmersion f] (g : Y ⟶ Z) (x : X)
-    (h : Function.Surjective ((f ≫ g).stalkMap x).hom) :
-    Function.Surjective (g.stalkMap (f.base x)).hom := by
-  have hEq : g.stalkMap (f.base x) = (f ≫ g).stalkMap x ≫ (asIso (f.stalkMap x)).inv :=
-    (Iso.eq_comp_inv _).mpr (LocallyRingedSpace.stalkMap_comp f g x).symm
-  rw [hEq]
-  exact surjective_hom_comp h
-    ((ConcreteCategory.isIso_iff_bijective _).mp inferInstance).surjective
-
 /-- **The stalk maps of the glued Tate diagonal are surjective** (source-local half of the
 closed-immersion criterion for the diagonal, EGA I §10.15).
 
