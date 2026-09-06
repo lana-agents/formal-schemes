@@ -333,6 +333,12 @@ all in this closure already, and so is everything the classification adds — `A
   `FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`: **the sufficient criterion at an
   arbitrary domain**, in its two halves and composed — one `m ≠ 0` whose powers clear every
   denominator gives the condition. Both values below are instances.
+* `FormalSpectrum.forall_dvd_pow_of_surjective_awayToFractionRing`,
+  `FormalSpectrum.surjective_awayToFractionRing_iff_forall_dvd_pow`: **the first of those halves
+  is an `↔`** — at a fixed `m ≠ 0` at any domain, `R[1/m] → Frac R` is surjective exactly when
+  every nonzero element of `R` divides a power of `m`. So the divisibility spelling and the
+  localized spelling of the sufficient criterion are one hypothesis, and choosing between them is
+  a matter of what a consumer holds. It is a statement about **one** `m` and decides no ring.
 * `FormalSpectrum.not_hasBoundedDenominators_of_primes`,
   `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`: **the refuting criterion**
   — a family of primes divisible into no single element refutes the condition — and the form it
@@ -1538,6 +1544,13 @@ Three values are three rings. The two criteria below are what holds at an arbitr
 — a family of primes that no single element is divisible by. Both values above and below are
 instances of the first, and `ℤ` is an instance of the second.
 
+**The sufficient criterion has two faces and they are one criterion.** *Every nonzero `s` divides
+a power of `m`* and *`R[1/m]` is already the whole of `Frac R`* are equivalent at a fixed `m ≠ 0`
+at any domain (`FormalSpectrum.surjective_awayToFractionRing_iff_forall_dvd_pow`), so which one a
+statement below is written in is a matter of what its consumer holds and not a difference in
+strength. That equivalence is about **one** `m`; it says nothing about the quantifier over `m`,
+which is where every open question in this section lives.
+
 **Neither is a classification on its own, and at a general domain the two together are not one
 either.** The sufficient criterion is not known to be necessary there, and the refuting one is not
 known to be the only way the condition can fail. The obstruction to closing the gap is that
@@ -1583,6 +1596,52 @@ theorem surjective_awayToFractionRing_of_forall_dvd_pow {m : R} (hm : m ≠ 0)
   rw [← hrs, ht, map_mul, map_mul]
   field_simp
 
+/-- **The converse of the first half**: if `R[1/m]` is already the whole fraction field then every
+nonzero `s : R` divides a power of `m`. At an arbitrary domain, with no factorisation and no
+countability hypothesis.
+
+**The divisibility condition is Mathlib's description of what it means for `s` to become a unit in
+`R[1/m]`**: `IsLocalization.Away.algebraMap_isUnit_iff` says `IsUnit (algebraMap R R[1/m] s)` is
+`∃ n, s ∣ m ^ n`, at any commutative ring. So the only thing to prove is that surjectivity makes
+every nonzero `s` a unit there, and that is where the hypotheses are spent: `s ≠ 0` gives an
+inverse in `Frac R`, surjectivity pulls it back to some `y : R[1/m]`, and
+`FormalSpectrum.injective_awayToFractionRing` — which needs `m ≠ 0` and `IsDomain R` — is what
+promotes `y * s = 1` from `Frac R` to `R[1/m]`.
+
+Injectivity is the step that cannot be dropped: a surjection alone would only say the two rings
+have the same image, and `y * s` and `1` could differ in the kernel. -/
+theorem forall_dvd_pow_of_surjective_awayToFractionRing {m : R} (hm : m ≠ 0)
+    (hs : Function.Surjective (awayToFractionRing R m hm)) (s : R) (hs0 : s ≠ 0) :
+    ∃ k : ℕ, s ∣ m ^ k := by
+  rw [← IsLocalization.Away.algebraMap_isUnit_iff (S := Localization.Away m) (x := m)]
+  obtain ⟨y, hy⟩ := hs (algebraMap R (FractionRing R) s)⁻¹
+  refine isUnit_iff_exists_inv.mpr ⟨y, injective_awayToFractionRing R m hm ?_⟩
+  rw [map_mul, hy, map_one, awayToFractionRing_algebraMap]
+  exact mul_inv_cancel₀ fun h => hs0 (IsFractionRing.injective R (FractionRing R)
+    (by rw [h, map_zero]))
+
+/-- **The two forms of the sufficient criterion are one criterion.** For a fixed `m ≠ 0` at an
+arbitrary domain, `R[1/m] → Frac R` is surjective **iff** every nonzero element of `R` divides a
+power of `m`.
+
+The backward direction is `FormalSpectrum.surjective_awayToFractionRing_of_forall_dvd_pow`, which
+was already on the tree; only the forward direction is new. Their relation is exactly that of
+`FormalSpectrum.hasBoundedDenominators_iff_range` to
+`FormalSpectrum.HasBoundedDenominators` — one statement in a localized spelling and an arithmetic
+one, with nothing between them.
+
+**This decides no ring.** It is a statement about one fixed `m`, and it says nothing new about
+`FormalSpectrum.HasBoundedDenominators`, which quantifies over `m`. In particular it does **not**
+remove the countability hypothesis from
+`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` or the unique-factorisation
+hypothesis from `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: both of those are about
+the quantifier over `m`, which this leaves exactly where it was. Nothing here bears on Dedekind,
+semilocal, Prüfer or valuation rings either. -/
+theorem surjective_awayToFractionRing_iff_forall_dvd_pow {m : R} (hm : m ≠ 0) :
+    Function.Surjective (awayToFractionRing R m hm) ↔ ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k :=
+  ⟨fun hs s hs0 => forall_dvd_pow_of_surjective_awayToFractionRing R hm hs s hs0,
+    surjective_awayToFractionRing_of_forall_dvd_pow R hm⟩
+
 /-- **The sufficient criterion, second half**: one surjective localization already gives the
 condition. If `R[1/m] → Frac R` is surjective for a single `m ≠ 0`, every family in `Frac R` lies
 in that one `R[1/m]`, and the denominator the condition asks for is chosen before the family is.
@@ -1612,12 +1671,12 @@ this criterion at the product of a set of representatives of the prime associate
 forward direction is `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`
 answering from the other side.
 
-**Over a countable fraction field a criterion of this shape is necessary too, but not this one.**
-What is necessary there is the *surjectivity* form of the hypothesis
-(`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`), which this divisibility form
-implies (`FormalSpectrum.surjective_awayToFractionRing_of_forall_dvd_pow`). Whether the
-implication reverses — whether `R[1/m] = Frac R` forces every nonzero element to divide a power of
-`m` — is not proved here, at any domain. -/
+**Over a countable fraction field a criterion of this shape is necessary too, and it is this
+one.** What is necessary there is the *surjectivity* form of the hypothesis
+(`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`), and at a fixed `m` that form and
+this divisibility form are the same hypothesis, by
+`FormalSpectrum.surjective_awayToFractionRing_iff_forall_dvd_pow` — at every domain, with no
+countability. The countability is spent on the quantifier over `m`, which neither form touches. -/
 theorem hasBoundedDenominators_of_forall_dvd_pow {m : R} (hm : m ≠ 0)
     (h : ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k) : HasBoundedDenominators R :=
   hasBoundedDenominators_of_surjective R hm (surjective_awayToFractionRing_of_forall_dvd_pow R hm h)
@@ -1746,7 +1805,12 @@ injectivity of the embedding is exactly the *pairwise non-associated* hypothesis
 
 **The backward direction is the sufficient criterion**, at the product of a set of representatives:
 `FormalSpectrum.forall_dvd_pow_prod` discharges its divisibility hypothesis, and the product is
-nonzero because each factor is prime. `Associates.out` is not available here — it needs
+nonzero because each factor is prime. That direction passes through both spellings of the
+criterion — divisibility, then surjectivity, then the condition — and the middle step costs
+nothing, since the two spellings are one hypothesis at a fixed `m`
+(`FormalSpectrum.surjective_awayToFractionRing_iff_forall_dvd_pow`).
+
+`Associates.out` is not available here — it needs
 `[NormalizationMonoid R]`, which a bare unique factorisation domain does not carry — so the
 representatives come from a choose on `Associates.mk_surjective`.
 
@@ -1829,6 +1893,13 @@ is a countable set, so a single `m` serves all of it, and
 `FormalSpectrum.mem_range_awayToFractionRing_iff` turns *cleared by a power of `m`* into
 *in the image of `R[1/m]`*, which is surjectivity. Backwards is
 `FormalSpectrum.hasBoundedDenominators_of_surjective` and nothing else.
+
+**The right-hand side has a localization-free reading too.** At a fixed `m` the surjection is the
+same hypothesis as *every nonzero element of `R` divides a power of `m`*
+(`FormalSpectrum.surjective_awayToFractionRing_iff_forall_dvd_pow`), at every domain and with no
+countability, so a consumer may check whichever is easier at the ring in hand. That does not
+weaken this theorem's hypothesis: what `[Countable (FractionRing R)]` buys is the quantifier over
+`m`, not the form of the condition at one `m`.
 
 **Necessity is what the hypothesis buys.** Sufficiency holds at every domain and is proved above;
 this direction is not known at a general domain, and the obstruction named there — that the
