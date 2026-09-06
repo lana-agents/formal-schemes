@@ -82,17 +82,22 @@ uniformizer, and **`ℤ` does not**, because a prime larger than `|m|` divides n
 the shape of the answer is that the half is about how many primes have to be inverted at once, and
 the geometric statements are that arithmetic read through the two identifications.
 
-**Naming it decides nothing, and the two criteria below do not decide it either.** Which rings
-satisfy `FormalSpectrum.HasBoundedDenominators` is still not determined here: the values are
-values, not a classification, and none of the obvious guesses about Dedekind or semilocal domains
-is checked anywhere below. What *is* proved, at an arbitrary domain and not just at the three
-rings, is one criterion in each direction — a single `m ≠ 0` whose powers clear every denominator
-gives the condition (`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`), and a family of
-primes divisible into no single element refutes it
-(`FormalSpectrum.not_hasBoundedDenominators_of_primes`). The two do not meet: **the sufficient
-criterion is not known to be necessary at a general domain**, and the obstruction is that the
-condition only ever sees *countable* families, so a domain whose fraction field needs uncountably
-many denominator types is not ruled out by anything here.
+**And at a unique factorisation domain the condition is decided.**
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: it holds **iff** there are finitely many
+primes up to associates. That is the cardinality the sentence above calls *how many*, and it makes
+the three values three cases of one theorem — the empty set, a singleton, and Euclid. Two criteria
+hold at an *arbitrary* domain and are what the classification glues: a single `m ≠ 0` whose powers
+clear every denominator gives the condition
+(`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`), and a family of primes divisible into
+no single element refutes it (`FormalSpectrum.not_hasBoundedDenominators_of_primes`).
+
+**Away from that hypothesis nothing here decides anything**, and the criteria on their own still do
+not meet: **the sufficient one is not known to be necessary at a general domain**, and the
+obstruction is that the condition only ever sees *countable* families, so a domain whose fraction
+field needs uncountably many denominator types is not ruled out by anything here. None of the
+obvious guesses about Dedekind or semilocal domains is checked anywhere below, and a Dedekind
+domain is not a corollary of the classification: it is a statement about **ideals**, and a
+nonprincipal maximal ideal contributes no prime element at all.
 
 ## The tool that was missing, and why the one on the tree does not do it
 
@@ -133,7 +138,14 @@ surjectivity alone, and the two halves are established by separate arguments bel
 **No general statement about `IsStalkLimit` at a non-closed point.** The proof uses `ℤ` through
 `FormalSpectrum.unitFractionSeries` and the infinitude of the primes. The two identifications hold
 much more generally — the first at every commutative ring, the second at every domain — but the
-final step does not, and no attempt is made to characterise the rings where it does.
+final step does not. What *is* characterised, and only at a unique factorisation domain, is the
+**surjectivity half** at the generic point: by
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` read through
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`, that
+half holds exactly when there are finitely many primes up to associates. The predicate itself is a
+conjunction, it is nowhere below assembled from its two halves, and no statement of the form
+*`IsStalkLimit` holds at `(X) ⊆ R⟦X⟧` for exactly these `R`* is proved here, at this point or at
+any other.
 
 **Nothing under a Noetherian hypothesis**, and nothing that uses one.
 
@@ -164,7 +176,10 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric`: forward closure **51** project
 modules besides itself (52 counted with itself), reverse closure **0**, counted by walking every
-`^import` line over the 549 modules under `FormalSchemes/`.
+`^import` line over the 551 modules under `FormalSchemes/` (`FormalSchemes.lean`, the aggregator,
+is outside the walk). The classification section keeps the criteria it glues in one file rather
+than putting them one module apart: both of its directions are theorems above it, all three of its
+cases are theorems below it, and the prose it makes stale is this docstring's.
 `Mathlib/RingTheory/AdicCompletion/Completeness.lean`, which carries the
 `IsAdicComplete (.span {X}) (PowerSeries R)` instance, is already reached. The discrete-valuation
 section adds no Mathlib import either: `IsDiscreteValuationRing`,
@@ -177,7 +192,10 @@ costs one build job — everything it imports was already reached — and it is 
 import in the file that is not needed by a theorem. The criteria themselves add none:
 `IsFractionRing.div_surjective`, `Prime.dvd_of_dvd_pow`, `UniqueFactorizationMonoid.factors`,
 `UniqueFactorizationMonoid.exists_mem_factors_of_dvd` and `Set.infinite_range_of_injective` are
-all in this closure already.
+all in this closure already, and so is everything the classification adds — `Associates`,
+`Associates.mk_surjective`, `UniqueFactorizationMonoid.factors_prod`,
+`Multiset.prod_dvd_prod_of_dvd`, `Set.Infinite.natEmbedding` and
+`IsDiscreteValuationRing.associated_of_irreducible`.
 
 ## Main definitions and results
 
@@ -239,7 +257,14 @@ all in this closure already.
   `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`: **the refuting criterion**
   — a family of primes divisible into no single element refutes the condition — and the form it
   takes at a unique factorisation domain, where *pairwise non-associated* suffices. Neither
-  criterion implies the other and neither is a classification.
+  criterion implies the other and neither is a classification on its own.
+* `FormalSpectrum.forall_dvd_pow_prod`: at a unique factorisation domain, **the product of a finite
+  set meeting every prime associate class is a denominator for the whole ring**.
+* `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: **the classification at a unique
+  factorisation domain** — the condition holds **iff** `{a : Associates R | Prime a}` is finite.
+  The two criteria above are its two directions, and the three values below are its empty,
+  singleton and infinite cases. It is the only hypothesis under which anything here decides the
+  condition; Dedekind, semilocal, Prüfer and valuation rings are untouched.
 * `FormalSpectrum.hasBoundedDenominators_of_field`: **a field satisfies it**, with `m = 1`. This
   is a value of the condition and not of `FormalSpectrum.IsStalkLimit`; the latter at a field is
   `FormalSpectrum.isStalkLimit_powerSeriesX_field`, by a different route.
@@ -247,6 +272,13 @@ all in this closure already.
   refutation with no formal geometry in it.
 * `FormalSpectrum.hasBoundedDenominators_of_isDiscreteValuationRing`: **a discrete valuation ring
   does**, with a uniformizer as the denominator.
+
+Each of those three values is checked a second time below, as an anonymous `example` reading it off
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`. **None of the three proofs is
+replaced**: each carries something the classification does not — the field value needs no
+factorisation, the discrete-valuation-ring value exhibits the uniformizer, and
+`FormalSpectrum.not_hasBoundedDenominators_int` exhibits an explicit family in `Frac ℤ` that
+defeats every `m`.
 
 ## References
 
@@ -1299,11 +1331,13 @@ This is exactly the surjectivity half of
 is **one conjunct at one point** and not `FormalSpectrum.IsStalkLimit`, whose other conjunct holds
 at the generic point of every domain
 (`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`). Naming it
-decides nothing: which rings satisfy it is not determined here, and the values below are values
-and not a classification. Two criteria at an arbitrary domain are proved below
+decided nothing on its own; what decides it is
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, and only at a **unique factorisation
+domain**, where the condition is exactly *finitely many primes up to associates*. Two criteria at
+an arbitrary domain are proved below
 (`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow` and
-`FormalSpectrum.not_hasBoundedDenominators_of_primes`); they do not meet, and the sufficient one
-is not known to be necessary at a general domain.
+`FormalSpectrum.not_hasBoundedDenominators_of_primes`); away from that hypothesis they still do not
+meet, and the sufficient one is not known to be necessary at a general domain.
 
 A `def` rather than a `class`: the condition occurs on the right of an `↔`, where instance search
 has nothing to do, and one of its three values is a *negation*, which no instance can carry. The
@@ -1385,12 +1419,16 @@ Three values are three rings. The two criteria below are what holds at an arbitr
 — a family of primes that no single element is divisible by. Both values above and below are
 instances of the first, and `ℤ` is an instance of the second.
 
-**Neither is a classification, and the two together are not one either.** The sufficient criterion
-is not known to be necessary at a general domain, and the refuting one is not known to be the only
-way the condition can fail. The obstruction to closing the gap is that
-`FormalSpectrum.HasBoundedDenominators` only ever sees **countable** families
+**Neither is a classification on its own, and at a general domain the two together are not one
+either.** The sufficient criterion is not known to be necessary at a general domain, and the
+refuting one is not known to be the only way the condition can fail. The obstruction to closing
+the gap is that `FormalSpectrum.HasBoundedDenominators` only ever sees **countable** families
 (`FormalSpectrum.hasBoundedDenominators_iff_countable`), so a domain whose fraction field needs
-uncountably many denominator types is not ruled out by anything here. Nothing below decides
+uncountably many denominator types is not ruled out by anything here. **Under one hypothesis they
+do meet**: at a unique factorisation domain the section below glues them into
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, and that hypothesis is what makes the
+passage from *every prime divides `m`* to *every element divides a power of `m`* available.
+Nothing below decides
 Dedekind, semilocal or valuation rings, and nothing below is attempted at a non-domain.
 -/
 
@@ -1442,9 +1480,11 @@ uniformizer — though that one is shorter through
 `FormalSpectrum.hasBoundedDenominators_of_surjective`, whose hypothesis it already has.
 
 **Not known to be necessary at a general domain**, and this file does not claim it is; see the
-section heading above for the obstruction. Its converse at a unique factorisation domain is the
-question `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` answers from the
-other side, and the two do not meet here. -/
+section heading above for the obstruction. At a unique factorisation domain it **is** necessary,
+and that is `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, whose backward direction is
+this criterion at the product of a set of representatives of the prime associate classes and whose
+forward direction is `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`
+answering from the other side. -/
 theorem hasBoundedDenominators_of_forall_dvd_pow {m : R} (hm : m ≠ 0)
     (h : ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k) : HasBoundedDenominators R :=
   hasBoundedDenominators_of_surjective R hm (surjective_awayToFractionRing_of_forall_dvd_pow R hm h)
@@ -1509,6 +1549,122 @@ theorem not_hasBoundedDenominators_of_primes_not_associated [UniqueFactorization
   exact Set.infinite_range_of_injective hinj
     (((UniqueFactorizationMonoid.factors m).toFinset.finite_toSet).subset hsub)
 
+/-! ### The classification at a unique factorisation domain
+
+The two criteria above do not meet at a general domain. At a unique factorisation domain they do,
+and the answer is a cardinality: **the denominator condition holds exactly when there are finitely
+many primes up to associates.** That makes the three values below three cases of one theorem — a
+field is the empty case, a discrete valuation ring the singleton case, and `ℤ` fails by Euclid —
+and it is what the sentence *"the half is about how many primes have to be inverted at once"* says
+once *how many* is read as a cardinality.
+
+`Associates R` is the quotient of `R` by the associate relation, so `{a : Associates R | Prime a}`
+says *up to associates* with no choice of representatives in the statement. Choice enters in both
+directions of the proof, and only there.
+
+**The hypothesis is not removable by anything on this tree.** Outside a unique factorisation domain
+the backward direction has no reason to hold: it goes from *every prime divides `m`* to *every
+element divides a power of `m`*, and that passage is factorisation. Nothing below bears on Dedekind
+domains — those are a statement about ideals, not elements, and a nonprincipal maximal ideal
+contributes no prime element at all — nor on semilocal, Prüfer or valuation rings, and the general
+domain remains open for the reason the section above gives.
+-/
+
+omit [IsDomain R] in
+/-- **Every nonzero element divides a power of the product of a covering set of primes.** If a
+finite set `t` meets every associate class of primes of a unique factorisation domain, then
+`∏ t` is a denominator for the whole ring in the sense
+`FormalSpectrum.surjective_awayToFractionRing_of_forall_dvd_pow` asks for.
+
+`UniqueFactorizationMonoid.factors s` is a multiset of primes whose product is associated to `s`,
+each of its members is associated to a member of `t` and therefore divides `∏ t`, and a product of
+`card` elements each dividing `∏ t` divides `(∏ t) ^ card`. That last step is Mathlib's
+`Multiset.prod_dvd_prod_of_dvd` at the constant function; the specialised form
+`s.prod ∣ m ^ Multiset.card s` is **not** in Mathlib — `exact?` on that goal fails — but it is one
+`simpa` away from the lemma that is, so it is used inline rather than given a name of its own.
+
+**No primality is asked of the members of `t`**, only that they cover. Primality enters on the
+side of `UniqueFactorizationMonoid.factors`, and again where the product of `t` has to be shown
+nonzero — which happens inside `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` and not
+here. -/
+theorem forall_dvd_pow_prod [UniqueFactorizationMonoid R] (t : Finset R)
+    (hcov : ∀ p : R, Prime p → ∃ q ∈ t, Associated p q) :
+    ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ (t.prod id) ^ k := by
+  intro s hs
+  refine ⟨Multiset.card (UniqueFactorizationMonoid.factors s), ?_⟩
+  refine ((UniqueFactorizationMonoid.factors_prod hs).symm.dvd).trans ?_
+  have hdvd : ∀ x ∈ UniqueFactorizationMonoid.factors s, id x ∣ (fun _ : R => t.prod id) x := by
+    intro x hx
+    obtain ⟨q, hq, hassoc⟩ := hcov x (UniqueFactorizationMonoid.prime_of_factor x hx)
+    exact hassoc.dvd.trans (Finset.dvd_prod_of_mem id hq)
+  simpa using Multiset.prod_dvd_prod_of_dvd (S := UniqueFactorizationMonoid.factors s) id
+    (fun _ => t.prod id) hdvd
+
+/-- **The denominator condition at a unique factorisation domain is exactly "finitely many primes
+up to associates".** This is where the two criteria of the section above meet, and it is the only
+hypothesis under which anything on this tree makes them meet.
+
+**The forward direction is the refuting criterion**, at a family extracted from an infinite set:
+`Set.Infinite.natEmbedding` turns infinitely many prime associate classes into an injective
+`ℕ`-indexed family of them, `Associates.mk_surjective` lifts each to a representative in `R`, and
+injectivity of the embedding is exactly the *pairwise non-associated* hypothesis of
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`.
+
+**The backward direction is the sufficient criterion**, at the product of a set of representatives:
+`FormalSpectrum.forall_dvd_pow_prod` discharges its divisibility hypothesis, and the product is
+nonzero because each factor is prime. `Associates.out` is not available here — it needs
+`[NormalizationMonoid R]`, which a bare unique factorisation domain does not carry — so the
+representatives come from `choose` on `Associates.mk_surjective`.
+
+The three values in this file are the three cases: a field is the empty set, a discrete valuation
+ring the singleton, and `ℤ` the infinite one. Each is checked below as an `example` beside the
+theorem it reproduces; **none of those proofs is replaced**, because each carries something this
+does not — the field value needs no factorisation, the discrete-valuation-ring value exhibits the
+uniformizer as the denominator, and `FormalSpectrum.not_hasBoundedDenominators_int` exhibits an
+explicit family in `Frac ℤ` that defeats every `m`.
+
+**This is one conjunct at one point and not `FormalSpectrum.IsStalkLimit`**, exactly as
+`FormalSpectrum.HasBoundedDenominators` is: through
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators` it
+decides the surjectivity half at the generic point of `R⟦X⟧` for every unique factorisation domain,
+and the other conjunct is
+`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`, which holds at
+that point for every domain — but the predicate at every point is a different
+statement and is decided nowhere. -/
+theorem hasBoundedDenominators_iff_finite_primes [UniqueFactorizationMonoid R] :
+    HasBoundedDenominators R ↔ {a : Associates R | Prime a}.Finite := by
+  classical
+  constructor
+  · intro h
+    by_contra hinf
+    rw [Set.not_finite] at hinf
+    let e : ℕ ↪ {a : Associates R | Prime a} := hinf.natEmbedding
+    choose p hp using fun n : ℕ => Associates.mk_surjective (e n : Associates R)
+    refine not_hasBoundedDenominators_of_primes_not_associated R p (fun n => ?_)
+      (fun i j hij => ?_) h
+    · exact Associates.prime_mk.mp (hp n ▸ (e n).2)
+    · have hee : (e i : Associates R) = e j := by
+        rw [← hp i, ← hp j]
+        exact Associates.mk_eq_mk_iff_associated.mpr hij
+      exact e.injective (Subtype.ext hee)
+  · intro hfin
+    choose rep hrep using fun a : Associates R => Associates.mk_surjective a
+    set t : Finset R := hfin.toFinset.image rep with ht
+    have hcov : ∀ p : R, Prime p → ∃ q ∈ t, Associated p q := by
+      intro p hpp
+      refine ⟨rep (Associates.mk p), Finset.mem_image_of_mem _ ?_, ?_⟩
+      · exact (Set.Finite.mem_toFinset hfin).mpr (Associates.prime_mk.mpr hpp)
+      · exact Associates.mk_eq_mk_iff_associated.mp (hrep (Associates.mk p)).symm
+    have htne : t.prod id ≠ 0 := by
+      rw [Finset.prod_ne_zero_iff]
+      intro q hq
+      obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hq
+      have hpa : Prime a := (Set.Finite.mem_toFinset hfin).mp ha
+      have hpr : Prime (Associates.mk (rep a)) := by rw [hrep a]; exact hpa
+      exact (Associates.prime_mk.mp hpr).ne_zero
+    exact hasBoundedDenominators_of_surjective R htne
+      (surjective_awayToFractionRing_of_forall_dvd_pow R htne (forall_dvd_pow_prod R t hcov))
+
 /-! ### The value at a field -/
 
 /-- **A field satisfies the denominator condition**, with `m = 1` and `k = 0`: nothing needs a
@@ -1530,6 +1686,25 @@ is unchanged; the earlier proof produced the same `m = 1` and `k = 0` by writing
 theorem hasBoundedDenominators_of_field (K : Type u) [Field K] : HasBoundedDenominators K :=
   hasBoundedDenominators_of_forall_dvd_pow K (one_ne_zero (α := K))
     fun _ hs => ⟨0, (isUnit_iff_ne_zero.mpr hs).dvd⟩
+
+/-- A field is the **empty** case of `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`:
+every nonzero element is a unit, so there is no prime at all and the set of prime associate
+classes is empty.
+
+**A consistency check on the classification, not a replacement for the theorem above.** The proof
+above needs no factorisation — a field is a unique factorisation monoid, but nothing about the
+value uses it — and it produces the denominator `m = 1` explicitly, where this produces it from a
+finite set of representatives of an empty set. It is an `example` because it proves a statement
+that already has a name. -/
+example (K : Type u) [Field K] : HasBoundedDenominators K := by
+  refine (hasBoundedDenominators_iff_finite_primes K).mpr ?_
+  convert Set.finite_empty
+  ext a
+  simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false]
+  intro ha
+  obtain ⟨x, rfl⟩ := Associates.mk_surjective a
+  exact (Associates.prime_mk.mp ha).not_unit
+    (isUnit_iff_ne_zero.mpr (Associates.prime_mk.mp ha).ne_zero)
 
 end Generic
 
@@ -1639,6 +1814,21 @@ example : ¬ HasBoundedDenominators ℤ := by
     exact_mod_cast Nat.lt_of_succ_le (hle m.natAbs)
   rw [← Int.natCast_natAbs] at hle'
   omega
+
+/-- `ℤ` is the **infinite** case of
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: read through the classification, the
+theorem above says exactly that `ℤ` has infinitely many primes up to associates, which is Euclid's
+theorem.
+
+**A consistency check, and the arrow runs the other way from the two above.** The field and
+discrete-valuation-ring cases compute the set of prime associate classes and read the condition
+off it; here the condition is already refuted, with an explicit witness in `Frac ℤ`, and the
+classification turns that refutation into the cardinality statement. So this is a third account of
+`ℤ` in this file and all three are kept: `FormalSpectrum.unitFractionSeries` is the witness, the
+`example` above is Euclid used as an instance of the refuting criterion, and this is Euclid
+recovered from the witness. -/
+example : ¬ {a : Associates ℤ | Prime a}.Finite :=
+  fun h => not_hasBoundedDenominators_int ((hasBoundedDenominators_iff_finite_primes ℤ).mpr h)
 
 /-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` fails at
 `ℤ`.**
@@ -1791,6 +1981,26 @@ theorem hasBoundedDenominators_of_isDiscreteValuationRing : HasBoundedDenominato
   (IsDiscreteValuationRing.exists_irreducible R).elim fun _ hϖ =>
     hasBoundedDenominators_of_surjective R hϖ.ne_zero
       (surjective_awayToFractionRing_of_irreducible R hϖ)
+
+/-- A discrete valuation ring is the **singleton** case of
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: all its irreducible elements are
+associated (`IsDiscreteValuationRing.associated_of_irreducible`), so there is exactly one prime
+associate class.
+
+**A consistency check on the classification, not a replacement for the theorem above.** The proof
+above exhibits the uniformizer as the denominator and goes through the surjection
+`FormalSpectrum.surjective_awayToFractionRing_of_irreducible`, which is proved from the valuation;
+this one produces the same denominator only as the product of a one-element set of
+representatives, and it is the classification's cardinality that does the work. It is an `example`
+because it proves a statement that already has a name. -/
+example : HasBoundedDenominators R := by
+  obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
+  refine (hasBoundedDenominators_iff_finite_primes R).mpr
+    (Set.Finite.subset (Set.finite_singleton (Associates.mk ϖ)) fun a ha => ?_)
+  obtain ⟨x, rfl⟩ := Associates.mk_surjective a
+  exact Associates.mk_eq_mk_iff_associated.mpr
+    (IsDiscreteValuationRing.associated_of_irreducible R
+      (Associates.prime_mk.mp ha).irreducible hϖ)
 
 /-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` holds**
 at the generic point of a discrete valuation ring — and one `f` serves every element at once,
