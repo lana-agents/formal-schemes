@@ -136,13 +136,20 @@ counted in its own closure; the aggregator at the repository root is outside the
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
 reasons, and the second is the load-bearing one. It is 2523 lines with 80 declarations and is the
 most edited file on this board, so a leaf keeps two concurrent rows off one file; and **the two
-Mathlib imports this material needs — `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` and
-`Mathlib/RingTheory/DedekindDomain/PID.lean`, the latter being what supplies
-`Ring.DimensionLEOne` —
-would otherwise be paid by a module that does not need them.** That file's own
-discrete-valuation-ring section advertises that it *"adds no Mathlib import either"*, so the two new
-imports are a cost worth isolating; they are the price of this row and they are not avoidable, since
-without them `Ring.DimensionLEOne` is an unknown constant.
+Mathlib imports this material needs would otherwise be paid by a module that does not need them.**
+That file's own discrete-valuation-ring section advertises that it *"adds no Mathlib import
+either"*, so the imports are a cost worth isolating, and they are not avoidable: without
+`Mathlib/RingTheory/DedekindDomain/PID.lean` the constant `Ring.DimensionLEOne` does not exist and
+without `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` the finiteness above has nothing to
+cite.
+
+**Only one of the two is new to the project's Mathlib closure, and it is worth saying which**, since
+the import line and the build cost are different things: walking the `import` graph over Mathlib's
+sources from every `import Mathlib` line in `FormalSchemes/`, the closure grows from **2910** to
+**2912** modules, the additions being `Mathlib/RingTheory/DedekindDomain/PID.lean` and its own
+`Mathlib/RingTheory/PrincipalIdealDomainOfPrime.lean`.
+`Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` was **already** reached by this project, so
+naming it here costs a line and no build.
 
 ## References
 
