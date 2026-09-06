@@ -75,12 +75,12 @@ imply it; no other finiteness is used.
 ## Placement
 
 A new leaf over `FormalSchemes.StructureSheafStalkBot`: forward closure **40** modules besides
-itself, reverse closure **6** — the power-series cluster, from
+itself, reverse closure **7** — the power-series cluster, from
 `FormalSchemes.StructureSheafStalkPowerSeries` up.
 
 `IsAdicComplete.of_pow_eq_bot` and `isAdicRing_adicTopology` mention no formal geometry and would
 sit naturally in `FormalSchemes.AdicRing` beside `instIsAdicRingBotOfDiscreteTopology`. They are
-**not** put there: `FormalSchemes.AdicRing`'s reverse closure is **509** of the project's 557
+**not** put there: `FormalSchemes.AdicRing`'s reverse closure is **510** of the project's 558
 modules, so a declaration added to it rebuilds nine tenths of the tree, and neither has a consumer
 outside this file. If a second consumer appears the move is worth re-costing; at one consumer it
 is not.
