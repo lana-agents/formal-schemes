@@ -176,7 +176,7 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric`: forward closure **51** project
 modules besides itself (52 counted with itself), reverse closure **0**, counted by walking every
-`^import` line over the 551 modules under `FormalSchemes/` (`FormalSchemes.lean`, the aggregator,
+`^import` line over the 551 modules under `FormalSchemes/` (the aggregator at the repository root
 is outside the walk). The classification section keeps the criteria it glues in one file rather
 than putting them one module apart: both of its directions are theorems above it, all three of its
 cases are theorems below it, and the prose it makes stale is this docstring's.
@@ -1578,10 +1578,11 @@ finite set `t` meets every associate class of primes of a unique factorisation d
 
 `UniqueFactorizationMonoid.factors s` is a multiset of primes whose product is associated to `s`,
 each of its members is associated to a member of `t` and therefore divides `∏ t`, and a product of
-`card` elements each dividing `∏ t` divides `(∏ t) ^ card`. That last step is Mathlib's
+`Multiset.card` many elements, each dividing `∏ t`, divides that many-th power of `∏ t`. That last
+step is Mathlib's
 `Multiset.prod_dvd_prod_of_dvd` at the constant function; the specialised form
-`s.prod ∣ m ^ Multiset.card s` is **not** in Mathlib — `exact?` on that goal fails — but it is one
-`simpa` away from the lemma that is, so it is used inline rather than given a name of its own.
+`s.prod ∣ m ^ Multiset.card s` is **not** in Mathlib — exact? on that goal fails — but it is one
+simpa away from the lemma that is, so it is used inline rather than given a name of its own.
 
 **No primality is asked of the members of `t`**, only that they cover. Primality enters on the
 side of `UniqueFactorizationMonoid.factors`, and again where the product of `t` has to be shown
@@ -1614,7 +1615,7 @@ injectivity of the embedding is exactly the *pairwise non-associated* hypothesis
 `FormalSpectrum.forall_dvd_pow_prod` discharges its divisibility hypothesis, and the product is
 nonzero because each factor is prime. `Associates.out` is not available here — it needs
 `[NormalizationMonoid R]`, which a bare unique factorisation domain does not carry — so the
-representatives come from `choose` on `Associates.mk_surjective`.
+representatives come from a choose on `Associates.mk_surjective`.
 
 The three values in this file are the three cases: a field is the empty set, a discrete valuation
 ring the singleton, and `ℤ` the infinite one. Each is checked below as an `example` beside the
