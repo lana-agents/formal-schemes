@@ -5,12 +5,16 @@ set_option linter.style.header false
 /-!
 # `FormalSpectrum.IsStalkLimit` at a point that is not closed: `(X) ⊆ ℤ⟦X⟧` at the generic point
 
-`FormalSpectrum.IsStalkLimit` — the stalk half of EGA I 10.8 — has three values, and all three are
-at a point where the colimit over basic opens has nothing to do: `FormalSpectrum.isStalkLimit_bot`
-at `I = ⊥`, `FormalSpectrum.isStalkLimit_of_isNilpotent` at every finitely generated nilpotent
-ideal of definition, and `FormalSpectrum.isStalkLimit_powerSeriesX_field` at `(X) ⊆ k⟦X⟧` for `k` a
-field. The third broke the nilpotency barrier — `FormalSpectrum.not_isNilpotent_powerSeriesXIdeal`
-is proved — but it is a value at the **closed point of a local ring**, reached through
+`FormalSpectrum.IsStalkLimit` — the stalk half of EGA I 10.8 — had three values when this file was
+written, and all three were at a point where the colimit over basic opens has nothing to do:
+`FormalSpectrum.isStalkLimit_bot` at `I = ⊥`, `FormalSpectrum.isStalkLimit_of_isNilpotent` at every
+finitely generated nilpotent ideal of definition, and
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` at `(X) ⊆ k⟦X⟧` for `k` a field. **That is no
+longer a description of the predicate**: `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint`
+(`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`) is positive at the generic point of
+a discrete valuation ring, where the colimit does move. The third of the three broke the
+nilpotency barrier — `FormalSpectrum.not_isNilpotent_powerSeriesXIdeal` is proved — but it is a
+value at the **closed point of a local ring**, reached through
 `FormalSpectrum.isStalkLimit_of_isUnit_notMem_pointPrime`, where every `f` with `x ∈ D(f)` is a
 unit and no witness is ever produced. `FormalSchemes.StructureSheafStalkPowerSeries` says so in its
 own `## What is *not* proved here`.
@@ -89,8 +93,10 @@ counterexample is constructed below. It is decided elsewhere, and negatively:
 `FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint`
 (`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`) refutes it, using the two ring
 identifications the paragraph below asks for. **That does not make the predicate false in
-general** — the three positive values above stand — and nothing in this file is evidence in either
-direction.
+general** — the positive values stand, and one of them
+(`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint`) is at the generic point of a discrete
+valuation ring, so the predicate is not negative wherever the colimit moves — and nothing in this
+file is evidence in either direction.
 
 **The two general statements above are not evidence that the half holds.** They say the obstruction
 is concentrated in the limit; they say nothing about whether it is surmountable there. A reader
@@ -348,10 +354,12 @@ theorem powerSeriesXHomeo_powerSeriesXGenericPoint :
 of `⊥` (`PrimeSpectrum.isClosed_singleton_iff_isMaximal`), which is `R` being a field
 (`Ring.isField_iff_maximal_bot`).
 
-**This is what makes the point a new target for `FormalSpectrum.IsStalkLimit`.** All three existing
-values are at points around which the basic opens are not a genuinely filtered system: at `⊥` and
-at a nilpotent ideal of definition the two completions collapse, and at `(X) ⊆ k⟦X⟧` the point is
-the closed point of a local ring. -/
+**This is what makes the point a new target for `FormalSpectrum.IsStalkLimit`.** The three values
+that predate this file are at points around which the basic opens are not a genuinely filtered
+system: at `⊥` and at a nilpotent ideal of definition the two completions collapse, and at
+`(X) ⊆ k⟦X⟧` the point is the closed point of a local ring. The predicate is now decided at this
+kind of point in both directions — negatively at `(X) ⊆ ℤ⟦X⟧` and positively at the generic point
+of a discrete valuation ring — so a value here is not settled by the point being of this kind. -/
 theorem not_isClosed_powerSeriesXGenericPoint (hR : ¬ IsField R) :
     ¬ IsClosed ({powerSeriesXGenericPoint R} : Set (FormalSpectrum (powerSeriesXIdeal R))) := by
   intro hc

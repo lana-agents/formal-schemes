@@ -3,11 +3,11 @@ import FormalSchemes.StructureSheafStalkPowerSeriesGeneric
 set_option linter.style.header false
 
 /-!
-# The two rings the criterion at `(X) ⊆ R⟦X⟧` compares, and `IsStalkLimit` at `ℤ⟦X⟧` refuted
+# The two rings the criterion at `(X) ⊆ R⟦X⟧` compares, and `IsStalkLimit` at two generic points
 
 `FormalSpectrum.IsStalkLimit` — the stalk half of EGA I 10.8, *the stalk of the completion is the
-completion of the stalk* — had three values on this tree, all positive and all at a point where the
-colimit over basic opens has nothing to do: `FormalSpectrum.isStalkLimit_bot`,
+completion of the stalk* — had three values when this file was started, all positive and all at a
+point where the colimit over basic opens has nothing to do: `FormalSpectrum.isStalkLimit_bot`,
 `FormalSpectrum.isStalkLimit_of_isNilpotent`, and `FormalSpectrum.isStalkLimit_powerSeriesX_field`
 at `(X) ⊆ k⟦X⟧` for `k` a field. `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` took the
 first target where the colimit does move — `(X) ⊆ ℤ⟦X⟧` at the generic point of `Spec ℤ` — proved
@@ -29,6 +29,20 @@ indeed at the generic point of every domain
 identifications give both: read through them the comparison map is `PowerSeries.map` of
 `ℤ[1/m] → ℚ`, which is injective coefficient by coefficient and misses `1 / p` for every prime
 `p > |m|`.
+
+**And the predicate is not positive only where it is idle.** The same two identifications, run in
+the other direction over a discrete valuation ring, give
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint`: at `(X) ⊆ R⟦X⟧` at the generic point of a
+discrete valuation ring `FormalSpectrum.IsStalkLimit` **holds**, and it holds at a point that is
+not closed and where a witness really is produced
+(`FormalSpectrum.isStalkLimit_and_not_isClosed_powerSeriesXGenericPoint`, and at `ℚ⟦T⟧` with no
+hypothesis at all in
+`FormalSpectrum.isStalkLimit_and_not_isClosed_powerSeriesXRatSeriesGenericPoint`). So the standing
+picture
+is not "positive exactly when the colimit has nothing to do": the predicate takes both values at
+points where the colimit moves, and what separates `ℤ` from a discrete valuation ring is how many
+primes have to be inverted at once. Inverting one uniformizer already gives the whole fraction
+field; no single `m` does that over `ℤ`.
 
 ## The two identifications
 
@@ -61,10 +75,12 @@ preimages inside the completion, which is complete.
 ## What is *not* proved here
 
 **`FormalSpectrum.IsStalkLimit` is not false in general, and this file must not be read as saying
-so.** It is refuted at one point of one ring. The three positive values are untouched, and each is
-still exactly as general as it was; in particular `FormalSpectrum.isStalkLimit_powerSeriesX_field`
-holds at `(X) ⊆ k⟦X⟧` for every field `k`, so the predicate genuinely depends on the ring and not
-only on the ideal of definition.
+so.** It is refuted at one point of one ring. The three positive values that predate this file are
+untouched, and each is still exactly as general as it was; in particular
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` holds at `(X) ⊆ k⟦X⟧` for every field `k`, so the
+predicate genuinely depends on the ring and not only on the ideal of definition. This file adds a
+fourth positive value, at the generic point of a discrete valuation ring, and it is equally not a
+statement about the predicate in general.
 
 **Nothing about EGA I 10.8's own statement is contradicted.** `FormalSpectrum.IsStalkLimit` is this
 tree's bijectivity assertion for `FormalSpectrum.stalkToAdicCompletion` at a single point, carrying
@@ -94,7 +110,7 @@ modules besides itself on top of this file's closure, 43 including it, and nothi
 ## Implementation notes
 
 The five `AdicCompletion` lemmas at the top of the file mention no formal geometry and would sit
-naturally in `FormalSchemes.Completion`, whose reverse closure is 432 of the project's 539 modules
+naturally in `FormalSchemes.Completion`, whose reverse closure is 434 of the project's 543 modules
 against this leaf's 0. They are kept here on the disposition
 `FormalSchemes.StructureSheafStalkPowerSeries` recorded for
 `AdicCompletion.bijective_mapCompletion` — which is the same shape and is still in that leaf — and
@@ -113,11 +129,14 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 ## Placement
 
-A new leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric`: forward closure **51**
-project modules besides itself (52 counted with itself), reverse closure **0**, counted by walking
-every `^import` line over the 539 modules under `FormalSchemes/`. It adds no Mathlib import;
+A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric`: forward closure **51** project
+modules besides itself (52 counted with itself), reverse closure **0**, counted by walking every
+`^import` line over the 543 modules under `FormalSchemes/`. It adds no Mathlib import;
 `Mathlib/RingTheory/AdicCompletion/Completeness.lean`, which carries the
-`IsAdicComplete (.span {X}) (PowerSeries R)` instance, is already reached.
+`IsAdicComplete (.span {X}) (PowerSeries R)` instance, is already reached. The discrete-valuation
+section adds none either: `IsDiscreteValuationRing`,
+`IsDiscreteValuationRing.exists_units_eq_smul_zpow_of_irreducible` and `PowerSeries.map_surjective`
+are all in this closure already.
 
 ## Main definitions and results
 
@@ -145,6 +164,16 @@ every `^import` line over the 539 modules under `FormalSchemes/`. It adds no Mat
   `ℤ`, which is the whole of the previous statement.
 * `FormalSpectrum.injective_and_not_surjective_powerSeriesXIntGenericPoint`: **the refutation is
   sharp** — the injectivity half holds and the surjectivity half fails.
+* `FormalSpectrum.surjective_awayToFractionRing_of_irreducible`: `R[1/ϖ] → Frac R` is **surjective**
+  at a uniformizer of a discrete valuation ring, which is what `ℤ` cannot do at any `m`.
+* `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint`: **the surjectivity
+  half holds** at the generic point of a discrete valuation ring, with one `f` for every element.
+* `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint`: **`FormalSpectrum.IsStalkLimit` is true at
+  `(X) ⊆ R⟦X⟧` at the generic point of a discrete valuation ring.**
+* `FormalSpectrum.isStalkLimit_and_not_isClosed_powerSeriesXGenericPoint`: **and it is true at a
+  point that is not closed** — the predicate is not positive only where the colimit is idle.
+* `FormalSpectrum.isStalkLimit_and_not_isClosed_powerSeriesXRatSeriesGenericPoint`: the same at
+  `ℚ⟦T⟧`, so the two theorems above are not conditional on an instance the tree cannot exhibit.
 
 ## References
 
@@ -1153,17 +1182,19 @@ theorem not_surjective_powerSeriesXIntGenericPoint :
 
 /-- **`FormalSpectrum.IsStalkLimit` is false at `(X) ⊆ ℤ⟦X⟧` at the generic point.**
 
-This is the first negative value of the predicate anywhere: the three values on the tree before it
+This is the first negative value of the predicate anywhere: the three values that predate this file
 — `FormalSpectrum.isStalkLimit_bot`, `FormalSpectrum.isStalkLimit_of_isNilpotent` and
 `FormalSpectrum.isStalkLimit_powerSeriesX_field` — are all positive, and all at points where the
-colimit over basic opens does not move.
+colimit over basic opens does not move. It is **not** the case that the predicate is negative
+wherever the colimit moves: `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint`, below, is
+positive at the generic point of a discrete valuation ring.
 
 The whole of the failure is the surjectivity half
 (`FormalSpectrum.not_surjective_powerSeriesXIntGenericPoint`), which is all this proof uses.
 
-**What this does not say.** It does not say `FormalSpectrum.IsStalkLimit` is false — the three
-positive values stand, and this is one point of one ring. It says nothing about EGA I 10.8, whose
-hypotheses this tree's predicate does not carry; see the module docstring. -/
+**What this does not say.** It does not say `FormalSpectrum.IsStalkLimit` is false — the positive
+values stand, one of them below, and this is one point of one ring. It says nothing about EGA I
+10.8, whose hypotheses this tree's predicate does not carry; see the module docstring. -/
 theorem not_isStalkLimit_powerSeriesXIntGenericPoint :
     ¬ IsStalkLimit (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ) := fun h =>
   not_surjective_powerSeriesXIntGenericPoint
@@ -1198,5 +1229,158 @@ theorem injective_and_not_surjective_powerSeriesXIntGenericPoint :
     not_surjective_powerSeriesXIntGenericPoint⟩
 
 end Int
+
+/-! ### The positive value at a discrete valuation ring
+
+The refutation above needs infinitely many primes. Read through the two identifications the
+surjectivity half asks that every element of `(Frac R)⟦X⟧` have all of its coefficients in a
+single `R[1/m]`, and `FormalSpectrum.unitFractionSeries` defeats every `m` because `ℤ` has
+infinitely many primes to put in a denominator. **A discrete valuation ring has one**, and there
+the half is not merely true but trivially so, uniformly in the element: for a uniformizer `ϖ` the
+ring `R[1/ϖ]` is already all of `Frac R`.
+
+So this section puts a *positive* value in a file named for a counterexample. That is deliberate
+and not an accident of where the work landed: both values are read through the same two
+identifications and through the same
+`FormalSpectrum.atPrimeCompletionEquiv_awayToAtPrimeCompletion`, run in opposite directions, and
+the contrast is the finding. Splitting them into two files would put the one statement that needs
+both of them in neither.
+-/
+
+section DiscreteValuationRing
+
+variable (R : Type u) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R]
+
+/-- **`FormalSpectrum.awayToFractionRing` is surjective at a uniformizer**: inverting `ϖ` alone
+already gives the whole fraction field.
+
+This is the discrete-valuation-ring statement and it is where the contrast with `ℤ` lives. The
+valuation is `ℤ`-valued and `ϖ` generates the value group, so every nonzero `x : Frac R` is
+`u • algebraMap ϖ ^ n` for a unit `u : Rˣ` and an `n : ℤ`
+(`IsDiscreteValuationRing.exists_units_eq_smul_zpow_of_irreducible`); for `n ≥ 0` the preimage is
+the image of `u * ϖ ^ n` and for `n < 0` it is `IsLocalization.mk' u ϖ ^ (-n)`. Over `ℤ` no single
+`m` can do this — that is `FormalSpectrum.unitFractionSeries_notMem_range` — and the difference is
+that `ℤ` has infinitely many primes and a discrete valuation ring has one.
+
+Stated at an arbitrary `Irreducible ϖ` rather than at `IsDiscreteValuationRing.exists_irreducible`'s
+choice, so the caller picks the uniformizer. -/
+theorem surjective_awayToFractionRing_of_irreducible {ϖ : R} (hϖ : Irreducible ϖ) :
+    Function.Surjective (awayToFractionRing R ϖ hϖ.ne_zero) := by
+  intro x
+  rcases eq_or_ne x 0 with rfl | hx
+  · exact ⟨0, map_zero _⟩
+  obtain ⟨n, u, rfl⟩ := IsDiscreteValuationRing.exists_units_eq_smul_zpow_of_irreducible
+    (K := FractionRing R) hϖ hx
+  have hϖ' : algebraMap R (FractionRing R) ϖ ≠ 0 := by
+    simpa using hϖ.ne_zero
+  obtain ⟨k, rfl | rfl⟩ : ∃ k : ℕ, n = (k : ℤ) ∨ n = -(k : ℤ) := by
+    rcases n with k | k
+    · exact ⟨k, Or.inl rfl⟩
+    · exact ⟨k + 1, Or.inr (by simp [Int.negSucc_eq])⟩
+  · refine ⟨algebraMap R (Localization.Away ϖ) ((u : R) * ϖ ^ k), ?_⟩
+    rw [awayToFractionRing_algebraMap]
+    simp [Units.smul_def, Algebra.smul_def, map_mul, map_pow, zpow_natCast]
+  · refine ⟨IsLocalization.mk' (Localization.Away ϖ) (u : R)
+      (⟨ϖ ^ k, ⟨k, rfl⟩⟩ : Submonoid.powers ϖ), ?_⟩
+    rw [show awayToFractionRing R ϖ hϖ.ne_zero = IsLocalization.lift
+      (M := Submonoid.powers ϖ) (g := algebraMap R (FractionRing R)) _ from rfl,
+      IsLocalization.lift_mk'_spec]
+    simp only [Units.smul_def, Algebra.smul_def, zpow_neg, zpow_natCast]
+    field_simp
+    rw [map_pow]
+
+/-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` holds**
+at the generic point of a discrete valuation ring — and one `f` serves every element at once,
+namely `PowerSeries.C ϖ` for a uniformizer `ϖ`.
+
+That is exactly what fails over `ℤ`, where the half cannot fail at any single level of the stalk
+tower (`FormalSpectrum.exists_awayToAtPrimeLevel_eq`) but no single `f` serves the limit. Here the
+non-uniformity has nowhere to hide, because one `f` is chosen before the element is.
+
+The transport is the mirror image of
+`FormalSpectrum.injective_awayToAtPrimeCompletion_powerSeriesXGenericPoint`'s and is cheaper:
+`FormalSpectrum.atPrimeCompletionEquiv_awayToAtPrimeCompletion` is an equation between
+applications, which is the shape wanted here, so nothing has to be lifted to a statement about
+maps. `PowerSeries.constantCoeff (PowerSeries.C ϖ)` is `ϖ` definitionally, so the dependent type
+`PowerSeries (Localization.Away (constantCoeff f))` needs no transport. -/
+theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint
+    (b : AdicCompletion (pointIdeal (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))
+      (Localization.AtPrime (pointPrime (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)))) :
+    ∃ f, ∃ (hf : constantCoeff f ≠ 0),
+      ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)
+        (fg_powerSeriesXIdeal R)
+        ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) a = b := by
+  obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
+  have hcc : constantCoeff (PowerSeries.C ϖ) ≠ 0 := by
+    rw [constantCoeff_C]
+    exact hϖ.ne_zero
+  obtain ⟨z, hz⟩ := PowerSeries.map_surjective (awayToFractionRing R ϖ hϖ.ne_zero)
+    (surjective_awayToFractionRing_of_irreducible R hϖ)
+    (atPrimeCompletionEquivFractionPowerSeries R b)
+  refine ⟨PowerSeries.C ϖ, hcc,
+    (awayCompletionEquivPowerSeriesAway (PowerSeries.C ϖ)).symm z, ?_⟩
+  apply (atPrimeCompletionEquivFractionPowerSeries R).injective
+  rw [atPrimeCompletionEquiv_awayToAtPrimeCompletion R (PowerSeries.C ϖ) _ hcc,
+    RingEquiv.apply_symm_apply]
+  exact hz
+
+/-- **`FormalSpectrum.IsStalkLimit` holds at `(X) ⊆ R⟦X⟧` at the generic point of a discrete
+valuation ring.**
+
+Both halves of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff`, and neither is proved
+here. The injectivity half is
+`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`, which holds at the
+generic point of **every** domain and so needs no hypothesis on `R` at all; the surjectivity half
+is the theorem above, and it is the only place the valuation is used.
+
+At the `p`-adic integers this holds and at `ℤ` it fails
+(`FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint`), and the two differ only in how
+many primes have to be inverted at once. -/
+theorem isStalkLimit_powerSeriesXGenericPoint :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) :=
+  (isStalkLimit_powerSeriesXGenericPoint_iff R).mpr
+    ⟨exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint R,
+      exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint R⟩
+
+/-- **`FormalSpectrum.IsStalkLimit` is positive at a point where the colimit over basic opens
+genuinely moves**, which is what this section exists to record.
+
+Before this, every positive value was at a point where the question is idle: at `⊥` and at a
+nilpotent ideal of definition the two completions collapse, and
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` is reached through
+`FormalSpectrum.isStalkLimit_of_isUnit_notMem_pointPrime`, at the closed point of a local ring,
+where every `f` with `x ∈ D(f)` is a unit and no witness is ever produced. A reader could have
+concluded that the predicate is positive exactly when it is vacuous. **It is not**: here the point
+is not closed, a witness is produced, and the value is positive.
+
+The criterion behind the value over a field also does not apply — a discrete valuation ring is not
+a field (`IsDiscreteValuationRing.not_isField`), so
+`FormalSpectrum.exists_notMem_pointPrime_not_isUnit_powerSeriesXGenericPoint` supplies an element
+outside `FormalSpectrum.pointPrime` that is not a unit. This is not
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` in disguise. -/
+theorem isStalkLimit_and_not_isClosed_powerSeriesXGenericPoint :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) ∧
+      ¬ IsClosed ({powerSeriesXGenericPoint R} :
+        Set (FormalSpectrum (powerSeriesXIdeal R))) :=
+  ⟨isStalkLimit_powerSeriesXGenericPoint R,
+    not_isClosed_powerSeriesXGenericPoint R (IsDiscreteValuationRing.not_isField R)⟩
+
+/-- **The value above is not vacuous**, and the witness needs no import this file does not have:
+`ℚ⟦T⟧` is a discrete valuation ring, so `FormalSpectrum.IsStalkLimit` holds at
+`(X) ⊆ ℚ⟦T⟧⟦X⟧` at the generic point, and that point is not closed.
+
+A statement under `[IsDiscreteValuationRing R]` is only as good as the instances in scope, and
+this is what stops the two theorems above from being conditional on something the tree cannot
+exhibit. It also gives the contrast in fully closed form: this holds, and
+`FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint` fails, with no hypothesis on either
+side. -/
+theorem isStalkLimit_and_not_isClosed_powerSeriesXRatSeriesGenericPoint :
+    IsStalkLimit (powerSeriesXIdeal (PowerSeries ℚ))
+        (powerSeriesXGenericPoint (PowerSeries ℚ)) ∧
+      ¬ IsClosed ({powerSeriesXGenericPoint (PowerSeries ℚ)} :
+        Set (FormalSpectrum (powerSeriesXIdeal (PowerSeries ℚ)))) :=
+  isStalkLimit_and_not_isClosed_powerSeriesXGenericPoint _
+
+end DiscreteValuationRing
 
 end FormalSpectrum
