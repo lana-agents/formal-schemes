@@ -27,10 +27,23 @@ and its corollary, which is the sharper sentence:
 > `FormalSpectrum.isPrincipalIdealRing_of_hasBoundedDenominators`: a Dedekind domain satisfying the
 > denominator condition is a **principal ideal ring**.
 
-Through `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`
-(`FormalSchemes.StructureSheafStalkPowerSeriesGeneric`) both are statements about the stalk half of
-EGA I 10.8 at the generic point of `R⟦X⟧`: it fails over every Dedekind domain with infinitely many
-primes, and over every Dedekind domain whose class number is greater than one.
+Both are then read at `FormalSpectrum.IsStalkLimit` rather than left for the reader to compose,
+because that predicate is what EGA I 10.8's stalk half is:
+
+> `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primeIdeals`: at a Dedekind
+> domain the stalk half **holds** at the generic point of `R⟦X⟧` **iff** `{I : Ideal R | I.IsPrime}`
+> is finite;
+
+> `FormalSpectrum.isPrincipalIdealRing_of_isStalkLimit_powerSeriesXGenericPoint`: so it **fails**
+> at every Dedekind domain that is not a principal ideal ring.
+
+The reading goes through
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`, which is in
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` and rests in turn on
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff`
+(`FormalSchemes.StructureSheafStalkPowerSeriesGeneric`), where the predicate at this point is set
+up. So the half fails over every Dedekind domain with infinitely many primes, and over every
+Dedekind domain whose class number is greater than one.
 
 ## Where the element criterion stops and the ideal criterion goes on
 
@@ -105,6 +118,12 @@ both apply, at a principal ideal domain, they agree.
 * `FormalSpectrum.isPrincipalIdealRing_of_hasBoundedDenominators`: **and a Dedekind domain
   satisfying it is a principal ideal ring**, so no Dedekind domain of class number greater than one
   satisfies it.
+* `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primeIdeals`: **the same
+  classification read at the predicate** — at a Dedekind domain `FormalSpectrum.IsStalkLimit` holds
+  at the generic point of `R⟦X⟧` **iff** `{I : Ideal R | I.IsPrime}` is finite.
+* `FormalSpectrum.isPrincipalIdealRing_of_isStalkLimit_powerSeriesXGenericPoint`: **and the
+  corollary at the predicate** — the stalk half of EGA I 10.8 fails at that point over every
+  Dedekind domain that is not a principal ideal ring.
 
 ## What is *not* proved here
 
@@ -152,14 +171,15 @@ under `FormalSchemes/` (a module is not counted in its own closure; the aggregat
 root is outside the walk).
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
-reasons, and the second is the load-bearing one. It is 2828 lines with 83 declarations and is the
-most edited file on this board, so a leaf keeps two concurrent rows off one file; and **the two
-Mathlib imports this material needs would otherwise be paid by a module that does not need them.**
-That file's own discrete-valuation-ring section advertises that it *"adds no Mathlib import
-either"*, so the imports are a cost worth isolating, and they are not avoidable: without
-`Mathlib/RingTheory/DedekindDomain/PID.lean` the constant `Ring.DimensionLEOne` does not exist and
-without `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` the finiteness above has nothing to
-cite.
+reasons, and the second is the load-bearing one. It is **2838** lines with **89** declarations —
+`theorem`, `lemma`, `def`, `instance` or `class` at the start of a line, `example`s not counted and
+there are nine of those — and is the most edited file on this board, so a leaf keeps two concurrent
+rows off one file; and **the two Mathlib imports this material needs would otherwise be paid by a
+module that does not need them.** That file's own discrete-valuation-ring section advertises that it
+*"adds no Mathlib import either"*, so the imports are a cost worth isolating, and they are not
+avoidable: without `Mathlib/RingTheory/DedekindDomain/PID.lean` the constant `Ring.DimensionLEOne`
+does not exist and without `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` the finiteness
+above has nothing to cite.
 
 **Only one of the two is new to the project's Mathlib closure, and it is worth saying which**, since
 the import line and the build cost are different things: walking the `import` graph over Mathlib's
@@ -313,8 +333,8 @@ docstring already gives: `Associates.out` needs `[NormalizationMonoid R]`, which
 not carry.
 
 **This direction needs neither factorisation nor principality**, which is why it is stated here
-rather than inside the classification below: what the Dedekind hypothesis buys there is
-principality, and that is used on the other side of this map. -/
+rather than inside `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals` below: what the
+Dedekind hypothesis buys there is principality, and that is used on the other side of this map. -/
 theorem finite_prime_associates_of_finite_primeIdeals (hfin : {I : Ideal R | I.IsPrime}.Finite) :
     {a : Associates R | Prime a}.Finite := by
   classical
@@ -398,11 +418,97 @@ semilocal Dedekind domain, both of which are principal ideal rings.
 
 **No ring is exhibited here**, and the reason is import cost rather than difficulty; see this
 file's *What is not proved here*. The statement above is not conditional on exhibiting one: it is a
-theorem about every Dedekind domain, and `ℤ` is a Dedekind domain, which the `example` below uses
-in the other direction. -/
+theorem about every Dedekind domain, and `ℤ` is a Dedekind domain, which the `example` in the
+`Int` section below uses in the other direction. -/
 theorem isPrincipalIdealRing_of_hasBoundedDenominators (h : HasBoundedDenominators R) :
     IsPrincipalIdealRing R :=
   IsPrincipalIdealRing.of_finite_primes ((hasBoundedDenominators_iff_finite_primeIdeals R).mp h)
+
+/-- **The classification read at the predicate: at a Dedekind domain the stalk of the completion is
+the completion of the stalk at the generic point of `R⟦X⟧` exactly when `R` has finitely many prime
+ideals.**
+
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` composed with the
+classification above. It is the Dedekind twin of
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes`, which is the same
+composition at a unique factorisation domain with the element classification in place of this one,
+and it exists for the reason that one does: **a classification of the condition is not yet a
+statement about EGA I 10.8 until it is read at the predicate.**
+
+**The two are incomparable, and neither is an instance of the other in either direction.**
+`[UniqueFactorizationMonoid R]` and `[IsDedekindDomain R]` neither contains the other — `ℂ[X, Y]`
+is the first and not the second, a Dedekind domain of class number greater than one is the second
+and not the first — so there is no substitution that turns one statement into the other. That is
+the incomparability the module docstring records for the two classifications, transported along a
+`↔` that carries no hypothesis of its own. **Where both apply, at a principal ideal domain, they
+agree**, and that is checked immediately below as an `example` rather than asserted here.
+
+**The two counts differ by `⊥` even where both apply**, and a reader comparing the two `↔`s will
+meet it first. `{I : Ideal R | I.IsPrime}` contains `⊥`, which is prime because `R` is a domain and
+which is the span of no prime element; `{a : Associates R | Prime a}` does not. At each of the
+three values the counterexample file records — all three of which are principal ideal domains — the
+ideal side is the associate side with `⊥` adjoined: at a field `{⊥}` against `∅`, at a discrete
+valuation ring `{⊥, 𝔪}` against the singleton, and at `ℤ` both are infinite. Finiteness is
+insensitive to one element, which is why the `↔`s agree while the cardinalities do not.
+
+**One point, and not a repair.** This is EGA I 10.8's stalk half at the generic point of `R⟦X⟧` and
+at no other point, at the ideal of definition `(X)` and no other, and over a power series ring and
+nothing else; it enlarges the class of rings over which the half is known to fail and settles
+nothing about which hypothesis would make the general statement true. -/
+theorem isStalkLimit_powerSeriesXGenericPoint_iff_finite_primeIdeals :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) ↔
+      {I : Ideal R | I.IsPrime}.Finite :=
+  (isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators R).trans
+    (hasBoundedDenominators_iff_finite_primeIdeals R)
+
+/-- **Where both classifications apply they agree.** A principal ideal domain is both a Dedekind
+domain and a unique factorisation domain, and there the two right-hand sides are equivalent —
+because each of them is equivalent to the same predicate at the same point.
+
+The proof is the two `↔`s and nothing else, which is the whole point of writing it: it is a check on
+the **pair**, not on either one, and it is the direction the module docstring's *"where both apply,
+at a principal ideal domain, they agree"* asserts. The forward implication is already a theorem at
+an arbitrary domain
+(`FormalSpectrum.finite_prime_associates_of_finite_primeIdeals`), so what is new here is the
+converse — and the converse is not proved by counting anything.
+
+An `example`, because it is the agreement of two named theorems rather than a statement of this
+file's, and because a claim about the relation between two theorems is worth putting where the
+build checks it rather than leaving in a docstring. -/
+example [IsPrincipalIdealRing R] :
+    {I : Ideal R | I.IsPrime}.Finite ↔ {a : Associates R | Prime a}.Finite :=
+  (isStalkLimit_powerSeriesXGenericPoint_iff_finite_primeIdeals R).symm.trans
+    (isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes R)
+
+/-- **The stalk half of EGA I 10.8 fails at the generic point of `R⟦X⟧` over every Dedekind domain
+that is not a principal ideal ring**, stated at the predicate.
+
+`FormalSpectrum.isPrincipalIdealRing_of_hasBoundedDenominators` with the predicate turned into the
+condition by `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`.
+
+**It is the contrapositive that is the sentence worth having**, and it is the sentence this cluster
+is for: a Dedekind domain whose class group is nontrivial is a ring where the stalk of the
+completion is *not* the completion of the stalk, at a point of a formal spectrum, and that is a
+statement about EGA I 10.8 rather than about denominators in a fraction field. It earns a name for
+the same reason `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes` does,
+one file down: it is one composition away from theorems that are already named, and it is the form
+in which the fact is recognisable to a reader who has not read
+`FormalSpectrum.HasBoundedDenominators`.
+
+**At a ring of integers it is vacuous, for the reason the theorem it composes is** — the hypothesis
+is never met there, since `FormalSpectrum.not_hasBoundedDenominators_ringOfIntegers`
+(`FormalSchemes.StructureSheafStalkPowerSeriesNumberField`) refutes the condition at every `𝓞 K`.
+Where it has content is where the condition holds and principality is not free: see the fences on
+`FormalSpectrum.isPrincipalIdealRing_of_hasBoundedDenominators` above.
+
+**It does not say the predicate varies across a single formal spectrum.** That needs a **local**
+domain failing the condition and none is on this tree; this is one point of one spectrum, and a
+Dedekind domain that is not a principal ideal ring is not local. -/
+theorem isPrincipalIdealRing_of_isStalkLimit_powerSeriesXGenericPoint
+    (h : IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)) :
+    IsPrincipalIdealRing R :=
+  isPrincipalIdealRing_of_hasBoundedDenominators R
+    ((isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators R).mp h)
 
 end Dedekind
 
@@ -410,8 +516,9 @@ section Int
 
 /-- **The classification is not vacuous, and at `ℤ` it is read in the direction that is new.**
 `FormalSpectrum.not_hasBoundedDenominators_int` is built from an explicit family in `Frac ℤ`
-(`FormalSpectrum.unitFractionSeries`), and the `↔` above turns that family into a cardinality of
-`Spec ℤ`: **`ℤ` has infinitely many prime ideals.**
+(`FormalSpectrum.unitFractionSeries`), and
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals` turns that family into a cardinality
+of `Spec ℤ`: **`ℤ` has infinitely many prime ideals.**
 
 The fact is Euclid's and the transport is the point — nothing on this tree could previously carry a
 statement about denominators in `Frac ℤ` over to a statement about the ideals of `ℤ`.
