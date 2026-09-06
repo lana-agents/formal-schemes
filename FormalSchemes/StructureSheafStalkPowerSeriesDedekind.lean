@@ -134,7 +134,7 @@ every `^import FormalSchemes.` line over the 555 modules under `FormalSchemes/` 
 counted in its own closure; the aggregator at the repository root is outside the walk).
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
-reasons, and the second is the load-bearing one. It is 2523 lines with 80 declarations and is the
+reasons, and the second is the load-bearing one. It is 2828 lines with 83 declarations and is the
 most edited file on this board, so a leaf keeps two concurrent rows off one file; and **the two
 Mathlib imports this material needs would otherwise be paid by a module that does not need them.**
 That file's own discrete-valuation-ring section advertises that it *"adds no Mathlib import
