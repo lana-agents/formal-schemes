@@ -191,6 +191,7 @@ import FormalSchemes.FormalLineTwoChartCover
 import FormalSchemes.FormalLineWitness
 import FormalSchemes.FormalScheme
 import FormalSchemes.FormalSpectrum
+import FormalSchemes.FormalSpectrumPointExt
 import FormalSchemes.FormalTorus
 import FormalSchemes.FreeActionQuotientFormalScheme
 import FormalSchemes.GeneralDiagonal
@@ -267,6 +268,7 @@ import FormalSchemes.IndSchemeForward
 import FormalSchemes.IndSchemeLimit
 import FormalSchemes.IndSchemeLimitComponents
 import FormalSchemes.IndSchemeThickening
+import FormalSchemes.InvariantSectionCongr
 import FormalSchemes.InversionCodiagonalClosedEmbedding
 import FormalSchemes.InversionCodiagonalClosedEmbeddingY
 import FormalSchemes.LargestIdealOfDefinition
@@ -289,6 +291,7 @@ import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.OpenImmersionReflectsIdeal
 import FormalSchemes.OpenImmersionSheafComponentIso
 import FormalSchemes.OpenImmersionSourceFormalScheme
+import FormalSchemes.PreimageBasicOpen
 import FormalSchemes.ProjectiveLineCompletion
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
@@ -404,6 +407,7 @@ import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvNodeChartAmbientNotInjective
 import FormalSchemes.TateInvNodeChartBaseGenerator
 import FormalSchemes.TateInvNodeChartBaseRegular
+import FormalSchemes.TateInvNodeChartBasicOpenPreimage
 import FormalSchemes.TateInvNodeChartComplete
 import FormalSchemes.TateInvNodeChartDescent
 import FormalSchemes.TateInvNodeChartDescentBasicOpen
