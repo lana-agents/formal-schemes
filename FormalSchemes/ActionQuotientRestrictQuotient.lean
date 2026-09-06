@@ -50,6 +50,11 @@ one genuinely new piece of bookkeeping in this file.
 * `AlgebraicGeometry.LocallyRingedSpace.isActionQuotient_restrictπ`: **the headline.** For any
   action quotient `π : X ⟶ Q` and any open `V` of `Q`, the restricted projection
   `X|_{π ⁻¹ V} ⟶ Q|_V` is an action quotient for the restricted action.
+* `AlgebraicGeometry.LocallyRingedSpace.isOpenMap_base_restrictπ`: its base map is an open map,
+  with no hypothesis on the action. Together with
+  `AlgebraicGeometry.LocallyRingedSpace.base_surjective_restrictπ`
+  (`FormalSchemes.ActionQuotientRestrict`) that makes it an open surjection, which is what lets a
+  property of a morphism out of `Q|_V` be read off the composite with it.
 * `AlgebraicGeometry.LocallyRingedSpace.restrictπComparison` and
   `AlgebraicGeometry.LocallyRingedSpace.isIso_restrictπComparison`: the comparison morphism from
   the coequalizer of the restricted action, and that it is an isomorphism; with its two halves
@@ -515,6 +520,24 @@ def isActionQuotient_restrictπ (h : IsActionQuotient a π) (V : Opens Q.toTopCa
   haveI := isIso_restrictπComparison h V
   (isActionQuotient_actionQuotientπ _).ofIso (asIso (restrictπComparison h V))
     (actionQuotientπ_comp_restrictπComparison h V)
+
+/-- **The base map of the restricted projection is an open map**, with no hypothesis on the
+action.
+
+`AlgebraicGeometry.LocallyRingedSpace.isOpenMap_base_of_isActionQuotient`
+(`FormalSchemes.ActionDiscontinuous`) at
+`AlgebraicGeometry.LocallyRingedSpace.isActionQuotient_restrictπ`: the saturation of an open set is
+a union of translates, each open because every `a g` is an isomorphism, and the quotient topology
+then makes the image open. Nothing about proper discontinuity or freeness enters.
+
+Beside `AlgebraicGeometry.LocallyRingedSpace.base_surjective_restrictπ`
+(`FormalSchemes.ActionQuotientRestrict`) this says the base map is an **open surjection**. That is
+the hypothesis under which openness of a composite `g ∘ (restrictπ π V).base` is *equivalent* to
+openness of `g` — `IsOpenMap.comp` one way and `IsOpenMap.of_comp_of_surjective`
+(`FormalSchemes.TopCatIsoOpenMap`) the other. -/
+theorem isOpenMap_base_restrictπ (h : IsActionQuotient a π) (V : Opens Q.toTopCat) :
+    IsOpenMap ⇑(ConcreteCategory.hom (restrictπ π V).base) :=
+  isOpenMap_base_of_isActionQuotient (isActionQuotient_restrictπ h V)
 
 end Quotient
 
