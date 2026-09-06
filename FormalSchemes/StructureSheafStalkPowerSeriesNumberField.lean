@@ -48,10 +48,10 @@ Two consequences worth stating in those terms.
   a semilocal Dedekind domain both satisfy the denominator condition and are principal ideal rings,
   and they are where it has content.
 
-For the same reason **no class-number theorem is stated here.** Mathlib's
-`NumberField.classNumber_eq_one_iff` would compose with the two facts above, and the composite would
-be vacuous; a name for it would suggest the class number decides something here, and it decides
-nothing.
+For the same reason **no class-number theorem is stated here.** Mathlib states class number one as
+principality of the ring of integers (`Mathlib/NumberTheory/NumberField/ClassNumber.lean`), so that
+statement composes with the two facts above — and the composite is vacuous. A name for it would
+suggest the class number decides something here, and it decides nothing.
 
 ## Where the infinitude comes from
 
@@ -120,8 +120,9 @@ closure **0**, counted by walking every `^import FormalSchemes.` line over the 5
 is outside the walk).
 
 **The leaf exists to isolate a Mathlib import, which is the reason the Dedekind module gave for not
-doing this work itself.** Appending here would push `Mathlib.NumberTheory.NumberField.Basic` under
-everything that ever imports the Dedekind classification, and that classification is general
+doing this work itself.** Appending here would push
+`Mathlib/NumberTheory/NumberField/Basic.lean` under everything that ever imports the Dedekind
+classification, and that classification is general
 commutative algebra with no number theory in it. The chain is three modules each one hypothesis
 narrower — arbitrary domain, Dedekind domain, ring of integers — and the imports get heavier in the
 same direction. The price of the leaf is a forward pointer from the Dedekind module's

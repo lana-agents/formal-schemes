@@ -123,7 +123,7 @@ difficulty.** Reading the theorems above at a ring of integers needs the infinit
 `Ideal.exists_ideal_over_prime_of_isIntegral` and `Nat.infinite_setOf_prime`; that drags a
 number-theory import in, and it is paid one module further out instead, on the leaf
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, whose whole purpose is to keep
-`Mathlib.NumberTheory.NumberField.Basic` out of this module's closure.
+`Mathlib/NumberTheory/NumberField/Basic.lean` out of this module's closure.
 
 **What that leaf finds is stronger than the reading this paragraph used to name.** It is not the
 class number that decides the question at a ring of integers:
