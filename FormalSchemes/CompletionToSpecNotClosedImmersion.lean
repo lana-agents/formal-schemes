@@ -96,7 +96,8 @@ maximality statement out of the instance graph.
 `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` states a theorem under
 `[Countable (FractionRing R)]` and wants that hypothesis discharged by search from `[Countable R]`.
 The reason above still decides the rest — it is about what a *downstream* elaboration pays, and the
-reverse closure of `FormalSchemes.CountableLocalization` is the two consumers and nothing else. The
+reverse closure of `FormalSchemes.CountableLocalization` is **5** modules: this file and the
+power-series cluster from `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` up. The
 `haveI` at the localization below is now redundant and is kept, since it names the submonoid the
 instance would otherwise have to be read off the goal to find.
 

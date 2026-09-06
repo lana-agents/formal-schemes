@@ -26,10 +26,10 @@ is a lemma, and this is where it lives.
 Nothing in it is about formal schemes, group actions of any particular group, or the Tate curve:
 the only project declaration it names is
 `AlgebraicGeometry.LocallyRingedSpace.IsInvariantSection`, which is declared in
-`FormalSchemes/ActionInvariantExtension.lean` (forward closure 78, reverse closure 61). This leaf
-over it has forward closure **79**, and reverse closure **1** — the Tate leaf of the row that
-asked for it; the alternative, adding it to `FormalSchemes/ActionInvariantExtension.lean`,
-re-elaborates 61 modules for a two-line proof.
+`FormalSchemes/ActionInvariantExtension.lean` (forward closure 78, reverse closure 65). This leaf
+over it has forward closure **79**, and reverse closure **5**, all five of them in the Tate
+node-chart cluster; the alternative, adding it to
+`FormalSchemes/ActionInvariantExtension.lean`, re-elaborates 65 modules for a two-line proof.
 
 ## Main results
 

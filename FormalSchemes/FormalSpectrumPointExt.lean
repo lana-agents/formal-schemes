@@ -18,7 +18,7 @@ so the family of memberships determines the prime and `PrimeSpectrum.ext` finish
 is used: no topology on `R`, no adic hypothesis, no sheaf.
 
 `FormalSchemes/FormalSpectrum.lean`, where the statement belongs on subject matter, has a reverse
-closure of **500** of the project's 547 modules, so this is a leaf over it rather than an edit to
+closure of **508** of the project's 557 modules, so this is a leaf over it rather than an edit to
 it.
 
 ## Main results

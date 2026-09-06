@@ -64,13 +64,15 @@ that `globalSectionsEquiv` needs both and the other three inherit them, and the 
 that would make the results below hypothesis-free does not exist as a signature change. What is
 *not* settled, and is a separate question with a separate answer, is whether
 `basicOpenRes_comp_awayCompletionHom` — an instance-free statement — admits an instance-free
-*proof* not routed through `Γ(⊤)`; nothing here attempts one, and its module has reverse closure 9.
+*proof* not routed through `Γ(⊤)`; nothing here attempts one, and its module
+`FormalSchemes.BasicOpenRestriction` has reverse closure 26.
 
 ## Placement, and the two options not taken
 
 A new leaf, importing `FormalSchemes.StructureSheafStalkComparison` and
-`FormalSchemes.BasicOpenRestrictionIdentification`: forward closure 46, reverse closure 0, so
-nothing else on the tree rebuilds for it.
+`FormalSchemes.BasicOpenRestrictionIdentification`: forward closure 46, reverse closure 6 —
+`FormalSchemes.StructureSheafStalkPowerSeries` and the five modules of the power-series cluster
+above it, which are everything on the tree that rebuilds for this file.
 
 *Editing `FormalSchemes.StructureSheafStalkComparison` in place* was the obvious alternative and
 costs the most: it would take that file's closure from 35 to 45 and put `[TopologicalSpace R]` and
@@ -81,10 +83,11 @@ sheaf-carrying criterion as well.
 already imports `FormalSchemes.BasicOpenRestrictionIdentification` and already makes the same trade
 one level down, for the separation statement on sections
 (`FormalSpectrum.exists_basicOpen_awayCompletionRestrict_eq`), recording the same two instance
-hypotheses as a cost. Its reverse closure is 0 too, and importing
-`FormalSchemes.StructureSheafStalkComparison` would take its closure from 42 to 46 — the same total
-as this leaf. The two are equal on the numbers; the split is by subject, since that file is about
-the *source* of the comparison map and these statements are about the map itself.
+hypotheses as a cost. `FormalSchemes.StructureSheafStalkBasicOpenCompletion`'s reverse closure is 0
+too, and importing `FormalSchemes.StructureSheafStalkComparison` would take its closure from 42 to
+46 — the same total as this leaf. The two are equal on the numbers; the split is by subject, since
+that file is about the *source* of the comparison map and these statements are about the map
+itself.
 
 ## Main results
 

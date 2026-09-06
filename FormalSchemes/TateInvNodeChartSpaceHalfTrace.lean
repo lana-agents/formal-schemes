@@ -91,7 +91,7 @@ one.
 
 A leaf over `FormalSchemes.TateInvNodeChartSpaceHalf` and
 `FormalSchemes.TateInvNodeChartPatchChartTrace`: forward closure **267** project modules besides
-itself, reverse closure **0**, counted by walking every `^import FormalSchemes.` line over the 554
+itself, reverse closure **0**, counted by walking every `^import FormalSchemes.` line over the 557
 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the
 repository root is outside the walk).
 

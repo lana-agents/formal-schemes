@@ -284,8 +284,9 @@ module apart: both of its directions are theorems above it, all three of its cas
 below it, and the prose it makes stale is this docstring's. The collapse section is placed on the
 same ground, one section further down.
 
-The second import is the one the collapse section adds, and it is a **Mathlib-only leaf** —
-forward closure 0, reverse closure 5 — holding one statement that was already on the tree:
+The second import is the one the collapse section adds, and it is the **Mathlib-only leaf**
+`FormalSchemes.CountableLocalization`, whose forward closure is 0 and whose reverse closure is 5 —
+holding one statement that was already on the tree:
 `Localization.countable_of_countable`, moved out of
 `FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has
 forward closure 25, is not in this file's closure and does not have this file in its own, so

@@ -415,6 +415,66 @@ tree-wide number is there so that the backlog is a known quantity rather than a 
 * **`git grep -nw` returns zero hits, silently, for any name ending in `₀`/`₁`.** U+2080 and
   U+2081 are Unicode category `No` and form no word boundary. Use bare-string greps.
 
+## The closure-figure convention
+
+**A closure figure quoted in a comment is a measurement, and it must be the measurement the
+`import` lines give at the commit that carries it.** `## Placement` paragraphs all over this tree
+argue for a home by comparing import costs, and the numbers in those arguments are checked by
+nothing: the sentence compiles whatever they say, every name in it resolves, and
+`scripts/citation_audit.py` looks at the names.
+
+The figures rot in a way no diff can show. A **reverse** closure is invalidated by a leaf added
+anywhere above the module, in a pull request that touches neither the file carrying the sentence
+nor any file that sentence is about — so the number goes wrong with nothing in that pull request,
+or any later one, able to see it. **Forward closures rot too**, more slowly: a module's forward
+closure grows when a module it already imports gains an import, which is likewise not in its own
+diff. Both had happened here before the checker existed: the reverse figures of sixteen files were
+stale, and one file's forward figure was.
+
+### The audit
+
+From the repository root; no build needed, since it reads `import` lines:
+
+```sh
+python3 scripts/closure_audit.py --tree
+```
+
+Run it beside `scripts/citation_audit.py`, at the same point and for the same reason. **Neither is
+run by `.github/workflows/` or by `.orchestra/validation.sh`**, and this one is deliberately not
+added to either: it is an author's instrument like the other, and a gate on a figure that a
+*different* pull request can falsify would fail branches that changed nothing. Unlike the citation
+audit it has no standing backlog, so `--tree` returning 0 is the state to keep the tree in, and a
+non-zero exit is a defect rather than a level.
+
+The conventions it implements are the ones the tree's own paragraphs state: the walk is over the
+files under `FormalSchemes/`, `FormalSchemes.lean` at the repository root is outside it, a module
+is not counted in its own closure, and `public import` is an import line. Where a paragraph counts
+the other way it says so — *"(N counted with itself)"* — and that spelling is checked as well, at
+one more.
+
+### Which module a figure is about, and when the checker declines to guess
+
+A figure in file `A` is often about `A`, but a `## Placement` paragraph also quotes the closures of
+the modules it is choosing between, so neither "the file it is in" nor "the module named nearest"
+is right on its own. The script's docstring states the rule it uses; what matters when writing
+prose is that **a figure whose subject the rule cannot pin down is reported as declined and left
+unchecked**, so an unattributable sentence silently loses its guarantee.
+
+Two spellings are worth preferring for that reason alone, since both are checked:
+
+* name the module — `` `FormalSchemes.Foo`'s reverse closure is **N** ``, or *"the reverse closure
+  of `` `FormalSchemes.Foo` `` is **N** modules"* — rather than writing *"its reverse closure"*. A
+  bare possessive pronoun is the one anaphor the checker refuses to resolve, because twice on this
+  tree its antecedent was the paragraph's subject while the last module actually named was a
+  different one mentioned in passing;
+* keep a companion figure in the same sentence as the claim it belongs to: *"N of the project's T
+  modules"*, *"against this leaf's M"*, *"K before this leaf"* and *"(J counted with itself)"* are
+  all checked against the same walk, and all four have been wrong on this tree.
+
+A figure spelled in words is invisible to it. *"The reverse closure of `FormalSchemes.Foo` is the
+two consumers and nothing else"* was **five** modules by then and no check could say so; write the
+numeral.
+
 ## Line width
 
 Every line is at most **100 characters and 100 display columns** — two separate limits, since a
