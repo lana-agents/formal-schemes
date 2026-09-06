@@ -62,7 +62,8 @@ principal ideal domain is a unique factorisation domain, so the backward directi
 theorem applied after `FormalSpectrum.finite_prime_associates_of_finite_primeIdeals` supplies its
 hypothesis. The counterexample file's sentence about that direction — *"it goes from every prime
 divides `m` to every element divides a power of `m`, and that passage is factorisation"* — stays
-exactly true: the factorisation arrives through `of_finite_primes` instead of being assumed.
+exactly true: the factorisation arrives through `IsPrincipalIdealRing.of_finite_primes` instead
+of being assumed.
 
 **There is no countability hypothesis anywhere here and none is removed from anything.** Like the
 unique-factorisation classification, the refuting direction constructs **one** explicit
@@ -135,8 +136,9 @@ counted in its own closure; the aggregator at the repository root is outside the
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
 reasons, and the second is the load-bearing one. It is 2523 lines with 80 declarations and is the
 most edited file on this board, so a leaf keeps two concurrent rows off one file; and **the two
-Mathlib imports this material needs — `Mathlib.RingTheory.Ideal.MinimalPrime.Noetherian` and
-`Mathlib.RingTheory.DedekindDomain.PID`, the latter being what supplies `Ring.DimensionLEOne` —
+Mathlib imports this material needs — `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` and
+`Mathlib/RingTheory/DedekindDomain/PID.lean`, the latter being what supplies
+`Ring.DimensionLEOne` —
 would otherwise be paid by a module that does not need them.** That file's own
 discrete-valuation-ring section advertises that it *"adds no Mathlib import either"*, so the two new
 imports are a cost worth isolating; they are the price of this row and they are not avoidable, since
@@ -195,8 +197,8 @@ replacement is the point of this file. Both proofs apply the condition to the fa
 `Ideal.mul_mem_left` from `s n ∈ P n`, and finishes with `Ideal.IsPrime.mem_of_pow_mem`. **A
 nonprincipal maximal ideal makes the first step impossible and leaves the second untouched.**
 
-The hypothesis `hcov` is the analogue of the element version's *no single `m` is divisible by the
-whole family*: no single `m` lies in every `P n`. The elements `s n` are hypotheses rather than
+The covering hypothesis is the analogue of the element version's *no single `m` is divisible by
+the whole family*: no single `m` lies in every `P n`. The elements `s n` are hypotheses rather than
 choices, so that the criterion is usable at a family a caller already has;
 `FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals` below makes them by choice.
 
@@ -260,7 +262,7 @@ The map is *prime element up to associates* ↦ *the ideal it generates*. It lan
 ideals by `Ideal.span_singleton_prime`, and it is injective on primes by
 `Ideal.span_singleton_eq_span_singleton`, which needs `[IsDomain]` and nothing else.
 
-The representatives come from a `choose` on `Associates.mk_surjective` and **not** from
+The representatives are chosen through `Associates.mk_surjective` and **not** through
 `Associates.out`, for the reason `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`'s
 docstring already gives: `Associates.out` needs `[NormalizationMonoid R]`, which a bare domain does
 not carry.
