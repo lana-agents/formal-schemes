@@ -113,9 +113,13 @@ this one point and at no other.
 criteria on their own still do not meet: **the sufficient one is not known to be necessary at a
 general domain**, and the obstruction is that the condition only ever sees *countable* families,
 so a domain whose fraction field needs uncountably many denominator types is not ruled out by
-anything here. None of the obvious guesses about Dedekind or semilocal domains is checked anywhere
-below, and a Dedekind domain is not a corollary of the classification: it is a statement about
-**ideals**, and a nonprincipal maximal ideal contributes no prime element at all.
+anything here. None of the obvious guesses about semilocal, Prüfer or valuation domains is checked
+anywhere, here or downstream. A Dedekind domain is not a corollary of the classification either —
+it is a statement about **ideals**, and a nonprincipal maximal ideal contributes no prime element at
+all — and that is exactly why it takes a *second* refuting criterion, stated at prime ideals, which
+`FormalSchemes.StructureSheafStalkPowerSeriesDedekind` supplies:
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals` decides the condition there and
+nothing in this file does.
 
 **Under a second hypothesis the two criteria meet again, and this one is that same obstruction
 removed rather than got round.** When `Frac R` is **countable** there is no room for uncountably
@@ -254,11 +258,13 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 ## Placement
 
-A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
+Over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
 `FormalSchemes.CountableLocalization`: forward closure **52** project modules besides itself (53
-counted with itself), reverse closure **0**, counted by walking every `^import` line over the 552
-modules under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator at
-the repository root is outside the walk). The classification section keeps the criteria it glues
+counted with itself), reverse closure **1** — the leaf
+`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which carries the classification at prime
+ideals — counted by walking every `^import` line over the 555 modules under `FormalSchemes/` (a
+module is not counted in its own closure, and the aggregator at the repository root is outside the
+walk). The classification section keeps the criteria it glues
 in one file rather than putting them one module apart: both of its directions are theorems above
 it, all three of its cases are theorems below it, and the prose it makes stale is this
 docstring's. The collapse section is placed on the same ground, one section further down.
@@ -387,8 +393,11 @@ all in this closure already, and so is everything the classification adds — `A
   Its two directions are `FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`, at the product
   of a set of representatives of the prime associate classes, and
   `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`; the three values below are
-  its empty, singleton and infinite cases. It is the only hypothesis under which anything here
-  decides the condition; Dedekind, semilocal, Prüfer and valuation rings are untouched.
+  its empty, singleton and infinite cases. It is the only hypothesis under which anything **in this
+  file** decides the condition; semilocal, Prüfer and valuation rings are untouched, and the
+  Dedekind case is a separate theorem in a separate module, because it is a statement about
+  ideals — `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`
+  (`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`).
 * `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`,
   `FormalSpectrum.hasBoundedDenominators_iff_exists_denominator`,
   `FormalSpectrum.hasBoundedDenominators_iff_forall_dvd_pow`,
@@ -1876,10 +1885,14 @@ directions of the proof, and only there.
 
 **The hypothesis is not removable by anything on this tree.** Outside a unique factorisation domain
 the backward direction has no reason to hold: it goes from *every prime divides `m`* to *every
-element divides a power of `m`*, and that passage is factorisation. Nothing below bears on Dedekind
-domains — those are a statement about ideals, not elements, and a nonprincipal maximal ideal
-contributes no prime element at all — nor on semilocal, Prüfer or valuation rings, and the general
-domain remains open for the reason the section above gives.
+element divides a power of `m`*, and that passage is factorisation. **A Dedekind domain is still not
+a corollary of this** — it is a statement about ideals, not elements, and a nonprincipal maximal
+ideal contributes no prime element at all — but there the passage is available for a reason rather
+than by hypothesis, since finitely many prime ideals forces principality. That is
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`
+(`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`), which **derives** the factorisation
+instead of removing this hypothesis. Nothing below bears on semilocal, Prüfer or valuation rings,
+and the general domain remains open for the reason the section above gives.
 -/
 
 omit [IsDomain R] in
