@@ -74,7 +74,7 @@ imply it; no other finiteness is used.
 
 ## Placement
 
-A new leaf over `FormalSchemes.StructureSheafStalkBot`: forward closure **40** modules besides
+Over `FormalSchemes.StructureSheafStalkBot`: forward closure **40** modules besides
 itself, reverse closure **6** — the power-series cluster, from
 `FormalSchemes.StructureSheafStalkPowerSeries` up.
 

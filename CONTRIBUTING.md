@@ -468,12 +468,21 @@ Two spellings are worth preferring for that reason alone, since both are checked
   tree its antecedent was the paragraph's subject while the last module actually named was a
   different one mentioned in passing;
 * keep a companion figure in the same sentence as the claim it belongs to: *"N of the project's T
-  modules"*, *"against this leaf's M"*, *"K before this leaf"* and *"(J counted with itself)"* are
+  modules"*, *"against this file's M"*, *"K before this leaf"* and *"(J counted with itself)"* are
   all checked against the same walk, and all four have been wrong on this tree.
 
 A figure spelled in words is invisible to it. *"The reverse closure of `FormalSchemes.Foo` is the
 two consumers and nothing else"* was **five** modules by then and no check could say so; write the
 numeral.
+
+**The noun beside the figure is a measurement too, and the checker does not see it.** Call a module
+a **leaf** only where a walk you ran gives it reverse closure 0; open a `## Placement` paragraph
+with *"Over `FormalSchemes.Foo` and `FormalSchemes.Bar`:"*, which carries the only fact the opener
+needs and asserts nothing a later module can falsify, and write *"this file's closure"* rather than
+*"this leaf's"*. **`Mathlib-only leaf` is the opposite sense — *forward* closure 0 — and is
+unaffected**: `FormalSchemes.LocallyRingedSpaceRange` is one, correctly, at reverse closure 249.
+Extending the audit to the noun was considered on row 1823 and declined, so this is held by the
+convention alone; row 1825 carries the instances that predate it.
 
 ## Line width
 
