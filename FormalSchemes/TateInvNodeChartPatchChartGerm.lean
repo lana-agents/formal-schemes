@@ -79,7 +79,10 @@ points; rows 1752 and 1761 have that.
 **The three space-half clauses are read on the chain, and the charts here cover the chain, not the
 quotient.** `AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff` quantifies over pairs of
 points of the chain; nothing below compares two charts, or a chart with its `σ`-translates, so
-nothing below says when two points with the same pattern are in the same orbit.
+nothing below says when two points with the same pattern are in the same orbit. The comparison of
+two charts is `FormalSchemes.TateInvNodeChartPatchChartTrace`, one module downstream, and it does
+not close that gap either: it turns *same pattern* into *same trace of two primes on one ring* and
+leaves *same trace implies same orbit* open.
 
 **The sheaf half and `AlgebraicGeometry.nonvanishingSectionsHom` are untouched.**
 
