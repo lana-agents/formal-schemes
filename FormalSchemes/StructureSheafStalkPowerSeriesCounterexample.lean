@@ -260,17 +260,19 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 Over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
 `FormalSchemes.CountableLocalization`: forward closure **52** project modules besides itself (53
-counted with itself), reverse closure **1** — the leaf
+counted with itself), reverse closure **2** —
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which carries the classification at prime
-ideals — counted by walking every `^import` line over the 555 modules under `FormalSchemes/` (a
-module is not counted in its own closure, and the aggregator at the repository root is outside the
-walk). The classification section keeps the criteria it glues
+ideals, and
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` over it, which instantiates the refuting
+criterion at a ring of integers — counted by walking every `^import` line over the 556 modules under
+`FormalSchemes/` (a module is not counted in its own closure, and the aggregator at the repository
+root is outside the walk). The classification section keeps the criteria it glues
 in one file rather than putting them one module apart: both of its directions are theorems above
 it, all three of its cases are theorems below it, and the prose it makes stale is this
 docstring's. The collapse section is placed on the same ground, one section further down.
 
 The second import is the one the collapse section adds, and it is a **Mathlib-only leaf** —
-forward closure 0, reverse closure 2 — holding one statement that was already on the tree:
+forward closure 0, reverse closure 4 — holding one statement that was already on the tree:
 `Localization.countable_of_countable`, moved out of
 `FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has
 forward closure 25, is not in this file's closure and does not have this file in its own, so
@@ -2265,10 +2267,18 @@ condition read as a statement about the predicate, and the three values in this 
 cases: a field is the empty set, a discrete valuation ring the singleton, and `ℤ` the infinite one.
 
 The factorisation hypothesis is spent entirely by the classification — the theorem above carries
-none of it — so away from a unique factorisation domain the cardinality form is simply not
-available. Nothing here decides Dedekind, semilocal, Prüfer or valuation rings: a Dedekind domain
-is a statement about **ideals**, and a nonprincipal maximal ideal contributes no prime element at
-all. -/
+none of it — so away from a unique factorisation domain **this** cardinality form is simply not
+available. Nothing here decides semilocal, Prüfer or valuation rings.
+
+**A Dedekind domain has a cardinality form of its own, and it is a different one for exactly the
+reason this file used to give for having none**: a Dedekind domain is a statement about **ideals**,
+and a nonprincipal maximal ideal contributes no prime element at all, so what decides it is
+`{I : Ideal R | I.IsPrime}` and not the primes up to associates. That is
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primeIdeals`
+(`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`), this theorem's twin at that hypothesis.
+It is **not** derived from this one and does not derive this one: `[UniqueFactorizationMonoid R]`
+and `[IsDedekindDomain R]` neither contains the other, and where both hold the two counts still
+differ by `⊥`. -/
 theorem isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes
     [UniqueFactorizationMonoid R] :
     IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) ↔
