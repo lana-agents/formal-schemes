@@ -59,9 +59,9 @@ is at a point that is not closed and answers differently for different `R`. As s
 local **domain** that is not a field, `Spf (R⟦X⟧, (X))` carries
 `FormalSpectrum.powerSeriesXClosedPoint` and a separate generic point, settled by different
 arguments under different hypotheses. **That is not a claim that the predicate ever disagrees at
-the two**; see
-`FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint` for why no witness to that is exhibited here
-or anywhere on this tree.
+the two**, and nothing below makes one; see
+`FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint` for what a ring at which they disagree has to
+be, and for the leaf downstream that exhibits one.
 
 ## Which difficulty this value faces, and which it does not
 
@@ -555,10 +555,17 @@ ideal is not `⊥` — this space carries a decided closed point and a separate 
 
 **No claim that the predicate varies across this space is made here.** That would need a local ring
 at whose generic point the predicate *fails*, i.e. a local domain failing the denominator condition
-of `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, and no such ring appears anywhere
-on this tree — a discrete valuation ring is not one, since it satisfies that condition and the
-predicate holds at both of its points. What is shown is that the two points are settled by
-*different* arguments under *different* hypotheses, not that they ever disagree.
+of `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, and no ring named in this file is
+one — a discrete valuation ring is not, since it satisfies that condition and the predicate holds at
+both of its points. What is shown here is that the two points are settled by *different* arguments
+under *different* hypotheses, not that they ever disagree.
+
+**A ring at which they do disagree is exhibited downstream**, on the leaf
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal`: `ℤ[X]` localized at `(2, X)` is a local domain
+failing the denominator condition, so this theorem and
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` settle the two
+points of one space oppositely (`FormalSpectrum.exists_isStalkLimit_and_not_isStalkLimit`). That
+leaf consumes this theorem exactly as it stands and adds no hypothesis to it.
 
 **Nothing here bears on EGA I 10.8's stalk half.** The counterexample is at a non-closed point and
 stands; which hypothesis repairs the general statement is still not determined anywhere. -/

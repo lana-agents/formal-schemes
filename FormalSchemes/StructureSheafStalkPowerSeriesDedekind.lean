@@ -131,10 +131,16 @@ both apply, at a principal ideal domain, they agree.
 `R⟦X⟧` over a larger class of rings than `ℤ`; which hypothesis makes the general statement true is
 undetermined and nothing below bears on it.
 
-**Nothing here says `FormalSpectrum.IsStalkLimit` varies across a single formal spectrum.** That
-would need a **local** domain failing the denominator condition, and none is on this tree; a
+**Nothing here says `FormalSpectrum.IsStalkLimit` varies across a single formal spectrum**, and no
+ring below can be made to say it. That needs a **local** domain failing the denominator condition; a
 Dedekind domain with infinitely many primes is not local, and neither is one of class number greater
-than one.
+than one. **The obstruction is in the hypotheses rather than in the choice of ring**:
+`FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals` assumes `Ring.DimensionLEOne`,
+and a local Noetherian domain of dimension at most one has exactly one nonzero prime, so locality
+and that criterion's hypothesis exclude each other. A witness therefore has to come from
+`FormalSpectrum.not_hasBoundedDenominators_of_primeIdeals`, the arbitrary-domain criterion above,
+and one does: `FormalSchemes.StructureSheafStalkPowerSeriesLocal` builds it at `ℤ[X]` localized at
+`(2, X)`.
 
 **No ring is instantiated here except `ℤ`, and the reason is import cost rather than
 difficulty.** Reading the theorems above at a ring of integers needs the infinitude of the primes of
@@ -164,11 +170,12 @@ the collapse, nor `[UniqueFactorizationMonoid R]` from the classification this g
 
 Over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds
 `FormalSpectrum.HasBoundedDenominators`, both refuting criteria and the element classification:
-forward closure **53** project modules besides itself, reverse closure **1** — the leaf
+forward closure **53** project modules besides itself, reverse closure **2** — the leaves
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting criterion
-at a ring of integers — counted by walking every `^import FormalSchemes.` line over the 556 modules
-under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository
-root is outside the walk).
+at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which instantiates
+it at `ℤ[X]` localized at `(2, X)` — counted by walking every `^import FormalSchemes.` line over
+the 557 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator
+at the repository root is outside the walk).
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
 reasons, and the second is the load-bearing one. It is **2838** lines with **89** declarations —
