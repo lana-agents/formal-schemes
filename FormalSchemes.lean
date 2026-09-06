@@ -280,6 +280,7 @@ import FormalSchemes.LocallyRingedSpaceBasisComponent
 import FormalSchemes.LocallyRingedSpaceGlueDesc
 import FormalSchemes.LocallyRingedSpaceHomExt
 import FormalSchemes.LocallyRingedSpaceRange
+import FormalSchemes.LocallyRingedSpaceStalkSurjective
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.OpenCoverHomExt

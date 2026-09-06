@@ -1,4 +1,5 @@
 import FormalSchemes.ClosedImmersionSections
+import FormalSchemes.LocallyRingedSpaceStalkSurjective
 import FormalSchemes.OpenCover
 import Mathlib.Topology.LocalAtTarget
 import Mathlib.Topology.Sets.OpenCover
@@ -83,7 +84,8 @@ theorem isClosedImmersion_id (X : FormalScheme.{u}) : IsClosedImmersion (𝟙 X)
 
 /-- Closed immersions of formal schemes are stable under composition: the base map of `f ≫ g` is
 the composite of two closed embeddings, and each stalk map of `f ≫ g` factors as a composite of
-two surjective stalk maps (via `LocallyRingedSpace.stalkMap_comp`). -/
+two surjective stalk maps (`AlgebraicGeometry.surjective_stalkMap_comp`,
+`FormalSchemes.LocallyRingedSpaceStalkSurjective`). -/
 theorem IsClosedImmersion.comp {f : X ⟶ Y} {g : Y ⟶ Z}
     (hf : IsClosedImmersion f) (hg : IsClosedImmersion g) :
     IsClosedImmersion (f ≫ g) where
@@ -92,15 +94,9 @@ theorem IsClosedImmersion.comp {f : X ⟶ Y} {g : Y ⟶ Z}
     rw [h]
     exact hg.base_closedEmbedding.comp hf.base_closedEmbedding
   surjective_stalkMap y := by
-    have hAB : Function.Surjective
-        ⇑(g.toLRSHom.stalkMap (f.toLRSHom.base y) ≫ f.toLRSHom.stalkMap y).hom := by
-      rw [CommRingCat.hom_comp, RingHom.coe_comp]
-      exact (hf.surjective_stalkMap y).comp (hg.surjective_stalkMap (f.toLRSHom.base y))
-    have e : (f ≫ g).toLRSHom.stalkMap y
-        = g.toLRSHom.stalkMap (f.toLRSHom.base y) ≫ f.toLRSHom.stalkMap y :=
-      LocallyRingedSpace.stalkMap_comp f.toLRSHom g.toLRSHom y
-    rw [e]
-    exact hAB
+    rw [comp_toLRSHom]
+    exact surjective_stalkMap_comp f.toLRSHom g.toLRSHom y
+      (hg.surjective_stalkMap (f.toLRSHom.base y)) (hf.surjective_stalkMap y)
 
 /-- **Being a closed immersion is local on the target.** Let `f : X ⟶ Y` be a morphism of formal
 schemes and `𝒰` an open cover of `Y`. If, for every member `j` of the cover, the restriction of the
