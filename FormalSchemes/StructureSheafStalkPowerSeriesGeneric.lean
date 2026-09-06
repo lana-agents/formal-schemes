@@ -444,9 +444,13 @@ opens in the injectivity half. `FormalSpectrum.awayCompletion` is an `abbrev` fo
 `AdicCompletion` of a localization, so no unfolding is needed to read the source as a completed
 localization of `R⟦X⟧`.
 
-**Neither side is decided below.** The conjunction is decided in
-`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, and negatively, at `R = ℤ`; see the
-module docstring. -/
+**Neither side is decided below**, that is, nowhere in this file. Both are decided downstream, in
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, and so is the conjunction: the
+injectivity half holds at the generic point of every domain, the surjectivity half is shown there
+to be equivalent to a condition on `R` alone which fails at `R = ℤ` and holds at a discrete
+valuation ring, and the two compose into an `↔` between `FormalSpectrum.IsStalkLimit` at this point
+and that condition — a cardinality, once `R` is a unique factorisation domain. None of that is
+available here; see that module's docstring. -/
 theorem isStalkLimit_powerSeriesXGenericPoint_iff :
     IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) ↔
       (∀ (f : PowerSeries R) (hf : constantCoeff f ≠ 0)
