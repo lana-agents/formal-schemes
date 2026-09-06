@@ -206,7 +206,7 @@ end Index
 patches are jointly surjective (`CategoryTheory.GlueData.ι_jointly_surjective`), the patch-`i`
 preimage of the locus is the basic open `D(x + y − 1)`
 (`AlgebraicGeometry.map_tateChainInvι_nodeChartSaturationOpens`) whose points are the range of the
-basic-open chart (`AlgebraicGeometry.range_basicOpenChart_base`), and the inclusion of the locus is
+basic-open chart (`FormalSpectrum.range_basicOpenChart_base`), and the inclusion of the locus is
 injective, so the point produced on the locus is the one asked for.
 
 This is the argument already inside
@@ -400,8 +400,9 @@ the `σ`-action beyond the invariance that makes
 **The converse is the whole content of the clause and is not proved anywhere below.** Nothing here
 says that two primes with the same trace produce points in the same orbit.
 
-`hfgI` and `hX` are hypotheses that the conclusion does not mention, and that is deliberate rather
-than an oversight: the only route on the tree from *same image under the restricted projection* to
+The two hypotheses about the node chart's ideal of definition and its adic sections are hypotheses
+that the conclusion does not mention, and that is deliberate rather than an oversight: the only
+route on the tree from *same image under the restricted projection* to
 *same germ pattern* is
 `AlgebraicGeometry.base_nodeChartQuotientHom_restrictπ_eq_iff`, which is stated at
 `AlgebraicGeometry.nodeChartQuotientHom`. Whether the implication holds without them is not
