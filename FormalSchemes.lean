@@ -434,6 +434,7 @@ import FormalSchemes.TateInvNodeChartQuotientSpf
 import FormalSchemes.TateInvNodeChartRestrictedQuotient
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.TateInvNodeChartSpaceHalf
+import FormalSchemes.TateInvNodeChartSpaceHalfTrace
 import FormalSchemes.TateInvNodeChartSpf
 import FormalSchemes.TateInvNodeChartSpfFamily
 import FormalSchemes.TateInvNodeChartSpfNonempty
