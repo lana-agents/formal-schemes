@@ -1,4 +1,5 @@
 import FormalSchemes.StructureSheafStalkPowerSeriesGeneric
+import Mathlib.Data.Nat.Prime.Int
 
 set_option linter.style.header false
 
@@ -81,9 +82,17 @@ uniformizer, and **`ℤ` does not**, because a prime larger than `|m|` divides n
 the shape of the answer is that the half is about how many primes have to be inverted at once, and
 the geometric statements are that arithmetic read through the two identifications.
 
-**Naming it decides nothing.** Which rings satisfy `FormalSpectrum.HasBoundedDenominators` is not
-determined here: three values are three rings, not a classification, and none of the obvious
-guesses about Dedekind or semilocal domains is checked anywhere below.
+**Naming it decides nothing, and the two criteria below do not decide it either.** Which rings
+satisfy `FormalSpectrum.HasBoundedDenominators` is still not determined here: the values are
+values, not a classification, and none of the obvious guesses about Dedekind or semilocal domains
+is checked anywhere below. What *is* proved, at an arbitrary domain and not just at the three
+rings, is one criterion in each direction — a single `m ≠ 0` whose powers clear every denominator
+gives the condition (`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`), and a family of
+primes divisible into no single element refutes it
+(`FormalSpectrum.not_hasBoundedDenominators_of_primes`). The two do not meet: **the sufficient
+criterion is not known to be necessary at a general domain**, and the obstruction is that the
+condition only ever sees *countable* families, so a domain whose fraction field needs uncountably
+many denominator types is not ruled out by anything here.
 
 ## The tool that was missing, and why the one on the tree does not do it
 
@@ -155,12 +164,20 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric`: forward closure **51** project
 modules besides itself (52 counted with itself), reverse closure **0**, counted by walking every
-`^import` line over the 543 modules under `FormalSchemes/`. It adds no Mathlib import;
+`^import` line over the 549 modules under `FormalSchemes/`.
 `Mathlib/RingTheory/AdicCompletion/Completeness.lean`, which carries the
 `IsAdicComplete (.span {X}) (PowerSeries R)` instance, is already reached. The discrete-valuation
-section adds none either: `IsDiscreteValuationRing`,
+section adds no Mathlib import either: `IsDiscreteValuationRing`,
 `IsDiscreteValuationRing.exists_units_eq_smul_zpow_of_irreducible` and `PowerSeries.map_surjective`
 are all in this closure already.
+
+**One Mathlib import is not reached and is taken: `Mathlib/Data/Nat/Prime/Int.lean`**, for
+`Nat.prime_iff_prime_int` in the consistency check that reads `ℤ` off the refuting criterion. It
+costs one build job — everything it imports was already reached — and it is the only Mathlib
+import in the file that is not needed by a theorem. The criteria themselves add none:
+`IsFractionRing.div_surjective`, `Prime.dvd_of_dvd_pow`, `UniqueFactorizationMonoid.factors`,
+`UniqueFactorizationMonoid.exists_mem_factors_of_dvd` and `Set.infinite_range_of_injective` are
+all in this closure already.
 
 ## Main definitions and results
 
@@ -213,6 +230,16 @@ are all in this closure already.
 * `FormalSpectrum.hasBoundedDenominators_iff_range`: the same as *lies inside a single `R[1/m]`*.
 * `FormalSpectrum.hasBoundedDenominators_iff_countable`: `ℕ`-indexed families and countable
   subsets of `Frac R` give the same condition.
+* `FormalSpectrum.surjective_awayToFractionRing_of_forall_dvd_pow`,
+  `FormalSpectrum.hasBoundedDenominators_of_surjective`,
+  `FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`: **the sufficient criterion at an
+  arbitrary domain**, in its two halves and composed — one `m ≠ 0` whose powers clear every
+  denominator gives the condition. Both values below are instances.
+* `FormalSpectrum.not_hasBoundedDenominators_of_primes`,
+  `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`: **the refuting criterion**
+  — a family of primes divisible into no single element refutes the condition — and the form it
+  takes at a unique factorisation domain, where *pairwise non-associated* suffices. Neither
+  criterion implies the other and neither is a classification.
 * `FormalSpectrum.hasBoundedDenominators_of_field`: **a field satisfies it**, with `m = 1`. This
   is a value of the condition and not of `FormalSpectrum.IsStalkLimit`; the latter at a field is
   `FormalSpectrum.isStalkLimit_powerSeriesX_field`, by a different route.
@@ -1272,8 +1299,11 @@ This is exactly the surjectivity half of
 is **one conjunct at one point** and not `FormalSpectrum.IsStalkLimit`, whose other conjunct holds
 at the generic point of every domain
 (`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`). Naming it
-decides nothing: which rings satisfy it is not determined here, and the three values below are
-three rings and not a classification.
+decides nothing: which rings satisfy it is not determined here, and the values below are values
+and not a classification. Two criteria at an arbitrary domain are proved below
+(`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow` and
+`FormalSpectrum.not_hasBoundedDenominators_of_primes`); they do not meet, and the sufficient one
+is not known to be necessary at a general domain.
 
 A `def` rather than a `class`: the condition occurs on the right of an `↔`, where instance search
 has nothing to do, and one of its three values is a *negation*, which no instance can carry. The
@@ -1348,6 +1378,137 @@ theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominat
   (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff R).trans
     (hasBoundedDenominators_iff_range R).symm
 
+/-! ### Two criteria at an arbitrary domain
+
+Three values are three rings. The two criteria below are what holds at an arbitrary domain: one
+**sufficient** — a single `m ≠ 0` whose powers clear every denominator — and one that **refutes**
+— a family of primes that no single element is divisible by. Both values above and below are
+instances of the first, and `ℤ` is an instance of the second.
+
+**Neither is a classification, and the two together are not one either.** The sufficient criterion
+is not known to be necessary at a general domain, and the refuting one is not known to be the only
+way the condition can fail. The obstruction to closing the gap is that
+`FormalSpectrum.HasBoundedDenominators` only ever sees **countable** families
+(`FormalSpectrum.hasBoundedDenominators_iff_countable`), so a domain whose fraction field needs
+uncountably many denominator types is not ruled out by anything here. Nothing below decides
+Dedekind, semilocal or valuation rings, and nothing below is attempted at a non-domain.
+-/
+
+/-- **The sufficient criterion, first half**: if a single `m ≠ 0` is such that every nonzero
+`s : R` divides some power of `m`, then `R[1/m]` is already the whole fraction field.
+
+`FormalSpectrum.mem_range_awayToFractionRing_iff` at `x = r / s`: an equation `s * t = m ^ k`
+clears the denominator into `R`, and `r * t` is then the numerator of `x` over `m ^ k`. The
+content is that **one** `m` serves every `s`; for each `s` separately its own denominator serves,
+at every domain.
+
+`FormalSpectrum.surjective_awayToFractionRing_of_irreducible` is the same conclusion at a
+uniformizer of a discrete valuation ring, proved from the valuation rather than from
+divisibility. -/
+theorem surjective_awayToFractionRing_of_forall_dvd_pow {m : R} (hm : m ≠ 0)
+    (h : ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k) :
+    Function.Surjective (awayToFractionRing R m hm) := by
+  intro x
+  obtain ⟨r, s, hs, hrs⟩ := IsFractionRing.div_surjective (A := R) x
+  have hs0 : s ≠ 0 := nonZeroDivisors.ne_zero hs
+  obtain ⟨k, t, ht⟩ := h s hs0
+  rw [← Set.mem_range, mem_range_awayToFractionRing_iff]
+  refine ⟨k, r * t, ?_⟩
+  have hsne : algebraMap R (FractionRing R) s ≠ 0 := fun hz =>
+    hs0 (IsFractionRing.injective R (FractionRing R) (by rw [hz, map_zero]))
+  rw [← hrs, ht, map_mul, map_mul]
+  field_simp
+
+/-- **The sufficient criterion, second half**: one surjective localization already gives the
+condition. If `R[1/m] → Frac R` is surjective for a single `m ≠ 0`, every family in `Frac R` lies
+in that one `R[1/m]`, and the denominator the condition asks for is chosen before the family is.
+
+`FormalSpectrum.hasBoundedDenominators_iff_range` and nothing else.
+
+Kept separate from `FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow` because the two have
+different consumers: the value at a discrete valuation ring arrives with the surjection already in
+hand (`FormalSpectrum.surjective_awayToFractionRing_of_irreducible`) and has no divisibility
+hypothesis to offer, while the value at a field has only divisibility. -/
+theorem hasBoundedDenominators_of_surjective {m : R} (hm : m ≠ 0)
+    (hs : Function.Surjective (awayToFractionRing R m hm)) : HasBoundedDenominators R :=
+  (hasBoundedDenominators_iff_range R).mpr fun x => ⟨m, hm, fun n => hs (x n)⟩
+
+/-- **The sufficient criterion.** One `m ≠ 0` whose powers clear every nonzero denominator makes
+the denominator condition hold.
+
+The two halves composed. Both values in this file are instances: a field is `m = 1`, where every
+nonzero element divides `1 ^ 0` because it is a unit, and a discrete valuation ring is a
+uniformizer — though that one is shorter through
+`FormalSpectrum.hasBoundedDenominators_of_surjective`, whose hypothesis it already has.
+
+**Not known to be necessary at a general domain**, and this file does not claim it is; see the
+section heading above for the obstruction. Its converse at a unique factorisation domain is the
+question `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` answers from the
+other side, and the two do not meet here. -/
+theorem hasBoundedDenominators_of_forall_dvd_pow {m : R} (hm : m ≠ 0)
+    (h : ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k) : HasBoundedDenominators R :=
+  hasBoundedDenominators_of_surjective R hm (surjective_awayToFractionRing_of_forall_dvd_pow R hm h)
+
+/-- **The refuting criterion.** A family of primes that no single `m ≠ 0` is divisible by refutes
+the denominator condition.
+
+Apply the condition to the family of inverses `n ↦ (p n)⁻¹`. A common denominator `m` and an
+exponent `k` give `m ^ k = r * p n` back in `R`, so `p n ∣ m ^ k`, and `Prime.dvd_of_dvd_pow`
+turns that into `p n ∣ m` — which is what the hypothesis forbids at some `n`. The family is
+`ℕ`-indexed because that is what the condition quantifies over; no injectivity is asked of it.
+
+**`Prime` does not weaken to `Irreducible` here.** The hypothesis is used only through
+`Prime.dvd_of_dvd_pow` and `Prime.ne_zero`, and at a general domain an irreducible element need
+not divide a factor of a power it divides, and exact? finds no `Irreducible` form of it. At
+a unique factorisation domain the two hypotheses do agree
+(`UniqueFactorizationMonoid.irreducible_iff_prime`), which is where
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` lives. -/
+theorem not_hasBoundedDenominators_of_primes (p : ℕ → R) (hp : ∀ n, Prime (p n))
+    (hdvd : ∀ m : R, m ≠ 0 → ∃ n, ¬ p n ∣ m) : ¬ HasBoundedDenominators R := by
+  intro h
+  obtain ⟨m, hm, hall⟩ := h fun n => (algebraMap R (FractionRing R) (p n))⁻¹
+  obtain ⟨n, hn⟩ := hdvd m hm
+  obtain ⟨k, r, hr⟩ := hall n
+  apply hn
+  have hpn0 : algebraMap R (FractionRing R) (p n) ≠ 0 := by simpa using (hp n).ne_zero
+  have hfrac : algebraMap R (FractionRing R) (m ^ k) =
+      algebraMap R (FractionRing R) r * algebraMap R (FractionRing R) (p n) := by
+    field_simp at hr
+    rw [← hr]
+  rw [← map_mul] at hfrac
+  have hmk : m ^ k = r * p n := IsFractionRing.injective R (FractionRing R) hfrac
+  exact (hp n).dvd_of_dvd_pow (n := k) ⟨r, by rw [hmk, mul_comm]⟩
+
+/-- **The refuting criterion in the form a caller has it**: at a unique factorisation domain a
+family of pairwise non-associated primes refutes the denominator condition.
+
+`FormalSpectrum.not_hasBoundedDenominators_of_primes` asks that no single `m` be divisible by the
+whole family, which is what its proof consumes; this asks that the family be pairwise
+non-associated, which is what a caller can check. If some `m ≠ 0` were divisible by every `p n`
+then each `p n` is associated to a member of `UniqueFactorizationMonoid.factors m`, the resulting
+map `ℕ → R` is injective because the family is pairwise non-associated, and a multiset of factors
+is finite.
+
+Both forms are shipped rather than one: the general one's hypothesis is strictly weaker — it needs
+no factorisation and no pairwise condition — and this one is the only one that a family of primes
+satisfies without any arithmetic being done first. -/
+theorem not_hasBoundedDenominators_of_primes_not_associated [UniqueFactorizationMonoid R]
+    (p : ℕ → R) (hp : ∀ n, Prime (p n))
+    (hne : ∀ i j, Associated (p i) (p j) → i = j) : ¬ HasBoundedDenominators R := by
+  classical
+  refine not_hasBoundedDenominators_of_primes R p hp fun m hm => ?_
+  by_contra hcon
+  have hdvd : ∀ n, p n ∣ m := fun n => not_not.mp fun hnd => hcon ⟨n, hnd⟩
+  choose f hf hfa using fun n =>
+    UniqueFactorizationMonoid.exists_mem_factors_of_dvd hm (hp n).irreducible (hdvd n)
+  have hinj : Function.Injective f := fun i j hij =>
+    hne i j ((hfa i).trans (hij ▸ (hfa j).symm))
+  have hsub : Set.range f ⊆ (UniqueFactorizationMonoid.factors m).toFinset := by
+    rintro _ ⟨n, rfl⟩
+    exact Multiset.mem_toFinset.mpr (hf n)
+  exact Set.infinite_range_of_injective hinj
+    (((UniqueFactorizationMonoid.factors m).toFinset.finite_toSet).subset hsub)
+
 /-! ### The value at a field -/
 
 /-- **A field satisfies the denominator condition**, with `m = 1` and `k = 0`: nothing needs a
@@ -1360,13 +1521,15 @@ a different route: over a field that space has one point, every `g` outside
 `FormalSpectrum.pointPrime` is a unit, and no witness is produced. The two do agree where they
 meet — the condition at a field also follows from that theorem through
 `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`, and
-the proof below uses none of it. -/
-theorem hasBoundedDenominators_of_field (K : Type u) [Field K] : HasBoundedDenominators K := by
-  intro x
-  refine ⟨1, one_ne_zero, fun n => ⟨0, ?_⟩⟩
-  rw [pow_zero, map_one, one_mul]
-  obtain ⟨r, s, hs, hrs⟩ := IsFractionRing.div_surjective (A := K) (x n)
-  exact ⟨r / s, by rw [← hrs, map_div₀]⟩
+the proof below uses none of it.
+
+`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow` at `m = 1`, where the divisibility
+hypothesis is `s ∣ 1 ^ 0` and holds because a nonzero element of a field is a unit. The statement
+is unchanged; the earlier proof produced the same `m = 1` and `k = 0` by writing out the quotient
+`r / s` by hand. -/
+theorem hasBoundedDenominators_of_field (K : Type u) [Field K] : HasBoundedDenominators K :=
+  hasBoundedDenominators_of_forall_dvd_pow K (one_ne_zero (α := K))
+    fun _ hs => ⟨0, (isUnit_iff_ne_zero.mpr hs).dvd⟩
 
 end Generic
 
@@ -1453,6 +1616,29 @@ theorem not_hasBoundedDenominators_int : ¬ HasBoundedDenominators ℤ := by
   obtain ⟨g, hg⟩ := (PowerSeries.exists_map_eq_iff_forall_coeff_mem_range
     (awayToFractionRing ℤ m hm) unitFractionSeries).mpr hall
   exact unitFractionSeries_notMem_range m hm g hg
+
+/-- `ℤ` is an instance of `FormalSpectrum.not_hasBoundedDenominators_of_primes`: a family of
+primes with `p n > n` is divisible by no single `m`, since a divisor of `m ≠ 0` is at most `|m|`.
+
+**A consistency check on the criterion, not a replacement for the theorem above.** The proof above
+is kept, and is the only place on this tree where an element of `Frac ℤ⟦X⟧` that defeats every `m`
+is written down: `FormalSpectrum.unitFractionSeries` is a witness, and this is an application of a
+criterion whose own witness is `Nat.exists_infinite_primes`. Deleting either for the other would
+lose something. It is an `example` because it proves a statement that already has a name.
+
+`Nat.exists_infinite_primes` is the whole of the arithmetic, and it is Euclid's theorem — the same
+fact the docstring above states as *"a prime `p > |m|` divides no power of `m`"*. -/
+example : ¬ HasBoundedDenominators ℤ := by
+  classical
+  choose p hle hp using fun n : ℕ => Nat.exists_infinite_primes (n + 1)
+  refine not_hasBoundedDenominators_of_primes ℤ (fun n => (p n : ℤ))
+    (fun n => Nat.prime_iff_prime_int.mp (hp n)) fun m hm => ⟨m.natAbs, fun hdvd => ?_⟩
+  have hle' : (p m.natAbs : ℤ) ≤ |m| :=
+    Int.le_of_dvd (abs_pos.mpr hm) ((dvd_abs _ _).mpr hdvd)
+  have hgt : (m.natAbs : ℤ) < (p m.natAbs : ℤ) := by
+    exact_mod_cast Nat.lt_of_succ_le (hle m.natAbs)
+  rw [← Int.natCast_natAbs] at hle'
+  omega
 
 /-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` fails at
 `ℤ`.**
@@ -1597,12 +1783,14 @@ uniformizer, chosen before the family is.
 `IsDiscreteValuationRing.exists_irreducible`: inverting `ϖ` alone gives the whole fraction field,
 so every family lies in `R[1/ϖ]` and no member needs a denominator of its own. Over `ℤ` this fails
 at every `m` (`FormalSpectrum.not_hasBoundedDenominators_int`), and the difference is that `ℤ` has
-infinitely many primes to put in a denominator and a discrete valuation ring has one. -/
+infinitely many primes to put in a denominator and a discrete valuation ring has one.
+
+`FormalSpectrum.hasBoundedDenominators_of_surjective` at a uniformizer: the surjection is the
+theorem above, and the criterion needs nothing else. The statement is unchanged. -/
 theorem hasBoundedDenominators_of_isDiscreteValuationRing : HasBoundedDenominators R :=
-  (hasBoundedDenominators_iff_range R).mpr
-    ((IsDiscreteValuationRing.exists_irreducible R).elim fun ϖ hϖ x =>
-      ⟨ϖ, hϖ.ne_zero, fun n =>
-        surjective_awayToFractionRing_of_irreducible R hϖ (x n)⟩)
+  (IsDiscreteValuationRing.exists_irreducible R).elim fun _ hϖ =>
+    hasBoundedDenominators_of_surjective R hϖ.ne_zero
+      (surjective_awayToFractionRing_of_irreducible R hϖ)
 
 /-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` holds**
 at the generic point of a discrete valuation ring — and one `f` serves every element at once,
