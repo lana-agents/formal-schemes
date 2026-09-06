@@ -182,6 +182,7 @@ import FormalSchemes.CompletionTwoPatchSupport
 import FormalSchemes.CompletionTwoPatchToScheme
 import FormalSchemes.ConservativityTopFiniteType
 import FormalSchemes.CoproductOpenImmersion
+import FormalSchemes.CountableLocalization
 import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.DiagonalPreimageGraph
 import FormalSchemes.DisjointGluing

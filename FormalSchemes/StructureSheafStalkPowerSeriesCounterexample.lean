@@ -1,3 +1,4 @@
+import FormalSchemes.CountableLocalization
 import FormalSchemes.StructureSheafStalkPowerSeriesGeneric
 import Mathlib.Data.Nat.Prime.Int
 
@@ -108,13 +109,30 @@ point of `R⟦X⟧` exactly when `R` has finitely many primes up to associates.*
 statements about the predicate itself rather than about one of its halves, and they are made at
 this one point and at no other.
 
-**Away from that hypothesis nothing here decides anything**, and the criteria on their own still do
-not meet: **the sufficient one is not known to be necessary at a general domain**, and the
-obstruction is that the condition only ever sees *countable* families, so a domain whose fraction
-field needs uncountably many denominator types is not ruled out by anything here. None of the
-obvious guesses about Dedekind or semilocal domains is checked anywhere below, and a Dedekind
-domain is not a corollary of the classification: it is a statement about **ideals**, and a
-nonprincipal maximal ideal contributes no prime element at all.
+**Away from that hypothesis nothing here decides which rings satisfy the condition**, and the
+criteria on their own still do not meet: **the sufficient one is not known to be necessary at a
+general domain**, and the obstruction is that the condition only ever sees *countable* families,
+so a domain whose fraction field needs uncountably many denominator types is not ruled out by
+anything here. None of the obvious guesses about Dedekind or semilocal domains is checked anywhere
+below, and a Dedekind domain is not a corollary of the classification: it is a statement about
+**ideals**, and a nonprincipal maximal ideal contributes no prime element at all.
+
+**Under a second hypothesis the two criteria meet again, and this one is that same obstruction
+removed rather than got round.** When `Frac R` is **countable** there is no room for uncountably
+many denominator types, so the condition may be applied to the whole of `Frac R` at once, and
+`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` makes the sufficient criterion
+necessary as well: the condition holds exactly when a single `R[1/m]` is already the whole
+fraction field. **Unlike the classification this decides no ring** — it trades one condition for a
+more elementary one, which a consumer can check by hand at a given ring, and which rings satisfy
+*that* is not determined here either. Its sharpest consequence is arithmetic with no geometry left
+in it at all: `FormalSpectrum.not_exists_surjective_awayToFractionRing_int` says **no single
+`ℤ[1/m]` is `ℚ`**.
+
+**The two hypotheses are incomparable and neither result subsumes the other.** Unique
+factorisation does not imply a countable fraction field (`ℂ[X]`) and a countable fraction field
+does not imply unique factorisation (an order in a number field with class number greater than
+one). Where they overlap the two statements agree, and that agreement is checked below as an
+`example` rather than asserted.
 
 ## The tool that was missing, and why the one on the tree does not do it
 
@@ -177,6 +195,22 @@ moving the point or the ideal. What is on the tree elsewhere is not surveyed her
 this says nothing about which of the general criteria in
 `FormalSchemes.StructureSheafStalkPowerSeries` do or do not apply at some other point.
 
+**The collapse is not claimed without countability.** Whether
+`FormalSpectrum.HasBoundedDenominators` is equivalent to *some `R[1/m]` is already `Frac R`* at an
+arbitrary domain is **not settled here in either direction**: no proof is given, no counterexample
+is exhibited, and nothing below should be read as evidence for either answer. What is proved is
+the implication that holds at every domain
+(`FormalSpectrum.hasBoundedDenominators_of_surjective`) and its converse under
+`[Countable (FractionRing R)]` (`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`).
+The hypothesis is not known to be removable and is not known to be needed.
+
+**And the collapse is not a classification.** It replaces one condition on `R` by a more
+elementary one; **which countable domains satisfy either is not determined here**, and no
+Dedekind, semilocal, Prüfer or valuation ring is decided by it. In particular nothing below
+computes the set of `m` that work at any ring other than a field, a discrete valuation ring, and
+`ℤ` — where the answer is that none does
+(`FormalSpectrum.not_exists_surjective_awayToFractionRing_int`).
+
 **Nothing under a Noetherian hypothesis**, and nothing that uses one.
 
 **No comparison with `Spec`.** `FormalSchemes.SpfDiscrete` is not imported; measured at **42**
@@ -185,7 +219,7 @@ modules besides itself on top of this file's closure, 43 including it, and nothi
 ## Implementation notes
 
 The five `AdicCompletion` lemmas at the top of the file mention no formal geometry and would sit
-naturally in `FormalSchemes.Completion`, whose reverse closure is 434 of the project's 543 modules
+naturally in `FormalSchemes.Completion`, whose reverse closure is 440 of the project's 552 modules
 against this leaf's 0. They are kept here on the disposition
 `FormalSchemes.StructureSheafStalkPowerSeries` recorded for
 `AdicCompletion.bijective_mapCompletion` — which is the same shape and is still in that leaf — and
@@ -204,12 +238,28 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 ## Placement
 
-A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric`: forward closure **51** project
-modules besides itself (52 counted with itself), reverse closure **0**, counted by walking every
-`^import` line over the 551 modules under `FormalSchemes/` (the aggregator at the repository root
-is outside the walk). The classification section keeps the criteria it glues in one file rather
-than putting them one module apart: both of its directions are theorems above it, all three of its
-cases are theorems below it, and the prose it makes stale is this docstring's.
+A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
+`FormalSchemes.CountableLocalization`: forward closure **52** project modules besides itself (53
+counted with itself), reverse closure **0**, counted by walking every `^import` line over the 552
+modules under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator at
+the repository root is outside the walk). The classification section keeps the criteria it glues
+in one file rather than putting them one module apart: both of its directions are theorems above
+it, all three of its cases are theorems below it, and the prose it makes stale is this
+docstring's. The collapse section is placed on the same ground, one section further down.
+
+The second import is the one the collapse section adds, and it is a **Mathlib-only leaf** —
+forward closure 0, reverse closure 2 — holding one statement that was already on the tree:
+`Localization.countable_of_countable`, moved out of
+`FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has
+forward closure 25, is not in this file's closure and does not have this file in its own, so
+neither could import the other; the statement mentions no formal scheme, no ideal of definition
+and no power series, and 25 of the 552 modules are already leaves of exactly that kind. Restating
+it here instead of moving it would have been a project-internal duplicate, which is what
+`scripts/symm_duplicate_statement_scan.lean` exists to catch; putting it in an existing
+Mathlib-only leaf would have turned a file about one localization identity
+(`FormalSchemes.LocalizationQuotient`) or about regularity (`FormalSchemes.RegularMulEquiv`) into
+a grab bag. It costs one module, one build job, and no Mathlib import that this file's closure did
+not already reach.
 `Mathlib/RingTheory/AdicCompletion/Completeness.lean`, which carries the
 `IsAdicComplete (.span {X}) (PowerSeries R)` instance, is already reached. The discrete-valuation
 section adds no Mathlib import either: `IsDiscreteValuationRing`,
@@ -295,6 +345,17 @@ all in this closure already, and so is everything the classification adds — `A
   The two criteria above are its two directions, and the three values below are its empty,
   singleton and infinite cases. It is the only hypothesis under which anything here decides the
   condition; Dedekind, semilocal, Prüfer and valuation rings are untouched.
+* `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`,
+  `FormalSpectrum.hasBoundedDenominators_iff_exists_denominator`: **the collapse over a countable
+  fraction field** — under `[Countable (FractionRing R)]` the condition holds **iff** a single
+  `R[1/m]` is already the whole of `Frac R`, so the sufficient criterion above is necessary too.
+  The two spellings are the localized one and the arithmetic one. This hypothesis is incomparable
+  with unique factorisation, and unlike the classification it **decides no ring**: it replaces the
+  condition by a more elementary one and nothing here says which rings meet it.
+* `FormalSpectrum.not_exists_surjective_awayToFractionRing_int`: **no single `ℤ[1/m]` is `ℚ`** —
+  the whole refutation with the power series, the completions and the localizations of `ℤ⟦X⟧`
+  stripped off. A corollary of `FormalSpectrum.not_hasBoundedDenominators_int`, needing no
+  countability hypothesis, since that direction holds at every domain.
 * `FormalSpectrum.hasBoundedDenominators_of_field`: **a field satisfies it**, with `m = 1`. This
   is a value of the condition and not of `FormalSpectrum.IsStalkLimit`; the latter at a field is
   `FormalSpectrum.isStalkLimit_powerSeriesX_field`, by a different route.
@@ -310,12 +371,22 @@ all in this closure already, and so is everything the classification adds — `A
   factorisation domain it is a cardinality** — the stalk of the completion is the completion of the
   stalk at that point exactly when `R` has finitely many primes up to associates.
 
-Each of those three values is checked a second time below, as an anonymous `example` reading it off
+Each of the field, `ℤ` and discrete-valuation-ring values above is checked a second time below, as
+an anonymous `example` reading it off
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`. **None of the three proofs is
 replaced**: each carries something the classification does not — the field value needs no
 factorisation, the discrete-valuation-ring value exhibits the uniformizer, and
 `FormalSpectrum.not_hasBoundedDenominators_int` exhibits an explicit family in `Frac ℤ` that
 defeats every `m`.
+
+The two values of the predicate are checked the same way, as anonymous `example`s reading them off
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` rather than off
+the classification, and neither of those proofs is replaced either.
+
+Two further anonymous `example`s sit beside the collapse and are consistency checks of the same
+kind: that the classification and the collapse agree at a domain satisfying both hypotheses, and
+that the collapse's forward direction has a value, at a countable discrete valuation ring — which
+also exhibits `Localization.countable_of_countable` discharging the hypothesis from `[Countable R]`.
 
 ## References
 
@@ -1300,8 +1371,11 @@ turns *hit by `PowerSeries.map`* into a condition on coefficients. Backwards the
 dependent type `PowerSeries (Localization.Away (constantCoeff f))`.
 
 **The quantifier order is the whole content.** `∀ x, ∃ m` is the statement, and the `m` is allowed
-to depend on the family. `∃ m, ∀ x` is strictly stronger and is false at `ℤ`, since it implies
-this one. `∀ x, ∀ n, ∃ m` is strictly weaker and holds at every domain, because a single element
+to depend on the family. `∃ m, ∀ x` is stronger and is false at `ℤ`, since it implies this one —
+but it is **not known to be strictly stronger**, and over a countable fraction field it is not:
+`FormalSpectrum.hasBoundedDenominators_iff_exists_denominator` puts a single `m` serving every
+element of `Frac R` at once, hence every family, on the other side of an `↔`.
+`∀ x, ∀ n, ∃ m` is strictly weaker and holds at every domain, because a single element
 of `Frac R` is a fraction and its own denominator serves; a characterisation with that order would
 be vacuous. -/
 theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff :
@@ -1360,7 +1434,10 @@ families are indexed by `ℕ` or are countable subsets of `Frac R`
 **The quantifier order is the content.** The `m` is uniform in the family and the exponent `k` is
 not: each member may need its own power of the same `m`. Weakening to `∀ x, ∀ n, ∃ m` holds at
 every domain, because a single element of `Frac R` is a fraction and its own denominator serves;
-strengthening to `∃ m, ∀ x` implies this one and so is false at `ℤ`.
+strengthening to `∃ m, ∀ x` implies this one and so is false at `ℤ`. Whether that strengthening is
+*strictly* stronger is not known at a general domain, and over a **countable** fraction field it is
+not — the two are equivalent, by
+`FormalSpectrum.hasBoundedDenominators_iff_exists_denominator`.
 
 This is exactly the surjectivity half of
 `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` at the generic point of `R`, by
@@ -1376,7 +1453,10 @@ domain**, where the condition is exactly *finitely many primes up to associates*
 an arbitrary domain are proved below
 (`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow` and
 `FormalSpectrum.not_hasBoundedDenominators_of_primes`); away from that hypothesis they still do not
-meet, and the sufficient one is not known to be necessary at a general domain.
+meet, and the sufficient one is not known to be necessary at a general domain. Over a **countable**
+fraction field it is necessary, and the condition collapses to a single `R[1/m]` being the whole of
+`Frac R` (`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`) — a second hypothesis,
+incomparable with the first, under which the criteria meet without deciding any ring.
 
 A `def` rather than a `class`: the condition occurs on the right of an `↔`, where instance search
 has nothing to do, and one of its three values is a *negation*, which no instance can carry. The
@@ -1459,16 +1539,23 @@ Three values are three rings. The two criteria below are what holds at an arbitr
 instances of the first, and `ℤ` is an instance of the second.
 
 **Neither is a classification on its own, and at a general domain the two together are not one
-either.** The sufficient criterion is not known to be necessary at a general domain, and the
-refuting one is not known to be the only way the condition can fail. The obstruction to closing
-the gap is that `FormalSpectrum.HasBoundedDenominators` only ever sees **countable** families
+either.** The sufficient criterion is not known to be necessary there, and the refuting one is not
+known to be the only way the condition can fail. The obstruction to closing the gap is that
+`FormalSpectrum.HasBoundedDenominators` only ever sees **countable** families
 (`FormalSpectrum.hasBoundedDenominators_iff_countable`), so a domain whose fraction field needs
-uncountably many denominator types is not ruled out by anything here. **Under one hypothesis they
-do meet**: at a unique factorisation domain the section below glues them into
+uncountably many denominator types is not ruled out by anything here.
+
+**Two hypotheses make them meet, and they meet in different ways.** At a unique factorisation
+domain the section below glues them into
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, and that hypothesis is what makes the
-passage from *every prime divides `m`* to *every element divides a power of `m`* available.
-Nothing below decides
-Dedekind, semilocal or valuation rings, and nothing below is attempted at a non-domain.
+passage from *every prime divides `m`* to *every element divides a power of `m`* available; that
+one **decides** the condition, as a cardinality. Over a countable fraction field the section after
+it turns the sufficient criterion into
+`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` by removing the obstruction rather
+than getting round it — the condition may then be applied to the whole of `Frac R` at once — and
+that one **decides nothing**, it only makes the condition elementary. The two hypotheses are
+incomparable. Nothing below decides Dedekind, semilocal, Prüfer or valuation rings, and nothing
+below is attempted at a non-domain.
 -/
 
 /-- **The sufficient criterion, first half**: if a single `m ≠ 0` is such that every nonzero
@@ -1523,7 +1610,14 @@ section heading above for the obstruction. At a unique factorisation domain it *
 and that is `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, whose backward direction is
 this criterion at the product of a set of representatives of the prime associate classes and whose
 forward direction is `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`
-answering from the other side. -/
+answering from the other side.
+
+**Over a countable fraction field a criterion of this shape is necessary too, but not this one.**
+What is necessary there is the *surjectivity* form of the hypothesis
+(`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`), which this divisibility form
+implies (`FormalSpectrum.surjective_awayToFractionRing_of_forall_dvd_pow`). Whether the
+implication reverses — whether `R[1/m] = Frac R` forces every nonzero element to divide a power of
+`m` — is not proved here, at any domain. -/
 theorem hasBoundedDenominators_of_forall_dvd_pow {m : R} (hm : m ≠ 0)
     (h : ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k) : HasBoundedDenominators R :=
   hasBoundedDenominators_of_surjective R hm (surjective_awayToFractionRing_of_forall_dvd_pow R hm h)
@@ -1704,6 +1798,103 @@ theorem hasBoundedDenominators_iff_finite_primes [UniqueFactorizationMonoid R] :
       exact (Associates.prime_mk.mp hpr).ne_zero
     exact hasBoundedDenominators_of_surjective R htne
       (surjective_awayToFractionRing_of_forall_dvd_pow R htne (forall_dvd_pow_prod R t hcov))
+
+/-! ### The collapse over a countable fraction field
+
+The sufficient criterion above is not known to be necessary at a general domain, and the reason
+the section heading gives is a cardinality: `FormalSpectrum.HasBoundedDenominators` only ever sees
+*countable* families (`FormalSpectrum.hasBoundedDenominators_iff_countable`), so a domain whose
+fraction field needs uncountably many denominator types is not excluded by it. **That reason is
+also the proof of this section.** When `Frac R` is itself countable there is no room for
+uncountably many denominator types: the condition may be applied to the whole of `Frac R` at once,
+and the criterion is then necessary as well as sufficient. So the countability hypothesis is not
+incidental — it is exactly what the general case is missing, and the two sections locate the
+difficulty in the same place.
+
+**This decides no ring.** It trades one condition for a more elementary one — a single `m ≠ 0`
+with `R[1/m]` already the whole fraction field — which a consumer can check by hand at a given
+ring. Which rings satisfy *that* is still not determined here.
+
+The hypothesis is on `Frac R` and not on `R`, because that is what the proof uses and it is the
+weaker of the two. `Localization.countable_of_countable`, in `FormalSchemes.CountableLocalization`,
+discharges it from `[Countable R]`, which is the form a consumer at a concrete ring has.
+-/
+
+/-- **Over a countable fraction field the sufficient criterion is necessary too**: the denominator
+condition holds exactly when one `R[1/m]` is already the whole of `Frac R`.
+
+Forwards is the only new content, and it is
+`FormalSpectrum.hasBoundedDenominators_iff_countable` applied at `Set.univ`: the whole of `Frac R`
+is a countable set, so a single `m` serves all of it, and
+`FormalSpectrum.mem_range_awayToFractionRing_iff` turns *cleared by a power of `m`* into
+*in the image of `R[1/m]`*, which is surjectivity. Backwards is
+`FormalSpectrum.hasBoundedDenominators_of_surjective` and nothing else.
+
+**Necessity is what the hypothesis buys.** Sufficiency holds at every domain and is proved above;
+this direction is not known at a general domain, and the obstruction named there — that the
+condition only ever sees countable families — is precisely what `[Countable (FractionRing R)]`
+removes.
+
+The hypothesis is on the fraction field rather than on `R`: it is the weaker assumption, and it is
+what the proof uses. At a concrete ring it comes from `[Countable R]` through
+`Localization.countable_of_countable`. -/
+theorem hasBoundedDenominators_iff_exists_surjective [Countable (FractionRing R)] :
+    HasBoundedDenominators R ↔
+      ∃ m : R, ∃ hm : m ≠ 0, Function.Surjective (awayToFractionRing R m hm) := by
+  constructor
+  · intro h
+    obtain ⟨m, hm, hall⟩ := (hasBoundedDenominators_iff_countable R).mp h Set.univ
+      Set.countable_univ
+    exact ⟨m, hm, fun y => (mem_range_awayToFractionRing_iff R m hm y).mpr
+      (hall y (Set.mem_univ y))⟩
+  · rintro ⟨m, hm, hs⟩
+    exact hasBoundedDenominators_of_surjective R hm hs
+
+/-- **The same collapse with the localization removed**, matching the spelling of the definition:
+over a countable fraction field one `m ≠ 0` clears *every* element of `Frac R`, not merely every
+countable family.
+
+`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` read through
+`FormalSpectrum.mem_range_awayToFractionRing_iff` at each element, exactly as
+`FormalSpectrum.hasBoundedDenominators_iff_range` is the localized reading of the definition.
+
+Both spellings are shipped because they are wanted in different places. The localized one is the
+form the criteria above are stated in, and is what composes with
+`FormalSpectrum.hasBoundedDenominators_of_surjective`. This one is elementary arithmetic in `R`
+and `Frac R`, names no localization, and is the one that says what the collapse *is*: the
+quantifier order of `FormalSpectrum.HasBoundedDenominators` stops mattering, because the `m` may
+be chosen before the family. -/
+theorem hasBoundedDenominators_iff_exists_denominator [Countable (FractionRing R)] :
+    HasBoundedDenominators R ↔
+      ∃ m : R, m ≠ 0 ∧ ∀ y : FractionRing R, ∃ k : ℕ,
+        algebraMap R (FractionRing R) (m ^ k) * y ∈
+          Set.range (algebraMap R (FractionRing R)) := by
+  rw [hasBoundedDenominators_iff_exists_surjective R]
+  constructor
+  · rintro ⟨m, hm, hs⟩
+    exact ⟨m, hm, fun y => (mem_range_awayToFractionRing_iff R m hm y).mp (hs y)⟩
+  · rintro ⟨m, hm, h⟩
+    exact ⟨m, hm, fun y => (mem_range_awayToFractionRing_iff R m hm y).mpr (h y)⟩
+
+/-- **Where the classification and the collapse overlap they agree**, and this checks it rather
+than asserting it: at a domain that is both a unique factorisation domain and has a countable
+fraction field, *finitely many primes up to associates* and *some `R[1/m]` is already `Frac R`*
+are equivalent, both being `FormalSpectrum.HasBoundedDenominators`.
+
+**A consistency check on two independently derived statements, and it is deliberately not a named
+theorem.** The two hypotheses are incomparable — `ℂ[X]` is a unique factorisation domain with an
+uncountable fraction field, and an order in a number field of class number greater than one has a
+countable fraction field and is not factorial — so neither of the two results above subsumes the
+other, and their composite is a statement about the intersection that belongs to neither. It is an
+`example` for the same reason the three values of the classification are: it proves nothing that
+does not already have a name, and its whole content is that the two names fit together.
+
+Nothing here computes which countable unique factorisation domains satisfy either side. -/
+example [UniqueFactorizationMonoid R] [Countable (FractionRing R)] :
+    {a : Associates R | Prime a}.Finite ↔
+      ∃ m : R, ∃ hm : m ≠ 0, Function.Surjective (awayToFractionRing R m hm) :=
+  (hasBoundedDenominators_iff_finite_primes R).symm.trans
+    (hasBoundedDenominators_iff_exists_surjective R)
 
 /-! ### The value at a field -/
 
@@ -1926,12 +2117,39 @@ theorem.
 **A consistency check, and the arrow runs the other way from the two above.** The field and
 discrete-valuation-ring cases compute the set of prime associate classes and read the condition
 off it; here the condition is already refuted, with an explicit witness in `Frac ℤ`, and the
-classification turns that refutation into the cardinality statement. So this is a third account of
-`ℤ` in this file and all three are kept: `FormalSpectrum.unitFractionSeries` is the witness, the
-`example` above is Euclid used as an instance of the refuting criterion, and this is Euclid
-recovered from the witness. -/
+classification turns that refutation into the cardinality statement. It is one of **four**
+accounts of `ℤ` in this file and all four are kept: `FormalSpectrum.unitFractionSeries` is the
+witness, the `example` above is Euclid used as an instance of the refuting criterion, this is
+Euclid recovered from the witness, and
+`FormalSpectrum.not_exists_surjective_awayToFractionRing_int` below is the same refutation with
+the power series stripped off. -/
 example : ¬ {a : Associates ℤ | Prime a}.Finite :=
   fun h => not_hasBoundedDenominators_int ((hasBoundedDenominators_iff_finite_primes ℤ).mpr h)
+
+/-- **No single `ℤ[1/m]` is `ℚ`.** For every `m ≠ 0` the map `ℤ[1/m] → ℚ` misses something, so
+there is no one integer whose inversion produces the whole of the rationals.
+
+This is the arithmetic content of the whole refutation with every trace of formal geometry
+removed: no power series, no completion, no localization of `ℤ⟦X⟧`, no adic ring. It is a
+**corollary of `FormalSpectrum.not_hasBoundedDenominators_int`** and not an independent proof —
+the arithmetic is all there, in `FormalSpectrum.unitFractionSeries`, and this only reads it off.
+
+It is the reverse half of `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`
+contraposed, and it is stated with **no countability hypothesis**, because that half is
+`FormalSpectrum.hasBoundedDenominators_of_surjective` and holds at every domain. `ℤ` does satisfy
+the hypothesis — `Countable (FractionRing ℤ)` by `Localization.countable_of_countable` — so this
+is a corollary of the `↔` as well; the direct route is taken because it assumes less.
+
+This is the **fourth** account of `ℤ` in this file and none of the four replaces another.
+`FormalSpectrum.not_hasBoundedDenominators_int` is the theorem, with an explicit family in
+`Frac ℤ` that defeats every `m`; the first `example` above is Euclid used as an instance of the
+refuting criterion `FormalSpectrum.not_hasBoundedDenominators_of_primes`; the second is Euclid
+recovered from that witness through the classification; and this is the same refutation with the
+power series stripped off, which is the form an arithmetic reader recognises. -/
+theorem not_exists_surjective_awayToFractionRing_int :
+    ¬ ∃ m : ℤ, ∃ hm : m ≠ 0, Function.Surjective (awayToFractionRing ℤ m hm) :=
+  fun ⟨_, hm, hs⟩ =>
+    not_hasBoundedDenominators_int (hasBoundedDenominators_of_surjective ℤ hm hs)
 
 /-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` fails at
 `ℤ`.**
@@ -2117,6 +2335,24 @@ example : HasBoundedDenominators R := by
   exact Associates.mk_eq_mk_iff_associated.mpr
     (IsDiscreteValuationRing.associated_of_irreducible R
       (Associates.prime_mk.mp ha).irreducible hϖ)
+
+/-- The forward direction of `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` is not
+vacuous: at a **countable** discrete valuation ring it produces an `m` whose inversion gives the
+whole fraction field.
+
+**Two things are being exhibited, and neither is a new mathematical statement.** First,
+`Localization.countable_of_countable` fires: the hypothesis of the collapse is on `Frac R`, and
+here only `[Countable R]` is assumed, so the instance is what supplies it. Second, the direction
+that the countability hypothesis buys — the one that is *not* available at a general domain — has
+a value, so the ℤ corollary is not an artefact of a right-hand side nothing satisfies.
+
+The conclusion is already `FormalSpectrum.surjective_awayToFractionRing_of_irreducible` at a
+uniformizer, and by a shorter route that needs no countability; this deliberately goes the long
+way round, through the collapse, because that is what is being exhibited. It is an `example`. -/
+example [Countable R] :
+    ∃ m : R, ∃ hm : m ≠ 0, Function.Surjective (awayToFractionRing R m hm) :=
+  (hasBoundedDenominators_iff_exists_surjective R).mp
+    (hasBoundedDenominators_of_isDiscreteValuationRing R)
 
 /-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` holds**
 at the generic point of a discrete valuation ring — and one `f` serves every element at once,
