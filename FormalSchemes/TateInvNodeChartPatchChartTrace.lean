@@ -120,7 +120,7 @@ proper in the ambient ring.
 
 ## Placement
 
-A leaf over `FormalSchemes.TateInvNodeChartPatchChartGerm`, which already imports
+Over `FormalSchemes.TateInvNodeChartPatchChartGerm`, which already imports
 `FormalSchemes.TateInvNodeChartBasicOpenPreimage`, so both inputs are reached by one import:
 forward closure **264** project modules besides itself, reverse closure **1** — the leaf
 `FormalSchemes.TateInvNodeChartSpaceHalfTrace`, which substitutes the restatement below into the

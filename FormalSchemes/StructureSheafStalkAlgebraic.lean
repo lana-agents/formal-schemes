@@ -38,7 +38,7 @@ Two things, both of which are the reason it was not taken where the criterion wa
 `[TopologicalSpace R]` and `IsAdicRing I`, so the statements below carry them too — even though,
 `FormalSpectrum.awayCompletionRestrict` being instance-free, nothing in what they say mentions
 either. `FormalSchemes.StructureSheafStalkComparison` needs neither and says so; that is why the
-substitution is made here, in a leaf, rather than there.
+substitution is made here, downstream of it, rather than there.
 
 ## The two instance hypotheses are *not* spurious
 
@@ -69,7 +69,7 @@ that would make the results below hypothesis-free does not exist as a signature 
 
 ## Placement, and the two options not taken
 
-A new leaf, importing `FormalSchemes.StructureSheafStalkComparison` and
+Over `FormalSchemes.StructureSheafStalkComparison` and
 `FormalSchemes.BasicOpenRestrictionIdentification`: forward closure 46, reverse closure 7 —
 `FormalSchemes.StructureSheafStalkPowerSeries` and the six modules of the power-series cluster
 above it, which are everything on the tree that rebuilds for this file.
@@ -85,7 +85,7 @@ one level down, for the separation statement on sections
 (`FormalSpectrum.exists_basicOpen_awayCompletionRestrict_eq`), recording the same two instance
 hypotheses as a cost. `FormalSchemes.StructureSheafStalkBasicOpenCompletion`'s reverse closure is 0
 too, and importing `FormalSchemes.StructureSheafStalkComparison` would take its closure from 42 to
-46 — the same total as this leaf. The two are equal on the numbers; the split is by subject, since
+46 — the same total as this file. The two are equal on the numbers; the split is by subject, since
 that file is about the *source* of the comparison map and these statements are about the map
 itself.
 

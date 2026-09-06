@@ -127,7 +127,7 @@ every domain, which is what makes the refutation named above sharp. No declarati
 evidence for it.
 
 **No comparison with `Spec`.** `FormalSchemes.SpfDiscrete` is not imported — measured at **42**
-modules besides itself on top of this leaf's closure, 43 including it — and nothing here needs it.
+modules besides itself on top of this file's closure, 43 including it — and nothing here needs it.
 
 ## Implementation notes
 
@@ -148,7 +148,7 @@ prints as.
 `FormalSpectrum.exists_awayToAtPrime_eq` and `FormalSpectrum.exists_mk_awayToAtPrime_eq` mention no
 power series and would sit as naturally in `FormalSchemes.StructureSheafStalkComparison`, whose
 `## What is *not* proved here` is what they sharpen and whose reverse closure is **10** of the
-project's 558 modules (forward closure 36 with itself, against this leaf's 51). They are kept here
+project's 558 modules (forward closure 36 with itself, against this file's 51). They are kept here
 anyway, on two grounds: each has exactly one consumer, both in this file, which is the disposition
 `FormalSchemes.StructureSheafStalkNilpotent` and `FormalSchemes.StructureSheafStalkPowerSeries`
 both recorded for a general statement with a single consumer; and moving them would edit a file
@@ -164,9 +164,9 @@ statements stay together here.
 
 ## Placement
 
-A leaf over `FormalSchemes.StructureSheafStalkPowerSeries`: forward closure **50** project modules
+Over `FormalSchemes.StructureSheafStalkPowerSeries`: forward closure **50** project modules
 besides itself (51 counted with itself), reverse closure **5** —
-`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` and the four leaves above it. It adds
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` and the four modules above it. It adds
 no Mathlib import.
 
 ## Main definitions and results
