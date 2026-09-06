@@ -117,14 +117,20 @@ would need a **local** domain failing the denominator condition, and none is on 
 Dedekind domain with infinitely many primes is not local, and neither is one of class number greater
 than one.
 
-**No ring is instantiated except `ℤ`.** The sharp reading of
-`FormalSpectrum.isPrincipalIdealRing_of_hasBoundedDenominators` is at a ring of integers of class
-number greater than one, where the element classification says nothing at all. That is deliberately
-not written down: it needs the infinitude of the primes of `𝓞 K`, which is not in Mathlib as a
-`Set.Infinite` statement and would have to be built from
-`Ideal.exists_ideal_over_prime_of_isIntegral` and `Nat.exists_infinite_primes`, and it would drag a
-number-theory import into a formal-schemes file. **The consequence is stated in prose and
-instantiated nowhere.**
+**No ring is instantiated here except `ℤ`, and the reason is import cost rather than
+difficulty.** Reading the theorems above at a ring of integers needs the infinitude of the primes of
+`𝓞 K`, which is not in Mathlib as a `Set.Infinite` statement and has to be built from
+`Ideal.exists_ideal_over_prime_of_isIntegral` and `Nat.infinite_setOf_prime`; that drags a
+number-theory import in, and it is paid one module further out instead, on the leaf
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, whose whole purpose is to keep
+`Mathlib.NumberTheory.NumberField.Basic` out of this module's closure.
+
+**What that leaf finds is stronger than the reading this paragraph used to name.** It is not the
+class number that decides the question at a ring of integers:
+`FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals` above asks only for infinitely
+many nonzero primes, and every `𝓞 K` has them, so the condition fails at `𝓞 K` for **every** number
+field `K` — `FormalSpectrum.not_hasBoundedDenominators_ringOfIntegers`. `ℤ` remains the only ring
+instantiated *here*.
 
 **Nothing here bears on semilocal domains in general.** The classification decides the condition at
 a **semilocal Dedekind** domain, positively, because that is a Dedekind domain with finitely many
@@ -137,11 +143,13 @@ the collapse, nor `[UniqueFactorizationMonoid R]` from the classification this g
 
 ## Placement
 
-A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds
+Over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds
 `FormalSpectrum.HasBoundedDenominators`, both refuting criteria and the element classification:
-forward closure **53** project modules besides itself, reverse closure **0**, counted by walking
-every `^import FormalSchemes.` line over the 555 modules under `FormalSchemes/` (a module is not
-counted in its own closure; the aggregator at the repository root is outside the walk).
+forward closure **53** project modules besides itself, reverse closure **1** — the leaf
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting criterion
+at a ring of integers — counted by walking every `^import FormalSchemes.` line over the 556 modules
+under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository
+root is outside the walk).
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
 reasons, and the second is the load-bearing one. It is 2828 lines with 83 declarations and is the
@@ -376,11 +384,19 @@ Dedekind domain of class number greater than one satisfies it.
 The classification above into `IsPrincipalIdealRing.of_finite_primes`. Read through
 `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` this is a
 statement about the stalk half of EGA I 10.8 at the generic point of `R⟦X⟧`: **the half fails at
-every Dedekind domain that is not a principal ideal ring**, and in particular at every ring of
-integers of class number greater than one — a class of rings about which the element classification
-says nothing at all, since none of them is a unique factorisation domain.
+every Dedekind domain that is not a principal ideal ring** — a class of rings about which the
+element classification says nothing at all, since none of them is a unique factorisation domain.
 
-**No such ring is exhibited here**, and the reason is import cost rather than difficulty; see this
+**At a ring of integers this theorem is vacuous, and the class number is not what decides the
+question there.** `FormalSpectrum.not_hasBoundedDenominators_ringOfIntegers`
+(`FormalSchemes.StructureSheafStalkPowerSeriesNumberField`) refutes the condition at `𝓞 K` for
+every number field `K`, class number one or not, because
+`FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals` above asks only for infinitely
+many nonzero primes. That is a fact about rings of integers and **not** a defect in this theorem,
+which has content wherever the condition does hold — at a discrete valuation ring and at a
+semilocal Dedekind domain, both of which are principal ideal rings.
+
+**No ring is exhibited here**, and the reason is import cost rather than difficulty; see this
 file's *What is not proved here*. The statement above is not conditional on exhibiting one: it is a
 theorem about every Dedekind domain, and `ℤ` is a Dedekind domain, which the `example` below uses
 in the other direction. -/
