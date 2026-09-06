@@ -3,7 +3,7 @@ import FormalSchemes.StructureSheafStalkPowerSeriesGeneric
 set_option linter.style.header false
 
 /-!
-# The two rings the criterion at `(X) ⊆ R⟦X⟧` compares, and `IsStalkLimit` at two generic points
+# The criterion at `(X) ⊆ R⟦X⟧`: the two rings, two generic points, and the half characterised
 
 `FormalSpectrum.IsStalkLimit` — the stalk half of EGA I 10.8, *the stalk of the completion is the
 completion of the stalk* — had three values when this file was started, all positive and all at a
@@ -60,6 +60,16 @@ Read through them, the surjectivity half of
 `ℚ⟦X⟧` has all of its coefficients in a single `ℤ[1/m]`.* The series with coefficients `1/(n + 1)`
 (`FormalSpectrum.unitFractionSeries`) refutes it, because a prime `p > |m|` divides no power of
 `m`.
+
+**That reading is a theorem, not a gloss.**
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff` says the half
+holds at the generic point of a domain `R` **iff** every `ℕ`-indexed family in `Frac R` lies in a
+single `R[1/m]` with `m ≠ 0`, and
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`
+restates that with no localization in it: every such family has a common denominator up to powers
+of one element. Both values of the half in this file are corollaries of it, and both proofs are
+shorter for going through it. It characterises **one conjunct at one point**, not
+`FormalSpectrum.IsStalkLimit`.
 
 ## The tool that was missing, and why the one on the tree does not do it
 
@@ -174,6 +184,16 @@ are all in this closure already.
   point that is not closed** — the predicate is not positive only where the colimit is idle.
 * `FormalSpectrum.isStalkLimit_and_not_isClosed_powerSeriesXRatSeriesGenericPoint`: the same at
   `ℚ⟦T⟧`, so the two theorems above are not conditional on an instance the tree cannot exhibit.
+* `PowerSeries.exists_map_eq_iff_forall_coeff_mem_range`: a series is hit by `PowerSeries.map g`
+  iff each of its coefficients is hit by `g` — the non-surjective companion of
+  `PowerSeries.map_surjective`.
+* `FormalSpectrum.mem_range_awayToFractionRing_iff`: membership in the image of `R[1/m] → Frac R`,
+  as *some power of `m` clears it into `R`*.
+* `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff`: **the
+  surjectivity half at the generic point of a domain is exactly the statement that every
+  `ℕ`-indexed family in `Frac R` lies in a single `R[1/m]`.**
+* `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`:
+  the same with no localization named — a common denominator up to powers of one element.
 
 ## References
 
@@ -301,7 +321,7 @@ theorem bijective_algebraMap_of_isAdicComplete {A : Type u} [CommRing A] (K : Id
 
 end AdicCompletion
 
-/-! ### `PowerSeries.map` on constant terms -/
+/-! ### `PowerSeries.map` on constant terms, and which series it hits -/
 
 /-- `PowerSeries.constantCoeff` commutes with `PowerSeries.map`. Mathlib has this for
 `MvPowerSeries` (`MvPowerSeries.constantCoeff_map`) and not for `PowerSeries`; it is
@@ -310,6 +330,25 @@ theorem PowerSeries.constantCoeff_map {R S : Type u} [CommRing R] [CommRing S] (
     (φ : PowerSeries R) : constantCoeff (PowerSeries.map g φ) = g (constantCoeff φ) := by
   rw [← PowerSeries.coeff_zero_eq_constantCoeff_apply (PowerSeries.map g φ),
     PowerSeries.coeff_map, PowerSeries.coeff_zero_eq_constantCoeff_apply]
+
+/-- **A power series is hit by `PowerSeries.map g` exactly when each of its coefficients is hit by
+`g`.** Both directions are `PowerSeries.coeff_map`: forwards read off a coefficient, backwards
+choose a preimage in each degree and assemble them with `PowerSeries.mk`.
+
+Mathlib's `PowerSeries.map_surjective` is the special case where `g` is surjective, so that every
+coefficient qualifies and the choice is unconstrained. This is the form needed when `g` is *not*
+surjective and the question is which series happen to be in the image, which is the question the
+surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` turns into. -/
+theorem PowerSeries.exists_map_eq_iff_forall_coeff_mem_range {R S : Type u} [CommRing R]
+    [CommRing S] (g : R →+* S) (b : PowerSeries S) :
+    (∃ φ, PowerSeries.map g φ = b) ↔ ∀ n, PowerSeries.coeff n b ∈ Set.range g := by
+  constructor
+  · rintro ⟨φ, rfl⟩ n
+    exact ⟨PowerSeries.coeff n φ, (PowerSeries.coeff_map _ _ _).symm⟩
+  · intro h
+    choose c hc using h
+    exact ⟨PowerSeries.mk c, PowerSeries.ext fun n => by
+      rw [PowerSeries.coeff_map, PowerSeries.coeff_mk, hc]⟩
 
 namespace FormalSpectrum
 
@@ -1082,6 +1121,131 @@ theorem exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint (f : Powe
     injective_awayToAtPrimeCompletion_powerSeriesXGenericPoint R f _ hf (by rw [ha, map_zero])
   ⟨f, hf, le_rfl, by rw [ha0, map_zero]⟩
 
+/-! ### The surjectivity half, characterised
+
+The two identifications turn the half at the generic point into a statement with no completion, no
+localization of `R⟦X⟧` and no formal geometry in it at all: a question about denominators in
+`Frac R`. Both values of the half become corollaries of it — `ℤ` fails it because a prime larger
+than `|m|` divides no power of `m`, and a discrete valuation ring satisfies it because inverting
+one uniformizer already gives the whole fraction field.
+-/
+
+/-- **Membership in the image of `R[1/m] → Frac R`, with no localization in the statement.** An
+element of `Frac R` is a fraction whose denominator is a power of `m` exactly when some power of
+`m` clears it into `R`.
+
+Forwards, `IsLocalization.mk'_surjective` writes the preimage as `r / m ^ k` and
+`IsLocalization.mk'_spec'` clears the denominator. Backwards, `IsLocalization.lift_mk'_spec` turns
+the cleared equation into a value of the lift; `FormalSpectrum.awayToFractionRing` is a `def`
+wrapping `IsLocalization.lift`, so that lemma has to be pointed at it explicitly before it
+fires. -/
+theorem mem_range_awayToFractionRing_iff (m : R) (hm : m ≠ 0) (x : FractionRing R) :
+    x ∈ Set.range (awayToFractionRing R m hm) ↔
+      ∃ k : ℕ, algebraMap R (FractionRing R) (m ^ k) * x ∈
+        Set.range (algebraMap R (FractionRing R)) := by
+  constructor
+  · rintro ⟨y, rfl⟩
+    obtain ⟨⟨r, s⟩, hy⟩ := IsLocalization.mk'_surjective (Submonoid.powers m) y
+    obtain ⟨k, hk⟩ := s.2
+    refine ⟨k, r, ?_⟩
+    have hspec : algebraMap R (Localization.Away m) (s : R) * y =
+        algebraMap R (Localization.Away m) r := by
+      rw [← show IsLocalization.mk' (Localization.Away m) r s = y from hy]
+      exact IsLocalization.mk'_spec' _ r s
+    have hs : (s : R) = m ^ k := hk.symm
+    have hmap := congrArg (awayToFractionRing R m hm) hspec
+    rw [map_mul, awayToFractionRing_algebraMap, awayToFractionRing_algebraMap, hs] at hmap
+    exact hmap.symm
+  · rintro ⟨k, r, hr⟩
+    refine ⟨IsLocalization.mk' (Localization.Away m) r
+      (⟨m ^ k, ⟨k, rfl⟩⟩ : Submonoid.powers m), ?_⟩
+    rw [show awayToFractionRing R m hm = IsLocalization.lift
+      (M := Submonoid.powers m) (g := algebraMap R (FractionRing R)) _ from rfl,
+      IsLocalization.lift_mk'_spec]
+    change algebraMap R (FractionRing R) r = algebraMap R (FractionRing R) (m ^ k) * x
+    exact hr
+
+/-- **The surjectivity half at the generic point, characterised.** At a domain `R` the half holds
+exactly when every `ℕ`-indexed family in `Frac R` lies inside a single `R[1/m]` with `m ≠ 0`.
+
+Read through `FormalSpectrum.awayCompletionEquivPowerSeriesAway` and
+`FormalSpectrum.atPrimeCompletionEquivFractionPowerSeries`, tied together by
+`FormalSpectrum.atPrimeCompletionEquiv_awayToAtPrimeCompletion`, the comparison map is
+`PowerSeries.map` of `FormalSpectrum.awayToFractionRing R m`, and a power series over `Frac R` is
+an `ℕ`-indexed family in `Frac R`. `PowerSeries.exists_map_eq_iff_forall_coeff_mem_range` is what
+turns *hit by `PowerSeries.map`* into a condition on coefficients. Backwards the `f` is
+`PowerSeries.C m`, whose constant term is `m` definitionally, so no transport is needed for the
+dependent type `PowerSeries (Localization.Away (constantCoeff f))`.
+
+**The quantifier order is the whole content.** `∀ x, ∃ m` is the statement, and the `m` is allowed
+to depend on the family. `∃ m, ∀ x` is strictly stronger and is false at `ℤ`, since it implies
+this one. `∀ x, ∀ n, ∃ m` is strictly weaker and holds at every domain, because a single element
+of `Frac R` is a fraction and its own denominator serves; a characterisation with that order would
+be vacuous. -/
+theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff :
+    (∀ b : AdicCompletion (pointIdeal (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))
+        (Localization.AtPrime (pointPrime (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))),
+      ∃ f, ∃ (hf : constantCoeff f ≠ 0),
+        ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)
+          (fg_powerSeriesXIdeal R)
+          ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) a = b) ↔
+      ∀ x : ℕ → FractionRing R, ∃ m : R, ∃ hm : m ≠ 0,
+        ∀ n, x n ∈ Set.range (awayToFractionRing R m hm) := by
+  constructor
+  · intro h x
+    obtain ⟨f, hf, a, ha⟩ := h
+      ((atPrimeCompletionEquivFractionPowerSeries R).symm (PowerSeries.mk x))
+    have key : PowerSeries.map (awayToFractionRing R (constantCoeff f) hf)
+        (awayCompletionEquivPowerSeriesAway f a) = PowerSeries.mk x := by
+      rw [← atPrimeCompletionEquiv_awayToAtPrimeCompletion R f
+        ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) hf a, ha,
+        RingEquiv.apply_symm_apply]
+    exact ⟨constantCoeff f, hf, fun n =>
+      ⟨PowerSeries.coeff n (awayCompletionEquivPowerSeriesAway f a), by
+        rw [← PowerSeries.coeff_map, key, PowerSeries.coeff_mk]⟩⟩
+  · intro h b
+    obtain ⟨m, hm, hall⟩ := h fun n =>
+      PowerSeries.coeff n (atPrimeCompletionEquivFractionPowerSeries R b)
+    have hcc : constantCoeff (PowerSeries.C m) ≠ 0 := by
+      rw [constantCoeff_C]
+      exact hm
+    obtain ⟨z, hz⟩ := (PowerSeries.exists_map_eq_iff_forall_coeff_mem_range
+      (awayToFractionRing R m hm) (atPrimeCompletionEquivFractionPowerSeries R b)).mpr hall
+    refine ⟨PowerSeries.C m, hcc,
+      (awayCompletionEquivPowerSeriesAway (PowerSeries.C m)).symm z, ?_⟩
+    apply (atPrimeCompletionEquivFractionPowerSeries R).injective
+    rw [atPrimeCompletionEquiv_awayToAtPrimeCompletion R (PowerSeries.C m) _ hcc,
+      RingEquiv.apply_symm_apply]
+    exact hz
+
+/-- **The same characterisation with no localization named at all.** The half holds exactly when
+every `ℕ`-indexed family in `Frac R` has a common denominator up to powers: a single `m ≠ 0` such
+that every member is cleared into `R` by some power of `m`.
+
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff` read through
+`FormalSpectrum.mem_range_awayToFractionRing_iff`. This is the form a consumer wants: its
+right-hand side is elementary arithmetic in `R` and `Frac R` and names neither `Localization.Away`
+nor any completion. The exponent `k` may depend on the index `n`; only `m` is uniform in the
+family, and that uniformity is the content. -/
+theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators :
+    (∀ b : AdicCompletion (pointIdeal (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))
+        (Localization.AtPrime (pointPrime (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))),
+      ∃ f, ∃ (hf : constantCoeff f ≠ 0),
+        ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)
+          (fg_powerSeriesXIdeal R)
+          ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) a = b) ↔
+      ∀ x : ℕ → FractionRing R, ∃ m : R, m ≠ 0 ∧ ∀ n, ∃ k : ℕ,
+        algebraMap R (FractionRing R) (m ^ k) * x n ∈
+          Set.range (algebraMap R (FractionRing R)) := by
+  rw [exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff]
+  constructor
+  · intro h x
+    obtain ⟨m, hm, hall⟩ := h x
+    exact ⟨m, hm, fun n => (mem_range_awayToFractionRing_iff R m hm (x n)).mp (hall n)⟩
+  · intro h x
+    obtain ⟨m, hm, hall⟩ := h x
+    exact ⟨m, hm, fun n => (mem_range_awayToFractionRing_iff R m hm (x n)).mpr (hall n)⟩
+
 end Generic
 
 /-! ### The counterexample at `ℤ` -/
@@ -1158,7 +1322,11 @@ difficulty: not at any one level of the stalk tower, where
 `FormalSpectrum.exists_awayToAtPrimeLevel_eq` says there is never an obstruction, but in the
 passage to the limit, where one `f` must serve every level at once. Read through the two
 identifications the half says every element of `ℚ⟦X⟧` lies in `ℤ[1/m]⟦X⟧` for a single `m ≠ 0`,
-and `FormalSpectrum.unitFractionSeries` does not.
+and `FormalSpectrum.unitFractionSeries` does not. That reading is a theorem —
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff` — and this proof
+goes through it, so all that is left here is the arithmetic
+(`FormalSpectrum.unitFractionSeries_notMem_range`) and the passage from coefficients back to a
+series (`PowerSeries.exists_map_eq_iff_forall_coeff_mem_range`).
 
 This is stated separately from
 `FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint` because it is strictly more
@@ -1172,13 +1340,11 @@ theorem not_surjective_powerSeriesXIntGenericPoint :
           (fg_powerSeriesXIdeal ℤ)
           ((mem_basicOpen_powerSeriesXGenericPoint_iff ℤ f).mpr hf) a = b := by
   intro hsurj
-  obtain ⟨f, hf, a, ha⟩ := hsurj
-    ((atPrimeCompletionEquivFractionPowerSeries ℤ).symm unitFractionSeries)
-  refine unitFractionSeries_notMem_range (constantCoeff f) hf
-    (awayCompletionEquivPowerSeriesAway f a) ?_
-  rw [← atPrimeCompletionEquiv_awayToAtPrimeCompletion ℤ f
-      ((mem_basicOpen_powerSeriesXGenericPoint_iff ℤ f).mpr hf) hf a, ha,
-    RingEquiv.apply_symm_apply]
+  obtain ⟨m, hm, hall⟩ := (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff ℤ).mp
+    hsurj fun n => PowerSeries.coeff n unitFractionSeries
+  obtain ⟨g, hg⟩ := (PowerSeries.exists_map_eq_iff_forall_coeff_mem_range
+    (awayToFractionRing ℤ m hm) unitFractionSeries).mpr hall
+  exact unitFractionSeries_notMem_range m hm g hg
 
 /-- **`FormalSpectrum.IsStalkLimit` is false at `(X) ⊆ ℤ⟦X⟧` at the generic point.**
 
@@ -1297,32 +1463,23 @@ That is exactly what fails over `ℤ`, where the half cannot fail at any single 
 tower (`FormalSpectrum.exists_awayToAtPrimeLevel_eq`) but no single `f` serves the limit. Here the
 non-uniformity has nowhere to hide, because one `f` is chosen before the element is.
 
-The transport is the mirror image of
-`FormalSpectrum.injective_awayToAtPrimeCompletion_powerSeriesXGenericPoint`'s and is cheaper:
-`FormalSpectrum.atPrimeCompletionEquiv_awayToAtPrimeCompletion` is an equation between
-applications, which is the shape wanted here, so nothing has to be lifted to a statement about
-maps. `PowerSeries.constantCoeff (PowerSeries.C ϖ)` is `ϖ` definitionally, so the dependent type
-`PowerSeries (Localization.Away (constantCoeff f))` needs no transport. -/
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff` reduces this to
+surjectivity of `R[1/ϖ] → Frac R`, which is
+`FormalSpectrum.surjective_awayToFractionRing_of_irreducible`. The uniformizer is obtained from
+`IsDiscreteValuationRing.exists_irreducible` **before** the family is introduced, which is what
+the paragraph above is about; the statement itself does not express that, since its `∃ f` sits
+under the `∀ b` the criterion puts there. -/
 theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint
     (b : AdicCompletion (pointIdeal (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))
       (Localization.AtPrime (pointPrime (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)))) :
     ∃ f, ∃ (hf : constantCoeff f ≠ 0),
       ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)
         (fg_powerSeriesXIdeal R)
-        ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) a = b := by
-  obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
-  have hcc : constantCoeff (PowerSeries.C ϖ) ≠ 0 := by
-    rw [constantCoeff_C]
-    exact hϖ.ne_zero
-  obtain ⟨z, hz⟩ := PowerSeries.map_surjective (awayToFractionRing R ϖ hϖ.ne_zero)
-    (surjective_awayToFractionRing_of_irreducible R hϖ)
-    (atPrimeCompletionEquivFractionPowerSeries R b)
-  refine ⟨PowerSeries.C ϖ, hcc,
-    (awayCompletionEquivPowerSeriesAway (PowerSeries.C ϖ)).symm z, ?_⟩
-  apply (atPrimeCompletionEquivFractionPowerSeries R).injective
-  rw [atPrimeCompletionEquiv_awayToAtPrimeCompletion R (PowerSeries.C ϖ) _ hcc,
-    RingEquiv.apply_symm_apply]
-  exact hz
+        ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) a = b :=
+  (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff R).mpr
+    ((IsDiscreteValuationRing.exists_irreducible R).elim fun ϖ hϖ x =>
+      ⟨ϖ, hϖ.ne_zero, fun n =>
+        surjective_awayToFractionRing_of_irreducible R hϖ (x n)⟩) b
 
 /-- **`FormalSpectrum.IsStalkLimit` holds at `(X) ⊆ R⟦X⟧` at the generic point of a discrete
 valuation ring.**
