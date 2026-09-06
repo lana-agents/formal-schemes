@@ -2027,7 +2027,8 @@ removed: no power series, no completion, no localization of `ℤ⟦X⟧`, no adi
 **corollary of `FormalSpectrum.not_hasBoundedDenominators_int`** and not an independent proof —
 the arithmetic is all there, in `FormalSpectrum.unitFractionSeries`, and this only reads it off.
 
-It is the `mpr` half of `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` contraposed,
+It is the reverse half of `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`
+contraposed,
 and it is stated with **no countability hypothesis**, because that half is
 `FormalSpectrum.hasBoundedDenominators_of_surjective` and holds at every domain. `ℤ` does satisfy
 the hypothesis — `Countable (FractionRing ℤ)` by `Localization.countable_of_countable` — so this

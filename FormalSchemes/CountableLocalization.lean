@@ -31,9 +31,9 @@ project-internal duplicate of exactly the kind
 of binders. The existing consumer passes the submonoid explicitly through a `haveI` and is
 unaffected by the promotion.
 
-Mathlib does not have the statement in any form. `Mathlib.Data.Countable.Basic` closes `Countable`
-under products, sums, subtypes and quotients, but nothing under
-`Mathlib.RingTheory.Localization` carries a `Countable` instance: `Countable (FractionRing ℤ)`
+Mathlib does not have the statement in any form. `Mathlib/Data/Countable/Basic.lean` closes
+`Countable` under products, sums, subtypes and quotients, but no file under Mathlib's
+localization directory carries a `Countable` instance: `Countable (FractionRing ℤ)`
 fails to synthesize with `Countable ℤ` in scope, and so does
 `Countable (Localization (nonZeroDivisors ℤ))` — checked separately, since `FractionRing` is an
 `abbrev` for the latter and the two could in principle have been found by different paths.
