@@ -57,6 +57,16 @@ the `σ`-action beyond the invariance already on the tree
 (`AlgebraicGeometry.isActionInvariant_nodeChartAdicHom`). **This is the first point in this cluster
 at which a property of the action has to be supplied**, and supplying it is a different row.
 
+**The condition is stated pointwise and is deliberately not shipped a second time as an equality of
+contracted ideals.** The two spellings do agree — `Ideal.comap` of the two primes along the same
+map are equal exactly when the pointwise condition holds — but that agreement is not a fact about
+this cluster: the general statement
+`Ideal.comap f I = Ideal.comap f J ↔ ∀ a, f a ∈ I ↔ f a ∈ J`, for any ring hom `f`, **is**
+Mathlib's `Submodule.ext_iff`, which proves it as a term with no tactic at all, `Ideal.mem_comap`
+being definitional. So the contracted-ideal form is a notation for the pointwise one, it belongs to
+the `Ideal` API and not to a node-chart module, and stating it here would put a fully general
+triviality where nobody wanting it would look.
+
 ## Main definitions and results
 
 * `AlgebraicGeometry.nodeChartPatchChart_R`, `AlgebraicGeometry.nodeChartPatchChart_I`,
@@ -67,8 +77,6 @@ at which a property of the action has to be supplied**, and supplying it is a di
   its hypothesis repackaged as *the point is what the lift produces at `w`*.
 * `AlgebraicGeometry.forall_isUnit_germ_nodeChartPsi_iff_forall_mem_asIdeal_iff`: **the pattern is
   a trace.**
-* `AlgebraicGeometry.comap_asIdeal_eq_iff_forall_mem_asIdeal_iff`: the same condition as an
-  equality of contracted ideals.
 * `AlgebraicGeometry.forall_mem_asIdeal_iff_of_base_restrictπ_eq`: **same orbit implies same
   trace** — the free direction.
 * `AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff_forall_mem_asIdeal_iff`: **the
@@ -114,9 +122,11 @@ proper in the ambient ring.
 
 A leaf over `FormalSchemes.TateInvNodeChartPatchChartGerm`, which already imports
 `FormalSchemes.TateInvNodeChartBasicOpenPreimage`, so both inputs are reached by one import:
-forward closure **264** project modules besides itself, reverse closure **0**, counted by walking
-every `^import FormalSchemes.` line over the 553 modules under `FormalSchemes/` (a module is not
-counted in its own closure; the aggregator at the repository root is outside the walk).
+forward closure **264** project modules besides itself, reverse closure **1** — the leaf
+`FormalSchemes.TateInvNodeChartSpaceHalfTrace`, which substitutes the restatement below into the
+space half — counted by walking every `^import FormalSchemes.` line over the 554 modules under
+`FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository
+root is outside the walk).
 
 Appending to `FormalSchemes.TateInvNodeChartPatchChartGerm` was the alternative and is cheaper by a
 module. It is not taken for a reason that file states about itself: its *What is not proved here*
@@ -124,8 +134,8 @@ says *"nothing below compares two charts, or a chart with its `σ`-translates"*,
 is doing work — it is what tells a reader of the germ formula that the formula alone decides
 nothing about orbits. Appending would falsify it and the repair would have to be a rewrite rather
 than an addition. Keeping the comparison one module away leaves the sentence true and lets it carry
-a forward pointer instead, which is the only edit this branch makes to that file. Reverse closure
-is 0 either way, so nothing downstream pays for the choice.
+a forward pointer instead. Both closures were 0 when that choice was made, so nothing downstream
+paid for it; the one consumer above arrived afterwards and sits over this file either way.
 
 ## References
 
@@ -346,37 +356,6 @@ theorem forall_isUnit_germ_nodeChartPsi_iff_forall_mem_asIdeal_iff
     exact ((isUnit_germ_nodeChartPsi_nodeChartPatchChartLift_iff R I q hq hI i w g).trans
       (not_iff_not.mpr (h (tateInvNodeChartQuotientRingEquiv R I q hq hI g)))).trans
       (isUnit_germ_nodeChartPsi_nodeChartPatchChartLift_iff R I q hq hI j w' g).symm
-
-/-- **The same condition as an equality of contracted ideals.** *Same trace* is
-`Ideal.comap` along the away subring's inclusion followed by the quotient map, so the pointwise
-form above is `Ideal.ext`.
-
-Both spellings are shipped because they are wanted in different places: the pointwise one is what
-the germ formula produces and what
-`AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff_forall_mem_asIdeal_iff` is stated with,
-and this one is what makes the condition a statement about the two primes and nothing else. -/
-theorem comap_asIdeal_eq_iff_forall_mem_asIdeal_iff
-    (w w' : FormalSpectrum (awayCompletionIdeal (annulusIdealOfDefinition R I q)
-      (annulusNodeChartCoord R I q))) :
-    w.asIdeal.comap ((Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
-          (annulusNodeChartCoord R I q))).comp
-        (tateInvNodeChartAwaySubring R I q hq hI).subtype)
-        = w'.asIdeal.comap ((Ideal.Quotient.mk (awayCompletionIdeal
-            (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q))).comp
-          (tateInvNodeChartAwaySubring R I q hq hI).subtype) ↔
-      ∀ a : tateInvNodeChartAwaySubring R I q hq hI,
-        (Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
-            (annulusNodeChartCoord R I q)) (a : awayCompletion (annulusIdealOfDefinition R I q)
-              (annulusNodeChartCoord R I q)) ∈ w.asIdeal ↔
-          Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
-            (annulusNodeChartCoord R I q)) (a : awayCompletion (annulusIdealOfDefinition R I q)
-              (annulusNodeChartCoord R I q)) ∈ w'.asIdeal) :=
-  ⟨fun h a => by
-    simpa only [Ideal.mem_comap, RingHom.coe_comp, Function.comp_apply, Subring.coe_subtype]
-      using Iff.of_eq (congrArg (a ∈ ·) h),
-   fun h => Ideal.ext fun a => by
-    simpa only [Ideal.mem_comap, RingHom.coe_comp, Function.comp_apply, Subring.coe_subtype]
-      using h a⟩
 
 /-! ### The injectivity clause, with no germ and no chart -/
 
