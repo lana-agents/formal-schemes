@@ -533,8 +533,7 @@ then makes the image open. Nothing about proper discontinuity or freeness enters
 Beside `AlgebraicGeometry.LocallyRingedSpace.base_surjective_restrictπ`
 (`FormalSchemes.ActionQuotientRestrict`) this says the base map is an **open surjection**. That is
 the hypothesis under which openness of a composite `g ∘ (restrictπ π V).base` is *equivalent* to
-openness of `g` — `IsOpenMap.comp` one way and `IsOpenMap.of_comp_of_surjective`
-(`FormalSchemes.TopCatIsoOpenMap`) the other. -/
+openness of `g` — `IsOpenMap.comp` one way and Mathlib's `IsOpenMap.of_comp` the other. -/
 theorem isOpenMap_base_restrictπ (h : IsActionQuotient a π) (V : Opens Q.toTopCat) :
     IsOpenMap ⇑(ConcreteCategory.hom (restrictπ π V).base) :=
   isOpenMap_base_of_isActionQuotient (isActionQuotient_restrictπ h V)

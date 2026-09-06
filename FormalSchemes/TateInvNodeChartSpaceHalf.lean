@@ -28,8 +28,7 @@ projection and `AlgebraicGeometry.nodeChartQuotientHom`. That projection's base 
 action). Along an open surjection both remaining clauses transfer, in both directions:
 
 * surjectivity, because the range of a map equals the range of its composite with a surjection;
-* openness, by `IsOpenMap.comp` one way and `IsOpenMap.of_comp_of_surjective`
-  (`FormalSchemes.TopCatIsoOpenMap`) the other.
+* openness, by `IsOpenMap.comp` one way and Mathlib's `IsOpenMap.of_comp` the other.
 
 So `AlgebraicGeometry.surjective_base_nodeChartQuotientHom_iff` and
 `AlgebraicGeometry.isOpenMap_base_nodeChartQuotientHom_iff` put both clauses on
@@ -158,7 +157,7 @@ theorem surjective_base_nodeChartQuotientHom_iff :
 The restricted projection's base map is an **open surjection** —
 `AlgebraicGeometry.LocallyRingedSpace.isOpenMap_base_restrictπ` and
 `AlgebraicGeometry.LocallyRingedSpace.base_surjective_restrictπ` — so `IsOpenMap.comp` gives one
-direction and `IsOpenMap.of_comp_of_surjective` (`FormalSchemes.TopCatIsoOpenMap`) the other.
+direction and Mathlib's `IsOpenMap.of_comp` the other.
 
 Unlike the surjectivity clause this genuinely needs the projection to be open, which is why that
 lemma had to be added; openness of a composite says nothing about a factor along a bare
@@ -183,7 +182,7 @@ theorem isOpenMap_base_nodeChartQuotientHom_iff :
     rw [hfac]
     exact h.comp hopen
   · intro h
-    exact IsOpenMap.of_comp_of_surjective (by fun_prop) hsurj (hfac ▸ h)
+    exact IsOpenMap.of_comp (by fun_prop) hsurj (hfac ▸ h)
 
 /-! ### The space half, assembled -/
 
