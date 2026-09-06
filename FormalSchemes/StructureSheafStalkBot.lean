@@ -78,7 +78,7 @@ carries both hypotheses.
 
 ## Placement
 
-A leaf over `FormalSchemes.StructureSheafStalkComparison` and
+Over `FormalSchemes.StructureSheafStalkComparison` and
 `FormalSchemes.AwayCompletionRestrict`: forward closure **39**, reverse closure **7** —
 `FormalSchemes.StructureSheafStalkNilpotent`, which widens the value below to every nilpotent
 ideal of definition and reuses the general-`I` lemmas here rather than reproving them, and the six
