@@ -114,7 +114,7 @@ criteria on their own still do not meet: **the sufficient one is not known to be
 general domain**, and the obstruction is that the condition only ever sees *countable* families,
 so a domain whose fraction field needs uncountably many denominator types is not ruled out by
 anything here. None of the obvious guesses about semilocal, Prüfer or valuation domains is checked
-anywhere, here or downstream. A Dedekind domain is not a corollary of the classification either —
+anywhere below. A Dedekind domain is not a corollary of the classification either —
 it is a statement about **ideals**, and a nonprincipal maximal ideal contributes no prime element at
 all — and that is exactly why it takes a *second* refuting criterion, stated at prime ideals, which
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` supplies:

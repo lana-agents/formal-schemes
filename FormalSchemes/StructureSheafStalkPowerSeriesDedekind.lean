@@ -43,9 +43,19 @@ family of inverses `n ↦ (s n)⁻¹` and land on `m ^ k = r * s n` back in `R`.
   `Ideal.mul_mem_left` from `s n ∈ P n`, and finishes with `Ideal.IsPrime.mem_of_pow_mem`.
 
 **That is the step a nonprincipal maximal ideal makes impossible in the element version and trivial
-here**, and it is the whole content of the generalisation. Neither criterion implies the other: the
-element version's hypothesis is about divisibility by a single `m` and asks for no witnesses, while
-this one asks for a nonzero element of each ideal and no arithmetic at all.
+here**, and it is the whole content of the generalisation. **The implication between the two
+criteria therefore runs one way, and it is the way the word says.** The ideal criterion gives the
+element one back, at `P n := Ideal.span {p n}` with `s n := p n`: `Ideal.span_singleton_prime`
+makes the span prime, `p n` is its own nonzero witness, and `Ideal.mem_span_singleton` turns *no
+`m` is divisible by the whole family* into *no `m` lies in every `P n`*. That derivation is
+written out as an `example` beside that criterion rather than asserted here, at the same
+generality and with no extra hypothesis. **The converse fails for the reason this file exists**:
+a nonprincipal maximal ideal is not the span of a prime element, so a family containing one is out
+of the element criterion's reach.
+
+`FormalSpectrum.not_hasBoundedDenominators_of_primes` is kept as it stands and is not restated as
+a corollary, on the precedent its own neighbour sets — *both forms are shipped rather than one* —
+because a caller holding prime elements should not have to build spans to use them.
 
 **The refutation uses no integral closedness.**
 `FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals` assumes only
@@ -228,12 +238,32 @@ theorem not_hasBoundedDenominators_of_primeIdeals (P : ℕ → Ideal R) (hP : �
   have hmk : m ^ k = r * s n := IsFractionRing.injective R (FractionRing R) hfrac
   exact (hP n).mem_of_pow_mem k (hmk ▸ Ideal.mul_mem_left _ r (hs n))
 
+/-- **The ideal criterion gives the element one back**, which is what makes the word
+*generalisation* above a checked statement rather than an assertion.
+
+`Ideal.span {p n}` is prime by `Ideal.span_singleton_prime`, `p n` is a nonzero element of it by
+`Ideal.mem_span_singleton_self` and `Prime.ne_zero`, and `Ideal.mem_span_singleton` turns the
+element version's *no `m` is divisible by the whole family* into the covering hypothesis. Same
+generality, no extra hypothesis.
+
+An `example` rather than a theorem: `FormalSpectrum.not_hasBoundedDenominators_of_primes` is on
+the tree already and stays there, for the reason its own neighbour gives — both forms are wanted
+in different places, and a caller holding prime elements should not have to build spans. The
+converse implication fails, and fails for the reason this file exists: a nonprincipal maximal
+ideal is not the span of a prime element. -/
+example (p : ℕ → R) (hp : ∀ n, Prime (p n)) (hdvd : ∀ m : R, m ≠ 0 → ∃ n, ¬ p n ∣ m) :
+    ¬ HasBoundedDenominators R :=
+  not_hasBoundedDenominators_of_primeIdeals R (fun n => Ideal.span {p n})
+    (fun n => (Ideal.span_singleton_prime (hp n).ne_zero).mpr (hp n))
+    p (fun _ => Ideal.mem_span_singleton_self _) (fun n => (hp n).ne_zero)
+    (fun m hm => (hdvd m hm).imp fun _ hn => fun hmem => hn (Ideal.mem_span_singleton.mp hmem))
+
 /-- **Infinitely many nonzero primes refutes the denominator condition**, at a Noetherian domain of
 dimension at most one.
 
 `Set.Infinite.natEmbedding` turns the infinite set of nonzero primes into an injective `ℕ`-indexed
-family of them, `Submodule.exists_mem_ne_zero_of_ne_bot` supplies a nonzero element of each, and the
-criterion above consumes both.
+family of them, `Submodule.exists_mem_ne_zero_of_ne_bot` supplies a nonzero element of each, and
+`FormalSpectrum.not_hasBoundedDenominators_of_primeIdeals` consumes both.
 
 **The covering hypothesis is where `FormalSpectrum.finite_setOf_isPrime_mem` is spent, and it is not
 "pick a prime avoiding `m`".** The prime that lemma produces need not lie in the range of the
