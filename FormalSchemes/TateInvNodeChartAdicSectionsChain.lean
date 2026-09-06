@@ -46,7 +46,7 @@ into the `hX` slot of `AlgebraicGeometry.exists_formalScheme_of_adicSections`, u
 own `letI`/`haveI` packaging, so the reduction is checked against the consumer and not only against
 itself.
 
-## The map the bound is taken along, and where it is not yet computed
+## The map the bound is taken along, and where it is computed
 
 The right-hand side's ring homomorphism is
 
@@ -55,8 +55,12 @@ tateInvNodeChartAwaySubring  --(tateInvNodeChartQuotientRingEquiv).symm-->  Γ (
    --(actionQuotientπ …).c.app V₀-->  Γ (T_inv, π⁻¹ V₀)  --d.opensSectionsHom-->  d.R
 ```
 
-and **this file does not compute it at any chart.** That is the residue, and it is worth being
-precise about what is known:
+and **this file does not compute it at any chart.** That was the residue when this file was
+written; `AlgebraicGeometry.theta_nodeChartPatchChart`
+(`FormalSchemes.TateInvNodeChartPatchChartAdic`) has since evaluated it, at the patch-`i`
+basic-open chart and at **every** index `i`, and the answer is the subring inclusion — so
+hypothesis 1 is closed (`AlgebraicGeometry.adicSectionsLocallyFG_nodeChartPsi`). What follows is
+the anatomy of that composite, kept because it is what the evaluation is an evaluation *of*:
 
 * the middle map, followed by restriction to the patch at index `0`, is
   `AlgebraicGeometry.tateInvChartSectionHom` (`FormalSchemes.TateInvQuotientChartRing`), out of
@@ -67,16 +71,20 @@ precise about what is known:
   `FormalSpectrum.awayCompletion`, whose contraction of
   `FormalSpectrum.awayCompletionIdeal` is `AlgebraicGeometry.tateInvNodeChartAwayIdeal` **by
   definition**;
-* the saturated locus is not inside one patch, so the other points need the translate of that
-  computation, and nothing on the tree performs it;
+* the saturated locus is not inside one patch, so the other points looked as though they needed a
+  translate of that computation. They do not: every patch sees `π^* t` as the *same* section
+  (`AlgebraicGeometry.map_eqToHom_c_app_tateChainInvι_actionQuotientπ`), because the projection
+  coequalises the action, so the index never enters the answer and no translation argument is
+  performed anywhere;
 * `AlgebraicGeometry.LocallyRingedSpace.sectionsMapOfRangeSubset_comp_opens`
   (`FormalSchemes.AdicSectionsRestrictOpen`) is the shape that computation takes — a chart of a
   glued object factors through a patch inclusion whose own range is *not* inside the open, so the
   plain functoriality lemma does not apply to it.
 
-**None of this is a proof and none of it is claimed as one.** In particular the second bullet is
-where a witness would have to do work that nothing here does, and the first is an expectation about
-a composite that has not been evaluated.
+**None of this is a proof and none of it is claimed as one**, and in particular none of it is
+where hypothesis 1 was closed: that is
+`AlgebraicGeometry.theta_nodeChartPatchChart` and nothing below. The first bullet was written as an
+expectation about a composite that had not been evaluated, and the evaluation confirmed it.
 
 ## The contraction, which is not the obstruction it was billed as
 
@@ -89,8 +97,10 @@ statement about `I` alone. The reduction above shows the reading is the wrong wa
 is a containment `tateInvNodeChartAwayIdeal ≤ d.I.comap (…)`, so a factorisation of the map through
 the *ambient* `A{1/(x + y − 1)}` would discharge it from the ambient's own ideal of definition, and
 the contraction is exactly what makes such a factorisation sufficient rather than insufficient.
-**Whether the map so factors is the open question**, and it is a different one from the one the
-contraction was thought to pose.
+Whether the map so factors was then the open question, and it is a different one from the one the
+contraction was thought to pose. It is now settled affirmatively by
+`AlgebraicGeometry.theta_nodeChartPatchChart`; **what remains open is hypothesis 4**, and nothing
+here or downstream of it decides that.
 
 ## Main definitions and results
 

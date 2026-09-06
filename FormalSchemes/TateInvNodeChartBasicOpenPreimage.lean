@@ -75,12 +75,18 @@ hypothesis 4 is that condition at a *named* morphism, so it is a priori strictly
 **Hypothesis 4 is still undecided in both directions.** No `g` is exhibited at which a clause
 fails, and no argument that none exists is given.
 
-**A description of a preimage is not a description of the base map on points.** Nothing below
-produces a formula for `(nodeChartAdicHom …).base x` at a point of the chain, and nothing computes
-which prime of the node chart's ring it is. What is produced is a name for the preimage of each
-member of a basis of the target, plus the two consequences that a basis affords: the fibres
-(`AlgebraicGeometry.base_nodeChartQuotientHom_restrictπ_eq_iff`) and which basic opens meet the
-image (`AlgebraicGeometry.exists_mem_preimage_basicOpen_nodeChartQuotientHom_iff`).
+**A description of a preimage is not by itself a description of the base map on points.** Nothing
+below produces a formula for `(nodeChartAdicHom …).base x` at a point of the chain, and nothing
+below computes which prime of the node chart's ring it is. What is produced is a name for the
+preimage of each member of a basis of the target, plus the two consequences that a basis affords:
+the fibres (`AlgebraicGeometry.base_nodeChartQuotientHom_restrictπ_eq_iff`) and which basic opens
+meet the image (`AlgebraicGeometry.exists_mem_preimage_basicOpen_nodeChartQuotientHom_iff`).
+
+That is a statement about this file and not about the tree: the missing ingredient is an evaluation
+of the germ, and `FormalSchemes.TateInvNodeChartPatchChartGerm` supplies one on every patch chart
+(`AlgebraicGeometry.isUnit_germ_nodeChartPsi_iff`), from which the image point *is* determined
+(`AlgebraicGeometry.eq_base_nodeChartAdicHom_nodeChartPatchChartLift`). What stays true here is the
+structural half: preimages of a basis of the target, on their own, do not determine a base map.
 
 **The space half is not decided, and of its clauses this file reaches only injectivity.**
 `IsIso …base` needs the base map to be bijective *and* open. Preimages of a basis of the **target**
@@ -96,10 +102,13 @@ Those two clauses are reached by a different route, and not by a handle on preim
 `AlgebraicGeometry.nodeChartAdicHom`, because that projection's base map is an open surjection.
 **Neither is decided there either**, and the space half stays open.
 
-**No germ is computed.** Every statement below trades one undecided condition for another; each
-right-hand side asks whether `AlgebraicGeometry.nodeChartPsi g` is invertible at a point of the
-chain, and no such question is answered at any `g`. In particular no property of the node locus,
-the annulus algebras or the `σ`-action is used or established.
+**No germ is computed below.** Every statement in this file trades one undecided condition for
+another; each right-hand side asks whether `AlgebraicGeometry.nodeChartPsi g` is invertible at a
+point of the chain, and no such question is answered here at any `g`. In particular no property of
+the node locus, the annulus algebras or the `σ`-action is used or established in this file. The
+evaluation itself is `AlgebraicGeometry.isUnit_germ_nodeChartPsi_iff`
+(`FormalSchemes.TateInvNodeChartPatchChartGerm`), which does use all three; it decides no clause of
+hypothesis 4 either.
 
 **`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.chart` is still a `Classical.choice`**, and
 every other consumer of it is untouched. `AlgebraicGeometry.nodeChartAdicHom` is still built from
