@@ -429,6 +429,7 @@ import FormalSchemes.TateInvNodeChartQuotientOpen
 import FormalSchemes.TateInvNodeChartQuotientSpf
 import FormalSchemes.TateInvNodeChartRestrictedQuotient
 import FormalSchemes.TateInvNodeChartRing
+import FormalSchemes.TateInvNodeChartSpaceHalf
 import FormalSchemes.TateInvNodeChartSpf
 import FormalSchemes.TateInvNodeChartSpfFamily
 import FormalSchemes.TateInvNodeChartSpfNonempty
@@ -526,6 +527,7 @@ import FormalSchemes.ThreeChartCoverToBase
 import FormalSchemes.ThreeChartCoverTopFiniteType
 import FormalSchemes.ThreeChartCoverTransitions
 import FormalSchemes.ThreeChartDatum
+import FormalSchemes.TopCatIsoOpenMap
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeAffineLocal
 import FormalSchemes.TopFiniteTypeBaseChange

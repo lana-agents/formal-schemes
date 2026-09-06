@@ -115,15 +115,21 @@ contraction was thought to pose.
 
 **`hnode` is undecided, in both directions, and nothing here moves it.** Scoring the residue of
 `AlgebraicGeometry.exists_formalScheme_of_adicSections` as it stands after this file, its
-hypothesis is one `∃` bundling three things and **all three are open**:
+hypothesis is one `∃` bundling three things, of which **the first and the last are open**:
 
 1. `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` at `AlgebraicGeometry.nodeChartPsi` —
    restated here, **not decided here**. What changed is the spelling: it is now an inequality of
    ideals in a chart ring of the chain, and it is an equivalence, so either answer to it is an
    answer to this hypothesis.
 3. Invariance of `AlgebraicGeometry.nodeChartAdicHom` under
-   `AlgebraicGeometry.tateInvNodeChartRestrictedAction` — untouched, and not attempted anywhere.
-4. `IsIso` of the descended morphism — untouched, and not attempted anywhere.
+   `AlgebraicGeometry.tateInvNodeChartRestrictedAction` — **not open**: it holds at any witness,
+   by `AlgebraicGeometry.isActionInvariant_nodeChartAdicHom`
+   (`FormalSchemes.TateInvNodeChartInvariant`). Nothing here contributes to it.
+4. `IsIso` of the descended morphism — **open**, and untouched here. It is taken apart without
+   being decided by `FormalSchemes.TateInvNodeChartDescentIso`,
+   `FormalSchemes.TateInvNodeChartDescentBasicOpen`,
+   `FormalSchemes.TateInvNodeChartBasicOpenPreimage` and
+   `FormalSchemes.TateInvNodeChartSpaceHalf`.
 
 The cluster's hypothesis 2, `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.OverlapAdic`, is
 **not** among them and the numbering above skips it deliberately: it holds for every witness of 1
@@ -133,7 +139,7 @@ records the *merge* question about pair witnesses as open.
 
 **Even a witness of the first would not move `hnode`.** The chain back runs through
 `AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens`, which is
-one-way, and 3 and 4 would both still be open. Nothing here should be read as evidence for or
+one-way, and 4 would still be open. Nothing here should be read as evidence for or
 against the node chart existing.
 
 **No chart of the chain inside the saturated locus is exhibited**, with or without the bound. The
