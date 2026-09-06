@@ -65,7 +65,9 @@ one genuinely new piece of bookkeeping in this file.
 * `AlgebraicGeometry.LocallyRingedSpace.exists_c_app_restrictπ_eq_iff_isInvariantSection`: the
   sections description of the restricted projection, phrased on `X|_{π ⁻¹ V}` and on invariance
   under the restricted action — the form the comparison consumes, and the form a successor working
-  inside the restriction wants.
+  inside the restriction wants. `..._isInvariantSection'` is the same statement with the open given
+  as an open of `Q|_V` rather than as a `W ≤ V` of `Q`, which is the form produced by a morphism
+  out of `Q|_V`.
 * `AlgebraicGeometry.LocallyRingedSpace.exists_le_preimage_eq`: every open of `Q|_V` is the
   preimage of an open of `Q` contained in `V`, which is what lets the `W ≤ V` statements of
   `FormalSchemes.ActionQuotientRestrictSections` be applied at an arbitrary open of the
@@ -412,6 +414,23 @@ theorem exists_c_app_restrictπ_eq_iff_isInvariantSection (h : IsActionQuotient 
     (isInvariantSection_ofRestrict_c_app_iff (isInvariantOpen_preimage h.isInvariant V)
       (isInvariantOpen_preimage h.isInvariant W) (fun x hx => hWV hx) s)).trans
     (isInvariantSection_iff_forall (isInvariantOpen_preimage h.isInvariant W) s)).symm
+
+/-- **The same description at an arbitrary open of the restriction.**
+`AlgebraicGeometry.LocallyRingedSpace.exists_c_app_restrictπ_eq_iff_isInvariantSection` is stated
+at an open `W ≤ V` of `Q` and reads its preimage; this is the same statement with the open of
+`Q|_V` given directly, which is the form a morphism *out of* `Q|_V` produces — its comparison maps
+are indexed by the opens of its target, pulled back into `Q|_V`, and there is no `W` in sight.
+
+`AlgebraicGeometry.LocallyRingedSpace.exists_le_preimage_eq` supplies the `W`, and substituting it
+leaves nothing to transport: the section `t` is retyped by the substitution itself (issue 1752). -/
+theorem exists_c_app_restrictπ_eq_iff_isInvariantSection' (h : IsActionQuotient a π)
+    (V : Opens Q.toTopCat) (O : Opens (Q.restrict V.isOpenEmbedding).toTopCat)
+    (t : ToType ((X.restrict ((Opens.map π.base).obj V).isOpenEmbedding).presheaf.obj
+      (op ((Opens.map (restrictπ π V).base).obj O)))) :
+    (∃ r, ((restrictπ π V).c.app (op O)) r = t) ↔
+      IsInvariantSection (restrictAction a _ (isInvariantOpen_preimage h.isInvariant V)) t := by
+  obtain ⟨W, hWV, rfl⟩ := exists_le_preimage_eq Q V O
+  exact exists_c_app_restrictπ_eq_iff_isInvariantSection h V W hWV t
 
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
