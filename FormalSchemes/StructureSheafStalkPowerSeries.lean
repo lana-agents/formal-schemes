@@ -45,6 +45,24 @@ a criterion that has nothing to do with power series:
 element outside `FormalSpectrum.pointPrime I x` is a unit of `R` — that is, at the closed point of
 a local ring (`FormalSpectrum.isStalkLimit_of_pointPrime_eq_maximalIdeal`).
 
+**And a value at the closed point of `Spf (R⟦X⟧, (X))` for every local `R`.** That criterion is
+stated at an arbitrary finitely generated ideal of definition and it now has a consumer at `(X)`:
+`FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint`, with no domain, factorisation, countability
+or Noetherian hypothesis. All of the work is `FormalSpectrum.pointPrime_powerSeriesX`, which
+computes the prime of `R⟦X⟧` under *any* point of this space as a `PowerSeries.constantCoeff`
+preimage, and `FormalSpectrum.maximalIdeal_powerSeries`, which reads that preimage at the closed
+point back as the maximal ideal of `R⟦X⟧`.
+
+**It is the first point at which the predicate is decided in a space with more than one point.**
+The field value is at every point of a one-point space, and the generic-point cluster downstream
+is at a point that is not closed and answers differently for different `R`. As soon as `R` is a
+local **domain** that is not a field, `Spf (R⟦X⟧, (X))` carries
+`FormalSpectrum.powerSeriesXClosedPoint` and a separate generic point, settled by different
+arguments under different hypotheses. **That is not a claim that the predicate ever disagrees at
+the two**; see
+`FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint` for why no witness to that is exhibited here
+or anywhere on this tree.
+
 ## Which difficulty this value faces, and which it does not
 
 **The filtration does not reach `⊥`, and that is new.** At `⊥` the stalk tower is constant from
@@ -94,8 +112,10 @@ out below and no declaration below asserts it**; it is carried out in
 `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, where
 `FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint` confirms the expectation and refutes
 `FormalSpectrum.IsStalkLimit` at that point. It is a statement about a *non-closed* point, so it is
-consistent with everything this file proves — in particular
-`FormalSpectrum.isStalkLimit_powerSeriesX_field` is untouched by it.
+consistent with everything this file proves — in particular neither
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` nor
+`FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint` is touched by it, and `ℤ` is not local, so
+the latter says nothing at that ring at all.
 
 **Nothing under a Noetherian hypothesis.** `Ideal.FG` of the ideal of definition is the only
 finiteness assumption, and it is inherited from the criteria being applied; `Ideal.span {X}` is
@@ -135,10 +155,17 @@ worth re-costing.
   its basic opens — the ones both halves of the criterion quantify over — are those of `Spec R`.
 * `FormalSpectrum.not_isNilpotent_powerSeriesXIdeal`: the target is outside the regime of the two
   existing values.
+* `FormalSpectrum.pointPrime_powerSeriesX`: **the prime of `R⟦X⟧` under any point of
+  `Spf (R⟦X⟧, (X))` is the `PowerSeries.constantCoeff` preimage of the prime it lies over**, at an
+  arbitrary commutative ring. The general form of two computations that predate it.
 * `FormalSpectrum.isStalkLimit_powerSeriesX_iff`: **the criterion at `(X) ⊆ R⟦X⟧`, with both
   instance hypotheses discharged.**
+* `FormalSpectrum.maximalIdeal_powerSeries`, `FormalSpectrum.powerSeriesXClosedPoint`,
+  `FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint`: **the value at the closed point**, for
+  every local `R`, and the maximal ideal of `R⟦X⟧` it is read through.
 * `FormalSpectrum.isStalkLimit_powerSeriesX_field`: **the value**, at every point of
-  `Spf (k⟦X⟧, (X))` for `k` a field.
+  `Spf (k⟦X⟧, (X))` for `k` a field — the case of the previous bullet in which the space has a
+  single point.
 
 ## References
 
@@ -360,6 +387,36 @@ theorem mem_basicOpen_powerSeriesX_iff (x : FormalSpectrum (powerSeriesXIdeal R)
       PowerSeries.C (constantCoeff f) ∉ pointPrime (powerSeriesXIdeal R) x := by
   rw [basicOpen_powerSeriesX_eq_constantCoeff, mem_basicOpen_iff_notMem_pointPrime]
 
+/-- **The prime of `R⟦X⟧` under a point of `Spf (R⟦X⟧, (X))` is the `PowerSeries.constantCoeff`
+preimage of the prime of `R` the point lies over.** Together with
+`FormalSpectrum.powerSeriesXHomeo`, which identifies the space with `Spec R`, this says that the
+points of `Spf (R⟦X⟧, (X))` are exactly the primes of `R⟦X⟧` of the form `constantCoeff ⁻¹ p`.
+
+`FormalSpectrum.pointPrime` is a contraction along `Ideal.Quotient.mk (X)` by definition and
+`FormalSpectrum.powerSeriesXHomeo` is a contraction along the inverse of
+`FormalSpectrum.powerSeriesXQuotientEquiv`, so both sides are contractions of the same ideal of
+`R⟦X⟧ ⧸ (X)`; the two ring maps agree because the equivalence sends `Ideal.Quotient.mk (X) f` to
+`PowerSeries.constantCoeff f`. They are equal and not *definitionally* equal — the composite
+reduces to `Ideal.Quotient.mk (X)` only through `RingEquiv.symm_apply_apply` — which is why the
+proof ends in `RingHom.ext` rather than `rfl`.
+
+**This is the general form of two computations that predate it**, and it explains why they could
+not share a proof: `FormalSpectrum.pointPrime_powerSeriesXIdeal` is this at the unique point of
+`Spec k` for `k` a field, and `FormalSpectrum.pointPrime_powerSeriesXGenericPoint` is this at `⊥`,
+where the contraction of `⊥` is `RingHom.ker constantCoeff`, which is `(X)`. Neither is restated
+or reproved here. -/
+theorem pointPrime_powerSeriesX (x : FormalSpectrum (powerSeriesXIdeal R)) :
+    pointPrime (powerSeriesXIdeal R) x =
+      Ideal.comap (constantCoeff (R := R)) (powerSeriesXHomeo R x).asIdeal := by
+  have hdef : pointPrime (powerSeriesXIdeal R) x =
+      (x.asIdeal).comap (Ideal.Quotient.mk (powerSeriesXIdeal R)) := rfl
+  have hhomeo : (powerSeriesXHomeo R x).asIdeal =
+      (x.asIdeal).comap (powerSeriesXQuotientEquiv R).symm.toRingHom := rfl
+  rw [hdef, hhomeo, Ideal.comap_comap]
+  congr 1
+  exact RingHom.ext fun f =>
+    ((powerSeriesXQuotientEquiv R).symm_apply_apply (Ideal.Quotient.mk _ f)).symm
+
 /-- **No power of `(X)` is `⊥`**, as soon as `R` is nontrivial: the coefficient of `X ^ k` in
 `X ^ k` is `1`. -/
 theorem pow_powerSeriesXIdeal_ne_bot [Nontrivial R] (k : ℕ) : powerSeriesXIdeal R ^ k ≠ ⊥ := by
@@ -422,6 +479,105 @@ theorem isStalkLimit_powerSeriesX_iff (x : FormalSpectrum (powerSeriesXIdeal R))
 
 end PowerSeriesX
 
+/-! ### The value at the closed point, at `(X) ⊆ R⟦X⟧` for `R` local
+
+`FormalSpectrum.isStalkLimit_of_pointPrime_eq_maximalIdeal` above is a criterion at the closed
+point of a local ring at an arbitrary finitely generated ideal of definition, and until now it had
+no consumer at `(X)`. Supplying one costs exactly the computation of
+`FormalSpectrum.pointPrime` at the point, which is `FormalSpectrum.pointPrime_powerSeriesX`
+followed by the description of the maximal ideal of `R⟦X⟧`.
+
+The section is placed before the field section rather than after it because the file runs in
+decreasing generality — arbitrary `R`, then local `R`, then a field — and the field value is the
+special case of this one in which the space has a single point.
+-/
+
+section LocalRing
+
+variable (R : Type u) [CommRing R]
+
+/-- **The maximal ideal of `R⟦X⟧` for `R` local is the `PowerSeries.constantCoeff` preimage of the
+maximal ideal of `R`.** Both sides are the non-units, and a power series is a unit exactly when its
+constant term is (`PowerSeries.isUnit_iff_constantCoeff`).
+
+Mathlib has `PowerSeries.maximalIdeal_eq_span_X`, but only over a **field**, where the right-hand
+side collapses to `(X)`; the statement at a general local ring is absent there and absent from this
+tree. It specialises correctly: over a field the maximal ideal of `R` is `⊥`, its preimage is
+`RingHom.ker constantCoeff`, and that is `(X)` by
+`FormalSpectrum.powerSeriesXIdeal_eq_ker`. -/
+theorem maximalIdeal_powerSeries [IsLocalRing R] :
+    IsLocalRing.maximalIdeal (PowerSeries R) =
+      Ideal.comap (constantCoeff (R := R)) (IsLocalRing.maximalIdeal R) := by
+  ext f
+  rw [Ideal.mem_comap, IsLocalRing.mem_maximalIdeal, IsLocalRing.mem_maximalIdeal,
+    mem_nonunits_iff, mem_nonunits_iff, isUnit_iff_constantCoeff]
+
+/-- **The closed point of `Spf (R⟦X⟧, (X))` for `R` local**, as the point of the formal spectrum
+lying over the closed point of `Spec R` under `FormalSpectrum.powerSeriesXHomeo`.
+
+Named for the same reason `FormalSpectrum.powerSeriesXGenericPoint` is, and in the same shape: the
+two are the points of this space at which `FormalSpectrum.IsStalkLimit` is decided, and they are
+different points as soon as `R` is a local **domain** that is not a field — the generic point is
+defined only at a domain, since it is the point over `⊥`. -/
+def powerSeriesXClosedPoint [IsLocalRing R] : FormalSpectrum (powerSeriesXIdeal R) :=
+  (powerSeriesXHomeo R).symm (IsLocalRing.closedPoint R)
+
+/-- **The prime of `R⟦X⟧` under the closed point is the maximal ideal of `R⟦X⟧`**, which is the
+hypothesis `FormalSpectrum.isStalkLimit_of_pointPrime_eq_maximalIdeal` asks for.
+
+`FormalSpectrum.pointPrime_powerSeriesX` at this point gives the `PowerSeries.constantCoeff`
+preimage of `(IsLocalRing.closedPoint R).asIdeal`, which is the maximal ideal of `R` by definition
+of `IsLocalRing.closedPoint`; `FormalSpectrum.maximalIdeal_powerSeries` reads that preimage back as
+the maximal ideal of `R⟦X⟧`. -/
+theorem pointPrime_powerSeriesXClosedPoint [IsLocalRing R] :
+    pointPrime (powerSeriesXIdeal R) (powerSeriesXClosedPoint R) =
+      IsLocalRing.maximalIdeal (PowerSeries R) := by
+  rw [powerSeriesXClosedPoint, pointPrime_powerSeriesX, Homeomorph.apply_symm_apply,
+    maximalIdeal_powerSeries]
+  rfl
+
+/-- **`FormalSpectrum.IsStalkLimit` holds at the closed point of `Spf (R⟦X⟧, (X))`, for every local
+ring `R`** — no domain, factorisation, countability or Noetherian hypothesis.
+
+It is `FormalSpectrum.isStalkLimit_of_pointPrime_eq_maximalIdeal` at
+`FormalSpectrum.pointPrime_powerSeriesXClosedPoint`, and nothing else: the criterion was written
+for exactly this and the whole of the work is the computation of the prime under the point.
+
+**This is the first value of the predicate at one point of a formal spectrum whose other points it
+does not settle.** `FormalSpectrum.isStalkLimit_powerSeriesX_field` is a value at every point of a
+space with one point; the generic-point cluster in
+`FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` is at a point that is *not* closed and
+its answer depends on `R`. Here the hypothesis is on `R` alone and the answer is unconditionally
+yes, so as soon as `R` is a local **domain** that is not a field — the generic point needs a
+domain, being the point over `⊥`, and it is distinct from the closed point exactly when the maximal
+ideal is not `⊥` — this space carries a decided closed point and a separate generic point.
+
+**No claim that the predicate varies across this space is made here.** That would need a local ring
+at whose generic point the predicate *fails*, i.e. a local domain failing the denominator condition
+of `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, and no such ring appears anywhere
+on this tree — a discrete valuation ring is not one, since it satisfies that condition and the
+predicate holds at both of its points. What is shown is that the two points are settled by
+*different* arguments under *different* hypotheses, not that they ever disagree.
+
+**Nothing here bears on EGA I 10.8's stalk half.** The counterexample is at a non-closed point and
+stands; which hypothesis repairs the general statement is still not determined anywhere. -/
+theorem isStalkLimit_powerSeriesXClosedPoint [IsLocalRing R] :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXClosedPoint R) :=
+  isStalkLimit_of_pointPrime_eq_maximalIdeal (powerSeriesXIdeal R) _
+    (fg_powerSeriesXIdeal R) (pointPrime_powerSeriesXClosedPoint R)
+
+/-- The value at a local ring that is **not** a field, so that it is not the field case of
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` in disguise: `k⟦X⟧` is local for `k` a field and
+its space `Spec k⟦X⟧` has two points. An `example`, since it proves nothing the theorem above does
+not. -/
+example (k : Type u) [Field k] :
+    IsStalkLimit (powerSeriesXIdeal (PowerSeries k))
+      (powerSeriesXClosedPoint (PowerSeries k)) :=
+  isStalkLimit_powerSeriesXClosedPoint _
+
+end LocalRing
+
 /-! ### The value, at `(X) ⊆ k⟦X⟧` for a field `k` -/
 
 section Field
@@ -457,8 +613,11 @@ It is `FormalSpectrum.isStalkLimit_of_isUnit_notMem_pointPrime` at the unique po
 `(X)` by `FormalSpectrum.pointPrime_powerSeriesXIdeal`.
 
 **It is a value at a *closed* point and says nothing about a point that is not closed.** For `k` a
-field there is no other kind of point; for a general `R` the space is `Spec R` and this argument
-does not run. See the module docstring for which difficulty is faced here and which is not. -/
+field there is no other kind of point. For a general `R` the space is `Spec R` and this argument
+does not run at every point — but it does run at the **closed** point whenever `R` is local, which
+is `FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint` above, and this theorem is that statement
+in the case where the space has a single point. See the module docstring for which difficulty is
+faced here and which is not. -/
 theorem isStalkLimit_powerSeriesX_field (x : FormalSpectrum (powerSeriesXIdeal k)) :
     IsStalkLimit (powerSeriesXIdeal k) x :=
   isStalkLimit_of_isUnit_notMem_pointPrime (powerSeriesXIdeal k) x (fg_powerSeriesXIdeal k)
