@@ -59,7 +59,7 @@ point with the basic-open quantifier replaced by the condition on constant terms
 `IsAdicRing`) with that one substitution, and **nothing more is claimed for it**; see the
 implementation notes for exactly which packaging is still in the statement.
 
-Two general statements say where the difficulty is **not**:
+Three general statements say where the difficulty is **not**:
 
 * `FormalSpectrum.exists_awayToAtPrime_eq`: **before completing, the surjectivity is free.** Every
   element of `Localization.AtPrime (pointPrime I x)` is `FormalSpectrum.awayToAtPrime` of an
@@ -70,6 +70,10 @@ Two general statements say where the difficulty is **not**:
   `FormalSpectrum.pointIdeal`, hence at **every level of the stalk tower**, those levels being
   `Localization.AtPrime (pointPrime I x) ⧸ pointIdeal I x ^ (n + 1)` by
   `FormalSpectrum.stalkTowerLevelEquiv`.
+* `FormalSpectrum.exists_awayToAtPrimeLevel_eq`: the same statement about the map the tower
+  actually compares with, `FormalSpectrum.awayToAtPrimeLevel`. The two agree definitionally, and
+  this is the declaration that says so, so that "the surjectivity half cannot fail at any one
+  level" is carried by a theorem about the level map rather than by a step left to the reader.
 
 So the surjectivity half of `FormalSpectrum.IsStalkLimit` cannot fail at any single level, and
 cannot fail before completion: whatever fails, fails in the passage to the limit, where one `f`
@@ -79,10 +83,14 @@ first time it has been isolated as a theorem rather than described.
 
 ## What is *not* proved here
 
-**`FormalSpectrum.IsStalkLimit` at `(X) ⊆ ℤ⟦X⟧` at the generic point is undecided, in both
-directions.** The surjectivity half was attempted and did **not** close, and no counterexample is
-produced. The predicate in general remains undecided in both directions and nothing here changes
-that; it still has no negative value anywhere.
+**Nothing below decides `FormalSpectrum.IsStalkLimit` at `(X) ⊆ ℤ⟦X⟧` at the generic point**, in
+either direction: the surjectivity half is attempted here and does **not** close, and no
+counterexample is constructed below. It is decided elsewhere, and negatively:
+`FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint`
+(`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`) refutes it, using the two ring
+identifications the paragraph below asks for. **That does not make the predicate false in
+general** — the three positive values above stand — and nothing in this file is evidence in either
+direction.
 
 **The two general statements above are not evidence that the half holds.** They say the obstruction
 is concentrated in the limit; they say nothing about whether it is surmountable there. A reader
@@ -90,15 +98,16 @@ must not read `FormalSpectrum.exists_mk_awayToAtPrime_eq` as levelwise progress 
 surjectivity half — the half quantifies over elements of the completion, and no element of the
 completion is constructed below.
 
-**Where the attempt stopped, and what it would take.** The expected counterexample is the one
+**Where the attempt below stopped, and what it took.** The expected counterexample is the one
 `FormalSchemes.StructureSheafStalkPowerSeries` records: over `ℤ`, an element of the target whose
 coefficients have denominators involving infinitely many primes lies in no single
-`FormalSpectrum.awayCompletion (X) f`. Carrying that out needs two ring identifications that are
-**not on this tree and are not proved below**: that the target is `ℚ⟦X⟧`, and that
-`FormalSpectrum.awayCompletion (X) f` is `ℤ[1/m]⟦X⟧` for `m` the constant term of `f`. Both are
-statements about quotients of `PowerSeries` by powers of `(X)` and their localizations. **This
-paragraph is an expectation, asserted by no declaration below**, and it is recorded so that the
-next attempt starts where this one stopped rather than repeating it.
+`FormalSpectrum.awayCompletion (X) f`. Carrying it out needs two ring identifications that are
+**not proved below**: that the target is `ℚ⟦X⟧`, and that `FormalSpectrum.awayCompletion (X) f` is
+`ℤ[1/m]⟦X⟧` for `m` the constant term of `f`. Both are now on the tree, as
+`FormalSpectrum.atPrimeCompletionEquivFractionPowerSeries` and
+`FormalSpectrum.awayCompletionEquivPowerSeriesAway` in
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which is where the counterexample is
+assembled. **No declaration below asserts either of them.**
 
 **Nothing under a Noetherian hypothesis.** `Ideal.FG` of the ideal of definition is the only
 finiteness assumption anywhere below, and it is `FormalSpectrum.fg_powerSeriesXIdeal`. `ℤ⟦X⟧` is
@@ -132,18 +141,28 @@ project's 538 modules (forward closure 36 with itself, against this leaf's 51). 
 anyway, on two grounds: each has exactly one consumer, both in this file, which is the disposition
 `FormalSchemes.StructureSheafStalkNilpotent` and `FormalSchemes.StructureSheafStalkPowerSeries`
 both recorded for a general statement with a single consumer; and moving them would edit a file
-this row is scoped not to touch. **If a second consumer appears the move is cheap and should be
-made** — cheaper than the analogous move those two files declined.
+this row is scoped not to touch. **The move was re-costed when the level bridge was added and
+declined**, not on the closure numbers but because it is blocked:
+`FormalSpectrum.exists_awayToAtPrime_eq` consumes
+`FormalSpectrum.mem_basicOpen_of_notMem_pointPrime`, which lives in
+`FormalSchemes.StructureSheafStalkBot` — *downstream* of
+`FormalSchemes.StructureSheafStalkComparison` — so the move would have to drag one of that file's
+five general-`I` lemmas upstream as well, or replace a named citation by the definitional
+coincidence that the two statements are the same proposition. Neither is worth it, and the three
+statements stay together here.
 
 ## Placement
 
-A new leaf over `FormalSchemes.StructureSheafStalkPowerSeries`: forward closure **50** project
-modules besides itself (51 counted with itself), reverse closure **0**. It adds no Mathlib import.
+A leaf over `FormalSchemes.StructureSheafStalkPowerSeries`: forward closure **50** project modules
+besides itself (51 counted with itself), reverse closure **1**, the one consumer being
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`. It adds no Mathlib import.
 
 ## Main definitions and results
 
-* `FormalSpectrum.exists_awayToAtPrime_eq`, `FormalSpectrum.exists_mk_awayToAtPrime_eq`: the
-  uncompleted surjectivity, and the same at every level, at every ideal of definition and point.
+* `FormalSpectrum.exists_awayToAtPrime_eq`, `FormalSpectrum.exists_mk_awayToAtPrime_eq`,
+  `FormalSpectrum.exists_awayToAtPrimeLevel_eq`: the uncompleted surjectivity, the same modulo any
+  power of the ideal of definition, and the same through the stalk tower's own level map, at every
+  ideal of definition and point.
 * `FormalSpectrum.powerSeriesXGenericPoint`: the point of `Spf (R⟦X⟧, (X))` over the generic point
   of `Spec R`, for `R` a domain.
 * `FormalSpectrum.pointPrime_powerSeriesXGenericPoint`,
@@ -236,6 +255,24 @@ theorem exists_mk_awayToAtPrime_eq (n : ℕ)
   obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective c
   obtain ⟨f, hf, a, ha⟩ := exists_awayToAtPrime_eq I x b
   exact ⟨f, hf, a, by rw [ha]⟩
+
+/-- **The same at every level of the stalk tower, through the tower's own comparison map.**
+`FormalSpectrum.exists_mk_awayToAtPrime_eq` is stated about `Ideal.Quotient.mk` composed with
+`FormalSpectrum.awayToAtPrime`; the map the stalk tower compares with at level `n` is
+`FormalSpectrum.awayToAtPrimeLevel`, which is `Ideal.quotientMap` of that same ring map. The two
+agree definitionally, and this is the declaration that says so — so that the reading "the
+surjectivity half cannot fail at any one level" is carried by a theorem about the level map itself
+and not by a step left to the reader.
+
+The indexing is `FormalSpectrum.stalkTowerLevelEquiv`'s: level `n` is the quotient by the
+`(n + 1)`-st power. -/
+theorem exists_awayToAtPrimeLevel_eq (n : ℕ)
+    (c : Localization.AtPrime (pointPrime I x) ⧸ pointIdeal I x ^ (n + 1)) :
+    ∃ (f : R) (hf : x ∈ basicOpen I f)
+      (a : Localization.Away f ⧸ (I.map (algebraMap R (Localization.Away f))) ^ (n + 1)),
+      awayToAtPrimeLevel I x hf n a = c := by
+  obtain ⟨f, hf, a, ha⟩ := exists_mk_awayToAtPrime_eq I x (n + 1) c
+  exact ⟨f, hf, Ideal.Quotient.mk _ a, ha⟩
 
 end Uncompleted
 
@@ -394,7 +431,9 @@ opens in the injectivity half. `FormalSpectrum.awayCompletion` is an `abbrev` fo
 `AdicCompletion` of a localization, so no unfolding is needed to read the source as a completed
 localization of `R⟦X⟧`.
 
-**Neither side is decided.** See the module docstring. -/
+**Neither side is decided below.** The conjunction is decided in
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, and negatively, at `R = ℤ`; see the
+module docstring. -/
 theorem isStalkLimit_powerSeriesXGenericPoint_iff :
     IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) ↔
       (∀ (f : PowerSeries R) (hf : constantCoeff f ≠ 0)
