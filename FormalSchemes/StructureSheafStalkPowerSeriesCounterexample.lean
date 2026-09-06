@@ -70,7 +70,11 @@ single `R[1/m]` with `m ≠ 0`, and
 `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`
 restates that with no localization in it: every such family has a common denominator up to powers
 of one element. Both values of the half in this file are corollaries of it, and both proofs are
-shorter for going through it. It characterises **one conjunct at one point**, not
+shorter for going through it. It characterises **one conjunct**, and at this one point that
+conjunct turns out to be the whole predicate: the other one holds at the generic point of every
+domain, so the conjunction collapses onto it
+(`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`, below). At any
+other point, and at any other ideal of definition, it still says nothing about
 `FormalSpectrum.IsStalkLimit`.
 
 **And the condition has a name.** `FormalSpectrum.HasBoundedDenominators` is that right-hand side:
@@ -91,6 +95,19 @@ hold at an *arbitrary* domain and are what the classification glues: a single `m
 clear every denominator gives the condition
 (`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`), and a family of primes divisible into
 no single element refutes it (`FormalSpectrum.not_hasBoundedDenominators_of_primes`).
+
+**And at this point the condition is the predicate.** The criterion is a conjunction whose
+injectivity half holds at the generic point of every domain, so nothing but the surjectivity half
+is ever at stake there and the conjunction collapses:
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` says
+`FormalSpectrum.IsStalkLimit` holds at `(X) ⊆ R⟦X⟧` at the generic point **iff** `R` satisfies the
+denominator condition, at every domain and under no further hypothesis. Composed with the
+classification that is a cardinality:
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes` — **at a unique
+factorisation domain the stalk of the completion is the completion of the stalk at the generic
+point of `R⟦X⟧` exactly when `R` has finitely many primes up to associates.** Those two are
+statements about the predicate itself rather than about one of its halves, and they are made at
+this one point and at no other.
 
 **Away from that hypothesis nothing here decides which rings satisfy the condition**, and the
 criteria on their own still do not meet: **the sufficient one is not known to be necessary at a
@@ -153,17 +170,30 @@ bear on EGA I 10.8's own statement. The counterexample proper still says nothing
 `FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint` refutes the conjunction by refuting
 surjectivity alone, and the two halves are established by separate arguments below.
 
-**No general statement about `IsStalkLimit` at a non-closed point.** The proof uses `ℤ` through
-`FormalSpectrum.unitFractionSeries` and the infinitude of the primes. The two identifications hold
-much more generally — the first at every commutative ring, the second at every domain — but the
-final step does not. What *is* characterised, and only at a unique factorisation domain, is the
-**surjectivity half** at the generic point: by
-`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` read through
-`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`, that
-half holds exactly when there are finitely many primes up to associates. The predicate itself is a
-conjunction, it is nowhere below assembled from its two halves, and no statement of the form
-*`IsStalkLimit` holds at `(X) ⊆ R⟦X⟧` for exactly these `R`* is proved here, at this point or at
-any other.
+**No general statement about `IsStalkLimit` at a non-closed point — one non-closed point only.**
+The refutation at `ℤ` uses `FormalSpectrum.unitFractionSeries` and the infinitude of the primes,
+and the two identifications, though they hold much more generally — the first at every commutative
+ring, the second at every domain — are identifications at the **generic point of `R⟦X⟧`** and
+nowhere else. At that one point the predicate is characterised, in both directions and with no
+hypothesis beyond `IsDomain R`
+(`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`), and at a
+unique factorisation domain the characterisation is a cardinality
+(`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes`). **That is the whole of
+what is claimed about the predicate.** The statement *`IsStalkLimit` holds at `(X) ⊆ R⟦X⟧` for
+exactly these `R`* is proved **here** and at **this** point; no statement of that form is proved at
+any other point, and the surjectivity half on its own is still all that
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` decides.
+
+**What is still open, which is what a successor needs.** Three things, none of them touched here:
+the predicate at a point of `Spf (R⟦X⟧, (X))` **other than the generic one**; the predicate at an
+**ideal of definition of `R⟦X⟧` other than `(X)`**; and the predicate at a formal spectrum whose
+ring is **not a power series ring** at all. Nothing below bears on any of the three, and nothing
+below is even stated at another point: both inputs to the characterisation — the injectivity half
+and the identification of the surjectivity half with the condition — name
+`FormalSpectrum.powerSeriesXGenericPoint` in their statements, and neither has a form that survives
+moving the point or the ideal. What is on the tree elsewhere is not surveyed here; in particular
+this says nothing about which of the general criteria in
+`FormalSchemes.StructureSheafStalkPowerSeries` do or do not apply at some other point.
 
 **The collapse is not claimed without countability.** Whether
 `FormalSpectrum.HasBoundedDenominators` is equivalent to *some `R[1/m]` is already `Frac R`* at an
@@ -333,13 +363,25 @@ all in this closure already, and so is everything the classification adds — `A
   refutation with no formal geometry in it.
 * `FormalSpectrum.hasBoundedDenominators_of_isDiscreteValuationRing`: **a discrete valuation ring
   does**, with a uniformizer as the denominator.
+* `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`: **the
+  predicate itself, at the generic point of `R⟦X⟧`, is exactly the denominator condition**, at
+  every domain. The criterion's injectivity half holds there for every domain, so the conjunction
+  collapses onto its surjectivity half.
+* `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes`: **and at a unique
+  factorisation domain it is a cardinality** — the stalk of the completion is the completion of the
+  stalk at that point exactly when `R` has finitely many primes up to associates.
 
-Each of those three values is checked a second time below, as an anonymous `example` reading it off
+Each of the field, `ℤ` and discrete-valuation-ring values above is checked a second time below, as
+an anonymous `example` reading it off
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`. **None of the three proofs is
 replaced**: each carries something the classification does not — the field value needs no
 factorisation, the discrete-valuation-ring value exhibits the uniformizer, and
 `FormalSpectrum.not_hasBoundedDenominators_int` exhibits an explicit family in `Frac ℤ` that
 defeats every `m`.
+
+The two values of the predicate are checked the same way, as anonymous `example`s reading them off
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` rather than off
+the classification, and neither of those proofs is replaced either.
 
 Two further anonymous `example`s sit beside the collapse and are consistency checks of the same
 kind: that the classification and the collapse agree at a domain satisfying both hypotheses, and
@@ -1400,9 +1442,11 @@ not — the two are equivalent, by
 This is exactly the surjectivity half of
 `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` at the generic point of `R`, by
 `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`. It
-is **one conjunct at one point** and not `FormalSpectrum.IsStalkLimit`, whose other conjunct holds
-at the generic point of every domain
-(`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`). Naming it
+is **one conjunct**, but the other one holds at the generic point of every domain
+(`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`), so at **this**
+point the two coincide and the condition is `FormalSpectrum.IsStalkLimit` itself
+(`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`). It is not the
+predicate at any other point, nor at any other ideal of definition. Naming it
 decided nothing on its own; what decides it is
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, and only at a **unique factorisation
 domain**, where the condition is exactly *finitely many primes up to associates*. Two criteria at
@@ -1713,14 +1757,14 @@ does not — the field value needs no factorisation, the discrete-valuation-ring
 uniformizer as the denominator, and `FormalSpectrum.not_hasBoundedDenominators_int` exhibits an
 explicit family in `Frac ℤ` that defeats every `m`.
 
-**This is one conjunct at one point and not `FormalSpectrum.IsStalkLimit`**, exactly as
-`FormalSpectrum.HasBoundedDenominators` is: through
-`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators` it
-decides the surjectivity half at the generic point of `R⟦X⟧` for every unique factorisation domain,
-and the other conjunct is
-`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`, which holds at
-that point for every domain — but the predicate at every point is a different
-statement and is decided nowhere. -/
+**On its own this is one conjunct**, exactly as `FormalSpectrum.HasBoundedDenominators` is:
+through `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`
+it decides the surjectivity half at the generic point of `R⟦X⟧` for every unique factorisation
+domain. The other conjunct is
+`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`, which holds at that
+point for every domain, so the two compose into a statement about the predicate itself there:
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes`. **The predicate at any
+other point is a different statement and is decided nowhere.** -/
 theorem hasBoundedDenominators_iff_finite_primes [UniqueFactorizationMonoid R] :
     HasBoundedDenominators R ↔ {a : Associates R | Prime a}.Finite := by
   classical
@@ -1892,6 +1936,69 @@ example (K : Type u) [Field K] : HasBoundedDenominators K := by
   obtain ⟨x, rfl⟩ := Associates.mk_surjective a
   exact (Associates.prime_mk.mp ha).not_unit
     (isUnit_iff_ne_zero.mpr (Associates.prime_mk.mp ha).ne_zero)
+
+/-! ### The predicate itself, at the generic point
+
+Everything above is about `FormalSpectrum.HasBoundedDenominators`, which is **one conjunct** of
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff`. At this one point that qualification
+can be dropped, and the reason is not a new argument: the other conjunct was proved not at one ring
+but at the generic point of *every* domain
+(`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`), so wherever the
+criterion applies at all it is already discharged and the conjunction collapses onto the condition.
+The two statements below are that composition, and their whole content is that it is legitimate.
+-/
+
+/-- **`FormalSpectrum.IsStalkLimit` at the generic point of `R⟦X⟧` is exactly the denominator
+condition**, at every domain — no factorisation, no countability, no Noetherian hypothesis — and
+with neither a completion nor a power series left on the right-hand side.
+
+**What makes the collapse possible is not a new argument.**
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` is a plain conjunction, and its two
+conjuncts are settled in the same generality:
+
+* the **injectivity** half is
+  `FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`, a theorem at the
+  generic point of *every* domain rather than at one ring (issue 1759, PR #589), so it is free
+  wherever the criterion can be stated at all;
+* the **surjectivity** half is `FormalSpectrum.HasBoundedDenominators` on the nose, by
+  `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`
+  (issue 1776, PR #595), whose left-hand side is literally the second conjunct of the criterion.
+
+Had the injectivity half been proved only at `ℤ`, or only at a discrete valuation ring, this would
+not be available at a general domain and there would be a second thing to prove.
+
+**One point.** This says nothing at any other point of `Spf (R⟦X⟧, (X))`, nothing at any other
+ideal of definition, and nothing at a formal spectrum whose ring is not a power series ring; see
+the module docstring. -/
+theorem isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) ↔
+      HasBoundedDenominators R :=
+  (isStalkLimit_powerSeriesXGenericPoint_iff R).trans
+    ⟨fun h =>
+      (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators R).mp h.2,
+     fun h =>
+      ⟨exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint R,
+        (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators R).mpr h⟩⟩
+
+/-- **At a unique factorisation domain, the stalk of the completion is the completion of the stalk
+at the generic point of `R⟦X⟧` exactly when `R` has finitely many primes up to associates.**
+
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` composed with
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`. It is the classification of the
+condition read as a statement about the predicate, and the three values in this file are its three
+cases: a field is the empty set, a discrete valuation ring the singleton, and `ℤ` the infinite one.
+
+The factorisation hypothesis is spent entirely by the classification — the theorem above carries
+none of it — so away from a unique factorisation domain the cardinality form is simply not
+available. Nothing here decides Dedekind, semilocal, Prüfer or valuation rings: a Dedekind domain
+is a statement about **ideals**, and a nonprincipal maximal ideal contributes no prime element at
+all. -/
+theorem isStalkLimit_powerSeriesXGenericPoint_iff_finite_primes
+    [UniqueFactorizationMonoid R] :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) ↔
+      {a : Associates R | Prime a}.Finite :=
+  (isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators R).trans
+    (hasBoundedDenominators_iff_finite_primes R)
 
 end Generic
 
@@ -2091,6 +2198,19 @@ theorem not_isStalkLimit_powerSeriesXIntGenericPoint :
   not_surjective_powerSeriesXIntGenericPoint
     ((isStalkLimit_powerSeriesXGenericPoint_iff ℤ).mp h).2
 
+/-- The same value read off
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`, as a
+**consistency check** on that characterisation.
+
+**The proof above is not replaced and must not be.** It refutes the predicate by refuting the
+surjectivity half, and that refutation exhibits `FormalSpectrum.unitFractionSeries`, an explicit
+element of the completion that defeats every `m`; a corollary of a characterisation exhibits
+nothing. This is an `example` for that reason, and because it proves a statement that already has
+a name. -/
+example : ¬ IsStalkLimit (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ) := fun h =>
+  not_hasBoundedDenominators_int
+    ((isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators ℤ).mp h)
+
 /-- **The refutation is sharp: `FormalSpectrum.IsStalkLimit` fails at `(X) ⊆ ℤ⟦X⟧` in the
 surjectivity half only.** The two conjuncts below are, verbatim, the two components of
 `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` at `R = ℤ`: the first holds and the
@@ -2274,6 +2394,19 @@ theorem isStalkLimit_powerSeriesXGenericPoint :
   (isStalkLimit_powerSeriesXGenericPoint_iff R).mpr
     ⟨exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint R,
       exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint R⟩
+
+/-- The same value read off
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`, as a
+**consistency check** on that characterisation.
+
+**The proof above is not replaced and must not be.** It goes through
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint`, where the uniformizer
+is exhibited as the denominator and the `f` serving a given element is produced; this route hides
+both halves behind a single `↔`. It is an `example` because it proves a statement that already has
+a name. -/
+example : IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) :=
+  (isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators R).mpr
+    (hasBoundedDenominators_of_isDiscreteValuationRing R)
 
 /-- **`FormalSpectrum.IsStalkLimit` is positive at a point where the colimit over basic opens
 genuinely moves**, which is what this section exists to record.
