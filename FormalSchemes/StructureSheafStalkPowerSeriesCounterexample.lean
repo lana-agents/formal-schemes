@@ -94,15 +94,15 @@ the `PowerSeries` one. It is stated here rather than in a Mathlib mirror because
 
 The whole file is arranged so that no element of an `AdicCompletion` is ever written down except
 through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's witness is a
-`PowerSeries`, and it reaches the completion only through
-`FormalSpectrum.atPrimeCompletionEquivFractionPowerSeries.symm`.
+`PowerSeries`, and it reaches the completion only through the inverse of
+`FormalSpectrum.atPrimeCompletionEquivFractionPowerSeries`.
 
 ## Placement
 
 A new leaf over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric`: forward closure **51**
 project modules besides itself (52 counted with itself), reverse closure **0**, counted by walking
 every `^import` line over the 539 modules under `FormalSchemes/`. It adds no Mathlib import;
-`Mathlib.RingTheory.AdicCompletion.Completeness`, which carries the
+`Mathlib/RingTheory/AdicCompletion/Completeness.lean`, which carries the
 `IsAdicComplete (.span {X}) (PowerSeries R)` instance, is already reached.
 
 ## Main definitions and results
@@ -140,7 +140,7 @@ namespace AdicCompletion
 variable {R S : Type u} [CommRing R] [CommRing S] {I : Ideal R} {J : Ideal S}
 
 /-- The continuity bound at every level that `I.map f ≤ J` already contains: `Ideal.map_pow` turns
-the hypothesis into `(I ^ n).map f ≤ J ^ n`, which is the `comap` form
+the hypothesis into `(I ^ n).map f ≤ J ^ n`, which is the `Ideal.comap` form
 `AdicCompletion.evalₐ_mapCompletion` and `Ideal.quotientMap` ask for. Stated separately because the
 criterion below quantifies over the proof. -/
 theorem pow_le_comap_of_map_le (f : R →+* S) (hf : I.map f ≤ J) (n : ℕ) :
@@ -718,7 +718,7 @@ theorem pointIdeal_powerSeriesXGenericPoint_pow_eq_span (n : ℕ) :
   rw [pointIdeal, Ideal.map_span, Set.image_singleton, map_pow, Ideal.span_singleton_pow]
 
 /-- `FormalSpectrum.atPrimeToFractionPowerSeries` carries the ideal of definition onto `(X) ⊆
-K⟦X⟧`; an equality, for the same reason as in the `Away` case. -/
+K⟦X⟧`; an equality, for the same reason as in the `Localization.Away` case. -/
 theorem map_pointIdeal_atPrimeToFractionPowerSeries :
     (pointIdeal (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)).map
         (atPrimeToFractionPowerSeries R) = powerSeriesXIdeal (FractionRing R) := by
@@ -729,7 +729,7 @@ theorem map_pointIdeal_atPrimeToFractionPowerSeries :
 /-- **`R⟦X⟧_{(X)} → K⟦X⟧ ⧸ (X) ^ n` is injective.** Writing the element as `a / d` with `d` outside
 `(X)`, the hypothesis says the first `n` coefficients of `a` vanish in `K`, hence in `R`, since
 `R` is a domain; so `X ^ n` divides `a` already in `R⟦X⟧`. No denominators have to be cleared,
-which is what distinguishes this from the `Away` case. -/
+which is what distinguishes this from the `Localization.Away` case. -/
 theorem mem_pointIdeal_pow_of_map_mem (n : ℕ)
     (s : Localization.AtPrime (pointPrime (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)))
     (hs : atPrimeToFractionPowerSeries R s ∈ powerSeriesXIdeal (FractionRing R) ^ n) :
@@ -761,7 +761,8 @@ theorem mem_pointIdeal_pow_of_map_mem (n : ℕ)
   rw [hb, map_mul]
   exact Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self _)
 
-/-- **`R⟦X⟧_{(X)} → K⟦X⟧ ⧸ (X) ^ n` is surjective**, by the same induction as in the `Away` case
+/-- **`R⟦X⟧_{(X)} → K⟦X⟧ ⧸ (X) ^ n` is surjective**, by the same induction as in the
+`Localization.Away` case
 and with the same shape: the error is `X ^ n * u`, the constant term of `u` is `r / d` with
 `d ≠ 0`, and `PowerSeries.C d` is outside `(X)`, hence already invertible in the source. -/
 theorem exists_sub_atPrimeToFractionPowerSeries_mem (n : ℕ) (t : PowerSeries (FractionRing R)) :
