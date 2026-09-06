@@ -113,7 +113,12 @@ assembled. **No declaration below asserts either of them.**
 finiteness assumption anywhere below, and it is `FormalSpectrum.fg_powerSeriesXIdeal`. `ℤ⟦X⟧` is
 Noetherian and no statement below uses it.
 
-**Nothing about the injectivity half.** It is not attempted, at this point or any other.
+**Nothing about the injectivity half.** It is not attempted below, at this point or any other. It
+is settled elsewhere, and positively:
+`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`
+(`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`) proves it at the generic point of
+every domain, which is what makes the refutation named above sharp. No declaration below is
+evidence for it.
 
 **No comparison with `Spec`.** `FormalSchemes.SpfDiscrete` is not imported — measured at **42**
 modules besides itself on top of this leaf's closure, 43 including it — and nothing here needs it.
