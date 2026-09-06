@@ -12,12 +12,14 @@ morphism's fibres.
 
 ## Why this file exists, and why it is this low
 
-`FormalSpectrum.mem_basicOpen` reads membership in `D(f)` as `Ideal.Quotient.mk I f ∉ x.asIdeal`,
-and `Ideal.Quotient.mk I` is surjective, so the family of memberships determines `x.asIdeal` and
-`PrimeSpectrum.ext` finishes. Nothing else is used: no topology on `R`, no adic hypothesis, no
-sheaf. `FormalSchemes/FormalSpectrum.lean`, where the statement belongs on subject matter, has a
-reverse closure of **500** of the project's 547 modules, so this is a leaf over it rather than
-an edit to it.
+`FormalSpectrum.mem_basicOpen` reads membership of a point in `D(f)` as non-membership of
+`Ideal.Quotient.mk I f` in that point's prime ideal, and `Ideal.Quotient.mk I` is surjective,
+so the family of memberships determines the prime and `PrimeSpectrum.ext` finishes. Nothing else
+is used: no topology on `R`, no adic hypothesis, no sheaf.
+
+`FormalSchemes/FormalSpectrum.lean`, where the statement belongs on subject matter, has a reverse
+closure of **500** of the project's 547 modules, so this is a leaf over it rather than an edit to
+it.
 
 ## Main results
 
