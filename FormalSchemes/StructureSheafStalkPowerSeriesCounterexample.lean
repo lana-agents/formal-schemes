@@ -71,6 +71,20 @@ of one element. Both values of the half in this file are corollaries of it, and 
 shorter for going through it. It characterises **one conjunct at one point**, not
 `FormalSpectrum.IsStalkLimit`.
 
+**And the condition has a name.** `FormalSpectrum.HasBoundedDenominators` is that right-hand side:
+every `ℕ`-indexed family in `Frac R` has a single denominator up to powers. It is a condition on
+`R` alone — no completion, no localization of `R⟦X⟧`, no power series — and equivalently a
+condition on countable *subsets* of `Frac R`
+(`FormalSpectrum.hasBoundedDenominators_iff_countable`). Each value of the half in this file is
+now a value of it: **a field satisfies it** with `m = 1`, **a discrete valuation ring** with a
+uniformizer, and **`ℤ` does not**, because a prime larger than `|m|` divides no power of `m`. So
+the shape of the answer is that the half is about how many primes have to be inverted at once, and
+the geometric statements are that arithmetic read through the two identifications.
+
+**Naming it decides nothing.** Which rings satisfy `FormalSpectrum.HasBoundedDenominators` is not
+determined here: three values are three rings, not a classification, and none of the obvious
+guesses about Dedekind or semilocal domains is checked anywhere below.
+
 ## The tool that was missing, and why the one on the tree does not do it
 
 `AdicCompletion.bijective_mapCompletion` (`FormalSchemes.StructureSheafStalkPowerSeries`) makes the
@@ -193,7 +207,19 @@ are all in this closure already.
   surjectivity half at the generic point of a domain is exactly the statement that every
   `ℕ`-indexed family in `Frac R` lies in a single `R[1/m]`.**
 * `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`:
-  the same with no localization named — a common denominator up to powers of one element.
+  the same with the condition named — a common denominator up to powers of one element.
+* `FormalSpectrum.HasBoundedDenominators`: **the condition**, as a `def` on a domain: every
+  `ℕ`-indexed family in `Frac R` has a single denominator up to powers.
+* `FormalSpectrum.hasBoundedDenominators_iff_range`: the same as *lies inside a single `R[1/m]`*.
+* `FormalSpectrum.hasBoundedDenominators_iff_countable`: `ℕ`-indexed families and countable
+  subsets of `Frac R` give the same condition.
+* `FormalSpectrum.hasBoundedDenominators_of_field`: **a field satisfies it**, with `m = 1`. This
+  is a value of the condition and not of `FormalSpectrum.IsStalkLimit`; the latter at a field is
+  `FormalSpectrum.isStalkLimit_powerSeriesX_field`, by a different route.
+* `FormalSpectrum.not_hasBoundedDenominators_int`: **`ℤ` does not**, which is the whole of the
+  refutation with no formal geometry in it.
+* `FormalSpectrum.hasBoundedDenominators_of_isDiscreteValuationRing`: **a discrete valuation ring
+  does**, with a uniformizer as the denominator.
 
 ## References
 
@@ -1218,15 +1244,99 @@ theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff :
       RingEquiv.apply_symm_apply]
     exact hz
 
-/-- **The same characterisation with no localization named at all.** The half holds exactly when
-every `ℕ`-indexed family in `Frac R` has a common denominator up to powers: a single `m ≠ 0` such
-that every member is cleared into `R` by some power of `m`.
+/-! ### The denominator condition, named
+
+The right-hand side of the characterisation is a condition on `R` alone: no completion, no
+localization of `R⟦X⟧`, no power series. Until it has a name nothing can be proved *about* it, and
+the three values in this file read as three unrelated computations rather than as three values of
+one condition.
+-/
+
+/-- **The denominator condition.** Every `ℕ`-indexed family in `Frac R` has a single denominator up
+to powers: one `m ≠ 0` such that every member of the family is cleared into `R` by some power of
+`m`.
+
+Equivalently every such family lies inside a single `R[1/m]`
+(`FormalSpectrum.hasBoundedDenominators_iff_range`), and it makes no difference whether the
+families are indexed by `ℕ` or are countable subsets of `Frac R`
+(`FormalSpectrum.hasBoundedDenominators_iff_countable`).
+
+**The quantifier order is the content.** The `m` is uniform in the family and the exponent `k` is
+not: each member may need its own power of the same `m`. Weakening to `∀ x, ∀ n, ∃ m` holds at
+every domain, because a single element of `Frac R` is a fraction and its own denominator serves;
+strengthening to `∃ m, ∀ x` implies this one and so is false at `ℤ`.
+
+This is exactly the surjectivity half of
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` at the generic point of `R`, by
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`. It
+is **one conjunct at one point** and not `FormalSpectrum.IsStalkLimit`, whose other conjunct holds
+at the generic point of every domain
+(`FormalSpectrum.exists_awayCompletionRestrict_eq_zero_powerSeriesXGenericPoint`). Naming it
+decides nothing: which rings satisfy it is not determined here, and the three values below are
+three rings and not a classification.
+
+A `def` rather than a `class`: the condition occurs on the right of an `↔`, where instance search
+has nothing to do, and one of its three values is a *negation*, which no instance can carry. The
+class variant does elaborate — a field and a discrete valuation ring both give firing instances —
+and was rejected for those two reasons, not because it fails.
+
+The binders are written out rather than taken from the section: `IsDomain R` is not used by the
+body, so it would be dropped from the signature, and the condition is only the intended one at a
+domain — over a ring with zero divisors `m ≠ 0` does not make `m` a denominator. -/
+def HasBoundedDenominators (R : Type u) [CommRing R] [IsDomain R] : Prop :=
+  ∀ x : ℕ → FractionRing R, ∃ m : R, m ≠ 0 ∧ ∀ n, ∃ k : ℕ,
+    algebraMap R (FractionRing R) (m ^ k) * x n ∈ Set.range (algebraMap R (FractionRing R))
+
+/-- **The condition, with the localization back in.** A family has a single denominator up to
+powers exactly when it lies inside a single `R[1/m]`.
+
+`FormalSpectrum.mem_range_awayToFractionRing_iff` at each member. The two forms are used in
+different places: the definition is elementary arithmetic in `R` and `Frac R`, and this one is
+what the characterisation and the value at a discrete valuation ring are stated with. -/
+theorem hasBoundedDenominators_iff_range :
+    HasBoundedDenominators R ↔ ∀ x : ℕ → FractionRing R, ∃ m : R, ∃ hm : m ≠ 0,
+      ∀ n, x n ∈ Set.range (awayToFractionRing R m hm) := by
+  constructor
+  · intro h x
+    obtain ⟨m, hm, hall⟩ := h x
+    exact ⟨m, hm, fun n => (mem_range_awayToFractionRing_iff R m hm (x n)).mpr (hall n)⟩
+  · intro h x
+    obtain ⟨m, hm, hall⟩ := h x
+    exact ⟨m, hm, fun n => (mem_range_awayToFractionRing_iff R m hm (x n)).mp (hall n)⟩
+
+/-- **`ℕ`-indexed families and countable subsets give the same condition.** The half needs the
+`ℕ`-indexed form, because a power series is an `ℕ`-indexed family; this says nothing is lost or
+gained by asking it of every countable subset of `Frac R` instead.
+
+Forwards, a nonempty countable set is a range (`Set.Countable.exists_eq_range`) and the empty set
+is served by `m = 1` — the one place the two quantifier problems differ. Backwards, the range of a
+family is countable. -/
+theorem hasBoundedDenominators_iff_countable :
+    HasBoundedDenominators R ↔ ∀ s : Set (FractionRing R), s.Countable →
+      ∃ m : R, m ≠ 0 ∧ ∀ y ∈ s, ∃ k : ℕ,
+        algebraMap R (FractionRing R) (m ^ k) * y ∈
+          Set.range (algebraMap R (FractionRing R)) := by
+  constructor
+  · intro h s hs
+    rcases s.eq_empty_or_nonempty with rfl | hne
+    · exact ⟨1, one_ne_zero, by simp⟩
+    · obtain ⟨f, rfl⟩ := hs.exists_eq_range hne
+      obtain ⟨m, hm, hall⟩ := h f
+      exact ⟨m, hm, by rintro _ ⟨n, rfl⟩; exact hall n⟩
+  · intro h x
+    obtain ⟨m, hm, hall⟩ := h (Set.range x) (Set.countable_range x)
+    exact ⟨m, hm, fun n => hall _ ⟨n, rfl⟩⟩
+
+/-- **The same characterisation with the condition named.** The half at the generic point of a
+domain holds exactly when `FormalSpectrum.HasBoundedDenominators` holds of `R`: every `ℕ`-indexed
+family in `Frac R` has a common denominator up to powers, a single `m ≠ 0` such that every member
+is cleared into `R` by some power of `m`.
 
 `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff` read through
-`FormalSpectrum.mem_range_awayToFractionRing_iff`. This is the form a consumer wants: its
+`FormalSpectrum.hasBoundedDenominators_iff_range`. This is the form a consumer wants: its
 right-hand side is elementary arithmetic in `R` and `Frac R` and names neither `Localization.Away`
-nor any completion. The exponent `k` may depend on the index `n`; only `m` is uniform in the
-family, and that uniformity is the content. -/
+nor any completion. The right-hand side is the definition unfolded and the statement is the one
+this theorem had before the condition was named; only the spelling of that side changed. -/
 theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators :
     (∀ b : AdicCompletion (pointIdeal (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))
         (Localization.AtPrime (pointPrime (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))),
@@ -1234,17 +1344,29 @@ theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominat
         ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)
           (fg_powerSeriesXIdeal R)
           ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) a = b) ↔
-      ∀ x : ℕ → FractionRing R, ∃ m : R, m ≠ 0 ∧ ∀ n, ∃ k : ℕ,
-        algebraMap R (FractionRing R) (m ^ k) * x n ∈
-          Set.range (algebraMap R (FractionRing R)) := by
-  rw [exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff]
-  constructor
-  · intro h x
-    obtain ⟨m, hm, hall⟩ := h x
-    exact ⟨m, hm, fun n => (mem_range_awayToFractionRing_iff R m hm (x n)).mp (hall n)⟩
-  · intro h x
-    obtain ⟨m, hm, hall⟩ := h x
-    exact ⟨m, hm, fun n => (mem_range_awayToFractionRing_iff R m hm (x n)).mpr (hall n)⟩
+      HasBoundedDenominators R :=
+  (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff R).trans
+    (hasBoundedDenominators_iff_range R).symm
+
+/-! ### The value at a field -/
+
+/-- **A field satisfies the denominator condition**, with `m = 1` and `k = 0`: nothing needs a
+denominator, because `K → Frac K` is already surjective.
+
+This is a value of the *condition*, hence of the surjectivity half at the generic point of
+`K⟦X⟧`. It is **not** `FormalSpectrum.isStalkLimit_powerSeriesX_field`, which is a value of the
+whole predicate `FormalSpectrum.IsStalkLimit` at every point of `Spf (k⟦X⟧, (X))` and is proved by
+a different route: over a field that space has one point, every `g` outside
+`FormalSpectrum.pointPrime` is a unit, and no witness is produced. The two do agree where they
+meet — the condition at a field also follows from that theorem through
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`, and
+the proof below uses none of it. -/
+theorem hasBoundedDenominators_of_field (K : Type u) [Field K] : HasBoundedDenominators K := by
+  intro x
+  refine ⟨1, one_ne_zero, fun n => ⟨0, ?_⟩⟩
+  rw [pow_zero, map_one, one_mul]
+  obtain ⟨r, s, hs, hrs⟩ := IsFractionRing.div_surjective (A := K) (x n)
+  exact ⟨r / s, by rw [← hrs, map_div₀]⟩
 
 end Generic
 
@@ -1314,6 +1436,24 @@ theorem unitFractionSeries_notMem_range (m : ℤ) (hm : m ≠ 0)
     Nat.le_of_dvd (Int.natAbs_pos.mpr hm) (hp.dvd_of_dvd_pow hdvdNat)
   omega
 
+/-- **`ℤ` does not satisfy the denominator condition.** The coefficients of
+`FormalSpectrum.unitFractionSeries` are `1 / (n + 1)`, and no single `m ≠ 0` clears all of them:
+a prime `p > |m|` divides no power of `m`.
+
+This is the arithmetic of `FormalSpectrum.unitFractionSeries_notMem_range` carried from
+coefficients back to a series by
+`PowerSeries.exists_map_eq_iff_forall_coeff_mem_range`, and it mentions no completion, no
+localization of `ℤ⟦X⟧` and no formal geometry. The geometric refutation below is this statement
+read through
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`. -/
+theorem not_hasBoundedDenominators_int : ¬ HasBoundedDenominators ℤ := by
+  intro h
+  obtain ⟨m, hm, hall⟩ := (hasBoundedDenominators_iff_range ℤ).mp h
+    fun n => PowerSeries.coeff n unitFractionSeries
+  obtain ⟨g, hg⟩ := (PowerSeries.exists_map_eq_iff_forall_coeff_mem_range
+    (awayToFractionRing ℤ m hm) unitFractionSeries).mpr hall
+  exact unitFractionSeries_notMem_range m hm g hg
+
 /-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` fails at
 `ℤ`.**
 
@@ -1323,10 +1463,9 @@ difficulty: not at any one level of the stalk tower, where
 passage to the limit, where one `f` must serve every level at once. Read through the two
 identifications the half says every element of `ℚ⟦X⟧` lies in `ℤ[1/m]⟦X⟧` for a single `m ≠ 0`,
 and `FormalSpectrum.unitFractionSeries` does not. That reading is a theorem —
-`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff` — and this proof
-goes through it, so all that is left here is the arithmetic
-(`FormalSpectrum.unitFractionSeries_notMem_range`) and the passage from coefficients back to a
-series (`PowerSeries.exists_map_eq_iff_forall_coeff_mem_range`).
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators` —
+and this proof is that theorem at `FormalSpectrum.not_hasBoundedDenominators_int`, which carries
+all of the arithmetic.
 
 This is stated separately from
 `FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint` because it is strictly more
@@ -1338,13 +1477,9 @@ theorem not_surjective_powerSeriesXIntGenericPoint :
       ∃ f, ∃ (hf : constantCoeff f ≠ 0),
         ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal ℤ) (powerSeriesXGenericPoint ℤ)
           (fg_powerSeriesXIdeal ℤ)
-          ((mem_basicOpen_powerSeriesXGenericPoint_iff ℤ f).mpr hf) a = b := by
-  intro hsurj
-  obtain ⟨m, hm, hall⟩ := (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff ℤ).mp
-    hsurj fun n => PowerSeries.coeff n unitFractionSeries
-  obtain ⟨g, hg⟩ := (PowerSeries.exists_map_eq_iff_forall_coeff_mem_range
-    (awayToFractionRing ℤ m hm) unitFractionSeries).mpr hall
-  exact unitFractionSeries_notMem_range m hm g hg
+          ((mem_basicOpen_powerSeriesXGenericPoint_iff ℤ f).mpr hf) a = b := fun hsurj =>
+  not_hasBoundedDenominators_int
+    ((exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators ℤ).mp hsurj)
 
 /-- **`FormalSpectrum.IsStalkLimit` is false at `(X) ⊆ ℤ⟦X⟧` at the generic point.**
 
@@ -1455,6 +1590,20 @@ theorem surjective_awayToFractionRing_of_irreducible {ϖ : R} (hϖ : Irreducible
     field_simp
     rw [map_pow]
 
+/-- **A discrete valuation ring satisfies the denominator condition**, and the denominator is a
+uniformizer, chosen before the family is.
+
+`FormalSpectrum.surjective_awayToFractionRing_of_irreducible` at
+`IsDiscreteValuationRing.exists_irreducible`: inverting `ϖ` alone gives the whole fraction field,
+so every family lies in `R[1/ϖ]` and no member needs a denominator of its own. Over `ℤ` this fails
+at every `m` (`FormalSpectrum.not_hasBoundedDenominators_int`), and the difference is that `ℤ` has
+infinitely many primes to put in a denominator and a discrete valuation ring has one. -/
+theorem hasBoundedDenominators_of_isDiscreteValuationRing : HasBoundedDenominators R :=
+  (hasBoundedDenominators_iff_range R).mpr
+    ((IsDiscreteValuationRing.exists_irreducible R).elim fun ϖ hϖ x =>
+      ⟨ϖ, hϖ.ne_zero, fun n =>
+        surjective_awayToFractionRing_of_irreducible R hϖ (x n)⟩)
+
 /-- **The surjectivity half of `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff` holds**
 at the generic point of a discrete valuation ring — and one `f` serves every element at once,
 namely `PowerSeries.C ϖ` for a uniformizer `ϖ`.
@@ -1463,12 +1612,11 @@ That is exactly what fails over `ℤ`, where the half cannot fail at any single 
 tower (`FormalSpectrum.exists_awayToAtPrimeLevel_eq`) but no single `f` serves the limit. Here the
 non-uniformity has nowhere to hide, because one `f` is chosen before the element is.
 
-`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff` reduces this to
-surjectivity of `R[1/ϖ] → Frac R`, which is
-`FormalSpectrum.surjective_awayToFractionRing_of_irreducible`. The uniformizer is obtained from
-`IsDiscreteValuationRing.exists_irreducible` **before** the family is introduced, which is what
-the paragraph above is about; the statement itself does not express that, since its `∃ f` sits
-under the `∀ b` the criterion puts there. -/
+`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators`
+reduces this to `FormalSpectrum.hasBoundedDenominators_of_isDiscreteValuationRing`, where the
+uniformizer is obtained from `IsDiscreteValuationRing.exists_irreducible` **before** the family is
+introduced — which is what the paragraph above is about. The statement here does not express that,
+since its `∃ f` sits under the `∀ b` the criterion puts there. -/
 theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint
     (b : AdicCompletion (pointIdeal (powerSeriesXIdeal R) (powerSeriesXGenericPoint R))
       (Localization.AtPrime (pointPrime (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)))) :
@@ -1476,10 +1624,8 @@ theorem exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint
       ∃ a, awayToAtPrimeCompletion (powerSeriesXIdeal R) (powerSeriesXGenericPoint R)
         (fg_powerSeriesXIdeal R)
         ((mem_basicOpen_powerSeriesXGenericPoint_iff R f).mpr hf) a = b :=
-  (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff R).mpr
-    ((IsDiscreteValuationRing.exists_irreducible R).elim fun ϖ hϖ x =>
-      ⟨ϖ, hϖ.ne_zero, fun n =>
-        surjective_awayToFractionRing_of_irreducible R hϖ (x n)⟩) b
+  (exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint_iff_denominators R).mpr
+    (hasBoundedDenominators_of_isDiscreteValuationRing R) b
 
 /-- **`FormalSpectrum.IsStalkLimit` holds at `(X) ⊆ R⟦X⟧` at the generic point of a discrete
 valuation ring.**
