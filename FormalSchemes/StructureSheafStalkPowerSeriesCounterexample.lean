@@ -218,14 +218,18 @@ it, all three of its cases are theorems below it, and the prose it makes stale i
 docstring's. The collapse section is placed on the same ground, one section further down.
 
 The second import is the one the collapse section adds, and it is a **Mathlib-only leaf** —
-forward closure 0, reverse closure 1, this file. Its content, that a localization of a countable
-ring is countable, mentions no formal scheme, no ideal of definition and no power series, and 25
-of the 552 modules are already leaves of exactly that kind. Kept here instead it would sit under
-52 modules of formal-scheme theory and be unreachable from anywhere else on the tree; put in an
-existing Mathlib-only leaf it would turn a file about one localization identity
+forward closure 0, reverse closure 2 — holding one statement that was already on the tree:
+`Localization.countable_of_countable`, moved out of
+`FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has
+forward closure 25, is not in this file's closure and does not have this file in its own, so
+neither could import the other; the statement mentions no formal scheme, no ideal of definition
+and no power series, and 25 of the 552 modules are already leaves of exactly that kind. Restating
+it here instead of moving it would have been a project-internal duplicate, which is what
+`scripts/symm_duplicate_statement_scan.lean` exists to catch; putting it in an existing
+Mathlib-only leaf would have turned a file about one localization identity
 (`FormalSchemes.LocalizationQuotient`) or about regularity (`FormalSchemes.RegularMulEquiv`) into
-a grab bag. It costs one module, and no Mathlib import that this file's closure did not already
-reach.
+a grab bag. It costs one module, one build job, and no Mathlib import that this file's closure did
+not already reach.
 `Mathlib/RingTheory/AdicCompletion/Completeness.lean`, which carries the
 `IsAdicComplete (.span {X}) (PowerSeries R)` instance, is already reached. The discrete-valuation
 section adds no Mathlib import either: `IsDiscreteValuationRing`,
@@ -340,7 +344,7 @@ defeats every `m`.
 Two further anonymous `example`s sit beside the collapse and are consistency checks of the same
 kind: that the classification and the collapse agree at a domain satisfying both hypotheses, and
 that the collapse's forward direction has a value, at a countable discrete valuation ring — which
-also exhibits `Localization.instCountable` discharging the hypothesis from `[Countable R]`.
+also exhibits `Localization.countable_of_countable` discharging the hypothesis from `[Countable R]`.
 
 ## References
 
@@ -1768,7 +1772,7 @@ with `R[1/m]` already the whole fraction field — which a consumer can check by
 ring. Which rings satisfy *that* is still not determined here.
 
 The hypothesis is on `Frac R` and not on `R`, because that is what the proof uses and it is the
-weaker of the two. `Localization.instCountable`, in `FormalSchemes.CountableLocalization`,
+weaker of the two. `Localization.countable_of_countable`, in `FormalSchemes.CountableLocalization`,
 discharges it from `[Countable R]`, which is the form a consumer at a concrete ring has.
 -/
 
@@ -1789,7 +1793,7 @@ removes.
 
 The hypothesis is on the fraction field rather than on `R`: it is the weaker assumption, and it is
 what the proof uses. At a concrete ring it comes from `[Countable R]` through
-`Localization.instCountable`. -/
+`Localization.countable_of_countable`. -/
 theorem hasBoundedDenominators_iff_exists_surjective [Countable (FractionRing R)] :
     HasBoundedDenominators R ↔
       ∃ m : R, ∃ hm : m ≠ 0, Function.Surjective (awayToFractionRing R m hm) := by
@@ -2026,8 +2030,8 @@ the arithmetic is all there, in `FormalSpectrum.unitFractionSeries`, and this on
 It is the `mpr` half of `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` contraposed,
 and it is stated with **no countability hypothesis**, because that half is
 `FormalSpectrum.hasBoundedDenominators_of_surjective` and holds at every domain. `ℤ` does satisfy
-the hypothesis — `Countable (FractionRing ℤ)` by `Localization.instCountable` — so this is a
-corollary of the `↔` as well; the direct route is taken because it assumes less.
+the hypothesis — `Countable (FractionRing ℤ)` by `Localization.countable_of_countable` — so this
+is a corollary of the `↔` as well; the direct route is taken because it assumes less.
 
 This is the **fourth** account of `ℤ` in this file and none of the four replaces another.
 `FormalSpectrum.not_hasBoundedDenominators_int` is the theorem, with an explicit family in
@@ -2217,10 +2221,10 @@ vacuous: at a **countable** discrete valuation ring it produces an `m` whose inv
 whole fraction field.
 
 **Two things are being exhibited, and neither is a new mathematical statement.** First,
-`Localization.instCountable` fires: the hypothesis of the collapse is on `Frac R`, and here only
-`[Countable R]` is assumed, so the instance is what supplies it. Second, the direction that the
-countability hypothesis buys — the one that is *not* available at a general domain — has a value,
-so the ℤ corollary is not an artefact of a right-hand side nothing satisfies.
+`Localization.countable_of_countable` fires: the hypothesis of the collapse is on `Frac R`, and
+here only `[Countable R]` is assumed, so the instance is what supplies it. Second, the direction
+that the countability hypothesis buys — the one that is *not* available at a general domain — has
+a value, so the ℤ corollary is not an artefact of a right-hand side nothing satisfies.
 
 The conclusion is already `FormalSpectrum.surjective_awayToFractionRing_of_irreducible` at a
 uniformizer, and by a shorter route that needs no countability; this deliberately goes the long

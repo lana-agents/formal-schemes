@@ -1,4 +1,5 @@
 import FormalSchemes.CompletionToSpecStalk
+import FormalSchemes.CountableLocalization
 import Mathlib.RingTheory.MvPowerSeries.Equiv
 import Mathlib.Data.Finsupp.Encodable
 import Mathlib.Data.Rat.Encodable
@@ -47,10 +48,15 @@ the other.
 
 Supporting statements that mention no formal scheme are stated in the namespace they belong to:
 `AlgebraicGeometry.LocallyRingedSpace.injective_Γgerm_of_subsingleton`,
-`Localization.countable_of_countable`, `MvPolynomial.ker_constantCoeff`,
-`MvPolynomial.isMaximal_idealOfVars`, `MvPolynomial.countable_of_countable`,
-`MvPowerSeries.uncountable_of_nonempty` and
+`MvPolynomial.ker_constantCoeff`, `MvPolynomial.isMaximal_idealOfVars`,
+`MvPolynomial.countable_of_countable`, `MvPowerSeries.uncountable_of_nonempty` and
 `MvPolynomial.uncountable_adicCompletion_idealOfVars`.
+
+One of them has since left: `Localization.countable_of_countable` acquired a second consumer in
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which is not in this file's closure
+and does not have this file in its own, so it moved to the Mathlib-only leaf
+`FormalSchemes.CountableLocalization` and is imported back. That is the disposition the
+*Implementation notes* below name for the two `MvPolynomial` lemmas, applied.
 
 ## What is *not* proved here
 
@@ -80,11 +86,19 @@ two-patch and arbitrary-index closed-immersion questions are still not written d
 
 ## Implementation notes
 
-The countability and uncountability statements are `theorem`s and not `instance`s, and are
-activated where they are used with `haveI`. `Countable` and `Uncountable` are searched by every
-elaboration in the file's reverse closure, and none of these is a fact anything else here wants.
-`FormalSchemes.TwoAdicDegeneracy` gives the same reason for keeping its `Int` maximality statement
-out of the instance graph.
+The countability and uncountability statements that remain here are `theorem`s and not
+`instance`s, and are activated where they are used with `haveI`. `Countable` and `Uncountable` are
+searched by every elaboration in the file's reverse closure, and none of these is a fact anything
+else here wants. `FormalSchemes.TwoAdicDegeneracy` gives the same reason for keeping its `Int`
+maximality statement out of the instance graph.
+
+`Localization.countable_of_countable` is the exception, and it left this file to become one:
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` states a theorem under
+`[Countable (FractionRing R)]` and wants that hypothesis discharged by search from `[Countable R]`.
+The reason above still decides the rest — it is about what a *downstream* elaboration pays, and the
+reverse closure of `FormalSchemes.CountableLocalization` is the two consumers and nothing else. The
+`haveI` at the localization below is now redundant and is kept, since it names the submonoid the
+instance would otherwise have to be read off the goal to find.
 
 `MvPolynomial.ker_constantCoeff` and `MvPolynomial.isMaximal_idealOfVars` say nothing about formal
 schemes and would sit happily in Mathlib beside `MvPolynomial.idealOfVars_fg`. They are here rather
@@ -122,19 +136,6 @@ theorem injective_Γgerm_of_subsingleton (X : LocallyRingedSpace.{u}) (hX : Subs
   exact h
 
 end AlgebraicGeometry.LocallyRingedSpace
-
-namespace Localization
-
-/-- **A localization of a countable ring is countable**: every element is `Localization.mk r s`,
-so `R × M` surjects onto it. -/
-theorem countable_of_countable {A : Type u} [CommRing A] [Countable A] (M : Submonoid A) :
-    Countable (Localization M) := by
-  refine Function.Surjective.countable (f := fun q : A × M => Localization.mk q.1 q.2) ?_
-  intro z
-  induction z using Localization.ind with
-  | _ q => exact ⟨(q.1, q.2), rfl⟩
-
-end Localization
 
 namespace MvPolynomial
 
