@@ -319,8 +319,17 @@ all in this closure already, and so is everything the classification adds — `A
   `ℤ`, which is the whole of the previous statement.
 * `FormalSpectrum.injective_and_not_surjective_powerSeriesXIntGenericPoint`: **the refutation is
   sharp** — the injectivity half holds and the surjectivity half fails.
-* `FormalSpectrum.surjective_awayToFractionRing_of_irreducible`: `R[1/ϖ] → Frac R` is **surjective**
-  at a uniformizer of a discrete valuation ring, which is what `ℤ` cannot do at any `m`.
+* `FormalSpectrum.surjective_awayToFractionRing_of_irreducible`,
+  `FormalSpectrum.isField_localizationAway_of_irreducible`: `R[1/ϖ] → Frac R` is **surjective**
+  at a uniformizer of a discrete valuation ring, which is what `ℤ` cannot do at any `m`, and so
+  **`R[1/ϖ]` is a field** there — `FormalSpectrum.isField_localizationAway_of_irreducible` is
+  `FormalSpectrum.surjective_awayToFractionRing_of_irreducible` read through
+  `FormalSpectrum.surjective_awayToFractionRing_iff_isField`, with no countability.
+* `FormalSpectrum.exists_isField_localizationAway_of_isDiscreteValuationRing`: the existential
+  form of `FormalSpectrum.isField_localizationAway_of_irreducible`, and the **exact negation** of
+  `FormalSpectrum.not_exists_isField_localizationAway_int` at the same strength: `ℤ` has no
+  `m ≠ 0` with `ℤ[1/m]` a field, a discrete valuation ring has one, and neither statement carries
+  a countability hypothesis.
 * `FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXGenericPoint`: **the surjectivity
   half holds** at the generic point of a discrete valuation ring, with one `f` for every element.
 * `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint`: **`FormalSpectrum.IsStalkLimit` is true at
@@ -360,6 +369,12 @@ all in this closure already, and so is everything the classification adds — `A
   Mathlib's `IsFractionRing.surjective_iff_isField` read at `R[1/m]`, which is not immediate only
   because the `IsFractionRing (Localization.Away m) (FractionRing R)` instance is absent on this
   tree; the proof supplies the algebra structure and cites it. Also about **one** `m`.
+* `FormalSpectrum.hasBoundedDenominators_of_isField`: **the sufficient criterion in that third
+  spelling** — one `m ≠ 0` with `R[1/m]` a field gives the condition, at every domain and with no
+  countability. It is `FormalSpectrum.surjective_awayToFractionRing_iff_isField` composed with
+  `FormalSpectrum.hasBoundedDenominators_of_surjective`, and it is the direction of
+  `FormalSpectrum.hasBoundedDenominators_iff_exists_isField` below that the countability
+  hypothesis does *not* buy.
 * `FormalSpectrum.not_hasBoundedDenominators_of_primes`,
   `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`: **the refuting criterion**
   — a family of primes divisible into no single element refutes the condition — and the form it
@@ -369,9 +384,11 @@ all in this closure already, and so is everything the classification adds — `A
   set meeting every prime associate class is a denominator for the whole ring**.
 * `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: **the classification at a unique
   factorisation domain** — the condition holds **iff** `{a : Associates R | Prime a}` is finite.
-  The two criteria above are its two directions, and the three values below are its empty,
-  singleton and infinite cases. It is the only hypothesis under which anything here decides the
-  condition; Dedekind, semilocal, Prüfer and valuation rings are untouched.
+  Its two directions are `FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`, at the product
+  of a set of representatives of the prime associate classes, and
+  `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`; the three values below are
+  its empty, singleton and infinite cases. It is the only hypothesis under which anything here
+  decides the condition; Dedekind, semilocal, Prüfer and valuation rings are untouched.
 * `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`,
   `FormalSpectrum.hasBoundedDenominators_iff_exists_denominator`,
   `FormalSpectrum.hasBoundedDenominators_iff_forall_dvd_pow`,
@@ -1760,6 +1777,30 @@ theorem hasBoundedDenominators_of_forall_dvd_pow {m : R} (hm : m ≠ 0)
     (h : ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k) : HasBoundedDenominators R :=
   hasBoundedDenominators_of_surjective R hm (surjective_awayToFractionRing_of_forall_dvd_pow R hm h)
 
+/-- **The sufficient criterion in the third spelling**: for a single `m ≠ 0`, `R[1/m]` being a
+field gives the denominator condition — at an arbitrary domain and with no countability.
+
+`FormalSpectrum.hasBoundedDenominators_of_surjective` after
+`FormalSpectrum.surjective_awayToFractionRing_iff_isField`, and that composition is the whole of
+it.
+
+**Named because the file already asserts it.**
+`FormalSpectrum.hasBoundedDenominators_iff_exists_isField` below carries
+`[Countable (FractionRing R)]`, and its docstring says that only *necessity* needs that hypothesis
+while sufficiency holds at every domain. That was true, but the tree held it only as a composition
+a reader had to perform; this is the composition, and the `↔` points here for it.
+
+**It decides no ring**, exactly as its two companions above do not. It is a statement at one fixed
+`m`, and the quantifier over `m` in `FormalSpectrum.HasBoundedDenominators` is untouched by it.
+What separates the three is only what a consumer has to have in hand: a surjection onto `Frac R`
+(`FormalSpectrum.hasBoundedDenominators_of_surjective`), a divisibility in `R`
+(`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`), or a property of the ring `R[1/m]` on
+its own, which is this one. -/
+theorem hasBoundedDenominators_of_isField {m : R} (hm : m ≠ 0)
+    (hf : IsField (Localization.Away m)) : HasBoundedDenominators R :=
+  hasBoundedDenominators_of_surjective R hm
+    ((surjective_awayToFractionRing_iff_isField R hm).mpr hf)
+
 /-- **The refuting criterion.** A family of primes that no single `m ≠ 0` is divisible by refutes
 the denominator condition.
 
@@ -2078,15 +2119,16 @@ The right-hand side mentions neither `Frac R` nor any map out of `R[1/m]`: it is
 ring `R[1/m]` on its own. That is what distinguishes it from the two spellings above, which name a
 surjection onto `Frac R` and a range inside `Frac R` respectively.
 
-**It decides no ring, and it is not a classification.** Which domains have a single-element
-localization that is a field is not determined here for anything beyond a field, a discrete
-valuation ring and `ℤ`.
+**It decides no ring, and it is not a classification.** It trades the condition for another one
+and says nothing about which domains meet that one. What decides rings is elsewhere: the values at
+a field, at `ℤ` and at a discrete valuation ring, and — read through this `↔` — the classification
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, which at a countable unique
+factorisation domain turns *some `R[1/m]` is a field* into *finitely many primes up to associates*.
 
 **Only one of the two directions needs the hypothesis**, exactly as for
 `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`, from which this inherits it.
-Sufficiency holds at every domain with no countability — it is
-`FormalSpectrum.hasBoundedDenominators_of_surjective` after
-`FormalSpectrum.surjective_awayToFractionRing_iff_isField` — and necessity is what
+Sufficiency holds at every domain with no countability and has a name of its own,
+`FormalSpectrum.hasBoundedDenominators_of_isField`; necessity is what
 `[Countable (FractionRing R)]` buys and is not known without it. -/
 theorem hasBoundedDenominators_iff_exists_isField [Countable (FractionRing R)] :
     HasBoundedDenominators R ↔ ∃ m : R, m ≠ 0 ∧ IsField (Localization.Away m) := by
@@ -2569,6 +2611,49 @@ theorem hasBoundedDenominators_of_isDiscreteValuationRing : HasBoundedDenominato
     hasBoundedDenominators_of_surjective R hϖ.ne_zero
       (surjective_awayToFractionRing_of_irreducible R hϖ)
 
+/-- **`R[1/ϖ]` is a field at a discrete valuation ring**, at every irreducible `ϖ`, with no
+countability hypothesis anywhere.
+
+`FormalSpectrum.surjective_awayToFractionRing_of_irreducible` into
+`FormalSpectrum.surjective_awayToFractionRing_iff_isField`: inverting a uniformizer already gives
+the whole of `Frac R`, and a domain that surjects onto its fraction field is a field.
+
+**This is the statement the last `example` of this section recorded as absent**, and what made it
+absent was the route and not the mathematics. Those `example`s reach the `IsField` form through
+`FormalSpectrum.hasBoundedDenominators_iff_exists_isField`, which carries
+`[Countable (FractionRing R)]`, so they cannot state it unconditionally; they still go that way
+round, because exhibiting the collapse is what they are for, and the fact itself lives here.
+
+Stated at an arbitrary `Irreducible ϖ` rather than at `IsDiscreteValuationRing.exists_irreducible`'s
+choice, matching `FormalSpectrum.surjective_awayToFractionRing_of_irreducible`, so the caller picks
+the uniformizer. The existential form is
+`FormalSpectrum.exists_isField_localizationAway_of_isDiscreteValuationRing` below. -/
+theorem isField_localizationAway_of_irreducible {ϖ : R} (hϖ : Irreducible ϖ) :
+    IsField (Localization.Away ϖ) :=
+  (surjective_awayToFractionRing_iff_isField R hϖ.ne_zero).mp
+    (surjective_awayToFractionRing_of_irreducible R hϖ)
+
+/-- **A discrete valuation ring has a single-element localization that is a field**, with no
+countability hypothesis.
+
+`FormalSpectrum.isField_localizationAway_of_irreducible` at
+`IsDiscreteValuationRing.exists_irreducible`, and nothing else.
+
+**This is the exact negation of `FormalSpectrum.not_exists_isField_localizationAway_int` at the
+same strength**, and the pair is the sharpest contrast this file's `IsField` material draws: `ℤ`
+has no `m ≠ 0` with `ℤ[1/m]` a field, a discrete valuation ring has one, and **neither statement
+carries a countability hypothesis**. Both name no map, no power series ring and none of this
+file's own definitions; they are statements about the rings `R[1/m]` themselves.
+
+Named for the reason `FormalSpectrum.not_exists_isField_localizationAway_int` is named — it is the
+form in which the fact is recognisable, and greppable, from outside the `FormalSpectrum` namespace
+— and not because it adds anything to `FormalSpectrum.isField_localizationAway_of_irreducible`
+above, which is stronger and exhibits the uniformizer. -/
+theorem exists_isField_localizationAway_of_isDiscreteValuationRing :
+    ∃ m : R, m ≠ 0 ∧ IsField (Localization.Away m) :=
+  (IsDiscreteValuationRing.exists_irreducible R).elim fun _ hϖ =>
+    ⟨_, hϖ.ne_zero, isField_localizationAway_of_irreducible R hϖ⟩
+
 /-- A discrete valuation ring is the **singleton** case of
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: all its irreducible elements are
 associated (`IsDiscreteValuationRing.associated_of_irreducible`), so there is exactly one prime
@@ -2617,12 +2702,14 @@ of writing it down.** `FormalSpectrum.hasBoundedDenominators_of_isDiscreteValuat
 *every* discrete valuation ring, and `FormalSpectrum.surjective_awayToFractionRing_of_irreducible`
 exhibits `R[1/ϖ] → Frac R` as surjective there with no countability at all. Only the passage to
 `IsField` goes through the `↔`, which carries `[Countable (FractionRing R)]`, so the hypothesis
-here is an artefact of the route and not of the fact. **Nothing here proves that `R[1/ϖ]` is a
-field at an arbitrary discrete valuation ring**, and that is not because the statement is hard: it
-is one composition away, `FormalSpectrum.surjective_awayToFractionRing_of_irreducible` into
-`FormalSpectrum.surjective_awayToFractionRing_iff_isField`, with no countability anywhere. It is
-deliberately not made, because that composition does not go through the collapse and the `example`s
-in this section are here to exhibit the collapse.
+here is an artefact of the route and not of the fact. **The unconditional statement is
+`FormalSpectrum.isField_localizationAway_of_irreducible` above**, which is that same composition —
+`FormalSpectrum.surjective_awayToFractionRing_of_irreducible` into
+`FormalSpectrum.surjective_awayToFractionRing_iff_isField` — with no countability anywhere, and
+`FormalSpectrum.exists_isField_localizationAway_of_isDiscreteValuationRing` is this `example`'s own
+statement with the hypothesis dropped. The `example` still goes the long way round, because that
+composition does not go through the collapse and the `example`s in this section are here to exhibit
+the collapse.
 
 It is an `example` for the same reason the two beside it are: it proves nothing that does not
 already have a name. -/
