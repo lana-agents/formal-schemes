@@ -19,9 +19,9 @@ sentence, and `FormalSchemes.TateInvNodeChartPatchChartTrace` and
 > patch-`(i + n)` chart produces at **the same** `w`.
 
 The action moves the chart index and leaves the prime alone. That is the cover-shift law
-`AlgebraicGeometry.ι_tateInvShiftAut_zpow` — `σⁿ` restricts along the inclusion of the patch `U_i`
-to the inclusion of `U_{i+n}` — read at a point, transported to the saturated locus, and it is the
-only property of the action any statement below uses.
+`AlgebraicGeometry.ι_tateInvShiftAut_zpow` — `σⁿ` restricts along the inclusion of the patch at
+index `i` to the inclusion of the patch at index `i + n` — read at a point, transported to the
+saturated locus, and it is the only property of the action any statement below uses.
 
 ## What it buys
 
@@ -51,7 +51,7 @@ of the saturated locus and only the third is about the action.
 
 1. `AlgebraicGeometry.base_restrictOpenι_tateInvNodeChartRestrictedAction` — the inclusion
    intertwines the restricted action with `σⁿ`. Term mode, no tactic:
-   `AlgebraicGeometry.LocallyRingedSpace.restrictOpenι` is
+   `AlgebraicGeometry.FormalScheme.restrictOpenι` is
    `AlgebraicGeometry.LocallyRingedSpace.ofRestrict` by definition and
    `AlgebraicGeometry.nodeChartSaturationOpens` is the preimage of
    `AlgebraicGeometry.tateInvNodeChartQuotientOpens` by definition, so
@@ -173,7 +173,7 @@ variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I)
 /-- **The inclusion of the saturated locus intertwines the restricted action with `σⁿ`.**
 
 Term mode with no tactic, because both spellings are definitional:
-`AlgebraicGeometry.LocallyRingedSpace.restrictOpenι` is
+`AlgebraicGeometry.FormalScheme.restrictOpenι` is
 `AlgebraicGeometry.LocallyRingedSpace.ofRestrict` of the open, and
 `AlgebraicGeometry.nodeChartSaturationOpens` is the preimage of
 `AlgebraicGeometry.tateInvNodeChartQuotientOpens` along the projection. So this is
@@ -261,7 +261,7 @@ locus, `σⁿ` carries the point the patch-`i` chart produces at a prime `w` to 
 patch-`(i + n)` chart produces at **the same** `w`.
 
 The three steps above under injectivity of the inclusion of the locus: push the equation forward
-along `AlgebraicGeometry.LocallyRingedSpace.restrictOpenι`, where the restricted action becomes
+along `AlgebraicGeometry.FormalScheme.restrictOpenι`, where the restricted action becomes
 `σⁿ` and both lifts become basic-open charts of patches, and there it is the cover-shift law.
 
 **This is the first property of the `σ`-action used anywhere in this cluster** beyond the
