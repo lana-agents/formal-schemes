@@ -26,7 +26,7 @@ is a lemma, and this is where it lives.
 Nothing in it is about formal schemes, group actions of any particular group, or the Tate curve:
 the only project declaration it names is
 `AlgebraicGeometry.LocallyRingedSpace.IsInvariantSection`, which is declared in
-`FormalSchemes/ActionInvariantExtension.lean` (forward closure 78, reverse closure 65). This leaf
+`FormalSchemes/ActionInvariantExtension.lean` (forward closure 78, reverse closure 65). This module
 over it has forward closure **79**, and reverse closure **5**, all five of them in the Tate
 node-chart cluster; the alternative, adding it to
 `FormalSchemes/ActionInvariantExtension.lean`, re-elaborates 65 modules for a two-line proof.

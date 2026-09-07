@@ -60,6 +60,22 @@ is wrong about the rest.  The rule implemented below is read off the prose that 
    indefinite leaf intervenes (*"a leaf whose own forward closure is 231"* is about a module that
    does not exist).
 
+## The noun beside the figure
+
+*"A leaf over `X` and `Y`: forward closure 39, reverse closure 7"* states its own contradiction:
+`leaf` is the claim that the reverse closure is **0**, and it rots exactly like the numeral beside
+it -- six openers on this tree said it of a file with consumers.  So a sentence that carries a
+closure figure **and** calls the file it is in a leaf, either as a `## Placement` opener or as
+*this leaf*, has that noun checked against the same walk, once per sentence however many figures
+it quotes.  This buys coverage for nothing: only sentences that already carry a claim are read, so
+no claim that was checked before is declined now, and the word's other senses stay out of range --
+a `Mathlib-only leaf` is a *forward*-closure claim, *"a leaf whose own forward closure is 231"* is
+hypothetical, and the 66 proof-tree leaves in the `GeneralFibreProductBothAlgebraData*` modules
+carry no figure at all.  What is out of reach is the positional noun about **another** module,
+*"`FormalSchemes.TateSeparated`, a Tate leaf"*: no figure in the sentence, nothing to attribute,
+and no cheap way to tell that use from a hypothetical one.  That half is convention only, and
+`CONTRIBUTING.md` says so.
+
 ## The spellings this script cannot read, and why they are counted rather than parsed
 
 `CLOSURE` keys on the words *forward closure* / *reverse closure*, so a sentence that measures the
@@ -147,6 +163,18 @@ DECLINER = re.compile(r"\b[Ii]ts\b")
 # exist, so there is nothing to compare it against.
 BLOCKER = re.compile(r"\ba (?:new )?leaf\b")
 
+# The noun beside the figure is a measurement too.  A sentence that carries a closure figure and
+# calls the file it is in a **leaf** -- as a `## Placement` opener (*A leaf over `X`:*) or as a
+# self-reference (*against this leaf's 13*) -- asserts that the file's reverse closure is 0, and
+# that assertion rots exactly like the numeral beside it: six openers on this tree contradicted
+# themselves inside one sentence (row 1823).  Only sentences that already carry a claim are read,
+# so this declines nothing that was checked before, and the *other* senses of the word are never
+# seen: `Mathlib-only leaf` is a forward-closure claim, `a leaf whose ...` is hypothetical, and the
+# 66 proof-tree leaves in the `GeneralFibreProductBothAlgebraData*` modules carry no figure at all.
+# A positional noun about *another* module (*`FormalSchemes.TateSeparated`, a Tate leaf*) is out of
+# reach for the same reason -- there is no figure in those sentences -- and stays a convention.
+SELF_LEAF = re.compile(r"\b[Tt]his leaf\b|\bA (?:new )?leaf\b")
+
 # Figures that ride along with a claim and are checkable against the same walk.  Each is looked for
 # between the claim's figure and whichever comes first of the end of its sentence and the next
 # closure claim, so a companion always belongs to the claim it is read under.  `offset` is added to
@@ -156,7 +184,7 @@ COMPANIONS = [
     (re.compile(r"\((\d+)(?: modules)?(?: counted)? with itself\)"), "subject", 1),
     (re.compile(r"\((\d+)(?: modules)?(?: counted)? besides itself\)"), "subject", 0),
     (re.compile(r"(\d+) with itself\b"), "subject", 1),
-    (re.compile(r"(\d+) before this leaf"), "subject", -1),
+    (re.compile(r"(\d+) before this (?:leaf|file|module)"), "subject", -1),
     (re.compile(r"against this (?:leaf|file|module)'s \*{0,2}(\d+)"), "self", 0),
     (re.compile(r"of the project's (\d+) modules"), "total", 0),
     (re.compile(r"over the (\d+) modules under"), "total", 0),
@@ -273,10 +301,14 @@ def claims(mods: dict[str, str]):
         for m in CLOSURE.finditer(flat):
             line = raw[:m.start()].count("\n") + 1
             end = BREAK.search(flat, m.end())
+            back = max(0, m.start() - WINDOW)
+            start = max((b.end() for b in BREAK.finditer(flat, back, m.start())), default=back)
             bound = min(end.start() if end else len(flat), m.end() + NUMERAL_REACH)
             fig = FIGURE.search(flat, m.end(), bound)
             base = dict(path=path, line=line, module=module, kind=m.group(1).lower(),
-                        text=" ".join(flat[m.start():m.start() + 90].split()))
+                        text=" ".join(flat[m.start():m.start() + 90].split()),
+                        sentence=start, self_leaf=bool(SELF_LEAF.search(
+                            flat[start:end.start() if end else len(flat)])))
             if not fig:
                 yield dict(base, stated=None, about=None, declined="no figure in the sentence")
                 continue
@@ -328,8 +360,15 @@ def audit(root: str = ".") -> tuple[list, list]:
     """Every claim in the tree, split into `(mismatches, declined)`."""
     mods = project_modules(root)
     forward, reverse = closures(mods)
-    mismatches, declined = [], []
+    mismatches, declined, called_leaf = [], [], set()
     for c in claims(mods):
+        # One report per sentence: a `## Placement` opener carries two claims and one noun.
+        seen_here = (c["path"], c["sentence"]) in called_leaf
+        if c["self_leaf"] and reverse[c["module"]] and not seen_here:
+            called_leaf.add((c["path"], c["sentence"]))
+            mismatches.append(dict(
+                c, stated=0, actual=len(reverse[c["module"]]),
+                what="the reverse closure of `%s`, which this sentence calls a leaf" % c["module"]))
         if c["about"] is None:
             declined.append(c)
             continue
@@ -415,12 +454,14 @@ def selftest() -> int:
                       encoding="utf-8") as f:
                 f.write(body)
 
-        write("Base", "/-! A leaf over nothing: forward closure **0**, reverse closure **3**. -/\n")
+        # `Top` is the only leaf of the three, so it is the only one that may say so.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **3**. -/\n")
         write("Mid", "public import FormalSchemes.Base\n"
-                     "/-! A leaf over `FormalSchemes.Base`: forward closure **1** project modules\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1** project modules\n"
                      "besides itself (2 counted with itself), reverse closure **1**. -/\n")
         write("Top", "import FormalSchemes.Mid\n"
-                     "/-! `FormalSchemes.Base`'s reverse closure is **9**. -/\n")
+                     "/-! A leaf over `FormalSchemes.Mid`: `FormalSchemes.Base`'s reverse closure\n"
+                     "is **9**. -/\n")
         write("Quiet", "import FormalSchemes.Base\n/-! Nothing measured here. -/\n")
         mis, dec = audit(d)
         check("the walk follows `public import` and both figures of the correct file pass",
@@ -435,6 +476,45 @@ def selftest() -> int:
         check("a wrong `counted with itself` companion figure is caught",
               sorted((m["module"], m["stated"], m["actual"]) for m in mis),
               [("FormalSchemes.Mid", 7, 2), ("FormalSchemes.Top", 9, 3)])
+
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        # `Base` is imported by both of the others and is called a leaf in neither of the two
+        # senses that are not a reverse-closure claim; `Mid` calls itself one and has a consumer.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **2**. It is a\n"
+                      "Mathlib-only leaf, and a leaf here would be no better. -/\n")
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! A leaf over `FormalSchemes.Base`: forward closure **1**, reverse\n"
+                     "closure **1**. -/\n")
+        write("Top", "import FormalSchemes.Mid\n"
+                     "/-! `FormalSchemes.Base`'s reverse closure is **2**, 1 before this\n"
+                     "file. -/\n")
+        mis, _ = audit(d)
+        check("a file that calls itself a leaf and has a consumer is caught, once",
+              [(m["module"], m["stated"], m["actual"]) for m in mis],
+              [("FormalSchemes.Mid", 0, 1)])
+        write("Top", "import FormalSchemes.Mid\n"
+                     "/-! `FormalSchemes.Base`'s reverse closure is **2**, 5 before this\n"
+                     "file. -/\n")
+        mis, _ = audit(d)
+        check("`N before this leaf` also reads `file` and `module`",
+              sorted((m["module"], m["stated"], m["actual"]) for m in mis),
+              [("FormalSchemes.Mid", 0, 1), ("FormalSchemes.Top", 5, 1)])
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**, and this file is not a leaf. -/\n")
+        write("Top", "import FormalSchemes.Mid\n"
+                     "/-! `FormalSchemes.Base`'s reverse closure is **2**, 1 before this\n"
+                     "module. -/\n")
+        mis, _ = audit(d)
+        check("neither `Mathlib-only leaf` nor an indefinite one is a reverse-closure claim",
+              [(m["module"], m["stated"], m["actual"]) for m in mis], [])
 
     with tempfile.TemporaryDirectory() as d:
         os.makedirs(os.path.join(d, "FormalSchemes"))

@@ -102,10 +102,10 @@ form is *ambiguous* under this tree's citation open set, since
 
 It lives in `AlgebraicGeometry.LocallyRingedSpace` rather than in `FormalSpectrum`: its statement
 mentions no ring, no ideal and no spectrum. Issue 1479 moved it here from
-`FormalSchemes.ThickeningChartRestrict`, whose import closure of 25 modules put it out of reach of
-`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq` below; that file still
-holds the `range_ofRestrict_comp_*` lemmas
-about compatible families, which are not general. -/
+`FormalSchemes.ThickeningChartRestrict`, whose forward closure of **26** modules put it out of
+reach of `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq` below; that
+file still holds the `range_ofRestrict_comp_*` lemmas about compatible families, which are not
+general. -/
 theorem range_ofRestrict (Y : LocallyRingedSpace.{u}) (V : Opens Y.toTopCat) :
     Set.range (Y.ofRestrict V.isOpenEmbedding).base = (V : Set Y.toTopCat) :=
   Opens.set_range_inclusion' V

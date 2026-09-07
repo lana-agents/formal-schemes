@@ -469,33 +469,54 @@ Two spellings are worth preferring for that reason alone, since both are checked
   tree its antecedent was the paragraph's subject while the last module actually named was a
   different one mentioned in passing;
 * keep a companion figure in the same sentence as the claim it belongs to: *"N of the project's T
-  modules"*, *"against this file's M"*, *"K before this leaf"* and *"(J counted with itself)"* are
+  modules"*, *"against this file's M"*, *"K before this file"* and *"(J counted with itself)"* are
   all checked against the same walk, and all four have been wrong on this tree.
 
 A figure spelled in words is invisible to it. *"The reverse closure of `FormalSchemes.Foo` is the
 two consumers and nothing else"* was **five** modules by then and no check could say so; write the
 numeral.
 
-**The noun beside the figure is a measurement too, and the checker does not see it.** Call a module
-a **leaf** only where a walk you ran gives it reverse closure 0; open a `## Placement` paragraph
-with *"Over `FormalSchemes.Foo` and `FormalSchemes.Bar`:"*, which carries the only fact the opener
-needs and asserts nothing a later module can falsify, and write *"this file's closure"* rather than
-*"this leaf's"*. **`Mathlib-only leaf` is the opposite sense — *forward* closure 0 — and is
-unaffected**: `FormalSchemes.LocallyRingedSpaceRange` is one, correctly, at reverse closure 249.
-Extending the audit to the noun was considered on row 1823 and declined, so this is held by the
-convention alone; row 1825 carries the instances that predate it.
+**And write the words `forward closure` or `reverse closure`, because that phrase is what the
+checker looks for.** The same measurement has been spelled on this tree as *"the import closure of
+this leaf is 82 project modules"*, *"whose import closure of 25 modules"*, *"this leaf's transitive
+closure"*, *"adding it takes a closure of 35 to one of 45"* and — inverted — *"this file is in the
+import closure of 445 of the library's 496 modules"*, which is a **reverse** closure written from
+the far end. Such a sentence carries numerals and is not reported as declined either: it is
+invisible, which is worse than unattributed, since a declined claim is at least counted. Two greps
+— `import closure of` and `closure of N` — find **eight** such sentences in five files, of which
+**two were wrong**, one by a module and the other by 56 in its figure and 62 in its total; row 1825
+rewrote the four that state a plain measurement into the checked spelling and left four deltas.
+**Those two greps are not the population**, and the section below is what a sweep finds instead.
+
+**The noun beside the figure is a measurement too.** Call a module a **leaf** only where a walk you
+ran gives it reverse closure 0; open a `## Placement` paragraph with *"Over `FormalSchemes.Foo` and
+`FormalSchemes.Bar`:"*, which carries the only fact the opener needs and asserts nothing a later
+module can falsify, and write *"this file's closure"* rather than *"this leaf's"*. **`Mathlib-only
+leaf` is the opposite sense — *forward* closure 0 — and is unaffected**:
+`FormalSchemes.LocallyRingedSpaceRange` is one, correctly, at reverse closure 249.
+
+**Half of that noun is checked and half is convention, and the halves are worth telling apart.**
+Where a sentence carries a closure figure *and* calls the file it is in a leaf — a `## Placement`
+opener, or *"against this leaf's 13"* — `closure_audit.py` reads the noun as the claim *reverse
+closure 0* and checks it against the same walk, once per sentence; that costs no coverage, because
+only sentences that already carry a figure are read and nothing new is declined. What it cannot
+see is the positional noun about **another** module, as in *"`FormalSchemes.TateSeparated`, a Tate
+leaf that nothing outside the Tate cluster can cite"*: there is no figure in that sentence to hang
+the check on, and the file carrying it has no reason ever to re-measure the module it names, which
+is why `TateSeparated` had picked up **67** consumers before anyone looked. Say *"a Tate-cluster
+module"*, or name the figure and bring the sentence under the check.
 
 ### The spellings the checker cannot read, and `--sweep`
 
-**Write the words `forward closure` or `reverse closure`, because that phrase is what `--tree`
-keys on.** The same measurement has been spelled on this tree as *"the import closure of this file
-is 82 project modules"*, *"whose import closure of 25 modules"*, *"its import closure is 214
-modules"*, *"this file's transitive closure"*, *"a 31-module transitive import closure"* and —
-inverted — *"`FormalSchemes.Gluing` being upstream of 272 of this tree's 496 modules"*, which is a
-**reverse** closure written from the far end. None of those is reported as *declined* either. A
-declined claim is at least counted; these are **invisible**, which is worse, and it is where the
-figures rot longest: row 1832 found **twelve** such sentences in eleven files carrying **twenty**
-wrong numerals, one of them a project total stale by 62 and one a reverse closure stale by 32.
+Those two greps are keyed on the preposition, and three further spellings do without it:
+*"its import closure is 214 modules"*, with none at all; *"a 31-module transitive import closure"*,
+with the numeral before the noun; and *"`FormalSchemes.Gluing` being upstream of 272 of this tree's
+496 modules"*, a **reverse** closure written with neither the word `reverse` nor a preposition to
+key on — and carrying the same stale project total that row 1825 had just repaired elsewhere.
+Sweeping for every sentence that pairs a numeral with the word `closure`, with a project-module
+total or with *upstream of N* reports all three. Row 1832 read that population and found **twelve**
+wrong sentences in eleven files carrying **twenty** wrong numerals, against the two the greps
+found: one project total stale by 62, one reverse closure stale by 32.
 
 Extending `CLOSURE` to those spellings was considered and declined twice, and the reason is not
 cost: *"the closure of `A` is N"* and *"`A` is in the closure of N"* are **opposite** claims in

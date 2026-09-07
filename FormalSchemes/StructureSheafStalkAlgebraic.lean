@@ -83,9 +83,11 @@ sheaf-carrying criterion as well.
 already imports `FormalSchemes.BasicOpenRestrictionIdentification` and already makes the same trade
 one level down, for the separation statement on sections
 (`FormalSpectrum.exists_basicOpen_awayCompletionRestrict_eq`), recording the same two instance
-hypotheses as a cost. `FormalSchemes.StructureSheafStalkBasicOpenCompletion`'s reverse closure is 0
-too, and importing `FormalSchemes.StructureSheafStalkComparison` would take its closure from 42 to
-46 — the same total as this file. The two are equal on the numbers; the split is by subject, since
+hypotheses as a cost. `FormalSchemes.StructureSheafStalkBasicOpenCompletion`'s reverse closure is 0,
+where this file's reverse closure is 7, and importing
+`FormalSchemes.StructureSheafStalkComparison` there would take
+`FormalSchemes.StructureSheafStalkBasicOpenCompletion`'s forward closure from 42 to 46 — the same
+total as this file. The two are equal on the numbers; the split is by subject, since
 that file is about the *source* of the comparison map and these statements are about the map
 itself.
 

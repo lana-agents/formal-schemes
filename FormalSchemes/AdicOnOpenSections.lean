@@ -52,12 +52,12 @@ formal spectra is adically continuous for them, provided its global-sections map
   structural map, its ideal and every power of that ideal, so a leg that composes a `.c.app` with
   an `eqToHom` presheaf transport costs no new argument.
 
-Issue 1473 brought those four here from `FormalSchemes.TateInvNodeChartAmbient`, a Tate leaf whose
-module docstring is about `A = R{x, y}/(x·y − q)`. None of the four mentions a Tate object, a
+Issue 1473 brought those four here from `FormalSchemes.TateInvNodeChartAmbient`, a Tate-cluster
+module whose docstring is about `A = R{x, y}/(x·y − q)`. None of the four mentions a Tate object, a
 period, a node or an annulus, and the tell was the direction of an import: to state the two
-structural-map lemmas in that leaf, issue 1459 had to add `import FormalSchemes.AdicOnOpenSections`
-to it — pulling a general upstream module sideways into the cluster. Their statements are
-unchanged by the move.
+structural-map lemmas in that module, issue 1459 had to add
+`import FormalSchemes.AdicOnOpenSections` to it — pulling a general upstream module sideways into
+the cluster. Their statements are unchanged by the move.
 
 ## What is *not* proved
 
