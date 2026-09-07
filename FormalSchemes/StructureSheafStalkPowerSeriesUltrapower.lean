@@ -378,17 +378,18 @@ theorem coe_ne_zero_intUltrapower {f : ℕ → ℤ} (hf : ∀ i, f i ≠ 0) :
   obtain ⟨i, hi⟩ := ((coe_eq_zero_iff_intUltrapower φ f).mp h).exists
   exact hf i hi
 
-/-- **A nonzero germ is nonzero on a set of the ultrafilter.** This is the first of the two places
-where the filter has to be an ultrafilter: `Ultrafilter.eventually_not` turns the *failure*
+/-- **A nonzero germ is nonzero on a set of the ultrafilter.** This is the first of the three
+places where the filter has to be an ultrafilter: `Ultrafilter.eventually_not` turns the *failure*
 of eventual vanishing into eventual non-vanishing, which is false at a general filter. -/
 theorem eventually_ne_zero_intUltrapower {f : ℕ → ℤ} (hf : (f : IntUltrapower φ) ≠ 0) :
     ∀ᶠ i in (φ : Filter ℕ), f i ≠ 0 :=
   Ultrafilter.eventually_not.mpr fun h => hf ((coe_eq_zero_iff_intUltrapower φ f).mpr h)
 
-/-- **The ultrapower has no zero divisors**, which is the second and last place the ultrafilter is
-used for its own sake: `Ultrafilter.eventually_or` splits *eventually one of the two factors
+/-- **The ultrapower has no zero divisors**, which is the second of the three places the ultrafilter
+is used for its own sake: `Ultrafilter.eventually_or` splits *eventually one of the two factors
 vanishes* into *one of the two vanishes eventually*. Over a filter that is not an ultrafilter the
-germ ring has zero divisors and nothing in this file survives. -/
+germ ring has zero divisors and nothing in this file survives. The third is
+`FormalSpectrum.prime_coe_intUltrapower`, which splits the same disjunction for divisibility. -/
 instance : NoZeroDivisors (IntUltrapower φ) where
   eq_zero_or_eq_zero_of_mul_eq_zero {x y} := by
     induction x, y using Germ.inductionOn₂ with
@@ -673,7 +674,9 @@ by `FormalSpectrum.eventually_dvd_of_coe_dvd_coe_intUltrapower`, `Prime (f i)` s
 index, and `Ultrafilter.eventually_or` chooses the side globally.
 
 Together with the `NoZeroDivisors` instance this is the second and last place in the file where a
-*disjunction* has to be resolved on a large set, and it is the same move. -/
+*disjunction* has to be resolved on a large set, and it is the same move; counting
+`FormalSpectrum.eventually_ne_zero_intUltrapower` it is the third and last place where the filter
+has to be an ultrafilter. -/
 theorem prime_coe_intUltrapower {f : ℕ → ℤ} (hf : ∀ i, Prime (f i)) :
     Prime ((f : IntUltrapower φ)) := by
   refine ⟨coe_ne_zero_intUltrapower φ fun i => (hf i).ne_zero,
