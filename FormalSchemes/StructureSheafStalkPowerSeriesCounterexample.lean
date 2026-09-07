@@ -1862,12 +1862,13 @@ a unique factorisation domain the two hypotheses do agree
 (`UniqueFactorizationMonoid.irreducible_iff_prime`), which is where
 `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` lives.
 
-**What the ultrapower falsifies here is `hdvd` and nothing else.** It has a family of primes
-(`FormalSpectrum.exists_prime_family_not_associated_intUltrapower`), so `hp` is met, but
-`FormalSpectrum.exists_forall_dvd_intUltrapower` applied to that very family produces an `m ≠ 0`
-divisible by every member. The two criteria therefore fail at that ring for different reasons —
-this one on `hdvd`, the companion below on `[UniqueFactorizationMonoid R]`, which the same family
-shows is **needed** rather than merely absent. -/
+**What the ultrapower falsifies here is the divisibility hypothesis and nothing else.** It has a
+family of primes (`FormalSpectrum.exists_prime_family_not_associated_intUltrapower`), so the
+primality hypothesis is met, but `FormalSpectrum.exists_forall_dvd_intUltrapower` applied to that
+very family produces an `m ≠ 0` divisible by every member. The two criteria therefore fail at that
+ring for different reasons — this one on its divisibility hypothesis, the companion below on
+`[UniqueFactorizationMonoid R]`, which the same family shows is **needed** rather than merely
+absent. -/
 theorem not_hasBoundedDenominators_of_primes (p : ℕ → R) (hp : ∀ n, Prime (p n))
     (hdvd : ∀ m : R, m ≠ 0 → ∃ n, ¬ p n ∣ m) : ¬ HasBoundedDenominators R := by
   intro h

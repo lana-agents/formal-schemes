@@ -157,7 +157,8 @@ criterion.
 * `FormalSpectrum.prime_coe_intUltrapower`, `FormalSpectrum.not_isUnit_coe_intUltrapower`,
   `FormalSpectrum.exists_prime_family_not_associated_intUltrapower`: **a pointwise prime is prime,
   and the ultrapower has infinitely many pairwise non-associated primes** — the germs of
-  `2, 3, 5, …`, enumerated from `Nat.exists_infinite_primes` rather than from `Nat.nth`.
+  `2, 3, 5, …`, enumerated from `Nat.exists_infinite_primes` rather than from Mathlib's nth-prime
+  function, whose module is outside this project's Mathlib closure.
 * `FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower`,
   `FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`: **the
   `[UniqueFactorizationMonoid R]` of
@@ -706,9 +707,10 @@ theorem associated_of_associated_coe_const_intUltrapower {p q : ℤ}
 constant sequences at a strictly increasing sequence of rational primes.
 
 The enumeration is built by recursion from `Nat.exists_infinite_primes`, which this file already
-uses in `FormalSpectrum.exists_forall_not_dvd_pow_intUltrapower`, rather than from `Nat.nth` —
-that is **not** in this project's Mathlib closure (`#check @Nat.nth` fails from this file) and
-importing it would be the whole cost of this section. -/
+uses in `FormalSpectrum.exists_forall_not_dvd_pow_intUltrapower`, rather than from Mathlib's
+nth-prime function: `Mathlib/Data/Nat/Nth.lean` is **not** in this project's Mathlib closure, its
+enumerator does not elaborate from this file, and importing it would be the whole cost of this
+section. -/
 theorem exists_prime_family_not_associated_intUltrapower :
     ∃ p : ℕ → IntUltrapower φ, (∀ n, Prime (p n)) ∧
       ∀ i j : ℕ, Associated (p i) (p j) → i = j := by
