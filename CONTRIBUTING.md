@@ -483,7 +483,7 @@ import closure of 445 of the library's 496 modules"*, which is a **reverse** clo
 the far end. Such a sentence carries numerals and is not reported as declined either: it is
 invisible, which is worse than unattributed, since a declined claim is at least counted. Row 1825
 measured the population at **eight** sentences in five files, of which **two were wrong** — one by
-a module, the other by 55 in its figure and 61 in its total — and rewrote the four that state a
+a module, the other by 56 in its figure and 62 in its total — and rewrote the four that state a
 plain measurement into the checked spelling. The four left are deltas (*"from 7 modules to 32"*,
 *"takes a closure of 35 to one of 45"*), whose second figure is counterfactual and checkable by no
 walk. Teaching the script this

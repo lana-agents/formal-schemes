@@ -44,7 +44,7 @@ We reindex by `n : ℕ` standing for the exponent `n + 1`, so that the `n ≠ 0`
 `towerRingHom` and the four lemmas about it were first written downstream, in
 `FormalSchemes.ThickeningTowerKernel`, as copies of this file's one-step declarations with `m ≤ n`
 in place of `m = n`, `n + 1`. They were moved here because this file's reverse closure is
-**500** of the project's 557 modules while `FormalSchemes.ThickeningTowerKernel`'s reverse closure
+**501** of the project's 558 modules while `FormalSchemes.ThickeningTowerKernel`'s reverse closure
 is **3**: a caller of a one-step form could not have reached the general form there, so the two
 would have stayed duplicated for as long as anyone needed both. The one-step names, statements and
 binder order are unchanged and are now proved by specialisation, so no citation of them changed
