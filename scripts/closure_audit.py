@@ -84,14 +84,17 @@ declined claim is at least counted.  The tree has spelled one absolute project-c
 *"the import closure of this file is 82 project modules"*, *"whose import closure of 25 modules"*,
 *"its import closure is 214 modules"*, *"this file's transitive closure"*, *"a 31-module transitive
 import closure"* and -- inverted -- *"`FormalSchemes.Gluing` being upstream of 272 of this tree's
-496 modules"*, which is a **reverse** closure written from the far end.  Eleven such figures were
-wrong when the population was first measured (rows 1825 and 1832), one of them by 62 in its total.
+496 modules"*, which is a **reverse** closure written from the far end.  When row 1832 first read
+that population it found **twelve** wrong sentences in eleven files carrying **twenty** wrong
+numerals, one of them a project-module total stale by 62.
 
 Extending `CLOSURE` to those spellings was considered twice and declined twice, and the reason is
 not cost: *"the closure of `A` is N"* and *"`A` is in the closure of N"* are **opposite** claims in
 nearly the same words, so a second grammar has to carry the direction, and getting that wrong turns
 a silent gap into confident mis-measurement.  What `--sweep` does instead is *count* them: every
-sentence carrying the word `closure` and a numeral that `--tree` neither attributes nor declines.
+sentence carrying a numeral together with the word `closure`, a project-module total or *upstream
+of N*, and that `--tree` neither attributes nor declines.  The word alone is not the trigger --
+the `Gluing` sentence quoted above does not contain it.
 `--tree` prints the count in its header and never fails on it, so the invisible population stops
 being invisible without the script pretending it can parse it.  Sentences naming Mathlib are left
 out: they measure Mathlib's import graph, which this script does not walk.
@@ -343,8 +346,8 @@ def sentences(raw: str):
 
 
 def invisible(mods: dict[str, str]):
-    """Every sentence that carries the word `closure` and a numeral and that `claims()` cannot
-    see at all -- neither attributed nor declined.  Counted, never failed on."""
+    """Every sentence that carries a numeral together with a `SWEEPABLE` marker and that
+    `claims()` cannot see at all -- neither attributed nor declined.  Counted, never failed on."""
     for module, path in sorted(mods.items()):
         raw = open(path, encoding="utf-8").read()
         for off, s in sentences(raw):
@@ -559,7 +562,8 @@ def main() -> int:
     mods = project_modules()
     if args.sweep:
         blind = list(invisible(mods))
-        print("sentences carrying `closure` and a numeral that --tree cannot see: %d" % len(blind))
+        print("sentences carrying a numeral and a closure marker that --tree cannot see: %d"
+              % len(blind))
         print("(Mathlib-closure sentences excluded; most of the rest are deltas, intersections or\n"
               " numerals that are not closure figures -- this is a reading list, not a failure\n"
               " list.  A plain measurement of this tree in here should be rewritten in the\n"
