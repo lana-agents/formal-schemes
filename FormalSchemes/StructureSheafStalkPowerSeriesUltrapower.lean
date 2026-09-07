@@ -332,9 +332,19 @@ are the ones this file argues do not apply, and importing them would be four mod
 statements that are only discussed.
 
 **This leaf adds exactly one module to the project's Mathlib closure**,
-`Mathlib/Order/Filter/Germ/Basic.lean`, measured by walking `import` and `public import` over
-Mathlib's sources from every `import Mathlib…` line under `FormalSchemes/`: 2726 modules at base
-and 2727 at head. `Mathlib/Order/Filter/Ultrafilter/Basic.lean` (for `Filter.hyperfilter` and
+`Mathlib/Order/Filter/Germ/Basic.lean`: **2649** modules at base and **2650** at head. An absolute
+pair here is worth nothing without the walk that produced it, so the walk is written down. It
+starts from every `import Mathlib…` line under `FormalSchemes/`, reads the header of each Mathlib
+source with its nested block comments stripped, accepts all five import spellings this Mathlib
+uses — `import`, `public import`, `meta import`, `public meta import` and `import all` — and
+allows a trailing `--` comment after the module name, which 118 of Mathlib's import lines carry.
+The two figures are then Lean's own: `Lean.Environment.allImportedModuleNames`, filtered to the
+names beginning with Mathlib, gives 2650 for the aggregator at the repository root and 2649 for
+the same tree with this file's line deleted. Two nearby conventions do not reproduce that —
+accepting only `import` and `public import` gives 2630 and 2631, and rejecting the trailing
+comment gives 2615 and 2616 — and under all three the **delta is 1**, which is what this
+paragraph is claiming.
+`Mathlib/Order/Filter/Ultrafilter/Basic.lean` (for `Filter.hyperfilter` and
 `Ultrafilter.eventually_or`) and `Mathlib/Data/Nat/Prime/Infinite.lean` (for
 `Nat.exists_infinite_primes`) are already in it and are reached through the import above.
 `Mathlib/Order/Filter/FilterProduct.lean`, the ultraproduct file, is **not** imported: it supplies
@@ -343,12 +353,22 @@ the field structure of an ultrapower of a field, and neither half below needs it
 **The second witness costs one `import` line and no module at all.**
 `Mathlib/RingTheory/Polynomial/RationalRoot.lean` is imported for the single instance
 `IsIntegrallyClosed ℤ` that `FormalSpectrum.not_isUnit_two_algInt` needs, and it is **already** in
-this project's Mathlib closure — three other files reach it, the shortest through
-`Mathlib/RingTheory/Ideal/Int.lean` — so the sentence above stays exact: this leaf still adds
-exactly one module to that closure, and the line here adds none. The two other modules a reader
-would expect — `Mathlib/FieldTheory/IsAlgClosed/AlgebraicClosure.lean` and
-`Mathlib/RingTheory/IntegralClosure/IntegrallyClosed.lean` — are **not** imported: both were
-already reachable from here, measured by deleting each candidate in turn and re-elaborating.
+this project's Mathlib closure — three other files reach it, the shortest chain being three steps
+from `Mathlib/NumberTheory/NumberField/Basic.lean` through
+`Mathlib/RingTheory/DedekindDomain/Basic.lean` — so the sentence above stays exact: this leaf
+still adds exactly one module to that closure, and the line here adds none.
+
+To **this file's own** closure it adds three, and the two other modules a reader would expect sit
+on opposite sides of that difference. `Mathlib/FieldTheory/IsAlgClosed/AlgebraicClosure.lean` was
+already reachable from here **before** this line was written: with the two imports above and
+nothing else, `AlgebraicClosure` and `integralClosure` both elaborate.
+`Mathlib/RingTheory/IntegralClosure/IntegrallyClosed.lean` was **not** — with those same two
+imports `IsIntegrallyClosed` is not an identifier in scope at all. It arrives here *with*
+`Mathlib/RingTheory/Polynomial/RationalRoot.lean`, which imports it, and brings
+`Mathlib/RingTheory/Localization/NumDen.lean` with it. So neither line needs to be written, but
+not for the same reason, and the difference is load-bearing: a successor who reproves
+`FormalSpectrum.not_isUnit_two_algInt` and deletes that import line keeps `AlgebraicClosure` and
+loses `IsIntegrallyClosed`.
 
 ## References
 
