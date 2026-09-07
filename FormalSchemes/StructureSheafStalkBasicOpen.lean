@@ -79,7 +79,7 @@ So the upgrade of the second theorem below to completion form is landed, in
 `FormalSpectrum.awayCompletionRestrict` and needs `Ideal.FG`, while
 `FormalSpectrum.exists_basicOpen_basicOpenRes_eq` states it against `FormalSpectrum.basicOpenRes`
 and needs nothing this file does not — an earlier version of this paragraph predicted the upgrade
-would need `Ideal.FG` outright, and only half of it does. It is a separate leaf, not an addition
+would need `Ideal.FG` outright, and only half of it does. It is a separate module, not an addition
 here, for the reason the implementation notes below give about `FormalSchemes.SpfGammaRoundTrip`:
 importing the identification would take this file's transitive closure from 7 modules to 41.
 Note that the reason the general case was expected to be hard — that there is no
@@ -100,7 +100,7 @@ bridging lemma; that is the whole of the specialisation.
 beside the basis lemma in `FormalSchemes.FormalSpectrum`, whose `FormalSpectrum.exists_basicOpen_le`
 already exists for the same reason. The alternative — restating its two lines here — would have put
 a second copy of a landed lemma on the tree, and importing `FormalSchemes.SpfGammaRoundTrip` instead
-would have taken this leaf's transitive closure from 7 modules to 32 for the sake of them.
+would have taken this file's transitive closure from 7 modules to 32 for the sake of them.
 
 Neither statement needs `IsAdicRing`, or even a topology on `R`: they are facts about the sheaf on
 the space `FormalSpectrum I` and about that space's basis.

@@ -97,7 +97,7 @@ the row is in the implementation notes.
 
 **`AlgebraicGeometry.FormalScheme.LocallyFG` has no bearing on anything here, and the file measures
 that rather than asserting it**: no declaration below mentions `AlgebraicGeometry.FormalScheme`, and
-the import closure of this leaf is 82 project modules, containing neither
+this file's forward closure is **82** project modules, containing neither
 `FormalSchemes.OpenFormalSubscheme` — where `AlgebraicGeometry.FormalScheme.restrictOpen` and its
 `AlgebraicGeometry.FormalScheme.LocallyFG` hypothesis live — nor
 `FormalSchemes.ActionQuotientFormalScheme`. This confirms at a
@@ -122,9 +122,10 @@ the whole of the overlap; the two proofs reach that lemma's hypothesis different
 already holds an isomorphism of sheaves and pushes it through `TopCat.Sheaf.forget`, where this one
 holds the components and assembles them with `CategoryTheory.NatIso.isIso_of_isIso_app`. It is
 **not** rerouted through this one: the two modules are incomparable in the import order — this
-leaf's closure is 82 modules and does not contain `FormalSchemes.CofinalSheafComparisonIso`, whose
-own closure is 37 and does not contain this leaf's imports — so removing the overlap means rehoming
-one of them, which is a dedup question and not this file's.
+file's forward closure is **82** modules and does not contain
+`FormalSchemes.CofinalSheafComparisonIso`, whose own forward closure is **36** and does not contain
+this file's imports — so removing the overlap means rehoming one of them, which is a dedup question
+and not this file's.
 
 Every transport between two opens that are equal but not definitionally so is discharged by
 `AlgebraicGeometry.LocallyRingedSpace.presheaf_map_congr`
