@@ -152,7 +152,7 @@ algebraic integers, which has **no** prime elements at all — so the first is r
 `Finset`, and the second at a ring where its hypothesis holds vacuously and its conclusion fails
 for every candidate.
 
-It is one `abbrev` and nine theorems, one of them `private`, none of which develops any theory of
+It is one `abbrev` and ten theorems, one of them `private`, none of which develops any theory of
 that ring, and it is in this file rather than in a new module because the sentences it falsifies
 are in this file's docstring and beside the two theorems in
 `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` that it measures. A reader who wants
@@ -365,12 +365,14 @@ paragraph is claiming.
 the field structure of an ultrapower of a field, and neither half below needs it.
 
 **The second witness costs one `import` line and no module at all.**
-`Mathlib/RingTheory/Polynomial/RationalRoot.lean` is imported for the single instance
-`IsIntegrallyClosed ℤ` that `FormalSpectrum.not_isUnit_two_algInt` needs, and it is **already** in
-this project's Mathlib closure — three other files reach it, the shortest chain being three steps
-from `Mathlib/NumberTheory/NumberField/Basic.lean` through
-`Mathlib/RingTheory/DedekindDomain/Basic.lean` — so the sentence above stays exact: this leaf
-still adds exactly one module to that closure, and the line here adds none.
+`Mathlib/RingTheory/Polynomial/RationalRoot.lean` is imported for the one instance
+`IsIntegrallyClosed ℤ`, and that import is spent once and consumed twice: both
+`FormalSpectrum.not_isUnit_two_algInt` and `FormalSpectrum.dvd_of_intCast_dvd_intCast_algInt` end
+in `IsIntegrallyClosed.isIntegral_iff` at `ℤ`, and the second spends no import the first has not
+already spent. That module is **already** in this project's Mathlib closure — three other files
+reach it, the shortest chain being three steps from `Mathlib/NumberTheory/NumberField/Basic.lean`
+through `Mathlib/RingTheory/DedekindDomain/Basic.lean` — so the sentence above stays exact: this
+leaf still adds exactly one module to that closure, and the line here adds none.
 
 To **this file's own** closure it adds three, and the two other modules a reader would expect sit
 on opposite sides of that difference. `Mathlib/FieldTheory/IsAlgClosed/AlgebraicClosure.lean` was
@@ -1267,10 +1269,12 @@ A right inverse `u` of `2` satisfies `2 * u = 1` in `AlgebraicClosure` and so is
 injection of `ℚ`, and `IsIntegrallyClosed.isIntegral_iff` at `ℤ` produces an integer `y` with
 `2 * y = 1`.
 
-**This is the only place a Mathlib import is spent on this section**: `IsIntegrallyClosed ℤ` is
+**This is where the section's one Mathlib import is spent**: `IsIntegrallyClosed ℤ` is
 declared in `Mathlib/RingTheory/Polynomial/RationalRoot.lean`, and everything else here was already
-reachable. Nothing distinguishes `2` beyond its being a nonzero non-unit; it is used rather than
-named because the two theorems that consume it want an element and not a definition. -/
+reachable. It is spent once and consumed twice; the second consumer is
+`FormalSpectrum.dvd_of_intCast_dvd_intCast_algInt`, which adds no import of its own. Nothing
+distinguishes `2` beyond its being a nonzero non-unit; it is used rather than named because the
+two theorems that consume it want an element and not a definition. -/
 theorem not_isUnit_two_algInt : ¬ IsUnit (2 : AlgInt) := by
   intro h
   obtain ⟨u, hu⟩ := h.exists_right_inv
