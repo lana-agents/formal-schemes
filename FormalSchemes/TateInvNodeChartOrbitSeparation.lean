@@ -264,9 +264,12 @@ The three steps above under injectivity of the inclusion of the locus: push the 
 along `AlgebraicGeometry.FormalScheme.restrictOpenι`, where the restricted action becomes
 `σⁿ` and both lifts become basic-open charts of patches, and there it is the cover-shift law.
 
-**This is the first property of the `σ`-action used anywhere in this cluster** beyond the
-invariance that makes `AlgebraicGeometry.nodeChartQuotientHom` exist, and it is the only one used
-below.
+**This is the first property of the `σ`-action to reach the trace residual**: every restatement
+from `FormalSchemes.TateInvNodeChartPatchChartTrace` down uses only the invariance that makes
+`AlgebraicGeometry.nodeChartQuotientHom` exist. The cover-shift law itself is not new to the
+cluster — `FormalSchemes.TateInvNodeChartGlue` and `FormalSchemes.TateInvNodeChartRing` both use
+it, and both sit upstream of this file — so what is new is reading it at a *point*. It is the only
+property of the action used below.
 
 The `set_option` was tested rather than copied: without it the two `inferInstance` calls fail to
 synthesize `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion` for a composite of the basic-open
