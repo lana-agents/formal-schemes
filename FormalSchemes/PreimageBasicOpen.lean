@@ -40,7 +40,7 @@ import closure, checked both ways), so a dedup would cost an import in one direc
 
 `FormalSchemes.TwoChartBasicOpen` (fwd 31) and `FormalSchemes.GlobalSectionsHom` (fwd 41) are
 likewise mutually unreachable, so neither can host a statement mentioning both without gaining an
-import; this file over the two has forward closure **44**, and reverse closure **5**, all five of
+import; this file over the two has forward closure **44**, and reverse closure **6**, all six of
 them in the Tate node-chart cluster.
 
 ## Main results

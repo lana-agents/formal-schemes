@@ -22,7 +22,7 @@ This file is the composite of the two, and it is the whole point of the pair:
 > through any two patch charts, points with the same image under the restricted projection, **and**
 > `(AlgebraicGeometry.nodeChartAdicHom …).base` is surjective, **and** it is open.
 
-No germ, no chart, no `AlgebraicGeometry.nodeChartPsi` and no
+No germ, no `AlgebraicGeometry.nodeChartPsi` and no
 `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG.chart` occurs in the first conjunct. A reader
 of the space half no longer has to hold the germ formalism in order to read the clause that is
 open; only `AlgebraicGeometry.nodeChartAdicHom` — the morphism out of the chain, which the other
@@ -68,7 +68,9 @@ unchanged by this file: *two primes with the same trace produce points in the sa
 where a property of the `σ`-action has to be supplied for the first time, and nothing below
 supplies one — the only fact about the action used here is the invariance that makes
 `AlgebraicGeometry.nodeChartQuotientHom` exist at all. **Nothing below may be described as progress
-on it.**
+on it.** One is supplied downstream, in
+`FormalSchemes.TateInvNodeChartOrbitSeparation`: the shift moves the chart index and fixes the
+prime, which gives a sufficient criterion for the clause but does not decide it.
 
 **`hnode` is undecided in both directions and nothing here moves it.** The chain back to it runs
 through `AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens`,
@@ -89,17 +91,23 @@ one.
 
 ## Placement
 
-A leaf over `FormalSchemes.TateInvNodeChartSpaceHalf` and
+Over `FormalSchemes.TateInvNodeChartSpaceHalf` and
 `FormalSchemes.TateInvNodeChartPatchChartTrace`: forward closure **267** project modules besides
-itself, reverse closure **0**, counted by walking every `^import FormalSchemes.` line over the 558
-modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the
-repository root is outside the walk).
+itself, reverse closure **1** — `FormalSchemes.TateInvNodeChartOrbitSeparation`, which supplies the
+property of the `σ`-action the residual below asks for — counted by walking every
+`^import FormalSchemes.` line over the 559 modules under `FormalSchemes/` (a module is not counted
+in its own closure; the aggregator at the repository root is outside the walk).
 
-**Neither input reaches the other**, so the second import is genuinely new wherever this statement
-is put — `FormalSchemes.TateInvNodeChartSpaceHalf` is not in the forward closure of
-`FormalSchemes.TateInvNodeChartPatchChartTrace` and, being a leaf itself, does not reach it either.
-The two closures differ by exactly one module, `FormalSchemes.TopCatIsoOpenMap`. So the choice is
-not about the cost of an import; it is about which file the statement belongs to.
+**Neither input reaches the other**, checked in both directions, so the second import is genuinely
+new wherever this statement is put.
+
+The two are incomparable rather than nested, and the difference between them is not symmetric.
+`FormalSchemes.TateInvNodeChartSpaceHalf`'s forward closure is **263** and holds exactly one module
+the other does not, `FormalSchemes.TopCatIsoOpenMap`;
+`FormalSchemes.TateInvNodeChartPatchChartTrace`'s forward closure is **264** and holds two the
+first does not, `FormalSchemes.ChartGermCriterion` and
+`FormalSchemes.TateInvNodeChartPatchChartGerm`. So the choice is not about the cost of an import;
+it is about which file the statement belongs to.
 
 Appending to `FormalSchemes.TateInvNodeChartPatchChartTrace` was the alternative and is cheaper by
 a module. It is not taken for the reason that file states about itself: its *What is not proved

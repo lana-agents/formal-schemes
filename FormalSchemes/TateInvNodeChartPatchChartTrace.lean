@@ -55,7 +55,10 @@ action, read through the germ formula.
 primes with the same trace produce points in the same orbit, and nothing below uses any property of
 the `σ`-action beyond the invariance already on the tree
 (`AlgebraicGeometry.isActionInvariant_nodeChartAdicHom`). **This is the first point in this cluster
-at which a property of the action has to be supplied**, and supplying it is a different row.
+at which a property of the action has to be supplied**, and supplying it is a different row —
+`FormalSchemes.TateInvNodeChartOrbitSeparation`, which proves that the shift moves the chart index
+and fixes the prime, and derives from it a sufficient criterion for the clause. Nothing below uses
+that, and the sentences above stay true of this file.
 
 **The condition is stated pointwise and is deliberately not shipped a second time as an equality of
 contracted ideals.** The two spellings do agree — `Ideal.comap` of the two primes along the same
@@ -122,9 +125,10 @@ proper in the ambient ring.
 
 Over `FormalSchemes.TateInvNodeChartPatchChartGerm`, which already imports
 `FormalSchemes.TateInvNodeChartBasicOpenPreimage`, so both inputs are reached by one import:
-forward closure **264** project modules besides itself, reverse closure **1** — the leaf
+forward closure **264** project modules besides itself, reverse closure **2** —
 `FormalSchemes.TateInvNodeChartSpaceHalfTrace`, which substitutes the restatement below into the
-space half — counted by walking every `^import FormalSchemes.` line over the 558 modules under
+space half, and `FormalSchemes.TateInvNodeChartOrbitSeparation` above it — counted by walking every
+`^import FormalSchemes.` line over the 559 modules under
 `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository
 root is outside the walk).
 
