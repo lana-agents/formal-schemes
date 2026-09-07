@@ -36,9 +36,10 @@ it in three lines.
 
 These lemmas were first proved inside `FormalSchemes/ThreeChartCoverSeparated.lean`. They live
 here because they mention nothing about the three charts, and a consumer of them should not have
-to build that instance's tower. Measured: this module's `FormalSchemes` import closure is **175**
-modules against that file's **188**, and the three dropped are exactly `ThreeChartCoverCharts`,
-`…Transitions` and `…Datum` — the first of which costs ~390 s on its own (issue 737).
+to build that instance's tower. Measured: this module's forward closure is **178** modules, where
+the forward closure of `FormalSchemes.ThreeChartCoverSeparated` is **191**, and the three dropped
+are exactly `FormalSchemes.ThreeChartCoverCharts`, `…Transitions` and `…Datum` — the first of
+which costs ~390 s on its own (issue 737).
 
 Being honest about the size of that win: 13 modules is modest, and it is a *build-graph* saving,
 not a memory one. Peak RSS on importing this module is ~2.9 GB against ~2.9 GB for the three-chart

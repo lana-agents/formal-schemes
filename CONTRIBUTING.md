@@ -437,6 +437,7 @@ From the repository root; no build needed, since it reads `import` lines:
 
 ```sh
 python3 scripts/closure_audit.py --tree
+python3 scripts/closure_audit.py --sweep
 ```
 
 Run it beside `scripts/citation_audit.py`, at the same point and for the same reason. **Neither is
@@ -481,15 +482,11 @@ this leaf is 82 project modules"*, *"whose import closure of 25 modules"*, *"thi
 closure"*, *"adding it takes a closure of 35 to one of 45"* and — inverted — *"this file is in the
 import closure of 445 of the library's 496 modules"*, which is a **reverse** closure written from
 the far end. Such a sentence carries numerals and is not reported as declined either: it is
-invisible, which is worse than unattributed, since a declined claim is at least counted. Row 1825
-measured the population at **eight** sentences in five files, of which **two were wrong** — one by
-a module, the other by 56 in its figure and 62 in its total — and rewrote the four that state a
-plain measurement into the checked spelling. The four left are deltas (*"from 7 modules to 32"*,
-*"takes a closure of 35 to one of 45"*), whose second figure is counterfactual and checkable by no
-walk. Teaching the script this
-second grammar was rejected instead: *"the closure of `A` is N"* and *"`A` is in the closure of N"*
-are opposite claims in nearly the same words, so the parse would have to carry the direction, and
-one spelling with a checker beats two without.
+invisible, which is worse than unattributed, since a declined claim is at least counted. Two greps
+— `import closure of` and `closure of N` — find **eight** such sentences in five files, of which
+**two were wrong**, one by a module and the other by 56 in its figure and 62 in its total; row 1825
+rewrote the four that state a plain measurement into the checked spelling and left four deltas.
+**Those two greps are not the population**, and the section below is what a sweep finds instead.
 
 **The noun beside the figure is a measurement too.** Call a module a **leaf** only where a walk you
 ran gives it reverse closure 0; open a `## Placement` paragraph with *"Over `FormalSchemes.Foo` and
@@ -508,6 +505,39 @@ leaf that nothing outside the Tate cluster can cite"*: there is no figure in tha
 the check on, and the file carrying it has no reason ever to re-measure the module it names, which
 is why `TateSeparated` had picked up **67** consumers before anyone looked. Say *"a Tate-cluster
 module"*, or name the figure and bring the sentence under the check.
+
+### The spellings the checker cannot read, and `--sweep`
+
+Those two greps are keyed on the preposition, and three further spellings do without it:
+*"its import closure is 214 modules"*, with none at all; *"a 31-module transitive import closure"*,
+with the numeral before the noun; and *"`FormalSchemes.Gluing` being upstream of 272 of this tree's
+496 modules"*, a **reverse** closure written with neither the word `reverse` nor a preposition to
+key on — and carrying the same stale project total that row 1825 had just repaired elsewhere.
+Sweeping for every sentence that pairs a numeral with the word `closure`, with a project-module
+total or with *upstream of N* reports all three. Row 1832 read that population and found **twelve**
+wrong sentences in eleven files carrying **twenty** wrong numerals, against the two the greps
+found: one project total stale by 62, one reverse closure stale by 32.
+
+Extending `CLOSURE` to those spellings was considered and declined twice, and the reason is not
+cost: *"the closure of `A` is N"* and *"`A` is in the closure of N"* are **opposite** claims in
+nearly the same words, so a second grammar would have to carry the direction, and getting that
+wrong turns a silent gap into confident mis-measurement. `--sweep` **counts** them instead. It
+lists every sentence that carries a numeral together with the word `closure`, a project-module
+total or *upstream of N*, and that `--tree` neither attributes nor declines; `--tree` prints the
+count in its header and never fails on it. Sentences naming Mathlib are left out — they measure a
+graph this script does not walk.
+
+**Most of what `--sweep` reports is out of reach, and one class in it is not.** Deltas,
+intersections of several import closures, peak-RSS figures and numerals that are issue numbers are
+checked by no walk this script runs, and that is why the list does not fail a run. But **one
+endpoint of every delta is a measurement of the tree as it stands** — *"importing it would take
+this file's closure from 48 modules to 93"* says the closure is 48 **now** — and **six** of row
+1832's twelve sentences were exactly that shape, wrong in the endpoint that is not counterfactual
+while looking unfalsifiable because of the endpoint that is. (The counterfactual endpoint is not
+beyond reach either: it is the closure of the union with the module being priced, and two of the
+six were stale in that figure as well. `--sweep` does not compute it, and nor does `--tree`.) If a
+figure `--sweep` reports is a plain measurement of this tree, rewrite it in the checked spelling
+rather than leaving it for the next sweep.
 
 ## Line width
 

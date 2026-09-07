@@ -287,8 +287,8 @@ which is Mathlib's `ULift.up_injective` (`Mathlib.Data.ULift`); the triples belo
 
 This file used to restate that fact privately, and justified doing so by an import jump: the
 project's own restatement lived in `FormalSchemes.ThreeChartDatum`, behind the completion-side
-chart cluster, and importing it would have taken this file's closure from 48 modules to 93. The
-measurement was correct about the wrong alternative — the real alternative was never that
+chart cluster, and importing it would take this file's forward closure from **49** modules to 95.
+The measurement was correct about the wrong alternative — the real alternative was never that
 restatement but the upstream lemma, which is in the closure of every module on this tree and
 costs no import at all. All three project restatements are gone. -/
 

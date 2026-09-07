@@ -81,10 +81,11 @@ mechanical enough to apply while writing: read the statement, not the motivation
 `range_ofRestrict` exists *because* of the thickening charts, and says nothing about them.
 
 **And the test decides the namespace, not the file.** `range_ofRestrict` was written here, in the
-right namespace, in a file whose import closure is 25 modules — so
-`FormalSchemes.OpenImmersionIsoOfRangeEq`, at closure 2, could not cite it and would have had to
-re-prove it. Issue 1479 moved it there and this file now imports it. A general statement wants
-both halves: the namespace its subject lives in, and a file its consumers can reach.
+right namespace, and this file's forward closure is **26** modules — so
+`FormalSchemes.OpenImmersionIsoOfRangeEq`, whose forward closure is **1** (2 with itself), could
+not cite it and would have had to re-prove it. Issue 1479 moved it there and this file now imports
+it. A general statement wants both halves: the namespace its subject lives in, and a file its
+consumers can reach.
 
 Three pieces of friction, all of the same kind: a term is definitionally what a lemma wants but
 not syntactically, so `rw` refuses while `exact` does not. None of them needs a transparency

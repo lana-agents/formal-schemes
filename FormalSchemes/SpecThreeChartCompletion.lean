@@ -113,8 +113,8 @@ which is Mathlib's `ULift.up_injective` (`Mathlib.Data.ULift`); the triple below
 `ULift.up_injective.ne (by decide)`.
 
 This file used to restate that fact privately, justified by an import jump: the project's public
-restatement in `FormalSchemes.ThreeChartDatum` would have taken this file's closure from 60
-modules to 104. The measurement was right and the alternative it priced was wrong —
+restatement in `FormalSchemes.ThreeChartDatum` would take this file's forward closure from **56**
+modules to 101. The measurement was right and the alternative it priced was wrong —
 `Mathlib.Data.ULift` is already in this file's closure, so the upstream lemma costs nothing. -/
 
 /-- **Non-vacuity of the completion side's triple-overlap field, in general.** At a pairwise
