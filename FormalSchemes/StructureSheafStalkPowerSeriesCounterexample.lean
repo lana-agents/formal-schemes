@@ -2075,14 +2075,15 @@ associate classes, so this `↔` with the instance deleted is false:
 it is the **forward** direction that fails there. The witness is the same family that measures the
 instance of `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`, read at
 `Associates`; that the forward direction below turns an infinite set of classes back into such a
-family is the inverse translation. **The backward direction is not refuted**: whether
-`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` survives without unique factorisation is
-open. One witness on this tree now bears on it and does not decide it — the ring of all algebraic
-integers has no prime elements, so it satisfies that theorem's hypothesis
-(`FormalSpectrum.finite_setOf_prime_associates_algInt`), and it fails the **unit** case of its
-conclusion (`FormalSpectrum.not_isUnit_clearing_algInt`), both in
-`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`; the non-unit case, which is what a
-refutation needs, is open there too.
+family is the inverse translation. **The backward direction is refuted too, and at a different
+ring**: `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` does not survive without unique
+factorisation, by `FormalSpectrum.not_forall_exists_forall_dvd_pow_of_finite_primes` in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`. The ultrapower cannot supply that one —
+its prime classes are infinite and the hypothesis is that they are finite — so the witness there is
+the ring of all algebraic integers, which has no prime elements at all
+(`FormalSpectrum.finite_setOf_prime_associates_algInt`) and in which no nonzero element is a
+clearing element (`FormalSpectrum.exists_ne_zero_forall_not_dvd_pow_algInt`). **The two directions
+are refuted separately, at two different rings, and neither refutation bears on the other.**
 
 The three values in this file are the three cases: a field is the empty set, a discrete valuation
 ring the singleton, and `ℤ` the infinite one. Each is checked below as an `example` beside the
@@ -2256,7 +2257,9 @@ statement and now known of both: the paragraph above says it of the countability
 `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_forall_dvd_pow`
 (`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) says it of the unique factorisation
 there, refuting that implication with `[UniqueFactorizationMonoid R]` deleted. Neither bears on
-`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, whose instance stays unmeasured. -/
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, whose instance is measured separately and
+at a different ring by `FormalSpectrum.not_forall_exists_forall_dvd_pow_of_finite_primes` in that
+same file, and is **needed** there too. -/
 theorem hasBoundedDenominators_iff_forall_dvd_pow [Countable (FractionRing R)] :
     HasBoundedDenominators R ↔
       ∃ m : R, m ≠ 0 ∧ ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k := by
