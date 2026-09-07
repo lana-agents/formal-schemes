@@ -423,9 +423,14 @@ all in this closure already, and so is everything the classification adds — `A
   factorisation domain** — the condition holds **iff** `{a : Associates R | Prime a}` is finite.
   Its two directions are `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` above, at the
   product of a set of representatives of the prime associate classes, and
-  `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`; the three values below are
-  its empty, singleton and infinite cases. It is the only hypothesis under which anything **in this
-  file** decides the condition; semilocal, Prüfer and valuation rings are untouched, and the
+  `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`. Its
+  `[UniqueFactorizationMonoid R]` is **needed** for the **forward** direction, by
+  `FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes` in
+  `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which refutes the `↔` with that
+  instance deleted; the backward direction with it deleted is refuted nowhere. The three values
+  below are its empty, singleton and infinite cases. It is the only hypothesis under which anything
+  **in this file** decides the condition; semilocal, Prüfer and valuation rings are untouched, and
+  the
   Dedekind case is a separate theorem in a separate module, because it is a statement about
   ideals — `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`
   (`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`).
@@ -1940,13 +1945,19 @@ once *how many* is read as a cardinality.
 says *up to associates* with no choice of representatives in the statement. Choice enters in both
 directions of the proof, and only there.
 
-**The hypothesis is not removable by anything on this tree.** Outside a unique factorisation domain
-the backward direction has no reason to hold: it goes from *every prime divides `m`* to *every
-element divides a power of `m`*, and that passage is factorisation. **A Dedekind domain is still not
-a corollary of this** — it is a statement about ideals, not elements, and a nonprincipal maximal
-ideal contributes no prime element at all — but there the passage is available for a reason rather
-than by hypothesis, since finitely many prime ideals forces principality. That is
-`FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`
+**The hypothesis is not removable, and the forward direction says so by a witness.** An ultrapower
+of `ℤ` satisfies the condition and has infinitely many prime associate classes, so the `↔` with
+`[UniqueFactorizationMonoid R]` deleted is false —
+`FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes` in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, and
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes` for the direction that
+actually fails. Nothing refutes the **backward** direction without the hypothesis, and outside a
+unique factorisation domain it has no reason to hold either: it goes from *every prime divides `m`*
+to *every element divides a power of `m`*, and that passage is factorisation. **A Dedekind domain
+is still not a corollary of this** — it is a statement about ideals, not elements, and a
+nonprincipal maximal ideal contributes no prime element at all — but there the passage is available
+for a reason rather than by hypothesis, since finitely many prime ideals forces principality. That
+is `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`
 (`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`), which **derives** the factorisation
 instead of removing this hypothesis. Nothing below bears on semilocal, Prüfer or valuation rings,
 and the general domain remains open for the reason the section above gives.
@@ -2038,6 +2049,19 @@ two spellings are one hypothesis at a fixed `m`
 `[NormalizationMonoid R]`, which a bare unique factorisation domain does not carry — so the
 representatives come from a choose on `Associates.mk_surjective`, in
 `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`.
+
+**`[UniqueFactorizationMonoid R]` is needed here, by a witness and not merely by the absence of a
+proof without it.** An ultrapower of `ℤ` satisfies the condition and has infinitely many prime
+associate classes, so this `↔` with the instance deleted is false:
+`FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes` in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, and
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes` for the sharper statement that
+it is the **forward** direction that fails there. The witness is the same family that measures the
+instance of `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`, read at
+`Associates`; that the forward direction below turns an infinite set of classes back into such a
+family is the inverse translation. **The backward direction is not refuted**: whether
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` survives without unique factorisation is
+open, and no witness on this tree bears on it.
 
 The three values in this file are the three cases: a field is the empty set, a discrete valuation
 ring the singleton, and `ℤ` the infinite one. Each is checked below as an `example` beside the
