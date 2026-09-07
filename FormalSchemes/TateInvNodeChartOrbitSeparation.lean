@@ -227,8 +227,7 @@ hypotheses and without `I ≠ ⊤` — that is what makes it the right noun — 
 the non-surjectivity and the properness all carry all three, and the criterion carries the two.
 That is a statement about those four; the witness section's statements are separate and carry only
 `I ≠ ⊤`. At `I = ⊤` nothing here says anything in either direction, and the map's injectivity
-outside this
-section's regime is untouched.
+outside this section's regime is untouched.
 
 ## Placement
 
