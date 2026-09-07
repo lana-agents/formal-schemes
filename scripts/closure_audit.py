@@ -19,6 +19,7 @@ Usage, from the repository root -- no build needed, this reads `import` lines:
 
     python3 scripts/closure_audit.py --tree
     python3 scripts/closure_audit.py --selftest
+    python3 scripts/closure_audit.py --sweep
 
 There is deliberately **no `--diff` mode**.  A closure figure is falsified by an edit somewhere
 else in the tree, so the population that matters is every claim in every file, not the claims in
@@ -58,6 +59,33 @@ is wrong about the rest.  The rule implemented below is read off the prose that 
    against (*"its module has reverse closure 9"*, where *its* is a declaration's), or when an
    indefinite leaf intervenes (*"a leaf whose own forward closure is 231"* is about a module that
    does not exist).
+
+## The spellings this script cannot read, and why they are counted rather than parsed
+
+`CLOSURE` keys on the words *forward closure* / *reverse closure*, so a sentence that measures the
+same thing in any other words is not declined -- it is **invisible**, which is worse, because a
+declined claim is at least counted.  The tree has spelled one absolute project-closure figure as
+*"the import closure of this file is 82 project modules"*, *"whose import closure of 25 modules"*,
+*"its import closure is 214 modules"*, *"this file's transitive closure"*, *"a 31-module transitive
+import closure"* and -- inverted -- *"`FormalSchemes.Gluing` being upstream of 272 of this tree's
+496 modules"*, which is a **reverse** closure written from the far end.  Eleven such figures were
+wrong when the population was first measured (rows 1825 and 1832), one of them by 62 in its total.
+
+Extending `CLOSURE` to those spellings was considered twice and declined twice, and the reason is
+not cost: *"the closure of `A` is N"* and *"`A` is in the closure of N"* are **opposite** claims in
+nearly the same words, so a second grammar has to carry the direction, and getting that wrong turns
+a silent gap into confident mis-measurement.  What `--sweep` does instead is *count* them: every
+sentence carrying the word `closure` and a numeral that `--tree` neither attributes nor declines.
+`--tree` prints the count in its header and never fails on it, so the invisible population stops
+being invisible without the script pretending it can parse it.  Sentences naming Mathlib are left
+out: they measure Mathlib's import graph, which this script does not walk.
+
+Most of what `--sweep` reports is legitimately out of reach -- deltas whose second figure is
+counterfactual, intersections of several closures, peak-RSS numbers, issue numbers.  It is a
+reading list, not a failure list.  **A figure in it that is a plain measurement of the tree should
+be rewritten in the checked spelling rather than left for the next sweep**, and one endpoint of
+every delta is such a measurement: *"importing it would take this file's closure from 48 to 93"*
+says the closure is 48 **now**.
 
 Declined claims are printed, with the reason and the count, and do **not** fail the run: this
 script's job is to keep the figures it can attribute honest, not to force prose into a template it
@@ -136,6 +164,19 @@ COMPANIONS = [
 
 # `forward closure 36 with itself` -- the other convention, inline.
 WITH_ITSELF = re.compile(r"^\s*(?:project |modules? )*(?:counted )?(?:with itself|including it)")
+
+# A sentence naming Mathlib is measuring Mathlib's import graph, not this tree's, and no walk here
+# can check it.  It is left out of `--sweep` rather than reported and dismissed every run.
+MATHLIB = re.compile(r"Mathlib", re.I)
+
+# What makes a sentence a candidate for `--sweep`.  The word `closure` is the obvious trigger, but
+# it is not sufficient: *"`FormalSchemes.Gluing` being upstream of 272 of this tree's 496 modules"*
+# is a **reverse**-closure measurement carrying two figures and does not contain the word at all.
+# Two further markers are added for that shape -- a project-module total, and `upstream of N` --
+# both of which are unambiguous assertions about the import graph however the sentence is worded.
+SWEEPABLE = re.compile(r"closure"
+                       r"|of (?:this|the) (?:tree|project|library)'s \*{0,2}\d+\*{0,2} modules?"
+                       r"|\bupstream of \*{0,2}\d", re.I)
 
 WINDOW = 320
 NUMERAL_REACH = 60
@@ -259,6 +300,30 @@ def claims(mods: dict[str, str]):
                        offset=1 if WITH_ITSELF.match(tail) else 0, companions=companions)
 
 
+def sentences(raw: str):
+    """`(offset, text)` for each sentence of `raw`, over the newline-flattened text."""
+    flat = raw.replace("\n", " ")
+    pos = 0
+    for m in BREAK.finditer(flat):
+        yield pos, flat[pos:m.end()]
+        pos = m.end()
+    yield pos, flat[pos:]
+
+
+def invisible(mods: dict[str, str]):
+    """Every sentence that carries the word `closure` and a numeral and that `claims()` cannot
+    see at all -- neither attributed nor declined.  Counted, never failed on."""
+    for module, path in sorted(mods.items()):
+        raw = open(path, encoding="utf-8").read()
+        for off, s in sentences(raw):
+            if not SWEEPABLE.search(s) or not FIGURE.search(s):
+                continue
+            if CLOSURE.search(s) or MATHLIB.search(s):
+                continue
+            yield dict(path=path, line=raw[:off].count("\n") + 1, module=module,
+                       text=" ".join(s.split()))
+
+
 def audit(root: str = ".") -> tuple[list, list]:
     """Every claim in the tree, split into `(mismatches, declined)`."""
     mods = project_modules(root)
@@ -370,6 +435,32 @@ def selftest() -> int:
         check("a wrong `counted with itself` companion figure is caught",
               sorted((m["module"], m["stated"], m["actual"]) for m in mis),
               [("FormalSchemes.Mid", 7, 2), ("FormalSchemes.Top", 9, 3)])
+
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        # One file per shape `--sweep` has to sort, plus one file carrying both shapes at once:
+        # invisibility is a property of the sentence, not of the file it sits in.
+        write("Vis", "/-! Over nothing: forward closure **0**. -/\n")
+        write("Blind", "/-! Its import closure is 3 modules. -/\n")
+        write("Delta", "/-! Importing it would take this file's closure from 4 to 9. -/\n")
+        write("Upstream", "/-! It is upstream of 5 of this tree's 6 modules. -/\n")
+        write("Mathlib",
+              "/-! Not in this project's Mathlib import closure, so 1 import. -/\n")
+        write("Wordy", "/-! Its import closure is the two consumers and nothing else. -/\n")
+        write("Both", "/-! Over nothing: forward closure **0**. Its import closure is 3. -/\n")
+        blind = sorted((c["module"], c["text"][:24]) for c in invisible(project_modules(d)))
+        check("--sweep reports every spelling `CLOSURE` cannot read",
+              [m for m, _ in blind],
+              ["FormalSchemes.Blind", "FormalSchemes.Both", "FormalSchemes.Delta",
+               "FormalSchemes.Upstream"])
+        check("--sweep reports the blind sentence of a file whose other sentence is checked",
+              [t for m, t in blind if m == "FormalSchemes.Both"], ["Its import closure is 3."])
     return 1 if bad else 0
 
 
@@ -379,11 +470,25 @@ def main() -> int:
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--tree", action="store_true", help="check every closure figure in the tree")
     g.add_argument("--selftest", action="store_true", help="check the attribution rule and walk")
+    g.add_argument("--sweep", action="store_true",
+                   help="list the closure sentences this script cannot read (never fails)")
     args = ap.parse_args()
     if args.selftest:
         return selftest()
 
     mods = project_modules()
+    if args.sweep:
+        blind = list(invisible(mods))
+        print("sentences carrying `closure` and a numeral that --tree cannot see: %d" % len(blind))
+        print("(Mathlib-closure sentences excluded; most of the rest are deltas, intersections or\n"
+              " numerals that are not closure figures -- this is a reading list, not a failure\n"
+              " list.  A plain measurement of this tree in here should be rewritten in the\n"
+              " `forward closure` / `reverse closure` spelling, and one endpoint of every delta\n"
+              " is such a measurement.)")
+        for c in blind:
+            print("  invisible %s:%d  %s" % (c["path"], c["line"], c["text"][:150]))
+        return 0
+
     mismatches, declined = audit()
     attributed = [c for c in claims(mods) if c["about"] is not None]
     print("modules under FormalSchemes/ : %5d" % len(mods))
@@ -392,6 +497,8 @@ def main() -> int:
           % (len(attributed) + sum(len(c["companions"]) for c in attributed)))
     print("  MISMATCH                   : %5d" % len(mismatches))
     print("  declined (see below)       : %5d" % len(declined))
+    print("  invisible (run --sweep)    : %5d   (not a failure: spellings `CLOSURE` cannot read)"
+          % len(list(invisible(mods))))
     for c in sorted(mismatches, key=lambda c: (c["path"], c["line"])):
         what = c.get("what") or "the %s closure of `%s`" % (c["kind"], c["about"])
         print("  MISMATCH  %s:%d  %s: states %d, walk gives %d"

@@ -180,7 +180,8 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 
 It lives here, beside its two ingredients, rather than in a consumer. It was originally declared in
 `FormalSchemes.TateInvNodeChartGlue`, which forced any file wanting the wrapper to take that
-module's whole import closure — 183 modules against this one's 166 — and a second copy of it was
+module's whole forward closure — **187** modules against this file's **170** — and a second copy
+of it was
 duly declared in `FormalSchemes.TateInvInvariantSectionCollapse`, under a name one character away
 from this one and in the same namespace. Both of those are gone; this is the only one. -/
 def tateInvSaturateOpens {S : Set (FormalSpectrum.locallyRingedSpaceObj

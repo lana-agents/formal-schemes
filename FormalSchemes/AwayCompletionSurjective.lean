@@ -22,9 +22,10 @@ generating set, and the approximation lifts that to genuine surjectivity.
 This is not a new argument. It is the shape `FormalSchemes/InversionCodiagonalClosedEmbedding.lean`
 (issue 502) runs for the Tate annulus. It was stated generically for the first time in
 `FormalSchemes/ThreeChartCoverSeparated.lean` (issue 779) and lives here so that a consumer can
-reach it without building that instance's tower: this module's `FormalSchemes` import closure is
-**17** modules against that file's **188**. Since issue 793 the Tate annulus consumes it rather
-than reproving it, so the successive-approximation argument occurs **once** in this library.
+reach it without building that instance's tower: this module's forward closure is **18** modules,
+where the forward closure of `FormalSchemes.ThreeChartCoverSeparated` is **191**. Since issue 793
+the Tate annulus consumes it rather than reproving it, so the successive-approximation argument
+occurs **once** in this library.
 
 (For the record, and correcting the premise of issue 793: `…ClosedEmbeddingY.lean` (issue 515) and
 `FormalSchemes/GraphCodiagonalClosedEmbedding.lean` (issue 529) never ran the argument. Their
