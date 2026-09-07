@@ -174,7 +174,7 @@ forward closure **53** project modules besides itself, reverse closure **2** —
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting criterion
 at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which instantiates
 it at `ℤ[X]` localized at `(2, X)` — counted by walking every `^import FormalSchemes.` line over
-the 557 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator
+the 558 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator
 at the repository root is outside the walk).
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two

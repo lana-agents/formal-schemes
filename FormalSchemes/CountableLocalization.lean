@@ -20,7 +20,7 @@ file has forward closure 25 and is not in the closure of
 `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, nor that of it. The statement
 mentions no formal scheme, no ideal of definition and no power series, so a Mathlib-only leaf is
 where it belongs and both of the modules that import it reach it from there. This file's reverse
-closure is **5**: those two, and the three modules above
+closure is **6**: those two, and the four modules above
 `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`.
 
 The one change is `theorem` to **`instance`**. That is what

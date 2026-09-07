@@ -110,12 +110,14 @@ statements about the predicate itself rather than about one of its halves, and t
 this one point and at no other.
 
 **Away from that hypothesis nothing here decides which rings satisfy the condition**, and the
-criteria on their own still do not meet: **the sufficient one is not known to be necessary at a
-general domain**, and the obstruction is that the condition only ever sees *countable* families,
-so a domain whose fraction field needs uncountably many denominator types is not ruled out by
-anything here. None of the obvious guesses about semilocal, Prüfer or valuation domains is checked
-anywhere below. A Dedekind domain is not a corollary of the classification either —
-it is a statement about **ideals**, and a nonprincipal maximal ideal contributes no prime element at
+criteria on their own still do not meet: **the sufficient one is not necessary at a general
+domain**, and the obstruction is the one this file names — the condition only ever sees *countable*
+families, so a domain whose fraction field needs uncountably many denominator types satisfies it
+with no single `m` serving every element. Such a domain exists and is exhibited in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, an ultrapower of `ℤ`; nothing below bears
+on it in either direction. None of the obvious guesses about semilocal, Prüfer or valuation domains
+is checked anywhere below. A Dedekind domain is not a corollary of the classification either — it
+is a statement about **ideals**, and a nonprincipal maximal ideal contributes no prime element at
 all — and that is exactly why it takes a *second* refuting criterion, stated at prime ideals, which
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` supplies:
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals` decides the condition there and
@@ -217,12 +219,15 @@ this says nothing about which of the general criteria in
 
 **The collapse is not claimed without countability.** Whether
 `FormalSpectrum.HasBoundedDenominators` is equivalent to *some `R[1/m]` is already `Frac R`* at an
-arbitrary domain is **not settled here in either direction**: no proof is given, no counterexample
-is exhibited, and nothing below should be read as evidence for either answer. What is proved is
-the implication that holds at every domain
+arbitrary domain is **settled by no argument in this file**: no proof is given, no counterexample
+is exhibited below, and nothing below should be read as evidence for either answer. What is proved
+here is the implication that holds at every domain
 (`FormalSpectrum.hasBoundedDenominators_of_surjective`) and its converse under
 `[Countable (FractionRing R)]` (`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`).
-The hypothesis is not known to be removable and is not known to be needed.
+**The hypothesis is needed**, which is proved one module downstream in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`: an ultrapower of `ℤ` satisfies the
+condition while no single `R[1/m]` is its fraction field, so the converse is false without it.
+That removes nothing from anything below, which is consumed exactly as it stands.
 
 **And the collapse is not a classification.** It replaces one condition on `R` by a more
 elementary one; **which countable domains satisfy either is not determined here**, and no
@@ -239,8 +244,8 @@ modules besides itself on top of this file's closure, 43 including it, and nothi
 ## Implementation notes
 
 The five `AdicCompletion` lemmas at the top of the file mention no formal geometry and would sit
-naturally in `FormalSchemes.Completion`, whose reverse closure is 445 of the project's 557 modules
-against this file's 3. They are kept here on the disposition
+naturally in `FormalSchemes.Completion`, whose reverse closure is 446 of the project's 558 modules
+against this file's 4. They are kept here on the disposition
 `FormalSchemes.StructureSheafStalkPowerSeries` recorded for
 `AdicCompletion.bijective_mapCompletion` — which is the same shape and is still in that file — and
 because every consumer is in this file. **If a second file needs
@@ -260,13 +265,15 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 Over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
 `FormalSchemes.CountableLocalization`: forward closure **52** project modules besides itself (53
-counted with itself), reverse closure **3** —
+counted with itself), reverse closure **4** —
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which carries the classification at prime
 ideals, and over it both
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting
 criterion at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which
-instantiates it at `ℤ[X]` localized at `(2, X)` — counted by walking every `^import` line over the
-557 modules under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator
+instantiates it at `ℤ[X]` localized at `(2, X)`, and
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which settles the collapse without
+countability at an ultrapower of `ℤ` — counted by walking every `^import` line over the
+558 modules under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator
 at the repository root is outside the walk).
 
 **Every closure figure in this docstring comes from that one walk and they go stale together** —
@@ -285,13 +292,13 @@ below it, and the prose it makes stale is this docstring's. The collapse section
 same ground, one section further down.
 
 The second import is the one the collapse section adds, and it is the **Mathlib-only leaf**
-`FormalSchemes.CountableLocalization`, whose forward closure is 0 and whose reverse closure is 5 —
+`FormalSchemes.CountableLocalization`, whose forward closure is 0 and whose reverse closure is 6 —
 holding one statement that was already on the tree:
 `Localization.countable_of_countable`, moved out of
 `FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has
 forward closure 25, is not in this file's closure and does not have this file in its own, so
 neither could import the other; the statement mentions no formal scheme, no ideal of definition
-and no power series, and 25 of the 557 modules are already leaves of exactly that kind. Restating
+and no power series, and 25 of the 558 modules are already leaves of exactly that kind. Restating
 it here instead of moving it would have been a project-internal duplicate, which is what
 `scripts/symm_duplicate_statement_scan.lean` exists to catch; putting it in an existing
 Mathlib-only leaf would have turned a file about one localization identity
@@ -1451,8 +1458,10 @@ turns *hit by `PowerSeries.map`* into a condition on coefficients. Backwards the
 dependent type `PowerSeries (Localization.Away (constantCoeff f))`.
 
 **The quantifier order is the whole content.** `∀ x, ∃ m` is the statement, and the `m` is allowed
-to depend on the family. `∃ m, ∀ x` is stronger and is false at `ℤ`, since it implies this one —
-but it is **not known to be strictly stronger**, and over a countable fraction field it is not:
+to depend on the family. `∃ m, ∀ x` is stronger and is false at `ℤ`, since it implies this one, and
+it is **strictly stronger** — the two come apart at an ultrapower of `ℤ`
+(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) — while over a countable fraction field
+it is not:
 `FormalSpectrum.hasBoundedDenominators_iff_exists_denominator` puts a single `m` serving every
 element of `Frac R` at once, hence every family, on the other side of an `↔`.
 `∀ x, ∀ n, ∃ m` is strictly weaker and holds at every domain, because a single element
@@ -1514,9 +1523,10 @@ families are indexed by `ℕ` or are countable subsets of `Frac R`
 **The quantifier order is the content.** The `m` is uniform in the family and the exponent `k` is
 not: each member may need its own power of the same `m`. Weakening to `∀ x, ∀ n, ∃ m` holds at
 every domain, because a single element of `Frac R` is a fraction and its own denominator serves;
-strengthening to `∃ m, ∀ x` implies this one and so is false at `ℤ`. Whether that strengthening is
-*strictly* stronger is not known at a general domain, and over a **countable** fraction field it is
-not — the two are equivalent, by
+strengthening to `∃ m, ∀ x` implies this one and so is false at `ℤ`. That strengthening is
+*strictly* stronger at a general domain — an ultrapower of `ℤ` satisfies this condition and no
+single `m` serves it (`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) — while over a
+**countable** fraction field it is not, the two being equivalent by
 `FormalSpectrum.hasBoundedDenominators_iff_exists_denominator`.
 
 This is exactly the surjectivity half of
@@ -1533,7 +1543,8 @@ domain**, where the condition is exactly *finitely many primes up to associates*
 an arbitrary domain are proved below
 (`FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow` and
 `FormalSpectrum.not_hasBoundedDenominators_of_primes`); away from that hypothesis they still do not
-meet, and the sufficient one is not known to be necessary at a general domain. Over a **countable**
+meet, and the sufficient one is not necessary at a general domain
+(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`). Over a **countable**
 fraction field it is necessary, and the condition collapses to a single `R[1/m]` being the whole of
 `Frac R` (`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`) — a second hypothesis,
 incomparable with the first, under which the criteria meet without deciding any ring.
@@ -1626,11 +1637,13 @@ strength. That equivalence is about **one** `m`; it says nothing about the quant
 which is where every open question in this section lives.
 
 **Neither is a classification on its own, and at a general domain the two together are not one
-either.** The sufficient criterion is not known to be necessary there, and the refuting one is not
-known to be the only way the condition can fail. The obstruction to closing the gap is that
+either.** The sufficient criterion is not necessary there
+(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`), and the refuting one is not known to be
+the only way the condition can fail. The obstruction is that
 `FormalSpectrum.HasBoundedDenominators` only ever sees **countable** families
 (`FormalSpectrum.hasBoundedDenominators_iff_countable`), so a domain whose fraction field needs
-uncountably many denominator types is not ruled out by anything here.
+uncountably many denominator types is not ruled out by anything here — and an ultrapower of `ℤ` is
+such a domain.
 
 **Two hypotheses make them meet, and they meet in different ways.** At a unique factorisation
 domain the section below glues them into
@@ -2014,7 +2027,9 @@ theorem hasBoundedDenominators_iff_finite_primes [UniqueFactorizationMonoid R] :
 
 /-! ### The collapse over a countable fraction field
 
-The sufficient criterion above is not known to be necessary at a general domain, and the reason
+The sufficient criterion above is not necessary at a general domain — an ultrapower of `ℤ`
+satisfies the condition and no single `R[1/m]` is its fraction field
+(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) — and the reason
 the section heading gives is a cardinality: `FormalSpectrum.HasBoundedDenominators` only ever sees
 *countable* families (`FormalSpectrum.hasBoundedDenominators_iff_countable`), so a domain whose
 fraction field needs uncountably many denominator types is not excluded by it. **That reason is
@@ -2051,8 +2066,9 @@ weaken this theorem's hypothesis: what `[Countable (FractionRing R)]` buys is th
 `m`, not the form of the condition at one `m`.
 
 **Necessity is what the hypothesis buys.** Sufficiency holds at every domain and is proved above;
-this direction is not known at a general domain, and the obstruction named there — that the
-condition only ever sees countable families — is precisely what `[Countable (FractionRing R)]`
+this direction is **false** at a general domain, by the ultrapower of `ℤ` in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, and the obstruction named there — that
+the condition only ever sees countable families — is precisely what `[Countable (FractionRing R)]`
 removes.
 
 The hypothesis is on the fraction field rather than on `R`: it is the weaker assumption, and it is
@@ -2158,7 +2174,8 @@ factorisation domain turns *some `R[1/m]` is a field* into *finitely many primes
 `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`, from which this inherits it.
 Sufficiency holds at every domain with no countability and has a name of its own,
 `FormalSpectrum.hasBoundedDenominators_of_isField`; necessity is what
-`[Countable (FractionRing R)]` buys and is not known without it. -/
+`[Countable (FractionRing R)]` buys and is false without it
+(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`). -/
 theorem hasBoundedDenominators_iff_exists_isField [Countable (FractionRing R)] :
     HasBoundedDenominators R ↔ ∃ m : R, m ≠ 0 ∧ IsField (Localization.Away m) := by
   rw [hasBoundedDenominators_iff_exists_surjective R]
