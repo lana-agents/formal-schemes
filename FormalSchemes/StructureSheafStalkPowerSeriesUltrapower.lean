@@ -1,5 +1,6 @@
 import FormalSchemes.StructureSheafStalkPowerSeriesCounterexample
 import Mathlib.Order.Filter.Germ.Basic
+import Mathlib.RingTheory.Polynomial.RationalRoot
 
 set_option linter.style.header false
 
@@ -136,6 +137,24 @@ are the shape of `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_su
 hypothesis shown needed by a witness rather than shown absent at one ring. What is measured is the
 classification's **forward** direction; its backward direction is untouched.
 
+## A second witness, and why it is in a file named for the ultrapower
+
+The last section of this file is about a **different ring**, and the file's name is the ultrapower's
+rather than that ring's. The subject the name abbreviates is not one ring but one question — which
+hypotheses of the passages from the denominator condition to a single clearing `m` can be deleted —
+and every `not_forall_…` refutation on this tree is here. `FormalSpectrum.forall_dvd_pow_prod` is
+the last of those passages whose instance was unmeasured, and **the ultrapower provably cannot
+measure it**: its hypothesis wants a `Finset` meeting every prime associate class and the ultrapower
+has infinitely many. The witness that does is the ring of all algebraic integers, which has **no**
+prime elements at all, so the refuting instance is the empty `Finset`.
+
+It is one `abbrev` and five theorems, none of which develops any theory of that ring, and it is in
+this file rather than in a new module because the sentences it falsifies are in this file's
+docstring and beside the theorem in
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` that it measures. A reader who wants
+only the ultrapower can stop at *The value of the predicate at the ultrapower*; nothing above the
+last section mentions the second ring except to say which question it answers.
+
 ## Main results
 
 * `FormalSpectrum.hasBoundedDenominators_iff_forall_exists_dvd_pow`: **the denominator condition is
@@ -166,11 +185,12 @@ classification's **forward** direction; its backward direction is untouched.
 * `FormalSpectrum.hasBoundedDenominators_and_not_exists_forall_dvd_pow_intUltrapower`,
   `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_forall_dvd_pow`: **the
   `[UniqueFactorizationMonoid R]` of
-  `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` is needed** — the same ring
-  satisfies that implication's hypothesis and falsifies its conclusion, which is
+  `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` is needed**, at the
+  ultrapower — it satisfies that implication's hypothesis and falsifies its conclusion, which is
   `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`'s proof read the other way round.
-  **The forward passage only**; `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` and
-  `FormalSpectrum.forall_dvd_pow_prod` keep their instance unmeasured.
+  **The forward passage only**; `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` keeps its
+  instance unmeasured, and `FormalSpectrum.forall_dvd_pow_prod` is measured at a different ring,
+  in the last entry below.
 * `FormalSpectrum.eventually_dvd_of_coe_dvd_coe_intUltrapower`,
   `FormalSpectrum.coe_dvd_coe_iff_eventually_dvd_intUltrapower`: **divisibility of germs is eventual
   pointwise divisibility**, the converse of the direction this file already had.
@@ -182,13 +202,15 @@ classification's **forward** direction; its backward direction is untouched.
 * `FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower`,
   `FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`: **the
   `[UniqueFactorizationMonoid R]` of
-  `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` is needed**, and not merely
-  unavailable at this ring — its other two hypotheses hold here and its conclusion fails.
+  `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` is needed**, again at the
+  ultrapower and not merely unavailable there — its other two hypotheses hold and its conclusion
+  fails.
 * `FormalSpectrum.infinite_setOf_prime_associates_intUltrapower`,
   `FormalSpectrum.hasBoundedDenominators_and_infinite_primes_intUltrapower`,
   `FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes`,
   `FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes`: **the same instance is
-  needed in the classification `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` too** —
+  needed in the classification `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` too**, and
+  at the ultrapower again —
   the same family read at `Associates` makes the prime classes infinite while the condition holds,
   which refutes the classification's forward direction with the instance deleted, and the `↔` with
   it. **Only the forward direction**; the backward one is not touched here or anywhere.
@@ -200,6 +222,18 @@ classification's **forward** direction; its backward direction is untouched.
 * `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_intUltrapower`,
   `FormalSpectrum.isStalkLimit_and_not_exists_surjective_intUltrapower`: **the geometric value**,
   and that no single localization explains it.
+* `FormalSpectrum.AlgInt`, `FormalSpectrum.exists_sq_eq_algInt`,
+  `FormalSpectrum.not_prime_algInt`, `FormalSpectrum.not_isUnit_two_algInt`,
+  `FormalSpectrum.not_forall_forall_dvd_pow_prod`: **the `[UniqueFactorizationMonoid R]` of
+  `FormalSpectrum.forall_dvd_pow_prod` is needed too** — and **not** at the ultrapower, which
+  cannot measure it, but at the ring of all algebraic integers, which has **no** prime elements and
+  a nonzero non-unit. The refutation is the empty `Finset`, where that theorem says every nonzero
+  element is a unit.
+* `FormalSpectrum.finite_setOf_prime_associates_algInt`,
+  `FormalSpectrum.not_isUnit_clearing_algInt`: **how far the same ring reaches on
+  `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, and where it stops** — it satisfies that
+  theorem's hypothesis and fails the unit case of its conclusion, which leaves the non-unit case
+  and therefore that theorem's instance **unmeasured** here and everywhere on this tree.
 
 ## What is *not* proved here
 
@@ -242,8 +276,23 @@ strictly stronger than `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapow
 only that they do not apply here. **Neither refutation is a factorisation of anything**, and
 neither reaches the classification's backward direction: *finitely many prime classes ⇒ the
 denominator condition* is proved here only under unique factorisation, by
-`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, and nothing above says whether that
-instance can be dropped there.
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, and **whether that instance can be dropped
+there is decided nowhere, here included**. The last section of this file reaches that theorem's
+hypothesis at a second ring and fails the unit case of its conclusion
+(`FormalSpectrum.finite_setOf_prime_associates_algInt`,
+`FormalSpectrum.not_isUnit_clearing_algInt`), which is more than nothing and is not a refutation.
+
+**Nothing is proved about the ring of all algebraic integers beyond five facts**, and they are
+`FormalSpectrum.exists_sq_eq_algInt`, `FormalSpectrum.not_prime_algInt`,
+`FormalSpectrum.not_isUnit_two_algInt`, `FormalSpectrum.finite_setOf_prime_associates_algInt` and
+`FormalSpectrum.not_isUnit_clearing_algInt`. It is **not** claimed to be, or not to be, a
+`UniqueFactorizationMonoid` — that is a statement in the shape of
+`FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower` and it is not made here — nor a
+Bézout, Dedekind or principal ideal ring; no factorisation is exhibited, no class group is
+computed, and no element of it other than `2` is named. In particular
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` is **not refuted**: that ring satisfies its
+hypothesis and fails the unit case of its conclusion, and the non-unit case, which is what a
+refutation needs, would run through valuations on an algebraic closure of `ℚ` and is not attempted.
 
 **The ultrafilter hypothesis is not analysed.** `Ultrafilter.eventually_or` is what makes the
 ring a domain and `(φ : Filter ℕ) ≤ Filter.atTop` is what makes the diagonal product work; that the
@@ -290,6 +339,16 @@ and 2727 at head. `Mathlib/Order/Filter/Ultrafilter/Basic.lean` (for `Filter.hyp
 `Nat.exists_infinite_primes`) are already in it and are reached through the import above.
 `Mathlib/Order/Filter/FilterProduct.lean`, the ultraproduct file, is **not** imported: it supplies
 the field structure of an ultrapower of a field, and neither half below needs it.
+
+**The second witness costs one `import` line and no module at all.**
+`Mathlib/RingTheory/Polynomial/RationalRoot.lean` is imported for the single instance
+`IsIntegrallyClosed ℤ` that `FormalSpectrum.not_isUnit_two_algInt` needs, and it is **already** in
+this project's Mathlib closure — three other files reach it, the shortest through
+`Mathlib/RingTheory/Ideal/Int.lean` — so the sentence above stays exact: this leaf still adds
+exactly one module to that closure, and the line here adds none. The two other modules a reader
+would expect — `Mathlib/FieldTheory/IsAlgClosed/AlgebraicClosure.lean` and
+`Mathlib/RingTheory/IntegralClosure/IntegrallyClosed.lean` — are **not** imported: both were
+already reachable from here, measured by deleting each candidate in turn and re-elaborating.
 
 ## References
 
@@ -696,14 +755,18 @@ against the **quantified statement** and the same three facts —
 instance cannot be dropped from it. One ring, one pair of facts, two readings, and *the instance is
 unavailable here* is the weaker of them.
 
-**Only the forward passage is reached.**
+**Only the forward passage is reached, and only by this ring.**
 `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` factors through
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` and
-`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, and nothing below bears on the second of
-those: refuting it would need a domain with **finitely** many prime associate classes and no
-clearing `m`, and this ring has infinitely many
-(`FormalSpectrum.infinite_setOf_prime_associates_intUltrapower`). Its instance, and that of
-`FormalSpectrum.forall_dvd_pow_prod`, stay unmeasured.
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, and the ultrapower bears on neither of the
+last two as it bears on the first: refuting the second would need a domain with **finitely** many
+prime associate classes and no clearing `m`, and this ring has infinitely many
+(`FormalSpectrum.infinite_setOf_prime_associates_intUltrapower`), and the third quantifies over a
+`Finset` meeting every prime class, which for the same reason has no instance here. Both are
+reached, as far as they are reached at all, at a **different** ring — the section *A second
+witness: the ring of all algebraic integers* at the end of this file, where
+`FormalSpectrum.forall_dvd_pow_prod`'s instance is shown **needed** and
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`'s stays **unmeasured**.
 -/
 
 /-- **The ultrapower satisfies the denominator condition and has no single clearing `m`.**
@@ -1090,6 +1153,175 @@ theorem isStalkLimit_and_not_exists_surjective_intUltrapower (hφ : (φ : Filter
           Function.Surjective (awayToFractionRing (IntUltrapower φ) m hm) :=
   ⟨isStalkLimit_powerSeriesXGenericPoint_intUltrapower φ hφ,
     not_exists_surjective_awayToFractionRing_intUltrapower φ⟩
+
+/-! ### A second witness: the ring of all algebraic integers
+
+`FormalSpectrum.forall_dvd_pow_prod` — the step inside
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` that turns a finite set of primes covering
+every associate class into a denominator for the whole ring — carries
+`[UniqueFactorizationMonoid R]` too, and **the ultrapower cannot measure it**. Its hypothesis asks
+for a `Finset R` meeting every prime associate class, and the ultrapower has infinitely many of
+them (`FormalSpectrum.infinite_setOf_prime_associates_intUltrapower`), so no finite set satisfies
+that hypothesis there and no instantiation at the ring above says anything. A second witness is
+needed, and the one that works sits at the opposite extreme: a ring with **no** prime elements.
+
+**The refutation is the empty set.** `FormalSpectrum.forall_dvd_pow_prod` carries `[CommRing R]`
+and the instance and — unlike every theorem above — **no** `[IsDomain R]`, so deleting the instance
+leaves a statement about an arbitrary commutative ring; and it is quantified over a `Finset R`. At
+the empty set its hypothesis reads *there are no prime elements* and its conclusion reads *every
+`s ≠ 0` divides `1`*. So what refutes it is a ring with no primes and one nonzero non-unit, and no
+divisibility argument, no fraction field and no denominator condition enter at all. That reduction
+is why this section is short; it is not a second development of anything above.
+
+The ring of all algebraic integers is such a ring. Every element is a square, because the ambient
+field is algebraically closed and a square root of an algebraic integer is again one; an element
+that is a square of a non-unit is not irreducible and hence not prime, and here the square root is
+a non-unit whenever the element is. And `2` is not a unit, because a rational algebraic integer is
+a rational integer. **That the witness is an integral closure in an algebraically closed field, and
+not the ring of integers of a number field, is what makes the first half true** — a ring of
+integers is not closed under square roots, which is why
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` cannot supply this witness even though it
+is the file about integral closures of `ℤ`.
+
+**This section measures `FormalSpectrum.forall_dvd_pow_prod` and stops there.** It does not settle
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, whose instance stays unmeasured; the two
+free halves of that question are the last pair of theorems below, and what is still missing between
+them is stated with them.
+-/
+
+/-- **The ring of all algebraic integers**: the integral closure of `ℤ` in an algebraic closure of
+`ℚ`.
+
+It is an `abbrev` so that its `CommRing` instance and its coercion to `AlgebraicClosure` are found
+without unfolding, as `FormalSpectrum.IntUltrapower` above is. Nothing here develops its
+factorisation theory: the only facts proved about it are the five below, and in particular it is
+**not** claimed to be or not to be a `UniqueFactorizationMonoid`, a Bézout ring or a Dedekind
+domain, and no class group is mentioned. -/
+abbrev AlgInt := integralClosure ℤ (AlgebraicClosure ℚ)
+
+/-- **Every algebraic integer is a square.** `IsAlgClosed.exists_pow_nat_eq` produces a square root
+in `AlgebraicClosure ℚ` and `isIntegral_trans`, against the monic `X ^ 2 - C p`, puts it back in
+the integral closure.
+
+**This is the step that fixes the witness.** The second half of the argument runs the square root
+back through the coercion, which is an injection of a subring, so no choice of root matters. A ring
+of integers of a number field is not closed under square roots and would fail here at once. -/
+theorem exists_sq_eq_algInt (p : AlgInt) : ∃ r : AlgInt, r * r = p := by
+  obtain ⟨r, hr⟩ :=
+    IsAlgClosed.exists_pow_nat_eq (p : AlgebraicClosure ℚ) (n := 2) (by norm_num)
+  have hint : IsIntegral ℤ r :=
+    isIntegral_trans (A := AlgInt) r
+      ⟨Polynomial.X ^ 2 - Polynomial.C p, Polynomial.monic_X_pow_sub_C _ two_ne_zero, by simp [hr]⟩
+  exact ⟨⟨r, hint⟩, Subtype.ext (by push_cast; rw [← hr]; ring)⟩
+
+/-- **The ring of all algebraic integers has no prime elements at all.**
+
+`Prime.irreducible` against `p = r * r`: `Irreducible.isUnit_or_isUnit` makes `r` a unit on
+whichever side it is read, so `p` is a product of two units and `Prime.not_unit` is contradicted.
+No factorisation is exhibited and no irreducible element is produced — there are none of those
+either, and only the prime statement is needed below. -/
+theorem not_prime_algInt (p : AlgInt) : ¬ Prime p := by
+  intro hp
+  obtain ⟨r, hr⟩ := exists_sq_eq_algInt p
+  rcases hp.irreducible.isUnit_or_isUnit hr.symm with h | h <;> exact hp.not_unit (hr ▸ h.mul h)
+
+/-- **`2` is not a unit of the ring of all algebraic integers**, which is the classical *a rational
+algebraic integer is a rational integer*.
+
+A right inverse `u` of `2` satisfies `2 * u = 1` in `AlgebraicClosure` and so is the image of
+`1 / 2`; `isIntegral_algebraMap_iff` pushes its integrality down to `(1 / 2 : ℚ)` along the
+injection of `ℚ`, and `IsIntegrallyClosed.isIntegral_iff` at `ℤ` produces an integer `y` with
+`2 * y = 1`.
+
+**This is the only place a Mathlib import is spent on this section**: `IsIntegrallyClosed ℤ` is
+declared in `Mathlib/RingTheory/Polynomial/RationalRoot.lean`, and everything else here was already
+reachable. Nothing distinguishes `2` beyond its being a nonzero non-unit; it is used rather than
+named because the two theorems that consume it want an element and not a definition. -/
+theorem not_isUnit_two_algInt : ¬ IsUnit (2 : AlgInt) := by
+  intro h
+  obtain ⟨u, hu⟩ := h.exists_right_inv
+  have hval : (2 : AlgebraicClosure ℚ) * (u : AlgebraicClosure ℚ) = 1 := by
+    have := congrArg (Subtype.val) hu; push_cast at this; exact this
+  have hcast : (algebraMap ℚ (AlgebraicClosure ℚ)) (1 / 2) = (u : AlgebraicClosure ℚ) := by
+    rw [map_div₀, map_one, map_ofNat, div_eq_iff (two_ne_zero (α := AlgebraicClosure ℚ))]
+    linear_combination -hval
+  have h3 : IsIntegral ℤ (1 / 2 : ℚ) :=
+    (isIntegral_algebraMap_iff (algebraMap ℚ (AlgebraicClosure ℚ)).injective).mp (hcast ▸ u.2)
+  obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.mp h3
+  have hq : (y : ℚ) = 1 / 2 := by simpa using hy
+  have : (2 * y : ℤ) = 1 := by
+    have : ((2 * y : ℤ) : ℚ) = 1 := by push_cast [hq]; norm_num
+    exact_mod_cast this
+  omega
+
+/-- **The quantified form: `FormalSpectrum.forall_dvd_pow_prod` is false without unique
+factorisation.**
+
+The statement is that theorem's own, with `[UniqueFactorizationMonoid R]` deleted and nothing else
+changed — the universe restricted to `Type` as in
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_forall_dvd_pow` above, the neighbouring
+statement of the same shape, which the witness meets.
+
+**There is no conjunction beside it**, unlike each of the three refutations above. Those pair a
+hypothesis and a failed conclusion at one ring because each destructures a two-part fact about that
+ring; this one destructures nothing. It applies the quantified statement at the empty set, where
+the hypothesis is `FormalSpectrum.not_prime_algInt` and the conclusion is refuted by
+`FormalSpectrum.not_isUnit_two_algInt`, so a conjunction of those two would be a name for an
+anonymous constructor and for nothing else. -/
+theorem not_forall_forall_dvd_pow_prod :
+    ¬ ∀ (R : Type) [CommRing R] (t : Finset R),
+        (∀ p : R, Prime p → ∃ q ∈ t, Associated p q) →
+          ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ t.prod id ^ k := by
+  intro h
+  obtain ⟨k, hk⟩ := h AlgInt ∅ (fun p hp => absurd hp (not_prime_algInt p)) 2 two_ne_zero
+  simp only [Finset.prod_empty, one_pow] at hk
+  exact not_isUnit_two_algInt (isUnit_of_dvd_one hk)
+
+/-! ### How far the same witness reaches on the sibling question, and where it stops
+
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` is the theorem
+`FormalSpectrum.forall_dvd_pow_prod` is the inside of, and it carries the same instance. **This
+file does not settle whether that instance can be deleted**, and the two theorems below say exactly
+how far the witness above gets, because a witness that reaches a hypothesis and fails at one case
+of a conclusion is worth recording and is not a refutation.
+
+The witness **satisfies that theorem's hypothesis**: having no primes at all, it has finitely many
+prime associate classes, namely none. And the `m` **is a unit** case of its conclusion already
+fails, on the same nonzero non-unit. What is missing is one thing: for a **non-unit** `m ≠ 0`, an
+`s ≠ 0` dividing no power of `m`. That is true — a rational prime outside the support of `m`, and a
+prime of the ring of all algebraic integers above it — but the argument runs through valuations on
+an algebraic closure of `ℚ`, i.e. through the fact that every element lies in some number field and
+through the primes of that field's ring of integers, and **whether Mathlib supports it at a cost
+worth paying is not measured here**. Nothing below should be read as a refutation of that theorem.
+-/
+
+/-- **The ring of all algebraic integers has finitely many prime associate classes: none.**
+
+`Associates.mk_surjective` and `Associates.prime_mk` off `FormalSpectrum.not_prime_algInt`, so the
+set is empty rather than merely finite. This is the hypothesis of
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` at this ring, and it is the reason that
+theorem's instance is worth asking about here rather than at the ultrapower, whose prime classes
+are infinite (`FormalSpectrum.infinite_setOf_prime_associates_intUltrapower`). -/
+theorem finite_setOf_prime_associates_algInt : {a : Associates AlgInt | Prime a}.Finite := by
+  convert Set.finite_empty
+  ext a
+  obtain ⟨p, rfl⟩ := Associates.mk_surjective a
+  simpa using fun hp => not_prime_algInt p (Associates.prime_mk.mp hp)
+
+/-- **The unit case of the sibling's conclusion fails at the same ring**: no unit has powers that
+everything nonzero divides, since `2` divides no unit
+(`FormalSpectrum.not_isUnit_two_algInt`).
+
+**This is one case and not the theorem.** Together with
+`FormalSpectrum.finite_setOf_prime_associates_algInt` it says that the witness reaches the
+hypothesis of `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` and fails the unit case of
+its conclusion, which leaves the non-unit `m ≠ 0` case open and that theorem's
+`[UniqueFactorizationMonoid R]` unmeasured. The hypothesis is stated as `IsUnit m` rather than
+derived, because the statement is exactly the case that is free. -/
+theorem not_isUnit_clearing_algInt (m : AlgInt) (hm : IsUnit m)
+    (h : ∀ s : AlgInt, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k) : False := by
+  obtain ⟨k, hk⟩ := h 2 two_ne_zero
+  exact not_isUnit_two_algInt (isUnit_of_dvd_unit hk (hm.pow k))
 
 end FormalSpectrum
 
