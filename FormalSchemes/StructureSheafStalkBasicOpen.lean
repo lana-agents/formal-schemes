@@ -81,7 +81,7 @@ So the upgrade of the second theorem below to completion form is landed, in
 and needs nothing this file does not — an earlier version of this paragraph predicted the upgrade
 would need `Ideal.FG` outright, and only half of it does. It is a separate module, not an addition
 here, for the reason the implementation notes below give about `FormalSchemes.SpfGammaRoundTrip`:
-importing the identification would take this file's transitive closure from 7 modules to 41.
+this file's forward closure is **7** modules, and importing the identification takes it to 41.
 Note that the reason the general case was expected to be hard — that there is no
 canonical `R_f → R_g` for a general `D(g) ⊆ D(f)` — is true of the *localizations* and was never the
 obstruction for the completions; `FormalSchemes.CofinalSheafComparisonNaturality` records that
@@ -100,7 +100,7 @@ bridging lemma; that is the whole of the specialisation.
 beside the basis lemma in `FormalSchemes.FormalSpectrum`, whose `FormalSpectrum.exists_basicOpen_le`
 already exists for the same reason. The alternative — restating its two lines here — would have put
 a second copy of a landed lemma on the tree, and importing `FormalSchemes.SpfGammaRoundTrip` instead
-would have taken this file's transitive closure from 7 modules to 32 for the sake of them.
+would have taken this file's forward closure, **7** modules, to 32 for the sake of them.
 
 Neither statement needs `IsAdicRing`, or even a topology on `R`: they are facts about the sheaf on
 the space `FormalSpectrum I` and about that space's basis.

@@ -31,8 +31,8 @@ reformulation, and it stays sheaf-theoretic.
 
 Two things, both of which are the reason it was not taken where the criterion was first stated.
 
-**Ten modules.** `FormalSchemes.BasicOpenRestrictionIdentification` is not in the import closure of
-`FormalSchemes.StructureSheafStalkComparison`, and adding it takes a closure of 35 to one of 45.
+**Ten modules.** `FormalSchemes.StructureSheafStalkComparison` has forward closure **35** and does
+not contain `FormalSchemes.BasicOpenRestrictionIdentification`; adding it takes that to 45.
 
 **Two instance hypotheses.** `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict` carries
 `[TopologicalSpace R]` and `IsAdicRing I`, so the statements below carry them too — even though,
@@ -75,9 +75,9 @@ Over `FormalSchemes.StructureSheafStalkComparison` and
 above it, which are everything on the tree that rebuilds for this file.
 
 *Editing `FormalSchemes.StructureSheafStalkComparison` in place* was the obvious alternative and
-costs the most: it would take that file's closure from 35 to 45 and put `[TopologicalSpace R]` and
-`IsAdicRing I` into a module that today has neither and says so, for every consumer of the
-sheaf-carrying criterion as well.
+costs the most: that file's forward closure is **35**, the edit would take it to 45, and it would
+put `[TopologicalSpace R]` and `IsAdicRing I` into a module that today has neither and says so, for
+every consumer of the sheaf-carrying criterion as well.
 
 *Adding this to `FormalSchemes.StructureSheafStalkBasicOpenCompletion`* was the near miss. That file
 already imports `FormalSchemes.BasicOpenRestrictionIdentification` and already makes the same trade

@@ -101,8 +101,9 @@ this file's forward closure is **82** project modules, containing neither
 `FormalSchemes.OpenFormalSubscheme` — where `AlgebraicGeometry.FormalScheme.restrictOpen` and its
 `AlgebraicGeometry.FormalScheme.LocallyFG` hypothesis live — nor
 `FormalSchemes.ActionQuotientFormalScheme`. This confirms at a
-third and larger closure what `FormalSchemes.ActionQuotientRestrict` and
-`FormalSchemes.ActionQuotientRestrictSections` measured at 72 and 77, and it does **not** contradict
+third and larger closure what `FormalSchemes.ActionQuotientRestrict`, whose forward closure is
+**72**, and `FormalSchemes.ActionQuotientRestrictSections`, whose forward closure is **77**,
+measured, and it does **not** contradict
 `FormalSchemes.ActionQuotientFormalScheme`'s "not removable" paragraph, which is about producing an
 affine chart inside a separating open and is correct about its own subject.
 
