@@ -44,6 +44,16 @@ This file makes that identification and draws the two consequences that are free
   **`AlgebraicGeometry.isHausdorff_tateInvNodeChartAwayIdeal`**: it is Hausdorff. The general
   lemma behind it, `AlgebraicGeometry.isHausdorff_comap_subtype`, is stated for an arbitrary
   subring of an arbitrary Hausdorff adic ring.
+* **`AlgebraicGeometry.tateInvNodeChartAwaySpfMap`**: `Spf` of the inclusion, the map of formal
+  spectra `Spf A{1/(x + y − 1)} → Spf` of the chart ring, with
+  `AlgebraicGeometry.continuous_tateInvNodeChartAwaySpfMap` and — the reason it is worth naming —
+  **`AlgebraicGeometry.tateInvNodeChartAwaySpfMap_eq_iff`**: two primes have the same image under
+  it exactly when they have the same trace on the chart ring. That pointwise condition is what the
+  node-chart cluster's residue is stated in, and this says it is a fibre of one map.
+* **`AlgebraicGeometry.injective_quotientMap_tateInvNodeChartAwaySubring`**: the chart ring
+  **embeds** in the ambient ring modulo the ideal of definition. Both of these are `le_rfl` at
+  the side condition, because the ideal above is by definition the contraction of the one below,
+  so neither needs completeness, finite generation or any adic hypothesis.
 * **`AlgebraicGeometry.tateInvNodeChartAmbientHom`** and
   **`AlgebraicGeometry.range_tateInvNodeChartAmbientHom`**: the morphism
   `Spf A{1/(x + y − 1)} ⟶ Q` obtained by composing the basic-open chart with the patch inclusion
@@ -86,10 +96,38 @@ This file makes that identification and draws the two consequences that are free
   `FormalSchemes.TateInvChartBaseImage`) and in this file's own spelling
   (`AlgebraicGeometry.algebraMap_mem_tateInvNodeChartAwaySubring`, same module) — but that is a
   lower bound and says nothing about the three questions above.
+* **`tateInvNodeChartAwaySpfMap` is not shown injective here, and it is not injective.**
+  `AlgebraicGeometry.not_injective_tateInvNodeChartAwaySpfMap`
+  (`FormalSchemes.TateInvNodeChartOrbitSeparation`) refutes its injectivity for `I ≠ ⊤`, inside
+  the regime that file's clause section fixes — finite generation of
+  `AlgebraicGeometry.tateInvNodeChartQuotientIdeal` and an
+  `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` witness — and contraposing that through
+  `PrimeSpectrum.comap_injective_of_surjective` gives there both
+  `AlgebraicGeometry.not_surjective_quotientMap_tateInvNodeChartAwaySubring` and
+  `AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top`. **So properness, which the bullet above
+  leaves open, is decided downstream in that regime — and only there.** Outside it, `I = ⊤`
+  included, nothing decides it; and no element of `A{1/(x + y − 1)}` is shown to lie outside the
+  chart ring anywhere on the tree, the refutation being a contraposition that produces no witness.
+  (`AlgebraicGeometry.notMem_tateInvGlobalSubring_overlapX`,
+  `FormalSchemes.TateInvGlobalProperness`, exhibits one for the **global** subring inside `A`,
+  which is a different subring of a different ring.)
 
 Nothing here weakens `LocallyRingedSpace.IsProperlyDiscontinuousOn`,
 `LocallyRingedSpace.IsFreeProperlyDiscontinuous` or
 `LocallyRingedSpace.freeActionQuotientFormalScheme`.
+
+## Placement
+
+Over `FormalSchemes.AdicOnOpenSections` and `FormalSchemes.TateInvNodeChartDomain`: forward
+closure **202** project modules besides itself, reverse closure **34**, counted by walking every
+`^import FormalSchemes.` line over the files under `FormalSchemes/` (a module is not counted in
+its own closure; the aggregator at the repository root is outside the walk).
+
+`Spf` of the inclusion is here rather than beside the statements that use it because it needs
+this file and nothing else: the two rings, the contraction and `FormalSpectrum.map` are all in
+scope by the line above. `FormalSchemes.TateInvNodeChartOrbitSeparation`, where the criterion it
+feeds is stated, has forward closure **269**, so a reader who wants only the map imports this file
+and pays sixty-seven modules less for it.
 
 ## References
 
@@ -204,6 +242,99 @@ theorem isHausdorff_tateInvNodeChartAwayIdeal :
       (tateInvNodeChartAwaySubring R I q hq hI) :=
   isHausdorff_comap_subtype _ _
     (FormalSpectrum.isHausdorff_awayCompletionIdeal _ _ (annulusIdealOfDefinition_fg R I q hI))
+
+/-! ### `Spf` of the inclusion -/
+
+/-- **`Spf` of the inclusion of the chart ring**: the map of formal spectra
+`Spf A{1/(x + y − 1)} → Spf (tateInvNodeChartAwaySubring …)` induced by
+`(AlgebraicGeometry.tateInvNodeChartAwaySubring R I q hq hI).subtype`.
+
+**The side condition is `le_rfl`**, and that it is is the reason this definition needs no
+hypothesis at all: `AlgebraicGeometry.tateInvNodeChartAwayIdeal` is *defined* as the contraction
+of `FormalSpectrum.awayCompletionIdeal` along the inclusion, so the containment
+`FormalSpectrum.map` asks for is the containment of an ideal in itself. `FormalSpectrum.map`
+moreover carries `omit [TopologicalSpace R] [IsAdicRing I]`, so nothing but the two `CommRing`
+structures enters here.
+
+**This is not a claim that `AlgebraicGeometry.tateInvNodeChartAwayIdeal` is an ideal of
+definition.** Neither completeness nor finite generation is used or obtained; the target is the
+formal spectrum of a pair (ring, ideal) and that is all `FormalSpectrum` is. See this file's
+module docstring. -/
+def tateInvNodeChartAwaySpfMap :
+    FormalSpectrum (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+      (annulusNodeChartCoord R I q)) →
+    FormalSpectrum (tateInvNodeChartAwayIdeal R I q hq hI) :=
+  FormalSpectrum.map (tateInvNodeChartAwayIdeal R I q hq hI)
+    (awayCompletionIdeal (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q))
+    (tateInvNodeChartAwaySubring R I q hq hI).subtype le_rfl
+
+/-- **It is continuous**, so *map of formal spectra* is the right noun for it and not just
+*function*: `FormalSpectrum.continuous_map` at the same side condition. Nothing below uses this;
+it is here so that the noun the docstrings use is one the file has earned. -/
+theorem continuous_tateInvNodeChartAwaySpfMap :
+    Continuous (tateInvNodeChartAwaySpfMap R I q hq hI) :=
+  FormalSpectrum.continuous_map _ _ _ _
+
+/-- **Two primes have the same image under `Spf` of the inclusion exactly when they have the same
+trace on the chart ring.** The right-hand side is the pointwise condition the node-chart cluster
+carries — a prime of `A{1/(x + y − 1)}` modulo `FormalSpectrum.awayCompletionIdeal` contains the
+class of an element of the chart ring iff the other one does — and this says it is a fibre of one
+map, with no scheme, no action and no chart in it.
+
+The proof is written around a hazard worth naming: `FormalSpectrum I` is a `def` for
+`PrimeSpectrum (R ⧸ I)` and **not** an `abbrev`, so `PrimeSpectrum.ext` and `PrimeSpectrum.asIdeal`
+reach a point of `FormalSpectrum _` only through that unfolding. The forward direction therefore
+transports the equality with `congrArg` at the `PrimeSpectrum` spelling rather than rewriting, and
+the backward direction produces the element with `Ideal.Quotient.mk_surjective` before comparing
+membership. -/
+theorem tateInvNodeChartAwaySpfMap_eq_iff
+    (w w' : FormalSpectrum (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+      (annulusNodeChartCoord R I q))) :
+    tateInvNodeChartAwaySpfMap R I q hq hI w = tateInvNodeChartAwaySpfMap R I q hq hI w' ↔
+      ∀ a : tateInvNodeChartAwaySubring R I q hq hI,
+        (Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+            (annulusNodeChartCoord R I q))
+            (a : awayCompletion (annulusIdealOfDefinition R I q)
+              (annulusNodeChartCoord R I q)) ∈ w.asIdeal ↔
+          Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+            (annulusNodeChartCoord R I q))
+            (a : awayCompletion (annulusIdealOfDefinition R I q)
+              (annulusNodeChartCoord R I q)) ∈ w'.asIdeal) := by
+  constructor
+  · intro h a
+    have := congrArg PrimeSpectrum.asIdeal h
+    have h2 : ∀ b, b ∈ (PrimeSpectrum.comap (Ideal.quotientMap _
+        (tateInvNodeChartAwaySubring R I q hq hI).subtype
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) w).asIdeal ↔
+        b ∈ (PrimeSpectrum.comap (Ideal.quotientMap _
+        (tateInvNodeChartAwaySubring R I q hq hI).subtype
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) w').asIdeal := fun b =>
+      Iff.of_eq (congrArg (b ∈ ·) this)
+    have := h2 (Ideal.Quotient.mk (tateInvNodeChartAwayIdeal R I q hq hI) a)
+    simpa [Ideal.quotientMap_mk] using this
+  · intro h
+    apply PrimeSpectrum.ext
+    apply Ideal.ext
+    intro b
+    obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective b
+    simpa [tateInvNodeChartAwaySpfMap, FormalSpectrum.map, Ideal.quotientMap_mk] using h a
+
+/-- **The chart ring embeds in the ambient ring modulo the ideal of definition.**
+`Ideal.quotientMap_injective'` at `le_rfl`, which applies for the same reason the map above needs
+no hypothesis: the ideal upstairs is the contraction of the one downstairs, so a chart-ring element
+lying in `FormalSpectrum.awayCompletionIdeal` already lies in
+`AlgebraicGeometry.tateInvNodeChartAwayIdeal`.
+
+Nothing here says the embedding is onto, and it is not: see
+`AlgebraicGeometry.not_surjective_quotientMap_tateInvNodeChartAwaySubring`
+(`FormalSchemes.TateInvNodeChartOrbitSeparation`), which refutes surjectivity for `I ≠ ⊤` in the
+regime that file's section fixes. -/
+theorem injective_quotientMap_tateInvNodeChartAwaySubring :
+    Function.Injective (Ideal.quotientMap
+      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q))
+      (tateInvNodeChartAwaySubring R I q hq hI).subtype
+      (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) :=
+  Ideal.quotientMap_injective' le_rfl
 
 section Quotient
 
