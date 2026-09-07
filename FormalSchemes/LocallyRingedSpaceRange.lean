@@ -36,7 +36,7 @@ wanted at unrelated places in the tree: the range pair at the Tate chain's glue 
 arbitrary-index chart-overlap computations
 (`FormalSchemes.SpecTwoPatchNonAffine`, `FormalSchemes.ChartedSchemeDatumChartOverlap`). No module
 already in all of those import closures is about bare locally ringed spaces — the intersection is
-26 modules and every one of them is an adic-ring or formal-spectrum module — so the file sits
+27 modules and every one of them is an adic-ring or formal-spectrum module — so the file sits
 directly on Mathlib, as `FormalSchemes/PullbackRangeLRS.lean` and
 `FormalSchemes/LocallyRingedSpaceHomExt.lean` already do for their own general facts.
 

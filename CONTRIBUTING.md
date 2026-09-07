@@ -453,6 +453,65 @@ is not counted in its own closure, and `public import` is an import line. Where 
 the other way it says so — *"(N counted with itself)"* — and that spelling is checked as well, at
 one more.
 
+**The script reads the tree at the current working directory, not the directory it is in.**
+`python3 /tmp/base/scripts/closure_audit.py --tree`, run from the repository, audits *the
+repository*, with only the script taken from the worktree, and prints nothing that says which tree
+it walked. To measure a base, `cd` into the worktree first. A base measurement is only a base
+measurement if you can say which tree produced it.
+
+### What adding a module costs, and why the figures are repaired rather than anchored
+
+**An absolute closure figure is a global invariant of the tree, so a pull request that adds a
+module falsifies figures in files it does not touch.** The figures in this subsection are one
+measurement at one commit — `db41d27`, where `--tree` is clean at 559 modules — and are not
+maintained; re-run the experiment rather than quoting them. One new leaf, importing a single
+existing module and touching no declaration, took `--tree` from 0 MISMATCH to **43**, across **27
+sentences** in **23 files**, of exactly two shapes and no third:
+
+| shape | count | why |
+| --- | --: | --- |
+| *"of the project's **N** modules"* | 16 | a new module falsifies every project total |
+| *"the reverse closure of `X` is **N**"* | 27 | a leaf is downstream of most of the tree |
+
+**A leaf leaves every forward closure alone** — a module added downstream changes nobody's imports
+— and a pull request that adds only declarations changes nothing at all, measured at 0 MISMATCH.
+
+**An added *import* is the other case, and its cost is not the importing file's reverse closure.**
+What an import `A → B` moves is the forward closure of `A` and of everything downstream of `A`, and
+the reverse closure of every module that `B` newly brings into `A`'s closure — so what it costs is
+the size of that new part, not the size of `A`'s consumer set. Both extremes were measured on one
+file whose reverse closure is 0: importing a module whose own closure was already inside it moved
+**one** figure, `A`'s forward closure, and cost **2** MISMATCHes because two files state that
+figure; importing one that brought a fresh subtree cost **17**, across 12 files. *"Reverse closure
+0, so an import is free"* is not the rule, and neither is *"one import, one figure"*.
+
+**The repair is mechanical — `+1` on a numeral — and the cost is the rebuild, which is concentrated
+in one file.** Editing a docstring re-elaborates that module's reverse closure; over the 23 files
+above the union of those is **504** modules, of which **502** are
+`FormalSchemes/StructureSheaf.lean` alone. Drop that one file and the same repair rebuilds **51**.
+
+That is what decides the disposition, and it rules out the option that looks best:
+
+* **Dropping the project totals** — one sentence here, and *"of the project's modules"* with no
+  numeral in the docstrings — removes 16 of the 43 figures and 5 of the 23 files, and **0 of the
+  504 rebuilt modules**. `FormalSchemes/StructureSheaf.lean` states a project total *and* its own
+  reverse closure in one sentence, so it is edited either way. Halving the count is not halving
+  the cost, and the cost is what the argument is about.
+* **Anchoring the figures** — *"**559** modules at `db41d27`"*, the spelling `README.md` uses —
+  would stop them rotting at the price of the checking that four rows were spent building, and no
+  `.lean` docstring on this tree quotes a commit.
+* **So the figures are repaired, and this is the obligation**: adding a module under
+  `FormalSchemes/` includes running `--tree` and repairing what it reports, and that repair may cost
+  a near-full rebuild on top of the build the module itself needs. Do the repairs **before** the
+  final build, not after. It is deliberately not in `.orchestra/validation.sh`, for the reason the
+  subsection above gives.
+
+**What the measurement does point at is placement, not spelling.** A project total or an absolute
+*reverse* closure written into a file with a large reverse closure is the expensive kind of figure:
+it will be repaired by somebody who is not you, and their rebuild is your file's consumer set.
+Where the argument allows it, put such a figure in a file that is cheap to re-elaborate, and prefer
+a **forward** closure, which no added leaf can falsify.
+
 ### Which module a figure is about, and when the checker declines to guess
 
 A figure in file `A` is often about `A`, but a `## Placement` paragraph also quotes the closures of
@@ -468,6 +527,12 @@ Two spellings are worth preferring for that reason alone, since both are checked
   bare possessive pronoun is the one anaphor the checker refuses to resolve, because twice on this
   tree its antecedent was the paragraph's subject while the last module actually named was a
   different one mentioned in passing;
+* refer back by **name or by *that file***, never by a definite description. *That file*, *that
+  module* and *whose* are resolved, to the nearest module named before them; *the first*, *the
+  former* and *the latter* are not anchors at all, so the figure falls through to whatever module
+  was last named, which is exactly the one the description was written to avoid repeating.
+  *"…in the forward closure of the first, whose own forward closure is **267**"* was attributed to
+  a module named three clauses earlier, and reported as a MISMATCH twice (row 1840);
 * keep a companion figure in the same sentence as the claim it belongs to: *"N of the project's T
   modules"*, *"against this file's M"*, *"K before this file"* and *"(J counted with itself)"* are
   all checked against the same walk, and all four have been wrong on this tree.
@@ -475,6 +540,14 @@ Two spellings are worth preferring for that reason alone, since both are checked
 A figure spelled in words is invisible to it. *"The reverse closure of `FormalSchemes.Foo` is the
 two consumers and nothing else"* was **five** modules by then and no check could say so; write the
 numeral.
+
+**A closure phrase with no numeral is counted as `declined`, so prose refactoring moves the coverage
+figure without touching a number.** Splitting one such sentence into three took the declined count
+from 10 to 12; rewriting the paragraph so that each closure phrase sits beside its own figure took
+it to 9 and moved those figures into *attributed* instead. So **re-run `--tree` after any prose edit
+that touches a closure word, not only after one that touches a numeral** — and compare the declined
+*lines*, not the counts. A set that changes while the count holds is the failure that comparison
+catches, and a line number that moves because the file grew above it is not a change at all.
 
 **And write the words `forward closure` or `reverse closure`, because that phrase is what the
 checker looks for.** The same measurement has been spelled on this tree as *"the import closure of
@@ -484,8 +557,16 @@ import closure of 445 of the library's 496 modules"*, which is a **reverse** clo
 the far end. Such a sentence carries numerals and is not reported as declined either: it is
 invisible, which is worse than unattributed, since a declined claim is at least counted. Two greps
 — `import closure of` and `closure of N` — find **eight** such sentences in five files, of which
-**two were wrong**, one by a module and the other by 56 in its figure and 62 in its total; row 1825
-rewrote the four that state a plain measurement into the checked spelling and left four deltas.
+**two were wrong**: one by a module, and one that said *"this file is in the import closure of
+**445** of the library's **496** modules"* where the walk gave both figures larger. Row 1825
+rewrote the four that state a plain measurement into the checked spelling and left four deltas; the
+repaired form of the second is in `FormalSchemes/StructureSheaf.lean`, where `--tree` now checks
+both of its figures. Read the true pair there and not here: it is live, and this file is outside
+the walk, as the paragraph below says. **Quote the two false figures, never the difference between
+them.** *"Wrong by 56 in its figure and 62 in its total"* is itself a measurement, it names no
+module and carries no closure phrase so no sweep can see it, and repairing the sentence it
+describes silently falsifies it — as happened here, where it read 55 and 61 until a merge moved the
+true figures.
 **Those two greps are not the population**, and the section below is what a sweep finds instead.
 
 **The noun beside the figure is a measurement too.** Call a module a **leaf** only where a walk you
@@ -493,7 +574,11 @@ ran gives it reverse closure 0; open a `## Placement` paragraph with *"Over `For
 `FormalSchemes.Bar`:"*, which carries the only fact the opener needs and asserts nothing a later
 module can falsify, and write *"this file's closure"* rather than *"this leaf's"*. **`Mathlib-only
 leaf` is the opposite sense — *forward* closure 0 — and is unaffected**:
-`FormalSchemes.LocallyRingedSpaceRange` is one, correctly, at reverse closure 249.
+`FormalSchemes.LocallyRingedSpaceRange` is one, correctly, and its **reverse** closure is in the
+hundreds. **This file is outside the audit's walk**, which covers `FormalSchemes/` only, so a live
+figure quoted here is checked by nothing and rots unread: the figure that stood in this sentence
+was stale by a module when row 1841 read it. Quote here only what cannot rot — a false figure, or
+one anchored to a commit — and leave the live figure in the module, where `--tree` checks it.
 
 **Half of that noun is checked and half is convention, and the halves are worth telling apart.**
 Where a sentence carries a closure figure *and* calls the file it is in a leaf — a `## Placement`
@@ -503,8 +588,8 @@ only sentences that already carry a figure are read and nothing new is declined.
 see is the positional noun about **another** module, as in *"`FormalSchemes.TateSeparated`, a Tate
 leaf that nothing outside the Tate cluster can cite"*: there is no figure in that sentence to hang
 the check on, and the file carrying it has no reason ever to re-measure the module it names, which
-is why `TateSeparated` had picked up **67** consumers before anyone looked. Say *"a Tate-cluster
-module"*, or name the figure and bring the sentence under the check.
+is why `TateSeparated` had picked up **67** consumers by the time anyone looked, and more since.
+Say *"a Tate-cluster module"*, or name the figure and bring the sentence under the check.
 
 ### The spellings the checker cannot read, and `--sweep`
 
@@ -527,6 +612,15 @@ total or *upstream of N*, and that `--tree` neither attributes nor declines; `--
 count in its header and never fails on it. Sentences naming Mathlib are left out — they measure a
 graph this script does not walk.
 
+**That exclusion is deliberately over-wide, and it has already cost a figure.** Nine sentences name
+Mathlib; eight of them are genuinely about Mathlib's import graph, and the ninth,
+`FormalSchemes/LocallyRingedSpaceRange.lean`'s *"the intersection is 27 modules"*, is an
+intersection of **project** closures excluded only because the same sentence ends *"so the file
+sits directly on Mathlib"*. It had gone stale by a module and was repaired on row 1841. The
+exclusion stays — a filter narrow enough to keep the other eight out is more grammar than one
+over-exclusion is worth — but the class it hides is *a project figure in a sentence that also
+mentions Mathlib*, and nothing checks that class.
+
 **Most of what `--sweep` reports is out of reach, and one class in it is not.** Deltas,
 intersections of several import closures, peak-RSS figures and numerals that are issue numbers are
 checked by no walk this script runs, and that is why the list does not fail a run. But **one
@@ -535,9 +629,10 @@ this file's closure from 48 modules to 93"* says the closure is 48 **now** — a
 1832's twelve sentences were exactly that shape, wrong in the endpoint that is not counterfactual
 while looking unfalsifiable because of the endpoint that is. (The counterfactual endpoint is not
 beyond reach either: it is the closure of the union with the module being priced, and two of the
-six were stale in that figure as well. `--sweep` does not compute it, and nor does `--tree`.) If a
-figure `--sweep` reports is a plain measurement of this tree, rewrite it in the checked spelling
-rather than leaving it for the next sweep.
+six were stale in that figure as well. `--sweep` does not compute it, and nor does `--tree`; it is
+a ten-line walk, and row 1841 ran it over every delta the sweep still reports and found all of them
+right, near endpoint and far.) If a figure `--sweep` reports is a plain measurement of this tree,
+rewrite it in the checked spelling rather than leaving it for the next sweep.
 
 ## Line width
 
