@@ -31,6 +31,9 @@ feeding `SheafedSpace.IsOpenImmersion.of_stalk_iso`, is proved in
   localization `R{1/f}` and its ideal of definition.
 * `FormalSpectrum.basicOpenChartBase I f`: the underlying map `Spf R{1/f} → Spf R` of the chart.
 * `FormalSpectrum.range_basicOpenChartBase`: its range is `basicOpen I f = D(f)`.
+* `FormalSpectrum.mem_asIdeal_basicOpenChartBase_iff`: the chart carries the residue of `b : R` to
+  the residue of its structural image, so an element not vanishing at a point of `Spf R` does not
+  vanish at any point of `Spf R{1/f}` over it, and conversely.
 * `FormalSpectrum.isOpenEmbedding_basicOpenChartBase`: it is an open topological embedding.
 * `FormalSpectrum.awayCompletionHom_comp_algebraMap`: the structural map `A → A{1/g}^` of a
   completed localization is a map of `R`-algebras.
@@ -236,6 +239,19 @@ theorem map_algebraMap_awayCompletion_eq {R : Type u} [CommRing R] (I : Ideal R)
 /-- The underlying continuous map `Spf R{1/f} → Spf R` of the affine basic-open chart. -/
 def basicOpenChartBase : FormalSpectrum (awayCompletionIdeal I f) → FormalSpectrum I :=
   map I (awayCompletionIdeal I f) (awayCompletionHom I f) (le_comap_awayCompletionHom I f)
+
+/-- **`FormalSpectrum.mem_asIdeal_map_iff` at the basic-open chart.** For a point `v` of
+`Spf R{1/f}` and an element `b : R`, the residue of `b` lies in the prime of the image point of `v`
+exactly when the residue of the structural image of `b` lies in the prime of `v`.
+
+This is what carries a witness across the chart. An element of `R` known not to lie in a prime of
+`R ⧸ I` — that is, a function not vanishing at a point of `Spf R` — stays non-vanishing at any
+point of `Spf R{1/f}` lying over it, and conversely. -/
+theorem mem_asIdeal_basicOpenChartBase_iff (v : FormalSpectrum (awayCompletionIdeal I f)) (b : R) :
+    Ideal.Quotient.mk I b ∈ (basicOpenChartBase I f v).asIdeal ↔
+      Ideal.Quotient.mk (awayCompletionIdeal I f) (awayCompletionHom I f b) ∈ v.asIdeal :=
+  mem_asIdeal_map_iff I (awayCompletionIdeal I f) (awayCompletionHom I f)
+    (le_comap_awayCompletionHom I f) v b
 
 /-- The residue ring `R{1/f} ⧸ (I·R{1/f})` of the completed localization is the localization of
 `R ⧸ I` away from the residue of `f`: completion does not change the level-`0` thickening, and
