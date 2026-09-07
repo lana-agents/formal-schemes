@@ -233,7 +233,7 @@ what an addition is allowed to do to the prose of the file it is added to.
 rings and the contraction between them, all of which
 `FormalSchemes.TateInvNodeChartAmbient` already has, so they are stated there and this file uses
 them across an import it already had. Only the four statements above — which need this section's
-this section's two hypotheses and the refutation — are here.
+two hypotheses and the refutation — are here.
 
 **The crux does not belong in `FormalSchemes.TateInvNodeChartPatchChartGerm` beside
 `AlgebraicGeometry.nodeChartPatchChartLift`**, which is where a reader would first look for it.

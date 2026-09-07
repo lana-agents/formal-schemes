@@ -53,7 +53,11 @@ This file makes that identification and draws the two consequences that are free
 * **`AlgebraicGeometry.injective_quotientMap_tateInvNodeChartAwaySubring`**: the chart ring
   **embeds** in the ambient ring modulo the ideal of definition. Both of these are `le_rfl` at
   the side condition, because the ideal above is by definition the contraction of the one below,
-  so neither needs completeness, finite generation or any adic hypothesis.
+  so neither asks for anything beyond the data that names the two rings — no completeness of
+  either, no finite generation of `FormalSpectrum.awayCompletionIdeal`, and nothing adic about
+  `AlgebraicGeometry.tateInvNodeChartAwayIdeal`. (Both do carry `hq`, `hI` and this file's
+  ambient instances, which is what `AlgebraicGeometry.tateInvNodeChartAwaySubring` itself needs
+  to be written down.)
 * **`AlgebraicGeometry.tateInvNodeChartAmbientHom`** and
   **`AlgebraicGeometry.range_tateInvNodeChartAmbientHom`**: the morphism
   `Spf A{1/(x + y − 1)} ⟶ Q` obtained by composing the basic-open chart with the patch inclusion
@@ -249,17 +253,19 @@ theorem isHausdorff_tateInvNodeChartAwayIdeal :
 `Spf A{1/(x + y − 1)} → Spf (tateInvNodeChartAwaySubring …)` induced by
 `(AlgebraicGeometry.tateInvNodeChartAwaySubring R I q hq hI).subtype`.
 
-**The side condition is `le_rfl`**, and that it is is the reason this definition needs no
-hypothesis at all: `AlgebraicGeometry.tateInvNodeChartAwayIdeal` is *defined* as the contraction
-of `FormalSpectrum.awayCompletionIdeal` along the inclusion, so the containment
+**The side condition is `le_rfl`**, and that it is is the reason this definition asks for nothing
+beyond the data naming the two rings: `AlgebraicGeometry.tateInvNodeChartAwayIdeal` is *defined* as
+the contraction of `FormalSpectrum.awayCompletionIdeal` along the inclusion, so the containment
 `FormalSpectrum.map` asks for is the containment of an ideal in itself. `FormalSpectrum.map`
 moreover carries `omit [TopologicalSpace R] [IsAdicRing I]`, so nothing but the two `CommRing`
-structures enters here.
+structures enters *it*. What remains in the signature here — `hq`, `hI` and this file's ambient
+instances — is what `AlgebraicGeometry.tateInvNodeChartAwaySubring` needs in order to be named at
+all, and none of it is consumed by the construction.
 
 **This is not a claim that `AlgebraicGeometry.tateInvNodeChartAwayIdeal` is an ideal of
-definition.** Neither completeness nor finite generation is used or obtained; the target is the
-formal spectrum of a pair (ring, ideal) and that is all `FormalSpectrum` is. See this file's
-module docstring. -/
+definition.** Neither completeness of the away completion nor finite generation of
+`FormalSpectrum.awayCompletionIdeal` is used or obtained; the target is the formal spectrum of a
+pair (ring, ideal) and that is all `FormalSpectrum` is. See this file's module docstring. -/
 def tateInvNodeChartAwaySpfMap :
     FormalSpectrum (awayCompletionIdeal (annulusIdealOfDefinition R I q)
       (annulusNodeChartCoord R I q)) →

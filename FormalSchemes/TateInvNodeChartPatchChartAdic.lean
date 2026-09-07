@@ -111,9 +111,8 @@ ring is the ambient one, and nothing here decides whether it is.
 subring is **proper**, for `I ≠ ⊤` and under that file's clause-section hypotheses. Outside that
 regime the question is open in both directions, and no element of the ambient ring outside the
 subring is exhibited anywhere on the tree — the proof there is a contraposition. And
-`AlgebraicGeometry.tateInvNodeChartAwayIdeal` remains **not**
-shown to be an ideal of definition (`FormalSchemes.TateInvNodeChartAmbient` records that only
-Hausdorffness is proved of it).
+`AlgebraicGeometry.tateInvNodeChartAwayIdeal` remains **not** shown to be an ideal of definition
+(`FormalSchemes.TateInvNodeChartAmbient` records that only Hausdorffness is proved of it).
 
 ## References
 
