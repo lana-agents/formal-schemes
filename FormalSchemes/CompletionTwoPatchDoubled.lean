@@ -21,8 +21,8 @@ of `FormalSchemes/SpecTwoPatchNonAffine.lean`, and they are built from the same 
 `LocallyRingedSpace.range_eqToHom_comp_base` (`FormalSchemes.LocallyRingedSpaceRange`), which is
 stated generally on the argument that every `GlueData.ofGlueData'` consumer meets the same
 `eqToHom`. Until issue 1399 both bricks arrived here through `SpecTwoPatchNonAffine`, whose own
-declarations this file never used; importing what it actually uses instead takes its closure from
-**48** to **39** — ten modules drop out and the leaf adds one back, counting this file itself.
+declarations this file never used; importing what it actually uses instead dropped ten modules and
+added the leaf back. This file's forward closure is **41** modules (42 with itself).
 
 ## The two steps
 

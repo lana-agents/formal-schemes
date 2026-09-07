@@ -35,8 +35,8 @@ across that isomorphism, so that both now hold of `(tateCurveExposeXDatum …).x
 ## Implementation notes
 
 `FormalSchemes.TateSeparatedValue` is deliberately **not** imported, even though the headline above
-quotes it: its import closure is 214 modules against this file's 182, and nothing below needs the
-separatedness statement to be proved — only to be cited. Following the same convention as
+quotes it: that module's forward closure is **219** against this file's **189**, and nothing below
+needs the separatedness statement to be proved — only to be cited. Following the same convention as
 `TateTopFiniteType.lean`, the pairing is stated in prose and the separatedness half is referred to
 by name.
 

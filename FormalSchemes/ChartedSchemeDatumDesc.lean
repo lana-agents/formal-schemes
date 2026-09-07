@@ -26,7 +26,8 @@ exactly this `CategoryTheory.GlueData.ofGlueData'` bookkeeping. Until issue 1399
 five times in five files, and this one reached it through `FormalSchemes.SpecTwoPatchNonAffine`, at
 a cost this paragraph priced at **+6** modules of import closure, 46 to 52 — the only thing this
 file ever took from that module. The move refunds five of the six: the import is now the leaf,
-which is itself the sixth module, so the closure goes 52 to **47**.
+which is itself the sixth module, so the closure went 52 to 47 when that was measured. It has
+moved since: this file's forward closure is **48** modules (49 with itself).
 
 ## The compatibility hypothesis, and why it is stated only off the diagonal
 

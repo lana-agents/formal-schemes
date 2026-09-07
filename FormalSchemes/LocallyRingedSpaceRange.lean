@@ -40,18 +40,24 @@ already in all of those import closures is about bare locally ringed spaces — 
 directly on Mathlib, as `FormalSchemes/PullbackRangeLRS.lean` and
 `FormalSchemes/LocallyRingedSpaceHomExt.lean` already do for their own general facts.
 
-Six modules import this one, and each imports it because it uses a declaration of it; counts below
-are self-inclusive over project modules. `TateChainGlue`, `SpecTwoPatchNonAffine` and
+Six modules import this one, and each imports it because it uses a declaration of it. The closure
+figures below are over project modules and do not count the module itself; the self-inclusive
+count is given beside each. `FormalSchemes.TateChainGlue`, `FormalSchemes.SpecTwoPatchNonAffine`
+and
 `CompletionNestedBasicOpen` were the minimal antichain among the sixteen files that cited the range
 lemmas *as the tree stood before issue 1399*. `ChartedSchemeDatumDesc` and
 `CompletionTwoPatchDoubled` had been importing `SpecTwoPatchNonAffine` *only* for the copy of the
-range lemma that used to live there, and issue 1399 gave them this module instead: their closures
-fell from 52 to **47** and from 48 to **39**. `ChartedSchemeDatumChartOverlap` is the sixth and
+range lemma that used to live there, and issue 1399 gave them this module instead, and both
+closures fell: the forward closure of `FormalSchemes.ChartedSchemeDatumDesc` is **48** (49 with
+itself), and the forward closure of `FormalSchemes.CompletionTwoPatchDoubled` is **41** (42 with
+itself). `FormalSchemes.ChartedSchemeDatumChartOverlap` is the sixth and
 came here on issue 1425, for the opposite reason: its *only* code use of `SpecTwoPatchNonAffine` —
 checked over all 27 of that file's declarations — was `image_preimage_eqToHom_comp_base`, so moving
 that lemma here let it drop `SpecTwoPatchNonAffine`, `SpecTwoPatchScheme` and `TwoPatchWitness` and
-gain nothing (this module was already in its closure through `ChartedSchemeDatumDesc`), taking it
-from 54 to **51**. That gives back the +1 issue 1399 cost it, and two more.
+gain nothing (this module was already in its closure through
+`FormalSchemes.ChartedSchemeDatumDesc`), giving back the +1 issue 1399 cost it and two more; the
+forward closure of
+`FormalSchemes.ChartedSchemeDatumChartOverlap` is **52** (53 with itself).
 -/
 
 open CategoryTheory
