@@ -152,9 +152,10 @@ algebraic integers, which has **no** prime elements at all — so the first is r
 `Finset`, and the second at a ring where its hypothesis holds vacuously and its conclusion fails
 for every candidate.
 
-It is one `abbrev` and nine theorems, one of them `private`, none of which develops any theory of
-that ring, and it is in this file rather than in a new module because the sentences it falsifies
-are in this file's docstring and beside the two theorems in
+It is one `abbrev` and ten theorems — everything from that section's heading to the end of the
+file, the `private` one included — none of which develops any theory of that ring, and it is in
+this file rather than in a new module because the sentences it falsifies are in this file's
+docstring and beside the two theorems in
 `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` that it measures. A reader who wants
 only the ultrapower can stop at *The value of the predicate at the ultrapower*; nothing above the
 last section mentions the second ring except to say which question it answers.
@@ -366,7 +367,8 @@ the field structure of an ultrapower of a field, and neither half below needs it
 
 **The second witness costs one `import` line and no module at all.**
 `Mathlib/RingTheory/Polynomial/RationalRoot.lean` is imported for the single instance
-`IsIntegrallyClosed ℤ` that `FormalSpectrum.not_isUnit_two_algInt` needs, and it is **already** in
+`IsIntegrallyClosed ℤ`, which `FormalSpectrum.not_isUnit_two_algInt` and
+`FormalSpectrum.dvd_of_intCast_dvd_intCast_algInt` both need, and it is **already** in
 this project's Mathlib closure — three other files reach it, the shortest chain being three steps
 from `Mathlib/NumberTheory/NumberField/Basic.lean` through
 `Mathlib/RingTheory/DedekindDomain/Basic.lean` — so the sentence above stays exact: this leaf
@@ -380,9 +382,9 @@ nothing else, `AlgebraicClosure` and `integralClosure` both elaborate.
 imports `IsIntegrallyClosed` is not an identifier in scope at all. It arrives here *with*
 `Mathlib/RingTheory/Polynomial/RationalRoot.lean`, which imports it, and brings
 `Mathlib/RingTheory/Localization/NumDen.lean` with it. So neither line needs to be written, but
-not for the same reason, and the difference is load-bearing: a successor who reproves
-`FormalSpectrum.not_isUnit_two_algInt` and deletes that import line keeps `AlgebraicClosure` and
-loses `IsIntegrallyClosed`.
+not for the same reason, and the difference is load-bearing: a successor who deletes that import
+line keeps `AlgebraicClosure` and loses `IsIntegrallyClosed`, so both theorems that use the
+instance have to be reproved first and not `FormalSpectrum.not_isUnit_two_algInt` alone.
 
 ## References
 
@@ -1018,10 +1020,13 @@ deleted and nothing else changed — the universe restricted to `Type` as in
 `FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`, the neighbouring
 statement of the same shape, which `IntUltrapower φ` meets.
 
-**The backward direction is untouched.** Nothing here says that finitely many prime classes force
-the denominator condition without unique factorisation;
-`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` uses that instance for more than
-bookkeeping, and whether it can be dropped there is not decided anywhere on this tree. -/
+**The backward direction is untouched here, and the ultrapower cannot touch it.** Nothing here
+says that finitely many prime classes force the denominator condition without unique
+factorisation, and nothing at this ring could: that direction is
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, whose hypothesis wants finitely many
+prime associate classes and this ring has infinitely many. Its `[UniqueFactorizationMonoid R]` is
+**needed** rather than bookkeeping, which is settled at a different ring in the last section of
+this file by `FormalSpectrum.not_forall_exists_forall_dvd_pow_of_finite_primes`. -/
 theorem not_forall_hasBoundedDenominators_imp_finite_primes :
     ¬ ∀ (R : Type) [CommRing R] [IsDomain R],
         HasBoundedDenominators R → {a : Associates R | Prime a}.Finite := by
@@ -1267,10 +1272,13 @@ A right inverse `u` of `2` satisfies `2 * u = 1` in `AlgebraicClosure` and so is
 injection of `ℚ`, and `IsIntegrallyClosed.isIntegral_iff` at `ℤ` produces an integer `y` with
 `2 * y = 1`.
 
-**This is the only place a Mathlib import is spent on this section**: `IsIntegrallyClosed ℤ` is
-declared in `Mathlib/RingTheory/Polynomial/RationalRoot.lean`, and everything else here was already
-reachable. Nothing distinguishes `2` beyond its being a nonzero non-unit; it is used rather than
-named because the two theorems that consume it want an element and not a definition. -/
+**The section spends one Mathlib import on one instance, and this is the first of the two places
+that use it**: `IsIntegrallyClosed ℤ` is declared in
+`Mathlib/RingTheory/Polynomial/RationalRoot.lean`, everything else here was already reachable, and
+`FormalSpectrum.dvd_of_intCast_dvd_intCast_algInt` below is the second use. Nothing distinguishes
+`2` beyond its being a nonzero non-unit and any such element would serve, so it is used rather
+than named: naming it would suggest a choice was made, and its one consumer,
+`FormalSpectrum.not_forall_forall_dvd_pow_prod`, wants an element and not a definition. -/
 theorem not_isUnit_two_algInt : ¬ IsUnit (2 : AlgInt) := by
   intro h
   obtain ⟨u, hu⟩ := h.exists_right_inv
