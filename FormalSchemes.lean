@@ -426,6 +426,7 @@ import FormalSchemes.TateInvNodeChartInvariant
 import FormalSchemes.TateInvNodeChartLegContinuous
 import FormalSchemes.TateInvNodeChartLegGeneral
 import FormalSchemes.TateInvNodeChartNontrivial
+import FormalSchemes.TateInvNodeChartOrbitSeparation
 import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvNodeChartOverlapAdic
 import FormalSchemes.TateInvNodeChartPatchChartAdic

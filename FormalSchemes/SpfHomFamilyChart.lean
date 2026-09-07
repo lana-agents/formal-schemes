@@ -86,7 +86,7 @@ and the `Spf`-shaped statement applies.
 Separated from its companion because that one lives beside
 `AlgebraicGeometry.LocallyRingedSpace.HasAffineChartAt` in `FormalSchemes.Gluing`, whose import
 closure does not reach `FormalSchemes.SpfDiscrete` and should not be made to for one corollary —
-less than ever, `FormalSchemes.Gluing`'s reverse closure being **304** of the project's **558**
+less than ever, `FormalSchemes.Gluing`'s reverse closure being **305** of the project's **559**
 modules. -/
 theorem hasAffineChartAt_of_isoRestrict_spec {X : LocallyRingedSpace.{u}} (U : Opens X.toTopCat)
     (B : Type u) [CommRing B]
