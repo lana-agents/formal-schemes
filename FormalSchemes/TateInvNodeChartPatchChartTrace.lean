@@ -57,7 +57,8 @@ the `σ`-action beyond the invariance already on the tree
 (`AlgebraicGeometry.isActionInvariant_nodeChartAdicHom`). **This is the first point in this cluster
 at which a property of the action has to be supplied**, and supplying it is a different row —
 `FormalSchemes.TateInvNodeChartOrbitSeparation`, which proves that the shift moves the chart index
-and fixes the prime, and derives from it a sufficient criterion for the clause. Nothing below uses
+and fixes the prime, and derives from it a sufficient criterion for the clause — a criterion whose
+hypothesis that same file then refutes for `I ≠ ⊤`, leaving the clause open. Nothing below uses
 that, and the sentences above stay true of this file.
 
 **The condition is stated pointwise and is deliberately not shipped a second time as an equality of
