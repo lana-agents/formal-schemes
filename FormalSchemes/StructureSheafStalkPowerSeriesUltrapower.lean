@@ -67,12 +67,18 @@ their hypotheses the ultrapower falsifies, and that pair of answers is complete.
   `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` both assume
   `[UniqueFactorizationMonoid R]`, and `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`
   says the ultrapower does not satisfy it — so both are inapplicable by a theorem and not merely by
-  an instance nobody has supplied. For the first of the two the ultrapower says more than
-  *inapplicable*: it satisfies that criterion's **other two** hypotheses, by the same family, and
-  satisfies the denominator condition anyway
-  (`FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower`), so
-  `[UniqueFactorizationMonoid R]` is **needed** there and not merely absent here
-  (`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`).
+  an instance nobody has supplied. For **both** the ultrapower says more than *inapplicable*. It
+  satisfies the criterion's other two hypotheses, by the family above, and satisfies the
+  denominator condition anyway
+  (`FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower`); and it
+  satisfies the classification's left-hand side while falsifying its right-hand side, by that same
+  family read at `Associates`
+  (`FormalSpectrum.hasBoundedDenominators_and_infinite_primes_intUltrapower`). So
+  `[UniqueFactorizationMonoid R]` is **needed** in each and not merely absent here
+  (`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`,
+  `FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes`). What the classification's
+  refutation reaches is its **forward** direction only; that finitely many prime classes force the
+  condition without unique factorisation is not refuted here and is not decided anywhere.
 
 None of this contradicts `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`: a domain may
 have infinitely many pairwise non-associated primes and fail to be a unique factorisation domain,
@@ -105,7 +111,7 @@ Three properties of the ultrapower follow from the two halves with nothing added
 Each is a contradiction from a classification already on the tree. **None of them develops any
 factorisation theory of the ring, and none computes a cardinal**; see *What is not proved here*.
 
-## The primes of the ultrapower, and the hypothesis they measure
+## The primes of the ultrapower, and the two hypotheses they measure
 
 One positive arithmetic fact is proved as well, and it does not belong under the heading above.
 The germs of the constant sequences at `2, 3, 5, …` are primes of the ultrapower and are pairwise
@@ -115,14 +121,20 @@ transfers pointwise because `p ∣ ab` is an eventual pointwise divisibility and
 non-associatedness comes back down because both divisibilities are eventual and a set of an
 ultrafilter is nonempty.
 
-**It is proved because a hypothesis needs measuring, not for its own sake.**
+**It is proved because hypotheses need measuring, and not for its own sake**, and it measures the
+same instance on two different theorems.
 `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` concludes
 `¬ HasBoundedDenominators R` from such a family *plus* `[UniqueFactorizationMonoid R]`. The
 ultrapower supplies the family and satisfies the denominator condition anyway, so that hypothesis
-is **needed** and not merely unavailable here — which is the same shape as
-`FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_surjective`, a hypothesis shown needed
-by a witness rather than shown absent at one ring, and it is the last unmeasured hypothesis on that
-criterion.
+is **needed** and not merely unavailable here. The classification
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` carries the same instance, and the same
+family read at `Associates` — where non-associatedness is injectivity of `n ↦ Associates.mk (p n)`
+— makes `{a : Associates R | Prime a}` infinite
+(`FormalSpectrum.infinite_setOf_prime_associates_intUltrapower`), so the ultrapower satisfies that
+theorem's left-hand side and falsifies its right-hand side, and its instance is needed too. Both
+are the shape of `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_surjective`, a
+hypothesis shown needed by a witness rather than shown absent at one ring. What is measured is the
+classification's **forward** direction; its backward direction is untouched.
 
 ## Main results
 
@@ -164,6 +176,14 @@ criterion.
   `[UniqueFactorizationMonoid R]` of
   `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` is needed**, and not merely
   unavailable at this ring — its other two hypotheses hold here and its conclusion fails.
+* `FormalSpectrum.infinite_setOf_prime_associates_intUltrapower`,
+  `FormalSpectrum.hasBoundedDenominators_and_infinite_primes_intUltrapower`,
+  `FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes`,
+  `FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes`: **the same instance is
+  needed in the classification `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` too** —
+  the same family read at `Associates` makes the prime classes infinite while the condition holds,
+  which refutes the classification's forward direction with the instance deleted, and the `↔` with
+  it. **Only the forward direction**; the backward one is not touched here or anywhere.
 * `FormalSpectrum.not_countable_intUltrapower`,
   `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`,
   `FormalSpectrum.not_isNoetherianRing_intUltrapower`: **the ultrapower is uncountable, is not a
@@ -193,11 +213,12 @@ unique factorisation domain and is not Noetherian are the section *What the ring
 is read off the two halves above rather than developed. The germs of `2, 3, 5, …` **are** primes of
 it, pairwise non-associated, and that is now the section *The primes of the ultrapower* rather than
 a sentence here; it is proved because
-`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` needs it and not for its own
-sake. **No factorisation of any element is exhibited**, no claim is made that these are all the
-primes or that they generate anything, no prime is counted, and no cardinal is computed —
-`FormalSpectrum.not_countable_intUltrapower` is a negation of `Countable` and supplies no lower
-bound.
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` and
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` each have an instance that needs
+measuring, and not for its own sake. **No factorisation of any element is exhibited**, no claim is
+made that these are all the primes or that they generate anything, no prime is counted, and no
+cardinal is computed — `FormalSpectrum.not_countable_intUltrapower` is a negation of `Countable`
+and supplies no lower bound.
 
 In particular the paragraph above about the refuting criteria still argues from their
 **hypotheses** and not from any factorisation theory: one asks for a family no element is divisible
@@ -206,9 +227,15 @@ unique factorisation, which is *needed* rather than merely absent —
 `FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower` supplies its
 other two hypotheses and the denominator condition together, so
 `FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators` refutes it with
-`[UniqueFactorizationMonoid R]` deleted. That is strictly stronger than
-`FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`, which says only that the criterion
-does not apply here.
+`[UniqueFactorizationMonoid R]` deleted. The classification
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` is refuted the same way and from the same
+family (`FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes`), and both are
+strictly stronger than `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`, which says
+only that they do not apply here. **Neither refutation is a factorisation of anything**, and
+neither reaches the classification's backward direction: *finitely many prime classes ⇒ the
+denominator condition* is proved here only under unique factorisation, by
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, and nothing above says whether that
+instance can be dropped there.
 
 **The ultrafilter hypothesis is not analysed.** `Ultrafilter.eventually_or` is what makes the
 ring a domain and `(φ : Filter ℕ) ≤ Filter.atTop` is what makes the diagonal product work; that the
@@ -609,10 +636,12 @@ The four are `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`,
 `FormalSpectrum.hasBoundedDenominators_iff_exists_isField`, and each conjunct below is that
 theorem's own right-hand side negated, not a paraphrase of it.
 
-`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` is **not** on the list and is not
-touched: it assumes `[UniqueFactorizationMonoid R]` rather than `[Countable (FractionRing R)]`,
-and `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower` below says the ultrapower has
-nothing to tell it. -/
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` is **not** on the list: it assumes
+`[UniqueFactorizationMonoid R]` rather than `[Countable (FractionRing R)]`, and its right-hand side
+is none of the four. The ultrapower does have something to say about it, but a different thing and
+about a different instance — that its `[UniqueFactorizationMonoid R]` cannot be dropped either,
+which is `FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes` below and no part of
+the conjunction here. -/
 theorem hasBoundedDenominators_and_no_collapse_intUltrapower (hφ : (φ : Filter ℕ) ≤ atTop) :
     HasBoundedDenominators (IntUltrapower φ) ∧
       (¬ ∃ (m : IntUltrapower φ) (hm : m ≠ 0),
@@ -646,13 +675,18 @@ theorem not_forall_hasBoundedDenominators_imp_exists_surjective :
 /-! ### The primes of the ultrapower
 
 The one *positive* arithmetic fact this file proves, and it is here rather than under *What the
-ring is not* for that reason. It is not decoration: read against
-`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` it says that theorem's
-`[UniqueFactorizationMonoid R]` is **needed** and not merely unavailable, which is the last
-unmeasured hypothesis on that criterion.
+ring is not* for that reason. It is not decoration, and it is not read once: the same family
+measures `[UniqueFactorizationMonoid R]` on **two** theorems. Read against
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` it says that criterion's
+instance is **needed** and not merely unavailable. Read at `Associates`, where the
+pairwise-non-associatedness becomes injectivity, it says the same of the classification
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, whose **forward** direction it refutes
+with that instance deleted. The two readings are one fact in two spellings, and the second is the
+inverse of the translation that classification's own proof performs.
 
 Nothing below exhibits a factorisation of any element, claims that these are all the primes, or
-claims that they generate anything. -/
+claims that they generate anything, and nothing below bears on the classification's **backward**
+direction, which needs unique factorisation for a reason no witness here touches. -/
 
 /-- **A pointwise non-unit is a non-unit.** An inverse germ has a representative, and the defining
 equation holds at some index because a set of the filter is nonempty.
@@ -770,6 +804,75 @@ theorem not_forall_primes_not_associated_imp_not_hasBoundedDenominators :
       Nat.hyperfilter_le_atTop
   exact h (IntUltrapower (hyperfilter ℕ)) p hp hpa hbd
 
+/-- **The prime associate classes of the ultrapower are infinite.**
+
+`FormalSpectrum.exists_prime_family_not_associated_intUltrapower` read at `Associates`:
+`Associates.mk_eq_mk_iff_associated` is exactly the pairwise-non-associated hypothesis read as
+injectivity of `n ↦ Associates.mk (p n)`, and `Associates.prime_mk` is primality read at the class.
+`Set.infinite_of_injective_forall_mem` then makes the set infinite, `ℕ` supplying the `Infinite`
+instance on the source.
+
+This is the **inverse** of the translation the forward direction of
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` performs, which turns an infinite set of
+classes into a family through `Set.Infinite.natEmbedding` and `Associates.mk_surjective`; a reader
+who has seen both has seen one fact in two spellings and not two facts. -/
+theorem infinite_setOf_prime_associates_intUltrapower :
+    {a : Associates (IntUltrapower φ) | Prime a}.Infinite := by
+  obtain ⟨p, hp, hne⟩ := exists_prime_family_not_associated_intUltrapower φ
+  refine Set.infinite_of_injective_forall_mem (f := fun n : ℕ => Associates.mk (p n)) ?_ ?_
+  · intro i j hij
+    exact hne i j (Associates.mk_eq_mk_iff_associated.mp hij)
+  · intro n
+    exact Associates.prime_mk.mpr (hp n)
+
+/-- **The ultrapower satisfies the denominator condition *and* has infinitely many prime associate
+classes.**
+
+The two sides of `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` at one ring, the left
+one true and the right one false. Read against that classification this says its
+`[UniqueFactorizationMonoid R]` is **needed** and not merely unavailable here — the same reading
+`FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower` gives of the
+refuting criterion, from the same family. -/
+theorem hasBoundedDenominators_and_infinite_primes_intUltrapower
+    (hφ : (φ : Filter ℕ) ≤ atTop) :
+    HasBoundedDenominators (IntUltrapower φ) ∧
+      {a : Associates (IntUltrapower φ) | Prime a}.Infinite :=
+  ⟨hasBoundedDenominators_intUltrapower φ hφ, infinite_setOf_prime_associates_intUltrapower φ⟩
+
+/-- **The quantified form: the classification's forward direction is false without unique
+factorisation.**
+
+The statement is the forward direction of
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, with `[UniqueFactorizationMonoid R]`
+deleted and nothing else changed — the universe restricted to `Type` as in
+`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`, the neighbouring
+statement of the same shape, which `IntUltrapower φ` meets.
+
+**The backward direction is untouched.** Nothing here says that finitely many prime classes force
+the denominator condition without unique factorisation;
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` uses that instance for more than
+bookkeeping, and whether it can be dropped there is not decided anywhere on this tree. -/
+theorem not_forall_hasBoundedDenominators_imp_finite_primes :
+    ¬ ∀ (R : Type) [CommRing R] [IsDomain R],
+        HasBoundedDenominators R → {a : Associates R | Prime a}.Finite := by
+  intro h
+  obtain ⟨hbd, hinf⟩ :=
+    hasBoundedDenominators_and_infinite_primes_intUltrapower (hyperfilter ℕ)
+      Nat.hyperfilter_le_atTop
+  exact hinf (h (IntUltrapower (hyperfilter ℕ)) hbd)
+
+/-- **The classification itself is false without unique factorisation**, which is the literal
+negation of `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` with its instance deleted.
+
+One line from
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes`, which is the sharper of the
+two because it names the direction that fails; this one is the shape that matches the theorem on
+the tree. They are stated together and derived from one another so that they cannot drift apart. -/
+theorem not_forall_hasBoundedDenominators_iff_finite_primes :
+    ¬ ∀ (R : Type) [CommRing R] [IsDomain R],
+        HasBoundedDenominators R ↔ {a : Associates R | Prime a}.Finite :=
+  fun h => not_forall_hasBoundedDenominators_imp_finite_primes fun R _ _ => (h R).mp
+
 /-! ### What the ring is not
 
 Three properties the ultrapower does not have, each read off the two halves above and none of them
@@ -816,7 +919,14 @@ It exhibits no irreducible-but-not-prime element, counts no primes, and does not
 a prime element at all. What it does settle is that
 `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` and
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` are inapplicable here as a **theorem**
-rather than as an observation about an instance that happens not to be available. -/
+rather than as an observation about an instance that happens not to be available. That is the
+weakest of the three true things this ring says about that pair; the section *The primes of the
+ultrapower* above says the other two, that the instance is **needed** in both of them, by
+`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators` and by
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes`, each of which refutes its
+statement with `[UniqueFactorizationMonoid R]` deleted. *Inapplicable here* is what this theorem
+says; *needed there* is what those two say, and a hypothesis unavailable at one ring is never on
+its own a reason that it cannot be dropped. -/
 theorem not_uniqueFactorizationMonoid_intUltrapower (hφ : (φ : Filter ℕ) ≤ atTop) :
     ¬ UniqueFactorizationMonoid (IntUltrapower φ) := fun _ =>
   not_exists_forall_dvd_pow_intUltrapower φ
