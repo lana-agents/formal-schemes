@@ -52,15 +52,31 @@ with `Prime.dvd_of_dvd_pow`.
 A reader who knows `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` will reach for one
 of them at once, and both fail on their hypotheses rather than on their conclusions.
 
+The family that answers both is the same one:
+`FormalSpectrum.exists_prime_family_not_associated_intUltrapower` gives infinitely many pairwise
+non-associated primes, the germs of `2, 3, 5, …`. The two criteria differ precisely in which of
+their hypotheses the ultrapower falsifies, and that pair of answers is complete.
+
 * `FormalSpectrum.not_hasBoundedDenominators_of_primes` asks for a family of primes that **no**
-  single `m ≠ 0` is divisible by. In an ultrapower that hypothesis is unsatisfiable, and
-  `FormalSpectrum.exists_forall_dvd_intUltrapower` is exactly the statement that it is: *every*
-  countable family of nonzero elements, primes or not, is divisible into a single element.
+  single `m ≠ 0` is divisible by, with no `[UniqueFactorizationMonoid R]` anywhere. In an
+  ultrapower that hypothesis is unsatisfiable, and `FormalSpectrum.exists_forall_dvd_intUltrapower`
+  is exactly the statement that it is: *every* countable family of nonzero elements, primes or not,
+  is divisible into a single element — applied to the family above, it produces the very `m` the
+  criterion asks not to exist.
 * `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` and the classification
   `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` both assume
   `[UniqueFactorizationMonoid R]`, and `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`
   says the ultrapower does not satisfy it — so both are inapplicable by a theorem and not merely by
-  an instance nobody has supplied.
+  an instance nobody has supplied. For the first of the two the ultrapower says more than
+  *inapplicable*: it satisfies that criterion's **other two** hypotheses, by the same family, and
+  satisfies the denominator condition anyway
+  (`FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower`), so
+  `[UniqueFactorizationMonoid R]` is **needed** there and not merely absent here
+  (`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`).
+
+None of this contradicts `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`: a domain may
+have infinitely many pairwise non-associated primes and fail to be a unique factorisation domain,
+because the primes need not generate, and nothing below says these do.
 
 ## What this buys the stalk half
 
@@ -89,6 +105,25 @@ Three properties of the ultrapower follow from the two halves with nothing added
 Each is a contradiction from a classification already on the tree. **None of them develops any
 factorisation theory of the ring, and none computes a cardinal**; see *What is not proved here*.
 
+## The primes of the ultrapower, and the hypothesis they measure
+
+One positive arithmetic fact is proved as well, and it does not belong under the heading above.
+The germs of the constant sequences at `2, 3, 5, …` are primes of the ultrapower and are pairwise
+non-associated (`FormalSpectrum.exists_prime_family_not_associated_intUltrapower`): primality
+transfers pointwise because `p ∣ ab` is an eventual pointwise divisibility and
+`Ultrafilter.eventually_or` chooses a side of the resulting disjunction globally, and
+non-associatedness comes back down because both divisibilities are eventual and a set of an
+ultrafilter is nonempty.
+
+**It is proved because a hypothesis needs measuring, not for its own sake.**
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` concludes
+`¬ HasBoundedDenominators R` from such a family *plus* `[UniqueFactorizationMonoid R]`. The
+ultrapower supplies the family and satisfies the denominator condition anyway, so that hypothesis
+is **needed** and not merely unavailable here — which is the same shape as
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_surjective`, a hypothesis shown needed
+by a witness rather than shown absent at one ring, and it is the last unmeasured hypothesis on that
+criterion.
+
 ## Main results
 
 * `FormalSpectrum.hasBoundedDenominators_iff_forall_exists_dvd_pow`: **the denominator condition is
@@ -116,6 +151,18 @@ factorisation theory of the ring, and none computes a cardinal**; see *What is n
   `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_surjective`: **the countability
   hypothesis of the collapse is needed**, in each of its four spellings, stated at the ultrapower
   and as the refutation of the quantified implication.
+* `FormalSpectrum.eventually_dvd_of_coe_dvd_coe_intUltrapower`,
+  `FormalSpectrum.coe_dvd_coe_iff_eventually_dvd_intUltrapower`: **divisibility of germs is eventual
+  pointwise divisibility**, the converse of the direction this file already had.
+* `FormalSpectrum.prime_coe_intUltrapower`, `FormalSpectrum.not_isUnit_coe_intUltrapower`,
+  `FormalSpectrum.exists_prime_family_not_associated_intUltrapower`: **a pointwise prime is prime,
+  and the ultrapower has infinitely many pairwise non-associated primes** — the germs of
+  `2, 3, 5, …`, enumerated from `Nat.exists_infinite_primes` rather than from `Nat.nth`.
+* `FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower`,
+  `FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`: **the
+  `[UniqueFactorizationMonoid R]` of
+  `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` is needed**, and not merely
+  unavailable at this ring — its other two hypotheses hold here and its conclusion fails.
 * `FormalSpectrum.not_countable_intUltrapower`,
   `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`,
   `FormalSpectrum.not_isNoetherianRing_intUltrapower`: **the ultrapower is uncountable, is not a
@@ -139,19 +186,28 @@ at every domain and is untouched.
 repairs EGA I 10.8's stalk half.** One further positive value is added, at one point of one formal
 spectrum, and which hypothesis makes the stalk half true is no better determined than before.
 
-**The ring's three negative properties are proved; its factorisation theory is not.** That
-`FormalSpectrum.IntUltrapower φ` is uncountable, is not a unique factorisation domain and is not
-Noetherian are the section *What the ring is not*, and each is read off the two halves above rather
-than developed. That the germs of `2, 3, 5, …` are prime in it is also true and is **not proved
-below**; nothing here needs it. No irreducible element is exhibited, no prime of the ring is named,
-no prime is counted, and no cardinal is computed — `FormalSpectrum.not_countable_intUltrapower` is
-a negation of `Countable` and supplies no lower bound.
+**The ring's negative properties are proved, and one positive arithmetic fact with them; its
+factorisation theory is not.** That `FormalSpectrum.IntUltrapower φ` is uncountable, is not a
+unique factorisation domain and is not Noetherian are the section *What the ring is not*, and each
+is read off the two halves above rather than developed. The germs of `2, 3, 5, …` **are** primes of
+it, pairwise non-associated, and that is now the section *The primes of the ultrapower* rather than
+a sentence here; it is proved because
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` needs it and not for its own
+sake. **No factorisation of any element is exhibited**, no claim is made that these are all the
+primes or that they generate anything, no prime is counted, and no cardinal is computed —
+`FormalSpectrum.not_countable_intUltrapower` is a negation of `Countable` and supplies no lower
+bound.
 
 In particular the paragraph above about the refuting criteria still argues from their
 **hypotheses** and not from any factorisation theory: one asks for a family no element is divisible
 by, which `FormalSpectrum.exists_forall_dvd_intUltrapower` refutes outright, and the other asks for
-unique factorisation, which `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower` now
-refutes as a theorem rather than leaving unavailable.
+unique factorisation, which is *needed* rather than merely absent —
+`FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower` supplies its
+other two hypotheses and the denominator condition together, so
+`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators` refutes it with
+`[UniqueFactorizationMonoid R]` deleted. That is strictly stronger than
+`FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`, which says only that the criterion
+does not apply here.
 
 **The ultrafilter hypothesis is not analysed.** `Ultrafilter.eventually_or` is what makes the
 ring a domain and `(φ : Filter ℕ) ≤ Filter.atTop` is what makes the diagonal product work; that the
@@ -354,6 +410,32 @@ theorem coe_dvd_coe_of_eventually_dvd_intUltrapower {a b : ℕ → ℤ}
   ⟨((fun i => b i / a i : ℕ → ℤ) : IntUltrapower φ), by
     rw [← Germ.coe_mul, Germ.coe_eq]
     exact h.mono fun i hi => (Int.mul_ediv_cancel' hi).symm⟩
+
+/-- **Divisibility of germs is eventual divisibility**, the converse of
+`FormalSpectrum.coe_dvd_coe_of_eventually_dvd_intUltrapower`: a cofactor germ has a representative,
+and the defining equation of the product is an eventual pointwise equation.
+
+This is the file's third instance of the same phenomenon —
+`FormalSpectrum.coe_eq_zero_iff_intUltrapower` for equality, the `NoZeroDivisors` instance for
+products, and now divisibility — and each is one `filter_upwards` or one
+`Ultrafilter.eventually_or`. That is why none of this needs Łoś's theorem: the statements being
+transferred are all of the shape the ultrafilter settles by itself. -/
+theorem eventually_dvd_of_coe_dvd_coe_intUltrapower {a b : ℕ → ℤ}
+    (h : (a : IntUltrapower φ) ∣ (b : IntUltrapower φ)) :
+    ∀ᶠ i in (φ : Filter ℕ), a i ∣ b i := by
+  obtain ⟨c, hc⟩ := h
+  induction c using Germ.inductionOn with
+  | h g =>
+    rw [← Germ.coe_mul, Germ.coe_eq] at hc
+    filter_upwards [hc] with i hi
+    exact ⟨g i, hi⟩
+
+/-- **Divisibility of germs of sequences is eventual pointwise divisibility**, both directions
+together. -/
+theorem coe_dvd_coe_iff_eventually_dvd_intUltrapower {a b : ℕ → ℤ} :
+    (a : IntUltrapower φ) ∣ (b : IntUltrapower φ) ↔ ∀ᶠ i in (φ : Filter ℕ), a i ∣ b i :=
+  ⟨eventually_dvd_of_coe_dvd_coe_intUltrapower φ,
+    coe_dvd_coe_of_eventually_dvd_intUltrapower φ⟩
 
 /-! ### The denominator condition holds in the ultrapower -/
 
@@ -559,6 +641,130 @@ theorem not_forall_hasBoundedDenominators_imp_exists_surjective :
       Nat.hyperfilter_le_atTop
   exact hns (h (IntUltrapower (hyperfilter ℕ)) hbd)
 
+/-! ### The primes of the ultrapower
+
+The one *positive* arithmetic fact this file proves, and it is here rather than under *What the
+ring is not* for that reason. It is not decoration: read against
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` it says that theorem's
+`[UniqueFactorizationMonoid R]` is **needed** and not merely unavailable, which is the last
+unmeasured hypothesis on that criterion.
+
+Nothing below exhibits a factorisation of any element, claims that these are all the primes, or
+claims that they generate anything. -/
+
+/-- **A pointwise non-unit is a non-unit.** An inverse germ has a representative, and the defining
+equation holds at some index because a set of the filter is nonempty.
+
+The general form of `FormalSpectrum.not_isUnit_coe_two_intUltrapower`, which is now one line of
+it. -/
+theorem not_isUnit_coe_intUltrapower {f : ℕ → ℤ} (hf : ∀ i, ¬ IsUnit (f i)) :
+    ¬ IsUnit ((f : IntUltrapower φ)) := by
+  rw [isUnit_iff_exists_inv]
+  rintro ⟨v, hv⟩
+  induction v using Germ.inductionOn with
+  | h g =>
+    rw [← Germ.coe_mul, ← Germ.coe_one, Germ.coe_eq] at hv
+    obtain ⟨i, hi⟩ := hv.exists
+    exact hf i (isUnit_iff_exists_inv.mpr ⟨g i, hi⟩)
+
+/-- **A pointwise prime is prime**, and the ultrafilter is what does the work: `p ∣ ab` is eventual
+by `FormalSpectrum.eventually_dvd_of_coe_dvd_coe_intUltrapower`, `Prime (f i)` splits it at each
+index, and `Ultrafilter.eventually_or` chooses the side globally.
+
+Together with the `NoZeroDivisors` instance this is the second and last place in the file where a
+*disjunction* has to be resolved on a large set, and it is the same move. -/
+theorem prime_coe_intUltrapower {f : ℕ → ℤ} (hf : ∀ i, Prime (f i)) :
+    Prime ((f : IntUltrapower φ)) := by
+  refine ⟨coe_ne_zero_intUltrapower φ fun i => (hf i).ne_zero,
+    not_isUnit_coe_intUltrapower φ fun i => (hf i).not_unit, ?_⟩
+  intro x y hxy
+  induction x, y using Germ.inductionOn₂ with
+  | h a b =>
+    rw [← Germ.coe_mul] at hxy
+    have h := eventually_dvd_of_coe_dvd_coe_intUltrapower φ hxy
+    have h' : ∀ᶠ i in (φ : Filter ℕ), f i ∣ a i ∨ f i ∣ b i := by
+      filter_upwards [h] with i hi using (hf i).dvd_or_dvd hi
+    rcases Ultrafilter.eventually_or.mp h' with h1 | h1
+    · exact Or.inl (coe_dvd_coe_of_eventually_dvd_intUltrapower φ h1)
+    · exact Or.inr (coe_dvd_coe_of_eventually_dvd_intUltrapower φ h1)
+
+/-- **The germ of a constant rational prime is prime.** -/
+theorem prime_coe_const_intUltrapower {p : ℤ} (hp : Prime p) :
+    Prime (((fun _ => p) : ℕ → ℤ) : IntUltrapower φ) :=
+  prime_coe_intUltrapower φ fun _ => hp
+
+/-- **Associated constant germs come from associated integers.** Both divisibilities are eventual,
+and a set of an ultrafilter is nonempty, so one index settles it. -/
+theorem associated_of_associated_coe_const_intUltrapower {p q : ℤ}
+    (h : Associated (((fun _ => p) : ℕ → ℤ) : IntUltrapower φ)
+      (((fun _ => q) : ℕ → ℤ) : IntUltrapower φ)) : Associated p q := by
+  obtain ⟨_, h1⟩ := (eventually_dvd_of_coe_dvd_coe_intUltrapower φ h.dvd).exists
+  obtain ⟨_, h2⟩ := (eventually_dvd_of_coe_dvd_coe_intUltrapower φ h.symm.dvd).exists
+  exact associated_of_dvd_dvd h1 h2
+
+/-- **The ultrapower has infinitely many primes, pairwise non-associated**: the germs of the
+constant sequences at a strictly increasing sequence of rational primes.
+
+The enumeration is built by recursion from `Nat.exists_infinite_primes`, which this file already
+uses in `FormalSpectrum.exists_forall_not_dvd_pow_intUltrapower`, rather than from `Nat.nth` —
+that is **not** in this project's Mathlib closure (`#check @Nat.nth` fails from this file) and
+importing it would be the whole cost of this section. -/
+theorem exists_prime_family_not_associated_intUltrapower :
+    ∃ p : ℕ → IntUltrapower φ, (∀ n, Prime (p n)) ∧
+      ∀ i j : ℕ, Associated (p i) (p j) → i = j := by
+  choose f hle hfp using fun n : ℕ => Nat.exists_infinite_primes (n + 1)
+  set q : ℕ → ℕ := fun n => Nat.rec (f 0) (fun _ ih => f ih) n with hq
+  have hqp : ∀ n, (q n).Prime := by
+    intro n
+    cases n with
+    | zero => exact hfp 0
+    | succ k => exact hfp _
+  have hmono : StrictMono q := by
+    refine strictMono_nat_of_lt_succ fun n => ?_
+    have : q n + 1 ≤ f (q n) := hle (q n)
+    simpa [hq] using this
+  refine ⟨fun n => (((fun _ => ((q n : ℤ))) : ℕ → ℤ) : IntUltrapower φ),
+    fun n => prime_coe_const_intUltrapower φ (Nat.prime_iff_prime_int.mp (hqp n)), ?_⟩
+  intro i j hij
+  have hass := associated_of_associated_coe_const_intUltrapower φ hij
+  rw [Int.associated_iff] at hass
+  have hqi : 0 < q i := (hqp i).pos
+  have hqj : 0 < q j := (hqp j).pos
+  rcases hass with h | h
+  · exact hmono.injective (by exact_mod_cast h)
+  · omega
+
+/-- **The ultrapower satisfies the denominator condition *and* has infinitely many pairwise
+non-associated primes.**
+
+Read against `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`, which concludes
+`¬ HasBoundedDenominators R` from exactly the second half of this conjunction *plus*
+`[UniqueFactorizationMonoid R]`, this says that hypothesis is **needed** and not merely
+unavailable here. `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower` says only that the
+criterion does not apply; this says it would be false without the hypothesis. -/
+theorem hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower
+    (hφ : (φ : Filter ℕ) ≤ atTop) :
+    HasBoundedDenominators (IntUltrapower φ) ∧
+      ∃ p : ℕ → IntUltrapower φ, (∀ n, Prime (p n)) ∧
+        ∀ i j : ℕ, Associated (p i) (p j) → i = j :=
+  ⟨hasBoundedDenominators_intUltrapower φ hφ,
+    exists_prime_family_not_associated_intUltrapower φ⟩
+
+/-- **The quantified form: the criterion is false without unique factorisation.**
+
+The statement is `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`'s own, with
+`[UniqueFactorizationMonoid R]` deleted and nothing else changed — the universe restricted to
+`Type` as in `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_surjective`, the
+neighbouring statement of the same shape, which `IntUltrapower φ` meets. -/
+theorem not_forall_primes_not_associated_imp_not_hasBoundedDenominators :
+    ¬ ∀ (R : Type) [CommRing R] [IsDomain R] (p : ℕ → R), (∀ n, Prime (p n)) →
+        (∀ i j, Associated (p i) (p j) → i = j) → ¬ HasBoundedDenominators R := by
+  intro h
+  obtain ⟨hbd, p, hp, hpa⟩ :=
+    hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower (hyperfilter ℕ)
+      Nat.hyperfilter_le_atTop
+  exact h (IntUltrapower (hyperfilter ℕ)) p hp hpa hbd
+
 /-! ### What the ring is not
 
 Three properties the ultrapower does not have, each read off the two halves above and none of them
@@ -617,17 +823,12 @@ at some index, since a set of the filter is nonempty.
 
 Nothing about `2` matters beyond its being a nonzero non-unit of `ℤ`, and it is written as a
 coercion rather than given a name because a `def` would need its equation lemma supplied before
-the rewrites below fire. -/
+the rewrites below fire. The statement is unchanged; the argument it used to run inline is now
+`FormalSpectrum.not_isUnit_coe_intUltrapower`, which the primes section needs at an arbitrary
+pointwise non-unit, and `Int.isUnit_iff` reduces the pointwise obligation to `omega`. -/
 theorem not_isUnit_coe_two_intUltrapower :
-    ¬ IsUnit ((((fun _ => (2 : ℤ)) : ℕ → ℤ) : IntUltrapower φ)) := by
-  rw [isUnit_iff_exists_inv]
-  rintro ⟨v, hv⟩
-  induction v using Germ.inductionOn with
-  | h g =>
-    rw [← Germ.coe_mul, ← Germ.coe_one, Germ.coe_eq] at hv
-    obtain ⟨i, hi⟩ := hv.exists
-    simp only [Pi.mul_apply, Pi.one_apply] at hi
-    omega
+    ¬ IsUnit ((((fun _ => (2 : ℤ)) : ℕ → ℤ) : IntUltrapower φ)) :=
+  not_isUnit_coe_intUltrapower φ fun _ => by rw [Int.isUnit_iff]; omega
 
 /-- **The ultrapower is not Noetherian**, by Krull intersection against the diagonal product.
 

@@ -408,7 +408,12 @@ all in this closure already, and so is everything the classification adds — `A
   `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`: **the refuting criterion**
   — a family of primes divisible into no single element refutes the condition — and the form it
   takes at a unique factorisation domain, where *pairwise non-associated* suffices. Neither
-  criterion implies the other and neither is a classification on its own.
+  criterion implies the other and neither is a classification on its own. The second one's
+  `[UniqueFactorizationMonoid R]` is **needed**, by
+  `FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators` in
+  `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which refutes it with that instance
+  deleted; the ultrapower witnessing it falsifies the *first* criterion's divisibility hypothesis
+  instead.
 * `FormalSpectrum.forall_dvd_pow_prod`: at a unique factorisation domain, **the product of a finite
   set meeting every prime associate class is a denominator for the whole ring**, and
   `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`: **finitely many primes up to associates
@@ -1855,7 +1860,14 @@ turns that into `p n ∣ m` — which is what the hypothesis forbids at some `n`
 not divide a factor of a power it divides, and exact? finds no `Irreducible` form of it. At
 a unique factorisation domain the two hypotheses do agree
 (`UniqueFactorizationMonoid.irreducible_iff_prime`), which is where
-`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` lives. -/
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` lives.
+
+**What the ultrapower falsifies here is `hdvd` and nothing else.** It has a family of primes
+(`FormalSpectrum.exists_prime_family_not_associated_intUltrapower`), so `hp` is met, but
+`FormalSpectrum.exists_forall_dvd_intUltrapower` applied to that very family produces an `m ≠ 0`
+divisible by every member. The two criteria therefore fail at that ring for different reasons —
+this one on `hdvd`, the companion below on `[UniqueFactorizationMonoid R]`, which the same family
+shows is **needed** rather than merely absent. -/
 theorem not_hasBoundedDenominators_of_primes (p : ℕ → R) (hp : ∀ n, Prime (p n))
     (hdvd : ∀ m : R, m ≠ 0 → ∃ n, ¬ p n ∣ m) : ¬ HasBoundedDenominators R := by
   intro h
@@ -1884,7 +1896,19 @@ is finite.
 
 Both forms are shipped rather than one: the general one's hypothesis is strictly weaker — it needs
 no factorisation and no pairwise condition — and this one is the only one that a family of primes
-satisfies without any arithmetic being done first. -/
+satisfies without any arithmetic being done first.
+
+**`[UniqueFactorizationMonoid R]` is needed here, and not merely convenient**, by a witness rather
+than by an argument:
+`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`
+(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) refutes this statement with that
+instance deleted and nothing else changed. The witness is an ultrapower of `ℤ`, which has
+infinitely many pairwise non-associated primes — the germs of the constant sequences at `2, 3, 5, …`
+(`FormalSpectrum.exists_prime_family_not_associated_intUltrapower`) — and satisfies
+`FormalSpectrum.HasBoundedDenominators` anyway
+(`FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower`). That is
+strictly more than `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`, which says only
+that this criterion does not apply at that ring. -/
 theorem not_hasBoundedDenominators_of_primes_not_associated [UniqueFactorizationMonoid R]
     (p : ℕ → R) (hp : ∀ n, Prime (p n))
     (hne : ∀ i j, Associated (p i) (p j) → i = j) : ¬ HasBoundedDenominators R := by
