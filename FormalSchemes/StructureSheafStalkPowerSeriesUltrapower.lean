@@ -153,7 +153,7 @@ classification's **forward** direction; its backward direction is untouched.
   is its fraction field.**
 * `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators`: at a **unique factorisation
   domain** the collapse holds with no countability at all, the finitely many primes having a
-  product that clears everything.
+  product that clears everything. **Its instance is needed too**, by the entry three below.
 * `FormalSpectrum.not_exists_denominator_intUltrapower`,
   `FormalSpectrum.not_exists_forall_dvd_pow_intUltrapower`,
   `FormalSpectrum.not_exists_isField_away_intUltrapower`: **the other three spellings of the
@@ -163,6 +163,14 @@ classification's **forward** direction; its backward direction is untouched.
   `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_surjective`: **the countability
   hypothesis of the collapse is needed**, in each of its four spellings, stated at the ultrapower
   and as the refutation of the quantified implication.
+* `FormalSpectrum.hasBoundedDenominators_and_not_exists_forall_dvd_pow_intUltrapower`,
+  `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_forall_dvd_pow`: **the
+  `[UniqueFactorizationMonoid R]` of
+  `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` is needed** — the same ring
+  satisfies that implication's hypothesis and falsifies its conclusion, which is
+  `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`'s proof read the other way round.
+  **The forward passage only**; `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` and
+  `FormalSpectrum.forall_dvd_pow_prod` keep their instance unmeasured.
 * `FormalSpectrum.eventually_dvd_of_coe_dvd_coe_intUltrapower`,
   `FormalSpectrum.coe_dvd_coe_iff_eventually_dvd_intUltrapower`: **divisibility of germs is eventual
   pointwise divisibility**, the converse of the direction this file already had.
@@ -672,6 +680,73 @@ theorem not_forall_hasBoundedDenominators_imp_exists_surjective :
       Nat.hyperfilter_le_atTop
   exact hns (h (IntUltrapower (hyperfilter ℕ)) hbd)
 
+/-! ### The unique-factorisation hypothesis of the collapse is needed
+
+`FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` is the *other* passage from the
+denominator condition to a single clearing `m`: not through a countable fraction field but through
+unique factorisation. Its instance cannot be deleted either, and the witness is the ring already
+above — no prime family, no `Associates` and nothing from the section that follows.
+
+**The refutation is `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`'s own proof read
+the other way round.** That proof discharges `[UniqueFactorizationMonoid R]` against the **ring**
+and concludes that the ring is not a unique factorisation domain; discharge the same instance
+against the **quantified statement** and the same three facts —
+`FormalSpectrum.hasBoundedDenominators_intUltrapower`,
+`FormalSpectrum.not_exists_forall_dvd_pow_intUltrapower` and the theorem itself — conclude that the
+instance cannot be dropped from it. One ring, one pair of facts, two readings, and *the instance is
+unavailable here* is the weaker of them.
+
+**Only the forward passage is reached.**
+`FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` factors through
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` and
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, and nothing below bears on the second of
+those: refuting it would need a domain with **finitely** many prime associate classes and no
+clearing `m`, and this ring has infinitely many
+(`FormalSpectrum.infinite_setOf_prime_associates_intUltrapower`). Its instance, and that of
+`FormalSpectrum.forall_dvd_pow_prod`, stay unmeasured.
+-/
+
+/-- **The ultrapower satisfies the denominator condition and has no single clearing `m`.**
+
+The two sides of the implication
+`FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` at one ring, the hypothesis true
+and the conclusion false. The second conjunct is that theorem's own conclusion negated and nothing
+else; it is already named, `FormalSpectrum.not_exists_forall_dvd_pow_intUltrapower`, and carries no
+`hφ`, so no projection out of
+`FormalSpectrum.hasBoundedDenominators_and_no_collapse_intUltrapower` is needed to reach it.
+
+The pairing is what carries no content and is stated anyway, because
+`FormalSpectrum.hasBoundedDenominators_and_exists_primes_not_associated_intUltrapower` and
+`FormalSpectrum.hasBoundedDenominators_and_infinite_primes_intUltrapower` are the same shape for
+the two *needed* results below, and a reader meeting the third should meet it in the shape of the
+first two. -/
+theorem hasBoundedDenominators_and_not_exists_forall_dvd_pow_intUltrapower
+    (hφ : (φ : Filter ℕ) ≤ atTop) :
+    HasBoundedDenominators (IntUltrapower φ) ∧
+      ¬ ∃ m : IntUltrapower φ, m ≠ 0 ∧ ∀ s : IntUltrapower φ, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k :=
+  ⟨hasBoundedDenominators_intUltrapower φ hφ, not_exists_forall_dvd_pow_intUltrapower φ⟩
+
+/-- **The quantified form: the collapse at a unique factorisation domain is false without that
+instance.**
+
+The statement is `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators`'s own, with
+`[UniqueFactorizationMonoid R]` deleted and nothing else changed — the universe restricted to
+`Type` as in `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_surjective`, the
+neighbouring statement of the same shape, which `IntUltrapower φ` meets.
+
+**There is no `↔` companion**, unlike the pair
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes` /
+`FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes` below: the theorem refuted
+here is an implication and not a classification, so this `→` form already is its negation. -/
+theorem not_forall_hasBoundedDenominators_imp_exists_forall_dvd_pow :
+    ¬ ∀ (R : Type) [CommRing R] [IsDomain R],
+        HasBoundedDenominators R → ∃ m : R, m ≠ 0 ∧ ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k := by
+  intro h
+  obtain ⟨hbd, hno⟩ :=
+    hasBoundedDenominators_and_not_exists_forall_dvd_pow_intUltrapower (hyperfilter ℕ)
+      Nat.hyperfilter_le_atTop
+  exact hno (h (IntUltrapower (hyperfilter ℕ)) hbd)
+
 /-! ### The primes of the ultrapower
 
 The one *positive* arithmetic fact this file proves, and it is here rather than under *What the
@@ -917,16 +992,28 @@ factorisation domain the denominator condition produces a single `m` whose power
 **This is a proof by contradiction from a classification and not a piece of factorisation theory.**
 It exhibits no irreducible-but-not-prime element, counts no primes, and does not show the ring has
 a prime element at all. What it does settle is that
-`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` and
-`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` are inapplicable here as a **theorem**
-rather than as an observation about an instance that happens not to be available. That is the
-weakest of the three true things this ring says about that pair; the section *The primes of the
-ultrapower* above says the other two, that the instance is **needed** in both of them, by
-`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators` and by
-`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes`, each of which refutes its
-statement with `[UniqueFactorizationMonoid R]` deleted. *Inapplicable here* is what this theorem
-says; *needed there* is what those two say, and a hypothesis unavailable at one ring is never on
-its own a reason that it cannot be dropped. -/
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`,
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` and the
+`FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` the line below invokes are
+inapplicable here as a **theorem** rather than as an observation about an instance that happens not
+to be available. That is the weakest thing this ring says about the three of them. The stronger
+thing, said of each, is that the instance is **needed** — by
+`FormalSpectrum.not_forall_primes_not_associated_imp_not_hasBoundedDenominators`, by
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes` and by
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_forall_dvd_pow`, each of which refutes
+its statement with `[UniqueFactorizationMonoid R]` deleted. *Inapplicable here* is what this
+theorem says; *needed there* is what those three say, and a hypothesis unavailable at one ring is
+never on its own a reason that it cannot be dropped.
+
+**The third of the three is this proof read the other way round**, and that is why it is the one
+worth pausing on. The line below discharges `[UniqueFactorizationMonoid (IntUltrapower φ)]` against
+the **ring** and combines three facts — the theorem,
+`FormalSpectrum.hasBoundedDenominators_intUltrapower` and
+`FormalSpectrum.not_exists_forall_dvd_pow_intUltrapower` — to conclude that the ring is not a
+unique factorisation domain. Discharge the same instance against the **quantified statement**
+instead, and the same three facts conclude that it cannot be deleted from the theorem. One ring,
+one pair of facts, two readings; the section *The unique-factorisation hypothesis of the collapse
+is needed* above is the second of them, and this theorem is the first. -/
 theorem not_uniqueFactorizationMonoid_intUltrapower (hφ : (φ : Filter ℕ) ≤ atTop) :
     ¬ UniqueFactorizationMonoid (IntUltrapower φ) := fun _ =>
   not_exists_forall_dvd_pow_intUltrapower φ

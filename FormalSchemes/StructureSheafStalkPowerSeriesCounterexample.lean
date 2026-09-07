@@ -2229,7 +2229,13 @@ side below at a ring satisfying the condition.
 **A different hypothesis buys the same conclusion.** At a unique factorisation domain, with no
 countability whatever, `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` produces
 the same `m` from `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` above. The two
-hypotheses are incomparable and neither is necessary. -/
+hypotheses are incomparable and neither is necessary for the `m`, each theorem reaching it without
+the other's. Neither can be **dropped** from the theorem that carries it, which is a different
+statement and now known of both: the paragraph above says it of the countability here, and
+`FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_forall_dvd_pow`
+(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) says it of the unique factorisation
+there, refuting that implication with `[UniqueFactorizationMonoid R]` deleted. Neither bears on
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, whose instance stays unmeasured. -/
 theorem hasBoundedDenominators_iff_forall_dvd_pow [Countable (FractionRing R)] :
     HasBoundedDenominators R ↔
       ∃ m : R, m ≠ 0 ∧ ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k := by
