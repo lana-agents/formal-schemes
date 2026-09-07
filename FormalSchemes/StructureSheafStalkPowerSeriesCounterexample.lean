@@ -418,7 +418,12 @@ all in this closure already, and so is everything the classification adds — `A
   set meeting every prime associate class is a denominator for the whole ring**, and
   `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`: **finitely many primes up to associates
   therefore give such a denominator**, which is the construction inside the classification below
-  and is named so that its forward composite can be stated elsewhere rather than copied.
+  and is named so that its forward composite can be stated elsewhere rather than copied. The
+  first's `[UniqueFactorizationMonoid R]` is **needed**, by
+  `FormalSpectrum.not_forall_forall_dvd_pow_prod` in
+  `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, at the ring of all algebraic integers
+  and the empty set. The second's is **not** measured anywhere: that same ring reaches its
+  hypothesis and fails only the unit case of its conclusion.
 * `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: **the classification at a unique
   factorisation domain** — the condition holds **iff** `{a : Associates R | Prime a}` is finite.
   Its two directions are `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` above, at the
@@ -1980,7 +1985,18 @@ simpa away from the lemma that is, so it is used inline rather than given a name
 **No primality is asked of the members of `t`**, only that they cover. Primality enters on the
 side of `UniqueFactorizationMonoid.factors`, and again where the product of `t` has to be shown
 nonzero — which happens inside `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` and not
-here. -/
+here.
+
+**`[UniqueFactorizationMonoid R]` is needed here, and not merely convenient**, by a witness rather
+than by an argument: `FormalSpectrum.not_forall_forall_dvd_pow_prod`
+(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) refutes this statement with that
+instance deleted and nothing else changed. **The refuting `t` is the empty one.** This theorem
+carries no `[IsDomain R]`, so with the instance gone it speaks about an arbitrary commutative ring,
+and at `t = ∅` it says *a ring with no prime elements has every nonzero element a unit*. The ring
+of all algebraic integers has no prime elements — every element is a square — and `2` is not a unit
+of it. So no divisibility argument is involved in the refutation, and the witness is neither the
+ultrapower, which has infinitely many prime classes and therefore satisfies no instance of the
+hypothesis, nor a ring of integers of a number field, which is not closed under square roots. -/
 theorem forall_dvd_pow_prod [UniqueFactorizationMonoid R] (t : Finset R)
     (hcov : ∀ p : R, Prime p → ∃ q ∈ t, Associated p q) :
     ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ (t.prod id) ^ k := by
@@ -2061,7 +2077,12 @@ instance of `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`
 `Associates`; that the forward direction below turns an infinite set of classes back into such a
 family is the inverse translation. **The backward direction is not refuted**: whether
 `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` survives without unique factorisation is
-open, and no witness on this tree bears on it.
+open. One witness on this tree now bears on it and does not decide it — the ring of all algebraic
+integers has no prime elements, so it satisfies that theorem's hypothesis
+(`FormalSpectrum.finite_setOf_prime_associates_algInt`), and it fails the **unit** case of its
+conclusion (`FormalSpectrum.not_isUnit_clearing_algInt`), both in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`; the non-unit case, which is what a
+refutation needs, is open there too.
 
 The three values in this file are the three cases: a field is the empty set, a discrete valuation
 ring the singleton, and `ℤ` the infinite one. Each is checked below as an `example` beside the
