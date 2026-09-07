@@ -410,11 +410,14 @@ all in this closure already, and so is everything the classification adds — `A
   takes at a unique factorisation domain, where *pairwise non-associated* suffices. Neither
   criterion implies the other and neither is a classification on its own.
 * `FormalSpectrum.forall_dvd_pow_prod`: at a unique factorisation domain, **the product of a finite
-  set meeting every prime associate class is a denominator for the whole ring**.
+  set meeting every prime associate class is a denominator for the whole ring**, and
+  `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`: **finitely many primes up to associates
+  therefore give such a denominator**, which is the construction inside the classification below
+  and is named so that its forward composite can be stated elsewhere rather than copied.
 * `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`: **the classification at a unique
   factorisation domain** — the condition holds **iff** `{a : Associates R | Prime a}` is finite.
-  Its two directions are `FormalSpectrum.hasBoundedDenominators_of_forall_dvd_pow`, at the product
-  of a set of representatives of the prime associate classes, and
+  Its two directions are `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` above, at the
+  product of a set of representatives of the prime associate classes, and
   `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`; the three values below are
   its empty, singleton and infinite cases. It is the only hypothesis under which anything **in this
   file** decides the condition; semilocal, Prüfer and valuation rings are untouched, and the
@@ -1955,6 +1958,39 @@ theorem forall_dvd_pow_prod [UniqueFactorizationMonoid R] (t : Finset R)
   simpa using Multiset.prod_dvd_prod_of_dvd (S := UniqueFactorizationMonoid.factors s) id
     (fun _ => t.prod id) hdvd
 
+/-- **Finitely many primes up to associates give a single element that every nonzero element
+divides a power of**: their product, through `FormalSpectrum.forall_dvd_pow_prod`.
+
+This is the construction inside the backward direction of
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, which is its one consumer here. It is
+named because the *forward* composite is wanted too — at a unique factorisation domain the
+denominator condition produces such an `m`, with **no countability hypothesis**, which is
+`FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower` — and a second consumer of a proof body
+is a project-internal duplicate rather than a second consumer of a theorem.
+
+The `m` is not canonical: it is a product of one chosen representative of each prime class, and
+any associate of it, or any multiple, serves equally. Nothing downstream depends on the choice. -/
+theorem exists_forall_dvd_pow_of_finite_primes [UniqueFactorizationMonoid R]
+    (hfin : {a : Associates R | Prime a}.Finite) :
+    ∃ m : R, m ≠ 0 ∧ ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k := by
+  classical
+  choose rep hrep using fun a : Associates R => Associates.mk_surjective a
+  set t : Finset R := hfin.toFinset.image rep with ht
+  have hcov : ∀ p : R, Prime p → ∃ q ∈ t, Associated p q := by
+    intro p hpp
+    refine ⟨rep (Associates.mk p), Finset.mem_image_of_mem _ ?_, ?_⟩
+    · exact (Set.Finite.mem_toFinset hfin).mpr (Associates.prime_mk.mpr hpp)
+    · exact Associates.mk_eq_mk_iff_associated.mp (hrep (Associates.mk p)).symm
+  have htne : t.prod id ≠ 0 := by
+    rw [Finset.prod_ne_zero_iff]
+    intro q hq
+    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hq
+    have hpa : Prime a := (Set.Finite.mem_toFinset hfin).mp ha
+    have hpr : Prime (Associates.mk (rep a)) := by rw [hrep a]; exact hpa
+    exact (Associates.prime_mk.mp hpr).ne_zero
+  exact ⟨t.prod id, htne, forall_dvd_pow_prod R t hcov⟩
+
 /-- **The denominator condition at a unique factorisation domain is exactly "finitely many primes
 up to associates".** This is where the two criteria of the section above meet, and it is the only
 hypothesis under which anything on this tree makes them meet.
@@ -1965,16 +2001,18 @@ hypothesis under which anything on this tree makes them meet.
 injectivity of the embedding is exactly the *pairwise non-associated* hypothesis of
 `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`.
 
-**The backward direction is the sufficient criterion**, at the product of a set of representatives:
-`FormalSpectrum.forall_dvd_pow_prod` discharges its divisibility hypothesis, and the product is
-nonzero because each factor is prime. That direction passes through both spellings of the
-criterion — divisibility, then surjectivity, then the condition — and the middle step costs
-nothing, since the two spellings are one hypothesis at a fixed `m`
+**The backward direction is the sufficient criterion**, at the product of a set of representatives.
+That whole construction is `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` above, which is
+where `FormalSpectrum.forall_dvd_pow_prod` discharges the divisibility hypothesis and the product
+is shown nonzero; what is left here is to pass through both spellings of the criterion —
+divisibility, then surjectivity, then the condition — and the middle step costs nothing, since the
+two spellings are one hypothesis at a fixed `m`
 (`FormalSpectrum.surjective_awayToFractionRing_iff_forall_dvd_pow`).
 
-`Associates.out` is not available here — it needs
+`Associates.out` is not available in either — it needs
 `[NormalizationMonoid R]`, which a bare unique factorisation domain does not carry — so the
-representatives come from a choose on `Associates.mk_surjective`.
+representatives come from a choose on `Associates.mk_surjective`, in
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`.
 
 The three values in this file are the three cases: a field is the empty set, a discrete valuation
 ring the singleton, and `ℤ` the infinite one. Each is checked below as an `example` beside the
@@ -2008,28 +2046,16 @@ theorem hasBoundedDenominators_iff_finite_primes [UniqueFactorizationMonoid R] :
         exact Associates.mk_eq_mk_iff_associated.mpr hij
       exact e.injective (Subtype.ext hee)
   · intro hfin
-    choose rep hrep using fun a : Associates R => Associates.mk_surjective a
-    set t : Finset R := hfin.toFinset.image rep with ht
-    have hcov : ∀ p : R, Prime p → ∃ q ∈ t, Associated p q := by
-      intro p hpp
-      refine ⟨rep (Associates.mk p), Finset.mem_image_of_mem _ ?_, ?_⟩
-      · exact (Set.Finite.mem_toFinset hfin).mpr (Associates.prime_mk.mpr hpp)
-      · exact Associates.mk_eq_mk_iff_associated.mp (hrep (Associates.mk p)).symm
-    have htne : t.prod id ≠ 0 := by
-      rw [Finset.prod_ne_zero_iff]
-      intro q hq
-      obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hq
-      have hpa : Prime a := (Set.Finite.mem_toFinset hfin).mp ha
-      have hpr : Prime (Associates.mk (rep a)) := by rw [hrep a]; exact hpa
-      exact (Associates.prime_mk.mp hpr).ne_zero
-    exact hasBoundedDenominators_of_surjective R htne
-      (surjective_awayToFractionRing_of_forall_dvd_pow R htne (forall_dvd_pow_prod R t hcov))
+    obtain ⟨m, hm, hall⟩ := exists_forall_dvd_pow_of_finite_primes R hfin
+    exact hasBoundedDenominators_of_surjective R hm
+      (surjective_awayToFractionRing_of_forall_dvd_pow R hm hall)
 
 /-! ### The collapse over a countable fraction field
 
 The sufficient criterion above is not necessary at a general domain — an ultrapower of `ℤ`
 satisfies the condition and no single `R[1/m]` is its fraction field
-(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) — and the reason
+(`FormalSpectrum.hasBoundedDenominators_and_no_collapse_intUltrapower`, which refutes the
+right-hand side of every theorem in this section at once) — and the reason
 the section heading gives is a cardinality: `FormalSpectrum.HasBoundedDenominators` only ever sees
 *countable* families (`FormalSpectrum.hasBoundedDenominators_iff_countable`), so a domain whose
 fraction field needs uncountably many denominator types is not excluded by it. **That reason is
@@ -2066,9 +2092,11 @@ weaken this theorem's hypothesis: what `[Countable (FractionRing R)]` buys is th
 `m`, not the form of the condition at one `m`.
 
 **Necessity is what the hypothesis buys.** Sufficiency holds at every domain and is proved above;
-this direction is **false** at a general domain, by the ultrapower of `ℤ` in
-`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, and the obstruction named there — that
-the condition only ever sees countable families — is precisely what `[Countable (FractionRing R)]`
+this direction is **false** at a general domain, and the counterexample is a theorem rather than a
+remark: `FormalSpectrum.hasBoundedDenominators_and_not_exists_surjective_intUltrapower` in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower` asserts this theorem's left-hand side and
+the negation of its right-hand side at an ultrapower of `ℤ`. The obstruction named there — that the
+condition only ever sees countable families — is precisely what `[Countable (FractionRing R)]`
 removes.
 
 The hypothesis is on the fraction field rather than on `R`: it is the weaker assumption, and it is
@@ -2099,7 +2127,12 @@ form the criteria above are stated in, and is what composes with
 `FormalSpectrum.hasBoundedDenominators_of_surjective`. This one is elementary arithmetic in `R`
 and `Frac R`, names no localization, and is the one that says what the collapse *is*: the
 quantifier order of `FormalSpectrum.HasBoundedDenominators` stops mattering, because the `m` may
-be chosen before the family. -/
+be chosen before the family.
+
+**The hypothesis is needed here too**, and in this spelling:
+`FormalSpectrum.not_exists_denominator_intUltrapower` in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower` refutes exactly the right-hand side below
+at a ring where the left-hand side holds. -/
 theorem hasBoundedDenominators_iff_exists_denominator [Countable (FractionRing R)] :
     HasBoundedDenominators R ↔
       ∃ m : R, m ≠ 0 ∧ ∀ y : FractionRing R, ∃ k : ℕ,
@@ -2140,7 +2173,14 @@ different places, and what changes between them is which objects a consumer has 
 divisibility form and the surjectivity form are the same hypothesis at every domain
 (`FormalSpectrum.surjective_awayToFractionRing_iff_forall_dvd_pow`); it is
 `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` that needs
-`[Countable (FractionRing R)]`, and this inherits it from there. -/
+`[Countable (FractionRing R)]`, and this inherits it from there — including the fact that it
+cannot be dropped, `FormalSpectrum.not_exists_forall_dvd_pow_intUltrapower` refuting the right-hand
+side below at a ring satisfying the condition.
+
+**A different hypothesis buys the same conclusion.** At a unique factorisation domain, with no
+countability whatever, `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` produces
+the same `m` from `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` above. The two
+hypotheses are incomparable and neither is necessary. -/
 theorem hasBoundedDenominators_iff_forall_dvd_pow [Countable (FractionRing R)] :
     HasBoundedDenominators R ↔
       ∃ m : R, m ≠ 0 ∧ ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k := by
@@ -2174,8 +2214,10 @@ factorisation domain turns *some `R[1/m]` is a field* into *finitely many primes
 `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`, from which this inherits it.
 Sufficiency holds at every domain with no countability and has a name of its own,
 `FormalSpectrum.hasBoundedDenominators_of_isField`; necessity is what
-`[Countable (FractionRing R)]` buys and is false without it
-(`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`). -/
+`[Countable (FractionRing R)]` buys and is false without it, by
+`FormalSpectrum.not_exists_isField_away_intUltrapower` in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which refutes the right-hand side below
+at a ring where the left-hand side holds. -/
 theorem hasBoundedDenominators_iff_exists_isField [Countable (FractionRing R)] :
     HasBoundedDenominators R ↔ ∃ m : R, m ≠ 0 ∧ IsField (Localization.Away m) := by
   rw [hasBoundedDenominators_iff_exists_surjective R]
