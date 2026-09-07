@@ -558,13 +558,15 @@ the far end. Such a sentence carries numerals and is not reported as declined ei
 invisible, which is worse than unattributed, since a declined claim is at least counted. Two greps
 — `import closure of` and `closure of N` — find **eight** such sentences in five files, of which
 **two were wrong**: one by a module, and one that said *"this file is in the import closure of
-**445** of the library's **496** modules"* where the walk gave 501 and 558. Row 1825 rewrote the
-four that state a plain measurement into the checked spelling and left four deltas; the repaired
-form of the second is in `FormalSchemes/StructureSheaf.lean`, where `--tree` now checks both of its
-figures. **Quote the two false figures, never the difference between them.** *"Wrong by 56 in its
-figure and 62 in its total"* is itself a measurement, it names no module and carries no closure
-phrase so no sweep can see it, and repairing the sentence it describes silently falsifies it — as
-happened here, where it read 55 and 61 until a merge moved the true figures.
+**445** of the library's **496** modules"* where the walk gave both figures larger. Row 1825
+rewrote the four that state a plain measurement into the checked spelling and left four deltas; the
+repaired form of the second is in `FormalSchemes/StructureSheaf.lean`, where `--tree` now checks
+both of its figures. Read the true pair there and not here: it is live, and this file is outside
+the walk, as the paragraph below says. **Quote the two false figures, never the difference between
+them.** *"Wrong by 56 in its figure and 62 in its total"* is itself a measurement, it names no
+module and carries no closure phrase so no sweep can see it, and repairing the sentence it
+describes silently falsifies it — as happened here, where it read 55 and 61 until a merge moved the
+true figures.
 **Those two greps are not the population**, and the section below is what a sweep finds instead.
 
 **The noun beside the figure is a measurement too.** Call a module a **leaf** only where a walk you
