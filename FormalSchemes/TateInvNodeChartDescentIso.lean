@@ -155,10 +155,10 @@ quotient are two-way. That is the disposition
 `FormalSchemes.TateInvNodeChartDescent`'s implementation notes argued for and took for
 `CategoryTheory.IsActionQuotient.exists_isIso_desc_of_iso` itself, at the same price:
 `FormalSchemes.ActionQuotient` has reverse closure **95** of the project's 558 modules — 94 before
-this leaf, which reaches it — against this leaf's **6**.
+this file, which reaches it — against this file's **6**.
 `AlgebraicGeometry.LocallyRingedSpace.isIso_iff_isIso_base_and_isIso_c_app` goes beside the
 one-way `AlgebraicGeometry.LocallyRingedSpace.isIso_of_isIso_base_of_isIso_c_app` in
-`FormalSchemes.ActionQuotientRestrictQuotient` (reverse closure **15**, 14 before this leaf) for the
+`FormalSchemes.ActionQuotientRestrictQuotient` (reverse closure **15**, 14 before this file) for the
 same reason and much more cheaply.
 
 The two general statements that *are* here —
@@ -169,7 +169,7 @@ The two general statements that *are* here —
 **6** counted with the module itself; a home for the first would therefore be a new leaf at forward
 closure **49** (48 modules besides itself). Each has one consumer, both in this file, so they are
 kept here and that leaf should be cut when a second consumer appears, which is the standing
-disposition on this tree for a general statement with a single consumer. This leaf's own forward
+disposition on this tree for a general statement with a single consumer. This file's own forward
 closure is **253** with itself, so a general statement parked here is reachable only at that
 price.
 

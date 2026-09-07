@@ -127,15 +127,14 @@ theorem isAdicRing_awayCompletionIdeal (hI : I.FG) : IsAdicRing (awayCompletionI
   AdicCompletion.isAdicRing_map _ (hI.map _)
 
 /-- **The ideal of definition of `R{1/f}` is finitely generated** when `I` is: it is the image of
-`I` under `FormalSpectrum.awayCompletionHom`, and `Ideal.FG` is stable under `Ideal.map`.
-
-This is the side condition every consumer of the chart has to discharge — the affine-target colimit
+`I` under `FormalSpectrum.awayCompletionHom`, and `Ideal.FG` is stable under `Ideal.map`.  This is
+the side condition every consumer of the chart has to discharge — the affine-target colimit
 property, `IsTopologicallyFiniteType.of_openImmersion_of_isCofinal`, and
 `FormalSpectrum.IsThickeningColimitTarget` all take it. It lives here, one line from
 `FormalSpectrum.isAdicRing_awayCompletionIdeal`, which has the identical hypothesis and the
-identical binders, for the reason recorded above: every consumer already imports this module.
-Issue 1284 first named it in `FormalSchemes/TateInvNodeChartComplete.lean`, a Tate leaf too far to
-the right of the import graph for anything else to cite, so fifteen sites re-proved it — fourteen
+identical binders, for the reason recorded above: every consumer already imports this module. Issue
+1284 first named it in `FormalSchemes/TateInvNodeChartComplete.lean`, a Tate-cluster module too far
+to the right of the import graph for anything else to cite, so fifteen sites re-proved it — fourteen
 as an anonymous `have`, and one, `AffineChartedFibreDatumX.fg_awayCompletionIdeal`, as a named
 theorem at a more specific ideal; issue 1445 moved it here and routed all fifteen through it. -/
 theorem awayCompletionIdeal_fg (hI : I.FG) : (awayCompletionIdeal I f).FG :=
@@ -150,10 +149,10 @@ and it earns its own name for the reason that one does: callers meet the left-ha
 `awayCompletionHom`, which no Mathlib rewrite fires on, and recovering this from the based form
 costs `Algebra.algebraMap_self` and `RingHom.comp_id` on top of it.
 
-Issue 374 named it in `FormalSchemes/TateSeparated.lean`, a Tate leaf that nothing outside the
+Issue 374 named it in `FormalSchemes/TateSeparated.lean`, a module that nothing outside the
 Tate cluster can cite, so four other sites carried their own proof of it: a `private theorem` of
 the identical name in `FormalSchemes/TateSelfProductSummandNaturality.lean`, which is *upstream*
-of that leaf and so could never have cited it — and is a week older, so the public lemma was
+of that module and so could never have cited it — and is a week older, so the public lemma was
 itself the copy; two `have`s routed through the based form; and one `show … from rfl`. Issue 1456
 moved it here and routed all four through it. -/
 theorem awayCompletionHom_eq_algebraMap :
