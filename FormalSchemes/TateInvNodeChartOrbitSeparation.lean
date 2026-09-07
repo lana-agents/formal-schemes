@@ -43,7 +43,20 @@ branch generic points of `FormalSchemes.TateInvNodeChartAmbientNotInjective` are
 primes with equal traces, so the criterion has no instantiation at which its hypothesis holds and
 it cannot be the route by which the clause is settled. **It is nonetheless a true theorem and
 stays**: its proof is the content of the crux, and it is what makes the shape of what is left
-legible.
+legible. Both it and the refutation are restated at the map the trace condition is a fibre of —
+`AlgebraicGeometry.tateInvNodeChartAwaySpfMap` (`FormalSchemes.TateInvNodeChartAmbient`), `Spf` of
+the inclusion of the chart ring — where the hypothesis is the injectivity of one map of formal
+spectra and the refutation is `¬ Function.Injective` of it.
+
+**And, from that spelling, a fact of commutative algebra with nothing geometric in it.** Contraposed
+through `PrimeSpectrum.comap_injective_of_surjective`, the refutation says the chart ring does
+**not** surject onto the ambient ring modulo the ideal of definition
+(`AlgebraicGeometry.not_surjective_quotientMap_tateInvNodeChartAwaySubring`) and hence that it is a
+**proper** subring of `A{1/(x + y − 1)}` (`AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top`),
+for `I ≠ ⊤` and in this section's regime. The second of those decides a question the cluster had
+recorded as open in both directions; the first is a statement about two explicit rings, and
+`AlgebraicGeometry.injective_quotientMap_tateInvNodeChartAwaySubring`
+(`FormalSchemes.TateInvNodeChartAmbient`) is its unconditional companion in the other direction.
 
 **And the exact size of what the criterion leaves — which is what survives.**
 `AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff_exists_index` states the clause with the
@@ -105,6 +118,12 @@ same reason, that `FormalSchemes.TateInvNodeChartPatchChartAdic` and
   for `I ≠ ⊤`, so the criterion is vacuous; and
   `AlgebraicGeometry.exists_ne_and_forall_mem_asIdeal_iff`, its positive form — two distinct
   primes with the same trace.
+* `AlgebraicGeometry.injective_base_nodeChartQuotientHom_of_injective_tateInvNodeChartAwaySpfMap`
+  and `AlgebraicGeometry.not_injective_tateInvNodeChartAwaySpfMap`: **the same criterion and the
+  same refutation at `Spf` of the inclusion**, which is what both are about.
+* `AlgebraicGeometry.not_surjective_quotientMap_tateInvNodeChartAwaySubring` and
+  `AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top`: **the chart ring does not surject onto
+  the ambient ring modulo the ideal of definition, and is a proper subring of it**, for `I ≠ ⊤`.
 
 ## What is *not* proved here
 
@@ -146,8 +165,30 @@ one.
 
 **Nothing here bears on `AlgebraicGeometry.tateInvNodeChartAmbientHom`**, whose refutation as an
 open immersion (`AlgebraicGeometry.not_isOpenImmersion_tateInvNodeChartAmbientHom_of_ne_top`) is
-untouched, and nothing here decides whether `AlgebraicGeometry.tateInvNodeChartAwaySubring` is
-proper in the ambient ring.
+untouched.
+
+**Properness of `AlgebraicGeometry.tateInvNodeChartAwaySubring` *is* decided here, and only in
+this section's regime.** It is a proper subring for `I ≠ ⊤`, under the same finite generation of
+`AlgebraicGeometry.tateInvNodeChartQuotientIdeal` and the same
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` witness as everything else in this section
+— a question `FormalSchemes.TateInvNodeChartPatchChartAdic` had
+recorded as open in both directions, and the sentence there is repaired to match. What travels
+with it does **not** follow:
+`AlgebraicGeometry.tateInvNodeChartAwayIdeal` is still not shown to be an ideal of definition —
+`FormalSchemes.TateInvNodeChartAmbient` proves it Hausdorff and nothing more — and the subring is
+not shown closed, complete or finitely generated over anything.
+
+**No element outside the chart ring is exhibited, here or anywhere on the tree.** Both negative
+statements above are contrapositions and produce no witness; an explicit element of
+`A{1/(x + y − 1)}` congruent modulo `FormalSpectrum.awayCompletionIdeal` to nothing in the chart
+ring would be a strictly stronger fact and is not proved.
+
+**None of the four statements at the map is unconditional.**
+`AlgebraicGeometry.tateInvNodeChartAwaySpfMap` is defined with neither of this section's two
+hypotheses and without `I ≠ ⊤` — that is what makes it the right noun — while the non-injectivity,
+the non-surjectivity and the properness all carry all three, and the criterion carries the two.
+At `I = ⊤` nothing here says anything in either direction, and the map's injectivity outside this
+section's regime is untouched.
 
 ## Placement
 
@@ -186,6 +227,13 @@ repairs, so a placement that leaves a pointer where the falsehood was is not a r
 argument that kept the crux out of `FormalSchemes.TateInvNodeChartPatchChartGerm` does not run in
 reverse here: what this file says about itself is rewritten above rather than falsified, which is
 what an addition is allowed to do to the prose of the file it is added to.
+
+**`Spf` of the inclusion is not here**, and this file pays no import for it.
+`AlgebraicGeometry.tateInvNodeChartAwaySpfMap` and the `↔` its fibres satisfy need only the two
+rings and the contraction between them, all of which
+`FormalSchemes.TateInvNodeChartAmbient` already has, so they are stated there and this file uses
+them across an import it already had. Only the four statements above — which need this section's
+two hypotheses and the refutation — are here.
 
 **The crux does not belong in `FormalSchemes.TateInvNodeChartPatchChartGerm` beside
 `AlgebraicGeometry.nodeChartPatchChartLift`**, which is where a reader would first look for it.
@@ -605,6 +653,88 @@ theorem exists_ne_and_forall_mem_asIdeal_iff (hItop : I ≠ ⊤) :
   refine not_forall_mem_asIdeal_iff_imp_eq R I q hq hI hfgI hX hItop fun w w' ht => ?_
   by_contra hne
   exact h ⟨w, w', ht, hne⟩
+
+/-! ### The criterion and its refutation, at `Spf` of the inclusion -/
+
+include hfgI hX in
+/-- **The criterion with the primes eliminated: it is the injectivity of `Spf` of the inclusion.**
+`AlgebraicGeometry.injective_base_nodeChartQuotientHom_of_forall_mem_asIdeal_iff` read through
+`AlgebraicGeometry.tateInvNodeChartAwaySpfMap_eq_iff`
+(`FormalSchemes.TateInvNodeChartAmbient`), which says the trace condition **is** a fibre of
+`AlgebraicGeometry.tateInvNodeChartAwaySpfMap`. Nothing is lost in either direction: that
+statement is an `↔`.
+
+This is the shape the criterion was always in and the shape it should be read in — a map of formal
+spectra induced by a ring inclusion, with no prime, no trace, no chart and no action in the
+hypothesis. **It is nonetheless vacuous**, by the next theorem, throughout the regime this section
+fixes and for `I ≠ ⊤`. -/
+theorem injective_base_nodeChartQuotientHom_of_injective_tateInvNodeChartAwaySpfMap
+    (h : Function.Injective (tateInvNodeChartAwaySpfMap R I q hq hI)) :
+    Function.Injective (nodeChartQuotientHom R I q hq hI hfgI hX).base :=
+  injective_base_nodeChartQuotientHom_of_forall_mem_asIdeal_iff R I q hq hI hfgI hX
+    fun w w' ht => h ((tateInvNodeChartAwaySpfMap_eq_iff R I q hq hI w w').mpr ht)
+
+include hfgI hX in
+/-- **`Spf` of the inclusion is not injective**, for `I ≠ ⊤`:
+`AlgebraicGeometry.not_forall_mem_asIdeal_iff_imp_eq` in one line instead of a negated `∀ ∀ →`,
+through the same `↔`. The two say the same thing and carry the same three hypotheses; the content
+is entirely the earlier one's, and this is the spelling a reader can hold.
+
+**The hypotheses are not decoration.** `AlgebraicGeometry.tateInvNodeChartAwaySpfMap` is defined
+with none of them, and this is not a statement that it fails to be injective in general: the two
+branch points exist only for `I ≠ ⊤`, and the trace half of the earlier theorem is only available
+under this section's finite generation of `AlgebraicGeometry.tateInvNodeChartQuotientIdeal` and
+its `AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` witness. At `I = ⊤` nothing here
+applies. -/
+theorem not_injective_tateInvNodeChartAwaySpfMap (hItop : I ≠ ⊤) :
+    ¬ Function.Injective (tateInvNodeChartAwaySpfMap R I q hq hI) := fun h =>
+  not_forall_mem_asIdeal_iff_imp_eq R I q hq hI hfgI hX hItop
+    fun w w' ht => h ((tateInvNodeChartAwaySpfMap_eq_iff R I q hq hI w w').mpr ht)
+
+include hfgI hX in
+/-- **The chart ring does not surject onto the ambient ring modulo the ideal of definition**, for
+`I ≠ ⊤`. `PrimeSpectrum.comap_injective_of_surjective` contraposed against the theorem above,
+which applies because `FormalSpectrum.map` **is** `PrimeSpectrum.comap` of
+`Ideal.quotientMap`.
+
+In words: there is an element of `A{1/(x + y − 1)}` congruent modulo
+`FormalSpectrum.awayCompletionIdeal` to nothing in
+`AlgebraicGeometry.tateInvNodeChartAwaySubring`. That is a statement about two explicit rings with
+no formal scheme, no action, no chart and no prime in it, and it is the first measurement on this
+tree of how the chart ring sits inside the ambient one from **above**;
+`AlgebraicGeometry.injective_quotientMap_tateInvNodeChartAwaySubring`
+(`FormalSchemes.TateInvNodeChartAmbient`) is the companion from below, and needs no hypothesis.
+
+**No such element is exhibited.** This is a negation obtained by contraposition and it produces no
+witness; see this file's module docstring. -/
+theorem not_surjective_quotientMap_tateInvNodeChartAwaySubring (hItop : I ≠ ⊤) :
+    ¬ Function.Surjective (Ideal.quotientMap
+      (awayCompletionIdeal (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q))
+      (tateInvNodeChartAwaySubring R I q hq hI).subtype
+      (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := fun hsurj =>
+  not_injective_tateInvNodeChartAwaySpfMap R I q hq hI hfgI hX hItop
+    (PrimeSpectrum.comap_injective_of_surjective _ hsurj)
+
+include hfgI hX in
+/-- **The chart ring is a proper subring of `A{1/(x + y − 1)}`**, for `I ≠ ⊤`. If it were the
+whole ring its inclusion would be surjective, hence so would the induced map of quotients
+(`Ideal.quotientMap_surjective`), which the theorem above refutes.
+
+**This decides a question the cluster records as open**, in this section's regime and nowhere
+else: `FormalSchemes.TateInvNodeChartPatchChartAdic` said that nothing on the tree decides whether
+`AlgebraicGeometry.tateInvNodeChartAwaySubring` is the whole of the ambient ring or a proper
+subring of it, and that sentence is repaired by this theorem rather than by anything about the
+action. What is *not* decided is everything else that question travels with: no element outside
+the subring is produced, `AlgebraicGeometry.tateInvNodeChartAwayIdeal` is still not shown to be an
+ideal of definition, and `I = ⊤` is untouched.
+
+The properness of the **global** subring in `A` is a different statement about different rings and
+is proved elsewhere and unconditionally in `I ≠ ⊤`, with a witness
+(`AlgebraicGeometry.tateInvGlobalSubring_ne_top`, `FormalSchemes.TateInvGlobalProperness`). -/
+theorem tateInvNodeChartAwaySubring_ne_top (hItop : I ≠ ⊤) :
+    tateInvNodeChartAwaySubring R I q hq hI ≠ ⊤ := fun htop =>
+  not_surjective_quotientMap_tateInvNodeChartAwaySubring R I q hq hI hfgI hX hItop
+    (Ideal.quotientMap_surjective fun a => ⟨⟨a, htop ▸ Subring.mem_top a⟩, rfl⟩)
 
 end Clause
 
