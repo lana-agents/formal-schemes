@@ -169,6 +169,17 @@ same reason, that `FormalSchemes.TateInvNodeChartPatchChartAdic` and
   the same hypotheses. With the entry above it this says that the chart ring contains **neither**
   coordinate of the node; it adds no properness statement, one missing element being all
   `AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top'` ever needed.
+* `AlgebraicGeometry.tateInvGlobalLegX_sub_legYX_mem_of_mem_range` and its mirror
+  `AlgebraicGeometry.tateInvGlobalLegY_sub_legXY_mem_of_mem_range`: **the necessary condition the
+  two witnesses are instances of** — if the residue of the structural image of an arbitrary `c` is
+  in the image of the chart ring, then the two legs of `c` on that side agree modulo
+  `FormalSpectrum.awayCompletionIdeal`. Both are unconditional in `I`; both are **necessary** and
+  no converse is stated or proved.
+* `AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapX_pow`,
+  `AlgebraicGeometry.notMem_tateInvNodeChartAwaySubring_overlapX_pow` and their `y` mirrors:
+  **every positive power of either coordinate is outside the chart ring**, for `I ≠ ⊤` — the
+  criteria applied at `xⁿ` and `yⁿ`, where the leg on the other side picks up `qⁿ`. The two
+  witnesses above are the cases `n = 1` and are proved from these.
 
 ## What is *not* proved here
 
@@ -226,17 +237,21 @@ sentence there is repaired to match. What travels with it does **not** follow:
 not shown closed, complete or finitely generated over anything. **At `I = ⊤` nothing here decides
 properness in either direction.**
 
-**Two elements outside the chart ring are exhibited and no more.** They are the images of the two
-coordinates `x` and `y`, and what is shown of each is exactly that its residue modulo
-`FormalSpectrum.awayCompletionIdeal` is not in the image of the chart ring. The `y` side is the
-`x`-side argument with the letters swapped — the backward pair of legs, the second component of
-`AlgebraicGeometry.tateInvNodeChartAwaySubring_eq_inf_eqLocus` and the `y`-branch point — and the
-only thing the pair says that neither says alone is that **both** coordinates are missed. **No
-description of the missed residues as a set is given** and nothing says how much of the ambient
-ring is missed; two elements are two elements, and the question of how much of
-`A{1/(x + y − 1)}` the chart ring misses is untouched. The two contrapositions in the clause
-section still produce no witness of their own; they are not repaired by the witness section, they
-are complemented by it.
+**A countably infinite family outside the chart ring is exhibited, and that is all.** It is the
+positive powers of the two coordinates, `xⁿ` and `yⁿ` for `n ≥ 1`, and what is shown of each is
+exactly that its residue modulo `FormalSpectrum.awayCompletionIdeal` is not in the image of the
+chart ring. The `y` side is the `x`-side argument with the letters swapped — the backward pair of
+legs, the second component of
+`AlgebraicGeometry.tateInvNodeChartAwaySubring_eq_inf_eqLocus` and the `y`-branch point — and each
+side is one criterion, on an arbitrary element, instantiated at one family.
+
+**Infinitely many elements are missed and how much is missed are different questions, and only the
+first is answered.** No description of the missed residues as a set is given, nothing counts them,
+and nothing says how much of `A{1/(x + y − 1)}` the chart ring misses. The two criteria are
+**necessary** conditions and are not claimed sufficient: whether agreeing legs put a residue back
+in the image is not decided here and nothing in this file bears on it. The two contrapositions in
+the clause section still produce no witness of their own; they are not repaired by the witness
+section, they are complemented by it.
 
 **None of the four statements at the map is unconditional.**
 `AlgebraicGeometry.tateInvNodeChartAwaySpfMap` is defined with neither of this section's two
@@ -813,7 +828,11 @@ theorem tateInvNodeChartAwaySubring_ne_top (hItop : I ≠ ⊤) :
 
 end Clause
 
-/-! ### The witness: the coordinate `x` is outside the chart ring -/
+/-! ### The witness: the coordinate `x` is outside the chart ring
+
+What carries the section is `AlgebraicGeometry.tateInvGlobalLegX_sub_legYX_mem_of_mem_range`, a
+condition on an **arbitrary** element; the coordinate and its powers are where it is instantiated.
+-/
 
 section Legs
 
@@ -950,31 +969,53 @@ theorem exists_mem_asIdeal_iff_mem_annulusBranchXPoint :
   refine ⟨v, fun b => ?_⟩
   rw [← mem_asIdeal_basicOpenChartBase_iff, hv, ← mem_asIdeal_basicOpenChartBase_iff, hu]
 
-set_option maxHeartbeats 4000000 in
--- the same `def`-not-`abbrev` unfolding as above, over a proof that also rewrites twice inside the
--- twice-completed localization and applies leg continuity at these concrete rings
-include hq hI h𝔭 in
-/-- **The residue of the coordinate `x` is not in the image of the chart ring**, at any prime
-`𝔭 ⊇ I` of the base. This is the whole content of this section; everything after it is packaging.
+set_option maxHeartbeats 800000 in
+-- the `def`-not-`abbrev` unfolding of `annulusAlgebra` inside the twice-completed localization,
+-- as everywhere in this section; for a defeq and not for the mathematics
+include hq hI in
+/-- **The necessary condition both `x`-side witnesses are instances of: if the residue of the
+structural image of `c` is in the image of the chart ring, the two forward legs of `c` agree
+there.** *Agree* means that their difference lies in `FormalSpectrum.awayCompletionIdeal` of
+`A{1/x}{1/(x + y − 1)}`; through `Ideal.Quotient.eq` that is the equality of their residues, and
+**the difference form is the one shipped because it is three times cheaper**. Stating the equality
+instead needs `2000000` heartbeats where this needs `600000`, both measured, so a reader who wants
+the equality should apply `Ideal.Quotient.eq.mpr` at the use site rather than restating this.
 
-The argument is the two forward legs read at `x`, and it uses the action nowhere. If the residue
-of `x` were the residue of some `a` in the chart ring, then `a − x` lies in
-`FormalSpectrum.awayCompletionIdeal`, so leg continuity
+This is `AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le` with its
+last step removed, and it is where all of that proof's work is. If the residue of `c` is the
+residue of some `a` in the chart ring then `a − c` lies in `FormalSpectrum.awayCompletionIdeal`,
+so leg continuity at exponent `1`
 (`AlgebraicGeometry.tateInvNodeChartAwayLegX_mem_pow` and its `YX` companion,
-`FormalSchemes.TateInvNodeChartLegContinuous`, at exponent `1`) puts the two legs of `x` in the
-same residue class of `A{1/x}{1/(x + y − 1)}`, because they agree at `a`. But the `x` leg sends `x`
-to `x` and the `YX` leg sends it to `q·x`
-(`AlgebraicGeometry.tateInvGlobalLegYX_overlapX`, `FormalSchemes.TateInvGlobalProperness`), and
-`q` dies in the residue while `x` does not — the second by
-`exists_mem_asIdeal_iff_mem_annulusBranchXPoint`, which is where `I ≠ ⊤` is spent. -/
-theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le :
-    Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+`FormalSchemes.TateInvNodeChartLegContinuous`) turns that into a congruence of the two legs of
+`c`, through the identity `legX c − legYX c = legYX (a − c) − legX (a − c)`; and the legs agree at
+`a` by the **first** component of
+`AlgebraicGeometry.tateInvNodeChartAwaySubring_eq_inf_eqLocus`.
+
+**It is unconditional in `I`**: no `I ≠ ⊤`, no prime of the base, no branch point. Everything the
+witnesses spend `I ≠ ⊤` on is spent below, on the branch point, and none of it here.
+
+**It is a necessary condition and no converse is stated or proved.** Whether agreement of the two
+legs puts a residue back in the image of the chart ring is not decided here and nothing in this
+file bears on it; that question is the *"how much is missed"* one, and it is untouched. -/
+theorem tateInvGlobalLegX_sub_legYX_mem_of_mem_range (c : annulusAlgebra R I q)
+    (hc : Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
         (annulusNodeChartCoord R I q))
-        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
-          (overlapX R I q)) ∉
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q) c) ∈
       Set.range (Ideal.quotientMap (awayCompletionIdeal (annulusIdealOfDefinition R I q)
         (annulusNodeChartCoord R I q)) (tateInvNodeChartAwaySubring R I q hq hI).subtype
-        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := by
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _))) :
+    awayCompletionHom (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
+          (annulusNodeChartCoord R I q))
+        (tateInvGlobalLegX (R := R) (I := I) (q := q) c) -
+      awayCompletionHom (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
+          (annulusNodeChartCoord R I q))
+        (tateInvGlobalLegYX hI c) ∈
+      awayCompletionIdeal (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+          (overlapX R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
+          (annulusNodeChartCoord R I q)) := by
   haveI _hann : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
   haveI _hawX : IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q)
       (overlapX R I q)) :=
@@ -982,13 +1023,12 @@ theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le :
   haveI _hawY : IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q)
       (overlapY R I q)) :=
     FormalSpectrum.isAdicRing_awayCompletionIdeal _ _ (annulusIdealOfDefinition_fg R I q hI)
-  rintro ⟨z, hz⟩
+  obtain ⟨z, hz⟩ := hc
   obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective z
   obtain ⟨a, ha⟩ := a
   rw [Ideal.quotientMap_mk] at hz
-  obtain ⟨v, hv⟩ := exists_mem_asIdeal_iff_mem_annulusBranchXPoint R I q hq hI 𝔭 h𝔭
   set α := awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
-    (overlapX R I q) with hα
+    c with hα
   have hd : a - α ∈
       (awayCompletionIdeal (annulusIdealOfDefinition R I q)
         (annulusNodeChartCoord R I q)) ^ 1 := by
@@ -1016,13 +1056,50 @@ theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le :
           (annulusNodeChartCoord R I q)) := by
     rw [← map_sub]
     exact hdiff
-  rw [hα, tateInvNodeChartTargetEquivX_tateInvNodeChartAwayLegX R I q hq hI (overlapX R I q),
-    tateInvNodeChartTargetEquivX_tateInvNodeChartAwayLegYX R I q hq hI (overlapX R I q),
-    tateInvGlobalLegYX_overlapX R I q hI,
+  rw [hα, tateInvNodeChartTargetEquivX_tateInvNodeChartAwayLegX R I q hq hI c,
+    tateInvNodeChartTargetEquivX_tateInvNodeChartAwayLegYX R I q hq hI c] at hdiff2
+  exact hdiff2
+
+set_option maxHeartbeats 800000 in
+-- the same unfolding, over a proof that rewrites three times inside the twice-completed
+-- localization; `500000` is not enough for this section and `600000` is, both measured on the
+-- whole file, and `800000` is that with headroom
+include hq hI h𝔭 in
+/-- **No positive power of the coordinate `x` has its residue in the image of the chart ring**, at
+any prime `𝔭 ⊇ I` of the base. The `n = 1` case is
+`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le`, which is now proved
+from this.
+
+The criterion above is applied at `c := xⁿ`, and the two legs are told apart there because they are
+told apart at `x`: the four legs are ring maps, so `legYX (xⁿ) = (legYX x)ⁿ = (q·x)ⁿ = qⁿ·xⁿ` by
+`AlgebraicGeometry.tateInvGlobalLegYX_overlapX` (`FormalSchemes.TateInvGlobalProperness`). For
+`n ≥ 1` the factor `qⁿ` dies in the residue at the `x`-branch generic point, and `xⁿ` does not —
+the second because that point's ideal is **prime**, which is the one input the `n = 1` argument did
+not need. `I ≠ ⊤` is spent, once, on `exists_mem_asIdeal_iff_mem_annulusBranchXPoint`. -/
+theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapX_pow_of_le
+    (n : ℕ) (hn : n ≠ 0) :
+    Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
+          (overlapX R I q ^ n)) ∉
+      Set.range (Ideal.quotientMap (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)) (tateInvNodeChartAwaySubring R I q hq hI).subtype
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := by
+  intro hc
+  have hcong := tateInvGlobalLegX_sub_legYX_mem_of_mem_range R I q hq hI
+    (overlapX R I q ^ n) hc
+  obtain ⟨v, hv⟩ := exists_mem_asIdeal_iff_mem_annulusBranchXPoint R I q hq hI 𝔭 h𝔭
+  rw [show tateInvGlobalLegYX hI (overlapX R I q ^ n) =
+      tateInvGlobalLegX (R := R) (I := I) (q := q)
+        ((algebraMap R (annulusAlgebra R I q) q * overlapX R I q) ^ n) by
+    rw [map_pow, map_pow, tateInvGlobalLegYX_overlapX R I q hI],
     show tateInvGlobalLegX (R := R) (I := I) (q := q)
-        (algebraMap R (annulusAlgebra R I q) q * overlapX R I q) =
+        ((algebraMap R (annulusAlgebra R I q) q * overlapX R I q) ^ n) =
       awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
-        (algebraMap R (annulusAlgebra R I q) q * overlapX R I q) from rfl] at hdiff2
+        ((algebraMap R (annulusAlgebra R I q) q * overlapX R I q) ^ n) from rfl,
+    show tateInvGlobalLegX (R := R) (I := I) (q := q) (overlapX R I q ^ n) =
+      awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
+        (overlapX R I q ^ n) from rfl] at hcong
   have hqmem : algebraMap R (annulusAlgebra R I q) q ∈ annulusIdealOfDefinition R I q := by
     rw [← annulus_map_eq]; exact Ideal.mem_map_of_mem _ hq
   have hzero : Ideal.Quotient.mk (awayCompletionIdeal
@@ -1033,14 +1110,37 @@ theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le :
         (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
           (annulusNodeChartCoord R I q))
         (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapX R I q)
-          (algebraMap R (annulusAlgebra R I q) q * overlapX R I q))) ∈ v.asIdeal := by
+          ((algebraMap R (annulusAlgebra R I q) q * overlapX R I q) ^ n))) ∈ v.asIdeal := by
     rw [hv]
     rw [show Ideal.Quotient.mk (annulusIdealOfDefinition R I q)
-        (algebraMap R (annulusAlgebra R I q) q * overlapX R I q) = 0 by
-      rw [map_mul, Ideal.Quotient.eq_zero_iff_mem.mpr hqmem, zero_mul]]
+        ((algebraMap R (annulusAlgebra R I q) q * overlapX R I q) ^ n) = 0 by
+      rw [map_pow, map_mul, Ideal.Quotient.eq_zero_iff_mem.mpr hqmem, zero_mul, zero_pow hn]]
     exact Ideal.zero_mem _
-  rw [← Ideal.Quotient.eq.mpr hdiff2] at hzero
-  exact notMem_annulusBranchXPoint_overlapX R I q hq 𝔭 h𝔭 ((hv _).mp hzero)
+  rw [← Ideal.Quotient.eq.mpr hcong] at hzero
+  have hmem := (hv _).mp hzero
+  rw [map_pow] at hmem
+  exact notMem_annulusBranchXPoint_overlapX R I q hq 𝔭 h𝔭
+    ((annulusBranchXPoint R I q 𝔭 h𝔭 hq).isPrime.mem_of_pow_mem n hmem)
+
+include hq hI h𝔭 in
+/-- **The residue of the coordinate `x` is not in the image of the chart ring**, at any prime
+`𝔭 ⊇ I` of the base. This is the `n = 1` case of
+`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapX_pow_of_le`, and
+was for two rows the long proof that lemma and
+`AlgebraicGeometry.tateInvGlobalLegX_sub_legYX_mem_of_mem_range` were extracted from.
+**The statement is unchanged**; everything after it is packaging as before.
+
+The argument is the two forward legs read at `x`, and it uses the action nowhere. -/
+theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le :
+    Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
+          (overlapX R I q)) ∉
+      Set.range (Ideal.quotientMap (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)) (tateInvNodeChartAwaySubring R I q hq hI).subtype
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := by
+  simpa using notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapX_pow_of_le
+    R I q hq hI 𝔭 h𝔭 1 one_ne_zero
 
 end Witness
 
@@ -1071,7 +1171,8 @@ theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring (hItop : I ≠ ⊤)
 
 include hq hI in
 /-- **The coordinate `x` is an explicit element of `A{1/(x + y − 1)}` outside the chart ring**, for
-`I ≠ ⊤`: if it were inside, its own residue would be in the image of the chart ring. -/
+`I ≠ ⊤`: if it were inside, its own residue would be in the image of the chart ring. It is the case
+`n = 1` of `AlgebraicGeometry.notMem_tateInvNodeChartAwaySubring_overlapX_pow`. -/
 theorem notMem_tateInvNodeChartAwaySubring_overlapX (hItop : I ≠ ⊤) :
     awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
         (overlapX R I q) ∉ tateInvNodeChartAwaySubring R I q hq hI := fun hmem =>
@@ -1107,7 +1208,9 @@ swapped: the *backward* pair of legs in place of the forward pair, the second co
 `AlgebraicGeometry.tateInvNodeChartAwaySubring_eq_inf_eqLocus` in place of the first, and the
 `y`-branch generic point in place of the `x`-branch one. Nothing here is new mathematics and
 nothing here is a stronger statement about the ring than the `x` side is; what the pair of them
-says, and neither says alone, is that the chart ring misses **both** coordinates of the node.
+says, and neither says alone, is that the chart ring misses **both** coordinates of the node. As on
+the `x` side, the section is carried by a criterion on an arbitrary element and the coordinate is
+where it is instantiated.
 
 **It adds no properness statement.** `AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top'`
 already holds for every `I ≠ ⊤` and one missing element is all it ever needed, so a second
@@ -1251,35 +1354,39 @@ theorem exists_mem_asIdeal_iff_mem_annulusBranchYPoint :
   refine ⟨v, fun b => ?_⟩
   rw [← mem_asIdeal_basicOpenChartBase_iff, hv, ← mem_asIdeal_basicOpenChartBase_iff, hu]
 
-set_option maxHeartbeats 4000000 in
--- the same `def`-not-`abbrev` unfolding as above over a proof that also rewrites twice inside the
--- twice-completed localization; `1000000` is not enough here and `2000000` is, both measured, and
--- the figure is the `x`-side mirror's, kept for headroom
-include hq hI h𝔭 in
-/-- **The residue of the coordinate `y` is not in the image of the chart ring**, at any prime
-`𝔭 ⊇ I` of the base — the mirror of
-`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le`, and like it the
-whole content of its half of the argument, everything after it being packaging.
+set_option maxHeartbeats 800000 in
+-- the same unfolding as on the `x` side, for a defeq and not for the mathematics
+include hq hI in
+/-- **The mirror criterion: if the residue of the structural image of `c` is in the image of the
+chart ring, the two *backward* legs of `c` agree there.** The difference lies in
+`FormalSpectrum.awayCompletionIdeal` of `A{1/y}{1/(x + y − 1)}`, in the same shape and for the same
+measured reason as its mirror, and the proof is the letter-swap of
+`AlgebraicGeometry.tateInvGlobalLegX_sub_legYX_mem_of_mem_range`: leg continuity at exponent
+`1` on the backward pair (`AlgebraicGeometry.tateInvNodeChartAwayLegY_mem_pow` and its `XY`
+companion, `FormalSchemes.TateInvNodeChartLegContinuous`), and the **second** component of
+`AlgebraicGeometry.tateInvNodeChartAwaySubring_eq_inf_eqLocus` in place of the first.
 
-The argument is the two **backward** legs read at `y`, and it uses the action nowhere. If the
-residue of `y` were the residue of some `a` in the chart ring, then `a − y` lies in
-`FormalSpectrum.awayCompletionIdeal`, so leg continuity
-(`AlgebraicGeometry.tateInvNodeChartAwayLegY_mem_pow` and its `XY` companion,
-`FormalSchemes.TateInvNodeChartLegContinuous`, at exponent `1`) puts the two legs of `y` in the
-same residue class of `A{1/y}{1/(x + y − 1)}`, because they agree at `a` — this time by the
-**second** component of `AlgebraicGeometry.tateInvNodeChartAwaySubring_eq_inf_eqLocus` rather than
-the first. But the `y` leg sends `y` to `y` and the `XY` leg sends it to `q·y`
-(`AlgebraicGeometry.tateInvGlobalLegXY_overlapY`, `FormalSchemes.TateInvGlobalProperness`), and
-`q` dies in the residue while `y` does not — the second by
-`exists_mem_asIdeal_iff_mem_annulusBranchYPoint`, which is where `I ≠ ⊤` is spent. -/
-theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_of_le :
-    Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+**It is unconditional in `I`** for the same reason as its mirror, and like its mirror it is a
+**necessary** condition with no converse stated or proved here. -/
+theorem tateInvGlobalLegY_sub_legXY_mem_of_mem_range (c : annulusAlgebra R I q)
+    (hc : Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
         (annulusNodeChartCoord R I q))
-        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
-          (overlapY R I q)) ∉
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q) c) ∈
       Set.range (Ideal.quotientMap (awayCompletionIdeal (annulusIdealOfDefinition R I q)
         (annulusNodeChartCoord R I q)) (tateInvNodeChartAwaySubring R I q hq hI).subtype
-        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := by
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _))) :
+    awayCompletionHom (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
+          (annulusNodeChartCoord R I q))
+        (tateInvGlobalLegY (R := R) (I := I) (q := q) c) -
+      awayCompletionHom (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
+          (annulusNodeChartCoord R I q))
+        (tateInvGlobalLegXY hI c) ∈
+      awayCompletionIdeal (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+          (overlapY R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
+          (annulusNodeChartCoord R I q)) := by
   haveI _hann : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
   haveI _hawX : IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q)
       (overlapX R I q)) :=
@@ -1287,13 +1394,12 @@ theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_of_le :
   haveI _hawY : IsAdicRing (awayCompletionIdeal (annulusIdealOfDefinition R I q)
       (overlapY R I q)) :=
     FormalSpectrum.isAdicRing_awayCompletionIdeal _ _ (annulusIdealOfDefinition_fg R I q hI)
-  rintro ⟨z, hz⟩
+  obtain ⟨z, hz⟩ := hc
   obtain ⟨a, rfl⟩ := Ideal.Quotient.mk_surjective z
   obtain ⟨a, ha⟩ := a
   rw [Ideal.quotientMap_mk] at hz
-  obtain ⟨v, hv⟩ := exists_mem_asIdeal_iff_mem_annulusBranchYPoint R I q hq hI 𝔭 h𝔭
   set α := awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
-    (overlapY R I q) with hα
+    c with hα
   have hd : a - α ∈
       (awayCompletionIdeal (annulusIdealOfDefinition R I q)
         (annulusNodeChartCoord R I q)) ^ 1 := by
@@ -1321,13 +1427,50 @@ theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_of_le :
           (annulusNodeChartCoord R I q)) := by
     rw [← map_sub]
     exact hdiff
-  rw [hα, tateInvNodeChartTargetEquivY_tateInvNodeChartAwayLegY R I q hq hI (overlapY R I q),
-    tateInvNodeChartTargetEquivY_tateInvNodeChartAwayLegXY R I q hq hI (overlapY R I q),
-    tateInvGlobalLegXY_overlapY R I q hI,
+  rw [hα, tateInvNodeChartTargetEquivY_tateInvNodeChartAwayLegY R I q hq hI c,
+    tateInvNodeChartTargetEquivY_tateInvNodeChartAwayLegXY R I q hq hI c] at hdiff2
+  exact hdiff2
+
+set_option maxHeartbeats 800000 in
+-- the same unfolding and the same measured pair as on the `x` side: `500000` is not enough,
+-- `600000` is, `800000` is shipped
+include hq hI h𝔭 in
+/-- **No positive power of the coordinate `y` has its residue in the image of the chart ring**, at
+any prime `𝔭 ⊇ I` of the base — the mirror of
+`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapX_pow_of_le`, and
+like it the `n = 1` case is
+`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_of_le`, now proved
+from this.
+
+The mirror criterion is applied at `c := yⁿ`, and `legXY (yⁿ) = (legXY y)ⁿ = (q·y)ⁿ = qⁿ·yⁿ` by
+`AlgebraicGeometry.tateInvGlobalLegXY_overlapY` (`FormalSchemes.TateInvGlobalProperness`). For
+`n ≥ 1` the factor `qⁿ` dies in the residue at the `y`-branch generic point and `yⁿ` does not, that
+point's ideal being prime. `I ≠ ⊤` is spent, once, on
+`exists_mem_asIdeal_iff_mem_annulusBranchYPoint`. -/
+theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_pow_of_le
+    (n : ℕ) (hn : n ≠ 0) :
+    Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
+          (overlapY R I q ^ n)) ∉
+      Set.range (Ideal.quotientMap (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)) (tateInvNodeChartAwaySubring R I q hq hI).subtype
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := by
+  intro hc
+  have hcong := tateInvGlobalLegY_sub_legXY_mem_of_mem_range R I q hq hI
+    (overlapY R I q ^ n) hc
+  obtain ⟨v, hv⟩ := exists_mem_asIdeal_iff_mem_annulusBranchYPoint R I q hq hI 𝔭 h𝔭
+  rw [show tateInvGlobalLegXY hI (overlapY R I q ^ n) =
+      tateInvGlobalLegY (R := R) (I := I) (q := q)
+        ((algebraMap R (annulusAlgebra R I q) q * overlapY R I q) ^ n) by
+    rw [map_pow, map_pow, tateInvGlobalLegXY_overlapY R I q hI],
     show tateInvGlobalLegY (R := R) (I := I) (q := q)
-        (algebraMap R (annulusAlgebra R I q) q * overlapY R I q) =
+        ((algebraMap R (annulusAlgebra R I q) q * overlapY R I q) ^ n) =
       awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
-        (algebraMap R (annulusAlgebra R I q) q * overlapY R I q) from rfl] at hdiff2
+        ((algebraMap R (annulusAlgebra R I q) q * overlapY R I q) ^ n) from rfl,
+    show tateInvGlobalLegY (R := R) (I := I) (q := q) (overlapY R I q ^ n) =
+      awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
+        (overlapY R I q ^ n) from rfl] at hcong
   have hqmem : algebraMap R (annulusAlgebra R I q) q ∈ annulusIdealOfDefinition R I q := by
     rw [← annulus_map_eq]; exact Ideal.mem_map_of_mem _ hq
   have hzero : Ideal.Quotient.mk (awayCompletionIdeal
@@ -1338,14 +1481,36 @@ theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_of_le :
         (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
           (annulusNodeChartCoord R I q))
         (awayCompletionHom (annulusIdealOfDefinition R I q) (overlapY R I q)
-          (algebraMap R (annulusAlgebra R I q) q * overlapY R I q))) ∈ v.asIdeal := by
+          ((algebraMap R (annulusAlgebra R I q) q * overlapY R I q) ^ n))) ∈ v.asIdeal := by
     rw [hv]
     rw [show Ideal.Quotient.mk (annulusIdealOfDefinition R I q)
-        (algebraMap R (annulusAlgebra R I q) q * overlapY R I q) = 0 by
-      rw [map_mul, Ideal.Quotient.eq_zero_iff_mem.mpr hqmem, zero_mul]]
+        ((algebraMap R (annulusAlgebra R I q) q * overlapY R I q) ^ n) = 0 by
+      rw [map_pow, map_mul, Ideal.Quotient.eq_zero_iff_mem.mpr hqmem, zero_mul, zero_pow hn]]
     exact Ideal.zero_mem _
-  rw [← Ideal.Quotient.eq.mpr hdiff2] at hzero
-  exact notMem_annulusBranchYPoint_overlapY R I q hq 𝔭 h𝔭 ((hv _).mp hzero)
+  rw [← Ideal.Quotient.eq.mpr hcong] at hzero
+  have hmem := (hv _).mp hzero
+  rw [map_pow] at hmem
+  exact notMem_annulusBranchYPoint_overlapY R I q hq 𝔭 h𝔭
+    ((annulusBranchYPoint R I q 𝔭 h𝔭 hq).isPrime.mem_of_pow_mem n hmem)
+
+include hq hI h𝔭 in
+/-- **The residue of the coordinate `y` is not in the image of the chart ring**, at any prime
+`𝔭 ⊇ I` of the base — the mirror of
+`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_of_le`, and like it now the
+`n = 1` case of the powers above. **The statement is unchanged** from the one #628 landed; what
+changed is that its proof is no longer a copy of the `x`-side one.
+
+The argument is the two backward legs read at `y`, and it uses the action nowhere. -/
+theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_of_le :
+    Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
+          (overlapY R I q)) ∉
+      Set.range (Ideal.quotientMap (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)) (tateInvNodeChartAwaySubring R I q hq hI).subtype
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := by
+  simpa using notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_pow_of_le
+    R I q hq hI 𝔭 h𝔭 1 one_ne_zero
 
 end WitnessY
 
@@ -1378,12 +1543,88 @@ include hq hI in
 With `AlgebraicGeometry.notMem_tateInvNodeChartAwaySubring_overlapX` this says that **the chart
 ring contains neither coordinate of the node**, which is a statement about the ring and not about
 its properness: properness needed one missing element and has it either way
-(`AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top'`). **Two elements are exhibited and no
-more** — still nothing describes the missed residues as a set. -/
+(`AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top'`). It is the case `n = 1` of
+`AlgebraicGeometry.notMem_tateInvNodeChartAwaySubring_overlapY_pow`, which exhibits every positive
+power; **still nothing describes the missed residues as a set**. -/
 theorem notMem_tateInvNodeChartAwaySubring_overlapY (hItop : I ≠ ⊤) :
     awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
         (overlapY R I q) ∉ tateInvNodeChartAwaySubring R I q hq hI := fun hmem =>
   notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY R I q hq hI hItop
+    ⟨Ideal.Quotient.mk _ ⟨_, hmem⟩, Ideal.quotientMap_mk⟩
+
+/-! ### The family: every positive power of either coordinate is outside the chart ring
+
+The two sections above each exhibit one element, and each does it by instantiating a criterion at
+that element. The criteria — `AlgebraicGeometry.tateInvGlobalLegX_sub_legYX_mem_of_mem_range`
+and its mirror — are conditions on an **arbitrary** `c`, so any `c` failing one is a witness, and
+the cheapest infinite family that does is the powers.
+
+**What this settles and what it does not.** It replaces two elements by a countably infinite
+family, on the same hypotheses and with the action still used nowhere. It does **not** describe the
+missed residues as a set, count them, or say how much of `A{1/(x + y − 1)}` is missed: *infinitely
+many elements are missed* and *how much is missed* are different questions and the second is
+untouched. It adds no properness statement —
+`AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top'` needed one missing element and has had one
+since the `x` side landed.
+-/
+
+include hq hI in
+/-- **No positive power of the coordinate `x` has its residue in the image of the chart ring**, for
+`I ≠ ⊤` and with none of this file's clause-section hypotheses — the family of which
+`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring` is the case `n = 1`. -/
+theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapX_pow (hItop : I ≠ ⊤)
+    (n : ℕ) (hn : n ≠ 0) :
+    Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
+          (overlapX R I q ^ n)) ∉
+      Set.range (Ideal.quotientMap (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)) (tateInvNodeChartAwaySubring R I q hq hI).subtype
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := by
+  obtain ⟨𝔪, h𝔪, h𝔪le⟩ := Ideal.exists_le_maximal I hItop
+  haveI : 𝔪.IsPrime := h𝔪.isPrime
+  exact notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapX_pow_of_le
+    R I q hq hI 𝔪 h𝔪le n hn
+
+include hq hI in
+/-- **No positive power of the coordinate `y` has its residue in the image of the chart ring**, on
+the same hypotheses — the mirror, of which
+`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY` is the case
+`n = 1`. -/
+theorem notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_pow (hItop : I ≠ ⊤)
+    (n : ℕ) (hn : n ≠ 0) :
+    Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q))
+        (awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
+          (overlapY R I q ^ n)) ∉
+      Set.range (Ideal.quotientMap (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)) (tateInvNodeChartAwaySubring R I q hq hI).subtype
+        (le_rfl : tateInvNodeChartAwayIdeal R I q hq hI ≤ _)) := by
+  obtain ⟨𝔪, h𝔪, h𝔪le⟩ := Ideal.exists_le_maximal I hItop
+  haveI : 𝔪.IsPrime := h𝔪.isPrime
+  exact notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_pow_of_le
+    R I q hq hI 𝔪 h𝔪le n hn
+
+include hq hI in
+/-- **Every positive power of the coordinate `x` is an explicit element of `A{1/(x + y − 1)}`
+outside the chart ring**, for `I ≠ ⊤`: if one were inside, its own residue would be in the image.
+
+As on both sides above, the residue form is the primary statement and this is deduced from it. -/
+theorem notMem_tateInvNodeChartAwaySubring_overlapX_pow (hItop : I ≠ ⊤) (n : ℕ) (hn : n ≠ 0) :
+    awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
+        (overlapX R I q ^ n) ∉ tateInvNodeChartAwaySubring R I q hq hI := fun hmem =>
+  notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapX_pow R I q hq hI hItop n hn
+    ⟨Ideal.Quotient.mk _ ⟨_, hmem⟩, Ideal.quotientMap_mk⟩
+
+include hq hI in
+/-- **Every positive power of the coordinate `y` is outside the chart ring too**, for `I ≠ ⊤`.
+
+With the entry above it this says that the chart ring misses **`xⁿ` and `yⁿ` for every `n ≥ 1`**,
+which is a statement about the ring and not about its properness. -/
+theorem notMem_tateInvNodeChartAwaySubring_overlapY_pow (hItop : I ≠ ⊤) (n : ℕ) (hn : n ≠ 0) :
+    awayCompletionHom (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q)
+        (overlapY R I q ^ n) ∉ tateInvNodeChartAwaySubring R I q hq hI := fun hmem =>
+  notMem_range_quotientMap_tateInvNodeChartAwaySubring_overlapY_pow R I q hq hI hItop n hn
     ⟨Ideal.Quotient.mk _ ⟨_, hmem⟩, Ideal.quotientMap_mk⟩
 
 end AlgebraicGeometry
