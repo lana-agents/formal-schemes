@@ -1,3 +1,4 @@
+import FormalSchemes.TateInvNodeChartAmbientNotInjective
 import FormalSchemes.TateInvNodeChartSpaceHalfTrace
 
 set_option linter.style.header false
@@ -33,7 +34,18 @@ witness for the orbit, so the whole clause follows with no further geometry. Tha
 no formal scheme, no action, no chart and no germ — it is the injectivity of one `Spec` map, for
 the ring inclusion `AlgebraicGeometry.tateInvNodeChartAwaySubring` sits in.
 
-**And the exact size of what the criterion leaves.**
+**And that hypothesis is false, so the criterion is vacuous for every `I ≠ ⊤`.**
+`AlgebraicGeometry.not_forall_mem_asIdeal_iff_imp_eq` is the criterion's hypothesis negated with
+nothing else changed, proved throughout the regime the criterion is stated in: the section's
+finite generation of `AlgebraicGeometry.tateInvNodeChartQuotientIdeal`, the section's
+`AlgebraicGeometry.FormalScheme.AdicSectionsLocallyFG` witness, and additionally `I ≠ ⊤`. The two
+branch generic points of `FormalSchemes.TateInvNodeChartAmbientNotInjective` are two distinct
+primes with equal traces, so the criterion has no instantiation at which its hypothesis holds and
+it cannot be the route by which the clause is settled. **It is nonetheless a true theorem and
+stays**: its proof is the content of the crux, and it is what makes the shape of what is left
+legible.
+
+**And the exact size of what the criterion leaves — which is what survives.**
 `AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff_exists_index` states the clause with the
 action eliminated: the orbit condition becomes a bare integer index `k`, and — the part worth
 noticing — the source index `i` **no longer occurs on the right-hand side** at all. Against that
@@ -89,17 +101,27 @@ same reason, that `FormalSchemes.TateInvNodeChartPatchChartAdic` and
   separates primes, the orbit-separation clause holds.**
 * `AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff_exists_index`: **the clause with the
   action eliminated** — an integer index, and no dependence on the source chart.
+* `AlgebraicGeometry.not_forall_mem_asIdeal_iff_imp_eq`: **the criterion's hypothesis is false**
+  for `I ≠ ⊤`, so the criterion is vacuous; and
+  `AlgebraicGeometry.exists_ne_and_forall_mem_asIdeal_iff`, its positive form — two distinct
+  primes with the same trace.
 
 ## What is *not* proved here
 
-**The orbit-separation clause is not decided, in either direction.** The criterion is one-way and
-the statement below it says how far one-way. Nothing here computes the trace of any prime, exhibits
-two primes with equal traces, or shows that the traces separate the primes.
+**The orbit-separation clause is not decided, in either direction.** The criterion is one-way, the
+statement after it says how far one-way, and the refutation of its hypothesis bears on the
+criterion and not on the clause. Nothing here computes the trace of any prime or shows that the
+traces separate the primes.
 
-**The criterion's hypothesis is not known to hold and is not known to fail.** There is no
-instantiation on this tree at which its truth value is known, so no example is given below and none
-should be read into the criterion's existence. In particular a refutation of that hypothesis would
-**not** refute the clause, for the reason the second statement makes precise.
+**Two primes with equal traces are exhibited, and they do not refute the clause.**
+`AlgebraicGeometry.not_forall_mem_asIdeal_iff_imp_eq` and its positive form
+`AlgebraicGeometry.exists_ne_and_forall_mem_asIdeal_iff` produce, for `I ≠ ⊤`, two distinct primes
+with the same trace — so the criterion's hypothesis fails and the criterion is vacuous throughout
+the regime it is stated in. The pair produced lies in **one** orbit, which is what the clause asks
+of it, so this is an instance of the clause rather than a counterexample to it;
+`AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff_exists_index` is what makes the
+difference precise, the clause asking for *some* index `k` where the criterion supplies the target
+index. Nothing here decides the clause at the pair it exhibits or anywhere else.
 
 **The other two conjuncts of the space half are untouched** — surjectivity and openness of
 `(AlgebraicGeometry.nodeChartAdicHom …).base` — and so is **the whole sheaf half**, including
@@ -129,17 +151,41 @@ proper in the ambient ring.
 
 ## Placement
 
-Over `FormalSchemes.TateInvNodeChartSpaceHalfTrace`: forward closure **268** project modules
+Over `FormalSchemes.TateInvNodeChartSpaceHalfTrace` and
+`FormalSchemes.TateInvNodeChartAmbientNotInjective`: forward closure **269** project modules
 besides itself, reverse closure **0**, counted by walking every `^import FormalSchemes.` line over
 the 559 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator
 at the repository root is outside the walk).
 
-**One import suffices and that was measured rather than assumed.** The three inputs are
-`FormalSchemes.TateInvNodeChartSpaceHalfTrace` (for the `↔` the two consequences rewrite by),
-`FormalSchemes.TateActionInv` (for the cover-shift law) and `FormalSchemes.ActionQuotientCarrier`
-(for the points of an action quotient). The forward closure of
-`FormalSchemes.TateInvNodeChartSpaceHalfTrace` is **267**, and the walk puts the other two inside
-it, so this file pays for one import and gets all three.
+**The first import suffices for the crux and that was measured rather than assumed.** Its three
+inputs are `FormalSchemes.TateInvNodeChartSpaceHalfTrace` (for the `↔` the two consequences
+rewrite by), `FormalSchemes.TateActionInv` (for the cover-shift law) and
+`FormalSchemes.ActionQuotientCarrier` (for the points of an action quotient). The forward closure
+of `FormalSchemes.TateInvNodeChartSpaceHalfTrace` is **267**, and the walk puts the other two
+inside it, so the crux pays for one import and gets all three.
+
+**The second import is what the refutation costs, and it costs exactly one module.**
+`FormalSchemes.TateInvNodeChartAmbientNotInjective` has forward closure **203**, and the walk puts
+every one of those inside the 268 this file had before the import, so the whole price is that
+module itself and the figure above is that 268 plus one.
+`FormalSchemes.TateInvNodeChartAmbientNotInjective` now has reverse closure **1** where it had
+none. Nothing else on the tree moves in either direction: no module is added, and nothing imports
+this file. Re-running `scripts/closure_audit.py --tree` with the import added and no other edit
+reports exactly one MISMATCH, the figure above — measured, not inferred, and it settles for the
+import case a question the tree's earlier measurement of this cost left open, that one having
+covered only the addition of a new module.
+
+**The refutation belongs beside the criterion it refutes rather than in a new module importing
+both**, and the comparison was made rather than assumed. A new module costs a 560th entry in the
+walk, and re-running the audit with one such module present reports **40** MISMATCHes over 25
+sentences in 22 files — 15 of them project-module totals and 25 of them figures counting how many
+modules sit above a given one — against the single figure the import moves. A new module would
+also leave the criterion's own docstring saying that its hypothesis is not known to fail, with the
+refutation in a file the reader has no reason to open; that sentence is the defect this row
+repairs, so a placement that leaves a pointer where the falsehood was is not a repair. The
+argument that kept the crux out of `FormalSchemes.TateInvNodeChartPatchChartGerm` does not run in
+reverse here: what this file says about itself is rewritten above rather than falsified, which is
+what an addition is allowed to do to the prose of the file it is added to.
 
 **The crux does not belong in `FormalSchemes.TateInvNodeChartPatchChartGerm` beside
 `AlgebraicGeometry.nodeChartPatchChartLift`**, which is where a reader would first look for it.
@@ -333,10 +379,13 @@ produces, so the two lie in one orbit
 (`AlgebraicGeometry.LocallyRingedSpace.base_eq_iff_of_isActionQuotient` at
 `AlgebraicGeometry.isActionQuotient_restrictπ_tateInvNodeChartQuotientOpens`).
 
-**This is a sufficient condition and not a characterisation**, and the hypothesis is not known to
-hold or to fail at any instantiation on this tree. Refuting it would leave the clause open;
+**This is a sufficient condition and not a characterisation**, and its hypothesis is **false** for
+`I ≠ ⊤` — `AlgebraicGeometry.not_forall_mem_asIdeal_iff_imp_eq` is that hypothesis negated, with
+nothing else changed — so this criterion is vacuous throughout the regime it is stated in. That
+leaves the clause open rather than refuting it;
 `AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff_exists_index` is what says how much room
-is left. -/
+is left. The statement is kept because it is true, because its proof is the crux above, and
+because the refutation is only legible against it. -/
 theorem injective_base_nodeChartQuotientHom_of_forall_mem_asIdeal_iff
     (htr : ∀ w w' : FormalSpectrum (awayCompletionIdeal (annulusIdealOfDefinition R I q)
         (annulusNodeChartCoord R I q)),
@@ -415,6 +464,147 @@ theorem injective_base_nodeChartQuotientHom_iff_exists_index :
     rw [base_tateInvNodeChartRestrictedAction_nodeChartPatchChartLift R I q hq hI
       (Multiplicative.ofAdd (k - i.down)) i w, hidx]
     exact hk
+
+/-! ### The hypothesis of the criterion is false -/
+
+include hfgI hX in
+set_option backward.isDefEq.respectTransparency false in
+/-- **The trace does not separate the primes.** The hypothesis of
+`AlgebraicGeometry.injective_base_nodeChartQuotientHom_of_forall_mem_asIdeal_iff`, negated and
+with nothing else changed, for every `I ≠ ⊤`. So the criterion above, true as it is, has no
+instantiation inside the section it is stated in at which its hypothesis holds, and it cannot be
+the route by which the orbit-separation clause is settled.
+
+The two halves were both on the tree and neither is new here.
+`AlgebraicGeometry.exists_ne_and_base_actionQuotientπ_ι_eq`
+(`FormalSchemes.TateInvNodeChartAmbientNotInjective`) gives two **distinct** points of
+`D(x + y − 1)` with **one** image in `T_inv/⟨σ⟩` — the generic points of the two branches of the
+special fibre, which the `σ`-shift identifies exactly as the Néron 1-gon glues `0` to `∞`. They
+lie in the range of `FormalSpectrum.basicOpenChart`
+(`FormalSpectrum.range_basicOpenChart_base`), so they are two distinct primes `w ≠ w'` of the
+away completion; and `AlgebraicGeometry.forall_mem_asIdeal_iff_of_base_restrictπ_eq`
+(`FormalSchemes.TateInvNodeChartPatchChartTrace`) — *same orbit implies same trace*, the free
+direction — says the two have the **same** trace.
+
+**This does not refute the orbit-separation clause and must not be read as doing so.** The pair it
+produces lies in **one** orbit, which is what the clause asks of it;
+`AlgebraicGeometry.injective_base_nodeChartQuotientHom_iff_exists_index` is the statement that
+says why the criterion is nevertheless not the clause, and the pair here is precisely a pair for
+which the index `k` the clause asks for is not the target index.
+
+Three mechanical points, each of which is a defeq the tactic layer will not close for you.
+`AlgebraicGeometry.LocallyRingedSpace.restrictπ_base_apply` has to be used through `refine` and
+not `rw`, because after `Subtype.ext` the goal's left-hand side is the coercion only
+definitionally. `AlgebraicGeometry.base_restrictOpenι_nodeChartPatchChartLift` is stated at
+`AlgebraicGeometry.FormalScheme.restrictOpenι` while the goal carries
+`AlgebraicGeometry.LocallyRingedSpace.ofRestrict`, so the two equations are stated in the first
+spelling and fed in through `show`. And the last step is `simp only` then `exact` rather than
+a single closing step with `using`, because the residual difference is a coercion normal form
+that `exact` closes and that closing step does not. The `set_option` is the one the crux above
+carries, for the same
+`inferInstance` failure, and it was tested here rather than copied. -/
+theorem not_forall_mem_asIdeal_iff_imp_eq (hItop : I ≠ ⊤) :
+    ¬ (∀ w w' : FormalSpectrum (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)),
+      (∀ a : tateInvNodeChartAwaySubring R I q hq hI,
+        (Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+            (annulusNodeChartCoord R I q))
+            (a : awayCompletion (annulusIdealOfDefinition R I q)
+              (annulusNodeChartCoord R I q)) ∈ w.asIdeal ↔
+          Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+            (annulusNodeChartCoord R I q))
+            (a : awayCompletion (annulusIdealOfDefinition R I q)
+              (annulusNodeChartCoord R I q)) ∈ w'.asIdeal)) → w = w') := by
+  intro htr
+  haveI _hann : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
+  haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart (annulusIdealOfDefinition R I q)
+      (annulusNodeChartCoord R I q)) :=
+    isOpenImmersion_basicOpenChart _ _ (annulusIdealOfDefinition_fg R I q hI)
+  haveI := (tateChainInvFormalGlueData R I q hq hI).ι_isOpenImmersion
+    (⟨(0 : ℤ)⟩ : (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.J)
+  haveI : LocallyRingedSpace.IsOpenImmersion
+      (basicOpenChart (annulusIdealOfDefinition R I q) (annulusNodeChartCoord R I q) ≫
+        (tateChainInvFormalGlueData R I q hq hI).ι
+          (⟨(0 : ℤ)⟩ : (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.J)) :=
+    inferInstance
+  obtain ⟨a, b, hab, ha, hb, heq⟩ :=
+    exists_ne_and_base_actionQuotientπ_ι_eq R I q hq hI hItop
+      (isActionQuotient_actionQuotientπ (tateInvPeriodAction R I q hq hI))
+  have hrange : Set.range ⇑(ConcreteCategory.hom
+      (basicOpenChart (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)).base) = tateInvNodeChartLocus R I q :=
+    range_basicOpenChart_base _ _ (annulusIdealOfDefinition_fg R I q hI)
+  obtain ⟨w, hw⟩ : a ∈ Set.range ⇑(ConcreteCategory.hom
+      (basicOpenChart (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)).base) := by rw [hrange]; exact ha
+  obtain ⟨w', hw'⟩ : b ∈ Set.range ⇑(ConcreteCategory.hom
+      (basicOpenChart (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)).base) := by rw [hrange]; exact hb
+  have hne : w ≠ w' := by
+    rintro rfl; exact hab (hw.symm.trans hw')
+  have hstep : (LocallyRingedSpace.restrictπ
+        (actionQuotientπ (tateInvPeriodAction R I q hq hI))
+        (tateInvNodeChartQuotientOpens R I q hq hI)).base
+        ((nodeChartPatchChartLift R I q hq hI ⟨0⟩).base w)
+      = (LocallyRingedSpace.restrictπ
+        (actionQuotientπ (tateInvPeriodAction R I q hq hI))
+        (tateInvNodeChartQuotientOpens R I q hq hI)).base
+        ((nodeChartPatchChartLift R I q hq hI ⟨0⟩).base w') := by
+    refine Subtype.ext ?_
+    refine (LocallyRingedSpace.restrictπ_base_apply _ _ _).trans
+      (Eq.trans ?_ (LocallyRingedSpace.restrictπ_base_apply _ _ _).symm)
+    have e1 : (ConcreteCategory.hom ((tateChainInv R I q hq hI).restrictOpenι
+        (tateChainInv_locallyFG R I q hq hI) (nodeChartSaturationOpens R I q hq hI)).base)
+        ((ConcreteCategory.hom (nodeChartPatchChartLift R I q hq hI ⟨0⟩).base) w)
+      = (ConcreteCategory.hom (basicOpenChart (annulusIdealOfDefinition R I q)
+          (annulusNodeChartCoord R I q) ≫
+          (tateChainInvFormalGlueData R I q hq hI).ι ⟨0⟩).base) w :=
+      base_restrictOpenι_nodeChartPatchChartLift R I q hq hI ⟨0⟩ w
+    have e2 : (ConcreteCategory.hom ((tateChainInv R I q hq hI).restrictOpenι
+        (tateChainInv_locallyFG R I q hq hI) (nodeChartSaturationOpens R I q hq hI)).base)
+        ((ConcreteCategory.hom (nodeChartPatchChartLift R I q hq hI ⟨0⟩).base) w')
+      = (ConcreteCategory.hom (basicOpenChart (annulusIdealOfDefinition R I q)
+          (annulusNodeChartCoord R I q) ≫
+          (tateChainInvFormalGlueData R I q hq hI).ι ⟨0⟩).base) w' :=
+      base_restrictOpenι_nodeChartPatchChartLift R I q hq hI ⟨0⟩ w'
+    rw [show (ConcreteCategory.hom ((tateChainInv R I q hq hI).toLocallyRingedSpace.ofRestrict
+        ((Opens.map (actionQuotientπ (tateInvPeriodAction R I q hq hI)).base).obj
+          (tateInvNodeChartQuotientOpens R I q hq hI)).isOpenEmbedding).base)
+        ((ConcreteCategory.hom (nodeChartPatchChartLift R I q hq hI ⟨0⟩).base) w) = _ from e1,
+      show (ConcreteCategory.hom ((tateChainInv R I q hq hI).toLocallyRingedSpace.ofRestrict
+        ((Opens.map (actionQuotientπ (tateInvPeriodAction R I q hq hI)).base).obj
+          (tateInvNodeChartQuotientOpens R I q hq hI)).isOpenEmbedding).base)
+        ((ConcreteCategory.hom (nodeChartPatchChartLift R I q hq hI ⟨0⟩).base) w') = _ from e2]
+    simp only [LocallyRingedSpace.comp_base, TopCat.hom_comp, ContinuousMap.comp_apply,
+      hw, hw']
+    exact heq
+  exact hne (htr w w' (forall_mem_asIdeal_iff_of_base_restrictπ_eq R I q hq hI hfgI hX
+    ⟨0⟩ ⟨0⟩ w w' hstep))
+
+include hfgI hX in
+/-- **Two distinct primes with the same trace exist**, for every `I ≠ ⊤`: the positive form of
+`AlgebraicGeometry.not_forall_mem_asIdeal_iff_imp_eq`, which is the form a reader wants, since the
+negation of a `∀ ∀ →` does not display what it produces.
+
+This is the first pair of primes with equal traces exhibited anywhere on this tree. It is **not** a
+counterexample to anything: the two lie in one orbit, so they satisfy the orbit-separation clause,
+and what they refute is only the identification of that clause's `∃ k` with the target index. -/
+theorem exists_ne_and_forall_mem_asIdeal_iff (hItop : I ≠ ⊤) :
+    ∃ w w' : FormalSpectrum (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+        (annulusNodeChartCoord R I q)),
+      (∀ a : tateInvNodeChartAwaySubring R I q hq hI,
+        (Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+            (annulusNodeChartCoord R I q))
+            (a : awayCompletion (annulusIdealOfDefinition R I q)
+              (annulusNodeChartCoord R I q)) ∈ w.asIdeal ↔
+          Ideal.Quotient.mk (awayCompletionIdeal (annulusIdealOfDefinition R I q)
+            (annulusNodeChartCoord R I q))
+            (a : awayCompletion (annulusIdealOfDefinition R I q)
+              (annulusNodeChartCoord R I q)) ∈ w'.asIdeal)) ∧ w ≠ w' := by
+  by_contra h
+  refine not_forall_mem_asIdeal_iff_imp_eq R I q hq hI hfgI hX hItop fun w w' ht => ?_
+  by_contra hne
+  exact h ⟨w, w', ht, hne⟩
 
 end Clause
 

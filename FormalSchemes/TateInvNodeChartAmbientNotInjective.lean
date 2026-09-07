@@ -63,6 +63,17 @@ not evidence against `hnode`: the expected chart has source `Spf` of the **invar
 precisely the node of the 1-gon, which is what an affine nodal curve looks like from its
 normalization. So this closes a route and confirms the picture that goals 1 and 2 were built on.
 
+**The two branch points are now used a second time, one module downstream.**
+`FormalSchemes.TateInvNodeChartOrbitSeparation` pulls them back through
+`FormalSpectrum.basicOpenChart` to two distinct primes of the away completion with the same
+trace on `AlgebraicGeometry.tateInvNodeChartAwaySubring`, which refutes the hypothesis of the
+sufficient criterion that file states for the orbit-separation clause
+(`AlgebraicGeometry.not_forall_mem_asIdeal_iff_imp_eq`). That is a use of what is proved here and
+changes nothing about it: the statements below are about `π` and about
+`AlgebraicGeometry.tateInvNodeChartAmbientHom`, and the second use is about primes of a different
+ring. It does not decide the orbit-separation clause either — the pair it produces lies in one
+orbit, which is what that clause asks of it.
+
 Nothing here weakens `LocallyRingedSpace.IsProperlyDiscontinuousOn`,
 `LocallyRingedSpace.IsFreeProperlyDiscontinuous` or
 `LocallyRingedSpace.freeActionQuotientFormalScheme`.

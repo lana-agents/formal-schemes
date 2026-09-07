@@ -70,7 +70,9 @@ supplies one — the only fact about the action used here is the invariance that
 `AlgebraicGeometry.nodeChartQuotientHom` exist at all. **Nothing below may be described as progress
 on it.** One is supplied downstream, in
 `FormalSchemes.TateInvNodeChartOrbitSeparation`: the shift moves the chart index and fixes the
-prime, which gives a sufficient criterion for the clause but does not decide it.
+prime, which gives a sufficient criterion for the clause but does not decide it. That file then
+refutes the criterion's own hypothesis for `I ≠ ⊤`, so the criterion is vacuous throughout the
+regime it is stated in and the clause is left exactly where this file leaves it.
 
 **`hnode` is undecided in both directions and nothing here moves it.** The chain back to it runs
 through `AlgebraicGeometry.exists_formalScheme_of_iso_restrict_tateInvNodeChartQuotientOpens`,
