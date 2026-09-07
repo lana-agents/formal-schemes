@@ -425,14 +425,14 @@ all in this closure already, and so is everything the classification adds — `A
   product of a set of representatives of the prime associate classes, and
   `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated`. Its
   `[UniqueFactorizationMonoid R]` is **needed** for the **forward** direction, by
-  `FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes` in
-  `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which refutes the `↔` with that
-  instance deleted; the backward direction with it deleted is refuted nowhere. The three values
-  below are its empty, singleton and infinite cases. It is the only hypothesis under which anything
-  **in this file** decides the condition; semilocal, Prüfer and valuation rings are untouched, and
-  the
-  Dedekind case is a separate theorem in a separate module, because it is a statement about
-  ideals — `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`
+  `FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes` in
+  `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which refutes that direction with the
+  instance deleted; `FormalSpectrum.not_forall_hasBoundedDenominators_iff_finite_primes` beside it
+  refutes the `↔` itself, and the backward direction with the instance deleted is refuted nowhere.
+  The three values below are its empty, singleton and infinite cases. It is the only hypothesis
+  under which anything **in this file** decides the condition; semilocal, Prüfer and valuation
+  rings are untouched, and the Dedekind case is a separate theorem in a separate module, because it
+  is a statement about ideals — `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`
   (`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`).
 * `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`,
   `FormalSpectrum.hasBoundedDenominators_iff_exists_denominator`,
