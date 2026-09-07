@@ -58,7 +58,9 @@ of them at once, and both fail on their hypotheses rather than on their conclusi
   countable family of nonzero elements, primes or not, is divisible into a single element.
 * `FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` and the classification
   `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` both assume
-  `[UniqueFactorizationMonoid R]`, which is not available here and is not proved below.
+  `[UniqueFactorizationMonoid R]`, and `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`
+  says the ultrapower does not satisfy it — so both are inapplicable by a theorem and not merely by
+  an instance nobody has supplied.
 
 ## What this buys the stalk half
 
@@ -69,6 +71,23 @@ the predicate**. It is of a kind the tree did not have: at a field, at a discret
 at the closed point of a local ring the predicate holds because one localization already does all of
 the work, and here it holds while **no** localization at a single element is the fraction field
 (`FormalSpectrum.isStalkLimit_and_not_exists_surjective_intUltrapower`).
+
+## What the ring is not, and why that is cheap
+
+Three properties of the ultrapower follow from the two halves with nothing added:
+
+* **uncountable** — were `Frac R` countable then
+  `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` would *apply* and produce the very
+  `m` the second half refutes, so the collapse theorem is used here as a tool rather than as a
+  target;
+* **not a unique factorisation domain** — at a unique factorisation domain the condition forces
+  finitely many primes up to associates and hence a single clearing `m`
+  (`FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators`), and again there is none;
+* **not Noetherian** — the single `m` clearing `c, c², c³, …` for `c` the germ of the constant `2`
+  lies in `⋂ᵢ (c)ⁱ`, which Krull intersection makes `⊥` in a Noetherian domain.
+
+Each is a contradiction from a classification already on the tree. **None of them develops any
+factorisation theory of the ring, and none computes a cardinal**; see *What is not proved here*.
 
 ## Main results
 
@@ -85,10 +104,23 @@ the work, and here it holds while **no** localization at a single element is the
 * `FormalSpectrum.exists_forall_not_dvd_pow_intUltrapower`,
   `FormalSpectrum.not_exists_surjective_awayToFractionRing_intUltrapower`: **and no single `R[1/m]`
   is its fraction field.**
+* `FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators`: at a **unique factorisation
+  domain** the collapse holds with no countability at all, the finitely many primes having a
+  product that clears everything.
+* `FormalSpectrum.not_exists_denominator_intUltrapower`,
+  `FormalSpectrum.not_exists_forall_dvd_pow_intUltrapower`,
+  `FormalSpectrum.not_exists_isField_away_intUltrapower`: **the other three spellings of the
+  collapse fail at the ultrapower too**, each refuted on the right-hand side its own `↔` states.
 * `FormalSpectrum.hasBoundedDenominators_and_not_exists_surjective_intUltrapower`,
+  `FormalSpectrum.hasBoundedDenominators_and_no_collapse_intUltrapower`,
   `FormalSpectrum.not_forall_hasBoundedDenominators_imp_exists_surjective`: **the countability
-  hypothesis of the collapse is needed**, stated at the ultrapower and as the refutation of the
-  quantified implication.
+  hypothesis of the collapse is needed**, in each of its four spellings, stated at the ultrapower
+  and as the refutation of the quantified implication.
+* `FormalSpectrum.not_countable_intUltrapower`,
+  `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower`,
+  `FormalSpectrum.not_isNoetherianRing_intUltrapower`: **the ultrapower is uncountable, is not a
+  unique factorisation domain and is not Noetherian** — each from the two halves above, with no
+  factorisation theory, no cardinal arithmetic and no model theory.
 * `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_intUltrapower`,
   `FormalSpectrum.isStalkLimit_and_not_exists_surjective_intUltrapower`: **the geometric value**,
   and that no single localization explains it.
@@ -107,14 +139,19 @@ at every domain and is untouched.
 repairs EGA I 10.8's stalk half.** One further positive value is added, at one point of one formal
 spectrum, and which hypothesis makes the stalk half true is no better determined than before.
 
-**Nothing about the ring beyond `IsDomain` is proved and nothing else may be read in.** That
-`FormalSpectrum.IntUltrapower φ` is uncountable, is not a unique factorisation domain, is not
-Noetherian, and that the germs of `2, 3, 5, …` are prime in it are all true and **none of them is
-proved below**; none is needed. In particular the paragraph above about the refuting criteria argues
-from their **hypotheses** — one asks for a family no element is divisible by, which
-`FormalSpectrum.exists_forall_dvd_intUltrapower` refutes outright, and the other asks for unique
-factorisation — and not from any factorisation theory of the ultrapower, which is not developed
-here.
+**The ring's three negative properties are proved; its factorisation theory is not.** That
+`FormalSpectrum.IntUltrapower φ` is uncountable, is not a unique factorisation domain and is not
+Noetherian are the section *What the ring is not*, and each is read off the two halves above rather
+than developed. That the germs of `2, 3, 5, …` are prime in it is also true and is **not proved
+below**; nothing here needs it. No irreducible element is exhibited, no prime of the ring is named,
+no prime is counted, and no cardinal is computed — `FormalSpectrum.not_countable_intUltrapower` is
+a negation of `Countable` and supplies no lower bound.
+
+In particular the paragraph above about the refuting criteria still argues from their
+**hypotheses** and not from any factorisation theory: one asks for a family no element is divisible
+by, which `FormalSpectrum.exists_forall_dvd_intUltrapower` refutes outright, and the other asks for
+unique factorisation, which `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower` now
+refutes as a theorem rather than leaving unavailable.
 
 **The ultrafilter hypothesis is not analysed.** `Ultrafilter.eventually_or` is what makes the
 ring a domain and `(φ : Filter ℕ) ≤ Filter.atTop` is what makes the diagonal product work; that the
@@ -123,7 +160,9 @@ second is equivalent to `φ` being non-principal is not proved, and no ultrafilt
 
 **No cardinal arithmetic, no saturation and no transfer principle.** The word *ultrapower* names the
 construction and nothing below appeals to any model-theoretic property of it. In particular the
-`ℵ₁`-saturation that would give the first half at once is neither used nor stated.
+`ℵ₁`-saturation that would give the first half at once is neither used nor stated, and
+`FormalSpectrum.not_countable_intUltrapower` is proved from the collapse theorem rather than by
+counting anything.
 
 ## Implementation notes
 
@@ -238,6 +277,24 @@ theorem hasBoundedDenominators_of_forall_exists_dvd
   (hasBoundedDenominators_iff_forall_exists_dvd_pow R).mpr fun d hd => by
     obtain ⟨m, hm, hall⟩ := h d hd
     exact ⟨m, hm, fun n => ⟨1, by simpa using hall n⟩⟩
+
+/-- **At a unique factorisation domain the collapse holds with no countability at all.** The
+denominator condition produces a single `m ≠ 0` whose powers clear every nonzero element of `R`.
+
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` carries `[UniqueFactorizationMonoid R]`
+and **no** `[Countable (FractionRing R)]`, so the condition already forces finitely many primes up
+to associates there; their product is the `m`
+(`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`).
+
+This is what `FormalSpectrum.hasBoundedDenominators_iff_forall_dvd_pow` says under
+`[Countable (FractionRing R)]` at an arbitrary domain, and the two hypotheses are incomparable:
+neither unique factorisation nor a countable fraction field implies the other. Read
+contrapositively it is the tool of
+`FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower` below. -/
+theorem exists_forall_dvd_pow_of_hasBoundedDenominators [UniqueFactorizationMonoid R]
+    (h : HasBoundedDenominators R) :
+    ∃ m : R, m ≠ 0 ∧ ∀ s : R, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k :=
+  exists_forall_dvd_pow_of_finite_primes R ((hasBoundedDenominators_iff_finite_primes R).mp h)
 
 end Domain
 
@@ -393,6 +450,51 @@ theorem not_exists_surjective_awayToFractionRing_intUltrapower :
     (surjective_awayToFractionRing_iff_forall_dvd_pow (IntUltrapower φ) hm).mp hs s hs0
   exact hsm k hk
 
+/-- **No single `m` clears every element of the fraction field**, which is the same statement with
+the localization removed.
+
+`FormalSpectrum.mem_range_awayToFractionRing_iff` at each element — a per-`m` bridge stated at an
+arbitrary domain with no countability — against
+`FormalSpectrum.not_exists_surjective_awayToFractionRing_intUltrapower`. The right-hand side here
+is, character for character, the one
+`FormalSpectrum.hasBoundedDenominators_iff_exists_denominator` puts on the other side of its `↔`
+under `[Countable (FractionRing R)]`. -/
+theorem not_exists_denominator_intUltrapower :
+    ¬ ∃ m : IntUltrapower φ, m ≠ 0 ∧ ∀ y : FractionRing (IntUltrapower φ), ∃ k : ℕ,
+        algebraMap (IntUltrapower φ) (FractionRing (IntUltrapower φ)) (m ^ k) * y ∈
+          Set.range (algebraMap (IntUltrapower φ) (FractionRing (IntUltrapower φ))) := by
+  rintro ⟨m, hm, h⟩
+  exact not_exists_surjective_awayToFractionRing_intUltrapower φ
+    ⟨m, hm, fun y => (mem_range_awayToFractionRing_iff (IntUltrapower φ) m hm y).mpr (h y)⟩
+
+/-- **No single `m` has every nonzero element dividing a power of it**: the same statement again
+with no fraction field and no localization left in it, which is
+`FormalSpectrum.hasBoundedDenominators_iff_forall_dvd_pow`'s right-hand side.
+
+Immediate from `FormalSpectrum.exists_forall_not_dvd_pow_intUltrapower`, which is exactly the
+negation of the inner quantifier at each `m`. Beside
+`FormalSpectrum.exists_forall_dvd_intUltrapower` it is the whole content of this file in two
+lines: **every countable family of nonzero elements divides one element, and the family of all of
+them does not.** -/
+theorem not_exists_forall_dvd_pow_intUltrapower :
+    ¬ ∃ m : IntUltrapower φ, m ≠ 0 ∧ ∀ s : IntUltrapower φ, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k := by
+  rintro ⟨m, hm, h⟩
+  obtain ⟨s, hs0, hsm⟩ := exists_forall_not_dvd_pow_intUltrapower φ m hm
+  obtain ⟨k, hk⟩ := h s hs0
+  exact hsm k hk
+
+/-- **No localization of the ultrapower at a single element is a field.**
+
+`FormalSpectrum.surjective_awayToFractionRing_iff_isField`, the per-`m` bridge that holds at an
+arbitrary domain, against
+`FormalSpectrum.not_exists_surjective_awayToFractionRing_intUltrapower`. This is the right-hand
+side of `FormalSpectrum.hasBoundedDenominators_iff_exists_isField`. -/
+theorem not_exists_isField_away_intUltrapower :
+    ¬ ∃ m : IntUltrapower φ, m ≠ 0 ∧ IsField (Localization.Away m) := by
+  rintro ⟨m, hm, hf⟩
+  exact not_exists_surjective_awayToFractionRing_intUltrapower φ
+    ⟨m, hm, (surjective_awayToFractionRing_iff_isField (IntUltrapower φ) hm).mpr hf⟩
+
 /-! ### The countability hypothesis of the collapse is needed -/
 
 /-- **The denominator condition does not imply that some `R[1/m]` is already `Frac R`.** Both halves
@@ -414,6 +516,34 @@ theorem hasBoundedDenominators_and_not_exists_surjective_intUltrapower
   ⟨hasBoundedDenominators_intUltrapower φ hφ,
     not_exists_surjective_awayToFractionRing_intUltrapower φ⟩
 
+/-- **The countability hypothesis is needed in every spelling of the collapse.** One ring satisfies
+the denominator condition and falsifies all four right-hand sides at once.
+
+The four are `FormalSpectrum.hasBoundedDenominators_iff_exists_surjective`,
+`FormalSpectrum.hasBoundedDenominators_iff_exists_denominator`,
+`FormalSpectrum.hasBoundedDenominators_iff_forall_dvd_pow` and
+`FormalSpectrum.hasBoundedDenominators_iff_exists_isField`, and each conjunct below is that
+theorem's own right-hand side negated, not a paraphrase of it.
+
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` is **not** on the list and is not
+touched: it assumes `[UniqueFactorizationMonoid R]` rather than `[Countable (FractionRing R)]`,
+and `FormalSpectrum.not_uniqueFactorizationMonoid_intUltrapower` below says the ultrapower has
+nothing to tell it. -/
+theorem hasBoundedDenominators_and_no_collapse_intUltrapower (hφ : (φ : Filter ℕ) ≤ atTop) :
+    HasBoundedDenominators (IntUltrapower φ) ∧
+      (¬ ∃ (m : IntUltrapower φ) (hm : m ≠ 0),
+          Function.Surjective (awayToFractionRing (IntUltrapower φ) m hm)) ∧
+      (¬ ∃ m : IntUltrapower φ, m ≠ 0 ∧ ∀ y : FractionRing (IntUltrapower φ), ∃ k : ℕ,
+          algebraMap (IntUltrapower φ) (FractionRing (IntUltrapower φ)) (m ^ k) * y ∈
+            Set.range (algebraMap (IntUltrapower φ) (FractionRing (IntUltrapower φ)))) ∧
+      (¬ ∃ m : IntUltrapower φ, m ≠ 0 ∧ ∀ s : IntUltrapower φ, s ≠ 0 → ∃ k : ℕ, s ∣ m ^ k) ∧
+      (¬ ∃ m : IntUltrapower φ, m ≠ 0 ∧ IsField (Localization.Away m)) :=
+  ⟨hasBoundedDenominators_intUltrapower φ hφ,
+    not_exists_surjective_awayToFractionRing_intUltrapower φ,
+    not_exists_denominator_intUltrapower φ,
+    not_exists_forall_dvd_pow_intUltrapower φ,
+    not_exists_isField_away_intUltrapower φ⟩
+
 /-- **The quantified form: the implication is false at an arbitrary domain.**
 
 `FormalSpectrum.hasBoundedDenominators_and_not_exists_surjective_intUltrapower` at
@@ -428,6 +558,105 @@ theorem not_forall_hasBoundedDenominators_imp_exists_surjective :
     hasBoundedDenominators_and_not_exists_surjective_intUltrapower (hyperfilter ℕ)
       Nat.hyperfilter_le_atTop
   exact hns (h (IntUltrapower (hyperfilter ℕ)) hbd)
+
+/-! ### What the ring is not
+
+Three properties the ultrapower does not have, each read off the two halves above and none of them
+needing any factorisation theory, cardinal arithmetic or model theory. They are here because the
+first version of this file asserted all three in prose as true-but-unproved, and an assertion no
+declaration states is the thing this tree tries hardest not to leave lying about. -/
+
+/-- **The fraction field of the ultrapower is uncountable.**
+
+The collapse used as a tool rather than as a target: if `Frac R` were countable then
+`FormalSpectrum.hasBoundedDenominators_iff_exists_surjective` would *apply*, and it would produce
+from `FormalSpectrum.hasBoundedDenominators_intUltrapower` the single `m` that
+`FormalSpectrum.exists_forall_not_dvd_pow_intUltrapower` refutes.
+
+Nothing here computes a cardinal. What is proved is a negation of `Countable`, and no lower bound
+on the size of the ring is available from it. -/
+theorem not_countable_fractionRing_intUltrapower (hφ : (φ : Filter ℕ) ≤ atTop) :
+    ¬ Countable (FractionRing (IntUltrapower φ)) := by
+  intro _hc
+  exact not_exists_surjective_awayToFractionRing_intUltrapower φ
+    ((hasBoundedDenominators_iff_exists_surjective (IntUltrapower φ)).mp
+      (hasBoundedDenominators_intUltrapower φ hφ))
+
+/-- **The ultrapower itself is uncountable.**
+
+`Localization.countable_of_countable` in `FormalSchemes.CountableLocalization` is an `instance`, and
+`FractionRing` is an `abbrev` for `Localization (nonZeroDivisors R)`, so a countable ring would have
+a countable fraction field by instance search alone — which is why `inferInstance` is the whole
+step down from
+`FormalSpectrum.not_countable_fractionRing_intUltrapower`. -/
+theorem not_countable_intUltrapower (hφ : (φ : Filter ℕ) ≤ atTop) :
+    ¬ Countable (IntUltrapower φ) := fun _hc =>
+  not_countable_fractionRing_intUltrapower φ hφ inferInstance
+
+/-- **The ultrapower is not a unique factorisation domain.**
+
+`FormalSpectrum.exists_forall_dvd_pow_of_hasBoundedDenominators` says that at a unique
+factorisation domain the denominator condition produces a single `m` whose powers clear everything;
+`FormalSpectrum.not_exists_forall_dvd_pow_intUltrapower` says there is no such `m` here, and
+`FormalSpectrum.hasBoundedDenominators_intUltrapower` says the condition holds.
+
+**This is a proof by contradiction from a classification and not a piece of factorisation theory.**
+It exhibits no irreducible-but-not-prime element, counts no primes, and does not show the ring has
+a prime element at all. What it does settle is that
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` and
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` are inapplicable here as a **theorem**
+rather than as an observation about an instance that happens not to be available. -/
+theorem not_uniqueFactorizationMonoid_intUltrapower (hφ : (φ : Filter ℕ) ≤ atTop) :
+    ¬ UniqueFactorizationMonoid (IntUltrapower φ) := fun _ =>
+  not_exists_forall_dvd_pow_intUltrapower φ
+    (exists_forall_dvd_pow_of_hasBoundedDenominators (IntUltrapower φ)
+      (hasBoundedDenominators_intUltrapower φ hφ))
+
+/-- The germ of the constant sequence `2` is not a unit: an inverse would have `2 * g i = 1` in `ℤ`
+at some index, since a set of the filter is nonempty.
+
+Nothing about `2` matters beyond its being a nonzero non-unit of `ℤ`, and it is written as a
+coercion rather than given a name because a `def` would need its equation lemma supplied before
+the rewrites below fire. -/
+theorem not_isUnit_coe_two_intUltrapower :
+    ¬ IsUnit ((((fun _ => (2 : ℤ)) : ℕ → ℤ) : IntUltrapower φ)) := by
+  rw [isUnit_iff_exists_inv]
+  rintro ⟨v, hv⟩
+  induction v using Germ.inductionOn with
+  | h g =>
+    rw [← Germ.coe_mul, ← Germ.coe_one, Germ.coe_eq] at hv
+    obtain ⟨i, hi⟩ := hv.exists
+    simp only [Pi.mul_apply, Pi.one_apply] at hi
+    omega
+
+/-- **The ultrapower is not Noetherian**, by Krull intersection against the diagonal product.
+
+Let `c` be the germ of the constant `2`, a nonzero non-unit. The countable family `c, c², c³, …` is
+cleared by a single `m ≠ 0` (`FormalSpectrum.exists_forall_dvd_intUltrapower`), and such an `m` lies
+in `⋂ᵢ (c)ⁱ`, which `Ideal.iInf_pow_eq_bot_of_isDomain` forces to be `⊥` in a Noetherian domain at
+a proper ideal.
+
+**The `i = 0` case is not decoration**: `(c)⁰` is `⊤` and the family is indexed so that the
+hypothesis supplies `c ^ (j + 1) ∣ m`, which is the successor case exactly. The statement needs no
+import that this file did not already have. -/
+theorem not_isNoetherianRing_intUltrapower (hφ : (φ : Filter ℕ) ≤ atTop) :
+    ¬ IsNoetherianRing (IntUltrapower φ) := by
+  intro hN
+  set c : IntUltrapower φ := (((fun _ => (2 : ℤ)) : ℕ → ℤ) : IntUltrapower φ) with hcdef
+  have hc0 : c ≠ 0 := coe_ne_zero_intUltrapower φ (by norm_num)
+  obtain ⟨m, hm, hall⟩ :=
+    exists_forall_dvd_intUltrapower φ hφ (fun n => c ^ (n + 1)) fun n => pow_ne_zero _ hc0
+  have hne : Ideal.span ({c} : Set (IntUltrapower φ)) ≠ ⊤ := by
+    rw [Ne, Ideal.span_singleton_eq_top]
+    exact not_isUnit_coe_two_intUltrapower φ
+  have hmem : m ∈ ⨅ i : ℕ, (Ideal.span ({c} : Set (IntUltrapower φ))) ^ i := by
+    refine Ideal.mem_iInf.mpr fun i => ?_
+    rw [Ideal.span_singleton_pow, Ideal.mem_span_singleton]
+    cases i with
+    | zero => simp
+    | succ j => exact hall j
+  rw [Ideal.iInf_pow_eq_bot_of_isDomain _ hne, Ideal.mem_bot] at hmem
+  exact hm hmem
 
 /-! ### The value of the predicate at the ultrapower -/
 
