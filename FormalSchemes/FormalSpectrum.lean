@@ -45,6 +45,9 @@ ringed space it makes `Spf R` into is `FormalSpectrum.locallyRingedSpaceObj`
   `FormalSpectrum.map` is continuous and functorial.
 * `FormalSpectrum.toPrimeSpectrum_map`: `FormalSpectrum.map` commutes with the inclusions
   into the prime spectra, i.e. the square relating `Spf` and `Spec` commutes.
+* `FormalSpectrum.mem_asIdeal_map_iff`: the same square read at one element — the residue of `b`
+  lies in the prime `FormalSpectrum.map` produces exactly when the residue of `φ b` lies in the
+  prime it is produced from.
 * `FormalSpectrum.thickeningHomeomorph`: `Spf R` is homeomorphic to each of its infinitesimal
   thickenings `Spec (R ⧸ I ^ n)`, `n ≠ 0`, compatibly with the transition maps of the tower
   (`FormalSpectrum.comap_factor_comp_toThickening`) and with the closed embeddings into
@@ -244,6 +247,21 @@ theorem toPrimeSpectrum_map (φ : R →+* S) (h : I ≤ J.comap φ) (x : FormalS
       = PrimeSpectrum.comap φ (PrimeSpectrum.comap (Ideal.Quotient.mk J) x)
   rw [← PrimeSpectrum.comap_comp_apply, ← PrimeSpectrum.comap_comp_apply,
     Ideal.quotientMap_comp_mk]
+
+/-- **A point of `Spf S` sees an element of `R` through `FormalSpectrum.map` exactly as its image
+does.** `FormalSpectrum.map` is `PrimeSpectrum.comap` of `Ideal.quotientMap`, so membership of the
+residue of `b` in the prime of the image point is membership of the residue of `φ b` in the prime
+of the point itself, by `Ideal.quotientMap_mk`.
+
+This is the pointwise form of `FormalSpectrum.toPrimeSpectrum_map` that a *witness* argument wants:
+it transports an element known not to lie in a prime of `R ⧸ I` to an element not lying in a prime
+of `S ⧸ J`, and back. `FormalSpectrum.mem_asIdeal_basicOpenChartBase_iff`
+(`FormalSchemes.BasicOpenChart`) is its basic-open-chart instance. -/
+theorem mem_asIdeal_map_iff (φ : R →+* S) (h : I ≤ J.comap φ) (x : FormalSpectrum J) (b : R) :
+    Ideal.Quotient.mk I b ∈ (map I J φ h x).asIdeal ↔
+      Ideal.Quotient.mk J (φ b) ∈ x.asIdeal := by
+  change Ideal.Quotient.mk I b ∈ Ideal.comap (Ideal.quotientMap J φ h) x.asIdeal ↔ _
+  rw [Ideal.mem_comap, Ideal.quotientMap_mk]
 
 end Functoriality
 

@@ -109,12 +109,16 @@ This file makes that identification and draws the two consequences that are free
   `PrimeSpectrum.comap_injective_of_surjective` gives there both
   `AlgebraicGeometry.not_surjective_quotientMap_tateInvNodeChartAwaySubring` and
   `AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top`. **So properness, which the bullet above
-  leaves open, is decided downstream in that regime — and only there.** Outside it, `I = ⊤`
-  included, nothing decides it; and no element of `A{1/(x + y − 1)}` is shown to lie outside the
-  chart ring anywhere on the tree, the refutation being a contraposition that produces no witness.
-  (`AlgebraicGeometry.notMem_tateInvGlobalSubring_overlapX`,
-  `FormalSchemes.TateInvGlobalProperness`, exhibits one for the **global** subring inside `A`,
-  which is a different subring of a different ring.)
+  leaves open, is decided downstream for every `I ≠ ⊤`.** The same file's
+  `AlgebraicGeometry.notMem_tateInvNodeChartAwaySubring_overlapX` decides it a second time and
+  without that regime, by exhibiting the missing element: the image of the coordinate `x` in
+  `A{1/(x + y − 1)}` is not in the chart ring, and its residue modulo
+  `FormalSpectrum.awayCompletionIdeal` is not in the image of the chart ring either
+  (`AlgebraicGeometry.notMem_range_quotientMap_tateInvNodeChartAwaySubring`), so
+  `AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top'` needs only `I ≠ ⊤`. At `I = ⊤` nothing
+  decides it. (`AlgebraicGeometry.notMem_tateInvGlobalSubring_overlapX`,
+  `FormalSchemes.TateInvGlobalProperness`, exhibits the same coordinate for the **global** subring
+  inside `A`, which is a different subring of a different ring.)
 
 Nothing here weakens `LocallyRingedSpace.IsProperlyDiscontinuousOn`,
 `LocallyRingedSpace.IsFreeProperlyDiscontinuous` or
@@ -130,8 +134,8 @@ its own closure; the aggregator at the repository root is outside the walk).
 `Spf` of the inclusion is here rather than beside the statements that use it because it needs
 this file and nothing else: the two rings, the contraction and `FormalSpectrum.map` are all in
 scope by the line above. `FormalSchemes.TateInvNodeChartOrbitSeparation`, where the criterion it
-feeds is stated, has forward closure **269**, so a reader who wants only the map imports this file
-and pays sixty-seven modules less for it.
+feeds is stated, has forward closure **270**, so a reader who wants only the map imports this file
+and pays sixty-eight modules less for it.
 
 ## References
 

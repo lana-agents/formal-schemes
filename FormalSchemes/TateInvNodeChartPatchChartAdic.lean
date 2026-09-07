@@ -106,11 +106,11 @@ immersion and that refutation is untouched: `AlgebraicGeometry.theta_nodeChartPa
 statement about *section maps*, which neither implies nor is implied by anything about open
 immersions. In particular the subring inclusion appearing here is not a claim that the node chart's
 ring is the ambient one, and nothing here decides whether it is.
-`AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top`
+`AlgebraicGeometry.tateInvNodeChartAwaySubring_ne_top'`
 (`FormalSchemes.TateInvNodeChartOrbitSeparation`) decides it downstream and in one direction: the
-subring is **proper**, for `I ≠ ⊤` and under that file's clause-section hypotheses. Outside that
-regime the question is open in both directions, and no element of the ambient ring outside the
-subring is exhibited anywhere on the tree — the proof there is a contraposition. And
+subring is **proper**, for every `I ≠ ⊤`, and the element it misses is exhibited there — the image
+of the coordinate `x` (`AlgebraicGeometry.notMem_tateInvNodeChartAwaySubring_overlapX`). At
+`I = ⊤` the question is open in both directions. And
 `AlgebraicGeometry.tateInvNodeChartAwayIdeal` remains **not** shown to be an ideal of definition
 (`FormalSchemes.TateInvNodeChartAmbient` records that only Hausdorffness is proved of it).
 
