@@ -157,17 +157,19 @@ what a general everywhere-failure has to be stated in, so the Dedekind module im
 rather than the other way about; nothing here was moved and nothing here changed to make that
 possible.
 
-**One instance was moved down to make room for this file.**
+**One instance was moved down to make room for this file and has now come back up into it.**
 `FormalSpectrum.isPrime_span_singleton_two` — `(2)` is prime in `ℤ` — was declared in
-`FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which **was** a sibling leaf when the move was
-made: neither file could reach the other, so the closed point below would have needed a second copy
-of it. That is no longer symmetric. `FormalSchemes.StructureSheafStalkPowerSeriesLocal` now reaches
-this module through `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` and is one of the three
-modules the count at the head of this section names; this module still cannot reach it, now because
-that edge would be a cycle rather than because the two are unrelated. The decision stands unchanged:
-the instance sits in `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which both of
-them reach, and is declared once. `Int.span_two_isMaximal` (`FormalSchemes.TwoAdicDegeneracy`) is
-the same fact about maximality and is **not** moved: it is in neither module's closure, it has a
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which **was** a sibling leaf when this file
+was written: neither could reach the other, so the closed point below would have needed a second
+copy of it and the instance went down to
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which both of them reach. That is no
+longer symmetric. `FormalSchemes.StructureSheafStalkPowerSeriesLocal` now reaches this module
+through `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` and is one of the three modules the
+count at the head of this section names; this module still cannot reach it, now because that edge
+would be a cycle rather than because the two are unrelated. **So a consumer can host it, and this
+file is the one that can**: the instance is declared here, once, and the local module picks it up
+through the Dedekind one. `Int.span_two_isMaximal` (`FormalSchemes.TwoAdicDegeneracy`) is the same
+fact about maximality and does **not** move with it: it is in neither module's closure, it has a
 consumer where it is, and the one use of maximality below is a term rather than a named theorem.
 
 **A new module is not free here and the alternative was measured.** Appending to
@@ -1238,6 +1240,29 @@ theorem not_isStalkLimit_powerSeriesX_int (x : FormalSpectrum (powerSeriesXIdeal
     ¬ IsStalkLimit (powerSeriesXIdeal ℤ) x := by
   rw [eq_powerSeriesXPoint ℤ x, isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt]
   exact not_hasBoundedDenominatorsAt_int _
+
+/-- **`(2)` is prime in `ℤ`.** Stated as an instance so that a prime of `ℤ[X]` above it, or a point
+of a formal spectrum over it, is prime by synthesis.
+
+It sits with a consumer rather than below both of them. The other consumer is
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal`, where it makes `FormalSpectrum.polyIntTwoX`
+prime; that module reaches this one through
+`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, so one declaration still serves both, and
+nothing that consumed the instance in its old home has lost it. It was declared in
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, below both consumers, for as long as
+neither of them could reach the other and so neither could host it — a placement resting on the
+**absence** of an edge, which any module added above either consumer can end, and one did. The
+placement here rests on that edge instead, which is a claim about the graph that the graph can
+only strengthen.
+
+**The general statement is a hypothesis and not an instance.** The results above take
+`[p.IsPrime]` on an arbitrary `p`, and at a span it is `Ideal.span_singleton_prime` in one rewrite,
+which is this proof. What a global instance buys is the places where the ideal is written out and
+no such hypothesis is in scope: the three theorems below, and the primality of
+`FormalSpectrum.polyIntTwoX` in the local module, which is `Ideal.comap_isPrime` of this one. -/
+instance isPrime_span_singleton_two : (Ideal.span {(2 : ℤ)}).IsPrime := by
+  rw [Ideal.span_singleton_prime two_ne_zero]
+  exact Int.prime_two
 
 /-- **The denominator condition fails at `(2) ⊆ ℤ`.** The case of
 `FormalSpectrum.not_hasBoundedDenominatorsAt_int` at the prime `(2)`, kept as a name because it is
