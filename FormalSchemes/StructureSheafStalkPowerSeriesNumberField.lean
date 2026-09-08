@@ -140,20 +140,24 @@ same direction. The price of the leaf is a forward pointer from the Dedekind mod
 
 **Only one of the two Mathlib imports costs a build, and the cost is 22 modules.** Walking
 `import` and `public import` over Mathlib's sources from every `import Mathlib…` line under
-`FormalSchemes/`, the project's Mathlib closure grows from **2699** to **2721**;
-`Mathlib/NumberTheory/NumberField/Basic.lean` brings all 22 with it, and
+`FormalSchemes/`, the project's Mathlib closure is **22** modules larger than it would be without
+`Mathlib/NumberTheory/NumberField/Basic.lean`, which brings all 22 with it;
 `Mathlib/RingTheory/Ideal/GoingUp.lean` was **already** reached, so naming it costs a line and no
-build. That is an order of magnitude more than the two modules
-`FormalSchemes.StructureSheafStalkPowerSeriesDedekind` paid, and it is the whole reason this is a
-leaf rather than an appendix to that file.
+build. **The figure is a difference and no absolute is quoted here**: the two ends of it move with
+every `import Mathlib…` line any row anywhere adds, and the difference between them does not. The
+absolutes, and how far the convention moves them, are in the cautions below. That is an order of
+magnitude more than the two modules `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` paid,
+and it is the whole reason this is a leaf rather than an appendix to that file.
 
 Two cautions for whoever re-measures. **Mathlib writes `public import`**; a walk matching only
 `^import ` returns a closure two orders of magnitude too small. And the absolute figure depends on
-the convention — restricting to names matching `^import <Name>$` and to `Mathlib.*` gives 2699,
-while admitting the `import Mathlib…` lines that occur inside docstrings gives 2704 and following
-non-Mathlib packages as well gives 2954. **The delta is 22 under all three**, which is why the
-delta and not the absolute is the figure quoted here. The three absolutes above are this file's own
-measurement at the time it was written and are expected to drift; only the 22 is load-bearing.
+the convention — restricting to names matching `^import <Name>$` and to `Mathlib.*` gives 2727,
+while following the other `.lake/packages` as well gives 2985. A third convention this paragraph
+used to name, admitting `import Mathlib…` lines that occur inside docstrings, no longer differs
+from the first: every such line on this tree today is prose with an ellipsis and names no module.
+**The delta is 22 under all of them**, which is why the delta and not the absolute is the figure
+quoted above. The two absolutes here are this file's own measurement at the time this paragraph was
+last re-measured and are expected to drift; only the 22 is load-bearing.
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` now states its own cost the same way — a
 delta of two, with absolutes given only to show how far the convention moves them.
 
