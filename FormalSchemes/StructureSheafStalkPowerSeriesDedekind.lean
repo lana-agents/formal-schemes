@@ -246,10 +246,17 @@ naming it here costs a line and no build.
 
 The **delta** is the figure quoted, not the absolute, and the reason is the one
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField` records at greater length: the absolute
-depends on the walk's convention — restricting to `Mathlib.*` gives 2727 where following the other
-packages as well gives 2985 — and it drifts upwards with every `import Mathlib…` line any row adds
-anywhere under `FormalSchemes/`, so it is stale the moment it is written. The delta is stable under
-both conventions and is what a reader deciding where to put material needs.
+depends on the walk's convention, and the first of the three conventions that file names is a bug
+rather than a choice. Reading each Mathlib header with its nested block comments stripped, this
+project loads **2650** Mathlib modules — the figure `Lean.Environment.allImportedModuleNames`
+returns when it is filtered to the names beginning with Mathlib, so it is answerable by the
+compiler and not only by a second walk. A walk that follows the `import` lines inside Mathlib's own
+comment spans reports **77** more, and that inflated figure is the one this paragraph used to
+quote. The absolute drifts upwards with every `import Mathlib…` line any row adds anywhere under
+`FormalSchemes/` as well, so it is stale the moment it is written. **The delta of two is neither
+inflated nor drifting**: it is unmoved by the comment spans, by anchoring the walk to end of line,
+and by following the other `.lake/packages`, and it is what a reader deciding where to put material
+needs.
 
 **The arbitrary-point material is appended here rather than paid on a leaf, which is the opposite
 of the choice the two paragraphs above defend, and the reason is that neither of their arguments
