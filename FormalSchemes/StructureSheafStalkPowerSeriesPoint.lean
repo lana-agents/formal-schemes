@@ -1071,9 +1071,11 @@ theorem le_bigPrimeAvoiding (g : ℤ) (n : ℕ) : g.natAbs + n + 3 ≤ bigPrimeA
   (Nat.exists_infinite_primes (g.natAbs + n + 3)).choose_spec.1
 
 /-- **The prime misses the ideal because it is larger than the generator**, and for no other
-reason. There is no coprimality argument here and none is available: a prime dividing `g` is at
-most its absolute value, and `FormalSpectrum.le_bigPrimeAvoiding` puts this one strictly above
-that. -/
+reason. There is no coprimality argument here and none is available: membership in the span says
+that `g` divides the prime, and a prime is divisible only by one and itself, so `Int.natAbs` of
+the generator is either `1` or the prime — `Prime.not_unit` rules out the first, and
+`FormalSpectrum.le_bigPrimeAvoiding`, which puts the prime strictly above that absolute value,
+rules out the second. -/
 theorem bigPrimeAvoiding_notMem {g : ℤ} (hg : Prime g) (n : ℕ) :
     ((bigPrimeAvoiding g n : ℕ) : ℤ) ∉ Ideal.span {g} := by
   rw [Ideal.mem_span_singleton]
