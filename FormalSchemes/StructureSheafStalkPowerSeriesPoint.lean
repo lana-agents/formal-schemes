@@ -90,22 +90,33 @@ generic-point theorem back, which is what the `example` under
 theorem because the statement is already proved elsewhere on this tree and is **not** reproved
 here.
 
-**`FormalSpectrum.HasBoundedDenominatorsAt` is compared and still not classified.**
-`FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` carries the classification of the denominator
-condition onto it **at `⊥` and only at `⊥`**, and no statement below moves any of that to another
-prime. Whether it is monotone in the prime, whether the condition at a prime follows from the
-condition at `⊥`, and whether the classification at a unique factorisation domain has an analogue
-at a general prime are all still open and none is touched below. The one general value proved here
-is at the maximal ideal of a local ring (`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`),
-where nothing has to be inverted.
+**`FormalSpectrum.HasBoundedDenominatorsAt` is classified at a unique factorisation domain and
+nowhere else.** `FormalSpectrum.hasBoundedDenominatorsAt_iff_finite_primes` says that at such a
+ring, and at **every** prime `p`, the condition holds exactly when finitely many primes up to
+associates lie outside `p`; monotonicity in the prime
+(`FormalSpectrum.hasBoundedDenominatorsAt_of_le`) and *the denominator condition implies the
+condition at every prime* (`FormalSpectrum.hasBoundedDenominatorsAt_of_hasBoundedDenominators`)
+are read off the right-hand side. **At a general domain nothing here is claimed and nothing is
+guessed at**: `⊥` is one of the primes that `↔` quantifies over, so the ultrapower of `ℤ` that
+refutes the classification at the generic point
+(`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes`, in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) refutes this one with the same instance
+deleted. **The converse of monotonicity is left open here and is false elsewhere on this tree**, at
+`ℤ[X]` localized at `(2, X)`; that ring lives in a sibling leaf this file cannot reach, so the
+statement is prose here and not a theorem. The one value proved here that needs no factorisation
+at all is still at the maximal ideal of a local ring
+(`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`), where nothing has to be inverted, and it
+is strictly more general than the case of the classification that recovers it.
 
 **The closed point is not decided in general, and neither is the everywhere-failure.** `ℤ` is now
 decided at every one of its primes, and it is the only ring decided everywhere in the *negative*:
 `FormalSpectrum.not_isStalkLimit_powerSeriesX_int` is about `ℤ` and about nothing else, while
-`FormalSpectrum.isStalkLimit_powerSeriesX_field` decides every prime of a field the other way. No
-criterion is given for which rings behave like `ℤ`, none is guessed at below, and
-`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` shows the behaviour is not universal — at a
-local ring the condition holds at the maximal ideal.
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` decides every prime of a field the other way. **A
+criterion for which rings behave like `ℤ` is given below at a unique factorisation domain** — the
+count of prime classes outside the point's own prime, by
+`FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_finite_primes` — and at a general domain none is
+given and none is guessed at. `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` shows the
+behaviour is not universal — at a local ring the condition holds at the maximal ideal.
 
 Neither `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo` nor
 `FormalSpectrum.not_isStalkLimit_powerSeriesX_int` refutes a theorem on this tree:
@@ -116,11 +127,18 @@ are the points where the colimit has nothing to do — over `ℤ` the basic open
 over `(2)` are a genuinely filtered system and the colimit misses `1 / q` for every prime `q`
 larger than the denominator on offer.
 
-**Nothing about the ultrapower, unique factorisation, Dedekind or Noetherian hypotheses.** No
-statement below carries any of them, and none of the material in
+**Nothing about the Dedekind or Noetherian hypotheses, and nothing consumed from the sibling
+leaves.** No statement below carries either of those, and no declaration of
 `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`,
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` or
-`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` is consumed or contradicted.
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` is consumed or contradicted — none of
+the three is in this file's import closure and none could be. `[UniqueFactorizationMonoid R]` is
+the one hypothesis of that list that does appear below, on the classification at a general prime
+and its corollaries; what it needs from `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`
+is `FormalSpectrum.HasBoundedDenominators` and nothing about factorisation, so the
+unique-factorisation lemmas there are named in prose and mirrored rather than reused. **In
+particular `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` is recovered as an `example`
+below and is not reproved.**
 
 ## Placement
 
@@ -191,6 +209,22 @@ reason the diff is wider than the mathematics.
 * `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo`: **a closed point at
   which the predicate fails**, at `(X) ⊆ ℤ⟦X⟧` over `(2)` — the illustration of the theorem
   above, its failure half now a corollary and only its closedness half about `(2)`.
+* `FormalSpectrum.dvd_pow_of_mem_range_algebraMap`: **the descent from the local ring back to the
+  ring** — clearing `1 / s` by `m ^ k` says `s ∣ m ^ k` in `R` — the single step both refutations
+  of the condition take, and the second of the two places a proof here spends `[IsDomain R]`.
+* `FormalSpectrum.hasBoundedDenominatorsAt_iff_finite_primes`: **the condition at a unique
+  factorisation domain is a cardinality at every prime**, namely the number of primes up to
+  associates lying outside that prime — the analogue at a general prime of
+  `FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, with the sufficient half
+  (`FormalSpectrum.hasBoundedDenominatorsAt_of_forall_dvd_pow`) carrying no hypothesis on `R` at
+  all.
+* `FormalSpectrum.hasBoundedDenominatorsAt_of_le` and
+  `FormalSpectrum.hasBoundedDenominatorsAt_of_hasBoundedDenominators`: **the condition is monotone
+  in the prime** at such a ring, and **the denominator condition implies it at every prime**. The
+  converse of each is false, at a ring this file cannot reach.
+* `FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_finite_primes`: **the predicate at every
+  point of `Spf (R⟦X⟧, (X))` over a unique factorisation domain, in both directions** — the first
+  statement here that decides a whole space and can come out either way.
 -/
 
 noncomputable section
@@ -819,11 +853,15 @@ variable (R : Type u) [CommRing R] [IsDomain R] (p : Ideal R) [p.IsPrime]
 `IsLocalization.injective_iff_map_algebraMap_eq` reduces injectivity of a ring map out of a
 localization to a statement about the structural map alone, and there both sides say `x = y`: the
 source because the powers of a nonzero element are nonzero divisors, the target because the prime
-complement is (`Ideal.primeCompl_le_nonZeroDivisors`). **This is the only place a proof in this
-file needs `[IsDomain R]`**, and it is why the main theorem below carries it while the
-surjectivity half does not. The binder occurs once more, on
-`FormalSpectrum.powerSeriesXPoint_bot`, and no proof there consumes it: it is there so that the
-statement typechecks, `FormalSpectrum.powerSeriesXGenericPoint` being defined only at a domain. -/
+complement is (`Ideal.primeCompl_le_nonZeroDivisors`). **This is one of exactly two places a
+proof in this file spends `[IsDomain R]`**, the other being
+`FormalSpectrum.dvd_pow_of_mem_range_algebraMap`, which spends the very same fact to push an
+equation in `Localization.AtPrime p` back down to `R`; and it is why the main theorem below
+carries the instance while the surjectivity half does not. Every other occurrence of the binder
+either consumes one of those two or is there only so that a statement elaborates —
+`FormalSpectrum.powerSeriesXPoint_bot`, where `FormalSpectrum.powerSeriesXGenericPoint` is defined
+only at a domain, and the unique-factorisation section at the end of the file, where
+`[UniqueFactorizationMonoid R]` does not elaborate without it. -/
 theorem injective_awayToLocalizationAtPrime (m : R) (hm : m ∉ p) :
     Function.Injective (awayToLocalizationAtPrime R p m hm) := by
   have hm0 : m ≠ 0 := fun h => hm (h ▸ p.zero_mem)
@@ -1049,6 +1087,40 @@ example (R : Type u) [CommRing R] [IsLocalRing R] [IsDomain R] :
   (isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt R
     (IsLocalRing.maximalIdeal R)).mpr (hasBoundedDenominatorsAt_maximalIdeal R)
 
+/-! ### The descent from the local ring back to the ring -/
+
+section Descent
+
+variable (R : Type u) [CommRing R] [IsDomain R] (p : Ideal R) [p.IsPrime]
+
+/-- **A denominator that clears a reciprocal divides that power of itself.** If `m ^ k` carries
+`1 / s` into the image of `R`, for an `s` outside `p`, then `s ∣ m ^ k` in `R`.
+
+This is the step every refutation of `FormalSpectrum.HasBoundedDenominatorsAt` below has to take,
+and the only thing any of them does with the hypothesis at a single index: it says nothing about
+how `s` was chosen, and the two consumers differ only in what they know about `s` afterwards.
+
+Multiplying the hypothesis by `algebraMap s` collapses the reciprocal (`IsLocalization.mk'_spec`)
+and leaves an equation between two images of `R`. **The domain hypothesis is spent on pushing that
+equation back down**, the prime complement of a prime of a domain consisting of nonzero divisors
+(`Ideal.primeCompl_le_nonZeroDivisors`, through `IsLocalization.injective`); that is the same fact
+`FormalSpectrum.injective_awayToLocalizationAtPrime` spends, and the two of them are the whole of
+this file's use of `[IsDomain R]`. -/
+theorem dvd_pow_of_mem_range_algebraMap (m : R) {s : R} (hs : s ∉ p) {k : ℕ}
+    (h : algebraMap R (Localization.AtPrime p) (m ^ k) *
+        IsLocalization.mk' (M := p.primeCompl) _ (1 : R) ⟨s, hs⟩ ∈
+      Set.range (algebraMap R (Localization.AtPrime p))) :
+    s ∣ m ^ k := by
+  obtain ⟨r, hr⟩ := h
+  have hmul := congrArg (· * algebraMap R (Localization.AtPrime p) s) hr
+  simp only [mul_assoc] at hmul
+  rw [IsLocalization.mk'_spec, map_one, mul_one, ← map_mul] at hmul
+  have hinj : Function.Injective (algebraMap R (Localization.AtPrime p)) :=
+    IsLocalization.injective _ (Ideal.primeCompl_le_nonZeroDivisors p)
+  exact ⟨r, by rw [← hinj hmul]; ring⟩
+
+end Descent
+
 /-! ### A formal spectrum at which the predicate fails everywhere -/
 
 section Int
@@ -1106,40 +1178,25 @@ not cleared into `ℤ` by any power of `m` — and the family above contains suc
 because it contains a prime past every bound.
 
 **Nothing in the argument is about the generator beyond
-`FormalSpectrum.bigPrimeAvoiding_notMem`**, which is why the same forty lines decide every prime
+`FormalSpectrum.bigPrimeAvoiding_notMem`**, which is why the same dozen lines decide every prime
 at once rather than one of them; `2` never played a role in it.
 
-The step that makes the descent legal is that `ℤ → ℤ_(g)` is injective, the prime complement of a
-prime of a domain consisting of nonzero divisors. The primeness of `g` is taken here as a
-hypothesis and the instance on its span as an instance binder, so that the statement elaborates at
-all; both are supplied once, in `FormalSpectrum.not_hasBoundedDenominatorsAt_int`. -/
+The step that makes the descent legal — that `ℤ → ℤ_(g)` is injective, the prime complement of a
+prime of a domain consisting of nonzero divisors — is
+`FormalSpectrum.dvd_pow_of_mem_range_algebraMap`, and what is left here once it is applied is
+arithmetic about `Int.natAbs`. The primeness of `g` is taken here as a hypothesis and the instance
+on its span as an instance binder, so that the statement elaborates at all; both are supplied
+once, in `FormalSpectrum.not_hasBoundedDenominatorsAt_int`. -/
 theorem not_hasBoundedDenominatorsAt_intSpan {g : ℤ} (hg : Prime g)
     [(Ideal.span {g}).IsPrime] :
     ¬ HasBoundedDenominatorsAt ℤ (Ideal.span {g}) := by
-  rw [hasBoundedDenominatorsAt_iff_range]
   intro h
   obtain ⟨m, hm, hall⟩ := h (intPrimeFamily hg)
   have hm0 : m ≠ 0 := fun h0 => hm (h0 ▸ Ideal.zero_mem _)
-  obtain ⟨z, hz⟩ := hall m.natAbs
-  obtain ⟨⟨a, y⟩, hy⟩ := IsLocalization.mk'_surjective (Submonoid.powers m) z
-  have hspec : algebraMap ℤ (Localization.Away m) (y : ℤ) * z =
-      algebraMap ℤ (Localization.Away m) a := by
-    rw [← hy]; exact IsLocalization.mk'_spec' _ a y
-  have himg := congrArg (awayToLocalizationAtPrime ℤ (Ideal.span {g}) m hm) hspec
-  rw [map_mul, awayToLocalizationAtPrime_algebraMap,
-    awayToLocalizationAtPrime_algebraMap, hz, intPrimeFamily] at himg
-  have hmul := congrArg
-    (· * algebraMap ℤ (Localization.AtPrime (Ideal.span {g}))
-      ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ)) himg
-  simp only [mul_assoc] at hmul
-  rw [IsLocalization.mk'_spec, map_one, mul_one, ← map_mul] at hmul
-  have hinj : Function.Injective
-      (algebraMap ℤ (Localization.AtPrime (Ideal.span {g}))) :=
-    IsLocalization.injective _ (Ideal.primeCompl_le_nonZeroDivisors (Ideal.span {g}))
-  have heq : (y : ℤ) = a * ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ) := hinj hmul
-  obtain ⟨k, hk⟩ := y.2
+  obtain ⟨k, hk⟩ := hall m.natAbs
   have hdvd : ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ) ∣ m ^ k :=
-    ⟨a, by rw [show m ^ k = (y : ℤ) from hk, heq]; ring⟩
+    dvd_pow_of_mem_range_algebraMap ℤ (Ideal.span {g}) m
+      (bigPrimeAvoiding_notMem hg m.natAbs) hk
   have hqp : Prime ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ) :=
     Nat.prime_iff_prime_int.mp (bigPrimeAvoiding_prime g m.natAbs)
   have hqm : ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ) ∣ m := hqp.dvd_of_dvd_pow hdvd
@@ -1234,6 +1291,321 @@ theorem isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo :
     not_isStalkLimit_powerSeriesXPoint_intTwo⟩
 
 end Int
+
+/-! ### The classification at a unique factorisation domain, at every prime
+
+At `⊥` the denominator condition is a cardinality:
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` says it holds at a unique factorisation
+domain exactly when there are finitely many primes up to associates. **The same is true at every
+prime, with the primes counted outside it.** Both directions are that proof with *nonzero*
+replaced by *outside `p`*, and neither replacement is free: the forward one has to descend from
+`Localization.AtPrime p` rather than from a fraction field, and the backward one has to know that
+the factors of an element outside `p` are themselves outside `p`, which is closure of a *prime*
+ideal downwards along divisibility rather than the corresponding triviality about being nonzero.
+
+**Nothing here weakens `[UniqueFactorizationMonoid R]`, and the forward direction is refuted
+without it.** An ultrapower of `ℤ` satisfies the denominator condition and has infinitely many
+prime associate classes (`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes`, in
+`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`); `⊥` is one of the primes below, so that
+witness refutes the `↔` below as it stands. **This is a statement about prime elements and not
+about prime ideals**, so `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals` is not a
+corollary of it and does not become one — a non-principal maximal ideal contributes no prime
+element at all.
+-/
+
+section UniqueFactorization
+
+variable (R : Type u) [CommRing R] (p : Ideal R) [p.IsPrime]
+
+/-- **A single denominator for everything outside `p` gives the condition**, with no hypothesis on
+`R` whatever: if every `s ∉ p` divides a power of `m` and `m ∉ p`, then that one `m` serves every
+family at once.
+
+Each member of a family is `IsLocalization.mk' r s` with `s ∉ p`
+(`IsLocalization.mk'_surjective` at the prime complement), and `m ^ k = s * t` turns clearing by
+`m ^ k` into clearing by `s`, which is `IsLocalization.mk'_spec'`. The exponent depends on the
+member and the denominator does not, which is exactly the shape
+`FormalSpectrum.HasBoundedDenominatorsAt` asks for.
+
+**This is the sufficient half of the classification below and is strictly more general than it**:
+it carries neither `[IsDomain R]` nor `[UniqueFactorizationMonoid R]`, and a consumer at a
+concrete ring may find the divisibility easier to check than the condition. -/
+theorem hasBoundedDenominatorsAt_of_forall_dvd_pow {m : R} (hm : m ∉ p)
+    (hall : ∀ s : R, s ∉ p → ∃ k : ℕ, s ∣ m ^ k) :
+    HasBoundedDenominatorsAt R p := by
+  intro x
+  refine ⟨m, hm, fun n => ?_⟩
+  obtain ⟨⟨r, s⟩, hrs⟩ := IsLocalization.mk'_surjective p.primeCompl (x n)
+  obtain ⟨k, t, ht⟩ := hall (s : R) s.2
+  have hspec : algebraMap R (Localization.AtPrime p) (s : R) *
+      IsLocalization.mk' (Localization.AtPrime p) r s =
+      algebraMap R (Localization.AtPrime p) r := IsLocalization.mk'_spec' _ r s
+  refine ⟨k, t * r, ?_⟩
+  rw [← hrs, ht, map_mul, map_mul,
+    mul_comm (algebraMap R (Localization.AtPrime p) (s : R)),
+    mul_assoc, hspec]
+
+/-- **Infinitely many pairwise non-associated primes outside `p` refute the condition.** This is
+`FormalSpectrum.not_hasBoundedDenominators_of_primes_not_associated` at an arbitrary prime, and
+the family that defeats every candidate denominator is the same one: the reciprocals of the given
+primes, each of them an element of `Localization.AtPrime p` because its denominator is outside
+`p`.
+
+`FormalSpectrum.dvd_pow_of_mem_range_algebraMap` turns the clearing of `1 / q n` into
+`q n ∣ m ^ k`, primeness of `q n` into `q n ∣ m`, and then unique factorisation finishes: the
+chosen primes inject into `UniqueFactorizationMonoid.factors m`, which is a finite multiset.
+**`m ≠ 0` is not a hypothesis and is not proved** — `0 ∈ p`, so `m ∉ p` already says it, and that
+is one place where a general prime is cheaper than the generic point rather than dearer. -/
+theorem not_hasBoundedDenominatorsAt_of_primes_notMem [IsDomain R]
+    [UniqueFactorizationMonoid R] (q : ℕ → R) (hq : ∀ n, Prime (q n)) (hqp : ∀ n, q n ∉ p)
+    (hne : ∀ i j, Associated (q i) (q j) → i = j) : ¬ HasBoundedDenominatorsAt R p := by
+  classical
+  intro h
+  obtain ⟨m, hm, hall⟩ :=
+    h fun n => IsLocalization.mk' (M := p.primeCompl) _ (1 : R) ⟨q n, hqp n⟩
+  have hm0 : m ≠ 0 := fun h0 => hm (h0 ▸ Ideal.zero_mem p)
+  have hdvd : ∀ n, q n ∣ m := by
+    intro n
+    obtain ⟨k, hk⟩ := hall n
+    exact (hq n).dvd_of_dvd_pow (dvd_pow_of_mem_range_algebraMap R p m (hqp n) hk)
+  choose f hf hfa using fun n =>
+    UniqueFactorizationMonoid.exists_mem_factors_of_dvd hm0 (hq n).irreducible (hdvd n)
+  have hinj : Function.Injective f := fun i j hij =>
+    hne i j ((hfa i).trans (hij ▸ (hfa j).symm))
+  have hsub : Set.range f ⊆ (UniqueFactorizationMonoid.factors m).toFinset := by
+    rintro _ ⟨n, rfl⟩
+    exact Multiset.mem_toFinset.mpr (hf n)
+  exact Set.infinite_range_of_injective hinj
+    (((UniqueFactorizationMonoid.factors m).toFinset.finite_toSet).subset hsub)
+
+omit [p.IsPrime] in
+/-- **Everything outside `p` divides a power of the product of a covering set of primes.** The
+analogue of `FormalSpectrum.forall_dvd_pow_prod`, where the set has to cover only the primes
+outside `p` and the conclusion is only about elements outside `p`.
+
+**That weaker covering hypothesis is enough for the stronger-looking conclusion because a prime
+ideal is closed downwards along divisibility**: a factor of `s` lying in `p` would put `s` in `p`
+(`Ideal.mem_of_dvd`), so every member of `UniqueFactorizationMonoid.factors s` is one of the
+primes the hypothesis covers. That step has no counterpart in the proof at the generic point,
+where *nonzero* is closed under divisors for nothing. After it the argument is the same:
+each factor divides the product, and a product of `Multiset.card` many divisors of one element
+divides that many-th power of it (`Multiset.prod_dvd_prod_of_dvd` at the constant function).
+
+`s ≠ 0` is not a hypothesis here either: `0 ∈ p`. -/
+theorem forall_dvd_pow_prod_notMem [IsDomain R] [UniqueFactorizationMonoid R] (t : Finset R)
+    (hcov : ∀ q : R, Prime q → q ∉ p → ∃ w ∈ t, Associated q w) :
+    ∀ s : R, s ∉ p → ∃ k : ℕ, s ∣ (t.prod id) ^ k := by
+  intro s hs
+  have hs0 : s ≠ 0 := fun h0 => hs (h0 ▸ Ideal.zero_mem p)
+  refine ⟨Multiset.card (UniqueFactorizationMonoid.factors s), ?_⟩
+  refine ((UniqueFactorizationMonoid.factors_prod hs0).symm.dvd).trans ?_
+  have hdvd : ∀ x ∈ UniqueFactorizationMonoid.factors s, id x ∣ (fun _ : R => t.prod id) x := by
+    intro x hx
+    have hxp : Prime x := UniqueFactorizationMonoid.prime_of_factor x hx
+    have hxs : x ∣ s := UniqueFactorizationMonoid.dvd_of_mem_factors hx
+    have hxnp : x ∉ p := fun hmem => hs (p.mem_of_dvd hxs hmem)
+    obtain ⟨w, hw, hassoc⟩ := hcov x hxp hxnp
+    exact hassoc.dvd.trans (Finset.dvd_prod_of_mem id hw)
+  simpa using Multiset.prod_dvd_prod_of_dvd (S := UniqueFactorizationMonoid.factors s) id
+    (fun _ => t.prod id) hdvd
+
+/-- **Finitely many prime classes outside `p` give a single denominator outside `p`**: the product
+of one representative of each, through `FormalSpectrum.forall_dvd_pow_prod_notMem`. The analogue
+of `FormalSpectrum.exists_forall_dvd_pow_of_finite_primes`, and the backward direction of the
+classification below is this composed with
+`FormalSpectrum.hasBoundedDenominatorsAt_of_forall_dvd_pow`.
+
+**That the product is itself outside `p` is where primeness is spent a second time**, through
+`Ideal.IsPrime.prod_mem_iff`; at the generic point the corresponding step is that a product of
+nonzero elements of a domain is nonzero, which is a different fact about a different hypothesis.
+
+The representatives are chosen by a total function with a junk value off the set, rather than on
+the subtype, because `Associates.out` needs `[NormalizationMonoid R]` and a bare unique
+factorisation domain does not carry it — the same reason
+`FormalSpectrum.exists_forall_dvd_pow_of_finite_primes` chooses on `Associates.mk_surjective`. The
+`m` is not canonical and nothing below depends on the choice. -/
+theorem exists_forall_dvd_pow_notMem_of_finite [IsDomain R] [UniqueFactorizationMonoid R]
+    (hfin : {a : Associates R | Prime a ∧ ∃ r : R, Associates.mk r = a ∧ r ∉ p}.Finite) :
+    ∃ m : R, m ∉ p ∧ ∀ s : R, s ∉ p → ∃ k : ℕ, s ∣ m ^ k := by
+  classical
+  have hex : ∀ a : Associates R, ∃ r : R,
+      a ∈ {a : Associates R | Prime a ∧ ∃ r : R, Associates.mk r = a ∧ r ∉ p} →
+        Associates.mk r = a ∧ r ∉ p := by
+    intro a
+    by_cases ha : a ∈ {a : Associates R | Prime a ∧ ∃ r : R, Associates.mk r = a ∧ r ∉ p}
+    · obtain ⟨r, hr1, hr2⟩ := ha.2
+      exact ⟨r, fun _ => ⟨hr1, hr2⟩⟩
+    · exact ⟨1, fun h => absurd h ha⟩
+  choose rep hrep using hex
+  refine ⟨(hfin.toFinset.image rep).prod id, ?_, ?_⟩
+  · intro hmem
+    obtain ⟨w, hw, hwp⟩ := Ideal.IsPrime.prod_mem_iff.mp hmem
+    obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hw
+    exact (hrep a ((Set.Finite.mem_toFinset hfin).mp ha)).2 hwp
+  · refine forall_dvd_pow_prod_notMem R p _ ?_
+    intro q hq hqp
+    refine ⟨rep (Associates.mk q), Finset.mem_image_of_mem _ ?_, ?_⟩
+    · exact (Set.Finite.mem_toFinset hfin).mpr ⟨Associates.prime_mk.mpr hq, q, rfl, hqp⟩
+    · exact Associates.mk_eq_mk_iff_associated.mp
+        (hrep _ ⟨Associates.prime_mk.mpr hq, q, rfl, hqp⟩).1.symm
+
+/-- **The condition at a unique factorisation domain is a cardinality at every prime, not only at
+`⊥`**: it holds at `p` exactly when finitely many primes up to associates lie outside `p`.
+
+`Associates R` is the quotient by the associate relation, so the set says *up to associates* with
+no choice of representatives in the statement; the extra clause asks that the class have **some**
+representative outside `p`, which is the same as asking it of every one, since `p` is an ideal.
+Choice enters in both directions of the proof and only there.
+
+Forwards is `FormalSpectrum.not_hasBoundedDenominatorsAt_of_primes_notMem` at a family extracted
+from an infinite set by `Set.Infinite.natEmbedding`, the injectivity of the embedding being
+exactly the *pairwise non-associated* hypothesis. Backwards is
+`FormalSpectrum.exists_forall_dvd_pow_notMem_of_finite` into
+`FormalSpectrum.hasBoundedDenominatorsAt_of_forall_dvd_pow`.
+
+**This is the analogue at a general prime that the module header above said was missing**, and
+with `FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt` it decides
+`FormalSpectrum.IsStalkLimit` at every point of `Spf (R⟦X⟧, (X))` over a unique factorisation
+domain, in both directions. It says nothing at a general domain: `⊥` is one of its primes, so the
+ultrapower that refutes the classification there refutes this one too. -/
+theorem hasBoundedDenominatorsAt_iff_finite_primes [IsDomain R] [UniqueFactorizationMonoid R] :
+    HasBoundedDenominatorsAt R p ↔
+      {a : Associates R | Prime a ∧ ∃ r : R, Associates.mk r = a ∧ r ∉ p}.Finite := by
+  classical
+  constructor
+  · intro h
+    by_contra hinf
+    rw [Set.not_finite] at hinf
+    let e : ℕ ↪ {a : Associates R //
+      a ∈ {a : Associates R | Prime a ∧ ∃ r : R, Associates.mk r = a ∧ r ∉ p}} :=
+      hinf.natEmbedding
+    choose q hq hqp using fun n : ℕ => (e n).2.2
+    refine not_hasBoundedDenominatorsAt_of_primes_notMem R p q (fun n => ?_) hqp
+      (fun i j hij => ?_) h
+    · exact Associates.prime_mk.mp (hq n ▸ (e n).2.1)
+    · have hee : (e i : Associates R) = e j := by
+        rw [← hq i, ← hq j]
+        exact Associates.mk_eq_mk_iff_associated.mpr hij
+      exact e.injective (Subtype.ext hee)
+  · intro hfin
+    obtain ⟨m, hm, hall⟩ := exists_forall_dvd_pow_notMem_of_finite R p hfin
+    exact hasBoundedDenominatorsAt_of_forall_dvd_pow R p hm hall
+
+end UniqueFactorization
+
+/-! ### What the classification answers about the condition itself
+
+The right-hand side above shrinks as the prime grows, so the condition is **monotone in the
+prime** at a unique factorisation domain, and *the condition at `⊥`* — which is the denominator
+condition, by `FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` — implies it everywhere. Those are
+two of the three questions the module header lists as open about
+`FormalSpectrum.HasBoundedDenominatorsAt`, and the theorem above is the third.
+
+**The converse of monotonicity is false, and the witness is already on this tree.** `ℤ[X]`
+localized at `(2, X)` is a local unique factorisation domain, so the condition holds at its
+maximal ideal (`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`) and fails at `⊥`, where
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal` refutes it. That is stated here in prose
+rather than proved, because that module is a **sibling** leaf of this one: neither imports the
+other, and reaching it would cost a new module for one corollary.
+-/
+
+section UniqueFactorizationCorollaries
+
+variable (R : Type u) [CommRing R] [IsDomain R] [UniqueFactorizationMonoid R]
+
+omit [IsDomain R] [UniqueFactorizationMonoid R] in
+/-- **At `⊥` the primes outside the prime are all the primes.** The clause that cuts the count
+down is vacuous at the zero ideal, because `Ideal.mem_bot` reads *outside `⊥`* as *nonzero* and a
+prime class has a nonzero representative — every representative, in fact.
+
+This is what makes `FormalSpectrum.hasBoundedDenominatorsAt_iff_finite_primes` a generalisation of
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes` rather than a statement beside it, and
+it is used only for the `example` below that checks exactly that. It needs neither instance of the
+section. -/
+theorem setOf_prime_notMem_bot :
+    {a : Associates R | Prime a ∧ ∃ r : R, Associates.mk r = a ∧ r ∉ (⊥ : Ideal R)} =
+      {a : Associates R | Prime a} := by
+  ext a
+  refine ⟨fun h => h.1, fun ha => ⟨ha, ?_⟩⟩
+  obtain ⟨r, rfl⟩ := Associates.mk_surjective a
+  exact ⟨r, rfl, fun h0 => (Associates.prime_mk.mp ha).ne_zero (Ideal.mem_bot.mp h0)⟩
+
+/-- **The condition is monotone in the prime** at a unique factorisation domain: it passes from a
+prime to any larger one. The larger prime swallows more prime elements, so fewer classes are left
+outside it, and `Set.Finite.subset` is the whole proof.
+
+**The converse is false**, by the witness the section heading above names, and this is one of the
+three questions the module header lists as open about
+`FormalSpectrum.HasBoundedDenominatorsAt`. -/
+theorem hasBoundedDenominatorsAt_of_le (p q : Ideal R) [p.IsPrime] [q.IsPrime] (hpq : p ≤ q)
+    (h : HasBoundedDenominatorsAt R p) : HasBoundedDenominatorsAt R q :=
+  (hasBoundedDenominatorsAt_iff_finite_primes R q).mpr
+    (((hasBoundedDenominatorsAt_iff_finite_primes R p).mp h).subset
+      fun _ ha => ⟨ha.1, ha.2.choose, ha.2.choose_spec.1,
+        fun hmem => ha.2.choose_spec.2 (hpq hmem)⟩)
+
+/-- **The denominator condition implies the condition at every prime**, at a unique factorisation
+domain: the case `p = ⊥` of monotonicity above, read through
+`FormalSpectrum.hasBoundedDenominatorsAt_bot_iff`.
+
+This is the second of the three questions the module header lists as open, and it is the direction
+that is true: the condition at a prime does **not** imply it at `⊥`, by the same witness. -/
+theorem hasBoundedDenominatorsAt_of_hasBoundedDenominators (h : HasBoundedDenominators R)
+    (p : Ideal R) [p.IsPrime] : HasBoundedDenominatorsAt R p :=
+  hasBoundedDenominatorsAt_of_le R ⊥ p bot_le ((hasBoundedDenominatorsAt_bot_iff R).mpr h)
+
+/-- **`FormalSpectrum.IsStalkLimit` at every point of `Spf (R⟦X⟧, (X))` over a unique
+factorisation domain, in both directions**: the criterion at an arbitrary point composed with the
+classification above.
+
+Every earlier value of the predicate on this tree is either at one distinguished point, or at one
+ring, or negative; this is the first statement that decides it everywhere on a space and can come
+out either way, the answer depending on how many primes lie outside the point's own. -/
+theorem isStalkLimit_powerSeriesXPoint_iff_finite_primes (p : Ideal R) [p.IsPrime] :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXPoint R p) ↔
+      {a : Associates R | Prime a ∧ ∃ r : R, Associates.mk r = a ∧ r ∉ p}.Finite :=
+  (isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt R p).trans
+    (hasBoundedDenominatorsAt_iff_finite_primes R p)
+
+/-! ### The classification against what the tree already knows
+
+The three `example`s below are **checks and not results**, exactly as the pair under
+`### The two known points, as values of the criterion` is: each restates something this tree
+already proves and derives it from the classification above, and each is an `example` so that no
+statement gets a second declaration.
+-/
+
+/-- The classification at `⊥` is the classification at the generic point:
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primes`, recovered through
+`FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` and `FormalSpectrum.setOf_prime_notMem_bot`.
+This is what makes *generalisation* a checked word here rather than an assertion. -/
+example : HasBoundedDenominators R ↔ {a : Associates R | Prime a}.Finite := by
+  rw [← hasBoundedDenominatorsAt_bot_iff, hasBoundedDenominatorsAt_iff_finite_primes,
+    setOf_prime_notMem_bot]
+
+/-- The value at the maximal ideal of a local ring, at a local unique factorisation domain: the
+set is empty, because a prime element is a nonunit and every nonunit of a local ring lies in the
+maximal ideal. `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` proves this at **every**
+local ring, with no factorisation and no domain hypothesis, and is not weakened by it. -/
+example [IsLocalRing R] : HasBoundedDenominatorsAt R (IsLocalRing.maximalIdeal R) := by
+  refine (hasBoundedDenominatorsAt_iff_finite_primes R _).mpr ?_
+  convert Set.finite_empty
+  ext a
+  simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false, not_and]
+  rintro ha ⟨r, rfl, hr⟩
+  exact (Associates.prime_mk.mp ha).not_unit (IsLocalRing.notMem_maximalIdeal.mp hr)
+
+/-- `FormalSpectrum.not_hasBoundedDenominatorsAt_int` read through the classification: it becomes
+*`ℤ` has infinitely many prime classes outside every one of its primes*, which is Euclid with one
+prime removed. This is the only one of the three checks that exercises the **forward** direction,
+and it is stated at `ℤ` rather than at the section's `R` because that is the ring the refutation
+is about. -/
+example (p : Ideal ℤ) [p.IsPrime] :
+    ¬ {a : Associates ℤ | Prime a ∧ ∃ r : ℤ, Associates.mk r = a ∧ r ∉ p}.Finite :=
+  fun hfin => not_hasBoundedDenominatorsAt_int p
+    ((hasBoundedDenominatorsAt_iff_finite_primes ℤ p).mpr hfin)
+
+end UniqueFactorizationCorollaries
 
 end FormalSpectrum
 
