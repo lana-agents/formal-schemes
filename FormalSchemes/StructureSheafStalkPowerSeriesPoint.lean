@@ -772,9 +772,11 @@ variable (R : Type u) [CommRing R] [IsDomain R] (p : Ideal R) [p.IsPrime]
 `IsLocalization.injective_iff_map_algebraMap_eq` reduces injectivity of a ring map out of a
 localization to a statement about the structural map alone, and there both sides say `x = y`: the
 source because the powers of a nonzero element are nonzero divisors, the target because the prime
-complement is (`Ideal.primeCompl_le_nonZeroDivisors`). **This is the only place `[IsDomain R]` is
-used in this file**, and it is why the main theorem below carries it while the surjectivity half
-does not. -/
+complement is (`Ideal.primeCompl_le_nonZeroDivisors`). **This is the only place a proof in this
+file needs `[IsDomain R]`**, and it is why the main theorem below carries it while the
+surjectivity half does not. The binder occurs once more, on
+`FormalSpectrum.powerSeriesXPoint_bot`, and no proof there consumes it: it is there so that the
+statement typechecks, `FormalSpectrum.powerSeriesXGenericPoint` being defined only at a domain. -/
 theorem injective_awayToLocalizationAtPrime (m : R) (hm : m ∉ p) :
     Function.Injective (awayToLocalizationAtPrime R p m hm) := by
   have hm0 : m ≠ 0 := fun h => hm (h ▸ p.zero_mem)
