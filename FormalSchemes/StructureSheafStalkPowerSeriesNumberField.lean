@@ -152,8 +152,10 @@ Two cautions for whoever re-measures. **Mathlib writes `public import`**; a walk
 the convention — restricting to names matching `^import <Name>$` and to `Mathlib.*` gives 2699,
 while admitting the `import Mathlib…` lines that occur inside docstrings gives 2704 and following
 non-Mathlib packages as well gives 2954. **The delta is 22 under all three**, which is why the
-delta and not the absolute is the figure quoted here; the same caution applies to the 2910 quoted
-by `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, whose delta of 2 reproduces exactly.
+delta and not the absolute is the figure quoted here. The three absolutes above are this file's own
+measurement at the time it was written and are expected to drift; only the 22 is load-bearing.
+`FormalSchemes.StructureSheafStalkPowerSeriesDedekind` now states its own cost the same way — a
+delta of two, with absolutes given only to show how far the convention moves them.
 
 **The `lake build` job count goes 3455 to 3479, and the walk accounts for 23 of those 24** — the 22
 Mathlib modules and this leaf. The twenty-fourth is not a source module in any package the project

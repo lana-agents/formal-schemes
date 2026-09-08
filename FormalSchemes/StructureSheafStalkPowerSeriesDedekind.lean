@@ -221,23 +221,32 @@ point, is itself over that same module, and is what the arbitrary-point material
 in; it is the one edge this branch adds.
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
-reasons, and the second is the load-bearing one. It is **2838** lines with **89** declarations —
+reasons, and the second is the load-bearing one. It is **3012** lines with **94** declarations —
 `theorem`, `lemma`, `def`, `instance` or `class` at the start of a line, `example`s not counted and
-there are nine of those — and is the most edited file on this board, so a leaf keeps two concurrent
-rows off one file; and **the two Mathlib imports this material needs would otherwise be paid by a
-module that does not need them.** That file's own discrete-valuation-ring section advertises that it
-*"adds no Mathlib import either"*, so the imports are a cost worth isolating, and they are not
-avoidable: without `Mathlib/RingTheory/DedekindDomain/PID.lean` the constant `Ring.DimensionLEOne`
-does not exist and without `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` the finiteness
-above has nothing to cite.
+there are **nine** of those — and is the most edited file on this board, at **26** commits touching
+it against **12** for the runner-up, so a leaf keeps two concurrent rows off one file; and **the two
+Mathlib imports this material needs would otherwise be paid by a module that does not need them.**
+That file's own discrete-valuation-ring section advertises that it *"adds no Mathlib import
+either"*, so the imports are a cost worth isolating, and they are not avoidable: without
+`Mathlib/RingTheory/DedekindDomain/PID.lean` the constant `Ring.DimensionLEOne` does not exist, and
+without `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` the finiteness above has nothing to
+cite.
 
 **Only one of the two is new to the project's Mathlib closure, and it is worth saying which**, since
-the import line and the build cost are different things: walking the `import` graph over Mathlib's
-sources from every `import Mathlib` line in `FormalSchemes/`, the closure grows from **2910** to
-**2912** modules, the additions being `Mathlib/RingTheory/DedekindDomain/PID.lean` and its own
+the import line and the build cost are different things: walking `import` and `public import` over
+Mathlib's sources from every `import Mathlib…` line under `FormalSchemes/`, the project's Mathlib
+closure is **exactly two modules larger** than it would be without
+`Mathlib/RingTheory/DedekindDomain/PID.lean`, the two being that module and its own
 `Mathlib/RingTheory/PrincipalIdealDomainOfPrime.lean`.
 `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` was **already** reached by this project, so
 naming it here costs a line and no build.
+
+The **delta** is the figure quoted, not the absolute, and the reason is the one
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` records at greater length: the absolute
+depends on the walk's convention — restricting to `Mathlib.*` gives 2727 where following the other
+packages as well gives 2985 — and it drifts upwards with every `import Mathlib…` line any row adds
+anywhere under `FormalSchemes/`, so it is stale the moment it is written. The delta is stable under
+both conventions and is what a reader deciding where to put material needs.
 
 **The arbitrary-point material is appended here rather than paid on a leaf, which is the opposite
 of the choice the two paragraphs above defend, and the reason is that neither of their arguments
@@ -259,8 +268,8 @@ this one, and the number-field leaf importing it — sends the same **5** in **3
 **The mathematical fit is what decides between the two cheap routes.** The criterion below is
 `FormalSpectrum.not_hasBoundedDenominators_of_primeIdeals` with the fraction field replaced by the
 local ring, and `FormalSpectrum.finite_setOf_isPrime_mem`, which its covering hypothesis spends, is
-three hundred lines above it; neither fact is about a point of a formal spectrum, and the point
-module would be importing a Dedekind-domain classification it makes no use of.
+a couple of hundred lines above it; neither fact is about a point of a formal spectrum, and the
+point module would be importing a Dedekind-domain classification it makes no use of.
 
 ## References
 
