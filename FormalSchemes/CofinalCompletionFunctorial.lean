@@ -21,9 +21,14 @@ sections, the completion functor `AdicCompletion.mapCompletion` of the localizat
 ring level: the cofinal comparison map `cofinalHom` is natural with respect to `mapCompletion`.
 
 This is the "compatibility on basic opens" step that the issue-74 route names as the input to the
-eventual sheaf-level gluing (the full `LocallyRingedSpace` isomorphism `Spf_I R ≅ Spf_J R`, an
-isomorphism of the two towers over the homeomorphism `IsAdic.homeomorphFormalSpectrum`, remains a
-follow-up — it is heavy sheaf/`PresheafedSpace` category theory over a genuine homeomorphism base).
+eventual sheaf-level gluing. **That gluing is landed, and this step is not what it consumed.** The
+full `LocallyRingedSpace` isomorphism `Spf_I R ≅ Spf_J R` over `IsAdic.homeomorphFormalSpectrum` is
+`FormalSpectrum.cofinalSpfIso` (`FormalSchemes.CofinalSheafComparisonIso`), with the nesting
+removed in `FormalSpectrum.generalCofinalSpfIso` (`FormalSchemes.CofinalSheafComparisonGeneral`).
+It comes from `Spf` functoriality applied to `RingHom.id R`, which is a morphism of sheaves already,
+rather than from gluing section isomorphisms, so no naturality square is spent on it and the one
+below is not what it rests on. The completion lemma that route does use is a different statement,
+`AdicCompletion.mapCompletion_eq_cofinalHom`, and it lives beside the isomorphism.
 
 ## Main results
 

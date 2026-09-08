@@ -42,10 +42,15 @@ exactly that lemma applied to `φ`, `b = 1`, and the two ideals of definition on
 
 ## Scope note
 
-Only the ring-level compatibility is proved here. Assembling these squares (together with the
-`⊤ → D(g)` square) through the structure-sheaf restriction maps into a single
-`PresheafedSpace`/`LocallyRingedSpace` isomorphism `Spf_I R ≅ Spf_J R` over the base homeomorphism
-remains the category-theoretically heavy follow-up named in `CofinalSheafComparison.lean`.
+Only the ring-level compatibility is proved here, and the assembly it was written for did not
+happen. `Spf_I R ≅ Spf_J R` is landed — `FormalSpectrum.cofinalSpfIso`
+(`FormalSchemes.CofinalSheafComparisonIso`) for `I ≤ J`, and `FormalSpectrum.generalCofinalSpfIso`
+(`FormalSchemes.CofinalSheafComparisonGeneral`) without the nesting — but not by assembling these
+squares (or the `⊤ → D(g)` one) through the structure-sheaf restriction maps. It is the
+`Spf`-functoriality morphism of `RingHom.id R`, a morphism of sheaves already, so no naturality
+square is spent on it; `CofinalSheafComparison.lean`'s docstring states that route. What is proved
+here is the ring-level half of the route that was not taken, kept because it is true and because
+it is the square a hand-built comparison would have needed.
 
 ## References
 
