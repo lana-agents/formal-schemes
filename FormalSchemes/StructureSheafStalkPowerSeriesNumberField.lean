@@ -138,10 +138,11 @@ narrower — arbitrary domain, Dedekind domain, ring of integers — and the imp
 same direction. The price of the leaf is a forward pointer from the Dedekind module's
 `## What is *not* proved here`, which this branch pays.
 
-**Only one of the two Mathlib imports costs a build, and the cost is 22 modules.** Walking
-`import` and `public import` over Mathlib's sources from every `import Mathlib…` line under
-`FormalSchemes/`, the project's Mathlib closure is **22** modules larger than it would be without
-`Mathlib/NumberTheory/NumberField/Basic.lean`, which brings all 22 with it;
+**Only one of the two Mathlib imports costs a build, and the cost is 23 modules.** Walking
+`import` and `public import` over Mathlib's sources — outside its comment spans, which is the first
+caution below and is not a choice — from every `import Mathlib…` line under `FormalSchemes/`, the
+project's Mathlib closure is **23** modules larger than it would be without
+`Mathlib/NumberTheory/NumberField/Basic.lean`, which brings all 23 with it;
 `Mathlib/RingTheory/Ideal/GoingUp.lean` was **already** reached, so naming it costs a line and no
 build. **The figure is a difference and no absolute is quoted here**: the two ends of it move with
 every `import Mathlib…` line any row anywhere adds, and the difference between them does not. The
@@ -149,22 +150,41 @@ absolutes, and how far the convention moves them, are in the cautions below. Tha
 magnitude more than the two modules `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` paid,
 and it is the whole reason this is a leaf rather than an appendix to that file.
 
-Two cautions for whoever re-measures. **Mathlib writes `public import`**; a walk matching only
-`^import ` returns a closure two orders of magnitude too small. And the absolute figure depends on
-the convention — restricting to names matching `^import <Name>$` and to `Mathlib.*` gives 2727,
-while following the other `.lake/packages` as well gives 2985. A third convention this paragraph
-used to name, admitting `import Mathlib…` lines that occur inside docstrings, no longer differs
-from the first: every such line on this tree today is prose with an ellipsis and names no module.
-**The delta is 22 under all of them**, which is why the delta and not the absolute is the figure
-quoted above. The two absolutes here are this file's own measurement at the time this paragraph was
-last re-measured and are expected to drift; only the 22 is load-bearing.
-`FormalSchemes.StructureSheafStalkPowerSeriesDedekind` now states its own cost the same way — a
-delta of two, with absolutes given only to show how far the convention moves them.
+Three cautions for whoever re-measures, and the first of them is a bug rather than a convention.
+**A walk that follows the `import` lines inside Mathlib's own comment spans is wrong**, and here it
+is wrong by 77 modules, among them the metric-space, extended-real and normed-group families that
+a formal-schemes project does not load. All 77 arrive through one docstring line,
+`Mathlib/Tactic/FunProp.lean:48`, which names `Mathlib/Analysis/Complex/Trigonometric.lean` inside
+a worked example. Reading each Mathlib header with its nested block comments stripped, the closure
+is **2650**, and that figure is checkable against Lean rather than against a second walk: filtering
+`Lean.Environment.allImportedModuleNames` to the names beginning with Mathlib returns the same
+count and the same modules. `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower` writes that
+walk out in full and does the check, and its **2649** to **2650** pair reproduces here.
 
-**The `lake build` job count goes 3455 to 3479, and the walk accounts for 23 of those 24** — the 22
-Mathlib modules and this leaf. The twenty-fourth is not a source module in any package the project
-depends on; the same walk accounted for that file's `+3` exactly, so the discrepancy is recorded
-here rather than explained away.
+Second, **Mathlib writes `public import`**, and also `meta import`, `import all`, and trailing `--`
+comments after the module name. A walk matching only `^import ` returns a closure two orders of
+magnitude too small, and one anchored to end of line drops seven modules that are genuinely
+reached — **2643** rather than 2650 — among them `Mathlib/Algebra/Order/Group/PosPart.lean`, which
+`Mathlib/Tactic/Positivity/Basic.lean` imports behind a `-- shake: keep` comment. Third, following
+the other `.lake/packages` as well gives **2907**.
+
+**The delta moves under the first of those three, and only the first.** It is **23** comment-aware
+and **22** comment-blind, the module that moves being `Mathlib/Algebra/Algebra/Rat.lean`, which a
+comment-blind walk already holds through the docstring line above. So the delta is the figure to
+quote and it is stable under the other two axes, but it is not convention-free either, and this
+paragraph names the walk that produced it rather than claiming it cannot move. The absolutes here
+are this file's own measurement and are expected to drift; the argument above rests only on 23
+against 2, which survives either reading of the first axis.
+`FormalSchemes.StructureSheafStalkPowerSeriesDedekind` states its own cost the same way — a delta of
+two, and that one really is invariant under all eight of the conventions above.
+
+**The `lake build` job count went 3455 to 3479 when this leaf landed (issue 1813), and those 24
+jobs are exactly the 23 Mathlib modules and this leaf.** That pair is the measurement taken then
+and not a current one; it moves with the tree like every other absolute. The paragraph used to
+report a twenty-fourth job the walk could not account for, and the twenty-fourth was
+`Mathlib/Algebra/Algebra/Rat.lean` — the walk was comment-blind, so it already held that module and
+charged the leaf 22. Comment-aware at the same commit the two imports cost 23, and nothing is left
+over.
 
 ## References
 
