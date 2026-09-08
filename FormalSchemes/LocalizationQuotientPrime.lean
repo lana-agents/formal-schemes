@@ -19,11 +19,21 @@ a localization of `R ⧸ K` at `Algebra.algebraMapSubmonoid (R ⧸ K) M` — spe
 submonoid `M`. All that changes is the identification of the image submonoid, which for a prime
 complement is `IsLocalization.algebraMapSubmonoid_primeCompl_comap` below.
 
-It sits in its own file rather than beside its `Localization.Away` sibling because
-`FormalSchemes.LocalizationQuotient` is imported, transitively, by 458 of the 508 modules of this
-library, against 1 for this one; a statement with a single consumer does not justify recompiling
-them. Merging the two files is a dedup question for whenever something downstream of
-`FormalSchemes.Sections` needs this.
+It sits in its own file rather than beside its `Localization.Away` sibling because the two are used
+at opposite scales, and it is the ratio and not either figure that decides.
+`FormalSchemes.LocalizationQuotient` has reverse closure **505**, counted by walking every
+`import FormalSchemes.` line, transitively, over the 560 modules under `FormalSchemes/` (a module
+is not counted in its own closure, and the aggregator at the repository root is outside the walk).
+This module's reverse closure is **13**, and exactly one module imports it directly,
+`FormalSchemes.StructureSheafStalkLevels`, which is also the only module whose code names anything
+declared here. The other twelve reach this file only through that one and, imports being
+transitive, see these declarations without using any: *sees*, *is recompiled by* and *uses* part
+company here, and merging the two files would move the first two and not the third. It would put
+this statement in front of every module that reaches the away one and recompile almost all of them
+for something they do not use. Both absolutes go stale the moment a module is added above either
+file, and they are here as the evidence for the ratio rather than as facts worth keeping in sync;
+the split stops paying when this module is reached by as much of the tree as the away one is, and
+it is nowhere near that.
 
 The statement is phrased against an arbitrary prime `p` of `R` together with a hypothesis
 `P.comap (Ideal.Quotient.mk K) = p`, rather than against `P.comap (Ideal.Quotient.mk K)` itself.
