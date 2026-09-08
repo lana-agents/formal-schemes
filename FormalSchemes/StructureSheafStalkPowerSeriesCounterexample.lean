@@ -206,15 +206,24 @@ exactly these `R`* is proved **here** and at **this** point; no statement of tha
 any other point, and the surjectivity half on its own is still all that
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` decides.
 
-**What is still open, which is what a successor needs.** Three things, none of them touched here:
-the predicate at a point of `Spf (R⟦X⟧, (X))` **other than the generic one**; the predicate at an
-**ideal of definition of `R⟦X⟧` other than `(X)`**; and the predicate at a formal spectrum whose
-ring is **not a power series ring** at all. Nothing below bears on any of the three, and nothing
-below is even stated at another point: both inputs to the characterisation — the injectivity half
-and the identification of the surjectivity half with the condition — name
-`FormalSpectrum.powerSeriesXGenericPoint` in their statements, and neither has a form that survives
-moving the point or the ideal. What is on the tree elsewhere is not surveyed here; in particular
-this says nothing about which of the general criteria in
+**What is still open, which is what a successor needs.** Three things were named here as open,
+none of them touched below, and **the first has since been closed elsewhere on the tree**: the
+predicate at a point of `Spf (R⟦X⟧, (X))` **other than the generic one** is settled at every point
+of every domain by `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, in
+`FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt`. The other two are
+still open: the predicate at an **ideal of definition of `R⟦X⟧` other than `(X)`**, and the
+predicate at a formal spectrum whose ring is **not a power series ring** at all. Nothing below
+bears on any of the three, and nothing below is even stated at another point: both inputs to the
+characterisation — the injectivity half and the identification of the surjectivity half with the
+condition — name `FormalSpectrum.powerSeriesXGenericPoint` in their statements, so moving the
+point means restating them. That restatement was the whole of the cost, and it turned out to be
+small: `FormalSpectrum.awayCompletionEquivPowerSeriesAway` was already at every commutative ring,
+and `FormalSpectrum.atPrimeCompletionEquivFractionPowerSeries` was reproved at every ring and
+every point as `FormalSpectrum.atPrimeCompletionEquivLocalizationPowerSeries`, its domain
+hypothesis doing no work at all — the one step that looks as though it needs a fraction field is a
+common-denominator argument inside the prime complement `Ideal.primeCompl`. **Moving the ideal is
+what remains untested.** What is on the tree elsewhere is not surveyed here beyond that; in
+particular this says nothing about which of the general criteria in
 `FormalSchemes.StructureSheafStalkPowerSeries` do or do not apply at some other point.
 
 **The collapse is not claimed without countability.** Whether
