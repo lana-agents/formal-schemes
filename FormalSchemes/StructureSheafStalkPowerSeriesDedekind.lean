@@ -221,11 +221,14 @@ point, is itself over that same module, and is what the arbitrary-point material
 in; it is the one edge this branch adds.
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
-reasons, and the second is the load-bearing one. It is **3001** lines with **93** declarations —
-`theorem`, `lemma`, `def`, `instance` or `class` at the start of a line, `example`s not counted and
-there are **nine** of those — and is the most edited file on this board, at **28** commits touching
-it against **12** for the runner-up, so a leaf keeps two concurrent rows off one file; and **the two
-Mathlib imports this material needs would otherwise be paid by a module that does not need them.**
+reasons, and the second is the load-bearing one. It is **3001** lines with **84** declarations —
+`theorem`, `lemma`, `def`, `instance` or `class` at column zero and **outside a comment span**,
+which is the qualification that does the work here: twelve lines of that file's prose begin with
+one of those words, and a walk that reads comments counts every one of them. `example`s are not
+counted and there are **nine** of those. It is the most edited file on this board, at **28**
+commits touching it against **12** for the runner-up, so a leaf keeps two concurrent rows off one
+file; and **the two Mathlib imports this material needs would otherwise be paid by a module that
+does not need them.**
 That file's own discrete-valuation-ring section advertises that it *"adds no Mathlib import
 either"*, so the imports are a cost worth isolating, and they are not avoidable: without
 `Mathlib/RingTheory/DedekindDomain/PID.lean` the constant `Ring.DimensionLEOne` does not exist, and
