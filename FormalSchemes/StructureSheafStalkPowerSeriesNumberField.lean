@@ -9,21 +9,25 @@ set_option linter.style.header false
 
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` classifies
 `FormalSpectrum.HasBoundedDenominators` at a Dedekind domain — it holds exactly when there are
-finitely many prime ideals — and refutes it, through
-`FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals`, at every Noetherian domain of
-dimension at most one with infinitely many nonzero primes. It instantiates that at no ring but `ℤ`,
-and says why: the infinitude of the primes of `𝓞 K` is not in Mathlib, and building it drags a
-number-theory import in.
+finitely many prime ideals — and refutes it at every Noetherian domain of dimension at most one
+with infinitely many nonzero primes: at the generic point through
+`FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals` and at **every** point of
+`Spf (R⟦X⟧, (X))` through
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`. It instantiates those at no
+ring but `ℤ`, and says why: the infinitude of the primes of `𝓞 K` is not in Mathlib, and building
+it drags a number-theory import in.
 
 **This file is that import, paid on a leaf**, and what it buys is not one ring but a family:
 
 > `FormalSpectrum.not_hasBoundedDenominators_ringOfIntegers`: the denominator condition **fails at
 > `𝓞 K` for every number field `K`**.
 
-and therefore
+and, out of the same count of prime ideals rather than out of the line above,
 
-> `FormalSpectrum.not_isStalkLimit_powerSeriesXRingOfIntegersGenericPoint`: the stalk half of
-> EGA I 10.8 **fails at the generic point of `(𝓞 K)⟦X⟧`, for every number field `K`**.
+> `FormalSpectrum.not_isStalkLimit_powerSeriesXRingOfIntegers`: the stalk half of EGA I 10.8
+> **fails at every point of `Spf ((𝓞 K)⟦X⟧, (X))`, for every number field `K`** — and
+> `FormalSpectrum.not_isStalkLimit_powerSeriesXRingOfIntegersGenericPoint`, the case at the generic
+> point, which is the statement the rest of this cluster compares against.
 
 ## The class number does not enter, and that is the point
 
@@ -76,8 +80,12 @@ argument goes wrong.
   ideals**, for every number field `K`.
 * `FormalSpectrum.not_hasBoundedDenominators_ringOfIntegers`: **the denominator condition fails at
   `𝓞 K`**, with no class-number, factorisation or countability hypothesis.
-* `FormalSpectrum.not_isStalkLimit_powerSeriesXRingOfIntegersGenericPoint`: **and so
-  `FormalSpectrum.IsStalkLimit` is false at `(X) ⊆ (𝓞 K)⟦X⟧` at the generic point.**
+* `FormalSpectrum.not_isStalkLimit_powerSeriesXRingOfIntegers`: **and so
+  `FormalSpectrum.IsStalkLimit` is false at every point of `Spf ((𝓞 K)⟦X⟧, (X))`**, through
+  `FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals` rather than through the
+  denominator condition at the generic point alone.
+* `FormalSpectrum.not_isStalkLimit_powerSeriesXRingOfIntegersGenericPoint`: **the case of that at
+  the generic point of `(𝓞 K)⟦X⟧`**, kept as a name and with its statement unchanged.
 
 The last is the second family of negative values of `FormalSpectrum.IsStalkLimit` on this tree,
 after `FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint`, and the first that is a family
@@ -116,7 +124,7 @@ collapse, not `[UniqueFactorizationMonoid R]` from the element classification, n
 ## Placement
 
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which holds the refuting
-criterion this file instantiates: forward closure **54** project modules besides itself, reverse
+criterion this file instantiates: forward closure **55** project modules besides itself, reverse
 closure **0**, counted by walking every `^import FormalSchemes.` line over the 560 modules under
 `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository root
 is outside the walk).
@@ -259,11 +267,42 @@ theorem not_hasBoundedDenominators_ringOfIntegers : ¬ HasBoundedDenominators (�
   not_hasBoundedDenominators_of_infinite_primeIdeals (𝓞 K)
     (infinite_setOf_isPrime_ringOfIntegers K)
 
+/-- **`FormalSpectrum.IsStalkLimit` is false at every point of `Spf ((𝓞 K)⟦X⟧, (X))`**, for every
+number field `K`.
+
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals` at the infinitude above.
+`IsDedekindDomain (𝓞 K)` is found by instance synthesis and supplies the three hypotheses that
+theorem needs — `IsDomain`, `IsNoetherianRing` and `Ring.DimensionLEOne` — so the only content here
+is again the count of prime ideals, exactly as at the generic point.
+
+**Every point and not only the generic one, with no class-number and no factorisation hypothesis.**
+`Spf (ℤ⟦X⟧, (X))` was the first formal spectrum on this tree decided everywhere in the negative and
+is no longer the only one: every number field contributes another, and the statement below is the
+case of this one at a single point.
+
+**Nothing here says the predicate varies across a single formal spectrum**: that needs a **local**
+domain failing the denominator condition and `𝓞 K` is not local, so
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal` is still where the varying value lives. And
+nothing here bears on **orders** in number fields, for the reason this file already gives: Mathlib
+carries no `Set.Infinite` statement about their prime ideals, and the criterion cannot be fed
+without one. -/
+theorem not_isStalkLimit_powerSeriesXRingOfIntegers
+    (x : FormalSpectrum (powerSeriesXIdeal (𝓞 K))) :
+    ¬ IsStalkLimit (powerSeriesXIdeal (𝓞 K)) x :=
+  not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals (𝓞 K)
+    (infinite_setOf_isPrime_ringOfIntegers K) x
+
 /-- **`FormalSpectrum.IsStalkLimit` is false at `(X) ⊆ (𝓞 K)⟦X⟧` at the generic point**, for every
 number field `K`.
 
-The theorem above read through
-`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`.
+**The case of the theorem above at one point**, kept as a name because this file's header is
+built around it and because it is the statement whose shape the rest of the cluster compares
+against. The route it used to take —
+`FormalSpectrum.not_hasBoundedDenominators_ringOfIntegers` read through
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` — is still
+available and is what
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals` performs internally, one
+point at a time; nothing about the statement changes.
 
 **The second family of negative values of the predicate on this tree**, after
 `FormalSpectrum.not_isStalkLimit_powerSeriesXIntGenericPoint`, and the first that is a family rather
@@ -275,11 +314,11 @@ any fraction field — it counts prime ideals.
 **This does not repair EGA I 10.8's stalk half and does not claim to.** It enlarges the class of
 rings over which that half is known to fail. Nor does it say the predicate varies across a single
 formal spectrum: that needs a **local** domain failing the denominator condition, and `𝓞 K` is not
-local. -/
+local — and the theorem above, which decides every point of this space the same way, is the
+sharpest form of that. -/
 theorem not_isStalkLimit_powerSeriesXRingOfIntegersGenericPoint :
-    ¬ IsStalkLimit (powerSeriesXIdeal (𝓞 K)) (powerSeriesXGenericPoint (𝓞 K)) := fun h =>
-  not_hasBoundedDenominators_ringOfIntegers K
-    ((isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators (𝓞 K)).mp h)
+    ¬ IsStalkLimit (powerSeriesXIdeal (𝓞 K)) (powerSeriesXGenericPoint (𝓞 K)) :=
+  not_isStalkLimit_powerSeriesXRingOfIntegers K _
 
 /-- **The statements above are not vacuous**: `NumberField ℚ` is an instance, so `ℚ` is a value of
 every one of them.

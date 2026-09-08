@@ -39,10 +39,15 @@ closed point turns out to be an illustration rather than an exception:
 > the generic point and every closed point, none left over — `FormalSpectrum.IsStalkLimit` is
 > **false**.
 
-That is the first formal spectrum on this tree decided everywhere in the **negative**. It is not
-the first decided everywhere: `FormalSpectrum.isStalkLimit_bot` decides `Spf (R, ⊥)` at every
-point of every commutative ring, `FormalSpectrum.isStalkLimit_of_isNilpotent` does the same at
-every finitely generated nilpotent ideal of definition, and
+That is the first formal spectrum on this tree decided everywhere in the **negative**, and it is
+no longer the only one: `FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`
+(`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`) is that theorem with `ℤ` replaced by the
+hypotheses its proof uses — a Noetherian domain of dimension at most one with infinitely many
+nonzero primes — and `FormalSpectrum.not_isStalkLimit_powerSeriesXRingOfIntegers` reads it at the
+ring of integers of every number field. It is not the first decided everywhere:
+`FormalSpectrum.isStalkLimit_bot` decides `Spf (R, ⊥)` at every point of every commutative ring,
+`FormalSpectrum.isStalkLimit_of_isNilpotent` does the same at every finitely generated nilpotent
+ideal of definition, and
 `FormalSpectrum.isStalkLimit_powerSeriesX_field` decides `Spf (k⟦X⟧, (X))` over a field — and all
 three of those are positive. **It is not a claim that `ℤ⟦X⟧` is a pathological ring and it
 refutes nothing** — see `## What is *not* proved here` below.
@@ -100,10 +105,15 @@ is at the maximal ideal of a local ring (`FormalSpectrum.hasBoundedDenominatorsA
 where nothing has to be inverted.
 
 **The closed point is not decided in general, and neither is the everywhere-failure.** `ℤ` is now
-decided at every one of its primes, and it is the only ring decided everywhere in the *negative*:
-`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` is about `ℤ` and about nothing else, while
-`FormalSpectrum.isStalkLimit_powerSeriesX_field` decides every prime of a field the other way. No
-criterion is given for which rings behave like `ℤ`, none is guessed at below, and
+decided at every one of its primes, and `Spf (ℤ⟦X⟧, (X))` was the first space on this tree decided
+everywhere in the *negative*; it is not the only one, because
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`
+(`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`) decides every point of `Spf (R⟦X⟧, (X))`
+the same way over every Noetherian domain of dimension at most one with infinitely many nonzero
+primes. `FormalSpectrum.not_isStalkLimit_powerSeriesX_int` **here** is about `ℤ` and about nothing
+else, while `FormalSpectrum.isStalkLimit_powerSeriesX_field` decides every prime of a field the
+other way. **A sufficient condition for behaving like `ℤ` is now on this tree and is that theorem**;
+none is given or guessed at *here*, it is one direction and not a classification, and
 `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` shows the behaviour is not universal — at a
 local ring the condition holds at the maximal ideal.
 
@@ -120,19 +130,32 @@ larger than the denominator on offer.
 statement below carries any of them, and none of the material in
 `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`,
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` or
-`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` is consumed or contradicted.
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` is consumed or contradicted. **The
+traffic runs the other way**: the Dedekind module imports this one and carries the criterion below
+to a Noetherian domain of dimension at most one, so a hypothesis of that shape is where the
+generalisations of anything here are to be looked for, and not in this file.
 
 ## Placement
 
-A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds the two
+Over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds the two
 identifications at the generic point and the levelwise completion criterion the target
 identification below reuses: forward closure **53** project modules besides itself, reverse closure
-**0**, counted by walking every `^import FormalSchemes.` line over the 560 modules under
+**3** — `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which generalises the criterion
+below away from `ℤ`, and the two modules over it,
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` and
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal` — counted by walking every
+`^import FormalSchemes.` line over the 560 modules under
 `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository root
 is outside the walk). It adds no Mathlib import.
 
 `FormalSpectrum.awayCompletionEquivPowerSeriesAway` lives there too, is already stated at every
 commutative ring, and is reused below unchanged.
+
+**This module was a leaf when it was written and is one no longer.** What made it stop being one is
+that `FormalSpectrum.HasBoundedDenominatorsAt` and the criterion at an arbitrary point below are
+what a general everywhere-failure has to be stated in, so the Dedekind module imports this one
+rather than the other way about; nothing here was moved and nothing here changed to make that
+possible.
 
 **One instance was moved down to make room for this file.**
 `FormalSpectrum.isPrime_span_singleton_two` — `(2)` is prime in `ℤ` — was declared in
@@ -1173,7 +1196,10 @@ theorem not_hasBoundedDenominatorsAt_int (p : Ideal ℤ) [p.IsPrime] :
 
 /-- **`FormalSpectrum.IsStalkLimit` fails at every point of `Spf (ℤ⟦X⟧, (X))`** — at the generic
 point, at every closed point, with no point left over. This is the first formal spectrum on this
-tree decided everywhere in the **negative**; it is not the first decided everywhere, since
+tree decided everywhere in the **negative** and it is no longer the only one —
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals` is this theorem with `ℤ`
+replaced by the hypotheses the proof uses, and it is what to cite for any other ring. It is not the
+first decided everywhere, since
 `FormalSpectrum.isStalkLimit_bot`, `FormalSpectrum.isStalkLimit_of_isNilpotent` and
 `FormalSpectrum.isStalkLimit_powerSeriesX_field` each decide a space at every one of its points,
 and each of those three is positive.
