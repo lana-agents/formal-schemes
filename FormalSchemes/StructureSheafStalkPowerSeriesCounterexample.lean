@@ -244,8 +244,8 @@ modules besides itself on top of this file's closure, 43 including it, and nothi
 ## Implementation notes
 
 The five `AdicCompletion` lemmas at the top of the file mention no formal geometry and would sit
-naturally in `FormalSchemes.Completion`, whose reverse closure is 447 of the project's 559 modules
-against this file's 4. They are kept here on the disposition
+naturally in `FormalSchemes.Completion`, whose reverse closure is 448 of the project's 560 modules
+against this file's 5. They are kept here on the disposition
 `FormalSchemes.StructureSheafStalkPowerSeries` recorded for
 `AdicCompletion.bijective_mapCompletion` — which is the same shape and is still in that file — and
 because every consumer is in this file. **If a second file needs
@@ -265,15 +265,17 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 Over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
 `FormalSchemes.CountableLocalization`: forward closure **52** project modules besides itself (53
-counted with itself), reverse closure **4** —
+counted with itself), reverse closure **5** —
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which carries the classification at prime
 ideals, and over it both
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting
 criterion at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which
-instantiates it at `ℤ[X]` localized at `(2, X)`, and
+instantiates it at `ℤ[X]` localized at `(2, X)`;
 `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which settles the collapse without
-countability at an ultrapower of `ℤ` — counted by walking every `^import` line over the
-558 modules under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator
+countability at an ultrapower of `ℤ`; and
+`FormalSchemes.StructureSheafStalkPowerSeriesPoint`, which decides the predicate at an arbitrary
+point — counted by walking every `^import` line over the
+560 modules under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator
 at the repository root is outside the walk).
 
 **Every closure figure in this docstring comes from that one walk and they go stale together** —
@@ -292,7 +294,7 @@ below it, and the prose it makes stale is this docstring's. The collapse section
 same ground, one section further down.
 
 The second import is the one the collapse section adds, and it is the **Mathlib-only leaf**
-`FormalSchemes.CountableLocalization`, whose forward closure is 0 and whose reverse closure is 6 —
+`FormalSchemes.CountableLocalization`, whose forward closure is 0 and whose reverse closure is 7 —
 holding one statement that was already on the tree:
 `Localization.countable_of_countable`, moved out of
 `FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has
@@ -2443,6 +2445,17 @@ end Generic
 /-! ### The counterexample at `ℤ` -/
 
 section Int
+
+/-- **`(2)` is prime in `ℤ`.** Stated as an instance so that a prime of `ℤ[X]` above it, or a point
+of a formal spectrum over it, is prime by synthesis.
+
+It sits here rather than in either of the two leaves that consume it —
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal`, where it makes `FormalSpectrum.polyIntTwoX`
+prime, and `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, where it names a point of
+`Spf (ℤ⟦X⟧, (X))` — because those two are siblings and neither can reach the other. -/
+instance isPrime_span_singleton_two : (Ideal.span {(2 : ℤ)}).IsPrime := by
+  rw [Ideal.span_singleton_prime two_ne_zero]
+  exact Int.prime_two
 
 /-- **The witness**: the power series over `Frac ℤ` whose `n`-th coefficient is `1 / (n + 1)`.
 
