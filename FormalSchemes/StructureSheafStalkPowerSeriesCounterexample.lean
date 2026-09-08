@@ -2458,10 +2458,15 @@ section Int
 /-- **`(2)` is prime in `ℤ`.** Stated as an instance so that a prime of `ℤ[X]` above it, or a point
 of a formal spectrum over it, is prime by synthesis.
 
-It sits here rather than in either of the two leaves that consume it —
+It sits here rather than in either of the two modules that consume it —
 `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, where it makes `FormalSpectrum.polyIntTwoX`
 prime, and `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, where it names a point of
-`Spf (ℤ⟦X⟧, (X))` — because those two are siblings and neither can reach the other. -/
+`Spf (ℤ⟦X⟧, (X))` — because when it was moved here neither of those two could reach the other.
+That is no longer symmetric: `FormalSchemes.StructureSheafStalkPowerSeriesLocal` now reaches
+`FormalSchemes.StructureSheafStalkPowerSeriesPoint` through
+`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`. The decision stands unchanged — the point
+module still cannot reach the local one, and here it is declared once where both of them reach
+it. -/
 instance isPrime_span_singleton_two : (Ideal.span {(2 : ℤ)}).IsPrime := by
   rw [Ideal.span_singleton_prime two_ne_zero]
   exact Int.prime_two
