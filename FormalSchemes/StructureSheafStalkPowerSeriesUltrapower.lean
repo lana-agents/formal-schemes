@@ -382,8 +382,8 @@ nothing else, `AlgebraicClosure` and `integralClosure` both elaborate.
 imports `IsIntegrallyClosed` is not an identifier in scope at all. It arrives here *with*
 `Mathlib/RingTheory/Polynomial/RationalRoot.lean`, which imports it, and brings
 `Mathlib/RingTheory/Localization/NumDen.lean` with it. So neither line needs to be written, but
-not for the same reason, and the difference is load-bearing: a successor who reproves
-`FormalSpectrum.not_isUnit_two_algInt` and deletes that import line keeps `AlgebraicClosure` and
+not for the same reason, and the difference is load-bearing: a successor who reproves **both**
+consumers of `IsIntegrallyClosed ℤ` and deletes that import line keeps `AlgebraicClosure` and
 loses `IsIntegrallyClosed`.
 
 ## References
