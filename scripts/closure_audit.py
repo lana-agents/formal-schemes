@@ -106,6 +106,39 @@ be rewritten in the checked spelling rather than left for the next sweep**, and 
 every delta is such a measurement: *"importing it would take this file's closure from 48 to 93"*
 says the closure is 48 **now**.
 
+## Size figures, and the history figure beside one that is out of reach
+
+A `## Placement` paragraph that says *"appending to `X` was the alternative ... it is **3001** lines
+with **84** declarations"* is making two measurements of **another** file, and they rot faster than
+any closure figure here: every commit to `X` can move the first, and `X` need not be a module this
+one imports or is imported by.  The tree spent three rows on one sentence's pair before this check
+existed -- rows 1899, 1906 and 1911, the last of which found the stated count was the file's
+declarations **plus** the nine `example`s the same sentence said it excluded.  So a figure
+immediately followed by `lines` or `declarations` is attributed by exactly the rule above and
+checked against the file it is attributed to:
+
+* **lines** is what `wc -l` gives, the number of `\n`;
+* **declarations** is the convention the tree's own gloss states -- `theorem`, `lemma`, `def`,
+  `instance` or `class` at column zero with a word boundary after it, on a line **not** inside a
+  `/- ... -/` span, nesting tracked.  An `example` is not a declaration: it is anonymous and puts
+  nothing in the environment, and it is counted separately.
+
+The comment exclusion is the whole check and not a detail.  Without it
+`FormalSchemes/StructureSheafStalkPowerSeriesCounterexample.lean` reads **96** rather than **84**,
+because twelve lines of that file's *prose* begin with one of the five keywords -- and a checker
+that reads 96 is worse than none, because it would demand a repair against a correct sentence.
+`--selftest` pins that with a fixture whose answer changes when the exclusion is dropped.
+
+What is out of reach is the **history** figure in the same sentence, *"28 commits touching it
+against 12 for the runner-up"*.  It needs `git`, which nothing else in this script does, and it has
+the property no check survives: the commit that repairs it falsifies it.  It stays convention, like
+the positional noun about another module above.
+
+A size claim whose subject is an anaphor with no module named in range is **declined**, exactly as a
+closure claim is, and the repair is in the prose rather than in `WINDOW`.  Widening the window to
+reach the intended module makes a *nearer* one the anchor and turns a decline into a confident wrong
+answer; `--selftest` pins that too, so a later widening fails the test instead of mis-measuring.
+
 Declined claims are printed, with the reason and the count, and do **not** fail the run: this
 script's job is to keep the figures it can attribute honest, not to force prose into a template it
 can parse.  The count is the honest coverage figure, and a run that suddenly declines more of them
@@ -208,6 +241,20 @@ MATHLIB = re.compile(r"Mathlib", re.I)
 SWEEPABLE = re.compile(r"closure"
                        r"|of (?:this|the) (?:tree|project|library)'s \*{0,2}\d+\*{0,2} modules?"
                        r"|\bupstream of \*{0,2}\d", re.I)
+
+# A size figure: `**3001** lines`, `84 declarations`.  The noun is the trigger, so the figure has
+# to be adjacent to it -- `**28** commits touching it` is a history claim and not one of these, and
+# a bare numeral is nobody's measurement.
+SIZE = re.compile(r"(?:\*\*)?(\d+)(?:\*\*)?\s+(lines|declarations)\b")
+
+# A declaration, by the convention the tree's own gloss states: one of the five keywords at column
+# zero with a word boundary after it.  `noncomputable def` and `@[simp] theorem` do not match, and
+# that is the gloss's rule rather than an oversight -- but it is a prefix match on the first word of
+# the line, so the first such spelling added to a file this tree measures will move the count.
+DECLARATION = re.compile(r"(?:theorem|lemma|def|instance|class)\b")
+
+# An `example` is counted, and separately: it is anonymous and puts nothing in the environment.
+EXAMPLE = re.compile(r"example\b")
 
 WINDOW = 320
 NUMERAL_REACH = 60
@@ -335,6 +382,63 @@ def claims(mods: dict[str, str]):
                        offset=1 if WITH_ITSELF.match(tail) else 0, companions=companions)
 
 
+def file_size(path: str) -> tuple[int, int, int, int]:
+    """`(lines, declarations, examples, keyword_lines_in_prose)` for one file.
+
+    `lines` is what `wc -l` gives.  The other three are comment-aware: a keyword counts only at
+    column zero on a line that is *outside* every `/- ... -/` span, with nesting tracked, because
+    twelve lines of one file's prose on this tree begin with one of the five keywords and a walk
+    that reads them over-counts by exactly that many.  The fourth figure is those lines, returned
+    so that `--selftest` can assert the exclusion did something rather than merely that the total
+    came out right.
+    """
+    raw = open(path, encoding="utf-8").read()
+    depth = 0
+    declarations = examples = in_prose = 0
+    for line in raw.split("\n"):
+        outside = depth == 0
+        i = 0
+        while i < len(line):
+            if depth == 0 and line.startswith("--", i):
+                break
+            if line.startswith("/-", i):
+                depth += 1
+                i += 2
+                continue
+            if line.startswith("-/", i) and depth:
+                depth -= 1
+                i += 2
+                continue
+            i += 1
+        if DECLARATION.match(line):
+            if outside:
+                declarations += 1
+            else:
+                in_prose += 1
+        elif outside and EXAMPLE.match(line):
+            examples += 1
+    return raw.count("\n"), declarations, examples, in_prose
+
+
+def size_claims(mods: dict[str, str]):
+    """Yield every `N lines` / `M declarations` claim in the tree, as a dict.
+
+    Same attribution as `claims()`, on the window ending at the figure -- the noun is the claim's
+    marker and the figure is immediately before it, so the two coincide.  As there, a hit inside
+    code would be reported rather than silently mis-measured.
+    """
+    for module, path in sorted(mods.items()):
+        raw = open(path, encoding="utf-8").read()
+        flat = raw.replace("\n", " ")
+        for m in SIZE.finditer(flat):
+            back = max(0, m.start() - WINDOW)
+            start = max((b.end() for b in BREAK.finditer(flat, back, m.start())), default=back)
+            about, why = attribute(flat[back:m.start()], module)
+            yield dict(path=path, line=raw[:m.start()].count("\n") + 1, module=module,
+                       noun=m.group(2).lower(), stated=int(m.group(1)), about=about, declined=why,
+                       sentence=start, text=" ".join(flat[m.start():m.start() + 90].split()))
+
+
 def sentences(raw: str):
     """`(offset, text)` for each sentence of `raw`, over the newline-flattened text."""
     flat = raw.replace("\n", " ")
@@ -359,11 +463,17 @@ def invisible(mods: dict[str, str]):
                        text=" ".join(s.split()))
 
 
-def audit(root: str = ".") -> tuple[list, list]:
-    """Every claim in the tree, split into `(mismatches, declined)`."""
+def audit(root: str = ".") -> tuple[list, list, list]:
+    """Every claim in the tree, as `(mismatches, declined, size_declined)`.
+
+    Mismatches are one list because `--tree` fails on any of them; the two declined populations are
+    kept apart because they are different coverage figures and a reader watching one of them move
+    should not have the other mixed into it.
+    """
     mods = project_modules(root)
     forward, reverse = closures(mods)
     mismatches, declined, called_leaf = [], [], set()
+    size_declined = []
     for c in claims(mods):
         # One report per sentence: a `## Placement` opener carries two claims and one noun.
         seen_here = (c["path"], c["sentence"]) in called_leaf
@@ -393,7 +503,19 @@ def audit(root: str = ".") -> tuple[list, list]:
                     what=("the number of modules under `FormalSchemes/`" if kind == "total" else
                           "the %s closure of `%s`" % (c["kind"], c["module"]) if kind == "self"
                           else "the %s closure of `%s`" % (c["kind"], c["about"]))))
-    return mismatches, declined
+    for c in size_claims(mods):
+        if c["about"] is None:
+            size_declined.append(c)
+            continue
+        if c["about"] not in mods:
+            size_declined.append(dict(c, declined="`%s` is not a module of this tree" % c["about"]))
+            continue
+        lines, declarations, _examples, _prose = file_size(mods[c["about"]])
+        actual = lines if c["noun"] == "lines" else declarations
+        if c["stated"] != actual:
+            mismatches.append(dict(c, actual=actual, what="the number of %s in `%s`"
+                                   % (c["noun"], c["about"])))
+    return mismatches, declined, size_declined
 
 
 def selftest() -> int:
@@ -466,7 +588,7 @@ def selftest() -> int:
                      "/-! A leaf over `FormalSchemes.Mid`: `FormalSchemes.Base`'s reverse closure\n"
                      "is **9**. -/\n")
         write("Quiet", "import FormalSchemes.Base\n/-! Nothing measured here. -/\n")
-        mis, dec = audit(d)
+        mis, dec, _sz = audit(d)
         check("the walk follows `public import` and both figures of the correct file pass",
               [(m["module"], m["stated"], m["actual"]) for m in mis],
               [("FormalSchemes.Top", 9, 3)])
@@ -475,7 +597,7 @@ def selftest() -> int:
         with open(os.path.join(d, "FormalSchemes", "Mid.lean"), encoding="utf-8") as f:
             broken = f.read().replace("(2 counted with itself)", "(7 counted with itself)")
         write("Mid", broken)
-        mis, _ = audit(d)
+        mis, _, _sz = audit(d)
         check("a wrong `counted with itself` companion figure is caught",
               sorted((m["module"], m["stated"], m["actual"]) for m in mis),
               [("FormalSchemes.Mid", 7, 2), ("FormalSchemes.Top", 9, 3)])
@@ -498,14 +620,14 @@ def selftest() -> int:
         write("Top", "import FormalSchemes.Mid\n"
                      "/-! `FormalSchemes.Base`'s reverse closure is **2**, 1 before this\n"
                      "file. -/\n")
-        mis, _ = audit(d)
+        mis, _, _sz = audit(d)
         check("a file that calls itself a leaf and has a consumer is caught, once",
               [(m["module"], m["stated"], m["actual"]) for m in mis],
               [("FormalSchemes.Mid", 0, 1)])
         write("Top", "import FormalSchemes.Mid\n"
                      "/-! `FormalSchemes.Base`'s reverse closure is **2**, 5 before this\n"
                      "file. -/\n")
-        mis, _ = audit(d)
+        mis, _, _sz = audit(d)
         check("`N before this leaf` also reads `file` and `module`",
               sorted((m["module"], m["stated"], m["actual"]) for m in mis),
               [("FormalSchemes.Mid", 0, 1), ("FormalSchemes.Top", 5, 1)])
@@ -515,7 +637,7 @@ def selftest() -> int:
         write("Top", "import FormalSchemes.Mid\n"
                      "/-! `FormalSchemes.Base`'s reverse closure is **2**, 1 before this\n"
                      "module. -/\n")
-        mis, _ = audit(d)
+        mis, _, _sz = audit(d)
         check("neither `Mathlib-only leaf` nor an indefinite one is a reverse-closure claim",
               [(m["module"], m["stated"], m["actual"]) for m in mis], [])
 
@@ -544,6 +666,86 @@ def selftest() -> int:
                "FormalSchemes.Upstream"])
         check("--sweep reports the blind sentence of a file whose other sentence is checked",
               [t for m, t in blind if m == "FormalSchemes.Both"], ["Its import closure is 3."])
+
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        # `Counted` is the shape the comment exclusion exists for: four of its lines begin with one
+        # of the five keywords **inside** a comment, one of them inside a nested span, so a walk
+        # that reads comments answers 6 where the tree's own convention answers 2.
+        counted = ("/-! A note whose own lines begin with the keywords:\n"
+                   "theorem is a word this paragraph starts a line with,\n"
+                   "instance likewise, and inside a nested span\n"
+                   "/-\n"
+                   "class again\n"
+                   "-/\n"
+                   "lemma once more. -/\n"
+                   "theorem a : True := trivial\n"
+                   "def b : Nat := 0\n"
+                   "example : True := trivial\n"
+                   "example : True := trivial\n")
+        write("Counted", counted)
+        lines, declarations, examples, in_prose = file_size(
+            os.path.join(d, "FormalSchemes", "Counted.lean"))
+        check("the comment exclusion is what makes the count right, and it removes four lines here",
+              (lines, declarations, examples, in_prose, declarations + in_prose),
+              (counted.count("\n"), 2, 2, 4, 6))
+
+        # The figure is attributed by the same rule as a closure claim, and checked against the
+        # file it names rather than the file it is written in.
+        write("Says", "/-! Appending to `FormalSchemes.Counted` was the alternative. It is\n"
+                      "**%d** lines with **2** declarations. -/\n" % lines)
+        mis, _dec, sdec = audit(d)
+        check("a size claim about another module is attributed to it and passes",
+              ([(m["module"], m["stated"], m["actual"]) for m in mis], sdec), ([], []))
+
+        # The wrong answer to reject is the comment-blind one: 6 is what a walk that reads
+        # docstrings returns, and it would demand a repair against correct prose.
+        write("Says", "/-! Appending to `FormalSchemes.Counted` was the alternative. It is\n"
+                      "**%d** lines with **6** declarations. -/\n" % lines)
+        mis, _dec, _sdec = audit(d)
+        check("the comment-blind count is reported as a MISMATCH against the checked one",
+              [(m["about"], m["noun"], m["stated"], m["actual"]) for m in mis],
+              [("FormalSchemes.Counted", "declarations", 6, 2)])
+
+        write("Says", "/-! Appending to `FormalSchemes.Counted` was the alternative. It is\n"
+                      "**%d** lines with **2** declarations. -/\n" % (lines + 1))
+        mis, _dec, _sdec = audit(d)
+        check("a stale line count is caught by the same walk",
+              [(m["about"], m["noun"], m["stated"], m["actual"]) for m in mis],
+              [("FormalSchemes.Counted", "lines", lines + 1, lines)])
+
+        write("Says", "/-! Nothing here names a module, and something is 12 lines long. -/\n")
+        mis, _dec, sdec = audit(d)
+        check("a size claim with no anchor is declined rather than guessed at",
+              (mis, [(c["noun"], c["declined"]) for c in sdec]),
+              ([], [("lines", "no anchor")]))
+
+        # The case this row exists for, and the one that has to outlive it.  `FormalSchemes.Other`
+        # sits beyond `WINDOW` and is **not** the sentence's subject; the anaphor has nothing in
+        # range, so the claim declines.  Widening `WINDOW` to reach it would resolve the anaphor to
+        # the wrong module and turn this decline into a confident MISMATCH against correct prose --
+        # which is what this case fails on, deliberately, rather than the repair being in the tool.
+        write("Other", "theorem c : True := trivial\n")
+        filler = ("`FormalSchemes.Other` is where the argument starts, and\n"
+                  "everything between it and the figure is filler whose only job\n"
+                  "is to be longer than the window the attribution rule reads back\n"
+                  "over, so that the module named at the top of this paragraph is\n"
+                  "out of reach by the time the figure arrives and cannot be taken\n"
+                  "for the subject of it. Appending to that file was the one\n"
+                  "alternative:\n")
+        write("Says", "/-! %sit is **%d** lines with **2** declarations. -/\n" % (filler, lines))
+        mis, _dec, sdec = audit(d)
+        check("an anaphor whose nearest module token is out of range declines, and stays declined",
+              (mis, sorted((c["noun"], c["declined"]) for c in sdec)),
+              ([], [("declarations", "anaphor with no module named before it"),
+                    ("lines", "anaphor with no module named before it")]))
+
     return 1 if bad else 0
 
 
@@ -573,8 +775,9 @@ def main() -> int:
             print("  invisible %s:%d  %s" % (c["path"], c["line"], c["text"][:150]))
         return 0
 
-    mismatches, declined = audit()
+    mismatches, declined, size_declined = audit()
     attributed = [c for c in claims(mods) if c["about"] is not None]
+    sized = [c for c in size_claims(mods) if c["about"] is not None]
     print("modules under FormalSchemes/ : %5d" % len(mods))
     print("closure claims attributed    : %5d" % len(attributed))
     print("  figures checked            : %5d   (the claims and their companion figures)"
@@ -583,6 +786,10 @@ def main() -> int:
     print("  declined (see below)       : %5d" % len(declined))
     print("  invisible (run --sweep)    : %5d   (not a failure: spellings `CLOSURE` cannot read)"
           % len(list(invisible(mods))))
+    print("size claims attributed       : %5d   (`N lines` / `M declarations`; commit counts are"
+          % len(sized))
+    print("  declined (see below)       : %5d    out of reach -- see the module docstring)"
+          % len(size_declined))
     for c in sorted(mismatches, key=lambda c: (c["path"], c["line"])):
         what = c.get("what") or "the %s closure of `%s`" % (c["kind"], c["about"])
         print("  MISMATCH  %s:%d  %s: states %d, walk gives %d"
@@ -590,6 +797,9 @@ def main() -> int:
         print("            %s" % c["text"])
     for c in sorted(declined, key=lambda c: (c["path"], c["line"])):
         print("  declined  %s:%d  %s -- %s" % (c["path"], c["line"], c["declined"], c["text"]))
+    for c in sorted(size_declined, key=lambda c: (c["path"], c["line"])):
+        print("  size-declined  %s:%d  %s -- %s"
+              % (c["path"], c["line"], c["declined"], c["text"]))
     return 1 if mismatches else 0
 
 
