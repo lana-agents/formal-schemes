@@ -68,8 +68,8 @@ project-import closure is **7** modules; `FormalSchemes.BasicOpenRestrictionIden
 raise a file of elementary basis-and-germ facts from 7 modules to 41 for the sake of the two
 statements below. That file already refused the same trade once, in its implementation notes, for
 `FormalSchemes.SpfGammaRoundTrip` at 32 modules; refusing it again at 41 is the consistent call.
-`FormalSchemes.StructureSheafStalkBasicOpen`'s reverse closure is 12 against this leaf's 0, so the
-import there is not free downstream either: it would rebuild those twelve modules as well, where
+`FormalSchemes.StructureSheafStalkBasicOpen`'s reverse closure is 13 against this leaf's 0, so the
+import there is not free downstream either: it would rebuild those thirteen modules as well, where
 this leaf rebuilds nothing.
 
 The proofs are the route the follow-up row set out and nothing more: take `e` and the two

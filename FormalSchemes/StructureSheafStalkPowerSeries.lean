@@ -129,16 +129,16 @@ through `FormalSpectrum.specIsoSpfBot`.
 
 Over `FormalSchemes.StructureSheafStalkAlgebraic` and
 `FormalSchemes.StructureSheafStalkNilpotent`: forward closure **49** project modules besides itself
-(50 counted with itself), reverse closure **6**, the consumers being
+(50 counted with itself), reverse closure **7**, the consumers being
 `FormalSchemes.StructureSheafStalkPowerSeriesGeneric`,
-`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` and the four modules above them. The
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` and the five modules above them. The
 Mathlib import `Mathlib/RingTheory/PowerSeries/Inverse.lean` is new to this file's closure but not
 to the library's: it is already reached by the full `FormalSchemes` build, so it adds no build job.
 
 `AdicCompletion.bijective_mapCompletion` mentions no formal geometry and would sit naturally in
 `FormalSchemes.Completion` beside `AdicCompletion.mapCompletion_id` and
 `AdicCompletion.mapCompletion_comp`, from which it is proved. It is **not** put there:
-`FormalSchemes.Completion`'s reverse closure is **447** of the project's 559 modules, and it has
+`FormalSchemes.Completion`'s reverse closure is **448** of the project's 560 modules, and it has
 one consumer, here. This is the disposition `FormalSchemes.StructureSheafStalkNilpotent` recorded
 for `isAdicRing_adicTopology` at `FormalSchemes.AdicRing`; if a second consumer appears the move is
 worth re-costing.

@@ -117,7 +117,7 @@ collapse, not `[UniqueFactorizationMonoid R]` from the element classification, n
 
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which holds the refuting
 criterion this file instantiates: forward closure **54** project modules besides itself, reverse
-closure **0**, counted by walking every `^import FormalSchemes.` line over the 559 modules under
+closure **0**, counted by walking every `^import FormalSchemes.` line over the 560 modules under
 `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository root
 is outside the walk).
 

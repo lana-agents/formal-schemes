@@ -121,7 +121,7 @@ used exactly as it stands.
 
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which holds the arbitrary-domain
 refuting criterion this file feeds: forward closure **54** project modules besides itself, reverse
-closure **0**, counted by walking every `^import FormalSchemes.` line over the 559 modules
+closure **0**, counted by walking every `^import FormalSchemes.` line over the 560 modules
 under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the
 repository root is outside the walk).
 
@@ -150,12 +150,6 @@ namespace FormalSpectrum
 open Polynomial
 
 /-! ### The prime `(2, X)` of `ℤ[X]`, and the primes inside it -/
-
-/-- `(2)` is prime in `ℤ`, which is what makes `FormalSpectrum.polyIntTwoX` prime. Stated as an
-instance so that the contraction below is prime by synthesis. -/
-instance isPrime_span_singleton_two : (Ideal.span {(2 : ℤ)}).IsPrime := by
-  rw [Ideal.span_singleton_prime two_ne_zero]
-  exact Int.prime_two
 
 /-- **The prime `(2, X)` of `ℤ[X]`**, presented as the polynomials whose constant term is even —
 the contraction of `(2) ⊆ ℤ` along evaluation at `0`.
