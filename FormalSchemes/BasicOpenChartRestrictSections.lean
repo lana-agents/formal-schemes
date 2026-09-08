@@ -18,11 +18,20 @@ For an adic ring `(R, I)` with `I` finitely generated and an inclusion of basic 
   (`FormalSchemes.BasicOpenChartRestrict`).
 
 This file says they agree. It is the statement that ties the geometric layer — where the charts of
-the basic opens form a diagram over `Spf R` — to the sheaf layer, and it needs a file of its own
-because the two files above are siblings: neither imports the other, so whichever hosted the
-statement would have to import the other one. `FormalSchemes.BasicOpenChartRestrict` is also
-deliberately free of any topology on `R`, which is what keeps its statements at their present
-generality, and this statement cannot be made without one.
+the basic opens form a diagram over `Spf R` — to the sheaf layer, and it is in a file of its own,
+though not because the two files above cannot see each other. They are **not** siblings:
+`FormalSchemes.BasicOpenChartRestrict` reaches `FormalSchemes.BasicOpenRestriction` through
+`FormalSchemes.AwayCompletionRestrictUnique`, and only the arrow back is missing. So hosting the
+statement in the sheaf-theoretic file is not merely expensive but impossible — it would close a
+cycle — while hosting it in the geometric one would cost no import of the sheaf-theoretic file at
+all. What it would cost is the one module this file reaches and
+`FormalSchemes.BasicOpenChartRestrict` does not,
+`FormalSchemes.BasicOpenRestrictionIdentification`, whose two rewrites the proofs below run on —
+and a topology on `R`. `FormalSchemes.BasicOpenChartRestrict` is deliberately free of one, which is
+what keeps its statements at their present generality; the theorems below can be *stated* without a
+topology, elaborating with neither `[TopologicalSpace R]` nor `[IsAdicRing I]`, as the
+implementation notes below record, but they cannot be *proved* without one, so hosting them there
+would put a topology-carrying declaration into a file that has none.
 
 ## Main results
 
