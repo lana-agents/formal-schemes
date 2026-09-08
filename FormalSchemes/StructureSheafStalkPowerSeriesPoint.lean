@@ -936,8 +936,19 @@ variable (R : Type u) [CommRing R] [IsDomain R]
 the prime complement of `⊥` *is* the non-zero divisors, so a localization at `⊥` is a localization
 at the non-zero divisors, and that is what `IsFractionRing` asks for.
 
-This is an instance, which is safe here and would not be everywhere: nothing on this tree imports
-this file, as its `## Placement` section records, so no other module sees it.
+**This is an instance and it is seen outside this file**, which is a change: three modules reach
+this one, as the `## Placement` section above records, so the justification this paragraph used to
+give — that nothing imports this file, and therefore nobody sees the instance — went stale when the
+Dedekind module began importing it. What makes the instance safe is not scope but the head of its
+statement: it is a candidate only for an `IsFractionRing` goal whose second argument unifies with
+`Localization.AtPrime (⊥ : Ideal R)`, and none of the three localizes at `⊥` — the primes they
+localize at are a fixed prime of `ℤ[X]` and a bound variable of the arbitrary-point criterion. The
+`IsFractionRing` goals that *do* occur downstream are at `FractionRing R`, which does not unify
+with it, and over the deepest of the three that goal still resolves to Mathlib's
+`Localization.isLocalization` — so nothing standard is shadowed. **That pair of `#synth` goals is
+the check to re-run**, not a count of what imports this file: the count is what one new import
+falsifies, and it already has.
+
 `FormalSpectrum.localizationAtPrimeBotEquiv` needs it as an instance rather than as a hypothesis,
 because `IsLocalization.algEquiv` takes both localization facts by instance search. -/
 instance isFractionRing_localizationAtPrimeBot :
