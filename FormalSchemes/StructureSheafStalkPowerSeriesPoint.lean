@@ -39,10 +39,15 @@ closed point turns out to be an illustration rather than an exception:
 > the generic point and every closed point, none left over — `FormalSpectrum.IsStalkLimit` is
 > **false**.
 
-That is the first formal spectrum on this tree decided everywhere in the **negative**. It is not
-the first decided everywhere: `FormalSpectrum.isStalkLimit_bot` decides `Spf (R, ⊥)` at every
-point of every commutative ring, `FormalSpectrum.isStalkLimit_of_isNilpotent` does the same at
-every finitely generated nilpotent ideal of definition, and
+That is the first formal spectrum on this tree decided everywhere in the **negative**, and it is
+no longer the only one: `FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`
+(`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`) is that theorem with `ℤ` replaced by the
+hypotheses its proof uses — a Noetherian domain of dimension at most one with infinitely many
+nonzero primes — and `FormalSpectrum.not_isStalkLimit_powerSeriesXRingOfIntegers` reads it at the
+ring of integers of every number field. It is not the first decided everywhere:
+`FormalSpectrum.isStalkLimit_bot` decides `Spf (R, ⊥)` at every point of every commutative ring,
+`FormalSpectrum.isStalkLimit_of_isNilpotent` does the same at every finitely generated nilpotent
+ideal of definition, and
 `FormalSpectrum.isStalkLimit_powerSeriesX_field` decides `Spf (k⟦X⟧, (X))` over a field — and all
 three of those are positive. **It is not a claim that `ℤ⟦X⟧` is a pathological ring and it
 refutes nothing** — see `## What is *not* proved here` below.
@@ -102,21 +107,27 @@ refutes the classification at the generic point
 (`FormalSpectrum.not_forall_hasBoundedDenominators_imp_finite_primes`, in
 `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`) refutes this one with the same instance
 deleted. **The converse of monotonicity is left open here and is false elsewhere on this tree**, at
-`ℤ[X]` localized at `(2, X)`; that ring lives in a sibling leaf this file cannot reach, so the
-statement is prose here and not a theorem. The one value proved here that needs no factorisation
-at all is still at the maximal ideal of a local ring
+`ℤ[X]` localized at `(2, X)`; that ring lives in a module *downstream* of this one, which this
+file cannot reach, so the statement is prose here and not a theorem. The one value proved here
+that needs no factorisation at all is still at the maximal ideal of a local ring
 (`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`), where nothing has to be inverted, and it
 is strictly more general than the case of the classification that recovers it.
 
 **The closed point is not decided in general, and neither is the everywhere-failure.** `ℤ` is now
-decided at every one of its primes, and it is the only ring decided everywhere in the *negative*:
-`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` is about `ℤ` and about nothing else, while
-`FormalSpectrum.isStalkLimit_powerSeriesX_field` decides every prime of a field the other way. **A
-criterion for which rings behave like `ℤ` is given below at a unique factorisation domain** — the
-count of prime classes outside the point's own prime, by
-`FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_finite_primes` — and at a general domain none is
-given and none is guessed at. `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` shows the
-behaviour is not universal — at a local ring the condition holds at the maximal ideal.
+decided at every one of its primes, and `Spf (ℤ⟦X⟧, (X))` was the first space on this tree decided
+everywhere in the *negative*; it is not the only one, because
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`
+(`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`) decides every point of `Spf (R⟦X⟧, (X))`
+the same way over every Noetherian domain of dimension at most one with infinitely many nonzero
+primes. `FormalSpectrum.not_isStalkLimit_powerSeriesX_int` **here** is about `ℤ` and about nothing
+else, while `FormalSpectrum.isStalkLimit_powerSeriesX_field` decides every prime of a field the
+other way. **Two conditions for behaving like `ℤ` are now on this tree and neither of them is at a
+general domain.** That theorem is a *sufficient* one and is not a classification, and it is not
+given here. `FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_finite_primes` **below** is a
+classification, in both directions, at a unique factorisation domain: the count of prime classes
+outside the point's own prime. At a general domain none is given and none is guessed at, and
+`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` shows the behaviour is not universal — at a
+local ring the condition holds at the maximal ideal.
 
 Neither `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo` nor
 `FormalSpectrum.not_isStalkLimit_powerSeriesX_int` refutes a theorem on this tree:
@@ -127,30 +138,45 @@ are the points where the colimit has nothing to do — over `ℤ` the basic open
 over `(2)` are a genuinely filtered system and the colimit misses `1 / q` for every prime `q`
 larger than the denominator on offer.
 
-**Nothing about the Dedekind or Noetherian hypotheses, and nothing consumed from the sibling
-leaves.** No statement below carries either of those, and no declaration of
-`FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`,
+**Nothing about the Dedekind or Noetherian hypotheses, and nothing consumed from the three modules
+that carry this material further.** No statement below carries either of those, and no declaration
+of `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`,
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` or
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField` is consumed or contradicted — none of
-the three is in this file's import closure and none could be. `[UniqueFactorizationMonoid R]` is
-the one hypothesis of that list that does appear below, on the classification at a general prime
-and its corollaries; what it needs from `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`
-is `FormalSpectrum.HasBoundedDenominators` and nothing about factorisation, so the
+the three is in this file's import closure and none could be. **For two of them the traffic runs
+the other way**: the Dedekind module imports this one and carries the criterion below to a
+Noetherian domain of dimension at most one, the number-field module imports that, and so a
+hypothesis of that shape is where the generalisations of anything here are to be looked for, and
+not in this file. The ultrapower module is a genuine sibling — neither file reaches the other.
+`[UniqueFactorizationMonoid R]` is the one hypothesis of that list that does appear below, on the
+classification at a general prime and its corollaries; what it needs from
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` is
+`FormalSpectrum.HasBoundedDenominators` and nothing about factorisation, so the
 unique-factorisation lemmas there are named in prose and mirrored rather than reused. **In
 particular `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` is recovered as an `example`
 below and is not reproved.**
 
 ## Placement
 
-A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds the two
+Over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds the two
 identifications at the generic point and the levelwise completion criterion the target
 identification below reuses: forward closure **53** project modules besides itself, reverse closure
-**0**, counted by walking every `^import FormalSchemes.` line over the 560 modules under
+**3** — `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which generalises the criterion
+below away from `ℤ`, and the two modules over it,
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` and
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal` — counted by walking every
+`^import FormalSchemes.` line over the 560 modules under
 `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository root
 is outside the walk). It adds no Mathlib import.
 
 `FormalSpectrum.awayCompletionEquivPowerSeriesAway` lives there too, is already stated at every
 commutative ring, and is reused below unchanged.
+
+**This module was a leaf when it was written and is one no longer.** What made it stop being one is
+that `FormalSpectrum.HasBoundedDenominatorsAt` and the criterion at an arbitrary point below are
+what a general everywhere-failure has to be stated in, so the Dedekind module imports this one
+rather than the other way about; nothing here was moved and nothing here changed to make that
+possible.
 
 **One instance was moved down to make room for this file.**
 `FormalSpectrum.isPrime_span_singleton_two` — `(2)` is prime in `ℤ` — was declared in
@@ -853,15 +879,18 @@ variable (R : Type u) [CommRing R] [IsDomain R] (p : Ideal R) [p.IsPrime]
 `IsLocalization.injective_iff_map_algebraMap_eq` reduces injectivity of a ring map out of a
 localization to a statement about the structural map alone, and there both sides say `x = y`: the
 source because the powers of a nonzero element are nonzero divisors, the target because the prime
-complement is (`Ideal.primeCompl_le_nonZeroDivisors`). **This is one of exactly two places a
-proof in this file spends `[IsDomain R]`**, the other being
+complement is (`Ideal.primeCompl_le_nonZeroDivisors`). **This is one of exactly three places a
+proof in this file spends `[IsDomain R]`.** The second is
 `FormalSpectrum.dvd_pow_of_mem_range_algebraMap`, which spends the very same fact to push an
-equation in `Localization.AtPrime p` back down to `R`; and it is why the main theorem below
-carries the instance while the surjectivity half does not. Every other occurrence of the binder
-either consumes one of those two or is there only so that a statement elaborates —
-`FormalSpectrum.powerSeriesXPoint_bot`, where `FormalSpectrum.powerSeriesXGenericPoint` is defined
-only at a domain, and the unique-factorisation section at the end of the file, where
-`[UniqueFactorizationMonoid R]` does not elaborate without it. -/
+equation in `Localization.AtPrime p` back down to `R`; the third is
+`FormalSpectrum.isFractionRing_localizationAtPrimeBot`, which spends a different one,
+`Ideal.primeCompl_bot`, and whose statement does not elaborate without the binder either. That is
+why the main theorem below carries the instance while the surjectivity half does not. Every other
+occurrence of the binder either consumes one of the three or is there only so that a statement
+elaborates — `FormalSpectrum.powerSeriesXPoint_bot`, where
+`FormalSpectrum.powerSeriesXGenericPoint` is defined only at a domain, and the
+unique-factorisation section at the end of the file, where `[UniqueFactorizationMonoid R]` does
+not elaborate without it. -/
 theorem injective_awayToLocalizationAtPrime (m : R) (hm : m ∉ p) :
     Function.Injective (awayToLocalizationAtPrime R p m hm) := by
   have hm0 : m ≠ 0 := fun h => hm (h ▸ p.zero_mem)
@@ -1232,7 +1261,10 @@ theorem not_hasBoundedDenominatorsAt_int (p : Ideal ℤ) [p.IsPrime] :
 
 /-- **`FormalSpectrum.IsStalkLimit` fails at every point of `Spf (ℤ⟦X⟧, (X))`** — at the generic
 point, at every closed point, with no point left over. This is the first formal spectrum on this
-tree decided everywhere in the **negative**; it is not the first decided everywhere, since
+tree decided everywhere in the **negative** and it is no longer the only one —
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals` is this theorem with `ℤ`
+replaced by the hypotheses the proof uses, and it is what to cite for any other ring. It is not the
+first decided everywhere, since
 `FormalSpectrum.isStalkLimit_bot`, `FormalSpectrum.isStalkLimit_of_isNilpotent` and
 `FormalSpectrum.isStalkLimit_powerSeriesX_field` each decide a space at every one of its points,
 and each of those three is positive.
@@ -1505,8 +1537,11 @@ two of the three questions the module header lists as open about
 localized at `(2, X)` is a local unique factorisation domain, so the condition holds at its
 maximal ideal (`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`) and fails at `⊥`, where
 `FormalSchemes.StructureSheafStalkPowerSeriesLocal` refutes it. That is stated here in prose
-rather than proved, because that module is a **sibling** leaf of this one: neither imports the
-other, and reaching it would cost a new module for one corollary.
+rather than proved, because that module is **downstream** of this one:
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal` imports
+`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which imports this file, so the witness
+cannot be named from here at all. It could be named *there*, at no module cost, and that is the
+successor row rather than this one.
 -/
 
 section UniqueFactorizationCorollaries

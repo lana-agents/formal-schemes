@@ -1,3 +1,4 @@
+import FormalSchemes.StructureSheafStalkPowerSeriesPoint
 import FormalSchemes.StructureSheafStalkPowerSeriesCounterexample
 import Mathlib.RingTheory.Ideal.MinimalPrime.Noetherian
 import Mathlib.RingTheory.DedekindDomain.PID
@@ -44,6 +45,29 @@ The reading goes through
 (`FormalSchemes.StructureSheafStalkPowerSeriesGeneric`), where the predicate at this point is set
 up. So the half fails over every Dedekind domain with infinitely many primes, and over every
 Dedekind domain whose class number is greater than one.
+
+**None of that is confined to the generic point.**
+`FormalSchemes.StructureSheafStalkPowerSeriesPoint` decides `FormalSpectrum.IsStalkLimit` at an
+**arbitrary** point of `Spf (R⟦X⟧, (X))`, as `FormalSpectrum.HasBoundedDenominatorsAt` at the
+corresponding prime of `R`, so the refuting criteria above have a form there too and this file
+carries them to it:
+
+> `FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`: over a Noetherian domain
+> of dimension at most one with infinitely many nonzero primes the stalk half fails at **every**
+> point of `Spf (R⟦X⟧, (X))`, and not only at the generic one.
+
+That is `FormalSpectrum.not_isStalkLimit_powerSeriesX_int` with `ℤ` replaced by the hypotheses it
+was using — the `example` in `section Int` below recovers the `ℤ` statement from it, and
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` reads it at every ring of integers. **It
+costs one project import and no Mathlib import**; see `## Placement`.
+
+Two steps of that passage are not transcriptions of the generic-point argument, and both are where
+a shorter-looking version goes wrong. **The descent back to `R` is where `[IsDomain R]` is spent**,
+through `Ideal.primeCompl_le_nonZeroDivisors` rather than through `IsFractionRing.injective`; and
+**the family of primes cannot be indexed by the nonzero primes**, because `p` is one of them and
+the elements the criterion needs have to avoid `p`. Cutting the family down to the primes other
+than `p` is what makes maximality — `Ideal.IsPrime.isMaximal`, which is the `Ring.DimensionLEOne`
+hypothesis — do work that it does not do at the generic point.
 
 ## Where the element criterion stops and the ideal criterion goes on
 
@@ -113,6 +137,13 @@ both apply, at a principal ideal domain, they agree.
   primes refutes the condition**, at a Noetherian domain of dimension at most one.
 * `FormalSpectrum.finite_prime_associates_of_finite_primeIdeals`: at an arbitrary domain, finitely
   many prime **ideals** gives finitely many prime **associate classes**.
+* `FormalSpectrum.not_hasBoundedDenominatorsAt_of_primeIdeals`: **the refuting criterion at an
+  arbitrary prime** — the criterion at the head of this list with the fraction field replaced by
+  the local ring, at an arbitrary domain and with the same three hypotheses absent.
+* `FormalSpectrum.not_hasBoundedDenominatorsAt_of_infinite_primeIdeals`: **infinitely many nonzero
+  primes refutes the condition at every prime**, at a Noetherian domain of dimension at most one.
+* `FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`: **and so the stalk half
+  fails at every point of `Spf (R⟦X⟧, (X))`** over such a ring, not only at the generic point.
 * `FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`: **the classification at a Dedekind
   domain** — the condition holds **iff** `{I : Ideal R | I.IsPrime}` is finite.
 * `FormalSpectrum.isPrincipalIdealRing_of_hasBoundedDenominators`: **and a Dedekind domain
@@ -124,12 +155,19 @@ both apply, at a principal ideal domain, they agree.
 * `FormalSpectrum.isPrincipalIdealRing_of_isStalkLimit_powerSeriesXGenericPoint`: **and the
   corollary at the predicate** — the stalk half of EGA I 10.8 fails at that point over every
   Dedekind domain that is not a principal ideal ring.
+* `FormalSpectrum.infinite_setOf_isPrime_int`: **`ℤ` has infinitely many nonzero prime ideals**,
+  built from `Nat.infinite_setOf_prime` so that the everywhere-failure above is checked at `ℤ`
+  rather than asserted of it.
 
 ## What is *not* proved here
 
-**Nothing here repairs EGA I 10.8's stalk half.** It refutes the stalk half at the generic point of
-`R⟦X⟧` over a larger class of rings than `ℤ`; which hypothesis makes the general statement true is
-undetermined and nothing below bears on it.
+**Nothing here repairs EGA I 10.8's stalk half.** It refutes that half over a larger class of rings
+than `ℤ`, and at every point of `Spf (R⟦X⟧, (X))` rather than at the generic point alone; which
+hypothesis makes the general statement true is undetermined and nothing below bears on it. **No
+criterion for when the predicate *holds* at a general prime is given either**, at any generality;
+the one general positive value on the tree is
+`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`, which is proved elsewhere and is not
+touched here.
 
 **Nothing here says `FormalSpectrum.IsStalkLimit` varies across a single formal spectrum**, and no
 ring below can be made to say it. That needs a **local** domain failing the denominator condition; a
@@ -140,7 +178,9 @@ and a local Noetherian domain of dimension at most one has exactly one nonzero p
 and that criterion's hypothesis exclude each other. A witness therefore has to come from
 `FormalSpectrum.not_hasBoundedDenominators_of_primeIdeals`, the arbitrary-domain criterion above,
 and one does: `FormalSchemes.StructureSheafStalkPowerSeriesLocal` builds it at `ℤ[X]` localized at
-`(2, X)`.
+`(2, X)`. **The criterion at an arbitrary point sharpens that exclusion rather than weakening it**:
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals` decides every point of
+`Spf (R⟦X⟧, (X))` the same way, so no ring meeting its hypotheses can be the witness either.
 
 **No ring is instantiated here except `ℤ`, and the reason is import cost rather than
 difficulty.** Reading the theorems above at a ring of integers needs the infinitude of the primes of
@@ -170,12 +210,15 @@ the collapse, nor `[UniqueFactorizationMonoid R]` from the classification this g
 
 Over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds
 `FormalSpectrum.HasBoundedDenominators`, both refuting criteria and the element classification:
-forward closure **53** project modules besides itself, reverse closure **2** — the leaves
+forward closure **54** project modules besides itself, reverse closure **2** — the leaves
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting criterion
 at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which instantiates
 it at `ℤ[X]` localized at `(2, X)` — counted by walking every `^import FormalSchemes.` line over
 the 560 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator
-at the repository root is outside the walk).
+at the repository root is outside the walk). The forward count includes
+`FormalSchemes.StructureSheafStalkPowerSeriesPoint`, which holds the predicate at an arbitrary
+point, is itself over that same module, and is what the arbitrary-point material below is stated
+in; it is the one edge this branch adds.
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
 reasons, and the second is the load-bearing one. It is **2838** lines with **89** declarations —
@@ -195,6 +238,29 @@ sources from every `import Mathlib` line in `FormalSchemes/`, the closure grows 
 `Mathlib/RingTheory/PrincipalIdealDomainOfPrime.lean`.
 `Mathlib/RingTheory/Ideal/MinimalPrime/Noetherian.lean` was **already** reached by this project, so
 naming it here costs a line and no build.
+
+**The arbitrary-point material is appended here rather than paid on a leaf, which is the opposite
+of the choice the two paragraphs above defend, and the reason is that neither of their arguments
+reaches it.** It needs **no** Mathlib import — `Ring.DimensionLEOne` and the Noetherian finiteness
+it spends are already in this file's closure — so the cost it would isolate does not exist; and its
+one new edge is the project import
+`FormalSchemes.StructureSheafStalkPowerSeriesPoint`, without which
+`FormalSpectrum.HasBoundedDenominatorsAt` cannot be named at all. The concurrency argument is real
+and is paid: this file is longer for it.
+
+**What a leaf would cost instead is prose, and the bill is not small.** A 561st module changes how
+many project modules every module above it reaches, and this tree states those counts in prose.
+The three routes were measured with `scripts/closure_audit.py --tree` in a scratch worktree, and
+the numbers are these. A stub leaf importing this file, the point module and the
+number-field one sends **42** attributed figures in **23** files to MISMATCH; the route taken
+here sends **5** in **4**; putting the material in the point module instead — that module importing
+this one, and the number-field leaf importing it — sends the same **5** in **3**.
+
+**The mathematical fit is what decides between the two cheap routes.** The criterion below is
+`FormalSpectrum.not_hasBoundedDenominators_of_primeIdeals` with the fraction field replaced by the
+local ring, and `FormalSpectrum.finite_setOf_isPrime_mem`, which its covering hypothesis spends, is
+three hundred lines above it; neither fact is about a point of a formal spectrum, and the point
+module would be importing a Dedekind-domain classification it makes no use of.
 
 ## References
 
@@ -358,6 +424,145 @@ theorem finite_prime_associates_of_finite_primeIdeals (hfin : {I : Ideal R | I.I
     exact Associates.mk_eq_mk_iff_associated.mpr hassoc
 
 end Domain
+
+section DimOnePoint
+
+variable (R : Type u) [CommRing R] [IsDomain R]
+
+/-- **The refuting criterion at an arbitrary prime**: a family of prime ideals, each of them
+carrying an element outside `p`, and no single `m` outside `p` lying in all of them, refutes
+`FormalSpectrum.HasBoundedDenominatorsAt` at `p`.
+
+This is `FormalSpectrum.not_hasBoundedDenominators_of_primeIdeals` with the fraction field replaced
+by the local ring at `p` and `m ≠ 0` by `m ∉ p` — exactly the relation
+`FormalSpectrum.HasBoundedDenominatorsAt` bears to `FormalSpectrum.HasBoundedDenominators` — and
+the four steps are the same ones: feed the condition the family `n ↦ 1 / s n`, get a common
+denominator `m ∉ p`, land back in `R` on `m ^ k = r * s n`, and read that as `m ^ k ∈ P n` by
+`Ideal.mul_mem_left` and then as `m ∈ P n` by `Ideal.IsPrime.mem_of_pow_mem`.
+
+**The descent back to `R` is where the two versions differ, and it is the only use `[IsDomain R]`
+gets here.** The generic-point version returns from `Frac R` by `IsFractionRing.injective`; the map
+to `Localization.AtPrime p` is injective for the neighbouring reason, that the prime complement of
+a prime of a domain consists of nonzero divisors — `Ideal.primeCompl_le_nonZeroDivisors` and
+`IsLocalization.injective`. Nothing else below asks for a domain.
+
+**`s n ∉ p` is a hypothesis and not bookkeeping.** It is what makes `1 / s n` an element of the
+local ring at all, and it is why the family cannot simply be indexed by the nonzero primes: at
+`P n = p` it is unsatisfiable. `FormalSpectrum.not_hasBoundedDenominatorsAt_of_infinite_primeIdeals`
+below is where that is dealt with.
+
+**No factorisation, no Noetherian hypothesis and no dimension hypothesis** — an arbitrary domain and
+an arbitrary prime of it, like the criterion this generalises. -/
+theorem not_hasBoundedDenominatorsAt_of_primeIdeals (p : Ideal R) [p.IsPrime] (P : ℕ → Ideal R)
+    (hP : ∀ n, (P n).IsPrime) (s : ℕ → R) (hs : ∀ n, s n ∈ P n) (hsp : ∀ n, s n ∉ p)
+    (hcov : ∀ m : R, m ∉ p → ∃ n, m ∉ P n) : ¬ HasBoundedDenominatorsAt R p := by
+  intro h
+  obtain ⟨m, hm, hall⟩ := h fun n =>
+    IsLocalization.mk' (M := p.primeCompl) _ (1 : R) ⟨s n, hsp n⟩
+  obtain ⟨n, hn⟩ := hcov m hm
+  obtain ⟨k, r, hr⟩ := hall n
+  have hmul := congrArg (· * algebraMap R (Localization.AtPrime p) (s n)) hr
+  simp only [mul_assoc] at hmul
+  rw [IsLocalization.mk'_spec, map_one, mul_one, ← map_mul] at hmul
+  have hinj : Function.Injective (algebraMap R (Localization.AtPrime p)) :=
+    IsLocalization.injective _ (Ideal.primeCompl_le_nonZeroDivisors p)
+  have heq : r * s n = m ^ k := hinj hmul
+  exact hn ((hP n).mem_of_pow_mem k (heq ▸ Ideal.mul_mem_left _ r (hs n)))
+
+variable [IsNoetherianRing R] [Ring.DimensionLEOne R]
+
+/-- **Infinitely many nonzero primes refutes the denominator condition at every prime**, at a
+Noetherian domain of dimension at most one.
+
+`FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals` is the case `p = ⊥` of this,
+read through `FormalSpectrum.hasBoundedDenominatorsAt_bot_iff`; the `example` below checks that
+rather than leaving it asserted.
+
+**The family that version builds cannot be reused, and cutting it down is the work.** Its members
+have to avoid `p`, and `p` is itself one of the infinitely many nonzero primes, so the set is
+first replaced by `{P | P.IsPrime ∧ P ≠ ⊥ ∧ P ≠ p}` — still infinite, being an infinite set less
+one element — and only then embedded by `Set.Infinite.natEmbedding`.
+
+**That cut is also what produces the elements, and it is the step with nothing to match at the
+generic point.** A nonzero prime `P ≠ p` of a Noetherian domain of dimension at most one is
+**maximal** — `Ideal.IsPrime.isMaximal`, which is what `Ring.DimensionLEOne` gives — so `P ≤ p`
+would force `P = p`, since `p` is prime and hence not `⊤`; `SetLike.not_le_iff_exists` then hands
+over an element of `P` outside `p`. At the generic point the elements are whatever
+`Submodule.exists_mem_ne_zero_of_ne_bot` returns and no maximality is needed.
+
+**The covering hypothesis is discharged exactly as that version discharges its own**, and it is not
+"pick a prime avoiding `m`": if every member of an injective `ℕ`-indexed family contained `m` then
+that family would sit inside the finite set `FormalSpectrum.finite_setOf_isPrime_mem` produces,
+which `Set.infinite_range_of_injective` refutes. The `m ≠ 0` that lemma asks for is read off
+`m ∉ p` rather than assumed. -/
+theorem not_hasBoundedDenominatorsAt_of_infinite_primeIdeals (p : Ideal R) [p.IsPrime]
+    (hinf : {P : Ideal R | P.IsPrime ∧ P ≠ ⊥}.Infinite) :
+    ¬ HasBoundedDenominatorsAt R p := by
+  classical
+  have hinf' : {P : Ideal R | P.IsPrime ∧ P ≠ ⊥ ∧ P ≠ p}.Infinite := by
+    refine Set.Infinite.mono ?_ (hinf.sdiff (Set.finite_singleton p))
+    rintro P ⟨⟨h1, h2⟩, h3⟩
+    exact ⟨h1, h2, by simpa using h3⟩
+  let e : ℕ ↪ {P : Ideal R // P ∈ {P : Ideal R | P.IsPrime ∧ P ≠ ⊥ ∧ P ≠ p}} := hinf'.natEmbedding
+  have hprime : ∀ n, ((e n : Ideal R)).IsPrime := fun n => (e n).2.1
+  have hne : ∀ n, (e n : Ideal R) ≠ ⊥ := fun n => (e n).2.2.1
+  have hnotle : ∀ n, ¬ ((e n : Ideal R) ≤ p) := fun n hle =>
+    (e n).2.2.2 (((hprime n).isMaximal (hne n)).eq_of_le (Ideal.IsPrime.ne_top ‹p.IsPrime›) hle)
+  choose s hs hsp using fun n => SetLike.not_le_iff_exists.mp (hnotle n)
+  refine not_hasBoundedDenominatorsAt_of_primeIdeals R p (fun n => (e n : Ideal R)) hprime s hs
+    hsp ?_
+  intro m hm
+  have hm0 : m ≠ 0 := fun h => hm (h ▸ p.zero_mem)
+  by_contra hcon
+  have hmem : ∀ n, m ∈ (e n : Ideal R) := fun n => not_not.mp fun h => hcon ⟨n, h⟩
+  have hinj : Function.Injective (fun n => (e n : Ideal R)) := fun i j hij =>
+    e.injective (Subtype.ext hij)
+  refine Set.infinite_range_of_injective hinj ((finite_setOf_isPrime_mem R hm0).subset ?_)
+  rintro _ ⟨n, rfl⟩
+  exact ⟨hprime n, hne n, hmem n⟩
+
+/-- **The stalk half of EGA I 10.8 fails at every point of `Spf (R⟦X⟧, (X))`**, over every
+Noetherian domain of dimension at most one with infinitely many nonzero prime ideals.
+
+`FormalSpectrum.eq_powerSeriesXPoint` says every point of that space is a
+`FormalSpectrum.powerSeriesXPoint`, and
+`FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt` turns the predicate
+there into the denominator condition at the corresponding prime of `R`, which the theorem above
+refutes at every prime at once. Both live in
+`FormalSchemes.StructureSheafStalkPowerSeriesPoint` and are the whole reason this file imports it.
+
+**This is `FormalSpectrum.not_isStalkLimit_powerSeriesX_int` with `ℤ` replaced by the hypotheses it
+was using.** That theorem's argument is *the ring has infinitely many primes and every candidate
+denominator misses one of them*, and `ℤ` entered it only through `Int.natAbs` bookkeeping and
+through the two-branch case split that a principal ideal ring makes possible. Here the bookkeeping
+is the cut-down family above, there is one branch, and the ring is arbitrary; the `example` in
+`section Int` below recovers the `ℤ` statement.
+
+**It gives no criterion for when the predicate holds** at a general prime — one direction is proved
+and `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` already shows the behaviour is not
+universal — and **it refutes no theorem.** EGA I 10.8 asks for a Noetherian adic hypothesis on a
+scheme; what fails here is the stalk half at a formal spectrum whose ideal of definition is
+`FormalSpectrum.powerSeriesXIdeal`, and no hypothesis of that theorem is claimed to hold. -/
+theorem not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals
+    (hinf : {P : Ideal R | P.IsPrime ∧ P ≠ ⊥}.Infinite)
+    (x : FormalSpectrum (powerSeriesXIdeal R)) : ¬ IsStalkLimit (powerSeriesXIdeal R) x := by
+  rw [eq_powerSeriesXPoint R x, isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt]
+  exact not_hasBoundedDenominatorsAt_of_infinite_primeIdeals R _ hinf
+
+/-- **The generic-point criterion is the case `p = ⊥`**, which is what makes the word
+*generalisation* above a checked statement rather than an assertion.
+`FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` is the comparison and there is nothing else in
+the step.
+
+An `example` rather than a theorem, on the convention the `example` under
+`FormalSpectrum.not_hasBoundedDenominators_of_primeIdeals` already follows here:
+`FormalSpectrum.not_hasBoundedDenominators_of_infinite_primeIdeals` is on the tree already, is
+stated in the `FormalSpectrum.HasBoundedDenominators` idiom its consumers use, and stays. -/
+example (hinf : {P : Ideal R | P.IsPrime ∧ P ≠ ⊥}.Infinite) : ¬ HasBoundedDenominators R := by
+  rw [← hasBoundedDenominatorsAt_bot_iff]
+  exact not_hasBoundedDenominatorsAt_of_infinite_primeIdeals R ⊥ hinf
+
+end DimOnePoint
 
 section Dedekind
 
@@ -534,6 +739,51 @@ statement about denominators in `Frac ℤ` over to a statement about the ideals 
 An `example`, because it proves a statement of Mathlib's and not one of this file's. -/
 example : {I : Ideal ℤ | I.IsPrime}.Infinite := fun hfin =>
   not_hasBoundedDenominators_int ((hasBoundedDenominators_iff_finite_primeIdeals ℤ).mpr hfin)
+
+/-- **`ℤ` has infinitely many nonzero prime ideals**, built from Euclid rather than read off the
+classification.
+
+The `example` above gets the same count out of
+`FormalSpectrum.hasBoundedDenominators_iff_finite_primeIdeals`, and for that reason cannot be used
+to **feed** a criterion that refutes the denominator condition: the transport there runs from
+denominators to ideals, and what is wanted here is the other direction. This one runs
+`Nat.infinite_setOf_prime` through `Ideal.span_singleton_prime` — the span of a rational prime is
+prime and nonzero — and the map `q ↦ (q)` is injective because `(a) = (b)` gives `a ∣ b` through
+`Ideal.mem_span_singleton`, and two positive primes dividing each other are equal
+(`Nat.prime_dvd_prime_iff_eq`).
+
+It exists so that *`ℤ` satisfies the hypotheses of
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`* is a checked statement
+rather than an assertion; the `example` below is that check. -/
+theorem infinite_setOf_isPrime_int : {P : Ideal ℤ | P.IsPrime ∧ P ≠ ⊥}.Infinite := by
+  classical
+  haveI : Infinite {q : ℕ // q ∈ {q : ℕ | q.Prime}} := Nat.infinite_setOf_prime.to_subtype
+  have hinj : Function.Injective
+      (fun q : {q : ℕ // q ∈ {q : ℕ | q.Prime}} => Ideal.span {((q : ℕ) : ℤ)}) := by
+    intro a b hab
+    have hdvd : ((a : ℕ) : ℤ) ∣ ((b : ℕ) : ℤ) := by
+      have hmem : ((b : ℕ) : ℤ) ∈ Ideal.span {((a : ℕ) : ℤ)} := by
+        simp only at hab
+        rw [hab]
+        exact Ideal.mem_span_singleton_self _
+      exact Ideal.mem_span_singleton.mp hmem
+    exact Subtype.ext ((Nat.prime_dvd_prime_iff_eq a.2 b.2).mp (by exact_mod_cast hdvd))
+  refine Set.Infinite.mono ?_ (Set.infinite_range_of_injective hinj)
+  rintro _ ⟨a, rfl⟩
+  have hp : Prime ((a : ℕ) : ℤ) := Nat.prime_iff_prime_int.mp a.2
+  exact ⟨(Ideal.span_singleton_prime hp.ne_zero).mpr hp,
+    fun h => hp.ne_zero (Ideal.span_singleton_eq_bot.mp h)⟩
+
+/-- **`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` is the case `R = ℤ`**, which is what makes
+*the everywhere-failure at `Spf (ℤ⟦X⟧, (X))` is not about `ℤ`* a checked statement rather than an
+assertion.
+
+An `example`: the statement belongs to `FormalSchemes.StructureSheafStalkPowerSeriesPoint` and
+stays there, where its proof splits `Spec ℤ` into the generic point and the closed points and
+treats each with its own argument — the split a principal ideal ring makes possible and the general
+theorem does not need. -/
+example (x : FormalSpectrum (powerSeriesXIdeal ℤ)) : ¬ IsStalkLimit (powerSeriesXIdeal ℤ) x :=
+  not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals ℤ infinite_setOf_isPrime_int x
 
 end Int
 
