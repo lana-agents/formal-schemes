@@ -65,21 +65,26 @@ the main theorem's proof.
 of definition of `R⟦X⟧` other than `(X)`, and nothing at a formal spectrum whose ring is not a
 power series ring. Every statement below names `FormalSpectrum.powerSeriesXIdeal`.
 
-**The generic-point theorem is not recovered as a corollary, and must not be quoted as one.**
-`FormalSpectrum.powerSeriesXPoint_bot` says the *point* is the same one, so the main theorem below
-is about the same object as
+**The generic-point theorem *is* recovered as a corollary, and the corollary is one line.**
+`FormalSpectrum.powerSeriesXPoint_bot` says the *point* is the same one and is `rfl`, so the main
+theorem below is about the same object as
 `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`. The two
-*conditions* are not literally the same statement: that one is about `FractionRing R` and this one
-about `Localization.AtPrime` at `⊥`, and **identifying those two models of the same localization
-is not done here**. Nothing below should be read as deriving either theorem from the other, and
-neither is reproved.
+*conditions* are still not literally the same statement — that one is about `FractionRing R` and
+this one about `Localization.AtPrime` at `⊥` — and identifying those two models of the same
+localization is `FormalSpectrum.hasBoundedDenominatorsAt_bot_iff`. Composing the two gives the
+generic-point theorem back, which is what the `example` under
+`### The two known points, as values of the criterion` records. It is an `example` and not a
+theorem because the statement is already proved elsewhere on this tree and is **not** reproved
+here.
 
-**`FormalSpectrum.HasBoundedDenominatorsAt` is named and not developed.** No classification, no
-criterion, and no comparison with `FormalSpectrum.HasBoundedDenominators` beyond the observation
-that the two definitions differ by replacing `m ≠ 0` with `m ∉ p` and the fraction field with the
-local ring. Whether it is monotone in the prime, whether it follows from the condition at `⊥`, and
-whether the classification at a unique factorisation domain has an analogue here are all open and
-none is touched below.
+**`FormalSpectrum.HasBoundedDenominatorsAt` is compared and still not classified.**
+`FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` carries the classification of the denominator
+condition onto it **at `⊥` and only at `⊥`**, and no statement below moves any of that to another
+prime. Whether it is monotone in the prime, whether the condition at a prime follows from the
+condition at `⊥`, and whether the classification at a unique factorisation domain has an analogue
+at a general prime are all still open and none is touched below. The one general value proved here
+is at the maximal ideal of a local ring (`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`),
+where nothing has to be inverted.
 
 **The closed point is not decided in general.**
 `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo` is one closed point of one
@@ -149,6 +154,14 @@ reason the diff is wider than the mathematics.
   `0`.
 * `FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt`: **the predicate at
   every point of every domain**, with neither a completion nor a power series left on the right.
+* `FormalSpectrum.hasBoundedDenominatorsAt_bot_iff`: **the condition at `⊥` is the denominator
+  condition**, at every domain — the identification of the two models that makes the criterion
+  above subsume
+  `FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` and carries
+  its classification onto the predicate at `⊥`.
+* `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`: **the condition holds at the maximal
+  ideal of every local ring**, with no domain hypothesis — the predicate's first value that is not
+  a negation at a single ring.
 * `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo`: **a closed point at
   which the predicate fails**, at `(X) ⊆ ℤ⟦X⟧` over `(2)`.
 -/
@@ -644,10 +657,14 @@ the fraction field replaced by the local ring, and it is stated in the same of t
 forms — denominators rather than localizations, the other being
 `FormalSpectrum.hasBoundedDenominatorsAt_iff_range`.
 
-**Nothing is proved about it here beyond that.** It is not compared with
-`FormalSpectrum.HasBoundedDenominators`, it is not decided at any ring, and no criterion for it is
-given; what it is for is that the surjectivity half of the criterion at the point over `p` is
-literally it (`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXPoint_iff`). -/
+**What is proved about it, all of it below.**
+`FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` identifies it at `⊥` with
+`FormalSpectrum.HasBoundedDenominators`; `FormalSpectrum.hasBoundedDenominatorsAt_of_surjective`
+is a sufficient criterion, and `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` the one
+general value it yields; `FormalSpectrum.not_hasBoundedDenominatorsAt_intTwo` refutes it at one
+prime of one ring. What it is *for* is that the surjectivity half of the criterion at the point
+over `p` is literally it
+(`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXPoint_iff`). -/
 def HasBoundedDenominatorsAt (R : Type u) [CommRing R] (p : Ideal R) [p.IsPrime] : Prop :=
   ∀ x : ℕ → Localization.AtPrime p, ∃ m : R, m ∉ p ∧ ∀ n, ∃ k : ℕ,
     algebraMap R (Localization.AtPrime p) (m ^ k) * x n ∈
@@ -850,6 +867,149 @@ theorem isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt :
         (exists_awayToAtPrimeCompletion_eq_powerSeriesXPoint_iff R p).mpr h⟩⟩
 
 end Domain
+
+/-! ### Comparison with the condition at the generic point -/
+
+section BotComparison
+
+variable (R : Type u) [CommRing R] [IsDomain R]
+
+/-- **The local ring at `⊥` is a fraction field.** `Ideal.primeCompl_bot` says that in a domain
+the prime complement of `⊥` *is* the non-zero divisors, so a localization at `⊥` is a localization
+at the non-zero divisors, and that is what `IsFractionRing` asks for.
+
+This is an instance, which is safe here and would not be everywhere: nothing on this tree imports
+this file, as its `## Placement` section records, so no other module sees it.
+`FormalSpectrum.localizationAtPrimeBotEquiv` needs it as an instance rather than as a hypothesis,
+because `IsLocalization.algEquiv` takes both localization facts by instance search. -/
+instance isFractionRing_localizationAtPrimeBot :
+    IsFractionRing R (Localization.AtPrime (⊥ : Ideal R)) := by
+  rw [IsFractionRing, ← Ideal.primeCompl_bot (α := R)]
+  infer_instance
+
+/-- **The two models of that localization, identified.** Both `FractionRing R` and
+`Localization.AtPrime (⊥ : Ideal R)` localize `R` at its non-zero divisors, so
+`IsLocalization.algEquiv` gives the unique `R`-algebra isomorphism between them.
+
+The `R`-algebra structure is what the transport below runs on, not the ring structure: it needs
+the isomorphism to commute with the two structural maps out of `R` (`AlgEquiv.commutes`), and a
+bare ring isomorphism of the two would not carry that. -/
+def localizationAtPrimeBotEquiv :
+    Localization.AtPrime (⊥ : Ideal R) ≃ₐ[R] FractionRing R :=
+  IsLocalization.algEquiv (nonZeroDivisors R) _ _
+
+/-- **The condition at `⊥` is the denominator condition.** At every domain,
+`FormalSpectrum.HasBoundedDenominatorsAt` at the zero ideal and
+`FormalSpectrum.HasBoundedDenominators` are the same condition.
+
+The two differ in three places and all three are settled by
+`FormalSpectrum.localizationAtPrimeBotEquiv`: a family indexed by one model transports to a family
+indexed by the other, `m ∉ (⊥ : Ideal R)` is `m ≠ 0` by `Ideal.mem_bot`, and membership in the
+range of a structural map transports because the isomorphism commutes with both of them. The
+quantifiers are untouched, which is the point — the `m` stays uniform in the family and the
+exponent stays local to each member.
+
+**This is what the module header used to say was not done.** With
+`FormalSpectrum.powerSeriesXPoint_bot`, which is `rfl`, it makes
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators` a corollary of
+`FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt`, and it carries the
+whole classification of the denominator condition — at a unique factorisation domain, at a
+Dedekind domain, over a countable fraction field, and the ultrapower's refutation of sufficiency —
+onto the predicate at `⊥`. None of that is restated in code here; the `↔` is the transport. -/
+theorem hasBoundedDenominatorsAt_bot_iff :
+    HasBoundedDenominatorsAt R (⊥ : Ideal R) ↔ HasBoundedDenominators R := by
+  set e := localizationAtPrimeBotEquiv R with he
+  constructor
+  · intro h x
+    obtain ⟨m, hm, hall⟩ := h fun n => e.symm (x n)
+    refine ⟨m, by simpa using hm, fun n => ?_⟩
+    obtain ⟨k, r, hr⟩ := hall n
+    refine ⟨k, r, ?_⟩
+    have h2 := congrArg e hr
+    rwa [map_mul, e.commutes, e.apply_symm_apply, e.commutes] at h2
+  · intro h x
+    obtain ⟨m, hm, hall⟩ := h fun n => e (x n)
+    refine ⟨m, by simpa [Ideal.mem_bot] using hm, fun n => ?_⟩
+    obtain ⟨k, r, hr⟩ := hall n
+    refine ⟨k, r, ?_⟩
+    have h2 := congrArg e.symm hr
+    rwa [map_mul, e.symm.commutes, e.symm_apply_apply, e.symm.commutes] at h2
+
+end BotComparison
+
+/-! ### A point at which the condition holds -/
+
+section Surjective
+
+variable (R : Type u) [CommRing R] (p : Ideal R) [p.IsPrime]
+
+/-- **The condition holds wherever nothing has to be inverted.** If every element of
+`Localization.AtPrime p` is already the image of an element of `R`, then `m = 1` and `k = 0` serve
+for every family at once.
+
+`1 ∉ p` is `Ideal.ne_top_iff_one` at a prime, which is the only thing primeness is used for. -/
+theorem hasBoundedDenominatorsAt_of_surjective
+    (hsurj : Function.Surjective (algebraMap R (Localization.AtPrime p))) :
+    HasBoundedDenominatorsAt R p :=
+  fun x => ⟨1, (Ideal.ne_top_iff_one p).mp (‹p.IsPrime›).ne_top, fun n => ⟨0, by
+    simpa using hsurj (x n)⟩⟩
+
+end Surjective
+
+section LocalRing
+
+variable (R : Type u) [CommRing R] [IsLocalRing R]
+
+/-- **A local ring is its own local ring at its maximal ideal.** Everything outside the maximal
+ideal is a unit (`IsLocalRing.notMem_maximalIdeal`), so the prime complement lands in
+`IsUnit.submonoid` and `IsLocalization.atUnits` makes the structural map an isomorphism; only its
+surjectivity is wanted below. -/
+theorem surjective_algebraMap_localizationAtPrime_maximalIdeal :
+    Function.Surjective (algebraMap R (Localization.AtPrime (IsLocalRing.maximalIdeal R))) :=
+  (IsLocalization.atUnits R (IsLocalRing.maximalIdeal R).primeCompl
+    (fun _ hx => IsLocalRing.notMem_maximalIdeal.mp hx)).surjective
+
+/-- **The condition holds at the maximal ideal of every local ring**, with no domain hypothesis
+and no hypothesis on the ring at all beyond locality.
+
+This is the first value of `FormalSpectrum.HasBoundedDenominatorsAt` on this tree that is not a
+negation at one ring: `FormalSpectrum.not_hasBoundedDenominatorsAt_intTwo` below is one prime of
+`ℤ`, and everything the condition at the generic point is known to satisfy is a theorem about
+`FormalSpectrum.HasBoundedDenominators`, which reaches the predicate only at `⊥` and only through
+`FormalSpectrum.hasBoundedDenominatorsAt_bot_iff`. -/
+theorem hasBoundedDenominatorsAt_maximalIdeal :
+    HasBoundedDenominatorsAt R (IsLocalRing.maximalIdeal R) :=
+  hasBoundedDenominatorsAt_of_surjective R _
+    (surjective_algebraMap_localizationAtPrime_maximalIdeal R)
+
+end LocalRing
+
+/-! ### The two known points, as values of the criterion
+
+The two `example`s below are **checks and not results**: each restates a theorem this tree already
+has, and each is derived here from the criterion at an arbitrary point. They are what shows the
+comparison above is the missing edge and not a restatement, and they are `example`s precisely so
+that neither becomes a second declaration of a statement already proved elsewhere.
+-/
+
+/-- The generic point: the criterion at an arbitrary point, at `⊥`, composed with the comparison.
+That `FormalSpectrum.powerSeriesXGenericPoint` may be written where the criterion says
+`FormalSpectrum.powerSeriesXPoint` at `⊥` is `FormalSpectrum.powerSeriesXPoint_bot`, which is
+`rfl`, so the elaborator needs no rewriting on the point and the whole derivation is the `↔`. -/
+example (R : Type u) [CommRing R] [IsDomain R] :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXGenericPoint R) ↔
+      HasBoundedDenominators R :=
+  (isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt R ⊥).trans
+    (hasBoundedDenominatorsAt_bot_iff R)
+
+/-- The closed point of a local domain, from
+`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` through the same criterion.
+`FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint` proves this at every local ring and is not
+weakened by it; the domain hypothesis here is the criterion's, not the statement's. -/
+example (R : Type u) [CommRing R] [IsLocalRing R] [IsDomain R] :
+    IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXClosedPoint R) :=
+  (isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt R
+    (IsLocalRing.maximalIdeal R)).mpr (hasBoundedDenominatorsAt_maximalIdeal R)
 
 /-! ### A closed point at which the predicate fails -/
 
