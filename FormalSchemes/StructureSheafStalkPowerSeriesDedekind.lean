@@ -221,9 +221,9 @@ point, is itself over that same module, and is what the arbitrary-point material
 in; it is the one edge this branch adds.
 
 Appending to that file was the alternative and is cheaper by a module. It is not taken for two
-reasons, and the second is the load-bearing one. It is **3012** lines with **94** declarations —
+reasons, and the second is the load-bearing one. It is **3001** lines with **93** declarations —
 `theorem`, `lemma`, `def`, `instance` or `class` at the start of a line, `example`s not counted and
-there are **nine** of those — and is the most edited file on this board, at **26** commits touching
+there are **nine** of those — and is the most edited file on this board, at **28** commits touching
 it against **12** for the runner-up, so a leaf keeps two concurrent rows off one file; and **the two
 Mathlib imports this material needs would otherwise be paid by a module that does not need them.**
 That file's own discrete-valuation-ring section advertises that it *"adds no Mathlib import
