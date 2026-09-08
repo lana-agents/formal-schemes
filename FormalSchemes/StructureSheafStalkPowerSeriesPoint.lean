@@ -237,7 +237,8 @@ reason the diff is wider than the mathematics.
   above, its failure half now a corollary and only its closedness half about `(2)`.
 * `FormalSpectrum.dvd_pow_of_mem_range_algebraMap`: **the descent from the local ring back to the
   ring** — clearing `1 / s` by `m ^ k` says `s ∣ m ^ k` in `R` — the single step both refutations
-  of the condition take, and the second of the two places a proof here spends `[IsDomain R]`.
+  of the condition take, and one of the places a proof here spends `[IsDomain R]`; they are
+  enumerated on `FormalSpectrum.injective_awayToLocalizationAtPrime`.
 * `FormalSpectrum.hasBoundedDenominatorsAt_iff_finite_primes`: **the condition at a unique
   factorisation domain is a cardinality at every prime**, namely the number of primes up to
   associates lying outside that prime — the analogue at a general prime of
@@ -1144,8 +1145,10 @@ Multiplying the hypothesis by `algebraMap s` collapses the reciprocal (`IsLocali
 and leaves an equation between two images of `R`. **The domain hypothesis is spent on pushing that
 equation back down**, the prime complement of a prime of a domain consisting of nonzero divisors
 (`Ideal.primeCompl_le_nonZeroDivisors`, through `IsLocalization.injective`); that is the same fact
-`FormalSpectrum.injective_awayToLocalizationAtPrime` spends, and the two of them are the whole of
-this file's use of `[IsDomain R]`. -/
+`FormalSpectrum.injective_awayToLocalizationAtPrime` spends, while
+`FormalSpectrum.isFractionRing_localizationAtPrimeBot` spends a different one.
+`FormalSpectrum.injective_awayToLocalizationAtPrime`'s docstring enumerates every place in this
+file where a proof spends the binder. -/
 theorem dvd_pow_of_mem_range_algebraMap (m : R) {s : R} (hs : s ∉ p) {k : ℕ}
     (h : algebraMap R (Localization.AtPrime p) (m ^ k) *
         IsLocalization.mk' (M := p.primeCompl) _ (1 : R) ⟨s, hs⟩ ∈
