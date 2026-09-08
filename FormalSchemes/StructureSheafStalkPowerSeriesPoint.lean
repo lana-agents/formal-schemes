@@ -39,10 +39,13 @@ closed point turns out to be an illustration rather than an exception:
 > the generic point and every closed point, none left over — `FormalSpectrum.IsStalkLimit` is
 > **false**.
 
-That is the first formal spectrum on this tree at which the stalk half is known to fail
-everywhere; every other space decided here takes both values, or one value at one point. **It is
-not a claim that `ℤ⟦X⟧` is a pathological ring and it refutes nothing** — see
-`## What is *not* proved here` below.
+That is the first formal spectrum on this tree decided everywhere in the **negative**. It is not
+the first decided everywhere: `FormalSpectrum.isStalkLimit_bot` decides `Spf (R, ⊥)` at every
+point of every commutative ring, `FormalSpectrum.isStalkLimit_of_isNilpotent` does the same at
+every finitely generated nilpotent ideal of definition, and
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` decides `Spf (k⟦X⟧, (X))` over a field — and all
+three of those are positive. **It is not a claim that `ℤ⟦X⟧` is a pathological ring and it
+refutes nothing** — see `## What is *not* proved here` below.
 
 ## What it costs, and what it does not
 
@@ -96,19 +99,22 @@ at a general prime are all still open and none is touched below. The one general
 is at the maximal ideal of a local ring (`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`),
 where nothing has to be inverted.
 
-**The closed point is not decided in general, and neither is the everywhere-failure.** One ring
-is now decided at every one of its primes, and it is the only one:
-`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` is about `ℤ` and about nothing else. No
-criterion is given for which rings behave like it, none is guessed at below, and
+**The closed point is not decided in general, and neither is the everywhere-failure.** `ℤ` is now
+decided at every one of its primes, and it is the only ring decided everywhere in the *negative*:
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` is about `ℤ` and about nothing else, while
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` decides every prime of a field the other way. No
+criterion is given for which rings behave like `ℤ`, none is guessed at below, and
 `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` shows the behaviour is not universal — at a
 local ring the condition holds at the maximal ideal.
 
-It refutes no theorem on this tree: `FormalSpectrum.powerSeriesXClosedPoint` is *defined*
-only at a local ring, so `FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint`'s `[IsLocalRing R]`
-cannot be deleted from a statement that would not typecheck without it. What it refutes is the
-reading that closed points are the points where the colimit has nothing to do — over `ℤ` the basic
-opens through the point over `(2)` are a genuinely filtered system and the colimit misses `1 / q`
-for every prime `q` larger than the denominator on offer.
+Neither `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo` nor
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` refutes a theorem on this tree:
+`FormalSpectrum.powerSeriesXClosedPoint` is *defined* only at a local ring, so
+`FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint`'s `[IsLocalRing R]` cannot be deleted from a
+statement that would not typecheck without it. What they refute is the reading that closed points
+are the points where the colimit has nothing to do — over `ℤ` the basic opens through the point
+over `(2)` are a genuinely filtered system and the colimit misses `1 / q` for every prime `q`
+larger than the denominator on offer.
 
 **Nothing about the ultrapower, unique factorisation, Dedekind or Noetherian hypotheses.** No
 statement below carries any of them, and none of the material in
@@ -1050,8 +1056,11 @@ section Int
 /-- **A prime larger than a given integer and a given bound.** `Nat.exists_infinite_primes` is the
 same source the `ℤ` refutation at the generic point draws its primes from. The bound is
 `g.natAbs + n + 3` and each summand earns its place: the absolute value (`Int.natAbs`) is what
-makes the prime miss `g`, the index is what makes the family below unbounded, and the `+ 3` keeps
-the prime away from `0` and `1` when the other two vanish. -/
+makes the prime miss `g`, the index is what makes the family below unbounded, and the constant is
+what makes the bound *strictly* exceed that absolute value, which is what
+`FormalSpectrum.bigPrimeAvoiding_notMem` needs when the index is zero. Any positive constant would
+serve; three is carried over from the `(2)` version this generalises, where it also had to push
+the prime past `2`. -/
 def bigPrimeAvoiding (g : ℤ) (n : ℕ) : ℕ :=
   (Nat.exists_infinite_primes (g.natAbs + n + 3)).choose
 
@@ -1164,8 +1173,10 @@ theorem not_hasBoundedDenominatorsAt_int (p : Ideal ℤ) [p.IsPrime] :
 
 /-- **`FormalSpectrum.IsStalkLimit` fails at every point of `Spf (ℤ⟦X⟧, (X))`** — at the generic
 point, at every closed point, with no point left over. This is the first formal spectrum on this
-tree at which the stalk half of EGA I 10.8 is known to fail everywhere; every other space decided
-here takes both values, or one value at one point.
+tree decided everywhere in the **negative**; it is not the first decided everywhere, since
+`FormalSpectrum.isStalkLimit_bot`, `FormalSpectrum.isStalkLimit_of_isNilpotent` and
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` each decide a space at every one of its points,
+and each of those three is positive.
 
 The proof is the criterion at an arbitrary point applied to an arbitrary point:
 `FormalSpectrum.eq_powerSeriesXPoint` says every point is a
