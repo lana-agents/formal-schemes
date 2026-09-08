@@ -32,7 +32,20 @@ And the predicate genuinely takes a new kind of value:
 > `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo`: at `(X) ⊆ ℤ⟦X⟧`, at the
 > point over `(2)`, the singleton is **closed** and `FormalSpectrum.IsStalkLimit` is **false**.
 
-Every negative value of the predicate that predates this file is at a **generic** point.
+Every negative value of the predicate that predates this file is at a **generic** point. That
+closed point turns out to be an illustration rather than an exception:
+
+> `FormalSpectrum.not_isStalkLimit_powerSeriesX_int`: at **every** point of `Spf (ℤ⟦X⟧, (X))` —
+> the generic point and every closed point, none left over — `FormalSpectrum.IsStalkLimit` is
+> **false**.
+
+That is the first formal spectrum on this tree decided everywhere in the **negative**. It is not
+the first decided everywhere: `FormalSpectrum.isStalkLimit_bot` decides `Spf (R, ⊥)` at every
+point of every commutative ring, `FormalSpectrum.isStalkLimit_of_isNilpotent` does the same at
+every finitely generated nilpotent ideal of definition, and
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` decides `Spf (k⟦X⟧, (X))` over a field — and all
+three of those are positive. **It is not a claim that `ℤ⟦X⟧` is a pathological ring and it
+refutes nothing** — see `## What is *not* proved here` below.
 
 ## What it costs, and what it does not
 
@@ -86,14 +99,22 @@ at a general prime are all still open and none is touched below. The one general
 is at the maximal ideal of a local ring (`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`),
 where nothing has to be inverted.
 
-**The closed point is not decided in general.**
-`FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo` is one closed point of one
-ring. It refutes no theorem on this tree: `FormalSpectrum.powerSeriesXClosedPoint` is *defined*
-only at a local ring, so `FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint`'s `[IsLocalRing R]`
-cannot be deleted from a statement that would not typecheck without it. What it refutes is the
-reading that closed points are the points where the colimit has nothing to do — over `ℤ` the basic
-opens through the point over `(2)` are a genuinely filtered system and the colimit misses `1 / q`
-for every prime `q` larger than the denominator on offer.
+**The closed point is not decided in general, and neither is the everywhere-failure.** `ℤ` is now
+decided at every one of its primes, and it is the only ring decided everywhere in the *negative*:
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` is about `ℤ` and about nothing else, while
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` decides every prime of a field the other way. No
+criterion is given for which rings behave like `ℤ`, none is guessed at below, and
+`FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` shows the behaviour is not universal — at a
+local ring the condition holds at the maximal ideal.
+
+Neither `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo` nor
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` refutes a theorem on this tree:
+`FormalSpectrum.powerSeriesXClosedPoint` is *defined* only at a local ring, so
+`FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint`'s `[IsLocalRing R]` cannot be deleted from a
+statement that would not typecheck without it. What they refute is the reading that closed points
+are the points where the colimit has nothing to do — over `ℤ` the basic opens through the point
+over `(2)` are a genuinely filtered system and the colimit misses `1 / q` for every prime `q`
+larger than the denominator on offer.
 
 **Nothing about the ultrapower, unique factorisation, Dedekind or Noetherian hypotheses.** No
 statement below carries any of them, and none of the material in
@@ -162,8 +183,14 @@ reason the diff is wider than the mathematics.
 * `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal`: **the condition holds at the maximal
   ideal of every local ring**, with no domain hypothesis — the predicate's first value that is not
   a negation at a single ring.
+* `FormalSpectrum.not_isStalkLimit_powerSeriesX_int`: **the predicate fails at every point of
+  `Spf (ℤ⟦X⟧, (X))`**, the first formal spectrum here on which it is identically false. It goes
+  through `FormalSpectrum.not_hasBoundedDenominatorsAt_int`, whose nonzero-prime branch is
+  `FormalSpectrum.not_hasBoundedDenominatorsAt_intSpan` and whose branch at `⊥` is the existing
+  refutation read through `FormalSpectrum.hasBoundedDenominatorsAt_bot_iff`.
 * `FormalSpectrum.isClosed_and_not_isStalkLimit_powerSeriesXPoint_intTwo`: **a closed point at
-  which the predicate fails**, at `(X) ⊆ ℤ⟦X⟧` over `(2)`.
+  which the predicate fails**, at `(X) ⊆ ℤ⟦X⟧` over `(2)` — the illustration of the theorem
+  above, its failure half now a corollary and only its closedness half about `(2)`.
 -/
 
 noncomputable section
@@ -475,8 +502,11 @@ removed: that one is stated at the generic point of a domain, and the domain ent
 one step only, which
 `FormalSpectrum.mem_pointIdeal_pow_of_map_mem_powerSeriesXPoint` replaces by a common-denominator
 argument inside the prime complement. Neither theorem is derived from the other and the earlier
-one is not reproved; the two targets are `FractionRing R` and `Localization.AtPrime` at `⊥`, and
-identifying those is not done anywhere here. -/
+one is not reproved; the two targets are `FractionRing R` and `Localization.AtPrime` at `⊥`.
+Those two *coefficient* rings are identified further down, by
+`FormalSpectrum.localizationAtPrimeBotEquiv`, but that identification is never transported through
+`PowerSeries.map`, so the two completions above are still not compared and the first sentence
+stands. -/
 def atPrimeCompletionEquivLocalizationPowerSeries :
     AdicCompletion (pointIdeal (powerSeriesXIdeal R) (powerSeriesXPoint R p))
         (Localization.AtPrime (pointPrime (powerSeriesXIdeal R) (powerSeriesXPoint R p)))
@@ -661,8 +691,8 @@ forms — denominators rather than localizations, the other being
 `FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` identifies it at `⊥` with
 `FormalSpectrum.HasBoundedDenominators`; `FormalSpectrum.hasBoundedDenominatorsAt_of_surjective`
 is a sufficient criterion, and `FormalSpectrum.hasBoundedDenominatorsAt_maximalIdeal` the one
-general value it yields; `FormalSpectrum.not_hasBoundedDenominatorsAt_intTwo` refutes it at one
-prime of one ring. What it is *for* is that the surjectivity half of the criterion at the point
+general value it yields; `FormalSpectrum.not_hasBoundedDenominatorsAt_int` refutes it at every
+prime of `ℤ`. What it is *for* is that the surjectivity half of the criterion at the point
 over `p` is literally it
 (`FormalSpectrum.exists_awayToAtPrimeCompletion_eq_powerSeriesXPoint_iff`). -/
 def HasBoundedDenominatorsAt (R : Type u) [CommRing R] (p : Ideal R) [p.IsPrime] : Prop :=
@@ -855,10 +885,13 @@ surjectivity half is ever at stake and that half is
 `FormalSpectrum.HasBoundedDenominatorsAt` on the nose.
 
 **This does not restate or reprove
-`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`.** By
-`FormalSpectrum.powerSeriesXPoint_bot` the two are about the same point when `p = ⊥`, but their
-right-hand sides are conditions on two different models of the same localization and identifying
-those is not done here; neither theorem is derived from the other. -/
+`FormalSpectrum.isStalkLimit_powerSeriesXGenericPoint_iff_hasBoundedDenominators`**, and *restate
+or reprove* is the whole of what it does not do. By `FormalSpectrum.powerSeriesXPoint_bot` the two
+are about the same point when `p = ⊥`, and their right-hand sides are conditions on two different
+models of the same localization which `FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` identifies.
+Composing the two **does** derive the generic-point theorem from this one; that derivation ships
+below as an `example` rather than as a theorem, so no second declaration of that statement exists
+on the tree. -/
 theorem isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt :
     IsStalkLimit (powerSeriesXIdeal R) (powerSeriesXPoint R p) ↔
       HasBoundedDenominatorsAt R p :=
@@ -949,7 +982,10 @@ variable (R : Type u) [CommRing R] (p : Ideal R) [p.IsPrime]
 `Localization.AtPrime p` is already the image of an element of `R`, then `m = 1` and `k = 0` serve
 for every family at once.
 
-`1 ∉ p` is `Ideal.ne_top_iff_one` at a prime, which is the only thing primeness is used for. -/
+`1 ∉ p` is `Ideal.ne_top_iff_one` at a prime, and it is the only thing the *proof* needs primeness
+for. The instance is doing something else as well, which is making the statement elaborate at all:
+`Ideal.primeCompl`, `Localization.AtPrime` and `FormalSpectrum.HasBoundedDenominatorsAt` each take
+it as an instance argument. -/
 theorem hasBoundedDenominatorsAt_of_surjective
     (hsurj : Function.Surjective (algebraMap R (Localization.AtPrime p))) :
     HasBoundedDenominatorsAt R p :=
@@ -974,8 +1010,8 @@ theorem surjective_algebraMap_localizationAtPrime_maximalIdeal :
 /-- **The condition holds at the maximal ideal of every local ring**, with no domain hypothesis
 and no hypothesis on the ring at all beyond locality.
 
-This is the first value of `FormalSpectrum.HasBoundedDenominatorsAt` on this tree that is not a
-negation at one ring: `FormalSpectrum.not_hasBoundedDenominatorsAt_intTwo` below is one prime of
+This is the only value of `FormalSpectrum.HasBoundedDenominatorsAt` on this tree that is not a
+negation: `FormalSpectrum.not_hasBoundedDenominatorsAt_int` below refutes it at *every* prime of
 `ℤ`, and everything the condition at the generic point is known to satisfy is a theorem about
 `FormalSpectrum.HasBoundedDenominators`, which reaches the predicate only at `⊥` and only through
 `FormalSpectrum.hasBoundedDenominatorsAt_bot_iff`. -/
@@ -1013,91 +1049,160 @@ example (R : Type u) [CommRing R] [IsLocalRing R] [IsDomain R] :
   (isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt R
     (IsLocalRing.maximalIdeal R)).mpr (hasBoundedDenominatorsAt_maximalIdeal R)
 
-/-! ### A closed point at which the predicate fails -/
+/-! ### A formal spectrum at which the predicate fails everywhere -/
 
 section Int
 
-/-- A prime at least `n + 3`, hence odd. `Nat.exists_infinite_primes` is the same source the
-`ℤ` refutation at the generic point draws its primes from. -/
-def bigOddPrime (n : ℕ) : ℕ := (Nat.exists_infinite_primes (n + 3)).choose
+/-- **A prime larger than a given integer and a given bound.** `Nat.exists_infinite_primes` is the
+same source the `ℤ` refutation at the generic point draws its primes from. The bound is
+`g.natAbs + n + 3` and each summand earns its place: the absolute value (`Int.natAbs`) is what
+makes the prime miss `g`, the index is what makes the family below unbounded, and the constant is
+what makes the bound *strictly* exceed that absolute value, which is what
+`FormalSpectrum.bigPrimeAvoiding_notMem` needs when the index is zero. Any positive constant would
+serve; three is carried over from the `(2)` version this generalises, where it also had to push
+the prime past `2`. -/
+def bigPrimeAvoiding (g : ℤ) (n : ℕ) : ℕ :=
+  (Nat.exists_infinite_primes (g.natAbs + n + 3)).choose
 
-theorem bigOddPrime_prime (n : ℕ) : (bigOddPrime n).Prime :=
-  (Nat.exists_infinite_primes (n + 3)).choose_spec.2
+theorem bigPrimeAvoiding_prime (g : ℤ) (n : ℕ) : (bigPrimeAvoiding g n).Prime :=
+  (Nat.exists_infinite_primes (g.natAbs + n + 3)).choose_spec.2
 
-theorem le_bigOddPrime (n : ℕ) : n + 3 ≤ bigOddPrime n :=
-  (Nat.exists_infinite_primes (n + 3)).choose_spec.1
+theorem le_bigPrimeAvoiding (g : ℤ) (n : ℕ) : g.natAbs + n + 3 ≤ bigPrimeAvoiding g n :=
+  (Nat.exists_infinite_primes (g.natAbs + n + 3)).choose_spec.1
 
-theorem bigOddPrime_notMem (n : ℕ) : ((bigOddPrime n : ℕ) : ℤ) ∉ Ideal.span {(2 : ℤ)} := by
+/-- **The prime misses the ideal because it is larger than the generator**, and for no other
+reason. There is no coprimality argument here and none is available: a prime dividing `g` is at
+most its absolute value, and `FormalSpectrum.le_bigPrimeAvoiding` puts this one strictly above
+that. -/
+theorem bigPrimeAvoiding_notMem {g : ℤ} (hg : Prime g) (n : ℕ) :
+    ((bigPrimeAvoiding g n : ℕ) : ℤ) ∉ Ideal.span {g} := by
   rw [Ideal.mem_span_singleton]
   intro hdvd
-  have h2 : (2 : ℕ) ∣ bigOddPrime n := by
-    have hcast : ((2 : ℕ) : ℤ) ∣ ((bigOddPrime n : ℕ) : ℤ) := by exact_mod_cast hdvd
-    exact_mod_cast hcast
-  rcases (Nat.Prime.eq_one_or_self_of_dvd (bigOddPrime_prime n) 2 h2) with h | h
-  · omega
-  · have := le_bigOddPrime n
+  have hnat : g.natAbs ∣ bigPrimeAvoiding g n := by
+    have := Int.natAbs_dvd_natAbs.mpr hdvd
+    simpa using this
+  rcases (bigPrimeAvoiding_prime g n).eq_one_or_self_of_dvd _ hnat with h | h
+  · exact hg.not_unit (Int.isUnit_iff.mpr (Int.natAbs_eq_iff.mp h |>.imp id id))
+  · have := le_bigPrimeAvoiding g n
     omega
 
-/-- **The family that refutes the condition at `(2) ⊆ ℤ`**: the reciprocals of an infinite set of
-odd primes, each of them a legitimate element of the local ring because its denominator is odd.
+/-- **The family that refutes the condition at a nonzero prime of `ℤ`**: the reciprocals of an
+infinite set of primes, each of them a legitimate element of the local ring because its
+denominator is larger than the generator and so lies outside the prime.
 
 The `ℤ` refutation at the generic point uses `FormalSpectrum.unitFractionSeries`, the reciprocals
-of *all* the positive integers; that family is not available here, because `1 / 2` is not in the
-local ring at `(2)`. -/
-def intTwoFamily (n : ℕ) : Localization.AtPrime (Ideal.span {(2 : ℤ)}) :=
-  IsLocalization.mk' (M := (Ideal.span {(2 : ℤ)}).primeCompl) _ (1 : ℤ)
-    ⟨((bigOddPrime n : ℕ) : ℤ), bigOddPrime_notMem n⟩
+of *all* the positive integers; that family is not available here, because the reciprocal of the
+generator is not in the local ring at the ideal it generates. -/
+def intPrimeFamily {g : ℤ} (hg : Prime g) [(Ideal.span {g}).IsPrime] (n : ℕ) :
+    Localization.AtPrime (Ideal.span {g}) :=
+  IsLocalization.mk' (M := (Ideal.span {g}).primeCompl) _ (1 : ℤ)
+    ⟨((bigPrimeAvoiding g n : ℕ) : ℤ), bigPrimeAvoiding_notMem hg n⟩
 
-/-- **The denominator condition fails at `(2) ⊆ ℤ`.** For any odd `m`, a prime `q` exceeding `|m|`
-divides no power of `m`, so `1 / q` is not cleared into `ℤ` by any power of `m` — and the family
-above contains such a `q` for every `m`, because it contains a prime past every bound.
+/-- **The denominator condition fails at every nonzero prime of `ℤ`.** For any candidate
+denominator `m`, a prime `q` exceeding `|m|` divides no power of `m`, so the reciprocal of `q` is
+not cleared into `ℤ` by any power of `m` — and the family above contains such a `q` for every `m`,
+because it contains a prime past every bound.
 
-The step that makes the descent legal is that `ℤ → ℤ_(2)` is injective, the prime complement of a
-prime of a domain consisting of nonzero divisors. -/
-theorem not_hasBoundedDenominatorsAt_intTwo :
-    ¬ HasBoundedDenominatorsAt ℤ (Ideal.span {(2 : ℤ)}) := by
+**Nothing in the argument is about the generator beyond
+`FormalSpectrum.bigPrimeAvoiding_notMem`**, which is why the same forty lines decide every prime
+at once rather than one of them; `2` never played a role in it.
+
+The step that makes the descent legal is that `ℤ → ℤ_(g)` is injective, the prime complement of a
+prime of a domain consisting of nonzero divisors. The primeness of `g` is taken here as a
+hypothesis and the instance on its span as an instance binder, so that the statement elaborates at
+all; both are supplied once, in `FormalSpectrum.not_hasBoundedDenominatorsAt_int`. -/
+theorem not_hasBoundedDenominatorsAt_intSpan {g : ℤ} (hg : Prime g)
+    [(Ideal.span {g}).IsPrime] :
+    ¬ HasBoundedDenominatorsAt ℤ (Ideal.span {g}) := by
   rw [hasBoundedDenominatorsAt_iff_range]
   intro h
-  obtain ⟨m, hm, hall⟩ := h intTwoFamily
+  obtain ⟨m, hm, hall⟩ := h (intPrimeFamily hg)
   have hm0 : m ≠ 0 := fun h0 => hm (h0 ▸ Ideal.zero_mem _)
   obtain ⟨z, hz⟩ := hall m.natAbs
   obtain ⟨⟨a, y⟩, hy⟩ := IsLocalization.mk'_surjective (Submonoid.powers m) z
   have hspec : algebraMap ℤ (Localization.Away m) (y : ℤ) * z =
       algebraMap ℤ (Localization.Away m) a := by
     rw [← hy]; exact IsLocalization.mk'_spec' _ a y
-  have himg := congrArg (awayToLocalizationAtPrime ℤ (Ideal.span {(2 : ℤ)}) m hm) hspec
+  have himg := congrArg (awayToLocalizationAtPrime ℤ (Ideal.span {g}) m hm) hspec
   rw [map_mul, awayToLocalizationAtPrime_algebraMap,
-    awayToLocalizationAtPrime_algebraMap, hz, intTwoFamily] at himg
+    awayToLocalizationAtPrime_algebraMap, hz, intPrimeFamily] at himg
   have hmul := congrArg
-    (· * algebraMap ℤ (Localization.AtPrime (Ideal.span {(2 : ℤ)}))
-      ((bigOddPrime m.natAbs : ℕ) : ℤ)) himg
+    (· * algebraMap ℤ (Localization.AtPrime (Ideal.span {g}))
+      ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ)) himg
   simp only [mul_assoc] at hmul
   rw [IsLocalization.mk'_spec, map_one, mul_one, ← map_mul] at hmul
   have hinj : Function.Injective
-      (algebraMap ℤ (Localization.AtPrime (Ideal.span {(2 : ℤ)}))) :=
-    IsLocalization.injective _
-      (Ideal.primeCompl_le_nonZeroDivisors (Ideal.span {(2 : ℤ)}))
-  have heq : (y : ℤ) = a * ((bigOddPrime m.natAbs : ℕ) : ℤ) := hinj hmul
+      (algebraMap ℤ (Localization.AtPrime (Ideal.span {g}))) :=
+    IsLocalization.injective _ (Ideal.primeCompl_le_nonZeroDivisors (Ideal.span {g}))
+  have heq : (y : ℤ) = a * ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ) := hinj hmul
   obtain ⟨k, hk⟩ := y.2
-  have hdvd : ((bigOddPrime m.natAbs : ℕ) : ℤ) ∣ m ^ k :=
+  have hdvd : ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ) ∣ m ^ k :=
     ⟨a, by rw [show m ^ k = (y : ℤ) from hk, heq]; ring⟩
-  have hqp : Prime ((bigOddPrime m.natAbs : ℕ) : ℤ) :=
-    Nat.prime_iff_prime_int.mp (bigOddPrime_prime m.natAbs)
-  have hqm : ((bigOddPrime m.natAbs : ℕ) : ℤ) ∣ m := hqp.dvd_of_dvd_pow hdvd
-  have hnat : bigOddPrime m.natAbs ∣ m.natAbs := by
+  have hqp : Prime ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ) :=
+    Nat.prime_iff_prime_int.mp (bigPrimeAvoiding_prime g m.natAbs)
+  have hqm : ((bigPrimeAvoiding g m.natAbs : ℕ) : ℤ) ∣ m := hqp.dvd_of_dvd_pow hdvd
+  have hnat : bigPrimeAvoiding g m.natAbs ∣ m.natAbs := by
     have hd := Int.natAbs_dvd_natAbs.mpr hqm
     simpa using hd
-  have hle : bigOddPrime m.natAbs ≤ m.natAbs :=
+  have hle : bigPrimeAvoiding g m.natAbs ≤ m.natAbs :=
     Nat.le_of_dvd (Int.natAbs_pos.mpr hm0) hnat
-  have := le_bigOddPrime m.natAbs
+  have := le_bigPrimeAvoiding g m.natAbs
   omega
+
+/-- **The denominator condition fails at every prime of `ℤ`, the zero ideal included.**
+
+**Two arguments, not one, and the generic point is not a special case of the other.** At a nonzero
+prime it is `FormalSpectrum.not_hasBoundedDenominatorsAt_intSpan`. At `⊥` there is no generator
+that is a prime element, so `FormalSpectrum.intPrimeFamily` does not typecheck there at all, and
+the branch instead reads the existing `FormalSpectrum.not_hasBoundedDenominators_int` through
+`FormalSpectrum.hasBoundedDenominatorsAt_bot_iff` — which is the whole use this file makes of that
+comparison outside its own consistency checks.
+
+What lets the two branches exhaust the primes is that `ℤ` is a principal ideal ring:
+`Ideal.span_singleton_generator` writes any ideal as a span, and `Ideal.span_singleton_prime`
+reads `Prime g` back off the ambient `Ideal.IsPrime` once the generator is known nonzero. -/
+theorem not_hasBoundedDenominatorsAt_int (p : Ideal ℤ) [p.IsPrime] :
+    ¬ HasBoundedDenominatorsAt ℤ p := by
+  rcases eq_or_ne p ⊥ with rfl | hp0
+  · rw [hasBoundedDenominatorsAt_bot_iff]
+    exact not_hasBoundedDenominators_int
+  · obtain ⟨g, rfl⟩ : ∃ g : ℤ, p = Ideal.span {g} :=
+      ⟨_, (Ideal.span_singleton_generator p).symm⟩
+    have hgne : g ≠ 0 := fun h0 => hp0 (by rw [h0, Ideal.span_singleton_eq_bot.mpr rfl])
+    exact not_hasBoundedDenominatorsAt_intSpan ((Ideal.span_singleton_prime hgne).mp ‹_›)
+
+/-- **`FormalSpectrum.IsStalkLimit` fails at every point of `Spf (ℤ⟦X⟧, (X))`** — at the generic
+point, at every closed point, with no point left over. This is the first formal spectrum on this
+tree decided everywhere in the **negative**; it is not the first decided everywhere, since
+`FormalSpectrum.isStalkLimit_bot`, `FormalSpectrum.isStalkLimit_of_isNilpotent` and
+`FormalSpectrum.isStalkLimit_powerSeriesX_field` each decide a space at every one of its points,
+and each of those three is positive.
+
+The proof is the criterion at an arbitrary point applied to an arbitrary point:
+`FormalSpectrum.eq_powerSeriesXPoint` says every point is a
+`FormalSpectrum.powerSeriesXPoint`, and after that there is nothing left but
+`FormalSpectrum.not_hasBoundedDenominatorsAt_int`.
+
+**This is not a statement about `ℤ⟦X⟧` being a pathological ring and it refutes no theorem.** EGA
+I 10.8 asks for a Noetherian adic hypothesis on a scheme; what is at stake here is the stalk half
+at a formal spectrum whose ideal of definition is `FormalSpectrum.powerSeriesXIdeal`, and no
+hypothesis of that theorem is claimed to hold here. -/
+theorem not_isStalkLimit_powerSeriesX_int (x : FormalSpectrum (powerSeriesXIdeal ℤ)) :
+    ¬ IsStalkLimit (powerSeriesXIdeal ℤ) x := by
+  rw [eq_powerSeriesXPoint ℤ x, isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt]
+  exact not_hasBoundedDenominatorsAt_int _
+
+/-- **The denominator condition fails at `(2) ⊆ ℤ`.** The case of
+`FormalSpectrum.not_hasBoundedDenominatorsAt_int` at the prime `(2)`, kept as a name because it is
+what the closed point below is about. -/
+theorem not_hasBoundedDenominatorsAt_intTwo :
+    ¬ HasBoundedDenominatorsAt ℤ (Ideal.span {(2 : ℤ)}) :=
+  not_hasBoundedDenominatorsAt_int _
 
 /-- **`FormalSpectrum.IsStalkLimit` fails at the point of `Spf (ℤ⟦X⟧, (X))` over `(2)`.** -/
 theorem not_isStalkLimit_powerSeriesXPoint_intTwo :
     ¬ IsStalkLimit (powerSeriesXIdeal ℤ) (powerSeriesXPoint ℤ (Ideal.span {(2 : ℤ)})) :=
-  fun h => not_hasBoundedDenominatorsAt_intTwo
-    ((isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt ℤ
-      (Ideal.span {(2 : ℤ)})).mp h)
+  not_isStalkLimit_powerSeriesX_int _
 
 /-- **A closed point at which `FormalSpectrum.IsStalkLimit` fails.**
 
@@ -1106,6 +1211,11 @@ Every negative value of the predicate that predates this file is at a **generic*
 of integers of a number field in
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField` — and every positive value at a closed
 point carries `[IsLocalRing R]`.
+
+**Only the closedness half is about `(2)`.** The failure half is the case of
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` at this point and says nothing about `2` that
+it does not say about every prime; what is genuinely about `(2)` is that it is maximal, which is
+what makes the singleton closed.
 
 **This refutes no theorem on this tree.** `FormalSpectrum.powerSeriesXClosedPoint` is defined only
 at a local ring, so the instance in `FormalSpectrum.isStalkLimit_powerSeriesXClosedPoint` cannot be
