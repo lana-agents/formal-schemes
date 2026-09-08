@@ -159,12 +159,16 @@ possible.
 
 **One instance was moved down to make room for this file.**
 `FormalSpectrum.isPrime_span_singleton_two` — `(2)` is prime in `ℤ` — was declared in
-`FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which is a *sibling* leaf: neither file can
-reach the other, so the closed point below would have needed a second copy of it. It now sits in
-`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which both leaves reach, and is
-declared once. `Int.span_two_isMaximal` (`FormalSchemes.TwoAdicDegeneracy`) is the same fact about
-maximality and is **not** moved: it is in neither leaf's closure, it has a consumer where it is,
-and the one use of maximality below is a term rather than a named theorem.
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which **was** a sibling leaf when the move was
+made: neither file could reach the other, so the closed point below would have needed a second copy
+of it. That is no longer symmetric. `FormalSchemes.StructureSheafStalkPowerSeriesLocal` now reaches
+this module through `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` and is one of the three
+modules the count at the head of this section names; this module still cannot reach it, now because
+that edge would be a cycle rather than because the two are unrelated. The decision stands unchanged:
+the instance sits in `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which both of
+them reach, and is declared once. `Int.span_two_isMaximal` (`FormalSchemes.TwoAdicDegeneracy`) is
+the same fact about maximality and is **not** moved: it is in neither module's closure, it has a
+consumer where it is, and the one use of maximality below is a term rather than a named theorem.
 
 **A new module is not free here and the alternative was measured.** Appending to
 `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` would cost the rebuild of its reverse
@@ -172,9 +176,13 @@ closure and would put an arbitrary-point theory inside a file whose subject is o
 to `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, the leaf whose subject is closest, would
 cost nothing at all in figures, because a leaf added to a leaf moves no closure. What a new module
 costs instead is prose: the module count and every reverse closure through
-`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` move by one, which is twenty-three
-figures in fifteen files, all of them numerals. That cost is paid in the same commit and is the
-reason the diff is wider than the mathematics.
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` move by one, which is thirty-seven
+figures in twenty-three files, all of them numerals — measured by adding a scratch leaf over that
+module in a throwaway worktree and re-running the tree audit, so a later reader can re-derive it
+instead of trusting the words. At the tree this file was added to the same construction gave
+thirty-six figures in twenty-two files, and those twenty-two are exactly the files whose prose the
+commit that added this one had to touch. That cost is paid in the same commit and is the reason the
+diff is wider than the mathematics.
 
 ## Main results
 
