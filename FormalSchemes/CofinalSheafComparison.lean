@@ -31,10 +31,22 @@ Two directions of content are provided.
   and on global sections the identification `Γ(⊤, O_{Spf_I R}) ≃+* Γ(⊤, O_{Spf_J R})`
   (`FormalSpectrum.globalSectionsComparison`), both descriptions recovering `R`. The naturality of
   these section isomorphisms with respect to the restriction maps between basic opens is the merged
-  lemma `AdicCompletion.mapCompletion_comp_cofinalHom`; wiring that compatibility through the
-  structure-sheaf restriction maps to glue the pointwise isomorphisms into a single
-  `PresheafedSpace`/`LocallyRingedSpace` isomorphism over the base homeomorphism is the remaining,
-  category-theoretically heavy, step towards the full `Spf_I R ≅ Spf_J R`.
+  lemma `AdicCompletion.mapCompletion_comp_cofinalHom`.
+
+**The full `Spf_I R ≅ Spf_J R` is landed, and wiring the section isomorphisms above through the
+structure-sheaf restriction maps is not how.** `FormalSpectrum.cofinalSpfIso`
+(`FormalSchemes.CofinalSheafComparisonIso`) has it for `I ≤ J`, and
+`FormalSpectrum.generalCofinalSpfIso` (`FormalSchemes.CofinalSheafComparisonGeneral`) drops the
+nesting through `K = I * J`. Neither glues anything. The comparison is the `Spf`-functoriality
+morphism `FormalSpectrum.locallyRingedSpaceMap` of `RingHom.id R`, which is a morphism of sheaves
+by construction, so its naturality against every restriction is free and no square is proved; what
+is left is that its two components are isomorphisms — the base map by
+`FormalSpectrum.isIso_mapTopId` below, and the sheaf map by `TopCat.Sheaf.isIso_iff_isIso_basis`
+out of `FormalSpectrum.isIso_mapSheafHomId_app_basicOpen`. So the section isomorphisms of the
+bullet above, and the naturality squares built on them in
+`FormalSchemes.CofinalSheafComparisonNaturality` and `FormalSchemes.CofinalSheafComparisonBasis`,
+are the ring-level half of a route that was not taken; they are correct and they are not what the
+isomorphism consumes.
 
 ## Main definitions and results
 

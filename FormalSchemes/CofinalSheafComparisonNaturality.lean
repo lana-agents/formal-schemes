@@ -32,9 +32,16 @@ This is piece (a) of the deferred goal-1 sheaf-iso roadmap named in the docstrin
 `AdicCompletion.cofinalHom` fixes the structure map `AdicCompletion.of`, hence intertwines the two
 `awayCompletionHom`s.
 
-We honestly note that the fully general **basis-restriction** naturality (for an arbitrary basic
-inclusion `D(g) ⊆ D(f)`, needed for the complete sheaf gluing over the whole distinguished basis)
-remains a follow-up. Only the `f = 1`, i.e. `⊤ → D(g)`, case is settled here, and it is settled by
+We honestly note that the fully general **basis-restriction** naturality, for an arbitrary basic
+inclusion `D(g) ⊆ D(f)`, remains a follow-up. **It is not needed for the complete sheaf gluing over
+the distinguished basis, and this paragraph used to say that it was.** That gluing is landed —
+`FormalSpectrum.cofinalSpfIso` (`FormalSchemes.CofinalSheafComparisonIso`), and
+`FormalSpectrum.generalCofinalSpfIso` (`FormalSchemes.CofinalSheafComparisonGeneral`) without the
+nesting — and it spends no naturality square at all: the comparison there is the
+`Spf`-functoriality morphism of `RingHom.id R`, a morphism of sheaves by construction, and only its
+components have to be shown isomorphisms. So what remains open here is the square for its own sake
+and not a missing input to anything.
+Only the `f = 1`, i.e. `⊤ → D(g)`, case is settled here, and it is settled by
 `awayCompletionHom_eq_restrict`, to which the general case does **not** reduce: there is no
 canonical ring map `R_f → R_g` for a general `D(g) ⊆ D(f)`, since the inclusion is a condition on
 residues modulo `I` and does not put `g` in the radical of `f`.
