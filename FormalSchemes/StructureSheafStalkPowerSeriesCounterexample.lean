@@ -253,7 +253,7 @@ modules besides itself on top of this file's closure, 43 including it, and nothi
 ## Implementation notes
 
 The five `AdicCompletion` lemmas at the top of the file mention no formal geometry and would sit
-naturally in `FormalSchemes.Completion`, whose reverse closure is 448 of the project's 561 modules
+naturally in `FormalSchemes.Completion`, whose reverse closure is 449 of the project's 562 modules
 against this file's 5. They are kept here on the disposition
 `FormalSchemes.StructureSheafStalkPowerSeries` recorded for
 `AdicCompletion.bijective_mapCompletion` — which is the same shape and is still in that file — and
@@ -284,7 +284,7 @@ instantiates it at `ℤ[X]` localized at `(2, X)`;
 countability at an ultrapower of `ℤ`; and
 `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, which decides the predicate at an arbitrary
 point — counted by walking every `^import` line over the
-561 modules under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator
+562 modules under `FormalSchemes/` (a module is not counted in its own closure, and the aggregator
 at the repository root is outside the walk).
 
 **Every closure figure in this docstring comes from that one walk and they go stale together** —
