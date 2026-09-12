@@ -4,19 +4,30 @@
 #
 # What comes out is a static directory — the definitional dependency graph, the
 # rendered source, and the marks — which the trust web UI reads directly.  It is
-# published to the `trust-index` branch, where `raw.githubusercontent.com`
-# serves it, so that anyone can read this development at
+# published to a `trust-index` release, one asset per file, so that anyone can
+# read this development at
 #
-#     https://<a trust deployment>/?gh=lana-agents/formal-schemes
+#     https://<a trust deployment>/?release=lana-agents/formal-schemes
 #
 # and it is kept as an artifact besides, for `gh run download`.
 #
-# The branch is what a browser can actually fetch.  Downloading a workflow
-# artifact requires a token with the `repo` scope even though this repository is
-# public, so a frontend reading artifacts would have to ask every reader for
-# full control of their private repositories to show them a public dependency
-# graph; a branch is anonymous and comes with the CORS header that makes it
-# readable.  See the `publish` input of chrisflav/trust-action.
+# A release rather than the `trust-index` branch this used to force-push.  The
+# index of this development is 302 MB across 123 files, all of it generated, and
+# a branch keeps every byte of it in the repository people clone for the
+# mathematics; `decls.jsonl` was also within sight of git's 100 MB blob limit,
+# which is a wall rather than a cost.  A release holds the same files outside the
+# history, with a 2 GB ceiling per file.
+#
+# What it gives up is that a release asset carries no
+# `Access-Control-Allow-Origin`, so a browser cannot fetch one cross-origin: a
+# deployment reads these only by proxying them onto its own origin, which
+# chrisflav/trust-web does at `/release/`.  A branch needed no such thing.  What
+# neither can be is the workflow artifact below — downloading one requires a
+# token with the `repo` scope even though this repository is public, so a
+# frontend reading artifacts would have to ask every reader for full control of
+# their private repositories to show them a public dependency graph.
+#
+# See the `publish` input of chrisflav/trust-action for the whole of that trade.
 name: Trust index
 
 on:
@@ -64,12 +75,12 @@ jobs:
           # for yet, this fails saying exactly that.
           #
           # Publish from master only.  This workflow also runs on a pull request
-          # that edits it, and an index of a branch force-pushed over master's
-          # would leave the published one describing a commit that was never
-          # merged — quite apart from a fork's token having no write access to
-          # push it with.  `github.ref` is `refs/pull/N/merge` there and
-          # `refs/heads/master` for both a push and a manual run.
-          publish: ${{ github.ref == 'refs/heads/master' && 'branch' || 'false' }}
+          # that edits it, and an index of a branch published over master's would
+          # leave the release describing a commit that was never merged — quite
+          # apart from a fork's token having no write access to upload it with.
+          # `github.ref` is `refs/pull/N/merge` there and `refs/heads/master`
+          # for both a push and a manual run.
+          publish: ${{ github.ref == 'refs/heads/master' && 'release' || 'false' }}
 
       - uses: actions/upload-artifact@v4
         with:
