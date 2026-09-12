@@ -130,6 +130,7 @@ import FormalSchemes.CofinalAdicRing
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalCompletionAlg
 import FormalSchemes.CofinalCompletionFunctorial
+import FormalSchemes.CofinalFormalSpectrumPoint
 import FormalSchemes.CofinalIdeal
 import FormalSchemes.CofinalSheafComparison
 import FormalSchemes.CofinalSheafComparisonBasis
