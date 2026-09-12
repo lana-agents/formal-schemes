@@ -65,7 +65,7 @@ that would make the results below hypothesis-free does not exist as a signature 
 *not* settled, and is a separate question with a separate answer, is whether
 `basicOpenRes_comp_awayCompletionHom` — an instance-free statement — admits an instance-free
 *proof* not routed through `Γ(⊤)`; nothing here attempts one, and its module
-`FormalSchemes.BasicOpenRestriction` has reverse closure 29.
+`FormalSchemes.BasicOpenRestriction` has reverse closure 30.
 
 ## Placement, and the two options not taken
 
