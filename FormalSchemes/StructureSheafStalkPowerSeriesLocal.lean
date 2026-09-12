@@ -121,7 +121,7 @@ used exactly as it stands.
 
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which holds the arbitrary-domain
 refuting criterion this file feeds: forward closure **55** project modules besides itself, reverse
-closure **0**, counted by walking every `^import FormalSchemes.` line over the 563 modules
+closure **0**, counted by walking every `^import FormalSchemes.` line over the 564 modules
 under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the
 repository root is outside the walk).
 
