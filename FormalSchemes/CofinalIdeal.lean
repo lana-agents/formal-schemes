@@ -31,6 +31,9 @@ already shows that the map they induce does not depend on them up to the resulti
 
 ## Main definitions and results
 
+* `Ideal.pow_map_le_map`: a containment `I ^ b ≤ J` extends along a ring homomorphism with the
+  *same* exponent. It is the step both directions of `Ideal.IsCofinal.map` take, and the reason a
+  single exponent can serve two rows of a square of completions.
 * `Ideal.IsCofinal`: some power of each ideal is contained in the other.
 * `Ideal.IsCofinal.refl`, `Ideal.IsCofinal.symm`, `Ideal.IsCofinal.trans`: it is an equivalence
   relation, packaged as `Ideal.isCofinal_equivalence`. `Ideal.IsCofinal.rfl` is `refl` with the
@@ -53,6 +56,21 @@ already shows that the map they induce does not depend on them up to the resulti
 -/
 
 namespace Ideal
+
+/-- **A containment of ideals survives extension along a ring homomorphism, with the same
+exponent.** `Ideal.map` commutes with powers and is monotone.
+
+The content is the *exponent*: one containment `I ^ b ≤ J` in `R` serves every extension of the
+pair at once, where a `Ideal.IsCofinal` hypothesis taken separately at each extension would supply
+unrelated witnesses. `Ideal.IsCofinal.map` below is this lemma applied to both directions, and
+`FormalSpectrum.cofinalHom_comp_awayToAtPrimeCompletion`
+(`FormalSchemes.CofinalAwayToAtPrimeSquare`) is why the exponent has to be shared.
+
+Stated before the section variables so that the two rings are in independent universes. -/
+theorem pow_map_le_map {R S : Type*} [CommRing R] [CommRing S] {I J : Ideal R} {b : ℕ}
+    (hb : I ^ b ≤ J) (φ : R →+* S) : (I.map φ) ^ b ≤ J.map φ := by
+  rw [← Ideal.map_pow]
+  exact Ideal.map_mono hb
 
 variable {R : Type*} [CommRing R] {S : Type*} [CommRing S] {I J K : Ideal R}
 
@@ -119,15 +137,11 @@ spectra identifies the ideals of definition" false — see `FormalSchemes.TopFin
 theorem pow (I : Ideal R) {n : ℕ} (hn : n ≠ 0) : IsCofinal I (I ^ n) :=
   ⟨⟨n, le_rfl⟩, ⟨1, by rw [pow_one]; exact Ideal.pow_le_self hn⟩⟩
 
-/-- Cofinality is preserved by extension along a ring homomorphism, because `Ideal.map` commutes
-with powers and is monotone. -/
+/-- Cofinality is preserved by extension along a ring homomorphism: `Ideal.pow_map_le_map` in each
+direction. -/
 theorem map (f : R →+* S) (h : IsCofinal I J) : IsCofinal (I.map f) (J.map f) := by
   obtain ⟨⟨m, hm⟩, ⟨n, hn⟩⟩ := h
-  refine ⟨⟨m, ?_⟩, ⟨n, ?_⟩⟩
-  · rw [← Ideal.map_pow]
-    exact Ideal.map_mono hm
-  · rw [← Ideal.map_pow]
-    exact Ideal.map_mono hn
+  exact ⟨⟨m, pow_map_le_map hm f⟩, ⟨n, pow_map_le_map hn f⟩⟩
 
 end IsCofinal
 
