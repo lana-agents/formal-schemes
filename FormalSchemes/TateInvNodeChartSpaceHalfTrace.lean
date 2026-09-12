@@ -97,7 +97,7 @@ Over `FormalSchemes.TateInvNodeChartSpaceHalf` and
 `FormalSchemes.TateInvNodeChartPatchChartTrace`: forward closure **267** project modules besides
 itself, reverse closure **1** — `FormalSchemes.TateInvNodeChartOrbitSeparation`, which supplies the
 property of the `σ`-action the residual below asks for — counted by walking every
-`^import FormalSchemes.` line over the 561 modules under `FormalSchemes/` (a module is not counted
+`^import FormalSchemes.` line over the 562 modules under `FormalSchemes/` (a module is not counted
 in its own closure; the aggregator at the repository root is outside the walk).
 
 **Neither input reaches the other**, checked in both directions, so the second import is genuinely
