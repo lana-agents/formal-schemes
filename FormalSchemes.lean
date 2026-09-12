@@ -127,6 +127,7 @@ import FormalSchemes.ClosedImmersionTargetLocal
 import FormalSchemes.CoequalizerSections
 import FormalSchemes.CofinalAdicComplete
 import FormalSchemes.CofinalAdicRing
+import FormalSchemes.CofinalAwayCompletionRestrict
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalCompletionAlg
 import FormalSchemes.CofinalCompletionFunctorial
