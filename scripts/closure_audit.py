@@ -38,6 +38,15 @@ Stated the same way in a dozen `## Placement` paragraphs, and this script implem
   *"N with itself"*, which this script also checks, at N plus one;
 * both `import FormalSchemes.Foo` and `public import FormalSchemes.Foo` are import lines.  A walker
   matching only `^import ` under-reports silently, which is the failure mode that looks plausible.
+* an `import` line inside a `/- ... -/` span is **not** one.  A walker that reads comments
+  over-reports, and that is the worse of the two failures: an extra edge moves a *computed*
+  closure, so a wrong sentence can be reported as matching and a right one as `MISMATCH`, with no
+  warning either way.  The same regex shape run over Mathlib is wrong today for exactly this
+  reason -- `Mathlib/Tactic/FunProp.lean:48` writes `import Mathlib.Analysis.Complex.Trigonometric`
+  inside a fenced block in its module docstring, and a walk that follows it reports this project's
+  Mathlib closure as 2727 where Lean loads 2650.  Under `FormalSchemes/` the population is **0** of
+  1186 import lines, so `code_only` below moves nothing on this tree; it is here so that the first
+  docstring to quote a Lean snippet does not move an audited figure with nothing in the diff.
 
 ## Which module a claim is about
 
@@ -261,6 +270,42 @@ NUMERAL_REACH = 60
 COMPANION_REACH = 400
 
 
+def code_only(text: str) -> str:
+    """`text` with every comment blanked out, keeping line and column positions.
+
+    `/- ... -/` spans nest, and `--` runs to end of line outside them; blanked rather than deleted
+    so that a caller can compare a masked line against the raw one, and so that offsets and `\n`
+    counts still refer to the file on disk.  Both walkers here read the result: the import walk,
+    which must not follow a snippet in a docstring, and `file_size`, which must not count a
+    declaration keyword that opens a line of prose.  String literals are **not** tracked, so a
+    `/-` inside one would open a span that is not there; on this tree the population of that is
+    zero, checked both by scanning for it and by comparing the import edges either way.
+    """
+    out = []
+    depth = 0
+    for line in text.split("\n"):
+        buf = []
+        i = 0
+        while i < len(line):
+            if depth == 0 and line.startswith("--", i):
+                buf.append(" " * (len(line) - i))
+                break
+            if line.startswith("/-", i):
+                depth += 1
+                buf.append("  ")
+                i += 2
+                continue
+            if line.startswith("-/", i) and depth:
+                depth -= 1
+                buf.append("  ")
+                i += 2
+                continue
+            buf.append(line[i] if depth == 0 else " ")
+            i += 1
+        out.append("".join(buf))
+    return "\n".join(out)
+
+
 def project_modules(root: str = ".") -> dict[str, str]:
     """Every module under `FormalSchemes/`, as `module name -> path`.  `FormalSchemes.lean` at the
     repository root is outside the walk, by the convention the tree's own paragraphs state."""
@@ -276,7 +321,7 @@ def closures(mods: dict[str, str]) -> tuple[dict[str, set], dict[str, set]]:
     """Forward and reverse closures, neither counting the module itself."""
     deps = {}
     for m, path in mods.items():
-        text = open(path, encoding="utf-8").read()
+        text = code_only(open(path, encoding="utf-8").read())
         deps[m] = {d for d in IMPORT.findall(text) if d in mods}
     forward = {}
     for m in mods:
@@ -385,37 +430,21 @@ def claims(mods: dict[str, str]):
 def file_size(path: str) -> tuple[int, int, int, int]:
     """`(lines, declarations, examples, keyword_lines_in_prose)` for one file.
 
-    `lines` is what `wc -l` gives.  The other three are comment-aware: a keyword counts only at
-    column zero on a line that is *outside* every `/- ... -/` span, with nesting tracked, because
-    twelve lines of one file's prose on this tree begin with one of the five keywords and a walk
-    that reads them over-counts by exactly that many.  The fourth figure is those lines, returned
-    so that `--selftest` can assert the exclusion did something rather than merely that the total
-    came out right.
+    `lines` is what `wc -l` gives.  The other three are comment-aware, through the same `code_only`
+    mask the import walk uses: a keyword counts only at column zero on a line that is *outside*
+    every `/- ... -/` span, with nesting tracked, because twelve lines of one file's prose on this
+    tree begin with one of the five keywords and a walk that reads them over-counts by exactly
+    that many.  The fourth figure is those lines, returned so that `--selftest` can assert the
+    exclusion did something rather than merely that the total came out right.
     """
     raw = open(path, encoding="utf-8").read()
-    depth = 0
     declarations = examples = in_prose = 0
-    for line in raw.split("\n"):
-        outside = depth == 0
-        i = 0
-        while i < len(line):
-            if depth == 0 and line.startswith("--", i):
-                break
-            if line.startswith("/-", i):
-                depth += 1
-                i += 2
-                continue
-            if line.startswith("-/", i) and depth:
-                depth -= 1
-                i += 2
-                continue
-            i += 1
-        if DECLARATION.match(line):
-            if outside:
-                declarations += 1
-            else:
-                in_prose += 1
-        elif outside and EXAMPLE.match(line):
+    for line, code in zip(raw.split("\n"), code_only(raw).split("\n")):
+        if DECLARATION.match(code):
+            declarations += 1
+        elif DECLARATION.match(line):
+            in_prose += 1
+        elif EXAMPLE.match(code):
             examples += 1
     return raw.count("\n"), declarations, examples, in_prose
 
@@ -639,6 +668,45 @@ def selftest() -> int:
                      "module. -/\n")
         mis, _, _sz = audit(d)
         check("neither `Mathlib-only leaf` nor an indefinite one is a reverse-closure claim",
+              [(m["module"], m["stated"], m["actual"]) for m in mis], [])
+
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        # `Ghost` names `Base` three times and imports it none: in a `/-! -/` span, in a nested
+        # one, and indented inside a fenced block, which is the shape a Lean snippet in this
+        # tree's prose takes.  `Doc` names it in a `/-- -/` declaration docstring.  `Real` is the
+        # only importer, and it carries a trailing `--`, so a mask that ate too much would lose
+        # the one real edge here rather than merely keeping the four false ones.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **1**. -/\n")
+        write("Ghost", "/-! This file imports nothing: forward closure **0**.  A snippet in\n"
+                       "prose,\n"
+                       "import FormalSchemes.Base\n"
+                       "is not an import; nor is one in a nested span,\n"
+                       "/-\n"
+                       "import FormalSchemes.Base\n"
+                       "-/\n"
+                       "nor an indented one inside a fenced block:\n"
+                       "  import FormalSchemes.Base\n"
+                       "-/\n")
+        write("Doc", "/-- A declaration docstring with a snippet in it:\n"
+                     "import FormalSchemes.Base\n"
+                     "and nothing else. -/\n"
+                     "theorem d : True := trivial\n")
+        write("Real", "import FormalSchemes.Base  -- with a trailing comment after the name\n"
+                      "/-! Over `FormalSchemes.Base`: forward closure **1**. -/\n")
+        forward, reverse = closures(project_modules(d))
+        check("an `import` inside a comment span is not an edge, and a trailing `--` hides none",
+              (sorted(forward["FormalSchemes.Ghost"]), sorted(forward["FormalSchemes.Doc"]),
+               sorted(forward["FormalSchemes.Real"]), sorted(reverse["FormalSchemes.Base"])),
+              ([], [], ["FormalSchemes.Base"], ["FormalSchemes.Real"]))
+        mis, _, _sz = audit(d)
+        check("the figures those files quote are the ones a comment-aware walk gives",
               [(m["module"], m["stated"], m["actual"]) for m in mis], [])
 
     with tempfile.TemporaryDirectory() as d:
