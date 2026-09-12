@@ -58,12 +58,8 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      # `v1.3.0` rather than the `v1` line, because `publish: release` is new in
-      # it and `v1` still points at `v1.2.0`, which refuses the value.  This can
-      # go back to `@v1` once that tag moves; it is pinned here so that master is
-      # not waiting on a tag to be pushed somewhere else.
       - id: trust
-        uses: chrisflav/trust-action@v1.3.0
+        uses: chrisflav/trust-action@v1
         with:
           module: FormalSchemes
           # No `module-filter`, so the index covers the whole import closure —
