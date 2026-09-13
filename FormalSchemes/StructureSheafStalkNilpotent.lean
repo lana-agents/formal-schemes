@@ -75,14 +75,17 @@ imply it; no other finiteness is used.
 ## Placement
 
 Over `FormalSchemes.StructureSheafStalkBot`: forward closure **40** modules besides
-itself, reverse closure **8** — the power-series cluster, from
+itself, reverse closure **9** — the power-series cluster, from
 `FormalSchemes.StructureSheafStalkPowerSeries` up.
 
 `IsAdicComplete.of_pow_eq_bot` and `isAdicRing_adicTopology` mention no formal geometry and would
 sit naturally in `FormalSchemes.AdicRing` beside `instIsAdicRingBotOfDiscreteTopology`. They are
-**not** put there: `FormalSchemes.AdicRing`'s reverse closure is **517**, so a declaration added
-to it rebuilds nine tenths of the tree, and neither has a consumer outside this file. If a second
-consumer appears the move is worth re-costing; at one consumer it is not.
+**not** put there: `FormalSchemes.AdicRing`'s reverse closure is **518**, so a declaration added
+to it rebuilds nine tenths of the tree. `IsAdicComplete.of_pow_eq_bot` has no consumer outside this
+file. `isAdicRing_adicTopology` has two — `FormalSchemes.StructureSheafStalkPowerSeries` and
+`FormalSchemes.StructureSheafStalkPowerSeriesCofinal`, each discharging `IsAdic` at
+`(X) ⊆ R⟦X⟧` — and both of them already import this file, so re-costing the move at two consumers
+still says no: it would buy neither of them anything and would rebuild the tree.
 
 ## Main results
 
