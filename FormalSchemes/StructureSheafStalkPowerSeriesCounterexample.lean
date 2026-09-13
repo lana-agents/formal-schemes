@@ -259,7 +259,7 @@ modules besides itself on top of this file's closure, 43 including it, and nothi
 ## Implementation notes
 
 The five `AdicCompletion` lemmas at the top of the file mention no formal geometry and would sit
-naturally in `FormalSchemes.Completion`, whose reverse closure is 452 against this file's 6.
+naturally in `FormalSchemes.Completion`, whose reverse closure is 454 against this file's 6.
 They are kept here on the disposition
 `FormalSchemes.StructureSheafStalkPowerSeries` recorded for
 `AdicCompletion.bijective_mapCompletion` — which is the same shape and is still in that file — and
@@ -317,7 +317,7 @@ holding one statement that was already on the tree:
 `FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has
 forward closure 25, is not in this file's closure and does not have this file in its own, so
 neither could import the other; the statement mentions no formal scheme, no ideal of definition
-and no power series, and 25 of the 558 modules are already leaves of exactly that kind. Restating
+and no power series, and 25 modules are already leaves of exactly that kind. Restating
 it here instead of moving it would have been a project-internal duplicate, which is what
 `scripts/symm_duplicate_statement_scan.lean` exists to catch; putting it in an existing
 Mathlib-only leaf would have turned a file about one localization identity
