@@ -42,8 +42,13 @@ definition).
   `IsPrecomplete` along a `RingEquiv` (`IsAdicComplete.congr_ringEquiv` and companions) but not the
   completion itself; the ideal is written `K.map f` here so that the two compose.
 * `RingSplit.isUnit_mk_pow_of_isUnit_mk`: a unit modulo `K` is a unit modulo every `Kⁿ`.
+* `RingSplit.factor_awayUnitLevelEquiv`: the level isomorphisms commute with
+  `Ideal.Quotient.factor` **across a change of ideal**, which is what a comparison of two ideals of
+  definition consumes; `RingSplit.factorPow_awayUnitLevelEquiv` is its one-ideal instance and is
+  what the equivalence below is built from.
 * `RingSplit.adicAwayUnitEquiv`: `AdicCompletion K B ≃+* B{1/s}^` when `s` is invertible in every
-  thickening, and `RingSplit.adicAwayUnitEquiv'`, its level-`1` form.
+  thickening, and `RingSplit.adicAwayUnitEquiv'`, its level-`1` form;
+  `RingSplit.evalₐ_adicAwayUnitEquiv` reads the first of them at level `n`.
 
 ## References
 
@@ -239,12 +244,31 @@ theorem awayUnitLevelEquiv_mk (hs : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (K ^ 
       (Ideal.Quotient.mk (K ^ n) b)) = _ from h]
   exact Ideal.quotEquivOfEq_mk _ _
 
+/-- **The level isomorphisms of `RingSplit.adicAwayUnitEquiv` commute with the quotient factor
+maps across a change of ideal.** `RingSplit.factorPow_awayUnitLevelEquiv` below is this at one
+ideal and two levels; here the ideal moves too, which is what a comparison of two ideals of
+definition needs.
+
+The proof does not have to look at the two levels at all: `Ideal.Quotient.mk` is surjective and
+`RingSplit.awayUnitLevelEquiv_mk` computes both sides on a representative. -/
+theorem factor_awayUnitLevelEquiv (L : Ideal B)
+    (hsK : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (K ^ n) s))
+    (hsL : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (L ^ n) s)) {m n : ℕ}
+    (h : K ^ m ≤ L ^ n) (h' : awayUnitIdeal K s ^ m ≤ awayUnitIdeal L s ^ n) (z : B ⧸ K ^ m) :
+    Ideal.Quotient.factor h' (awayUnitLevelEquiv K s hsK m z) =
+      awayUnitLevelEquiv L s hsL n (Ideal.Quotient.factor h z) := by
+  obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective z
+  simp only [awayUnitLevelEquiv_mk, Ideal.Quotient.factor_mk]
+
+/-- **`RingSplit.factor_awayUnitLevelEquiv` at a single ideal**, which is the form
+`RingSplit.adicAwayUnitEquiv` is built from. `Ideal.Quotient.factorPow` is an `abbrev` for
+`Ideal.Quotient.factor` at `Ideal.pow_le_pow_right`, so this is an instance of the lemma above
+rather than a companion of it. -/
 theorem factorPow_awayUnitLevelEquiv (hs : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (K ^ n) s))
     {m n : ℕ} (hle : m ≤ n) (z : B ⧸ K ^ n) :
     Ideal.Quotient.factorPow (awayUnitIdeal K s) hle (awayUnitLevelEquiv K s hs n z) =
-      awayUnitLevelEquiv K s hs m (Ideal.Quotient.factorPow K hle z) := by
-  obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective z
-  simp only [awayUnitLevelEquiv_mk, Ideal.Quotient.factor_mk]
+      awayUnitLevelEquiv K s hs m (Ideal.Quotient.factorPow K hle z) :=
+  factor_awayUnitLevelEquiv K s K hs hs _ _ z
 
 /-- **Localizing at an element that is invertible in every thickening does not change the
 completion**: `AdicCompletion K B ≃+* B{1/s}^`. Geometrically, `D(s) = Spf (B, K)`. -/
@@ -258,6 +282,15 @@ theorem adicAwayUnitEquiv_of (hs : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (K ^ n
       AdicCompletion.of (awayUnitIdeal K s) (Localization.Away s)
         (algebraMap B (Localization.Away s) b) :=
   AdicCompletion.congrOfLevelEquiv_of _ _ _ _ _ _ (fun n => awayUnitLevelEquiv_mk K s hs n b)
+
+/-- `RingSplit.adicAwayUnitEquiv` read at level `n`: it is `RingSplit.awayUnitLevelEquiv` there.
+This is `AdicCompletion.evalₐ_congrOfLevelEquiv` at the family the equivalence is built from, named
+so that a square over it is a rewrite rather than an unfolding. -/
+theorem evalₐ_adicAwayUnitEquiv (hs : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (K ^ n) s)) (n : ℕ)
+    (x : AdicCompletion K B) :
+    AdicCompletion.evalₐ (awayUnitIdeal K s) n (adicAwayUnitEquiv K s hs x) =
+      awayUnitLevelEquiv K s hs n (AdicCompletion.evalₐ K n x) :=
+  AdicCompletion.evalₐ_congrOfLevelEquiv _ _ _ _ n x
 
 /-- **The level-`1` form of `RingSplit.adicAwayUnitEquiv`**: it is enough that `s` be invertible
 in the residue ring `B ⧸ K`, i.e. that `D(s)` be all of `Spf (B, K)`. -/

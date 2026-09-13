@@ -42,23 +42,23 @@ The second is the content of this file and it closed **level-wise**, not through
 structure-map-and-density route. `RingSplit.adicAwayUnitEquiv` is assembled from a level-`n`-to-
 level-`n` family and `AdicCompletion.cofinalHom` reads level `n` of its target off level
 `(b + 1) * n` of its source, so the square is not level-wise on the nose. What closes it is
-`RingSplit.factor_awayUnitLevelEquiv`: `RingSplit.awayUnitLevelEquiv` commutes with
-`Ideal.Quotient.factor` **between two different ideals and two different levels**, and not merely
-with `Ideal.Quotient.factorPow` at one ideal, which is all
-`RingSplit.factorPow_awayUnitLevelEquiv` supplies. That generalisation is one `obtain` and one
-`simp only` away from the existing lemma, because both sides are computed by
-`RingSplit.awayUnitLevelEquiv_mk` on a representative — the mismatch of levels never has to be
+`RingSplit.factor_awayUnitLevelEquiv` (`FormalSchemes.AdicCompletionCongrLevel`):
+`RingSplit.awayUnitLevelEquiv` commutes with `Ideal.Quotient.factor` **between two different
+ideals and two different levels**, and not merely with `Ideal.Quotient.factorPow` at one ideal,
+which is all `RingSplit.factorPow_awayUnitLevelEquiv` supplies. That generalisation is one
+`obtain` and one `simp only` away from the lemma it generalises, because both sides are computed
+by `RingSplit.awayUnitLevelEquiv_mk` on a representative — the mismatch of levels never has to be
 looked at.
 
 `Ideal.Quotient.factorPow` is an `abbrev` for `Ideal.Quotient.factor` at
 `Ideal.pow_le_pow_right`, so `RingSplit.factorPow_awayUnitLevelEquiv` is an *instance* of the
 generalisation rather than a companion of it, and Mathlib's own `Ideal.Quotient.factorPow`
 docstring asks for exactly this direction: before adding a lemma about it, check whether the lemma
-generalises to `Ideal.Quotient.factor`. The generalisation is therefore a `move-lemma` question —
-it belongs beside the lemma it generalises, in `FormalSchemes.AdicCompletionCongrLevel`, with the
-`Ideal.Quotient.factorPow` form left as a one-line corollary. **Measured and reported, not acted
-on here**, because performing it means rewriting `RingSplit.adicAwayUnitEquiv`'s definition in a
-file this one only imports.
+generalises to `Ideal.Quotient.factor`. That made the generalisation a `move-lemma` question,
+which this file reported when it was written and which has since been carried out: it lives beside
+the lemma it generalises, in `FormalSchemes.AdicCompletionCongrLevel`, and the
+`Ideal.Quotient.factorPow` form is a one-line corollary of it there. **This file states neither
+and only consumes the general one**, across an import it already had.
 
 ## The containment the squares are indexed by
 
@@ -72,8 +72,6 @@ cannot bucket together because the two binder orders differ.
 
 ## Main results
 
-* `RingSplit.factor_awayUnitLevelEquiv`: the level isomorphisms of
-  `RingSplit.adicAwayUnitEquiv` commute with the quotient factor maps across a change of ideal.
 * `RingSplit.cofinalHom_adicAwayUnitEquiv` and its level-`1` form
   `RingSplit.cofinalHom_adicAwayUnitEquiv'`: **localizing at an already-invertible element commutes
   with the cofinal comparison.**
@@ -110,29 +108,6 @@ namespace RingSplit
 
 variable {B : Type u} [CommRing B] {K L : Ideal B} {s : B} {b : ℕ}
 
-/-- **The level isomorphisms of `RingSplit.adicAwayUnitEquiv` commute with the quotient factor maps
-across a change of ideal.** `RingSplit.factorPow_awayUnitLevelEquiv` is this at one ideal and two
-levels; here the ideal moves too, which is what the comparison of two ideals of definition needs.
-
-The proof does not have to look at the two levels at all: `Ideal.Quotient.mk` is surjective and
-`RingSplit.awayUnitLevelEquiv_mk` computes both sides on a representative. -/
-theorem factor_awayUnitLevelEquiv (hsK : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (K ^ n) s))
-    (hsL : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (L ^ n) s)) {m n : ℕ}
-    (h : K ^ m ≤ L ^ n) (h' : awayUnitIdeal K s ^ m ≤ awayUnitIdeal L s ^ n) (z : B ⧸ K ^ m) :
-    Ideal.Quotient.factor h' (awayUnitLevelEquiv K s hsK m z) =
-      awayUnitLevelEquiv L s hsL n (Ideal.Quotient.factor h z) := by
-  obtain ⟨c, rfl⟩ := Ideal.Quotient.mk_surjective z
-  simp only [awayUnitLevelEquiv_mk, Ideal.Quotient.factor_mk]
-
-/-- `RingSplit.adicAwayUnitEquiv` read at level `n`: it is `RingSplit.awayUnitLevelEquiv` there.
-This is `AdicCompletion.evalₐ_congrOfLevelEquiv` at the family the equivalence is built from, named
-so that the square below is a rewrite rather than an unfolding. -/
-theorem evalₐ_adicAwayUnitEquiv (hs : ∀ n : ℕ, IsUnit (Ideal.Quotient.mk (K ^ n) s)) (n : ℕ)
-    (x : AdicCompletion K B) :
-    AdicCompletion.evalₐ (awayUnitIdeal K s) n (adicAwayUnitEquiv K s hs x) =
-      awayUnitLevelEquiv K s hs n (AdicCompletion.evalₐ K n x) :=
-  AdicCompletion.evalₐ_congrOfLevelEquiv _ _ _ _ n x
-
 /-- **Localizing at an already-invertible element commutes with the cofinal comparison.** For
 cofinal ideals `K ^ b ≤ L` of `B` and an `s` invertible in every thickening at both, the square
 
@@ -160,7 +135,7 @@ theorem cofinalHom_adicAwayUnitEquiv (hb : K ^ b ≤ L)
   rw [AdicCompletion.evalₐ_cofinalHom, AdicCompletion.cofinalLevel_apply,
     evalₐ_adicAwayUnitEquiv, evalₐ_adicAwayUnitEquiv, AdicCompletion.evalₐ_cofinalHom,
     AdicCompletion.cofinalLevel_apply]
-  exact factor_awayUnitLevelEquiv _ _ _ _ _
+  exact factor_awayUnitLevelEquiv K s L hsK hsL _ _ _
 
 /-- **The level-`1` form of `RingSplit.cofinalHom_adicAwayUnitEquiv`**, matching
 `RingSplit.adicAwayUnitEquiv'`: it is enough that `s` be invertible in the two residue rings
