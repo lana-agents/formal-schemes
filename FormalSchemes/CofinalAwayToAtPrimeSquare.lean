@@ -66,7 +66,7 @@ compared rather than here.
 `AdicCompletion.mapCompletion_comp_cofinalHom` (`FormalSchemes.CofinalCompletionFunctorial`) needs
 **one** exponent `b` serving both rows of the square: `(I · R_f) ^ b ≤ J · R_f` *and*
 `(I · R_p) ^ b ≤ J · R_p`. A containment `I ^ b ≤ J` in `R` maps forward to both, with the same `b`
-(`Ideal.pow_map_le_map`, `FormalSchemes.CofinalIdeal`), so there is nothing to reconcile.
+(`Ideal.pow_map_le_map`, `FormalSchemes.IdealsOfDefinition`), so there is nothing to reconcile.
 
 A packaged `Ideal.IsCofinal (I · R_f) (J · R_f)` would *lose* that. `Ideal.IsCofinal`
 (`FormalSchemes.CofinalIdeal`) only asserts that an exponent exists, so the two rows would be

@@ -63,12 +63,13 @@ file this one only imports.
 ## The containment the squares are indexed by
 
 `AdicCompletion.mapCompletion_comp_cofinalHom` is indexed by containments on the *extended* ideals,
-while every consumer has one on `R`; `Ideal.pow_map_le_map` (`FormalSchemes.CofinalIdeal`) bridges
-the two, with the same exponent on both sides. It is **not** stated here. It is a general fact
-about `Ideal.map`, it is the step `Ideal.IsCofinal.map` is built from in that file, and the two
-squares of this cluster — this one and the one for `FormalSpectrum.awayToAtPrimeCompletion` — would
-otherwise each carry a copy in a different namespace, which the tree's duplicate-statement scan
-cannot bucket together because the two binder orders differ.
+while every consumer has one on `R`; `Ideal.pow_map_le_map`
+(`FormalSchemes.IdealsOfDefinition`) bridges the two, with the same exponent on both sides. It is
+**not** stated here. It is a general fact about `Ideal.map`, it is the step `Ideal.IsCofinal.map`
+(`FormalSchemes.CofinalIdeal`) is built from, and the two squares of this cluster — this one and
+the one for `FormalSpectrum.awayToAtPrimeCompletion` — would otherwise each carry a copy in a
+different namespace, which the tree's duplicate-statement scan cannot bucket together because the
+two binder orders differ.
 
 ## Main results
 
