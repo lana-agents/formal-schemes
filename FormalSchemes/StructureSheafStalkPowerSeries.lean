@@ -138,7 +138,7 @@ to the library's: it is already reached by the full `FormalSchemes` build, so it
 `AdicCompletion.bijective_mapCompletion` mentions no formal geometry and would sit naturally in
 `FormalSchemes.Completion` beside `AdicCompletion.mapCompletion_id` and
 `AdicCompletion.mapCompletion_comp`, from which it is proved. It is **not** put there:
-`FormalSchemes.Completion`'s reverse closure is **454** — most of the tree — and it has one
+`FormalSchemes.Completion`'s reverse closure is **455** — most of the tree — and it has one
 consumer, here. This is the disposition `FormalSchemes.StructureSheafStalkNilpotent` recorded
 for `IsAdicComplete.of_pow_eq_bot` at `FormalSchemes.AdicRing`; if a second consumer appears the
 move is worth re-costing.
