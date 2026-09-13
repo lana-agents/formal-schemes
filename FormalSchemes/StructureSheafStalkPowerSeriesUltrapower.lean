@@ -337,7 +337,7 @@ here; it is recorded because the error message points at the wrong object.
 A leaf over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds the condition,
 its criteria and the identification of the geometric half with it: forward closure **53** project
 modules besides itself, reverse closure **0**, counted by walking every `^import FormalSchemes.`
-line over the 563 modules under `FormalSchemes/` (a module is not counted in its own closure; the
+line over the 564 modules under `FormalSchemes/` (a module is not counted in its own closure; the
 aggregator at the repository root is outside the walk).
 
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind` and

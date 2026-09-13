@@ -288,7 +288,7 @@ outside this section's regime is untouched.
 Over `FormalSchemes.TateInvNodeChartSpaceHalfTrace`,
 `FormalSchemes.TateInvNodeChartAmbientNotInjective` and
 `FormalSchemes.TateInvNodeChartLegGeneral`: forward closure **270** project modules besides
-itself, reverse closure **0**, counted by walking every `^import FormalSchemes.` line over the 563
+itself, reverse closure **0**, counted by walking every `^import FormalSchemes.` line over the 564
 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the
 repository root is outside the walk).
 

@@ -133,7 +133,7 @@ Nothing here says the restricted quotient *is* affine formal, and nothing here b
 
 Both general lemmas would read better in `FormalSchemes.OpenImmersionIsoOfRangeEq`, next to
 `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`. They are here instead because that
-module's reverse closure is **325** of the project's 563 modules against this file's **15**, both
+module's reverse closure is **325** of the project's 564 modules against this file's **15**, both
 recomputed from the `import` lines at this commit. Moving
 `AlgebraicGeometry.LocallyRingedSpace.restrictTopSectionsIso` would cost only that rebuild — its
 proof cites nothing outside Mathlib. Moving
