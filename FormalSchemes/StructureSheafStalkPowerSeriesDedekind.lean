@@ -268,7 +268,7 @@ one new edge is the project import
 and is paid: this file is longer for it.
 
 **What a leaf would cost instead is prose, and the bill is not small.** A new module changes how
-many project modules every module above it reaches, and this tree states those counts in prose.
+many project modules reach every module below it, and this tree states those counts in prose.
 The three routes were measured with `scripts/closure_audit.py --tree` in a scratch worktree **in
 the tree as it stood when this material was added**, and the numbers are these. They record a
 decision already taken rather than a measurement of any later tree: two of the three are deltas
