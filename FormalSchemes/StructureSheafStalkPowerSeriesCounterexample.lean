@@ -207,12 +207,16 @@ any other point, and the surjectivity half on its own is still all that
 `FormalSpectrum.hasBoundedDenominators_iff_finite_primes` decides.
 
 **What is still open, which is what a successor needs.** Three things were named here as open,
-none of them touched below, and **the first has since been closed elsewhere on the tree**: the
+none of them touched below, and **two have since been closed elsewhere on the tree**: the
 predicate at a point of `Spf (R⟦X⟧, (X))` **other than the generic one** is settled at every point
 of every domain by `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, in
-`FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt`. The other two are
-still open: the predicate at an **ideal of definition of `R⟦X⟧` other than `(X)`**, and the
-predicate at a formal spectrum whose ring is **not a power series ring** at all. Nothing below
+`FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt`; and the predicate at
+an **ideal of definition of `R⟦X⟧` other than `(X)`** is settled at every **finitely generated**
+one by `FormalSchemes.StructureSheafStalkPowerSeriesCofinal`, in
+`FormalSpectrum.isStalkLimit_powerSeriesX_congr`, which carries every value at `(X)` to every such
+ideal at once — the finite generation there being a real hypothesis and not decoration. The third
+is still open: the predicate at a formal spectrum whose ring is **not a power series ring** at
+all. Nothing below
 bears on any of the three, and nothing below is even stated at another point: both inputs to the
 characterisation — the injectivity half and the identification of the surjectivity half with the
 condition — name `FormalSpectrum.powerSeriesXGenericPoint` in their statements, so moving the
@@ -221,8 +225,10 @@ small: `FormalSpectrum.awayCompletionEquivPowerSeriesAway` was already at every 
 and `FormalSpectrum.atPrimeCompletionEquivFractionPowerSeries` was reproved at every ring and
 every point as `FormalSpectrum.atPrimeCompletionEquivLocalizationPowerSeries`, its domain
 hypothesis doing no work at all — the one step that looks as though it needs a fraction field is a
-common-denominator argument inside the prime complement `Ideal.primeCompl`. **Moving the ideal is
-what remains untested.** What is on the tree elsewhere is not surveyed here beyond that; in
+common-denominator argument inside the prime complement `Ideal.primeCompl`. **Moving the ideal
+costs nothing of that kind**: `FormalSpectrum.isStalkLimit_powerSeriesX_congr` transports the
+predicate itself and restates no input, at the price of finite generation of the second ideal.
+What is on the tree elsewhere is not surveyed here beyond that; in
 particular this says nothing about which of the general criteria in
 `FormalSchemes.StructureSheafStalkPowerSeries` do or do not apply at some other point.
 
@@ -253,7 +259,7 @@ modules besides itself on top of this file's closure, 43 including it, and nothi
 ## Implementation notes
 
 The five `AdicCompletion` lemmas at the top of the file mention no formal geometry and would sit
-naturally in `FormalSchemes.Completion`, whose reverse closure is 451 against this file's 5.
+naturally in `FormalSchemes.Completion`, whose reverse closure is 452 against this file's 6.
 They are kept here on the disposition
 `FormalSchemes.StructureSheafStalkPowerSeries` recorded for
 `AdicCompletion.bijective_mapCompletion` — which is the same shape and is still in that file — and
@@ -274,12 +280,14 @@ through `AdicCompletion.mapCompletion` and `algebraMap`. The counterexample's wi
 
 Over `FormalSchemes.StructureSheafStalkPowerSeriesGeneric` and
 `FormalSchemes.CountableLocalization`: forward closure **52** project modules besides itself (53
-counted with itself), reverse closure **5** —
+counted with itself), reverse closure **6** —
 `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which carries the classification at prime
-ideals, and over it both
+ideals, and over it
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting
-criterion at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which
-instantiates it at `ℤ[X]` localized at `(2, X)`;
+criterion at a ring of integers, `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which
+instantiates it at `ℤ[X]` localized at `(2, X)`, and
+`FormalSchemes.StructureSheafStalkPowerSeriesCofinal`, which carries the values of this cluster to
+every finitely generated ideal of definition of `R⟦X⟧`;
 `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which settles the collapse without
 countability at an ultrapower of `ℤ`; and
 `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, which decides the predicate at an arbitrary
@@ -303,7 +311,7 @@ below it, and the prose it makes stale is this docstring's. The collapse section
 same ground, one section further down.
 
 The second import is the one the collapse section adds, and it is the **Mathlib-only leaf**
-`FormalSchemes.CountableLocalization`, whose forward closure is 0 and whose reverse closure is 7 —
+`FormalSchemes.CountableLocalization`, whose forward closure is 0 and whose reverse closure is 8 —
 holding one statement that was already on the tree:
 `Localization.countable_of_countable`, moved out of
 `FormalSchemes.CompletionToSpecNotClosedImmersion` and promoted to an instance. That file has

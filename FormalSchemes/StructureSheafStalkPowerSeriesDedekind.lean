@@ -210,10 +210,12 @@ the collapse, nor `[UniqueFactorizationMonoid R]` from the classification this g
 
 Over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds
 `FormalSpectrum.HasBoundedDenominators`, both refuting criteria and the element classification:
-forward closure **54** project modules besides itself, reverse closure **2** — the leaves
+forward closure **54** project modules besides itself, reverse closure **3** — the leaves
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting criterion
-at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which instantiates
-it at `ℤ[X]` localized at `(2, X)` — counted by walking every `^import FormalSchemes.` line over
+at a ring of integers, `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which instantiates
+it at `ℤ[X]` localized at `(2, X)`, and `FormalSchemes.StructureSheafStalkPowerSeriesCofinal`,
+which reads the values of this cluster at every finitely generated ideal of definition of `R⟦X⟧` —
+counted by walking every `^import FormalSchemes.` line over
 the modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at
 the repository root is outside the walk). The forward count includes
 `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, which holds the predicate at an arbitrary
@@ -222,7 +224,7 @@ in; it is the one edge this branch adds.
 
 Appending to `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` was the alternative and
 is cheaper by a module. It is not taken for two reasons, and the second is the load-bearing one.
-It is **3001** lines with **84** declarations — `theorem`, `lemma`, `def`, `instance` or `class`
+It is **3009** lines with **84** declarations — `theorem`, `lemma`, `def`, `instance` or `class`
 at column zero and **outside a comment span**, which is the qualification that does the work here:
 twelve lines of that file's prose begin with one of those words, and a walk that reads comments
 counts every one of them. `example`s are not counted and there are **nine** of those. It is the

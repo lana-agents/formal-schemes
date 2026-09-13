@@ -79,9 +79,18 @@ the main theorem's proof.
 
 ## What is *not* proved here
 
-**The other two questions that paragraph names are untouched.** Nothing here is stated at an ideal
-of definition of `R⟦X⟧` other than `(X)`, and nothing at a formal spectrum whose ring is not a
-power series ring. Every statement below names `FormalSpectrum.powerSeriesXIdeal`.
+**Neither of the other two questions that paragraph names is addressed here, and one of them is no
+longer open on the tree.** Nothing below is stated at an ideal of definition of `R⟦X⟧` other than
+`(X)`, and nothing at a formal spectrum whose ring is not a power series ring; every statement
+below names `FormalSpectrum.powerSeriesXIdeal`. What has changed is not this file but what stands
+beside it: `FormalSpectrum.isStalkLimit_powerSeriesX_congr`
+(`FormalSchemes.StructureSheafStalkPowerSeriesCofinal`) says the predicate at a **finitely
+generated** ideal of definition `J` of `R⟦X⟧` is the predicate at `(X)` at the partner point, so
+every value below is a value at every such `J` — `FormalSpectrum.not_isStalkLimit_powerSeriesX_int`
+reads that way as `FormalSpectrum.not_isStalkLimit_powerSeriesXCofinal_int`. **The finite
+generation is a genuine hypothesis**, an ideal of definition need not carry it, and nothing there
+is proved without it. The second of the two questions — a formal spectrum whose ring is not a
+power series ring — is as open there as it is here.
 
 **The generic-point theorem *is* recovered as a corollary, and the corollary is one line.**
 `FormalSpectrum.powerSeriesXPoint_bot` says the *point* is the same one and is `rfl`, so the main
@@ -161,10 +170,11 @@ below and is not reproved.**
 Over `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample`, which holds the two
 identifications at the generic point and the levelwise completion criterion the target
 identification below reuses: forward closure **53** project modules besides itself, reverse closure
-**3** — `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which generalises the criterion
-below away from `ℤ`, and the two modules over it,
-`FormalSchemes.StructureSheafStalkPowerSeriesNumberField` and
-`FormalSchemes.StructureSheafStalkPowerSeriesLocal` — counted by walking every
+**4** — `FormalSchemes.StructureSheafStalkPowerSeriesDedekind`, which generalises the criterion
+below away from `ℤ`, and the three modules over it,
+`FormalSchemes.StructureSheafStalkPowerSeriesNumberField`,
+`FormalSchemes.StructureSheafStalkPowerSeriesLocal` and
+`FormalSchemes.StructureSheafStalkPowerSeriesCofinal` — counted by walking every
 `^import FormalSchemes.` line over the modules under `FormalSchemes/` (a module is not counted in
 its own closure; the aggregator at the repository root is outside the walk). It adds no Mathlib
 import.
