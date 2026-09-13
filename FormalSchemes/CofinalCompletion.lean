@@ -165,10 +165,6 @@ theorem nonempty_cofinalRingEquiv_map (f : R →+* S) (hI : IsAdic I) (hJ : IsAd
     Nonempty (AdicCompletion (I.map f) S ≃+* AdicCompletion (J.map f) S) := by
   obtain ⟨a, ha⟩ := hI.exists_pow_le hJ
   obtain ⟨b, hb⟩ := hJ.exists_pow_le hI
-  refine nonempty_cofinalRingEquiv ⟨b, ?_⟩ ⟨a, ?_⟩
-  · rw [← Ideal.map_pow]
-    exact Ideal.map_mono hb
-  · rw [← Ideal.map_pow]
-    exact Ideal.map_mono ha
+  exact nonempty_cofinalRingEquiv ⟨b, Ideal.pow_map_le_map hb f⟩ ⟨a, Ideal.pow_map_le_map ha f⟩
 
 end AdicCompletion
