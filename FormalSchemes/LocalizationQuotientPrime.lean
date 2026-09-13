@@ -21,12 +21,12 @@ complement is `IsLocalization.algebraMapSubmonoid_primeCompl_comap` below.
 
 It sits in its own file rather than beside its `Localization.Away` sibling because the two are used
 at opposite scales, and it is the ratio and not either figure that decides.
-`FormalSchemes.LocalizationQuotient` has reverse closure **509**, counted by walking every
+`FormalSchemes.LocalizationQuotient` has reverse closure **510**, counted by walking every
 `import FormalSchemes.` line, transitively, over the modules under `FormalSchemes/` (a module is
 not counted in its own closure, and the aggregator at the repository root is outside the walk).
-This module's reverse closure is **17**, and exactly one module imports it directly,
+This module's reverse closure is **18**, and exactly one module imports it directly,
 `FormalSchemes.StructureSheafStalkLevels`, which is also the only module whose code names anything
-declared here. The other sixteen reach this file only through that one and, imports being
+declared here. The other seventeen reach this file only through that one and, imports being
 transitive, see these declarations without using any: *sees*, *is recompiled by* and *uses* part
 company here, and merging the two files would move the first two and not the third. It would put
 this statement in front of every module that reaches the away one and recompile almost all of them

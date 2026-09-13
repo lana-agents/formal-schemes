@@ -117,7 +117,7 @@ of them.
 being found; the second needs no finiteness hypothesis at all. The existing
 `AdicCompletion.evalₐ_mapCompletion` takes a finite generation hypothesis on the *source* ideal and
 an explicit continuity bound, neither of which its conclusion needs — but its module
-`FormalSchemes.BasicOpenImmersion` has reverse closure 387, so weakening its signature is a
+`FormalSchemes.BasicOpenImmersion` has reverse closure 388, so weakening its signature is a
 separate measured decision and is not taken here.
 
 The membership `x ∈ FormalSpectrum.basicOpen I f` and the non-membership

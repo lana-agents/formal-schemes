@@ -65,14 +65,15 @@ that would make the results below hypothesis-free does not exist as a signature 
 *not* settled, and is a separate question with a separate answer, is whether
 `basicOpenRes_comp_awayCompletionHom` — an instance-free statement — admits an instance-free
 *proof* not routed through `Γ(⊤)`; nothing here attempts one, and its module
-`FormalSchemes.BasicOpenRestriction` has reverse closure 30.
+`FormalSchemes.BasicOpenRestriction` has reverse closure 31.
 
 ## Placement, and the two options not taken
 
 Over `FormalSchemes.StructureSheafStalkComparison` and
-`FormalSchemes.BasicOpenRestrictionIdentification`: forward closure 46, reverse closure 8 —
+`FormalSchemes.BasicOpenRestrictionIdentification`: forward closure 46, reverse closure 9 —
 `FormalSchemes.StructureSheafStalkPowerSeries` and the seven modules of the power-series cluster
-above it, which are everything on the tree that rebuilds for this file.
+above it, together with `FormalSchemes.CofinalStalkLimit`, which are everything on the tree that
+rebuilds for this file.
 
 *Editing `FormalSchemes.StructureSheafStalkComparison` in place* was the obvious alternative and
 costs the most: that file's forward closure is **35**, the edit would take it to 45, and it would
@@ -84,7 +85,7 @@ already imports `FormalSchemes.BasicOpenRestrictionIdentification` and already m
 one level down, for the separation statement on sections
 (`FormalSpectrum.exists_basicOpen_awayCompletionRestrict_eq`), recording the same two instance
 hypotheses as a cost. `FormalSchemes.StructureSheafStalkBasicOpenCompletion`'s reverse closure is 0,
-where this file's reverse closure is 8, and importing
+where this file's reverse closure is 9, and importing
 `FormalSchemes.StructureSheafStalkComparison` there would take
 `FormalSchemes.StructureSheafStalkBasicOpenCompletion`'s forward closure from 42 to 46 — the same
 total as this file. The two are equal on the numbers; the split is by subject, since
