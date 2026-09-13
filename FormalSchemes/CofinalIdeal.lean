@@ -31,9 +31,6 @@ already shows that the map they induce does not depend on them up to the resulti
 
 ## Main definitions and results
 
-* `Ideal.pow_map_le_map`: a containment `I ^ b ≤ J` extends along a ring homomorphism *with the
-  same exponent* — the ingredient `Ideal.IsCofinal.map` is built from, and the reason the cofinal
-  comparison squares downstream are indexed by a containment in `R` rather than by a cofinality.
 * `Ideal.IsCofinal`: some power of each ideal is contained in the other.
 * `Ideal.IsCofinal.refl`, `Ideal.IsCofinal.symm`, `Ideal.IsCofinal.trans`: it is an equivalence
   relation, packaged as `Ideal.isCofinal_equivalence`. `Ideal.IsCofinal.rfl` is `refl` with the
@@ -41,7 +38,10 @@ already shows that the map they induce does not depend on them up to the resulti
   scan flags the pair and why both are correct.
 * `Ideal.IsCofinal.pow`: `I` is cofinal with `I ^ n` for `n ≠ 0` — the standard example, and the
   one that makes the relation non-trivial.
-* `Ideal.IsCofinal.map`: cofinality is preserved by extension along a ring homomorphism.
+* `Ideal.IsCofinal.map`: cofinality is preserved by extension along a ring homomorphism, from
+  `Ideal.pow_map_le_map` (`FormalSchemes.IdealsOfDefinition`) in each direction — which is also
+  the reason the cofinal comparison squares downstream are indexed by a containment in `R` rather
+  than by a cofinality.
 * `Ideal.IsCofinal.isAdic` and `IsAdic.isCofinal`: **the topological bridge.** For ideals of one
   topological ring, cofinality is exactly the statement that both are ideals of definition.
 * `Ideal.IsCofinal.radical_eq` and `Ideal.IsCofinal.of_radical_eq`: **the geometric bridge.**
@@ -58,21 +58,6 @@ already shows that the map they induce does not depend on them up to the resulti
 namespace Ideal
 
 variable {R : Type*} [CommRing R] {S : Type*} [CommRing S] {I J K : Ideal R}
-
-/-- **A containment of a power survives extension along a ring homomorphism, with the same
-exponent**: `I ^ b ≤ J` gives `(I · S) ^ b ≤ J · S`. `Ideal.map` commutes with powers
-(`Ideal.map_pow`) and is monotone (`Ideal.map_mono`), and that is the whole proof.
-
-It is stated because the exponent is shared. `Ideal.IsCofinal.map` below uses it twice, and the
-squares `AdicCompletion.mapCompletion_comp_cofinalHom`
-(`FormalSchemes.CofinalCompletionFunctorial`) indexes need *one* exponent serving both rows: a
-containment upstairs in `R` maps forward to two extensions with that same `b`, where a packaged
-`Ideal.IsCofinal` at each row would supply two independently chosen witnesses to reconcile. That is
-why the consumers of this file's squares take `I ^ b ≤ J` rather than a cofinality. -/
-theorem pow_map_le_map {b : ℕ} (hb : I ^ b ≤ J) (φ : R →+* S) : (I.map φ) ^ b ≤ J.map φ := by
-  rw [← Ideal.map_pow]
-  exact Ideal.map_mono hb
-
 
 /-- Two ideals are **cofinal** if some power of each is contained in the other. Equivalently — see
 `Ideal.IsCofinal.isAdic` and `IsAdic.isCofinal` — they induce the same adic topology.
@@ -137,8 +122,8 @@ spectra identifies the ideals of definition" false — see `FormalSchemes.TopFin
 theorem pow (I : Ideal R) {n : ℕ} (hn : n ≠ 0) : IsCofinal I (I ^ n) :=
   ⟨⟨n, le_rfl⟩, ⟨1, by rw [pow_one]; exact Ideal.pow_le_self hn⟩⟩
 
-/-- Cofinality is preserved by extension along a ring homomorphism: `Ideal.pow_map_le_map` in each
-direction. -/
+/-- Cofinality is preserved by extension along a ring homomorphism:
+`Ideal.pow_map_le_map` (`FormalSchemes.IdealsOfDefinition`) in each direction. -/
 theorem map (f : R →+* S) (h : IsCofinal I J) : IsCofinal (I.map f) (J.map f) := by
   obtain ⟨⟨m, hm⟩, ⟨n, hn⟩⟩ := h
   exact ⟨⟨m, pow_map_le_map hm f⟩, ⟨n, pow_map_le_map hn f⟩⟩

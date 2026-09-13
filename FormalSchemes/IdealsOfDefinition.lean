@@ -16,6 +16,9 @@ on the chosen ideal of definition, formalizing the affine part of EGA I, §10.3.
 * `IsAdic.exists_pow_le`: if `I` and `J` are two ideals of definition of the same topological
   ring `R`, then some power of `J` is contained in `I` (and, symmetrically, some power of `I`
   is contained in `J`). Thus the two adic filtrations are cofinal in one another.
+* `Ideal.pow_map_le_map`: a containment of a power extends along a ring homomorphism *with the
+  same exponent*. It mentions no topology; it is here because this is the only module that every
+  one of its six consuming files reaches and that is not a foundation the whole tree reaches.
 * `IsAdic.radical_eq`: two ideals of definition have the same radical.
 * `IsAdic.zeroLocus_eq` / `IsAdic.range_toPrimeSpectrum_eq`: consequently the formal spectra
   `FormalSpectrum I` and `FormalSpectrum J` cut out the same closed subset of `Spec R`.
@@ -31,6 +34,44 @@ on the chosen ideal of definition, formalizing the affine part of EGA I, §10.3.
 -/
 
 open TopologicalSpace Topology
+
+namespace Ideal
+
+variable {R : Type*} [CommRing R] {S : Type*} [CommRing S] {I J : Ideal R}
+
+/-- **A containment of a power survives extension along a ring homomorphism, with the same
+exponent**: `I ^ b ≤ J` gives `(I · S) ^ b ≤ J · S`. `Ideal.map` commutes with powers
+(`Ideal.map_pow`) and is monotone (`Ideal.map_mono`), and that is the whole proof.
+
+**It mentions no topology, and it is in this file anyway**, and the reason is the import graph
+rather than the subject. Six files use it, thirteen applications in all:
+`FormalSchemes.CofinalAwayCompletionRestrict`, `FormalSchemes.CofinalAwayToAtPrimeSquare`,
+`FormalSchemes.CofinalCompletion`, `FormalSchemes.CofinalIdeal`,
+`FormalSchemes.CofinalSheafComparison` and `FormalSchemes.CofinalSheafComparisonIso`. The only
+modules every one of those six reaches are `FormalSchemes.AdicRing`,
+`FormalSchemes.FormalSpectrum` and this one, and the first two are the foundation that every
+module here reaches — so this file is the only home for it that adds no import edge anywhere.
+
+What the six have in common is the *shape* of the containment and not its origin. Every use
+transports one of the form `IsAdic.exists_pow_le` below produces, and three of the four sites this
+lemma replaced apply it to that lemma's output directly; but it is **not** confined to that
+origin. `Ideal.IsCofinal.map` (`FormalSchemes.CofinalIdeal`) applies it to an arbitrary
+`Ideal.IsCofinal`, and two consumers of that lemma carry no `IsAdic` hypothesis at all:
+`RestrictedPowerSeries.cofinalAlgEquiv` (`FormalSchemes.CofinalCompletionAlg`) and
+`IsTopologicallyFiniteType.isCofinal_map` (`FormalSchemes.CofinalTopFiniteType`).
+
+It is stated rather than inlined because the exponent is shared. `Ideal.IsCofinal.map`
+(`FormalSchemes.CofinalIdeal`) uses it twice, and the squares
+`AdicCompletion.mapCompletion_comp_cofinalHom` (`FormalSchemes.CofinalCompletionFunctorial`)
+indexes need *one* exponent serving both rows: a containment upstairs in `R` maps forward to two
+extensions with that same `b`, where a packaged `Ideal.IsCofinal` at each row would supply two
+independently chosen witnesses to reconcile. That is why the consumers of those squares take
+`I ^ b ≤ J` rather than a cofinality. -/
+theorem pow_map_le_map {b : ℕ} (hb : I ^ b ≤ J) (φ : R →+* S) : (I.map φ) ^ b ≤ J.map φ := by
+  rw [← Ideal.map_pow]
+  exact Ideal.map_mono hb
+
+end Ideal
 
 variable {R : Type*} [CommRing R] [TopologicalSpace R] {I J : Ideal R}
 
