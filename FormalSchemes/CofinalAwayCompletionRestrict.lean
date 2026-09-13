@@ -76,20 +76,12 @@ two binder orders differ.
 * `RingSplit.cofinalHom_adicAwayUnitEquiv` and its level-`1` form
   `RingSplit.cofinalHom_adicAwayUnitEquiv'`: **localizing at an already-invertible element commutes
   with the cofinal comparison.**
-* `FormalSpectrum.basicOpen_le_of_isAdic` and `FormalSpectrum.basicOpen_le_congr_of_isAdic`: an
-  inclusion of basic opens does not depend on the ideal of definition. This is the hypothesis the
-  square below needs on the `J` side, and it is point data — it would have fitted
-  `FormalSchemes.CofinalFormalSpectrumPoint`, whose
-  `FormalSpectrum.mem_basicOpen_homeomorphFormalSpectrum` is the whole of both proofs. It is here
-  because this file was the only consumer of either when they were written. That is no longer so:
-  `FormalSchemes.CofinalStalkLimit` consumes the `_congr_` form, the plain form still has no
-  consumer outside this file, and the move would now cost no import edge at either end — a
-  relocation worth re-costing, and a row of its own rather than a clause here.
 * `FormalSpectrum.cofinalHom_awayCompletionRestrict`, its composed form
   `FormalSpectrum.cofinalHom_comp_awayCompletionRestrict`, and the two forms a consumer will
   actually have the hypotheses for: `..._of_pow_le`, stated at a containment `I ^ b ≤ J` in `R`
   rather than at its two extensions, and `..._of_isAdic`, which additionally derives the `J`-side
-  inclusion of basic opens.
+  inclusion of basic opens from `FormalSpectrum.basicOpen_le_congr_of_isAdic`
+  (`FormalSchemes.CofinalFormalSpectrumPoint`).
 
 ## What is *not* proved here
 
@@ -99,6 +91,15 @@ the other of the two squares and is a separate file. Nothing here identifies
 `FormalSpectrum.awayCompletionRestrict` with the structure-sheaf restriction either — that is the
 open question `FormalSchemes.AwayCompletionRestrict`'s own `## What is *not* proved here` records,
 and this square is about the map that file builds, not about the sheaf.
+
+**Not the two lemmas saying an inclusion of basic opens does not depend on the ideal of
+definition.** `FormalSpectrum.basicOpen_le_of_isAdic` and
+`FormalSpectrum.basicOpen_le_congr_of_isAdic` were stated here while this file was their only
+consumer, but they are point data and
+`FormalSpectrum.mem_basicOpen_homeomorphFormalSpectrum` is the whole of both proofs; once
+`FormalSchemes.CofinalStalkLimit` became a second consumer of the `_congr_` form they moved beside
+that ingredient, in `FormalSchemes.CofinalFormalSpectrumPoint`, at no import cost to either end.
+This file consumes the `_congr_` form across an import it already had.
 
 ## References
 
@@ -221,27 +222,6 @@ end
 section
 
 variable {R : Type u} [CommRing R] [TopologicalSpace R] {I J : Ideal R} {f g : R} {b : ℕ}
-
-/-- **An inclusion of basic opens does not depend on the ideal of definition.** `D(g) ⊆ D(f)` in
-`Spf_J R` gives `D(g) ⊆ D(f)` in `Spf_I R`: the two spaces are identified by
-`IsAdic.homeomorphFormalSpectrum` and membership in a basic open transports along it
-(`FormalSpectrum.mem_basicOpen_homeomorphFormalSpectrum`,
-`FormalSchemes.CofinalFormalSpectrumPoint`).
-
-Note the direction: no surjectivity of the homeomorphism is used, because the conclusion is
-quantified over points of `Spf_I R` and the hypothesis over their images. The `Iff` is this lemma
-applied twice, once each way round. -/
-theorem basicOpen_le_of_isAdic (hI : IsAdic I) (hJ : IsAdic J)
-    (h : basicOpen J g ≤ basicOpen J f) : basicOpen I g ≤ basicOpen I f := fun x hx =>
-  (mem_basicOpen_homeomorphFormalSpectrum hI hJ x f).1
-    (h ((mem_basicOpen_homeomorphFormalSpectrum hI hJ x g).2 hx))
-
-/-- **The inclusion `D(g) ⊆ D(f)` is the same condition at the two ideals of definition.** This is
-the hypothesis `FormalSpectrum.awayCompletionRestrict` takes, so it is what lets the square below
-be stated with one inclusion rather than two unrelated ones. -/
-theorem basicOpen_le_congr_of_isAdic (hI : IsAdic I) (hJ : IsAdic J) (f g : R) :
-    basicOpen I g ≤ basicOpen I f ↔ basicOpen J g ≤ basicOpen J f :=
-  ⟨basicOpen_le_of_isAdic hJ hI, basicOpen_le_of_isAdic hI hJ⟩
 
 /-- **The square at two ideals of definition of one topological ring**, which is the form the
 cofinal-invariance of the stalk-limit question consumes: one containment `I ^ b ≤ J` in `R`, one
