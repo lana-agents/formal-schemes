@@ -214,8 +214,8 @@ forward closure **54** project modules besides itself, reverse closure **3** —
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting criterion
 at a ring of integers, `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which instantiates
 it at `ℤ[X]` localized at `(2, X)`, and `FormalSchemes.StructureSheafStalkPowerSeriesCofinal`,
-which reads the values of this cluster at every finitely generated ideal of definition of `R⟦X⟧` —
-counted by walking every `^import FormalSchemes.` line over
+which reads the values of this cluster at every finitely generated ideal of definition of `R⟦X⟧`
+for its `(X)`-adic topology — counted by walking every `^import FormalSchemes.` line over
 the modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at
 the repository root is outside the walk). The forward count includes
 `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, which holds the predicate at an arbitrary
