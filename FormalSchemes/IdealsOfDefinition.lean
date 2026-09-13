@@ -17,8 +17,9 @@ on the chosen ideal of definition, formalizing the affine part of EGA I, §10.3.
   ring `R`, then some power of `J` is contained in `I` (and, symmetrically, some power of `I`
   is contained in `J`). Thus the two adic filtrations are cofinal in one another.
 * `Ideal.pow_map_le_map`: a containment of a power extends along a ring homomorphism *with the
-  same exponent*. It mentions no topology; it is here because this is the only module that every
-  one of its seven consuming files reaches and that is not a foundation the whole tree reaches.
+  same exponent*. It mentions no topology; it is here because all seven of its consuming files
+  reach this module, and of the three modules they all reach it is the only one a declaration
+  can be added to without rebuilding nine tenths of the tree.
 * `IsAdic.radical_eq`: two ideals of definition have the same radical.
 * `IsAdic.zeroLocus_eq` / `IsAdic.range_toPrimeSpectrum_eq`: consequently the formal spectra
   `FormalSpectrum I` and `FormalSpectrum J` cut out the same closed subset of `Spec R`.
@@ -49,9 +50,11 @@ rather than the subject. Seven files use it, nineteen applications in all:
 `FormalSchemes.CofinalCompletion`, `FormalSchemes.CofinalIdeal`,
 `FormalSchemes.CofinalSheafComparison`, `FormalSchemes.CofinalSheafComparisonIso` and
 `FormalSchemes.CofinalStalkLimit`. The only modules every one of those seven reaches are
-`FormalSchemes.AdicRing`, `FormalSchemes.FormalSpectrum` and this one, and the first two are the
-foundation that every module here reaches — so this file is the only home for it that adds
-no import edge anywhere.
+`FormalSchemes.AdicRing`, `FormalSchemes.FormalSpectrum` and this one, so all **three** are homes
+that add no import edge, and what picks this one out of the three is rebuild cost rather than
+edges. `FormalSchemes.AdicRing`'s reverse closure is **518** of the project's 566 modules and
+`FormalSchemes.FormalSpectrum`'s reverse closure is **517**, so a declaration added to either
+rebuilds nine tenths of the tree, where this file's reverse closure is **44**.
 
 What the seven have in common is the *shape* of the containment and not its origin. Every use
 transports one of the form `IsAdic.exists_pow_le` below produces, and three of the four sites this
@@ -62,11 +65,11 @@ origin. `Ideal.IsCofinal.map` (`FormalSchemes.CofinalIdeal`) applies it to an ar
 `IsTopologicallyFiniteType.isCofinal_map` (`FormalSchemes.CofinalTopFiniteType`).
 
 It is stated rather than inlined because the exponent is shared. `Ideal.IsCofinal.map`
-(`FormalSchemes.CofinalIdeal`) uses it twice, and the squares
-`AdicCompletion.mapCompletion_comp_cofinalHom` (`FormalSchemes.CofinalCompletionFunctorial`)
-indexes need *one* exponent serving both rows: a containment upstairs in `R` maps forward to two
+(`FormalSchemes.CofinalIdeal`) uses it twice, and the square
+`AdicCompletion.mapCompletion_comp_cofinalHom` (`FormalSchemes.CofinalCompletionFunctorial`) needs
+*one* exponent serving both of its rows: a containment upstairs in `R` maps forward to two
 extensions with that same `b`, where a packaged `Ideal.IsCofinal` at each row would supply two
-independently chosen witnesses to reconcile. That is why the consumers of those squares take
+independently chosen witnesses to reconcile. That is why the consumers of that square take
 `I ^ b ≤ J` rather than a cofinality. -/
 theorem pow_map_le_map {b : ℕ} (hb : I ^ b ≤ J) (φ : R →+* S) : (I.map φ) ^ b ≤ J.map φ := by
   rw [← Ideal.map_pow]
