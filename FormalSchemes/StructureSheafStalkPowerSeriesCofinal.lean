@@ -88,8 +88,10 @@ and `Ideal.IsCofinal.pow` (`FormalSchemes.CofinalIdeal`) says `(X) ^ k` is cofin
 every `k ≠ 0`. So `FormalSpectrum.not_isStalkLimit_powerSeriesXIdealPow_int` is a decision at a
 formal spectrum of `ℤ⟦X⟧` whose ideal of definition genuinely **is not** `(X)`, and the transport
 is not a claim about a family with one member in it.
-`FormalSpectrum.exists_ne_powerSeriesXIdeal_not_isStalkLimit_int` is that sentence as a theorem,
-which is what makes it checkable rather than prose.
+`FormalSpectrum.exists_isCofinal_ne_powerSeriesXIdeal_not_isStalkLimit_int` is that sentence as a
+theorem, cofinality conjunct and all, which is what makes it checkable rather than prose: without
+that conjunct the statement would quantify over every ideal of `ℤ⟦X⟧` and `⊤`, whose formal
+spectrum is empty, would satisfy it.
 
 ## What is *not* proved here
 
@@ -119,9 +121,10 @@ through `FormalSpectrum.isStalkLimit_congr`; nothing about
   at a Noetherian domain of dimension at most one with infinitely many nonzero primes.
 * `FormalSpectrum.fg_powerSeriesIdeal_of_isNoetherianRing`: what removes the finiteness hypothesis
   from the three of them.
-* `FormalSpectrum.exists_ne_powerSeriesXIdeal_not_isStalkLimit_int`: **there is an ideal of
-  definition of `ℤ⟦X⟧` other than `(X)`** at which the predicate is false at every point, so none
-  of this is a restatement of what was already there.
+* `FormalSpectrum.exists_isCofinal_ne_powerSeriesXIdeal_not_isStalkLimit_int`: **there is an ideal
+  of definition of `ℤ⟦X⟧` other than `(X)`** at which the predicate is false at every point — the
+  ideal-of-definition clause being the statement's own cofinality conjunct — so none of this is a
+  restatement of what was already there.
 
 ## References
 
@@ -248,16 +251,30 @@ theorem not_isStalkLimit_powerSeriesXIdealPow_int {k : ℕ} (hk : 2 ≤ k)
 definition of `ℤ⟦X⟧` **other than** `(X)` at which `FormalSpectrum.IsStalkLimit` is false at every
 point. The witness is `(X) ^ 2`.
 
+*Ideal of definition* is the first conjunct and not a hypothesis left to the reader: by the opening
+section above, an ideal of `ℤ⟦X⟧` is an ideal of definition for the `(X)`-adic topology exactly
+when it is cofinal with `(X)`, so the three conjuncts are the three clauses of the sentence.
+
+The cofinality is also what keeps the statement from being satisfied by an ideal at which there is
+nothing to decide. `FormalSpectrum J` is `PrimeSpectrum (ℤ⟦X⟧ ⧸ J)`, so at `J = ⊤` it is empty and
+the universal clause holds for want of a point; `⊤ ≠ (X)` as well, so the last two conjuncts on
+their own are satisfiable by a witness that decides nothing. `Ideal.IsCofinal (X) ⊤` is false — it
+asks for `⊤ ^ n ≤ (X)`, and `⊤ ^ n` is `⊤` at every `n` — so the first conjunct rules that witness
+out. Nonemptiness of `FormalSpectrum J` is not stated here and is not needed for that: cofinality
+gives `J ^ n ≤ (X)` with `(X)` prime, hence `J ≤ (X)` and `J` proper, but nothing below asks for a
+point and this file adds no declaration to supply one.
+
 Without it the claim that anything here is stated away from `(X)` would rest on prose; with it the
 two repaired docstrings in `FormalSchemes.StructureSheafStalkPowerSeriesPoint` and
 `FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` assert something the tree proves. It
 is the counterpart of `FormalSpectrum.exists_isStalkLimit_powerSeriesX_field`, which records the
-same kind of non-vacuity one file down. -/
-theorem exists_ne_powerSeriesXIdeal_not_isStalkLimit_int :
-    ∃ J : Ideal (PowerSeries ℤ), J ≠ powerSeriesXIdeal ℤ ∧
-      ∀ y : FormalSpectrum J, ¬ IsStalkLimit J y :=
-  ⟨powerSeriesXIdeal ℤ ^ 2, powerSeriesXIdeal_pow_ne le_rfl,
-    not_isStalkLimit_powerSeriesXIdealPow_int le_rfl⟩
+same kind of non-vacuity one file down — there by exhibiting a point, here by constraining the
+ideal. -/
+theorem exists_isCofinal_ne_powerSeriesXIdeal_not_isStalkLimit_int :
+    ∃ J : Ideal (PowerSeries ℤ), Ideal.IsCofinal (powerSeriesXIdeal ℤ) J ∧
+      J ≠ powerSeriesXIdeal ℤ ∧ ∀ y : FormalSpectrum J, ¬ IsStalkLimit J y :=
+  ⟨powerSeriesXIdeal ℤ ^ 2, Ideal.IsCofinal.pow _ two_ne_zero,
+    powerSeriesXIdeal_pow_ne le_rfl, not_isStalkLimit_powerSeriesXIdealPow_int le_rfl⟩
 
 end Int
 
