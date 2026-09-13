@@ -211,8 +211,8 @@ none of them touched below, and **two have since been closed elsewhere on the tr
 predicate at a point of `Spf (R⟦X⟧, (X))` **other than the generic one** is settled at every point
 of every domain by `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, in
 `FormalSpectrum.isStalkLimit_powerSeriesXPoint_iff_hasBoundedDenominatorsAt`; and the predicate at
-an **ideal of definition of `R⟦X⟧` other than `(X)`** is settled at every **finitely generated**
-one by `FormalSchemes.StructureSheafStalkPowerSeriesCofinal`, in
+an **ideal of definition of `R⟦X⟧` for its `(X)`-adic topology other than `(X)`** is settled at
+every **finitely generated** one by `FormalSchemes.StructureSheafStalkPowerSeriesCofinal`, in
 `FormalSpectrum.isStalkLimit_powerSeriesX_congr`, which carries every value at `(X)` to every such
 ideal at once — the finite generation there being a real hypothesis and not decoration. The third
 is still open: the predicate at a formal spectrum whose ring is **not a power series ring** at
@@ -287,7 +287,7 @@ ideals, and over it
 criterion at a ring of integers, `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which
 instantiates it at `ℤ[X]` localized at `(2, X)`, and
 `FormalSchemes.StructureSheafStalkPowerSeriesCofinal`, which carries the values of this cluster to
-every finitely generated ideal of definition of `R⟦X⟧`;
+every finitely generated ideal of definition of `R⟦X⟧` for its `(X)`-adic topology;
 `FormalSchemes.StructureSheafStalkPowerSeriesUltrapower`, which settles the collapse without
 countability at an ultrapower of `ℤ`; and
 `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, which decides the predicate at an arbitrary

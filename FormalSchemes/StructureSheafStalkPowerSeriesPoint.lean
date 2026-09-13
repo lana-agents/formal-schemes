@@ -85,9 +85,10 @@ longer open on the tree.** Nothing below is stated at an ideal of definition of 
 below names `FormalSpectrum.powerSeriesXIdeal`. What has changed is not this file but what stands
 beside it: `FormalSpectrum.isStalkLimit_powerSeriesX_congr`
 (`FormalSchemes.StructureSheafStalkPowerSeriesCofinal`) says the predicate at a **finitely
-generated** ideal of definition `J` of `R⟦X⟧` is the predicate at `(X)` at the partner point, so
-every value below is a value at every such `J` — `FormalSpectrum.not_isStalkLimit_powerSeriesX_int`
-reads that way as `FormalSpectrum.not_isStalkLimit_powerSeriesXCofinal_int`. **The finite
+generated** ideal of definition `J` of `R⟦X⟧` for its `(X)`-adic topology is the predicate at `(X)`
+at the partner point, so every value below is a value at every such `J` —
+`FormalSpectrum.not_isStalkLimit_powerSeriesX_int` reads that way as
+`FormalSpectrum.not_isStalkLimit_powerSeriesXCofinal_int`. **The finite
 generation is a genuine hypothesis**, an ideal of definition need not carry it, and nothing there
 is proved without it. The second of the two questions — a formal spectrum whose ring is not a
 power series ring — is as open there as it is here.
