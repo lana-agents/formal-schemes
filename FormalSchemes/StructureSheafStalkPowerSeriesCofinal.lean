@@ -235,8 +235,8 @@ end Values
 
 section Int
 
-/-- **`FormalSpectrum.IsStalkLimit` is false at every point of `Spf (ℤ⟦X⟧, J)`, for every finitely
-generated ideal of definition `J` of `ℤ⟦X⟧`.**
+/-- **`FormalSpectrum.IsStalkLimit` is false at every point of `Spf (ℤ⟦X⟧, J)`, for every ideal of
+definition `J` of `ℤ⟦X⟧`.**
 
 `FormalSpectrum.not_isStalkLimit_powerSeriesX_int`
 (`FormalSchemes.StructureSheafStalkPowerSeriesPoint`) is this at `J = (X)`, and it decides every
@@ -298,7 +298,7 @@ section Field
 variable (k : Type u) [Field k]
 
 /-- **`FormalSpectrum.IsStalkLimit` holds at every point of `Spf (k⟦X⟧, J)` for `k` a field and `J`
-a finitely generated ideal of definition of `k⟦X⟧`.**
+an ideal of definition of `k⟦X⟧`.**
 
 `FormalSpectrum.isStalkLimit_powerSeriesX_field` (`FormalSchemes.StructureSheafStalkPowerSeries`)
 is this at `J = (X)`. Together with
@@ -318,8 +318,8 @@ section DimOne
 
 variable (R : Type u) [CommRing R] [IsDomain R] [IsNoetherianRing R] [Ring.DimensionLEOne R]
 
-/-- **The negative value at every finitely generated ideal of definition, over a Noetherian domain
-of dimension at most one with infinitely many nonzero primes.**
+/-- **The negative value at every ideal of definition, over a Noetherian domain of dimension at
+most one with infinitely many nonzero primes.**
 `FormalSpectrum.not_isStalkLimit_powerSeriesX_of_infinite_primeIdeals`
 (`FormalSchemes.StructureSheafStalkPowerSeriesDedekind`) is this at `J = (X)`, and
 `FormalSpectrum.not_isStalkLimit_powerSeriesXCofinal_int` is this at `R = ℤ`, where the hypothesis
