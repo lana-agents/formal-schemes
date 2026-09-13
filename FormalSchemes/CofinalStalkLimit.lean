@@ -40,25 +40,28 @@ deliberately left out, and it is two things.
 ## The one pair of exponents
 
 `AdicCompletion.cofinalHom` (`FormalSchemes.CofinalCompletion`) is indexed by a containment
-`I ^ b ≤ J`, and its level-`n` component is a formula in `b`; nothing on this tree says that two
-containments at two exponents induce the same map. Both squares above are stated at
-`Ideal.pow_map_le_map hb φ` (`FormalSchemes.IdealsOfDefinition`) for the consumer's own `hb`, so
-the assembly takes **one** pair `I ^ b ≤ J`, `J ^ a ≤ I` out of `IsAdic.isCofinal`
+`I ^ b ≤ J`, and its level-`n` component is a formula in `b`. Reconciling two exponents is
+possible — `AdicCompletion.cofinalHom_congr`, in that same file, says two containments at two
+exponents induce the same map — and the assembly has no need of it. Both squares above are stated
+at `Ideal.pow_map_le_map hb φ` (`FormalSchemes.IdealsOfDefinition`) for the consumer's own `hb`,
+so the assembly takes **one** pair `I ^ b ≤ J`, `J ^ a ≤ I` out of `IsAdic.isCofinal`
 (`FormalSchemes.CofinalIdeal`) at the top and builds every comparison map from it. Then the two
 squares apply verbatim and there is nothing about exponents to reconcile.
 
 That is why `FormalSpectrum.atPrimeCofinalRingEquiv` and
 `FormalSpectrum.stalkTargetCofinalRingEquiv` (`FormalSchemes.StructureSheafStalkCofinalTarget`) do
 **not** appear below: both choose their own exponents, by taking `Exists.choose_spec` of
-`Ideal.IsCofinal.exists_pow_le`, so the squares are not stated at the maps they are built from.
+`Ideal.IsCofinal.exists_pow_le`, so the squares are not stated at the maps they are built from,
+and nothing below has to bridge the difference.
 What this file consumes out of that module is the point data —
 `FormalSpectrum.cofinalPoint`, `FormalSpectrum.pointPrime_cofinalPoint`,
 `FormalSpectrum.cofinalPoint_cofinalPoint` — and `FormalSpectrum.mapAtPrimeCongr`.
 
 The invertibility the argument needs of the comparison maps is therefore not a witness-independence
 statement but the plain fact that a comparison at a pair of containments is bijective:
-`AdicCompletion.bijective_cofinalHom_map` below, which is `AdicCompletion.cofinalRingEquiv` read
-through `AdicCompletion.cofinalRingEquiv_apply`.
+`AdicCompletion.bijective_cofinalHom_map` (`FormalSchemes.CofinalCompletion`), which is
+`AdicCompletion.cofinalRingEquiv` read through `AdicCompletion.cofinalRingEquiv_apply`. It is
+stated beside the map it is about rather than here; this file only applies it.
 
 ## The transport along the equality of primes
 
@@ -115,27 +118,6 @@ identified and a square over a homeomorphism base, and it is not taken.
 noncomputable section
 
 universe u
-
-namespace AdicCompletion
-
-variable {R : Type u} [CommRing R] {S : Type u} [CommRing S] {I J : Ideal R} {a b : ℕ}
-
-/-- **A cofinal comparison map between two extended ideals is bijective.** For containments
-`I ^ b ≤ J` and `J ^ a ≤ I` in `R` and any `φ : R →+* S`, the comparison
-`AdicCompletion (I · S) S →+* AdicCompletion (J · S) S` at the extended containment
-`Ideal.pow_map_le_map hb φ` (`FormalSchemes.IdealsOfDefinition`) is bijective: it is the forward
-map of `AdicCompletion.cofinalRingEquiv`, whose inverse is the comparison at
-`Ideal.pow_map_le_map ha φ`.
-
-Stated at the containments upstairs in `R` rather than at their extensions because that is the form
-the squares of this cluster are indexed by, and it is what makes the *same* map both a square's edge
-and an invertible one. It is not a witness-independence statement: it says nothing about two
-containments at different exponents, and nothing below needs that. -/
-theorem bijective_cofinalHom_map (hb : I ^ b ≤ J) (ha : J ^ a ≤ I) (φ : R →+* S) :
-    Function.Bijective (cofinalHom (S := S) (Ideal.pow_map_le_map hb φ)) :=
-  (cofinalRingEquiv (Ideal.pow_map_le_map hb φ) (Ideal.pow_map_le_map ha φ)).bijective
-
-end AdicCompletion
 
 namespace FormalSpectrum
 

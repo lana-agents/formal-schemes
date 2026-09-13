@@ -122,10 +122,13 @@ caller carrying its own exponents may use it rather than rebuild it.
 
 The reason this file used to give was different and was never proved — that
 `FormalSpectrum.atPrimeCofinalRingEquiv_of` pins the map on the image of `Localization.AtPrime p`
-and `AdicCompletion.cofinalHom` is determined there. Nothing on this tree says a ring
-homomorphism out of `AdicCompletion K S` is determined by its values on the image of
-`AdicCompletion.of`, so that inference was never available; the working argument is the level
-formula, in `AdicCompletion.cofinalHom_congr`'s own docstring.
+and `AdicCompletion.cofinalHom` is determined there. Determinacy on that image is a real principle
+on this tree — `AdicCompletion.hom_ext_of_continuous` (`FormalSchemes.AdicExtend`) — but it is not
+free: it needs the ideal upstairs finitely generated, *both* homomorphisms continuous, and an
+adically complete target. This definition has none of the three — it carries `[IsAdicRing I]`,
+`[IsAdicRing J]` and no finiteness hypothesis at all — so `_of` on its own never supplied that
+inference; the working argument is the level formula, in `AdicCompletion.cofinalHom_congr`'s own
+docstring.
 
 The cofinality itself is `IsAdic.isCofinal_map_atPrime`
 (`FormalSchemes.CofinalFormalSpectrumPoint`), taken once in each direction. It is stated there at
