@@ -127,8 +127,8 @@ theorem isIso_mapSheafHomId_app_basicOpen (hIJ : I ≤ J) (hI : I.FG) (hJ : J.FG
     obtain ⟨a, ha0⟩ :=
       IsAdic.exists_pow_le (IsAdicRing.isAdic (I := I)) (IsAdicRing.isAdic (I := J))
     have ha : (J.map (algebraMap R (Localization.Away g))) ^ a ≤
-        I.map (algebraMap R (Localization.Away g)) := by
-      rw [← Ideal.map_pow]; exact Ideal.map_mono ha0
+        I.map (algebraMap R (Localization.Away g)) :=
+      Ideal.pow_map_le_map ha0 _
     have hb1 : (I.map (algebraMap R (Localization.Away g))) ^ 1 ≤
         J.map (algebraMap R (Localization.Away g)) := by
       rw [pow_one]; exact Ideal.map_mono hIJ
