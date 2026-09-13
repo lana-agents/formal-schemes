@@ -88,12 +88,18 @@ supplied.
   proved and is not immediate: the target cover for `g ≫ h` has to be refined against both, and the
   per-chart clause would then need separatedness of a morphism between two open subschemes over a
   common affine, which the affine-base predicate does not state.
-* **A value at a genuinely non-affine target.** The cheapest candidate is the identity on
-  `ThreeChartCover.coverSubscheme`, and it runs into `FormalScheme.restrictOpenMap_id`'s documented
-  heartbeat wall — the one place in this file's neighbourhood where that cost is real. Every value
-  in `FormalSchemes.GeneralSeparatedHomValues` is conservativity applied at an affine target and
-  then transported, which is what makes the predicate non-vacuous but says nothing that the
-  base-affine notion could not already say.
+* **A value at a genuinely non-affine target, other than an identity.** Every value in
+  `FormalSchemes.GeneralSeparatedHomValues` is conservativity applied at an affine target and then
+  transported, which is what makes the predicate non-vacuous but says nothing that the base-affine
+  notion could not already say. `FormalSchemes.GeneralSeparatedHomIdentity` closes the identity
+  case — `FormalScheme.isSeparatedHom_id` holds for *every* `FormalScheme.LocallyFG` formal
+  scheme — so the predicate is now inhabited at a non-affine target; a separated morphism between
+  two non-affine formal schemes, neither of them an identity, is still not in the tree.
+  **The heartbeat wall this list used to name as the obstruction is not one**:
+  `FormalScheme.restrictOpenMap_id`'s documented cost is a fact about the spelling
+  `𝟙 X.toLocallyRingedSpace`, and against `(𝟙 X : X ⟶ X).toLRSHom` the same law is
+  `FormalScheme.restrictOpenMap_uniq` plus a `change`
+  (`FormalScheme.restrictOpenMap_toLRSHom_id`, three lines, no heartbeat raised).
 * **Any relation to `BothChartedFibreDatumXY.IsSeparated`** beyond the one that
   `FormalScheme.IsSeparatedOverSpf` already carries. Nothing here is deprecated and no existing
   consumer moves.

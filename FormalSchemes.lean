@@ -239,6 +239,7 @@ import FormalSchemes.GeneralSeparatedChartCodiagonal
 import FormalSchemes.GeneralSeparatedChartCodiagonalSurjective
 import FormalSchemes.GeneralSeparatedChartPreimage
 import FormalSchemes.GeneralSeparatedHom
+import FormalSchemes.GeneralSeparatedHomIdentity
 import FormalSchemes.GeneralSeparatedHomValues
 import FormalSchemes.GeneralSeparatedOpenCover
 import FormalSchemes.GeneralSeparatedPresentation
