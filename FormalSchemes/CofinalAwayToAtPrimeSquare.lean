@@ -39,9 +39,13 @@ This is one of the **two** squares the invariance of `FormalSpectrum.IsStalkLimi
 ideal of definition needs. The other one, for restriction between basic opens, is
 `FormalSpectrum.cofinalHom_comp_awayCompletionRestrict`
 (`FormalSchemes.CofinalAwayCompletionRestrict`). Nothing here mentions a stalk, and nothing here
-assembles the two: that is a separate file, and it is where the exponent `b` of this square has to
-meet the one `FormalSpectrum.atPrimeCofinalRingEquiv`
-(`FormalSchemes.StructureSheafStalkCofinalTarget`) chooses for itself.
+assembles the two: that is `FormalSchemes.CofinalStalkLimit`. The two exponents this file once
+predicted would have to be reconciled there never met — that file takes **one** pair out of
+`IsAdic.isCofinal` (`FormalSchemes.CofinalIdeal`) and builds every comparison map from it, so both
+squares apply at the same `b` and `FormalSpectrum.atPrimeCofinalRingEquiv`
+(`FormalSchemes.StructureSheafStalkCofinalTarget`), which chooses its own, is not used. Reconciling
+two exponents is possible — `AdicCompletion.cofinalHom_congr`
+(`FormalSchemes.CofinalCompletion`) — and the assembly simply had no need of it.
 
 ## Why the square is stated at one prime rather than at two points
 

@@ -78,7 +78,12 @@ cannot bucket together because the two binder orders differ.
 * `FormalSpectrum.basicOpen_le_of_isAdic` and `FormalSpectrum.basicOpen_le_congr_of_isAdic`: an
   inclusion of basic opens does not depend on the ideal of definition. This is the hypothesis the
   square below needs on the `J` side, and it is point data — it would have fitted
-  `FormalSchemes.CofinalFormalSpectrumPoint`, and is here because this file is its only consumer.
+  `FormalSchemes.CofinalFormalSpectrumPoint`, whose
+  `FormalSpectrum.mem_basicOpen_homeomorphFormalSpectrum` is the whole of both proofs. It is here
+  because this file was the only consumer of either when they were written. That is no longer so:
+  `FormalSchemes.CofinalStalkLimit` consumes the `_congr_` form, the plain form still has no
+  consumer outside this file, and the move would now cost no import edge at either end — a
+  relocation worth re-costing, and a row of its own rather than a clause here.
 * `FormalSpectrum.cofinalHom_awayCompletionRestrict`, its composed form
   `FormalSpectrum.cofinalHom_comp_awayCompletionRestrict`, and the two forms a consumer will
   actually have the hypotheses for: `..._of_pow_le`, stated at a containment `I ^ b ≤ J` in `R`
