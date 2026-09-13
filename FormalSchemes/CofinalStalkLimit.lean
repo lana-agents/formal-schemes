@@ -42,8 +42,8 @@ deliberately left out, and it is two things.
 `AdicCompletion.cofinalHom` (`FormalSchemes.CofinalCompletion`) is indexed by a containment
 `I ^ b ≤ J`, and its level-`n` component is a formula in `b`; nothing on this tree says that two
 containments at two exponents induce the same map. Both squares above are stated at
-`Ideal.pow_map_le_map hb φ` (`FormalSchemes.CofinalIdeal`) for the consumer's own `hb`, so the
-assembly takes **one** pair `I ^ b ≤ J`, `J ^ a ≤ I` out of `IsAdic.isCofinal`
+`Ideal.pow_map_le_map hb φ` (`FormalSchemes.IdealsOfDefinition`) for the consumer's own `hb`, so
+the assembly takes **one** pair `I ^ b ≤ J`, `J ^ a ≤ I` out of `IsAdic.isCofinal`
 (`FormalSchemes.CofinalIdeal`) at the top and builds every comparison map from it. Then the two
 squares apply verbatim and there is nothing about exponents to reconcile.
 
@@ -123,8 +123,8 @@ variable {R : Type u} [CommRing R] {S : Type u} [CommRing S] {I J : Ideal R} {a 
 /-- **A cofinal comparison map between two extended ideals is bijective.** For containments
 `I ^ b ≤ J` and `J ^ a ≤ I` in `R` and any `φ : R →+* S`, the comparison
 `AdicCompletion (I · S) S →+* AdicCompletion (J · S) S` at the extended containment
-`Ideal.pow_map_le_map hb φ` (`FormalSchemes.CofinalIdeal`) is bijective: it is the forward map of
-`AdicCompletion.cofinalRingEquiv`, whose inverse is the comparison at
+`Ideal.pow_map_le_map hb φ` (`FormalSchemes.IdealsOfDefinition`) is bijective: it is the forward
+map of `AdicCompletion.cofinalRingEquiv`, whose inverse is the comparison at
 `Ideal.pow_map_le_map ha φ`.
 
 Stated at the containments upstairs in `R` rather than at their extensions because that is the form

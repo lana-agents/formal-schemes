@@ -148,7 +148,7 @@ def basicOpenSectionsComparison (hIJ : I ≤ J) {a : ℕ} (hcof : J ^ a ≤ I) (
         (L := J.map (algebraMap R (Localization.Away f)))
         (b := 1) (a := a)
         (by rw [pow_one]; exact Ideal.map_mono hIJ)
-        (by rw [← Ideal.map_pow]; exact Ideal.map_mono hcof))).trans
+        (Ideal.pow_map_le_map hcof _))).trans
       (sectionsBasicOpenEquiv J f).symm)
 
 /-- **The rings of global sections agree**: both descriptions of `Γ(⊤, O_{Spf R})` recover `R`
