@@ -89,8 +89,8 @@ at the declaration.
 argument: `FormalSpectrum.IsStalkLimit I x` is a condition at a given point and there is nothing
 for it to quantify over vacuously. It is the `∀ x` form that would need a nonemptiness statement,
 and the general one is `FormalSpectrum.nonempty_iff_ne_top`
-(`FormalSchemes.TateInvNodeChartSpfNonempty`), which this file cannot cite as a term: that module
-is far downstream of this one, and a general statement about `Spf` must not import a Tate leaf.
+(`FormalSchemes.FormalSpectrum`), which this file does reach. It was written far downstream of
+here, in a Tate leaf, and moved beside the definition it unfolds once five modules had restated it.
 
 ## References
 

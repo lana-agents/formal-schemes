@@ -177,11 +177,13 @@ nonempty set**, so it is not a condition that holds because there is nothing to 
 exactly when `I ≠ ⊤`.
 
 The general statement is `FormalSpectrum.nonempty_iff_ne_top`
-(`FormalSchemes.TateInvNodeChartSpfNonempty`) and this is one more of its instances:
-`annulus_formalSpectrum_nonempty` and `FormalSpectrum.nonempty_twoAdic` predate it, while
+(`FormalSchemes.FormalSpectrum`) and this is one more of its instances:
+`annulus_formalSpectrum_nonempty`,
 `AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartAwayIdeal`,
 `AlgebraicGeometry.nonempty_thickening_tateInvNodeChart` and
-`AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartQuotientIdeal` apply it. It duplicates
+`AlgebraicGeometry.nonempty_formalSpectrum_tateInvNodeChartQuotientIdeal` apply it, while
+`FormalSpectrum.nonempty_twoAdic` reaches the same conclusion through
+`AdicCompletion.quotientEquiv` and a residue field instead. It duplicates
 none of them: the content here is the *transport*, from `I ≠ ⊤` in `R` to nonemptiness of the
 formal spectrum of `AdicCompletion.idealOfDefinition I` in the completion. Going through the
 general statement instead lands on `AdicCompletion.idealOfDefinition I ≠ ⊤`, which is not on the

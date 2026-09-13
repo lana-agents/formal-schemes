@@ -312,13 +312,11 @@ theorem nilpotentWitnessIdeal_ne_top : nilpotentWitnessIdeal ≠ ⊤ := by
   rw [nilpotentWitnessIdeal, Ne, Ideal.span_singleton_eq_top]
   decide
 
-/-- `Spf (ZMod 4, (2))` has a point: `(2)` is not the whole ring, so the quotient is nontrivial and
-its prime spectrum is nonempty. -/
+/-- `Spf (ZMod 4, (2))` has a point: `(2)` is not the whole ring, and `nonempty_iff_ne_top`
+(`FormalSchemes.FormalSpectrum`) converts. -/
 theorem nonempty_formalSpectrum_nilpotentWitnessIdeal :
-    Nonempty (FormalSpectrum nilpotentWitnessIdeal) := by
-  haveI : Nontrivial (ZMod 4 ⧸ nilpotentWitnessIdeal) :=
-    Ideal.Quotient.nontrivial_iff.mpr nilpotentWitnessIdeal_ne_top
-  exact inferInstanceAs (Nonempty (PrimeSpectrum (ZMod 4 ⧸ nilpotentWitnessIdeal)))
+    Nonempty (FormalSpectrum nilpotentWitnessIdeal) :=
+  (nonempty_iff_ne_top _).mpr nilpotentWitnessIdeal_ne_top
 
 /-- **`FormalSpectrum.IsStalkLimit` holds at a nonzero ideal of definition.** Together with
 `FormalSpectrum.nilpotentWitnessIdeal_ne_bot` this is what makes

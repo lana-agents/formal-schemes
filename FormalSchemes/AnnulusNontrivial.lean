@@ -128,10 +128,11 @@ theorem annulus_nontrivial (hq : q ∈ I) (hI : I ≠ ⊤) :
   Ideal.Quotient.nontrivial_iff.mpr (annulusIdealOfDefinition_ne_top R I q hq hI)
 
 /-- **The formal spectrum of the Tate annulus is nonempty** when `I ≠ ⊤`: `Spf A` has at least
-one open prime, being `Spec` of the nontrivial special fibre `A ⧸ (I·A)`. -/
+one open prime, `A ⧸ (I·A)` being the nontrivial special fibre. This is
+`FormalSpectrum.nonempty_iff_ne_top` (`FormalSchemes.FormalSpectrum`) at `I·A`; it was that
+statement written out here for as long as the general one was out of this file's reach. -/
 theorem annulus_formalSpectrum_nonempty (hq : q ∈ I) (hI : I ≠ ⊤) :
-    Nonempty (FormalSpectrum (annulusIdealOfDefinition R I q)) := by
-  haveI := annulus_nontrivial R I q hq hI
-  exact PrimeSpectrum.nonempty_iff_nontrivial.mpr inferInstance
+    Nonempty (FormalSpectrum (annulusIdealOfDefinition R I q)) :=
+  (FormalSpectrum.nonempty_iff_ne_top _).mpr (annulusIdealOfDefinition_ne_top R I q hq hI)
 
 end
