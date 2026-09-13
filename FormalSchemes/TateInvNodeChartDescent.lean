@@ -134,9 +134,9 @@ not in this file, although only this file uses it. It is general — it mentions
 and no Tate hypothesis — and it belongs beside `CategoryTheory.IsActionQuotient.uniqueUpToIso` and
 `CategoryTheory.IsActionQuotient.ofIso`, whose docstrings are about exactly this: which of the
 quotient's characterisations are two-way rather than one-way. The cost is that
-`FormalSchemes.ActionQuotient` has reverse closure **96** of the project's 564 modules against this
-file's **14**, both recomputed from the `import` lines at this commit; the alternative is a general
-categorical lemma reachable only through this file, at forward closure **234**, which is worse for
+`FormalSchemes.ActionQuotient` has reverse closure **96** against this file's **14**, both
+recomputed from the `import` lines at this commit; the alternative is a general categorical lemma
+reachable only through this file, at forward closure **234**, which is worse for
 anything that wants to reuse it.
 
 ## References

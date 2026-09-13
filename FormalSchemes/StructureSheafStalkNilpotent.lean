@@ -80,10 +80,9 @@ itself, reverse closure **8** — the power-series cluster, from
 
 `IsAdicComplete.of_pow_eq_bot` and `isAdicRing_adicTopology` mention no formal geometry and would
 sit naturally in `FormalSchemes.AdicRing` beside `instIsAdicRingBotOfDiscreteTopology`. They are
-**not** put there: `FormalSchemes.AdicRing`'s reverse closure is **516** of the project's 564
-modules, so a declaration added to it rebuilds nine tenths of the tree, and neither has a consumer
-outside this file. If a second consumer appears the move is worth re-costing; at one consumer it
-is not.
+**not** put there: `FormalSchemes.AdicRing`'s reverse closure is **516**, so a declaration added
+to it rebuilds nine tenths of the tree, and neither has a consumer outside this file. If a second
+consumer appears the move is worth re-costing; at one consumer it is not.
 
 ## Main results
 

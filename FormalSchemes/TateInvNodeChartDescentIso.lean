@@ -154,8 +154,8 @@ beside `CategoryTheory.IsActionQuotient.exists_isIso_desc_of_iso` and
 quotient are two-way. That is the disposition
 `FormalSchemes.TateInvNodeChartDescent`'s implementation notes argued for and took for
 `CategoryTheory.IsActionQuotient.exists_isIso_desc_of_iso` itself, at the same price:
-`FormalSchemes.ActionQuotient` has reverse closure **96** of the project's 564 modules — 95 before
-this file, which reaches it — against this file's **7**.
+`FormalSchemes.ActionQuotient` has reverse closure **96** — 95 before this file, which reaches
+it — against this file's **7**.
 `AlgebraicGeometry.LocallyRingedSpace.isIso_iff_isIso_base_and_isIso_c_app` goes beside the
 one-way `AlgebraicGeometry.LocallyRingedSpace.isIso_of_isIso_base_of_isIso_c_app` in
 `FormalSchemes.ActionQuotientRestrictQuotient` (reverse closure **16**, 15 before this file) for the
