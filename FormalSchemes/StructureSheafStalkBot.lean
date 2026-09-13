@@ -354,10 +354,10 @@ theorem isStalkLimit_bot (x : FormalSpectrum (⊥ : Ideal R)) : IsStalkLimit (�
   exact ⟨fun f hf a ha => exists_basicOpenRes_eq_zero_bot x f hf a ha,
     exists_awayToAtPrimeCompletion_eq_bot x⟩
 
-/-- `Spf (R, ⊥)` has a point when `R` is nontrivial: it is `Spec (R ⧸ ⊥)`, and `⊥ ≠ ⊤`. -/
-theorem nonempty_formalSpectrum_bot [Nontrivial R] : Nonempty (FormalSpectrum (⊥ : Ideal R)) := by
-  haveI : Nontrivial (R ⧸ (⊥ : Ideal R)) := Ideal.Quotient.nontrivial_iff.mpr bot_ne_top
-  exact inferInstanceAs (Nonempty (PrimeSpectrum (R ⧸ (⊥ : Ideal R))))
+/-- `Spf (R, ⊥)` has a point when `R` is nontrivial: `⊥ ≠ ⊤`, and `nonempty_iff_ne_top`
+(`FormalSchemes.FormalSpectrum`) converts. -/
+theorem nonempty_formalSpectrum_bot [Nontrivial R] : Nonempty (FormalSpectrum (⊥ : Ideal R)) :=
+  (nonempty_iff_ne_top _).mpr bot_ne_top
 
 /-- **`FormalSpectrum.IsStalkLimit` is not vacuous.** `FormalSpectrum.isStalkLimit_bot` holds at
 every point of `Spf (R, ⊥)`, and `Spf (R, ⊥)` has a point as soon as `R` is nontrivial, so there

@@ -36,9 +36,6 @@ point that `FormalSchemes.TateInvNodeChartNontrivial` used, and needs the same s
 
 ## Main results
 
-* `FormalSpectrum.nonempty_iff_ne_top`: `Spf R` is nonempty iff `I ≠ ⊤`. General, and the shape
-  the tree has been proving one instance of at a time — `annulus_formalSpectrum_nonempty` and
-  `FormalSpectrum.nonempty_twoAdic` are both this plus a properness fact.
 * `FormalSpectrum.ne_top_awayCompletionIdeal_of_nonempty_basicOpen`: the ideal of definition of
   `R{1/f}` is proper as soon as `D(f) ⊆ Spf R` has a point.
 * `AlgebraicGeometry.ne_top_tateInvNodeChartAwayIdeal` and
@@ -53,7 +50,7 @@ point that `FormalSchemes.TateInvNodeChartNontrivial` used, and needs the same s
   — the set the sought open immersion must cover is itself nonempty for `I ≠ ⊤`, so neither side
   of issue 1197's residual hypothesis is empty for a trivial reason.
 * **`exists_isAdicComplete_nontrivial_sections_tateInvNodeChart_of_isLeftRegular_base`**, in the
-  `AlgebraicGeometry` namespace like everything else on this list bar the first two:
+  same namespace as the two bullets above it:
   `AlgebraicGeometry.exists_isAdicComplete_sections_tateInvNodeChart_of_isLeftRegular_base`
   (`FormalSchemes.TateInvNodeChartSpf`) with `Nontrivial (Γ (T_inv/⟨σ⟩, V))` added to its
   conclusion, so that its `K.FG ∧ IsAdicComplete K …` is a statement about a nonzero ring inside
@@ -76,6 +73,13 @@ from a compatible family of morphisms out of the thickenings. It does not apply 
 `T_inv/⟨σ⟩` because it needs the target covered by opens isomorphic to `Spec` of a ring, so the
 obstruction is circularity rather than absence.
 
+**Not the general nonemptiness statement itself.** `FormalSpectrum.nonempty_iff_ne_top` — `Spf R`
+has a point iff `I ≠ ⊤` — was written here, and it is about no Tate curve, no node and no chart:
+it is the definition `Spf R = Spec (R ⧸ I)` unfolded against two Mathlib lemmas. It now lives
+beside that definition, in `FormalSchemes.FormalSpectrum`, which this file reaches and which every
+module that wants the statement reaches too; that module's `## Placement` argues the exception.
+The results below consume it across an import this file already had.
+
 **No converse for the general lemma at the node chart**: `I = ⊤` is not shown to make
 `tateInvNodeChartAwayIdeal` equal to `⊤`. It makes `Spf A` empty, so the argument below simply
 stops.
@@ -94,24 +98,12 @@ universe u
 
 namespace FormalSpectrum
 
-variable {R : Type u} [CommRing R] (I : Ideal R)
-
-/-- **`Spf R` is nonempty exactly when its ideal of definition is proper.** `Spf R` is
-`Spec (R ⧸ I)` by definition, `PrimeSpectrum.nonempty_iff_nontrivial` turns that into
-nontriviality of the special fibre, and `Ideal.Quotient.nontrivial_iff` into `I ≠ ⊤`.
-
-The tree has been proving instances of this one at a time — `annulus_formalSpectrum_nonempty`
-(`FormalSchemes.AnnulusNontrivial`) and `FormalSpectrum.nonempty_twoAdic`
-(`FormalSchemes.TwoAdicDegeneracy`) are each this plus a properness fact about their own ideal. -/
-theorem nonempty_iff_ne_top : Nonempty (FormalSpectrum I) ↔ I ≠ ⊤ :=
-  PrimeSpectrum.nonempty_iff_nontrivial.trans Ideal.Quotient.nontrivial_iff
-
-variable (f : R)
+variable {R : Type u} [CommRing R] (I : Ideal R) (f : R)
 
 /-- **The ideal of definition of `R{1/f}` is proper once `D(f)` has a point.**
 `FormalSpectrum.range_basicOpenChartBase` computes the range of `Spf R{1/f} → Spf R` as
 `D(f)`, so a point of `D(f)` is a point of `Spf R{1/f}`, and
-`FormalSpectrum.nonempty_iff_ne_top` converts. -/
+`FormalSpectrum.nonempty_iff_ne_top` (`FormalSchemes.FormalSpectrum`) converts. -/
 theorem ne_top_awayCompletionIdeal_of_nonempty_basicOpen (hI : I.FG)
     (hne : (basicOpen I f : Set (FormalSpectrum I)).Nonempty) :
     awayCompletionIdeal I f ≠ ⊤ := by

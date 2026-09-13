@@ -52,6 +52,31 @@ ringed space it makes `Spf R` into is `FormalSpectrum.locallyRingedSpaceObj`
   thickenings `Spec (R ⧸ I ^ n)`, `n ≠ 0`, compatibly with the transition maps of the tower
   (`FormalSpectrum.comap_factor_comp_toThickening`) and with the closed embeddings into
   `Spec R` (`FormalSpectrum.comap_mk_toThickening`).
+* `FormalSpectrum.nonempty_iff_ne_top`: `Spf R` has a point exactly when its ideal of definition
+  is proper. This is the definition unfolded and two Mathlib lemmas, and it is stated here rather
+  than wherever it is first wanted; see `## Placement`.
+
+## Placement
+
+`FormalSpectrum.nonempty_iff_ne_top` is here because it is about the definition above and about
+nothing else, and that placement is a considered exception rather than the default. Nine tenths of
+this library imports this file, so a declaration added here rebuilds nine tenths of it, and
+`FormalSchemes.StructureSheafStalkNilpotent` declines a move into `FormalSchemes.AdicRing` on
+exactly that ground.
+
+What differs is what the move buys. There the two declarations already had every consumer they
+wanted, so the rebuild bought nothing. This one was written in a Tate leaf
+(`FormalSchemes.TateInvNodeChartSpfNonempty`, issue 1197's cluster) that the annulus, completion
+and stalk clusters cannot import, and five modules there stated `Nonempty (FormalSpectrum ...)`
+without being able to cite it — `FormalSchemes.AnnulusNontrivial`,
+`FormalSchemes.CompletionToSpecStalk`, `FormalSchemes.StructureSheafStalkBot`,
+`FormalSchemes.StructureSheafStalkNilpotent` and `FormalSchemes.TwoAdicDegeneracy`. Three of the
+five were this statement written out by hand. A rebuild is paid once; being out of reach is paid
+again at every recurrence, and the recurrences were already at five.
+
+The move costs no import edge anywhere, at either end: every module that states the conclusion
+already imports this file, and the two modules that cite the statement as a term still import the
+leaf it came from for other results of that leaf.
 
 ## References
 
@@ -78,6 +103,16 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 quasi-compact, `T0`, sober, and quasi-separated. -/
 instance instSpectralSpace : SpectralSpace (FormalSpectrum I) :=
   inferInstanceAs (SpectralSpace (PrimeSpectrum (R ⧸ I)))
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **`Spf R` is nonempty exactly when its ideal of definition is proper.** `Spf R` is
+`Spec (R ⧸ I)` by definition, `PrimeSpectrum.nonempty_iff_nontrivial` turns that into
+nontriviality of the special fibre, and `Ideal.Quotient.nontrivial_iff` into `I ≠ ⊤`.
+
+The tree proved instances of this one at a time for as long as it was out of reach; `## Placement`
+in the module docstring records where it used to live and why it is here now. -/
+theorem nonempty_iff_ne_top : Nonempty (FormalSpectrum I) ↔ I ≠ ⊤ :=
+  PrimeSpectrum.nonempty_iff_nontrivial.trans Ideal.Quotient.nontrivial_iff
 
 /-- The inclusion of the formal spectrum `Spf R` into `Spec R`, sending an open prime of `R ⧸ I`
 to its preimage under `R → R ⧸ I`. -/
