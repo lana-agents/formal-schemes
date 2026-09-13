@@ -53,10 +53,17 @@ that equality; it is stated with both primes as variables because `subst` is wha
 
 Nothing about `FormalSpectrum.stalkToLimit`, `FormalSpectrum.stalkToAdicCompletion` or
 `FormalSpectrum.IsStalkLimit`. That the comparison maps *intertwine*
-`FormalSpectrum.stalkTargetCofinalRingEquiv` with the isomorphism of the two stalks — and hence that
-`FormalSpectrum.IsStalkLimit` is invariant under passing to another ideal of definition — is a
-separate question, and the isomorphism of the two stalks is not constructed here either. This file
-supplies one edge of that square and makes no claim about the other three.
+`FormalSpectrum.stalkTargetCofinalRingEquiv` with the isomorphism of the two stalks is a separate
+question, and the isomorphism of the two stalks is not constructed here either. This file supplies
+one edge of that square and makes no claim about the other three.
+
+**The invariance of `FormalSpectrum.IsStalkLimit` is not downstream of that square, and is proved.**
+`FormalSpectrum.isStalkLimit_congr` (`FormalSchemes.CofinalStalkLimit`) transports the sheaf-free
+criterion instead of intertwining anything, and it uses neither
+`FormalSpectrum.stalkTargetCofinalRingEquiv` nor `FormalSpectrum.atPrimeCofinalRingEquiv` — what it
+takes from this file is the point data and `FormalSpectrum.mapAtPrimeCongr`. So the intertwining is
+open on its own account rather than as the missing step of that proof, and the edge above is one
+nothing currently consumes.
 
 ## References
 
@@ -107,9 +114,18 @@ theorem cofinalPoint_cofinalPoint (x : FormalSpectrum I) :
 
 The two exponents are *chosen* from the cofinality rather than passed in:
 `AdicCompletion.cofinalRingEquiv` takes them explicitly, and `Ideal.IsCofinal` only asserts that
-they exist. Nothing below depends on which witnesses are chosen, because
-`FormalSpectrum.atPrimeCofinalRingEquiv_of` pins the map on the image of
-`Localization.AtPrime p`, and `AdicCompletion.cofinalHom` is determined there.
+they exist. **Nothing depends on which witnesses are chosen**, and that is a theorem:
+`AdicCompletion.cofinalHom_congr` (`FormalSchemes.CofinalCompletion`) says two containments at
+different exponents induce the same map. So through `AdicCompletion.cofinalRingEquiv_apply` this
+equivalence *is* `AdicCompletion.cofinalHom hb` for any containment `hb` a caller has, and a
+caller carrying its own exponents may use it rather than rebuild it.
+
+The reason this file used to give was different and was never proved — that
+`FormalSpectrum.atPrimeCofinalRingEquiv_of` pins the map on the image of `Localization.AtPrime p`
+and `AdicCompletion.cofinalHom` is determined there. Nothing on this tree says a ring
+homomorphism out of `AdicCompletion K S` is determined by its values on the image of
+`AdicCompletion.of`, so that inference was never available; the working argument is the level
+formula, in `AdicCompletion.cofinalHom_congr`'s own docstring.
 
 The cofinality itself is `IsAdic.isCofinal_map_atPrime`
 (`FormalSchemes.CofinalFormalSpectrumPoint`), taken once in each direction. It is stated there at

@@ -443,10 +443,11 @@ by `Ideal.adicTopology` together with `isAdicRing_adicTopology`
 (`FormalSchemes.StructureSheafStalkNilpotent`) and Mathlib's `IsAdicComplete` instance for
 `(X) ⊆ R⟦X⟧`, so the statement below has neither.
 
-**This is the first application of that criterion anywhere on the tree**, checked by searching the
+**This was the first application of that criterion anywhere on the tree**, checked by searching the
 tree for every occurrence of the two names rather than assumed: before this file
-`FormalSpectrum.isStalkLimit_iff_awayCompletionRestrict` had no consumer at all — every other
-occurrence of the name is prose — and the sheaf-carrying
+`FormalSpectrum.isStalkLimit_iff_awayCompletionRestrict` had no consumer at all. It has one other
+now, `FormalSpectrum.isStalkLimit_cofinalPoint` (`FormalSchemes.CofinalStalkLimit`), in a module
+neither above nor below this one. The sheaf-carrying
 `FormalSpectrum.isStalkLimit_iff_awayCompletion` was applied exactly twice, at `⊥`
 (`FormalSchemes.StructureSheafStalkBot`) and at a nilpotent ideal of definition
 (`FormalSchemes.StructureSheafStalkNilpotent`). So no application at a non-nilpotent ideal of

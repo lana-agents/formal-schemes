@@ -27,6 +27,9 @@ definition of `R`, the ideals `I · R_f`, `J · R_f` are cofinal in `R_f`
   the universal property of the completion applied to the factor maps
   `S ⧸ K ^ ((b + 1) * n) →+* S ⧸ L ^ n`.
 * `AdicCompletion.cofinalHom_of`: the comparison map fixes the structure map `AdicCompletion.of`.
+* `AdicCompletion.cofinalHom_congr`: the comparison map does not depend on the exponent
+  witnessing `K ^ b ≤ L`. Two containments at different exponents induce the same map, so a
+  comparison built from *chosen* witnesses is the one a caller with its own witnesses would build.
 * `AdicCompletion.cofinalRingEquiv hb ha`: the ring isomorphism
   `AdicCompletion K S ≃+* AdicCompletion L S` for cofinal `K`, `L`.
 * `AdicCompletion.nonempty_cofinalRingEquiv_map`: two ideals of definition `I`, `J` of a
@@ -109,6 +112,40 @@ theorem cofinalHom_of (hb : K ^ b ≤ L) (x : S) :
     cofinalHom hb (of K S x) = of L S x := by
   refine AdicCompletion.ext_evalₐ fun n => ?_
   rw [evalₐ_cofinalHom, cofinalLevel_apply, evalₐ_of, Ideal.Quotient.factor_mk, evalₐ_of]
+
+/-- **The cofinal comparison map does not depend on the exponent witnessing the containment.**
+Two containments `K ^ b ≤ L` and `K ^ b' ≤ L`, at possibly different exponents, induce the same
+map `AdicCompletion K S →+* AdicCompletion L S`.
+
+This is not automatic from the definition: `cofinalLevel hb n` is
+`Ideal.Quotient.factor (pow_mul_le_pow hb n)` after `evalₐ K ((b + 1) * n)`, a formula in which
+`b` occurs twice. What makes the two agree is that for `b ≤ b'` the evaluation at the smaller
+level factors through the larger one (`AdicCompletion.factorPow_evalₐ`), after which both sides
+are `Ideal.Quotient.factor` applied to the *same* element of `S ⧸ K ^ ((b' + 1) * n)` at two
+proofs of one containment `K ^ ((b' + 1) * n) ≤ L ^ n` — and a proof is not data. The general case
+is that one with `le_total`.
+
+It is what lets a comparison map built from *chosen* witnesses be identified with one built from
+a caller's own: `FormalSpectrum.atPrimeCofinalRingEquiv`
+(`FormalSchemes.StructureSheafStalkCofinalTarget`) takes its exponents from
+`Ideal.IsCofinal.exists_pow_le` by `Exists.choose_spec`, and through
+`AdicCompletion.cofinalRingEquiv_apply` this lemma says that map is `cofinalHom hb` for any `hb`
+the caller has. -/
+theorem cofinalHom_congr {b b' : ℕ} (hb : K ^ b ≤ L) (hb' : K ^ b' ≤ L) :
+    cofinalHom hb = cofinalHom hb' := by
+  have key : ∀ {c c' : ℕ} (hc : K ^ c ≤ L) (hc' : K ^ c' ≤ L), c ≤ c' →
+      ∀ (n : ℕ) (x : AdicCompletion K S), cofinalLevel hc n x = cofinalLevel hc' n x := by
+    intro c c' hc hc' hcc n x
+    have h : (c + 1) * n ≤ (c' + 1) * n := Nat.mul_le_mul_right n (Nat.succ_le_succ hcc)
+    rw [cofinalLevel_apply, cofinalLevel_apply, ← factorPow_evalₐ K h x,
+      show (Ideal.Quotient.factorPow K h) =
+        Ideal.Quotient.factor (Ideal.pow_le_pow_right h) from rfl,
+      Ideal.Quotient.factor_comp_apply]
+  refine RingHom.ext fun x => AdicCompletion.ext_evalₐ fun n => ?_
+  rw [evalₐ_cofinalHom, evalₐ_cofinalHom]
+  rcases le_total b b' with h | h
+  · exact key hb hb' h n x
+  · exact (key hb' hb h n x).symm
 
 /-- The two cofinal comparison maps for `K ^ b ≤ L` and `L ^ a ≤ K` are mutually inverse:
 composing them collapses, on each level, to an evaluation of the same completion via
