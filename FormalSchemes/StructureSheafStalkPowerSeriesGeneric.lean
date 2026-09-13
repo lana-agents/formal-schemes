@@ -147,9 +147,9 @@ prints as.
 
 `FormalSpectrum.exists_awayToAtPrime_eq` and `FormalSpectrum.exists_mk_awayToAtPrime_eq` mention no
 power series and would sit as naturally in `FormalSchemes.StructureSheafStalkComparison`, whose
-`## What is *not* proved here` is what they sharpen and whose reverse closure is **12** of the
-project's 564 modules (forward closure 36 with itself, against this file's 51). They are kept here
-anyway, on two grounds: each has exactly one consumer, both in this file, which is the disposition
+`## What is *not* proved here` is what they sharpen and whose reverse closure is **12** (forward
+closure 36 with itself, against this file's 51). They are kept here anyway, on two grounds: each
+has exactly one consumer, both in this file, which is the disposition
 `FormalSchemes.StructureSheafStalkNilpotent` and `FormalSchemes.StructureSheafStalkPowerSeries`
 both recorded for a general statement with a single consumer; and moving them would edit a file
 this row is scoped not to touch. **The move was re-costed when the level bridge was added and

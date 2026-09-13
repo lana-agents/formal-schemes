@@ -288,7 +288,7 @@ outside this section's regime is untouched.
 Over `FormalSchemes.TateInvNodeChartSpaceHalfTrace`,
 `FormalSchemes.TateInvNodeChartAmbientNotInjective` and
 `FormalSchemes.TateInvNodeChartLegGeneral`: forward closure **270** project modules besides
-itself, reverse closure **0**, counted by walking every `^import FormalSchemes.` line over the 564
+itself, reverse closure **0**, counted by walking every `^import FormalSchemes.` line over the
 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at the
 repository root is outside the walk).
 
@@ -324,11 +324,12 @@ not a measurement**: a successor that wants the four legs uniformly should move 
 `XY` companions into `FormalSchemes.TateInvNodeChartLegGeneral` in one step.
 
 **The refutation belongs beside the criterion it refutes rather than in a new module importing
-both**, and the comparison was made rather than assumed. A new module costs a 560th entry in the
-walk, and re-running the audit with one such module present reports **40** MISMATCHes over 25
-sentences in 22 files — 15 of them project-module totals and 25 of them figures counting how many
-modules sit above a given one — against the single figure the import moves. A new module would
-also leave the criterion's own docstring saying that its hypothesis is not known to fail, with the
+both**, and the comparison was made rather than assumed. A new module costs an entry in the walk,
+and every module in its import cone that states in prose how many modules sit above it has that
+figure invalidated — dozens of them, against the single figure the import moves. The exact count
+belongs to where the new module would go and not to anything here, so it is measured when the
+choice is made rather than carried in this sentence. A new module would also leave the criterion's
+own docstring saying that its hypothesis is not known to fail, with the
 refutation in a file the reader has no reason to open; that sentence is the defect this row
 repairs, so a placement that leaves a pointer where the falsehood was is not a repair. The
 argument that kept the crux out of `FormalSchemes.TateInvNodeChartPatchChartGerm` does not run in

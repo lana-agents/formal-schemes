@@ -214,8 +214,8 @@ forward closure **54** project modules besides itself, reverse closure **2** —
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField`, which instantiates the refuting criterion
 at a ring of integers, and `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, which instantiates
 it at `ℤ[X]` localized at `(2, X)` — counted by walking every `^import FormalSchemes.` line over
-the 564 modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator
-at the repository root is outside the walk). The forward count includes
+the modules under `FormalSchemes/` (a module is not counted in its own closure; the aggregator at
+the repository root is outside the walk). The forward count includes
 `FormalSchemes.StructureSheafStalkPowerSeriesPoint`, which holds the predicate at an arbitrary
 point, is itself over that same module, and is what the arbitrary-point material below is stated
 in; it is the one edge this branch adds.
@@ -267,10 +267,13 @@ one new edge is the project import
 `FormalSpectrum.HasBoundedDenominatorsAt` cannot be named at all. The concurrency argument is real
 and is paid: this file is longer for it.
 
-**What a leaf would cost instead is prose, and the bill is not small.** A 561st module changes how
+**What a leaf would cost instead is prose, and the bill is not small.** A new module changes how
 many project modules every module above it reaches, and this tree states those counts in prose.
-The three routes were measured with `scripts/closure_audit.py --tree` in a scratch worktree, and
-the numbers are these. A stub leaf importing this file, the point module and the
+The three routes were measured with `scripts/closure_audit.py --tree` in a scratch worktree **in
+the tree as it stood when this material was added**, and the numbers are these. They record a
+decision already taken rather than a measurement of any later tree: two of the three are deltas
+against a state that no longer exists, and the first counted project-module totals that this tree
+no longer states. A stub leaf importing this file, the point module and the
 number-field one sends **42** attributed figures in **23** files to MISMATCH; the route taken
 here sends **5** in **4**; putting the material in the point module instead — that module importing
 this one, and the number-field leaf importing it — sends the same **5** in **3**.

@@ -165,9 +165,9 @@ identification below reuses: forward closure **53** project modules besides itse
 below away from `ℤ`, and the two modules over it,
 `FormalSchemes.StructureSheafStalkPowerSeriesNumberField` and
 `FormalSchemes.StructureSheafStalkPowerSeriesLocal` — counted by walking every
-`^import FormalSchemes.` line over the 564 modules under
-`FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository root
-is outside the walk). It adds no Mathlib import.
+`^import FormalSchemes.` line over the modules under `FormalSchemes/` (a module is not counted in
+its own closure; the aggregator at the repository root is outside the walk). It adds no Mathlib
+import.
 
 `FormalSpectrum.awayCompletionEquivPowerSeriesAway` lives there too, is already stated at every
 commutative ring, and is reused below unchanged.

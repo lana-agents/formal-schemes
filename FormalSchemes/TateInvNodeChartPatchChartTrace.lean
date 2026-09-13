@@ -129,9 +129,8 @@ Over `FormalSchemes.TateInvNodeChartPatchChartGerm`, which already imports
 forward closure **264** project modules besides itself, reverse closure **2** —
 `FormalSchemes.TateInvNodeChartSpaceHalfTrace`, which substitutes the restatement below into the
 space half, and `FormalSchemes.TateInvNodeChartOrbitSeparation` above it — counted by walking every
-`^import FormalSchemes.` line over the 564 modules under
-`FormalSchemes/` (a module is not counted in its own closure; the aggregator at the repository
-root is outside the walk).
+`^import FormalSchemes.` line over the modules under `FormalSchemes/` (a module is not counted in
+its own closure; the aggregator at the repository root is outside the walk).
 
 Appending to `FormalSchemes.TateInvNodeChartPatchChartGerm` was the alternative and is cheaper by a
 module. It is not taken for a reason that file states about itself: its *What is not proved here*
