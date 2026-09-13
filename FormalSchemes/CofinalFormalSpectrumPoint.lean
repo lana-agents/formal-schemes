@@ -15,7 +15,8 @@ point* that the stalk cluster is written in terms of. This file supplies that, i
 and no more:
 
 * the prime of `R` under a point is **equal** at the two ideals, not merely corresponding;
-* membership in a basic open transports along the homeomorphism;
+* membership in a basic open transports along the homeomorphism, and so does an inclusion of one
+  basic open in another;
 * the two ideals of definition stay cofinal after any base change, in particular at the two
   localizations the stalk cluster localises at.
 
@@ -48,6 +49,11 @@ specialises. That is one transport at one site, rather than one here and one at 
   non-membership in the prime under the point. Definitional, and stated because the two halves of
   it already on the tree live in two different modules.
 * `FormalSpectrum.mem_basicOpen_homeomorphFormalSpectrum`: basic-open membership transports.
+* `FormalSpectrum.basicOpen_le_of_isAdic` and `FormalSpectrum.basicOpen_le_congr_of_isAdic`: an
+  inclusion `D(g) ⊆ D(f)` of basic opens transports too, and is the same condition at the two
+  ideals of definition. Both are `FormalSpectrum.mem_basicOpen_homeomorphFormalSpectrum` and
+  nothing else, which is why they are here rather than beside the square that consumes the second
+  of them (`FormalSchemes.CofinalAwayCompletionRestrict`).
 * `IsAdic.isCofinal_map`, `IsAdic.isCofinal_map_away`, `IsAdic.isCofinal_map_atPrime`: two ideals of
   definition of one topological ring stay cofinal after any base change.
 
@@ -101,6 +107,30 @@ theorem mem_basicOpen_homeomorphFormalSpectrum (hI : IsAdic I) (hJ : IsAdic J)
     hI.homeomorphFormalSpectrum hJ x ∈ basicOpen J f ↔ x ∈ basicOpen I f := by
   rw [mem_basicOpen_iff_notMem_pointPrime, mem_basicOpen_iff_notMem_pointPrime,
     pointPrime_homeomorphFormalSpectrum hI hJ x]
+
+variable {f g : R}
+
+/-- **An inclusion of basic opens does not depend on the ideal of definition.** `D(g) ⊆ D(f)` in
+`Spf_J R` gives `D(g) ⊆ D(f)` in `Spf_I R`: the two spaces are identified by
+`IsAdic.homeomorphFormalSpectrum` and membership in a basic open transports along it, which is
+`FormalSpectrum.mem_basicOpen_homeomorphFormalSpectrum` just above.
+
+Note the direction: no surjectivity of the homeomorphism is used, because the conclusion is
+quantified over points of `Spf_I R` and the hypothesis over their images. The `Iff` is this lemma
+applied twice, once each way round. -/
+theorem basicOpen_le_of_isAdic (hI : IsAdic I) (hJ : IsAdic J)
+    (h : basicOpen J g ≤ basicOpen J f) : basicOpen I g ≤ basicOpen I f := fun x hx =>
+  (mem_basicOpen_homeomorphFormalSpectrum hI hJ x f).1
+    (h ((mem_basicOpen_homeomorphFormalSpectrum hI hJ x g).2 hx))
+
+/-- **The inclusion `D(g) ⊆ D(f)` is the same condition at the two ideals of definition.** This is
+the hypothesis `FormalSpectrum.awayCompletionRestrict` (`FormalSchemes.AwayCompletionRestrict`)
+takes, so it is what lets the restriction square in
+`FormalSchemes.CofinalAwayCompletionRestrict` be stated with one inclusion rather than two
+unrelated ones. -/
+theorem basicOpen_le_congr_of_isAdic (hI : IsAdic I) (hJ : IsAdic J) (f g : R) :
+    basicOpen I g ≤ basicOpen I f ↔ basicOpen J g ≤ basicOpen J f :=
+  ⟨basicOpen_le_of_isAdic hJ hI, basicOpen_le_of_isAdic hI hJ⟩
 
 end FormalSpectrum
 
