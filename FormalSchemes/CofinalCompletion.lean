@@ -32,6 +32,9 @@ definition of `R`, the ideals `I · R_f`, `J · R_f` are cofinal in `R_f`
   comparison built from *chosen* witnesses is the one a caller with its own witnesses would build.
 * `AdicCompletion.cofinalRingEquiv hb ha`: the ring isomorphism
   `AdicCompletion K S ≃+* AdicCompletion L S` for cofinal `K`, `L`.
+* `AdicCompletion.bijective_cofinalHom_map`: the comparison between the *extensions* of two
+  cofinal ideals of `R` along a ring homomorphism `φ : R →+* S` is bijective, stated at the
+  containments upstairs in `R` because that is the form the squares downstream are indexed by.
 * `AdicCompletion.nonempty_cofinalRingEquiv_map`: two ideals of definition `I`, `J` of a
   topological ring `R` have, along any ring homomorphism `f : R →+* S`, isomorphic completions
   `AdicCompletion (I.map f) S ≃+* AdicCompletion (J.map f) S`. This is the ring-of-sections
@@ -187,6 +190,28 @@ theorem nonempty_cofinalRingEquiv (hKL : ∃ b, K ^ b ≤ L) (hLK : ∃ a, L ^ a
   let ⟨_, hb⟩ := hKL
   let ⟨_, ha⟩ := hLK
   ⟨cofinalRingEquiv hb ha⟩
+
+section Extended
+
+variable {R : Type u} [CommRing R] {I J : Ideal R}
+
+/-- **A cofinal comparison map between two extended ideals is bijective.** For containments
+`I ^ b ≤ J` and `J ^ a ≤ I` in `R` and any `φ : R →+* S`, the comparison
+`AdicCompletion (I · S) S →+* AdicCompletion (J · S) S` at the extended containment
+`Ideal.pow_map_le_map hb φ` (`FormalSchemes.IdealsOfDefinition`) is bijective: it is the forward
+map of `AdicCompletion.cofinalRingEquiv`, whose inverse is the comparison at
+`Ideal.pow_map_le_map ha φ`.
+
+Stated at the containments upstairs in `R` rather than at their extensions because that is the form
+the cofinal comparison squares downstream are indexed by, and it is what makes the *same* map both
+a square's edge and an invertible one. It is not a witness-independence statement: it says nothing
+about two containments at different exponents — that is `AdicCompletion.cofinalHom_congr` above —
+and its one consumer, `FormalSchemes.CofinalStalkLimit`, needs only this. -/
+theorem bijective_cofinalHom_map (hb : I ^ b ≤ J) (ha : J ^ a ≤ I) (φ : R →+* S) :
+    Function.Bijective (cofinalHom (S := S) (Ideal.pow_map_le_map hb φ)) :=
+  (cofinalRingEquiv (Ideal.pow_map_le_map hb φ) (Ideal.pow_map_le_map ha φ)).bijective
+
+end Extended
 
 variable {R : Type u} [CommRing R] [TopologicalSpace R] {I J : Ideal R}
 
