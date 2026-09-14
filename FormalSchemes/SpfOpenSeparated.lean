@@ -37,15 +37,23 @@ No new geometry is proved here and no chart data appears in either headline stat
 
 ## What this does **not** close
 
-`FormalSchemes.GeneralSeparatedHom`'s "What is *not* proved here" names three gaps — the
-**refinement direction** of `AlgebraicGeometry.FormalScheme.IsSeparatedHom`, the **composition
-law**, and **conservativity's hard direction**. **This file closes none of them.** What it supplies
-is the per-chart input all three were missing: restricting a witness cover of the target along an
-open `W` produces pieces that are opens of an affine rather than affines, and the per-chart clause
-of `AlgebraicGeometry.FormalScheme.IsSeparatedHom` asks each piece to be separated over an affine.
+Three directions of §10.15 are open, and they are named in **two** files rather than one.
+`FormalSchemes.GeneralSeparatedHom`'s "What is *not* proved here" names the **composition law**
+and **conservativity's hard direction**. That list has four bullets, and the other two — a value
+at a genuinely non-affine target other than an identity, and any relation to
+`AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated` — are untouched here and stay true as
+stated. The third direction, the **refinement direction** of
+`AlgebraicGeometry.FormalScheme.IsSeparatedHom`, is named one file down in
+`FormalSchemes.GeneralSeparatedHomLocal`, which records it as the half that list *needs* for a
+composition law rather than as an entry on it.
+
+**This file closes none of the three.** What it supplies is the per-chart input all three were
+missing: restricting a witness cover of the target along an open `W` produces pieces that are
+opens of an affine rather than affines, and the per-chart clause of
+`AlgebraicGeometry.FormalScheme.IsSeparatedHom` asks each piece to be separated over an affine.
 Each of the three still needs its own assembly — the refinement direction has to build the
-restricted cover and check its overlaps, not merely know that its pieces are separated — and each is
-its own issue.
+restricted cover and check its overlaps, not merely know that its pieces are separated — and each
+is its own issue.
 
 It is also only the **affine** case of the source-restriction principle that issue 1987 inventories
 as statement (A): the presentation here is *constructed*, from basic opens of `Spf A`, rather than
@@ -143,8 +151,10 @@ The presentation is built rather than restricted: the charts are the completed l
 The structural morphism is the inclusion followed by the map of formal spectra induced by
 `algebraMap R A`, which is `ThreeChartCover.ambientStructMap I` written out.
 
-**This closes none of the three gaps** named under "What is *not* proved here" in
-`FormalSchemes.GeneralSeparatedHom`; this file's own docstring says what it does supply them. -/
+**This closes none of the three open directions of §10.15** — the composition law and
+conservativity's hard direction, named in `FormalSchemes.GeneralSeparatedHom`, and the refinement
+direction, named in `FormalSchemes.GeneralSeparatedHomLocal`. The module docstring above says what
+this file supplies them instead. -/
 theorem isSeparatedOverSpf_restrictOpen_Spf (hI : I.FG)
     (U : Opens (FormalScheme.Spf (I.map (algebraMap R A)))) :
     FormalScheme.IsSeparatedOverSpf hI
