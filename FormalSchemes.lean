@@ -240,6 +240,7 @@ import FormalSchemes.GeneralSeparatedChartCodiagonalSurjective
 import FormalSchemes.GeneralSeparatedChartPreimage
 import FormalSchemes.GeneralSeparatedHom
 import FormalSchemes.GeneralSeparatedHomIdentity
+import FormalSchemes.GeneralSeparatedHomLocal
 import FormalSchemes.GeneralSeparatedHomValues
 import FormalSchemes.GeneralSeparatedOpenCover
 import FormalSchemes.GeneralSeparatedPresentation
@@ -292,6 +293,7 @@ import FormalSchemes.LocallyRingedSpaceGlueDesc
 import FormalSchemes.LocallyRingedSpaceHomExt
 import FormalSchemes.LocallyRingedSpaceRange
 import FormalSchemes.LocallyRingedSpaceStalkSurjective
+import FormalSchemes.NestedOpenFormalSubscheme
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.OpenCoverHomExt
