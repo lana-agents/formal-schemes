@@ -88,12 +88,24 @@ supplied.
   proved and is not immediate: the target cover for `g ≫ h` has to be refined against both, and the
   per-chart clause would then need separatedness of a morphism between two open subschemes over a
   common affine, which the affine-base predicate does not state.
-* **A value at a genuinely non-affine target.** The cheapest candidate is the identity on
-  `ThreeChartCover.coverSubscheme`, and it runs into `FormalScheme.restrictOpenMap_id`'s documented
-  heartbeat wall — the one place in this file's neighbourhood where that cost is real. Every value
-  in `FormalSchemes.GeneralSeparatedHomValues` is conservativity applied at an affine target and
-  then transported, which is what makes the predicate non-vacuous but says nothing that the
-  base-affine notion could not already say.
+* **A value at a genuinely non-affine target, other than an identity.** Every value in
+  `FormalSchemes.GeneralSeparatedHomValues` is conservativity applied at an affine target and then
+  transported, which is what makes the predicate non-vacuous but says nothing that the base-affine
+  notion could not already say. `FormalSchemes.GeneralSeparatedHomIdentity` closes the identity
+  case — `FormalScheme.isSeparatedHom_id` holds for *every* `FormalScheme.LocallyFG` formal
+  scheme — so the predicate is now inhabited at an arbitrary target; a separated morphism between
+  two formal schemes neither of which is a `FormalScheme.Spf`, and which is not an identity, is
+  still not in the tree.
+  **The heartbeat wall this list used to name as the obstruction is not one, and it is not a fact
+  about how the identity is spelled either.** Once the right-hand side is a bare identity, the law
+  is `FormalScheme.restrictOpenMap_uniq` plus a `change` at *both* spellings of the identity and
+  *both* spellings of the open: the four combinations were measured one scratch file at a time,
+  all four EXIT=0 under default heartbeats in 2.79–2.88 s. What `FormalScheme.restrictOpenCongr`
+  buys `FormalScheme.restrictOpenMap_id` is a right-hand side that names the transport — the form
+  that lemma wants, being the functor law up to the renaming of the open — and not tractability.
+  `FormalScheme.restrictOpenMap_toLRSHom_id` is stated because its consumer needs the law at the
+  spelling this predicate puts in the goal — `FormalScheme.Hom.toLRSHom` of the morphism, at the
+  identity — and not because that spelling is cheaper.
 * **Any relation to `BothChartedFibreDatumXY.IsSeparated`** beyond the one that
   `FormalScheme.IsSeparatedOverSpf` already carries. Nothing here is deprecated and no existing
   consumer moves.
