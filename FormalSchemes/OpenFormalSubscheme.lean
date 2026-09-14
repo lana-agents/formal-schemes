@@ -507,13 +507,24 @@ its proof goes through, and that equation's own tactic proof: each EXIT=0 at tha
 by leaving the other half unproved.
 
 What does not survive is the single application of `FormalScheme.restrictOpenMap_uniq`, whose
-morphism argument is declared with the preimage spelled along `.base`. The two spellings of the
-open then meet as the source object of a `Quiver.Hom`, and the unifier unfolds
-`AlgebraicGeometry.LocallyRingedSpace.Hom.toHom` 664946 times and `ContinuousMap.id` 45968 times
-before the budget goes. The tower is in that count — as the thing unfolded pointwise, not as a
-metavariable being solved — and `FormalScheme.restrictOpenMap_comp` hands the same lemma a
-mismatch of the same shape and pays nothing for it, so this is a fact about this identity and not
-about the pattern.
+morphism argument is declared with the preimage spelled along `.base`. The two spellings of the open
+then meet as the source object of a `Quiver.Hom`, and that is the head of what the unifier unfolds:
+249694 for `Quiver.Hom` itself and 664946 for `AlgebraicGeometry.LocallyRingedSpace.Hom.toHom` — the
+largest counter in each of the two tables the instrument prints, one for reducible declarations and
+one for the rest. `ContinuousMap.id` at 45968 is far down the same table as `Quiver.Hom` and is
+named anyway, because an identity unfolded that many times is what the next clause rests on. The
+tower is in that count — as the thing unfolded pointwise, not as a metavariable being solved — and
+`FormalScheme.restrictOpenMap_comp` hands the same lemma a mismatch of the same shape and pays
+nothing for it, so this is a fact about this identity and not about the pattern.
+
+Those three counts are one instrument's reading, and the instrument belongs in the figure: that
+application on its own, with its hypothesis left unproved so that nothing else elaborates, under
+set_option diagnostics and nothing else, at the default budget. Under exactly those options they
+repeat byte for byte. Add a second set_option — it need not be one whose value can bear on
+elaboration — and the largest reads 664907 instead, with every other down by tens, while adding a
+comment changes nothing: the budget is spent on everything the elaborator does and not only on the
+unfoldings being counted, so a fractionally costlier step exhausts it fractionally earlier. A re-run
+that disagrees by tens has changed the instrument, not caught a stale figure.
 
 None of which shows Mathlib's spelling is unusable here: no attribute was changed, no restated
 argument type was tried, and no normal form for `Opens.map` at an identity was looked for. Stated
