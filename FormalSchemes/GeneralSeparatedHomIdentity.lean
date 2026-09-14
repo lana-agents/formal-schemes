@@ -59,10 +59,10 @@ is outside the walk):
 
 * `FormalSpectrum.locallyRingedSpaceObjCongr` and its `_hom_eq_map` belong beside
   `FormalSpectrum.locallyRingedSpaceMap_id` in `FormalSchemes.FormalSpectrum`, whose reverse
-  closure is **520** — nine tenths of the tree — against this file's **0**. Declined on that ratio;
+  closure is **522** — nine tenths of the tree — against this file's **0**. Declined on that ratio;
   they have one consumer, here.
 * `FormalScheme.restrictOpenMap_toLRSHom_id` belongs beside `FormalScheme.restrictOpenMap_id` in
-  `FormalSchemes.OpenFormalSubscheme`, reverse closure **71**. Declined for now on the same
+  `FormalSchemes.OpenFormalSubscheme`, reverse closure **73**. Declined for now on the same
   disposition `FormalSchemes.StructureSheafStalkPowerSeries` records for
   `AdicCompletion.bijective_mapCompletion`: one consumer, and the move is worth re-costing when a
   second appears.
@@ -164,7 +164,7 @@ a `change`, and `rfl` — goes through at *both* spellings of the identity and *
 the open, all four under default heartbeats and none of them slow: 2.79–2.88 s, one scratch file at
 a time, two runs each. So the `FormalScheme.restrictOpenCongr` form buys the named transport and not
 tractability, and the functor-law note in `FormalSchemes.OpenFormalSubscheme` — reverse closure
-**71**, against this file's **0** — attributed it to the heartbeat budget and did not reproduce.
+**73**, against this file's **0** — attributed it to the heartbeat budget and did not reproduce.
 That note has since been repaired and now carries the account above.
 
 The `change` is load-bearing at every one of the four spellings, and its absence is a transparency
