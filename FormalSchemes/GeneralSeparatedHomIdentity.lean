@@ -164,8 +164,8 @@ a `change`, and `rfl` — goes through at *both* spellings of the identity and *
 the open, all four under default heartbeats and none of them slow: 2.79–2.88 s, one scratch file at
 a time, two runs each. So the `FormalScheme.restrictOpenCongr` form buys the named transport and not
 tractability, and the functor-law note in `FormalSchemes.OpenFormalSubscheme` — reverse closure
-**71**, against this file's **0** — which attributes it to the heartbeat budget is not
-reproducible. Repairing that note is deliberately outside this file's diff.
+**71**, against this file's **0** — attributed it to the heartbeat budget and did not reproduce.
+That note has since been repaired and now carries the account above.
 
 The `change` is load-bearing at every one of the four spellings, and its absence is a transparency
 failure and not a budget one: without it `rw [Category.id_comp]` reports *"Did not find an

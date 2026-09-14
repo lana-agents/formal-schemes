@@ -158,9 +158,10 @@ The cover is the one-element cover at `V = ⊤`, the affine identification is
 `LocallyRingedSpace.restrictTopIso` — which is `FormalScheme.restrictOpenι` at `⊤` on the nose — and
 the source comparison is `restrictOpenCongr ≪≫ restrictOpenTopIso`, whose forward leg is the
 inclusion by `FormalScheme.restrictOpenCongrTop_hom`. That comparison is *named* rather than left to
-unification on purpose: `FormalSchemes.OpenFormalSubscheme`'s functor-law note records that asking
-`isDefEq` to identify `X.restrictOpen hX ((Opens.map _).obj V)` with `X.restrictOpen hX V` is what
-exhausts the heartbeat budget in `FormalScheme.restrictOpenMap_id`.
+unification on purpose, and not for any cost — `FormalSchemes.OpenFormalSubscheme`'s functor-law
+note used to attribute one here and no longer does. The reason is that the rest of this proof
+rewrites *along* that comparison: `FormalScheme.restrictOpenCongrTop_hom` is a statement about the
+named isomorphism, and a comparison discharged by unification leaves no name to state it about.
 
 This is the easy half of conservativity; the converse is not proved — see the module docstring. -/
 theorem isSeparatedHom_of_isSeparatedOverSpf (hI : I.FG) (hX : X.LocallyFG)

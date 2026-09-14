@@ -456,14 +456,30 @@ end Map
 
 /-! ### The functor laws
 
-Both are `restrictOpenMap_uniq`. The only friction is that `(Opens.map (𝟙 _)).obj V` and
-`(Opens.map (f ≫ g)).obj W` are *definitionally* but not syntactically the opens one wants, so
+Both are `FormalScheme.restrictOpenMap_uniq`. The only friction is that `(Opens.map (𝟙 _)).obj V`
+and `(Opens.map (f ≫ g)).obj W` are *definitionally* but not syntactically the opens one wants, so
 the source objects of the two sides are spelled differently. For the composition law the two
-spellings unify cheaply and the statement can be written directly; for the identity law they do
-not — asking `isDefEq` to compare `X.restrictOpen hX ((Opens.map (𝟙 _)).obj V)` with
-`X.restrictOpen hX V` while also inserting an identity morphism exhausts the heartbeat budget.
-So the identity law is stated through `restrictOpenCongr`, which names the transport instead of
-leaving it to unification, and then everything is fast. -/
+spellings unify cheaply and the statement can be written directly.
+
+**For the identity law they unify cheaply too.** This note used to say that asking unification to
+compare `X.restrictOpen hX ((Opens.map (𝟙 _)).obj V)` with `X.restrictOpen hX V` while also
+inserting an identity morphism exhausts the heartbeat budget; that does not reproduce. Written with
+a bare `𝟙` on the right — and with the right-hand side at the open `V` itself, so that the
+equality's own type demands exactly that comparison — the law is
+`FormalScheme.restrictOpenMap_uniq`, a `change` and `rfl`, and it elaborates under default
+heartbeats at both spellings of the identity: EXIT=0 in 3.8–4.6 s per scratch file, measured here.
+(`FormalSchemes.GeneralSeparatedHomIdentity`, downstream of this file, records 2.79–2.88 s for the
+same experiment on a quieter machine; the claim rests on the exits and not on the digits.)
+
+So what `FormalScheme.restrictOpenCongr` buys `FormalScheme.restrictOpenMap_id` below is a
+right-hand side that *names* the transport along `FormalScheme.opensMap_id_base_obj` instead of
+leaving it to unification — the shape the functor law wants, that law being the identity up to
+exactly that renaming of the open — and not tractability.
+
+The `change` is load-bearing, and its absence is a transparency failure rather than a budget one:
+without it `rw [Category.id_comp]` reports *"Did not find an occurrence of the pattern"*, together
+with Lean's own note that the target is not type-correct at instances transparency, and it does so
+in 4.0 s rather than by running out of budget. -/
 
 /-- `(Opens.map (𝟙 X).base).obj V = V`, at the spelling `restrictOpenMap` produces it.
 
@@ -476,9 +492,21 @@ theorem opensMap_id_base_obj (V : Opens X) :
     (Opens.map (𝟙 X.toLocallyRingedSpace : X.toLocallyRingedSpace ⟶ _).base).obj V = V :=
   rfl
 
-/-- The identity morphism of a formal scheme induces the transport along `opensMap_id_base_obj`,
-which is the identity up to that renaming of the open. Stated through `restrictOpenCongr`
-deliberately: see the note above. -/
+/-- The identity morphism of a formal scheme induces the transport along
+`FormalScheme.opensMap_id_base_obj`, which is the identity up to that renaming of the open.
+
+Stated through `FormalScheme.restrictOpenCongr` deliberately, for the reason the note above now
+gives — the right-hand side names the transport — and not because a bare-`𝟙` right-hand side is
+expensive, which it is not. Nor is that form missing from the tree:
+`FormalScheme.restrictOpenMap_toLRSHom_id` (`FormalSchemes.GeneralSeparatedHomIdentity`) is it, at
+the `FormalScheme.Hom.toLRSHom` spelling of the identity.
+
+This lemma is deliberately **not** restated in the bare-`𝟙` form. Nothing would break if it were
+— a comment-stripped count over every file of this library finds
+`FormalScheme.restrictOpenMap_id` exactly once, in the declaration below, so it has no consumer —
+but the restatement would buy a second bare-`𝟙` law differing from the downstream one only in how
+the identity is spelled, and would lose the one thing this statement says that a bare `𝟙` does
+not, namely *which* transport. -/
 theorem restrictOpenMap_id (V : Opens X) :
     X.restrictOpenMap hX X hX (𝟙 X.toLocallyRingedSpace : X.toLocallyRingedSpace ⟶ _) V
       = (X.restrictOpenCongr hX (X.opensMap_id_base_obj V)).hom.toLRSHom :=
