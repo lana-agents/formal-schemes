@@ -6,11 +6,11 @@ import FormalSchemes.ThreeChartCoverSeparated
 set_option linter.style.header false
 
 /-!
-# The three-chart open cover maps down to `Spf A` (EGA I §10.15)
+# The basic-open cover maps down to `Spf A` (EGA I §10.15)
 
 `AlgebraicGeometry.ThreeChartCover.gluedX` (`FormalSchemes.ThreeChartCoverDatum`) is the formal
-scheme glued from the three basic-open charts `A{1/f_0}`, `A{1/f_1}`, `A{1/f_2}` of `Spf A`. Two
-EGA properties of it are on master — separatedness over `Spf R`
+scheme glued from the basic-open charts `A{1/f_i}` of `Spf A`, one for each index of an arbitrary
+`J`. Two EGA properties of it are on master — separatedness over `Spf R`
 (`FormalSchemes.ThreeChartCoverSeparatedScheme`) and, over it, topological finite type — and both
 are, deliberately and by their own docstrings, statements about *a presentation's glued object*
 rather than about a named formal scheme. The structural morphism can only be spelled
@@ -18,8 +18,11 @@ rather than about a named formal scheme. The structural morphism can only be spe
 
 This file supplies that relation: the morphism `gluedXToBase : gluedX ⟶ Spf A` restricting on each
 chart to the basic-open chart `Spf A{1/f_i} ⟶ Spf A`. It is the first step of the identification
-of `gluedX` with the open formal subscheme `D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A`, which
+of `ThreeChartCover.gluedX` with the open formal subscheme `⋃ D(f_i) ⊆ Spf A`, which
 `FormalSchemes.ThreeChartCoverSeparated`'s module docstring records as deliberately avoided.
+
+The index type is arbitrary throughout, as it is in the modules this one sits on; nothing below
+inspects it.
 
 ## What is here and what is not
 
@@ -28,11 +31,12 @@ immersion** — `chartToBase i` is `basicOpenChart (I·A) (f i)` up to the ideal
 transport of `map_algebraMap_awayCompletion_eq`, so its range is the basic open `D(f_i)`.
 
 **Not** delivered here, and not attempted here: that `gluedXToBase` is itself an open immersion,
-that its range is `D(f₀) ∪ D(f₁) ∪ D(f₂)`, and the resulting chart-free restatements of the two EGA
-properties. Those need the range of a glued morphism, which is genuine geometric content, and they
-were carved as their own issues and delivered downstream — `range_gluedXToBase_base` and
-`isOpenImmersion_gluedXToBase` in `FormalSchemes.ThreeChartCoverOpenImmersion`, and the open formal
-subscheme `coverSubscheme` with the chart-free restatements in
+that its range is the union of the `D(f_i)`, and the resulting chart-free restatements of the two
+EGA properties. Those need the range of a glued morphism, which is genuine geometric content, and
+they were carved as their own issues and delivered downstream —
+`ThreeChartCover.range_gluedXToBase_base` and `ThreeChartCover.isOpenImmersion_gluedXToBase` in
+`FormalSchemes.ThreeChartCoverOpenImmersion`, and the open formal subscheme
+`ThreeChartCover.coverSubscheme` with the chart-free restatements in
 `FormalSchemes.ThreeChartCoverOpenSubscheme`. Nothing *here* should be read as having established
 them.
 
@@ -47,7 +51,7 @@ It is nevertheless true, and `FormalSchemes.ThreeChartCoverSeparated` (issue 779
 exactly the needed fact for its own purposes: `ThreeChartCover.tau_symm_algebraMap`, that the
 transition fixes the image of `A`. `FormalSchemes.AwayCongrAlgebraMap`'s docstring calls such
 transitions *inert*, and records that a datum whose transition is a genuine automorphism — like the
-Tate model's — does **not** have the property. So the three-chart cover maps to `Spf A` for the
+Tate model's — does **not** have the property. So the basic-open cover maps to `Spf A` for the
 same structural reason that made it separable, and this construction does not transfer to the Tate
 model. (What *is* claimed there is only the failure of inertness; whether `𝔈_q` admits some other
 morphism to a `Spf` of its chart algebra is not addressed anywhere and is not claimed here.)
@@ -109,7 +113,7 @@ namespace ThreeChartCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
-variable (f : ULift.{u} (Fin 3) → A)
+variable {J : Type u} (f : J → A)
 
 /-! ### The chart morphisms -/
 
@@ -118,7 +122,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 `awayCompletionHom (I·A) (f i)` (`IsScalarTower.algebraMap_eq`), whose continuity is
 `le_comap_awayCompletionHom` once the target ideal is put in the `awayCompletionIdeal` convention
 by `map_algebraMap_awayCompletion_eq`. -/
-theorem le_comap_chartToBase (i : ULift.{u} (Fin 3)) :
+theorem le_comap_chartToBase (i : J) :
     I.map (algebraMap R A) ≤
       (I.map (algebraMap R (chartAlgebra I f i))).comap (algebraMap A (chartAlgebra I f i)) := by
   rw [map_algebraMap_awayCompletion_eq,
@@ -129,7 +133,7 @@ theorem le_comap_chartToBase (i : ULift.{u} (Fin 3)) :
 chart at `f i` (`chartToBase_eq`), written with its source's ideal of definition in the spelling
 `I.map (algebraMap R (chartAlgebra I f i))` that the datum's charts carry, rather than the
 `awayCompletionIdeal` spelling `basicOpenChart` produces. -/
-def chartToBase (i : ULift.{u} (Fin 3)) :
+def chartToBase (i : J) :
     locallyRingedSpaceObj (I.map (algebraMap R (chartAlgebra I f i))) ⟶
       locallyRingedSpaceObj (I.map (algebraMap R A)) :=
   locallyRingedSpaceMap (I.map (algebraMap R A)) (I.map (algebraMap R (chartAlgebra I f i)))
@@ -140,7 +144,7 @@ def chartToBase (i : ULift.{u} (Fin 3)) :
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The `i`-th chart, in the datum's ideal spelling, is the source of `basicOpenChart (I·A) (f i)`.
 The two spellings of its ideal of definition are `map_algebraMap_awayCompletion_eq`. -/
-theorem chartObj_eq (i : ULift.{u} (Fin 3)) :
+theorem chartObj_eq (i : J) :
     locallyRingedSpaceObj (I.map (algebraMap R (chartAlgebra I f i))) =
       locallyRingedSpaceObj (awayCompletionIdeal (I.map (algebraMap R A)) (f i)) :=
   congrArg _ (map_algebraMap_awayCompletion_eq I (f i))
@@ -150,7 +154,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 the two spellings of that source's ideal of definition. This is what makes the chart morphisms of
 this file geometric rather than merely formal: everything known about `basicOpenChart` — that it is
 an open immersion with range `D(f_i)` — transfers along an `eqToHom`. -/
-theorem chartToBase_eq (i : ULift.{u} (Fin 3)) :
+theorem chartToBase_eq (i : J) :
     chartToBase I f i =
       eqToHom (chartObj_eq I f i) ≫ basicOpenChart (I.map (algebraMap R A)) (f i) := by
   rw [chartToBase, basicOpenChart,
@@ -165,7 +169,7 @@ theorem chartToBase_eq (i : ULift.{u} (Fin 3)) :
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The chart morphism is an open immersion**: an `eqToHom` followed by `basicOpenChart`, which
 is one by `isOpenImmersion_basicOpenChart` (issue 163). -/
-theorem isOpenImmersion_chartToBase (hI : I.FG) (i : ULift.{u} (Fin 3)) :
+theorem isOpenImmersion_chartToBase (hI : I.FG) (i : J) :
     LocallyRingedSpace.IsOpenImmersion (chartToBase I f i) := by
   rw [chartToBase_eq]
   haveI := isOpenImmersion_basicOpenChart (I.map (algebraMap R A)) (f i) (hI.map _)
@@ -174,7 +178,7 @@ theorem isOpenImmersion_chartToBase (hI : I.FG) (i : ULift.{u} (Fin 3)) :
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The range of the `i`-th chart is the basic open `D(f_i)`** of `Spf A`. -/
-theorem range_chartToBase_base (hI : I.FG) (i : ULift.{u} (Fin 3)) :
+theorem range_chartToBase_base (hI : I.FG) (i : J) :
     Set.range (chartToBase I f i).base =
       (FormalSpectrum.basicOpen (I.map (algebraMap R A)) (f i) :
         Set (FormalSpectrum (I.map (algebraMap R A)))) := by
@@ -193,7 +197,7 @@ underlying ring maps agree because `(tau I f hI i j).symm` fixes the image of `A
 (`tau_symm_algebraMap`, issue 779). That is the one non-formal step: `tau` is an `R`-algebra
 isomorphism by construction, not an `A`-algebra one, so this does not follow from
 `AlgEquiv.commutes` the way the corresponding square for `xStructMap` does. -/
-theorem chartToBase_naturality (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
+theorem chartToBase_naturality (hI : I.FG) (i j : J) :
     basicOpenChart (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j) ≫
         chartToBase I f i =
       awayCompletionTransition (overlapElt I f i j) (overlapElt I f j i) (tau I f hI i j) ≫
@@ -226,13 +230,14 @@ theorem chartToBase_naturality (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
 variable (B : Type u) [CommRing B] [Algebra R B]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **The three-chart open cover maps to `Spf A`** — the morphism `gluedX ⟶ Spf A` gluing the
-three basic-open charts, via `AffineChartedFibreDatumX.glueChartMorphisms`.
+/-- **The basic-open cover maps to `Spf A`** — the morphism `gluedX ⟶ Spf A` gluing the
+basic-open charts, via `AffineChartedFibreDatumX.glueChartMorphisms`.
 
 By `ι_gluedXToBase` and `range_chartToBase_base` its range *contains* each `D(f_i)`. That it is
-exactly `D(f₀) ∪ D(f₁) ∪ D(f₂)`, and that the morphism is an isomorphism onto that open formal
-subscheme — which is what would make the cover's separatedness and finite-type statements
-chart-free — is **not** proved here and should not be assumed; see the module docstring. -/
+exactly their union, and that the morphism is an isomorphism onto the open formal
+subscheme that union cuts out — which is what would make the cover's separatedness and finite-type
+statements chart-free — is **not** proved here and should not be assumed; see the module
+docstring. -/
 def gluedXToBase (hI : I.FG) :
     (gluedX I f B hI).toLocallyRingedSpace ⟶ locallyRingedSpaceObj (I.map (algebraMap R A)) :=
   (datumX I f B hI).glueChartMorphisms (fun i => chartToBase I f i)
@@ -241,7 +246,7 @@ def gluedXToBase (hI : I.FG) :
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The glued morphism restricts to the `i`-th basic-open chart.** -/
 @[reassoc (attr := simp)]
-theorem ι_gluedXToBase (hI : I.FG) (i : ULift.{u} (Fin 3)) :
+theorem ι_gluedXToBase (hI : I.FG) (i : J) :
     (datumX I f B hI).xFormalGlueData.ι i ≫ gluedXToBase I f B hI = chartToBase I f i :=
   (datumX I f B hI).ι_glueChartMorphisms _ _ i
 
