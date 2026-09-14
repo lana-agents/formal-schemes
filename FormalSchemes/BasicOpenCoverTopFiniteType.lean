@@ -1,13 +1,13 @@
 import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.ChartedDatumTopFiniteType
-import FormalSchemes.ThreeChartCoverSeparatedScheme
+import FormalSchemes.BasicOpenCoverSeparatedScheme
 
 set_option linter.style.header false
 
 /-!
 # The basic-open cover is of finite type over `Spf R`, and separated (EGA I §10.13, §10.15)
 
-`FormalSchemes.ThreeChartCoverSeparatedScheme` (issue 852) put the glued object of the basic-open
+`FormalSchemes.BasicOpenCoverSeparatedScheme` (issue 852) put the glued object of the basic-open
 cover datum into the scheme-level separatedness vocabulary. This file supplies
 its **other** EGA property — that its structural morphism is topologically of finite type — and
 then states the two together, as `FormalSchemes.AffineSeparatedTopFiniteType` and
@@ -22,7 +22,7 @@ Both ingredients are general and neither is new mathematics here:
   each chart `A{1/f_i}^` is tf-type as soon as `A` is.
 
 So the only work is the ideal-of-definition bookkeeping between the two conventions, which is
-`map_algebraMap_awayCompletion` — see `ThreeChartCover.chart_isTopologicallyFiniteType` below. The
+`map_algebraMap_awayCompletion` — see `BasicOpenCover.chart_isTopologicallyFiniteType` below. The
 index type is arbitrary here, as it is in the modules this one sits on.
 
 ## The hypothesis, and what it is not
@@ -35,12 +35,12 @@ one hypothesis, and it is doing real work.
 
 ## What this is not: a chart-free statement
 
-As in `FormalSchemes.ThreeChartCoverSeparatedScheme`, the object is named here through its own
+As in `FormalSchemes.BasicOpenCoverSeparatedScheme`, the object is named here through its own
 presentation, as `(datumX I f B hI).xGlued`, because at the time this file was written the
 basic-open cover had no gluing isomorphism onto an independently constructed formal scheme. The
 genuinely chart-free form is about the open formal subscheme `⋃ D(f_i)` of `Spf A`;
 that object and the identification of `xGlued` with it now exist, in
-`FormalSchemes.ThreeChartCoverOpenSubscheme`, where both results below are restated with no
+`FormalSchemes.BasicOpenCoverOpenSubscheme`, where both results below are restated with no
 presentation in the statement (`coverSubscheme_isRelativelyTopFiniteType`,
 `coverSubscheme_isSeparatedOverSpf`). Unlike `𝔈_q` (issue 856), this pairing is therefore a
 statement about a presentation's glued object, not about a named formal scheme, and the module
@@ -48,12 +48,12 @@ docstring of the separatedness file says the same thing for the same reason.
 
 ## Main results
 
-* `AlgebraicGeometry.ThreeChartCover.chart_isTopologicallyFiniteType`: each chart `A{1/f_i}^` is
+* `AlgebraicGeometry.BasicOpenCover.chart_isTopologicallyFiniteType`: each chart `A{1/f_i}^` is
   tf-type over `(R, I)` at the ideal spelling the datum uses.
-* `AlgebraicGeometry.ThreeChartCover.datumX_isRelativelyTopFiniteType`,
-  `AlgebraicGeometry.ThreeChartCover.gluedX_isRelativelyTopFiniteType`: **the basic-open cover is
+* `AlgebraicGeometry.BasicOpenCover.datumX_isRelativelyTopFiniteType`,
+  `AlgebraicGeometry.BasicOpenCover.gluedX_isRelativelyTopFiniteType`: **the basic-open cover is
   topologically of finite type over `Spf R`**, in both spellings of the glued object.
-* `AlgebraicGeometry.ThreeChartCover.datumX_isSeparatedOverSpf_and_isRelativelyTopFiniteType`:
+* `AlgebraicGeometry.BasicOpenCover.datumX_isSeparatedOverSpf_and_isRelativelyTopFiniteType`:
   **both EGA properties of the basic-open cover, in one statement.**
 
 ## References
@@ -70,7 +70,7 @@ universe u
 
 namespace AlgebraicGeometry
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -134,7 +134,7 @@ theorem datumX_isSeparatedOverSpf_and_isRelativelyTopFiniteType (hI : I.FG) {L :
         (FormalScheme.Hom.mk (datumX I f B hI).xStructMap) :=
   ⟨datumX_isSeparatedOverSpf I f B hI, datumX_isRelativelyTopFiniteType I f B hI hA⟩
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

@@ -1,6 +1,6 @@
 import FormalSchemes.AffineSeparatedScheme
 import FormalSchemes.GeneralSeparatedHom
-import FormalSchemes.ThreeChartCoverOpenSubscheme
+import FormalSchemes.BasicOpenCoverOpenSubscheme
 
 set_option linter.style.header false
 
@@ -16,8 +16,8 @@ There are two, and **both are the base-affine value plus a transport**, which is
 
 * `Spf A ⟶ Spf R`, from `spf_isSeparatedOverSpf` (`FormalSchemes.AffineSeparatedScheme`);
 * `D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A`, over `Spf R`, from
-  `ThreeChartCover.coverSubscheme_isSeparatedOverSpf`
-  (`FormalSchemes.ThreeChartCoverOpenSubscheme`).
+  `BasicOpenCover.coverSubscheme_isSeparatedOverSpf`
+  (`FormalSchemes.BasicOpenCoverOpenSubscheme`).
 
 **Neither is evidence about a general target**, and the second is the interesting one only because
 its *source* is a union of three basic opens rather than an affine formal scheme — the target is
@@ -50,7 +50,7 @@ owner already imports the restriction calculus, it belongs in that owner and not
 
 * `AlgebraicGeometry.spf_isSeparatedHom`: **the structural morphism `Spf A ⟶ Spf R` is
   separated.**
-* `AlgebraicGeometry.ThreeChartCover.coverSubscheme_isSeparatedHom`: **the structural morphism
+* `AlgebraicGeometry.BasicOpenCover.coverSubscheme_isSeparatedHom`: **the structural morphism
   `D(f₀) ∪ D(f₁) ∪ D(f₂) ⟶ Spf R` is separated**, with the source not affine.
 
 ## References
@@ -89,7 +89,7 @@ theorem spf_isSeparatedHom :
         (locallyRingedSpaceMap I (I.map (algebraMap R A)) (algebraMap R A) Ideal.le_comap_map)) :=
   FormalScheme.isSeparatedHom_of_isSeparatedOverSpf hI _ _ (spf_isSeparatedOverSpf hI)
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable (I) (f : ULift.{u} (Fin 3) → A)
 
@@ -98,21 +98,21 @@ variable (I) (f : ULift.{u} (Fin 3) → A)
 
 Unlike `spf_isSeparatedHom` the source here is an open formal subscheme of `Spf A` cut out by a
 union of three basic opens, so it is not affine in general —
-`FormalSchemes.ThreeChartCoverOpenImmersion` is about the degenerate case where the three opens do
+`FormalSchemes.BasicOpenCoverOpenImmersion` is about the degenerate case where the three opens do
 cover and it is affine after all. **The target is still `Spf R`**, so this is again
 `FormalScheme.isSeparatedHom_of_isSeparatedOverSpf` applied to
-`ThreeChartCover.coverSubscheme_isSeparatedOverSpf` and is not a statement about a general target.
+`BasicOpenCover.coverSubscheme_isSeparatedOverSpf` and is not a statement about a general target.
 
-The wrapper `ThreeChartCover.coverSubschemeStructHom` is `FormalScheme.Hom.mk
+The wrapper `BasicOpenCover.coverSubschemeStructHom` is `FormalScheme.Hom.mk
 (coverSubschemeStructMap …)`, which is why the transported hypothesis is the one
-`ThreeChartCover.coverSubscheme_isSeparatedOverSpf` states. -/
+`BasicOpenCover.coverSubscheme_isSeparatedOverSpf` states. -/
 theorem coverSubscheme_isSeparatedHom (hI : I.FG) :
     FormalScheme.IsSeparatedHom (coverSubscheme_locallyFG I f hI) (FormalScheme.locallyFG_Spf hI)
       (coverSubschemeStructHom I f hI) :=
   FormalScheme.isSeparatedHom_of_isSeparatedOverSpf hI _ _
     (coverSubscheme_isSeparatedOverSpf I f hI)
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

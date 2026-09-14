@@ -73,8 +73,7 @@ appear (`F ∘ e.symm = G` ⟺ `F = G ∘ e`) before applying anything here.
   `FormalSpectrum.awayCompletionNestedAlgEquiv_apply_eq`: `N` is a single `mapCompletion`.
 * `FormalSpectrum.awayCongrHom_nested`: **the naturality square**.
 * `FormalSpectrum.awayCongrHom_nestedCongr`: the packaged form, in which the target's away element
-  is adjusted by a further comparison isomorphism — the form a three-chart open-cover datum
-  consumes.
+  is adjusted by a further comparison isomorphism — the form a basic-open cover datum consumes.
 
 ## References
 

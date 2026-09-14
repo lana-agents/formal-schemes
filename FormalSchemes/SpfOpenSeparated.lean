@@ -1,4 +1,4 @@
-import FormalSchemes.ThreeChartCoverOpenSubscheme
+import FormalSchemes.BasicOpenCoverOpenSubscheme
 import FormalSchemes.GeneralSeparatedHom
 
 set_option linter.style.header false
@@ -6,7 +6,7 @@ set_option linter.style.header false
 /-!
 # Every open formal subscheme of `Spf A` is separated over `Spf R` (EGA I §10.15)
 
-`FormalSchemes.ThreeChartCoverOpenSubscheme` proves that the open formal subscheme of `Spf A` cut
+`FormalSchemes.BasicOpenCoverOpenSubscheme` proves that the open formal subscheme of `Spf A` cut
 out by `⨆ i, D(f_i)`, for a family `f : J → A`, is separated over `Spf R` — at an arbitrary index
 type `J`, since issues 1988 and 1989 lifted the whole basic-open cover tower off `ULift (Fin 3)`.
 This file takes the family to be **all of** the basic opens contained in a given open `U`, and the
@@ -27,10 +27,10 @@ and it holds on the nose. The family is `Subtype.val`, and the three remaining s
 
 * the supremum of the basic opens inside `U` is `U`, because the basic opens are a basis
   (`FormalSpectrum.exists_basicOpen_le`) — `FormalSpectrum.iSup_basicOpen_le_eq` below;
-* so `ThreeChartCover.coverSubscheme` at that family is `Spf A` restricted to `U` — the two are
+* so `BasicOpenCover.coverSubscheme` at that family is `Spf A` restricted to `U` — the two are
   the same term once the equality of opens is substituted, with no comparison isomorphism in the
   way;
-* and `ThreeChartCover.coverSubscheme_isSeparatedOverSpf` is then the statement itself.
+* and `BasicOpenCover.coverSubscheme_isSeparatedOverSpf` is then the statement itself.
 
 No new geometry is proved here and no chart data appears in either headline statement: they name
 `A`, `I`, `U` and nothing else.
@@ -64,7 +64,7 @@ basic-open refinement of an arbitrary chart family and is not attempted.
 
 * `FormalSpectrum.iSup_basicOpen_le_eq`: the basic opens contained in an open `U` of `Spf R` have
   supremum `U`.
-* `AlgebraicGeometry.ThreeChartCover.isSeparatedOverSpf_restrictOpen_of_coverOpen_eq`: the transport
+* `AlgebraicGeometry.BasicOpenCover.isSeparatedOverSpf_restrictOpen_of_coverOpen_eq`: the transport
   that turns a covering identity `coverOpen I f = U` into separatedness of `Spf A` restricted
   to `U`.
 * `AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_restrictOpen_Spf`: **every open formal
@@ -76,7 +76,7 @@ basic-open refinement of an arbitrary chart family and is not attempted.
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
-* `FormalSchemes.ThreeChartCoverOpenSubscheme` — the same construction at a general family, and the
+* `FormalSchemes.BasicOpenCoverOpenSubscheme` — the same construction at a general family, and the
   three-index case it was written for.
 -/
 
@@ -108,7 +108,7 @@ end FormalSpectrum
 
 namespace AlgebraicGeometry
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -116,10 +116,10 @@ variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
 
 /-- **A family whose basic opens cover `U` presents `U` as a separated open formal subscheme.**
 
-`ThreeChartCover.coverSubscheme` is `Spf A` restricted to `ThreeChartCover.coverOpen I f`, so an
+`BasicOpenCover.coverSubscheme` is `Spf A` restricted to `BasicOpenCover.coverOpen I f`, so an
 equality of opens is all that separates it from `Spf A` restricted to `U`; the hypothesis is
 consumed by substitution and the conclusion is then
-`ThreeChartCover.coverSubscheme_isSeparatedOverSpf`.
+`BasicOpenCover.coverSubscheme_isSeparatedOverSpf`.
 
 Stated with `f` and `U` independent, which is what makes the substitution legal: at the application
 below the family is built *from* `U`, so the equality cannot be substituted there. -/
@@ -132,7 +132,7 @@ theorem isSeparatedOverSpf_restrictOpen_of_coverOpen_eq (hI : I.FG) {J : Type u}
   subst hU
   exact coverSubscheme_isSeparatedOverSpf I f hI
 
-end ThreeChartCover
+end BasicOpenCover
 
 namespace FormalScheme
 
@@ -145,11 +145,11 @@ arbitrary open `U` and with no presentation in the statement.
 
 The presentation is built rather than restricted: the charts are the completed localizations
 `A{1/g}` for **all** `g : A` with `D(g) ≤ U`, whose basic opens have supremum `U` by
-`FormalSpectrum.iSup_basicOpen_le_eq`, so `ThreeChartCover.coverSubscheme` at that family is
+`FormalSpectrum.iSup_basicOpen_le_eq`, so `BasicOpenCover.coverSubscheme` at that family is
 `Spf A` restricted to `U`.
 
 The structural morphism is the inclusion followed by the map of formal spectra induced by
-`algebraMap R A`, which is `ThreeChartCover.ambientStructMap I` written out.
+`algebraMap R A`, which is `BasicOpenCover.ambientStructMap I` written out.
 
 **This closes none of the three open directions of §10.15** — the composition law and
 conservativity's hard direction, named in `FormalSchemes.GeneralSeparatedHom`, and the refinement
@@ -163,7 +163,7 @@ theorem isSeparatedOverSpf_restrictOpen_Spf (hI : I.FG)
       ((FormalScheme.Spf (I.map (algebraMap R A))).restrictOpenι
           (locallyFG_Spf (hI.map (algebraMap R A))) U ≫
         locallyRingedSpaceMap I (I.map (algebraMap R A)) (algebraMap R A) Ideal.le_comap_map) :=
-  ThreeChartCover.isSeparatedOverSpf_restrictOpen_of_coverOpen_eq I hI
+  BasicOpenCover.isSeparatedOverSpf_restrictOpen_of_coverOpen_eq I hI
     (Subtype.val : {g : A // basicOpen (I.map (algebraMap R A)) g ≤ U} → A) U
     (iSup_basicOpen_le_eq (I.map (algebraMap R A)) U)
 

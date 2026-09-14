@@ -1,8 +1,8 @@
 import FormalSchemes.OpenFormalSubscheme
-import FormalSchemes.ThreeChartCoverOpenImmersion
-import FormalSchemes.ThreeChartCoverOverBase
-import FormalSchemes.ThreeChartCoverSeparatedScheme
-import FormalSchemes.ThreeChartCoverTopFiniteType
+import FormalSchemes.BasicOpenCoverOpenImmersion
+import FormalSchemes.BasicOpenCoverOverBase
+import FormalSchemes.BasicOpenCoverSeparatedScheme
+import FormalSchemes.BasicOpenCoverTopFiniteType
 
 set_option linter.style.header false
 
@@ -11,9 +11,9 @@ set_option linter.style.header false
 
 This file closes the gap the last four PRs on this chain each recorded in their own docstring.
 
-`FormalSchemes.ThreeChartCoverOpenImmersion` (issue 864) proves that
-`ThreeChartCover.gluedXToBase` is an open immersion with range the union of the `D(f_i)`, which
-says `ThreeChartCover.gluedX` *is* an open formal subscheme of `Spf A`. But it could not say so
+`FormalSchemes.BasicOpenCoverOpenImmersion` (issue 864) proves that
+`BasicOpenCover.gluedXToBase` is an open immersion with range the union of the `D(f_i)`, which
+says `BasicOpenCover.gluedX` *is* an open formal subscheme of `Spf A`. But it could not say so
 about an **object**, because the tree had no construction of the open formal subscheme cut out by
 an open subset — only `basicOpenChart`, for a single basic open.
 Consequently the two EGA properties of the cover,
@@ -56,20 +56,20 @@ not an artefact of the proof.
 
 The two halves read the structural morphism through different wrappers — `IsSeparatedOverSpf` takes
 the locally-ringed-space morphism, `IsRelativelyTopFiniteType` its `FormalScheme.Hom.mk` — for the
-same reason recorded in `FormalSchemes.ThreeChartCoverTopFiniteType`. They are the same morphism.
+same reason recorded in `FormalSchemes.BasicOpenCoverTopFiniteType`. They are the same morphism.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.ThreeChartCover.coverOpen`: `⨆ i, D(f_i)` as an open of `Spf A`.
-* `AlgebraicGeometry.ThreeChartCover.coverSubscheme`: the open formal subscheme it cuts out.
-* `AlgebraicGeometry.ThreeChartCover.gluedXIsoCoverSubscheme`: `gluedX ≅ coverSubscheme`, over
+* `AlgebraicGeometry.BasicOpenCover.coverOpen`: `⨆ i, D(f_i)` as an open of `Spf A`.
+* `AlgebraicGeometry.BasicOpenCover.coverSubscheme`: the open formal subscheme it cuts out.
+* `AlgebraicGeometry.BasicOpenCover.gluedXIsoCoverSubscheme`: `gluedX ≅ coverSubscheme`, over
   `Spf A`.
-* `AlgebraicGeometry.ThreeChartCover.coverSubscheme_isSeparatedOverSpf` and
+* `AlgebraicGeometry.BasicOpenCover.coverSubscheme_isSeparatedOverSpf` and
   `coverSubscheme_isRelativelyTopFiniteType`: **the two EGA properties, without a presentation.**
-* `AlgebraicGeometry.ThreeChartCover.coverSubschemeIsoSpf` and
-  `AlgebraicGeometry.ThreeChartCover.gluedXIsoSpf_eq`: when the
-  basic opens cover, the open subscheme is `Spf A` and `gluedXIsoSpf` (issue 864) is the
-  degenerate case of `gluedXIsoCoverSubscheme`.
+* `AlgebraicGeometry.BasicOpenCover.coverSubschemeIsoSpf` and
+  `AlgebraicGeometry.BasicOpenCover.gluedXIsoSpf_eq`: when the basic opens cover, the open
+  subscheme is `Spf A` and `AlgebraicGeometry.BasicOpenCover.gluedXIsoSpf` (issue 864) is the
+  degenerate case of `AlgebraicGeometry.BasicOpenCover.gluedXIsoCoverSubscheme`.
 
 ## References
 
@@ -84,7 +84,7 @@ universe u
 
 namespace AlgebraicGeometry
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -168,7 +168,7 @@ theorem isOpenImmersion_gluedXToBase_spf (hI : I.FG) :
         gluedXToBase I f B hI) :=
   isOpenImmersion_gluedXToBase I f B hI
 
-/-- **`ThreeChartCover.gluedX` is the open formal subscheme `⋃ D(f_i)` of `Spf A`.** The cover map
+/-- **`BasicOpenCover.gluedX` is the open formal subscheme `⋃ D(f_i)` of `Spf A`.** The cover map
 is an open immersion (issue 864) with range that union, so `FormalScheme.restrictOpenSchemeIso`
 applies. -/
 def gluedXIsoCoverSubscheme (hI : I.FG) : gluedX I f B hI ≅ coverSubscheme I f hI :=
@@ -241,7 +241,7 @@ rather than carrying it is what makes these two statements mention no algebra ot
 /-- **The open formal subscheme `⋃ D(f_i)` of `Spf A` is separated over `Spf R`**
 (EGA I §10.15).
 
-Compare `ThreeChartCover.gluedX_isSeparatedOverSpf`, which says the same thing about a glued
+Compare `BasicOpenCover.gluedX_isSeparatedOverSpf`, which says the same thing about a glued
 object built from a family of chart algebras, a transition system and an auxiliary algebra `B`.
 Here the statement names only `A`, `f` and `I`; the presentation survives only in the proof. -/
 theorem coverSubscheme_isSeparatedOverSpf (hI : I.FG) :
@@ -265,18 +265,19 @@ theorem coverSubscheme_isRelativelyTopFiniteType (hI : I.FG) {L : Ideal A}
 
 /-! ### The covering case is the degenerate case
 
-`FormalSchemes.ThreeChartCoverOpenImmersion` (issue 864) proves `gluedX ≅ Spf A` **under the
-hypothesis that the basic opens cover**, by showing `ThreeChartCover.gluedXToBase` is then an
-isomorphism. With `ThreeChartCover.gluedXIsoCoverSubscheme` above — which carries no such
+`FormalSchemes.BasicOpenCoverOpenImmersion` (issue 864) proves `gluedX ≅ Spf A` **under the
+hypothesis that the basic opens cover**, by showing `BasicOpenCover.gluedXToBase` is then an
+isomorphism. With `BasicOpenCover.gluedXIsoCoverSubscheme` above — which carries no such
 hypothesis — that is no longer an independent fact: under the covering hypothesis
-`ThreeChartCover.coverOpen` is `⊤`, the open subscheme it cuts out is `Spf A`
-(`FormalScheme.restrictOpenTopIso`), and `ThreeChartCover.gluedXIsoSpf` is the composite.
-`ThreeChartCover.gluedXIsoSpf_eq` says exactly that, so the special case is now derived rather
+`BasicOpenCover.coverOpen` is `⊤`, the open subscheme it cuts out is `Spf A`
+(`FormalScheme.restrictOpenTopIso`), and `BasicOpenCover.gluedXIsoSpf` is the composite.
+`BasicOpenCover.gluedXIsoSpf_eq` says exactly that, so the special case is now derived rather
 than separately established.
 
-The derivation is stated here and not in `ThreeChartCoverOpenImmersion`, whose `gluedXIsoSpf` is
-left as it stands: that module is *below* this one in the import graph, so rewriting its proof in
-place would reverse an import. Nothing is duplicated — the two are proved equal. -/
+The derivation is stated here and not in `FormalSchemes.BasicOpenCoverOpenImmersion`, whose
+`AlgebraicGeometry.BasicOpenCover.gluedXIsoSpf` is left as it stands: that module is *below* this
+one in the import graph, so rewriting its proof in place would reverse an import. Nothing is
+duplicated — the two are proved equal. -/
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **When the basic opens cover, the open subscheme they cut out is `Spf A` itself.**
@@ -307,9 +308,9 @@ theorem gluedXIsoSpf_hom_toLRSHom (hI : I.FG)
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **`gluedXIsoSpf` is the degenerate case of `gluedXIsoCoverSubscheme`.**
 
-Note that the covering hypothesis, stated in `FormalSchemes.ThreeChartCoverOpenImmersion`'s
+Note that the covering hypothesis, stated in `FormalSchemes.BasicOpenCoverOpenImmersion`'s
 spelling as an equality of an indexed supremum of basic opens, is *definitionally*
-`coverOpen I f = ⊤` — `ThreeChartCover.coverOpen` is that supremum — so it is passed straight
+`coverOpen I f = ⊤` — `BasicOpenCover.coverOpen` is that supremum — so it is passed straight
 through with no bridging lemma.
 
 Both sides are determined by their underlying locally ringed space morphism, and both are
@@ -329,7 +330,7 @@ theorem gluedXIsoSpf_eq (hI : I.FG)
   rw [coverSubschemeIsoSpf_hom]
   exact (gluedXIsoCoverSubscheme_hom_comp I f B hI).symm
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

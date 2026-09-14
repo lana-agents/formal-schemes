@@ -40,8 +40,8 @@ needs — and that is how every non-vacuous `xt'` on this tree is in fact built.
 `awayCompletionTransition σ`, and `(basicOpenChartOverlapIso (I·A_j) (g j k) (g j i)).hom`; the
 smart constructor `AffineChartedFibreDatumX.ofAlgebraData` feeds it to the datum's `xt'` field.
 Two datum values on master reach it with real content: `ThreeChart.datumX`
-(`FormalSchemes/ThreeChartDatum.lean`) and `ThreeChartCover.datumX`
-(`FormalSchemes/ThreeChartCoverDatum.lean`), both at an arbitrary index type — the second being a
+(`FormalSchemes/ThreeChartDatum.lean`) and `BasicOpenCover.datumX`
+(`FormalSchemes/BasicOpenCoverDatum.lean`), both at an arbitrary index type — the second being a
 single `Spf A` covered by an arbitrary family of basic opens, which is exactly this file's
 situation. That the geometric field is genuinely `AffineChartedFibreDatumX.xAlgDataT'` rather than
 `False.elim` is the theorem `ThreeChart.datumX_xt'_eq`, and it says so at every index type; what a

@@ -24,7 +24,7 @@ this instead.
 
 Why it matters: a datum whose chart transition fixes the image of `A` has *inert* transitions, and
 that is exactly what lets an inverse supplied by one chart be paired against an element read in
-another. `FormalSchemes/ThreeChartCoverSeparated.lean` (issue 779) turns on it; a datum whose
+another. `FormalSchemes/BasicOpenCoverSeparated.lean` (issue 779) turns on it; a datum whose
 transition is a genuine automorphism, like the Tate model's, does not have it.
 
 ## Main results

@@ -1,6 +1,6 @@
 import FormalSchemes.AwayCongrAlgebraMap
 import FormalSchemes.GeneralSeparatedChartCodiagonalSurjective
-import FormalSchemes.ThreeChartCoverDatum
+import FormalSchemes.BasicOpenCoverDatum
 
 set_option linter.style.header false
 set_option linter.style.setOption false
@@ -11,7 +11,7 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # A basic-open cover of a formal affine is separated (EGA I §10.15)
 
-`FormalSchemes/ThreeChartCoverDatum.lean` (issue 609) presents the union of a family of basic opens
+`FormalSchemes/BasicOpenCoverDatum.lean` (issue 609) presents the union of a family of basic opens
 `D(f_i) ⊆ Spf A`, `i : J`, as an `AffineChartedFibreDatumX` with chart algebras `A{1/f_i}` and
 overlap elements `g_ij = ` the image of `f_i·f_j`. Its module docstring promises that the glued
 `X`, being an open subscheme of the affine `Spf A`, is separated, and leaves the proof to a
@@ -58,19 +58,21 @@ The second structure map of the overlap is `A{1/f_j}^ → A{1/f_j}^{1/g_ji}^ →
 A{1/f_i}^{1/g_ij}^`, so pairing `f_j⁻¹` from the `j`-th chart against `f_j` from the `i`-th chart
 needs the transition to be **compatible with the map from `A`**. It is: `τ` is built by passing
 through the common `A{1/(f_i f_j)}` downstairs, and both legs — the nested chart identification
-`chartOverlapEquiv` and 594's comparison isomorphism `ThreeChart.tau` — fix the image of `A`
-(`chartOverlapEquiv_algebraMap`, `ThreeChart.tau_symm_algebraMap`). This is `ThreeChartCover`'s
-structural advantage over the Tate datum, whose transition is a genuine automorphism.
+`AlgebraicGeometry.BasicOpenCover.chartOverlapEquiv` and 594's comparison isomorphism
+`ThreeChart.tau` — fix the image of `A`
+(`AlgebraicGeometry.BasicOpenCover.chartOverlapEquiv_algebraMap`,
+`ThreeChart.tau_symm_algebraMap`). This is BasicOpenCover's structural advantage over the Tate
+datum, whose transition is a genuine automorphism.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.ThreeChartCover.tau_symm_algebraMap`: the open cover's transition fixes the
+* `AlgebraicGeometry.BasicOpenCover.tau_symm_algebraMap`: the open cover's transition fixes the
   image of `A`.
-* `AlgebraicGeometry.ThreeChartCover.chartCodiagonal_witness_mul_eq_one`: the witness
+* `AlgebraicGeometry.BasicOpenCover.chartCodiagonal_witness_mul_eq_one`: the witness
   `inl (f_i⁻¹) · inr (f_j⁻¹)`.
-* `AlgebraicGeometry.ThreeChartCover.datumX_chartCodiagonal_surjective`: the chart codiagonals of
+* `AlgebraicGeometry.BasicOpenCover.datumX_chartCodiagonal_surjective`: the chart codiagonals of
   the open cover are surjective.
-* `AlgebraicGeometry.ThreeChartCover.datumX_isSeparated`: **the glued object of the basic-open
+* `AlgebraicGeometry.BasicOpenCover.datumX_isSeparated`: **the glued object of the basic-open
   cover datum is separated over `Spf R`.**
 
 The datum-generic machinery this file consumes lives elsewhere, so that another instance can reach
@@ -85,10 +87,12 @@ it without importing the cover tower:
 
 ## Implementation notes
 
-The cost note of `FormalSchemes/ThreeChartCoverCharts.lean` is in force: `chartOverlapEquiv` must
-never be delta-unfolded by the kernel inside a statement about the doubly nested completion. It is
-not here — `chartOverlapEquiv_algebraMap` consumes the top-level `chartOverlapEquiv_apply` exactly
-as that file intends, and the module costs seconds.
+The cost note of `FormalSchemes/BasicOpenCoverCharts.lean` is in force:
+`AlgebraicGeometry.BasicOpenCover.chartOverlapEquiv` must never be delta-unfolded by the kernel
+inside a statement about the doubly nested completion. It is not here —
+`AlgebraicGeometry.BasicOpenCover.chartOverlapEquiv_algebraMap` consumes the top-level
+`AlgebraicGeometry.BasicOpenCover.chartOverlapEquiv_apply` exactly as that file intends, and the
+module costs seconds.
 
 The friction specific to writing *ring* identities against a datum: an equation between the two
 spellings of a chart algebra elaborates (`Eq` unifies up to definitional equality), but a
@@ -135,7 +139,7 @@ end ThreeChart
 
 /-! ### The open cover -/
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -147,7 +151,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The nested chart identification fixes the image of `A`.** Proved through the top-level
 `chartOverlapEquiv_apply`, so that the kernel never delta-unfolds `chartOverlapEquiv` inside a
 statement about the doubly nested completion — see the cost note of
-`FormalSchemes.ThreeChartCoverCharts`. -/
+`FormalSchemes.BasicOpenCoverCharts`. -/
 theorem chartOverlapEquiv_algebraMap (hI : I.FG) (i j : J) (a : A) :
     chartOverlapEquiv I f hI i j
         (algebraMap A (awayCompletion (I.map (algebraMap R A)) (f i * f j)) a) =
@@ -334,7 +338,7 @@ theorem datumX_isSeparated (hI : I.FG) :
   BothChartedFibreDatumXY.isSeparated_of_chartCodiagonal_surjective _ _ _ _
     (fun i j hij => datumX_chartCodiagonal_surjective I f B hI i j hij)
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

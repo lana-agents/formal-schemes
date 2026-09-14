@@ -18,7 +18,7 @@ FormalScheme.isSeparatedHom_id (hX : X.LocallyFG) : FormalScheme.IsSeparatedHom 
 ```
 
 for an arbitrary `X`, together with one concrete instance of it
-(`AlgebraicGeometry.ThreeChartCover.coverSubscheme_isSeparatedHom_id`, whose object is a union of
+(`AlgebraicGeometry.BasicOpenCover.coverSubscheme_isSeparatedHom_id`, whose object is a union of
 three basic opens of a `Spf` and is not affine in general).
 
 ## Why the general statement is the cheap one
@@ -220,7 +220,7 @@ theorem isSeparatedHom_id (hX : X.LocallyFG) : IsSeparatedHom hX hX (𝟙 X) := 
 
 end FormalScheme
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {I : Ideal R} [IsAdicRing I] {A : Type u} [CommRing A] [Algebra R A] [TopologicalSpace A]
 variable [IsAdicRing (I.map (algebraMap R A))] (I) (f : ULift.{u} (Fin 3) → A)
@@ -229,11 +229,11 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The identity of `D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A` is separated** (EGA I §10.15), with the
 target not affine in general.
 
-This is `FormalScheme.isSeparatedHom_id` at `ThreeChartCover.coverSubscheme_locallyFG`, and it is
+This is `FormalScheme.isSeparatedHom_id` at `BasicOpenCover.coverSubscheme_locallyFG`, and it is
 the first `FormalScheme.IsSeparatedHom` in the tree whose **target** is not a `FormalScheme.Spf`:
-`AlgebraicGeometry.ThreeChartCover.coverSubscheme_isSeparatedHom`
+`AlgebraicGeometry.BasicOpenCover.coverSubscheme_isSeparatedHom`
 (`FormalSchemes.GeneralSeparatedHomValues`) is about the same object but over `Spf R`.
-`FormalSchemes.ThreeChartCoverOpenImmersion` is about the degenerate case where the three opens do
+`FormalSchemes.BasicOpenCoverOpenImmersion` is about the degenerate case where the three opens do
 cover and the object is affine after all.
 
 It is the identity, not a general morphism between two non-affine formal schemes; nothing here
@@ -243,7 +243,7 @@ theorem coverSubscheme_isSeparatedHom_id (hI : I.FG) :
       (𝟙 (coverSubscheme I f hI)) :=
   FormalScheme.isSeparatedHom_id (coverSubscheme_locallyFG I f hI)
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

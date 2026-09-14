@@ -1,25 +1,25 @@
 import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.GeneralFibreProductBothOverlapRange
-import FormalSchemes.ThreeChartCoverDatum
-import FormalSchemes.ThreeChartCoverSeparated
+import FormalSchemes.BasicOpenCoverDatum
+import FormalSchemes.BasicOpenCoverSeparated
 
 set_option linter.style.header false
 
 /-!
 # The basic-open cover maps down to `Spf A` (EGA I §10.15)
 
-`AlgebraicGeometry.ThreeChartCover.gluedX` (`FormalSchemes.ThreeChartCoverDatum`) is the formal
+`AlgebraicGeometry.BasicOpenCover.gluedX` (`FormalSchemes.BasicOpenCoverDatum`) is the formal
 scheme glued from the basic-open charts `A{1/f_i}` of `Spf A`, one for each index of an arbitrary
 `J`. Two EGA properties of it are on master — separatedness over `Spf R`
-(`FormalSchemes.ThreeChartCoverSeparatedScheme`) and, over it, topological finite type — and both
+(`FormalSchemes.BasicOpenCoverSeparatedScheme`) and, over it, topological finite type — and both
 are, deliberately and by their own docstrings, statements about *a presentation's glued object*
 rather than about a named formal scheme. The structural morphism can only be spelled
 `(datumX I f B hI).xStructMap`, because the tree has never related `gluedX` to `Spf A` at all.
 
 This file supplies that relation: the morphism `gluedXToBase : gluedX ⟶ Spf A` restricting on each
 chart to the basic-open chart `Spf A{1/f_i} ⟶ Spf A`. It is the first step of the identification
-of `ThreeChartCover.gluedX` with the open formal subscheme `⋃ D(f_i) ⊆ Spf A`, which
-`FormalSchemes.ThreeChartCoverSeparated`'s module docstring records as deliberately avoided.
+of `BasicOpenCover.gluedX` with the open formal subscheme `⋃ D(f_i) ⊆ Spf A`, which
+`FormalSchemes.BasicOpenCoverSeparated`'s module docstring records as deliberately avoided.
 
 The index type is arbitrary throughout, as it is in the modules this one sits on; nothing below
 inspects it.
@@ -34,10 +34,10 @@ transport of `map_algebraMap_awayCompletion_eq`, so its range is the basic open 
 that its range is the union of the `D(f_i)`, and the resulting chart-free restatements of the two
 EGA properties. Those need the range of a glued morphism, which is genuine geometric content, and
 they were carved as their own issues and delivered downstream —
-`ThreeChartCover.range_gluedXToBase_base` and `ThreeChartCover.isOpenImmersion_gluedXToBase` in
-`FormalSchemes.ThreeChartCoverOpenImmersion`, and the open formal subscheme
-`ThreeChartCover.coverSubscheme` with the chart-free restatements in
-`FormalSchemes.ThreeChartCoverOpenSubscheme`. Nothing *here* should be read as having established
+`BasicOpenCover.range_gluedXToBase_base` and `BasicOpenCover.isOpenImmersion_gluedXToBase` in
+`FormalSchemes.BasicOpenCoverOpenImmersion`, and the open formal subscheme
+`BasicOpenCover.coverSubscheme` with the chart-free restatements in
+`FormalSchemes.BasicOpenCoverOpenSubscheme`. Nothing *here* should be read as having established
 them.
 
 ## Why the transition fixes `A`, and why that is the whole content
@@ -47,8 +47,8 @@ same points of `Spf A`. Unlike the structural morphism to `Spf R` — where both
 because `τ i j` is an `R`-algebra isomorphism and `AlgEquiv.commutes` finishes it — `tau` is
 **not** an `A`-algebra isomorphism by construction, so nothing formal discharges this.
 
-It is nevertheless true, and `FormalSchemes.ThreeChartCoverSeparated` (issue 779) already proved
-exactly the needed fact for its own purposes: `ThreeChartCover.tau_symm_algebraMap`, that the
+It is nevertheless true, and `FormalSchemes.BasicOpenCoverSeparated` (issue 779) already proved
+exactly the needed fact for its own purposes: `BasicOpenCover.tau_symm_algebraMap`, that the
 transition fixes the image of `A`. `FormalSchemes.AwayCongrAlgebraMap`'s docstring calls such
 transitions *inert*, and records that a datum whose transition is a genuine automorphism — like the
 Tate model's — does **not** have the property. So the basic-open cover maps to `Spf A` for the
@@ -86,15 +86,15 @@ each case rather than guessed.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.ThreeChartCover.chartToBase`: the `i`-th chart's morphism `Spf A{1/f_i} ⟶
+* `AlgebraicGeometry.BasicOpenCover.chartToBase`: the `i`-th chart's morphism `Spf A{1/f_i} ⟶
   Spf A`, in the ideal spelling the datum's charts are built at.
-* `AlgebraicGeometry.ThreeChartCover.chartToBase_eq`: it is `basicOpenChart (I·A) (f i)` composed
+* `AlgebraicGeometry.BasicOpenCover.chartToBase_eq`: it is `basicOpenChart (I·A) (f i)` composed
   with the ideal transport, hence an open immersion
-  (`AlgebraicGeometry.ThreeChartCover.isOpenImmersion_chartToBase`) with range `D(f_i)`
-  (`AlgebraicGeometry.ThreeChartCover.range_chartToBase_base`).
-* `AlgebraicGeometry.ThreeChartCover.chartToBase_naturality`: the double-overlap square.
-* `AlgebraicGeometry.ThreeChartCover.gluedXToBase`: **the glued morphism `gluedX ⟶ Spf A`**, and
-  `AlgebraicGeometry.ThreeChartCover.ι_gluedXToBase`, its restriction law.
+  (`AlgebraicGeometry.BasicOpenCover.isOpenImmersion_chartToBase`) with range `D(f_i)`
+  (`AlgebraicGeometry.BasicOpenCover.range_chartToBase_base`).
+* `AlgebraicGeometry.BasicOpenCover.chartToBase_naturality`: the double-overlap square.
+* `AlgebraicGeometry.BasicOpenCover.gluedXToBase`: **the glued morphism `gluedX ⟶ Spf A`**, and
+  `AlgebraicGeometry.BasicOpenCover.ι_gluedXToBase`, its restriction law.
 
 ## References
 
@@ -109,7 +109,7 @@ universe u
 
 namespace AlgebraicGeometry
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -250,7 +250,7 @@ theorem ι_gluedXToBase (hI : I.FG) (i : J) :
     (datumX I f B hI).xFormalGlueData.ι i ≫ gluedXToBase I f B hI = chartToBase I f i :=
   (datumX I f B hI).ι_glueChartMorphisms _ _ i
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 
