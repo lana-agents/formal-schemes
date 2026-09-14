@@ -21,12 +21,12 @@ There are two, and **both are the base-affine value plus a transport**, which is
 
 **Neither is evidence about a general target**, and the second is the interesting one only because
 its *source* is a union of three basic opens rather than an affine formal scheme — the target is
-`Spf R` in both cases. A value at an arbitrary target is
-`FormalScheme.isSeparatedHom_id` (`FormalSchemes.GeneralSeparatedHomIdentity`), which is downstream
-of this file and is an identity morphism; neither value here is one, and what remains open is a
-separated morphism, not an identity, between two formal schemes neither of which is a
-`FormalScheme.Spf`. See
-`FormalSchemes.GeneralSeparatedHom`'s "What is *not* proved here".
+`Spf R` in both cases. Two values at an arbitrary target are downstream of this file:
+`FormalScheme.isSeparatedHom_id` (`FormalSchemes.GeneralSeparatedHomIdentity`), which is an
+identity morphism, and `FormalScheme.isSeparatedHom_restrictOpenHom`
+(`FormalSchemes.GeneralSeparatedHomRestrictOpen`), the inclusion of an open formal subscheme, which
+is not one. See `FormalSchemes.GeneralSeparatedHom`'s "What is *not* proved here" for what the two
+together leave open.
 
 **A third value is one lemma away and the lemma is not on the tree.** The Tate curve formal model
 has `tateCurveModel_isSeparatedOverSpf` (`FormalSchemes.TateSeparatedScheme`), but

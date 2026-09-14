@@ -210,13 +210,16 @@ closure and would put an arbitrary-point theory inside a file whose subject is o
 to `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, the leaf whose subject is closest, would
 cost nothing at all in figures, because a leaf added to a leaf moves no closure. What a new module
 costs instead is prose: the module count and every reverse closure through
-`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` move by one, which is thirty-seven
-figures in twenty-three files, all of them numerals — measured by adding a scratch leaf over that
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` move by one, which is twenty-seven
+figures in seventeen files, all of them numerals — measured by adding a scratch leaf over that
 module in a throwaway worktree and re-running the tree audit, so a later reader can re-derive it
-instead of trusting the words. At the tree this file was added to the same construction gave
-thirty-six figures in twenty-two files, and those twenty-two are exactly the files whose prose the
-commit that added this one had to touch. That cost is paid in the same commit and is the reason the
-diff is wider than the mathematics.
+instead of trusting the words. **That is a re-derivation and not a transcription**: the figure this
+sentence carried, thirty-seven in twenty-three, does not reproduce, and the same construction one
+commit back gives twenty-six in sixteen — the difference of one being this sentence's own subject,
+a module added over `FormalSchemes.FormalSpectrum` whose prose quotes that module's figure. At the
+tree this file was added to the same construction gave thirty-six figures in twenty-two files, and
+those twenty-two are exactly the files whose prose the commit that added this one had to touch.
+That cost is paid in the same commit and is the reason the diff is wider than the mathematics.
 
 ## Main results
 

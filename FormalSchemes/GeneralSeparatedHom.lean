@@ -88,27 +88,26 @@ supplied.
   proved and is not immediate: the target cover for `g ≫ h` has to be refined against both, and the
   per-chart clause would then need separatedness of a morphism between two open subschemes over a
   common affine, which the affine-base predicate does not state.
-* **A value at a genuinely non-affine target, other than an identity.** Every value in
-  `FormalSchemes.GeneralSeparatedHomValues` is conservativity applied at an affine target and then
-  transported, which is what makes the predicate non-vacuous but says nothing that the base-affine
-  notion could not already say. `FormalSchemes.GeneralSeparatedHomIdentity` closes the identity
-  case — `FormalScheme.isSeparatedHom_id` holds for *every* `FormalScheme.LocallyFG` formal
-  scheme — so the predicate is now inhabited at an arbitrary target; a separated morphism between
-  two formal schemes neither of which is a `FormalScheme.Spf`, and which is not an identity, is
-  still not in the tree.
-  **The heartbeat wall this list used to name as the obstruction is not one, and it is not a fact
-  about how the identity is spelled either.** Once the right-hand side is a bare identity, the law
-  is `FormalScheme.restrictOpenMap_uniq` plus a `change` at *both* spellings of the identity and
-  *both* spellings of the open: the four combinations were measured one scratch file at a time,
-  all four EXIT=0 under default heartbeats in 2.79–2.88 s. What `FormalScheme.restrictOpenCongr`
-  buys `FormalScheme.restrictOpenMap_id` is a right-hand side that names the transport — the form
-  that lemma wants, being the functor law up to the renaming of the open — and not tractability.
-  `FormalScheme.restrictOpenMap_toLRSHom_id` is stated because its consumer needs the law at the
-  spelling this predicate puts in the goal — `FormalScheme.Hom.toLRSHom` of the morphism, at the
-  identity — and not because that spelling is cheaper.
 * **Any relation to `BothChartedFibreDatumXY.IsSeparated`** beyond the one that
   `FormalScheme.IsSeparatedOverSpf` already carries. Nothing here is deprecated and no existing
   consumer moves.
+
+**The three above are one problem with three faces, and the third is named elsewhere.** The two
+bullets in this list and the **refinement direction** of `FormalScheme.IsSeparatedHom` — recorded
+in `FormalSchemes.GeneralSeparatedHomLocal` as the half this list *needs* rather than as an entry
+on it — all reduce to the same missing statement: that `FormalScheme.IsSeparatedOverSpf` survives
+replacing the affine base by an open subscheme the morphism factors through. Conservativity's hard
+direction needs it to return a witness from an arbitrary cover to `(R, I)`; the composition law
+needs it to compare two witnesses over a common affine; refinement needs it to carry a witness to a
+finer cover. None of the three is closer than the others, and none is reachable without it.
+
+**A value at a target that is not a `FormalScheme.Spf`, and a morphism that is not an identity, is
+no longer missing.** `FormalScheme.isSeparatedHom_restrictOpenHom`
+(`FormalSchemes.GeneralSeparatedHomRestrictOpen`) is the inclusion of an arbitrary open formal
+subscheme, at an arbitrary `FormalScheme.LocallyFG` target. *Arbitrary* rather than *non-affine*
+stays the honest word, for the reason `FormalSchemes.GeneralSeparatedHomIdentity` gives: nothing on
+this tree exhibits a formal scheme it knows not to be affine. What that value adds over
+`FormalScheme.isSeparatedHom_id` is the morphism and not the target.
 
 ## References
 

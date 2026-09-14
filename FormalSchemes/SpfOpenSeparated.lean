@@ -39,10 +39,12 @@ No new geometry is proved here and no chart data appears in either headline stat
 
 Three directions of §10.15 are open, and they are named in **two** files rather than one.
 `FormalSchemes.GeneralSeparatedHom`'s "What is *not* proved here" names the **composition law**
-and **conservativity's hard direction**. That list has four bullets, and the other two — a value
-at a genuinely non-affine target other than an identity, and any relation to
-`AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated` — are untouched here and stay true as
-stated. The third direction, the **refinement direction** of
+and **conservativity's hard direction**. That list has three bullets, and the remaining one — any
+relation to `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated` — is untouched here and stays
+true as stated. A fourth bullet, asking for a value at a target that is not a `FormalScheme.Spf`
+and a morphism that is not an identity, was removed when
+`FormalSchemes.GeneralSeparatedHomRestrictOpen` supplied one. The third direction, the **refinement
+direction** of
 `AlgebraicGeometry.FormalScheme.IsSeparatedHom`, is named one file down in
 `FormalSchemes.GeneralSeparatedHomLocal`, which records it as the half that list *needs* for a
 composition law rather than as an entry on it.
