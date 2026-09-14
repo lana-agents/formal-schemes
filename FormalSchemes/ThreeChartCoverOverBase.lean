@@ -78,10 +78,18 @@ type `A` (`IsTopologicallyFiniteType.isAdicRing_of_noetherian`), which is precis
 
 `ULift (Fin 3)` is never case-split on and its cardinality is never used. The results lift verbatim
 to any `AffineChartedFibreDatumX` whose chart algebras are completed localizations of a single
-ambient `A`, with the chart maps to `Spf A` supplied. They are *not* lifted: the three-chart cover
-is the only such datum on the board, and this tree has repeatedly paid for generic layers with no
-second consumer. If a second one appears, the lift needs only `chartToBase` and its naturality as
-hypotheses.
+ambient `A`, with the chart maps to `Spf A` supplied.
+
+**The datum below this file has since been lifted and these results have not.** The charts, the
+transitions, the datum itself and its separatedness now quantify over an arbitrary index type
+(`FormalSchemes.ThreeChartCoverDatum`, which records why), so `ThreeChartCover.datumX` accepts
+index types on which `ThreeChartCover.gluedXToBase` cannot be named. The reason for the asymmetry
+is that the lift is *not* verbatim here: `ThreeChartCover.range_gluedXToBase_base_sup`, and through
+it `ThreeChartCover.isIso_gluedXToBase` and `ThreeChartCover.gluedXIsoSpf`
+(`FormalSchemes.ThreeChartCoverOpenImmersion`), state the covering hypothesis as a three-fold `⊔`
+of basic opens whose general form is an indexed supremum, and moving to it changes those signatures
+and every call site of them. That is tracked as its own row on the board. Taken there, the lift of
+*this* file needs only `ThreeChartCover.chartToBase` and its naturality.
 
 ## Main definitions and results
 

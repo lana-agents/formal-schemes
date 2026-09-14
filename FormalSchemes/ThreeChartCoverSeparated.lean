@@ -9,13 +9,14 @@ set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
 /-!
-# The three-chart open cover is separated (EGA I §10.15)
+# A basic-open cover of a formal affine is separated (EGA I §10.15)
 
-`FormalSchemes/ThreeChartCoverDatum.lean` (issue 609) presents `D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A` as
-an `AffineChartedFibreDatumX` with chart algebras `A{1/f_i}` and overlap elements
-`g_ij = ` the image of `f_i·f_j`. Its module docstring promises that the glued `X`, being an open
-subscheme of the affine `Spf A`, is separated, and leaves the proof to a follow-up. This file is
-that follow-up.
+`FormalSchemes/ThreeChartCoverDatum.lean` (issue 609) presents the union of a family of basic opens
+`D(f_i) ⊆ Spf A`, `i : J`, as an `AffineChartedFibreDatumX` with chart algebras `A{1/f_i}` and
+overlap elements `g_ij = ` the image of `f_i·f_j`. Its module docstring promises that the glued
+`X`, being an open subscheme of the affine `Spf A`, is separated, and leaves the proof to a
+follow-up. This file is that follow-up. The index type is arbitrary here, as it is there, and
+nothing below inspects it.
 
 The route is **not** the identification of `X` with an open subscheme of `Spf A` — that would need
 base-change infrastructure the tree does not have. It is
@@ -29,7 +30,7 @@ datum-presented `X` to surjectivity of the **chart codiagonals**
 
 — a purely ring-theoretic condition on the datum's own data. This is the second concrete
 `BothChartedFibreDatumXY.IsSeparated` value in the tree after the affine one (issue 513), and the
-first with more than one chart.
+first at an index type on which two charts can be distinct.
 
 ## Why the chart codiagonals are surjective
 
@@ -69,11 +70,11 @@ structural advantage over the Tate datum, whose transition is a genuine automorp
   `inl (f_i⁻¹) · inr (f_j⁻¹)`.
 * `AlgebraicGeometry.ThreeChartCover.datumX_chartCodiagonal_surjective`: the chart codiagonals of
   the open cover are surjective.
-* `AlgebraicGeometry.ThreeChartCover.datumX_isSeparated`: **`D(f₀) ∪ D(f₁) ∪ D(f₂)` is separated
-  over `Spf R`.**
+* `AlgebraicGeometry.ThreeChartCover.datumX_isSeparated`: **the glued object of the basic-open
+  cover datum is separated over `Spf R`.**
 
 The datum-generic machinery this file consumes lives elsewhere, so that another instance can reach
-it without importing the three-chart tower:
+it without importing the cover tower:
 `FormalSpectrum.surjective_of_algebraMap_mem_range` in
 `FormalSchemes/AwayCompletionSurjective.lean`;
 `AffineChartedFibreDatumX.map_idealOfDefinition_chartCodiagonal` and
@@ -119,11 +120,11 @@ namespace ThreeChart
 
 variable {R : Type u} [CommRing R] {I : Ideal R} (hI : I.FG)
 variable {A : Type u} [CommRing A] [Algebra R A]
-variable (f : ULift.{u} (Fin 3) → A)
+variable {J : Type u} (f : J → A)
 
 /-- **594's single-overlap transition fixes the image of `A`**, being a comparison isomorphism of
 two completed localizations of `A` at equal elements. -/
-theorem tau_symm_algebraMap (i j : ULift.{u} (Fin 3)) (a : A) :
+theorem tau_symm_algebraMap (i j : J) (a : A) :
     (tau hI f i j).symm
         (algebraMap A (awayCompletion (I.map (algebraMap R A)) (f j * f i)) a) =
       algebraMap A (awayCompletion (I.map (algebraMap R A)) (f i * f j)) a := by
@@ -138,7 +139,7 @@ namespace ThreeChartCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
-variable (f : ULift.{u} (Fin 3) → A)
+variable {J : Type u} (f : J → A)
 
 /-! #### The chart identifications fix the base -/
 
@@ -147,7 +148,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 `chartOverlapEquiv_apply`, so that the kernel never delta-unfolds `chartOverlapEquiv` inside a
 statement about the doubly nested completion — see the cost note of
 `FormalSchemes.ThreeChartCoverCharts`. -/
-theorem chartOverlapEquiv_algebraMap (hI : I.FG) (i j : ULift.{u} (Fin 3)) (a : A) :
+theorem chartOverlapEquiv_algebraMap (hI : I.FG) (i j : J) (a : A) :
     chartOverlapEquiv I f hI i j
         (algebraMap A (awayCompletion (I.map (algebraMap R A)) (f i * f j)) a) =
       algebraMap A (awayCompletion (I.map (algebraMap R (chartAlgebra I f i)))
@@ -157,7 +158,7 @@ theorem chartOverlapEquiv_algebraMap (hI : I.FG) (i j : ULift.{u} (Fin 3)) (a : 
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The inverse nested chart identification fixes the image of `A`. -/
-theorem chartOverlapEquiv_symm_algebraMap (hI : I.FG) (i j : ULift.{u} (Fin 3)) (a : A) :
+theorem chartOverlapEquiv_symm_algebraMap (hI : I.FG) (i j : J) (a : A) :
     (chartOverlapEquiv I f hI i j).symm
         (algebraMap A (awayCompletion (I.map (algebraMap R (chartAlgebra I f i)))
           (overlapElt I f i j)) a) =
@@ -168,7 +169,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The open cover's chart transition fixes the image of `A`.** Both legs of `tau` — the nested
 chart identification and 594's comparison isomorphism downstairs — do, and this is what lets the
 inverse of `f_j` supplied by the `j`-th chart be paired against `f_j` read in the `i`-th. -/
-theorem tau_symm_algebraMap (hI : I.FG) (i j : ULift.{u} (Fin 3)) (a : A) :
+theorem tau_symm_algebraMap (hI : I.FG) (i j : J) (a : A) :
     (tau I f hI i j).symm
         (algebraMap A (awayCompletion (I.map (algebraMap R (chartAlgebra I f j)))
           (overlapElt I f j i)) a) =
@@ -181,11 +182,11 @@ theorem tau_symm_algebraMap (hI : I.FG) (i j : ULift.{u} (Fin 3)) (a : A) :
 /-! #### The witness -/
 
 /-- **The inverse of `f_i` inside the `i`-th chart** `A{1/f_i}`. -/
-def chartInvSelf (i : ULift.{u} (Fin 3)) : chartAlgebra I f i :=
+def chartInvSelf (i : J) : chartAlgebra I f i :=
   algebraMap (Localization.Away (f i)) (chartAlgebra I f i) (IsLocalization.Away.invSelf (f i))
 
 /-- `f_i` is inverted in its own chart. -/
-theorem chartInvSelf_mul (i : ULift.{u} (Fin 3)) :
+theorem chartInvSelf_mul (i : J) :
     chartInvSelf I f i * algebraMap A (chartAlgebra I f i) (f i) = 1 := by
   rw [chartInvSelf, IsScalarTower.algebraMap_apply A (Localization.Away (f i))
     (chartAlgebra I f i), ← map_mul, mul_comm, IsLocalization.Away.mul_invSelf, map_one]
@@ -198,13 +199,13 @@ Definitionally `(datumX I f B hI).chartCodiagonal i j hij`. Giving the concrete 
 lets the ring identities below be *stated*: `HMul` is synthesised from the syntactic type, and the
 datum spells its chart algebras through its own projections, so a product of one element in each
 spelling does not elaborate even though the two types are definitionally equal. -/
-def coverCodiagonal (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : i ≠ j) :
+def coverCodiagonal (hI : I.FG) (i j : J) (hij : i ≠ j) :
     CompletedTensorProduct R I (chartAlgebra I f i) (chartAlgebra I f j) →+*
       awayCompletion (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j) :=
   (datumX I f B hI).chartCodiagonal i j hij
 
 /-- `chartCodiagonal_inl` at this datum, in the concrete spelling of the chart algebras. -/
-theorem datumX_chartCodiagonal_inl (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : i ≠ j)
+theorem datumX_chartCodiagonal_inl (hI : I.FG) (i j : J) (hij : i ≠ j)
     (c : chartAlgebra I f i) :
     coverCodiagonal I f B hI i j hij
         (CompletedTensorProduct.inl R I (chartAlgebra I f i) (chartAlgebra I f j) c) =
@@ -213,7 +214,7 @@ theorem datumX_chartCodiagonal_inl (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : 
   (datumX I f B hI).chartCodiagonal_inl i j hij c
 
 /-- `chartCodiagonal_inr` at this datum, in the concrete spelling of the chart algebras. -/
-theorem datumX_chartCodiagonal_inr (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : i ≠ j)
+theorem datumX_chartCodiagonal_inr (hI : I.FG) (i j : J) (hij : i ≠ j)
     (c : chartAlgebra I f j) :
     coverCodiagonal I f B hI i j hij
         (CompletedTensorProduct.inr R I (chartAlgebra I f i) (chartAlgebra I f j) c) =
@@ -223,7 +224,7 @@ theorem datumX_chartCodiagonal_inr (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : 
   (datumX I f B hI).chartCodiagonal_inr i j hij c
 
 /-- **The first leg inverts `f_i`**: the `i`-th chart already contains `f_i⁻¹`. -/
-theorem chartCodiagonal_inl_chartInvSelf (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : i ≠ j) :
+theorem chartCodiagonal_inl_chartInvSelf (hI : I.FG) (i j : J) (hij : i ≠ j) :
     coverCodiagonal I f B hI i j hij
         (CompletedTensorProduct.inl R I (chartAlgebra I f i) (chartAlgebra I f j)
           (chartInvSelf I f i)) *
@@ -237,7 +238,7 @@ theorem chartCodiagonal_inl_chartInvSelf (hI : I.FG) (i j : ULift.{u} (Fin 3)) (
 /-- **The second leg inverts `f_j`**: the `j`-th chart contains `f_j⁻¹`, and the transition carries
 it to an inverse of `f_j` read in the `i`-th chart because it fixes the image of `A`
 (`tau_symm_algebraMap`). This is the step that fails for a non-separated datum. -/
-theorem chartCodiagonal_inr_chartInvSelf (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : i ≠ j) :
+theorem chartCodiagonal_inr_chartInvSelf (hI : I.FG) (i j : J) (hij : i ≠ j) :
     coverCodiagonal I f B hI i j hij
         (CompletedTensorProduct.inr R I (chartAlgebra I f i) (chartAlgebra I f j)
           (chartInvSelf I f j)) *
@@ -257,7 +258,7 @@ theorem chartCodiagonal_inr_chartInvSelf (hI : I.FG) (i j : ULift.{u} (Fin 3)) (
 
 /-- The image of the overlap element in the overlap chart is the product of the images of `f_i` and
 `f_j`. -/
-theorem algebraMap_overlapElt (i j : ULift.{u} (Fin 3)) :
+theorem algebraMap_overlapElt (i j : J) :
     algebraMap (chartAlgebra I f i)
         (awayCompletion (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j))
         (overlapElt I f i j) =
@@ -273,7 +274,7 @@ theorem algebraMap_overlapElt (i j : ULift.{u} (Fin 3)) :
 /-- **The witness.** `inl (f_i⁻¹) · inr (f_j⁻¹)` maps to an inverse of the overlap element: the two
 factors of `g_ij = f_i·f_j` are inverted in the two *different* charts, and that is exactly what the
 two legs of the chart codiagonal supply. -/
-theorem chartCodiagonal_witness_mul_eq_one (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : i ≠ j) :
+theorem chartCodiagonal_witness_mul_eq_one (hI : I.FG) (i j : J) (hij : i ≠ j) :
     coverCodiagonal I f B hI i j hij
         (CompletedTensorProduct.inl R I (chartAlgebra I f i) (chartAlgebra I f j)
             (chartInvSelf I f i) *
@@ -310,18 +311,21 @@ theorem chartCodiagonal_witness_mul_eq_one (hI : I.FG) (i j : ULift.{u} (Fin 3))
 /-! #### The value -/
 
 /-- **The chart codiagonals of the open cover are surjective.** -/
-theorem datumX_chartCodiagonal_surjective (hI : I.FG) (i j : ULift.{u} (Fin 3)) (hij : i ≠ j) :
+theorem datumX_chartCodiagonal_surjective (hI : I.FG) (i j : J) (hij : i ≠ j) :
     Function.Surjective ((datumX I f B hI).chartCodiagonal i j hij) :=
   (datumX I f B hI).chartCodiagonal_surjective_of_mul_eq_one i j hij _
     (chartCodiagonal_witness_mul_eq_one I f B hI i j hij)
 
-/-- **`D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A` is separated over `Spf R`** (EGA I §10.15).
+/-- **The glued object of the basic-open cover datum is separated over `Spf R`** (EGA I §10.15),
+at an arbitrary index type. Its identification with the union of the `D(f_i)` inside `Spf A` is a
+separate theorem and is not used here.
 
 The second concrete `BothChartedFibreDatumXY.IsSeparated` value in the tree after the affine one
-(issue 513), and the first with more than one chart. The whole content is that the away element
-`g_ij = f_i·f_j` of each overlap has its two factors inverted in the two charts being compared, so
-that the chart codiagonal `A{1/f_i}^ ⊗̂_R A{1/f_j}^ → A{1/f_i}^{1/g_ij}^` is surjective; issue
-778's criterion does the rest. -/
+(issue 513), and the first at an index type on which two charts can be distinct. The whole content
+is that the away element `g_ij = f_i·f_j` of each overlap has its two factors inverted in the two
+charts being compared, so that the chart codiagonal
+`A{1/f_i}^ ⊗̂_R A{1/f_j}^ → A{1/f_i}^{1/g_ij}^` is surjective; issue 778's criterion does the
+rest. -/
 theorem datumX_isSeparated (hI : I.FG) :
     BothChartedFibreDatumXY.IsSeparated (datumX I f B hI)
       (fun i j k _ _ _ => sigma I f hI i j k)
