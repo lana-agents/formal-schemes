@@ -169,8 +169,8 @@ theorem isOpenImmersion_gluedXToBase_spf (hI : I.FG) :
   isOpenImmersion_gluedXToBase I f B hI
 
 /-- **`ThreeChartCover.gluedX` is the open formal subscheme `⋃ D(f_i)` of `Spf A`.** The cover map
-is
-an open immersion (issue 864) with range that union, so `restrictOpenSchemeIso` applies. -/
+is an open immersion (issue 864) with range that union, so `FormalScheme.restrictOpenSchemeIso`
+applies. -/
 def gluedXIsoCoverSubscheme (hI : I.FG) : gluedX I f B hI ≅ coverSubscheme I f hI :=
   letI := isOpenImmersion_gluedXToBase_spf I f B hI
   FormalScheme.restrictOpenSchemeIso (FormalScheme.Spf (I.map (algebraMap R A)))
@@ -241,10 +241,9 @@ rather than carrying it is what makes these two statements mention no algebra ot
 /-- **The open formal subscheme `⋃ D(f_i)` of `Spf A` is separated over `Spf R`**
 (EGA I §10.15).
 
-Compare `ThreeChartCover.gluedX_isSeparatedOverSpf`, which says the same thing about a glued object
-built from a
-family of chart algebras, a transition system and an auxiliary algebra `B`. Here the statement
-names only `A`, `f` and `I`; the presentation survives only in the proof. -/
+Compare `ThreeChartCover.gluedX_isSeparatedOverSpf`, which says the same thing about a glued
+object built from a family of chart algebras, a transition system and an auxiliary algebra `B`.
+Here the statement names only `A`, `f` and `I`; the presentation survives only in the proof. -/
 theorem coverSubscheme_isSeparatedOverSpf (hI : I.FG) :
     FormalScheme.IsSeparatedOverSpf hI (coverSubscheme I f hI)
       (coverSubschemeStructMap I f hI) :=
@@ -268,12 +267,12 @@ theorem coverSubscheme_isRelativelyTopFiniteType (hI : I.FG) {L : Ideal A}
 
 `FormalSchemes.ThreeChartCoverOpenImmersion` (issue 864) proves `gluedX ≅ Spf A` **under the
 hypothesis that the basic opens cover**, by showing `ThreeChartCover.gluedXToBase` is then an
-isomorphism.
-With `gluedXIsoCoverSubscheme` above — which carries no such hypothesis — that is no longer an
-independent fact: under the covering hypothesis the open `coverOpen I f` is `⊤`, the open
-subscheme it cuts out is `Spf A` (`FormalScheme.restrictOpenTopIso`), and `gluedXIsoSpf` is the
-composite. `gluedXIsoSpf_eq` says exactly that, so the special case is now derived rather than
-separately established.
+isomorphism. With `ThreeChartCover.gluedXIsoCoverSubscheme` above — which carries no such
+hypothesis — that is no longer an independent fact: under the covering hypothesis
+`ThreeChartCover.coverOpen` is `⊤`, the open subscheme it cuts out is `Spf A`
+(`FormalScheme.restrictOpenTopIso`), and `ThreeChartCover.gluedXIsoSpf` is the composite.
+`ThreeChartCover.gluedXIsoSpf_eq` says exactly that, so the special case is now derived rather
+than separately established.
 
 The derivation is stated here and not in `ThreeChartCoverOpenImmersion`, whose `gluedXIsoSpf` is
 left as it stands: that module is *below* this one in the import graph, so rewriting its proof in

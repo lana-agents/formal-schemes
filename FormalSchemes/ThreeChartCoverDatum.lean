@@ -29,14 +29,15 @@ The glued `X` is separated over `Spf R` — the first non-Tate concrete instance
 `BothChartedFibreDatumXY.IsSeparated` (`FormalSchemes.GeneralSeparated`). That is
 `ThreeChartCover.datumX_isSeparated` (`FormalSchemes.ThreeChartCoverSeparated`), stated of the
 formal scheme as `ThreeChartCover.datumX_isSeparatedOverSpf`
-(`FormalSchemes.ThreeChartCoverSeparatedScheme`), and it holds at every index type. It is proved
-from the datum's own chart codiagonals and **not** from any identification of `X` with a subscheme
-of `Spf A`; that identification is a separate theorem —
-`ThreeChartCover.isOpenImmersion_gluedXToBase` together with
-`ThreeChartCover.range_gluedXToBase_base`
-(`FormalSchemes.ThreeChartCoverOpenImmersion`), whose chart-free restatement is
-`ThreeChartCover.coverSubscheme_isSeparatedOverSpf`
-(`FormalSchemes.ThreeChartCoverOpenSubscheme`). It holds at every index type too.
+(`FormalSchemes.ThreeChartCoverSeparatedScheme`) and chart-free as
+`ThreeChartCover.coverSubscheme_isSeparatedOverSpf` (`FormalSchemes.ThreeChartCoverOpenSubscheme`),
+and it holds at every index type. It is proved from the datum's own chart codiagonals and **not**
+from any identification of `X` with a subscheme of `Spf A`. That identification is a separate
+theorem — `ThreeChartCover.isOpenImmersion_gluedXToBase` together with
+`ThreeChartCover.range_gluedXToBase_base` (`FormalSchemes.ThreeChartCoverOpenImmersion`) — and it
+too holds at every index type. What it names as an *object* is `ThreeChartCover.coverSubscheme`,
+compared with the glued `X` by `ThreeChartCover.gluedXIsoCoverSubscheme`
+(`FormalSchemes.ThreeChartCoverOpenSubscheme`).
 
 Note that `A` itself is **not** required to be an adic ring: only the chart algebras `A{1/f_i}`
 occur as charts, and a completed localization is adic for free.
@@ -61,7 +62,7 @@ opens and now state it as `⨆ i, D(f_i) = ⊤`. So the whole tower is index-gen
 **The namespace is still named after three charts, and that is now a misnomer.** It is left standing
 deliberately rather than overlooked: the name is spelled out in modules all over this library, and
 renaming it is a large mechanical diff with no mathematical content, which is worth taking on its
-own rather than inside a lift. The rename is tracked as its own row on the board.
+own rather than inside a lift. The rename is tracked as its own row on the board, issue 1991.
 
 ## Main definitions and results
 

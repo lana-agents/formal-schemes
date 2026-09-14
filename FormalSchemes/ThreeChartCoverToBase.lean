@@ -34,9 +34,9 @@ transport of `map_algebraMap_awayCompletion_eq`, so its range is the basic open 
 that its range is the union of the `D(f_i)`, and the resulting chart-free restatements of the two
 EGA properties. Those need the range of a glued morphism, which is genuine geometric content, and
 they were carved as their own issues and delivered downstream —
-`ThreeChartCover.range_gluedXToBase_base` and
-`isOpenImmersion_gluedXToBase` in `FormalSchemes.ThreeChartCoverOpenImmersion`, and the open formal
-subscheme `coverSubscheme` with the chart-free restatements in
+`ThreeChartCover.range_gluedXToBase_base` and `ThreeChartCover.isOpenImmersion_gluedXToBase` in
+`FormalSchemes.ThreeChartCoverOpenImmersion`, and the open formal subscheme
+`ThreeChartCover.coverSubscheme` with the chart-free restatements in
 `FormalSchemes.ThreeChartCoverOpenSubscheme`. Nothing *here* should be read as having established
 them.
 

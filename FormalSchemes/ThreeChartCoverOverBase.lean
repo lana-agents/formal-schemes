@@ -156,12 +156,12 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The cover map `gluedX ⟶ Spf A` is a morphism over `Spf R`**: composing it with
 `Spf A ⟶ Spf R` recovers the datum's own structural morphism.
 
-Together with `ThreeChartCover.ι_gluedXToBase` this makes the basic-open cover an object
-*over `Spf A`* over
-`Spf R`. That is the frame in which "`gluedX` is an open formal subscheme of `Spf A`" is to be
-stated — an open immersion into `Spf A` is the right statement only if it is a morphism over the
-base — and it is the last piece of scaffolding before that claim; it is not the claim, and it does
-not make the cover's separatedness or finite-type statements chart-free.
+Together with `ThreeChartCover.ι_gluedXToBase` this makes the basic-open cover an object *over
+`Spf A`* over `Spf R`. That is the frame in which "`ThreeChartCover.gluedX` is an open formal
+subscheme of `Spf A`" is to be stated — an open immersion into `Spf A` is the right statement only
+if it is a morphism over the base — and it is the last piece of scaffolding before that claim; it
+is not the claim, and it does not make the cover's separatedness or finite-type statements
+chart-free.
 
 Proved by uniqueness of morphisms out of the canonical open cover of the glued object
 (`FormalScheme.OpenCover.hom_ext`), reduced chartwise to `chartToBase_comp_ambientStructMap`. The

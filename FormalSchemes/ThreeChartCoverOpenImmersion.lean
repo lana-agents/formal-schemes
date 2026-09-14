@@ -12,14 +12,14 @@ with range the basic open `D(f_i)`. Its docstring is explicit that this leaves t
 carrying the geometry unproved: that the *glued* morphism is an open immersion, and that its range
 is the union of the `D(f_i)`. This file proves both.
 
-The consequence is the sentence the tree has been unable to write down: `ThreeChartCover.gluedX`
-**is** an open
-formal subscheme of `Spf A`, namely the union of the basic opens.
+The consequence is the sentence the tree has been unable to write down:
+`ThreeChartCover.gluedX` **is** an open formal subscheme of `Spf A`, namely the union of the
+basic opens.
 
 The index type is arbitrary here, as it is in the modules this one sits on. Exactly two statements
-below name three indices, both about the index type alone:
-`ThreeChartCover.iSup_basicOpen_eq_sup`, which expands the supremum at `ULift (Fin 3)`, and
-`ThreeChartCover.range_gluedXToBase_base_sup`, the three-index reading of the range.
+below name three indices, both about the index type alone: `ThreeChartCover.iSup_basicOpen_eq_sup`,
+which expands the supremum at `ULift (Fin 3)`, and `ThreeChartCover.range_gluedXToBase_base_sup`,
+the three-index reading of the range.
 
 ## The one non-formal input
 
@@ -61,9 +61,8 @@ question is `Spf A` itself. Building the open formal subscheme is the next issue
 * `AlgebraicGeometry.ThreeChartCover.range_overlapChart_comp_chartToBase`: the charts meet exactly
   along the overlap — the one non-formal input.
 * `AlgebraicGeometry.ThreeChartCover.range_gluedXToBase_base` and
-  `ThreeChartCover.range_gluedXToBase_base_iSup`: **the range is the union of the `D(f_i)`**, as an
-  indexed union
-  of sets and as an indexed supremum of opens.
+  `ThreeChartCover.range_gluedXToBase_base_iSup`: **the range is the union of the `D(f_i)`**, as
+  an indexed union of sets and as an indexed supremum of opens.
 * `AlgebraicGeometry.ThreeChartCover.iSup_basicOpen_eq_sup` and
   `AlgebraicGeometry.ThreeChartCover.range_gluedXToBase_base_sup`: the three-index readings of
   those two, as a three-fold supremum.
@@ -151,8 +150,7 @@ theorem range_gluedXToBase_base (hI : I.FG) :
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The range of the cover map is the union of the basic opens, read as an open** of `Spf A`
 rather than as a set — `ThreeChartCover.range_gluedXToBase_base` with the coercion pushed through
-the supremum.
-This is the form the covering hypothesis below and the open subscheme of
+the supremum. This is the form the covering hypothesis below and the open subscheme of
 `FormalSchemes.ThreeChartCoverOpenSubscheme` are both stated at. -/
 theorem range_gluedXToBase_base_iSup (hI : I.FG) :
     Set.range (gluedXToBase I f B hI).base =
@@ -178,8 +176,8 @@ theorem iSup_basicOpen_eq_sup (f : ULift.{u} (Fin 3) → A) :
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The range of the cover map at three indices is `D(f₀) ∪ D(f₁) ∪ D(f₂)`**, spelled as a
 three-fold supremum of opens. The three-index reading of
-`ThreeChartCover.range_gluedXToBase_base_iSup`, kept
-because the three-fold spelling is the one this chain published first. -/
+`ThreeChartCover.range_gluedXToBase_base_iSup`, kept because the three-fold spelling is the one
+this chain published first. -/
 theorem range_gluedXToBase_base_sup (f : ULift.{u} (Fin 3) → A) (hI : I.FG) :
     Set.range (gluedXToBase I f B hI).base =
       ((basicOpen (I.map (algebraMap R A)) (f ⟨0⟩) ⊔
@@ -191,9 +189,8 @@ theorem range_gluedXToBase_base_sup (f : ULift.{u} (Fin 3) → A) (hI : I.FG) :
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The basic-open cover maps to `Spf A` by an open immersion.** With
-`ThreeChartCover.range_gluedXToBase_base_iSup` this says that `ThreeChartCover.gluedX` is the open
-formal subscheme
-`⋃ D(f_i)` of `Spf A`.
+`ThreeChartCover.range_gluedXToBase_base_iSup` this says that `ThreeChartCover.gluedX` is the
+open formal subscheme `⋃ D(f_i)` of `Spf A`.
 
 The charts are open immersions by `isOpenImmersion_chartToBase` (issue 860) and they meet only along
 their overlaps by `range_overlapChart_comp_chartToBase`; the general criterion supplies the rest. -/

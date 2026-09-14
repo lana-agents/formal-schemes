@@ -33,9 +33,8 @@ docstring records as deliberately avoided, since the separatedness proof does no
 That identification has since been made, at an arbitrary index type like this file's:
 `FormalSchemes.ThreeChartCoverOpenSubscheme` builds the open formal subscheme `⋃ D(f_i)` of
 `Spf A` and restates the theorem below about it, as
-`ThreeChartCover.coverSubscheme_isSeparatedOverSpf`, with no presentation in the statement. What
-is above stays true of *this* file, which still names the datum; the chart-free form is
-downstream.
+`ThreeChartCover.coverSubscheme_isSeparatedOverSpf`, with no presentation in the statement. What is
+above stays true of *this* file, which still names the datum; the chart-free form is downstream.
 
 ## Why the third value is worth having anyway
 
