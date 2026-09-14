@@ -108,8 +108,8 @@ should take `eqToIso` of the equality rather than have a second definition to ke
 A leaf over `FormalSchemes.GeneralFibreProductExposeXAlgebraData`: forward closure **79**, reverse
 closure **0**. The three transports are general and each has a natural home earlier in the tree —
 the first two beside `FormalSpectrum.locallyRingedSpaceMap` in `FormalSchemes.SpfMap`, whose
-reverse closure is **494**, and the third beside `FormalSpectrum.basicOpenChartOverlapIso` in
-`FormalSchemes.BasicOpenChartOverlap`, whose reverse closure is **73**, both against this file's
+reverse closure is **495**, and the third beside `FormalSpectrum.basicOpenChartOverlapIso` in
+`FormalSchemes.BasicOpenChartOverlap`, whose reverse closure is **74**, both against this file's
 **0**. They are kept here on that ratio and because each has exactly one consumer, here; the
 disposition is worth re-costing when a second appears.
 

@@ -108,6 +108,25 @@ fibre products or diagonals.
 transitions transports along it by `AlgEquiv.ext`; but that transport is performed where the
 identities live, not here.
 
+## Placement
+
+A leaf over `FormalSchemes.AwayCompletionRestrictUnique` and `FormalSchemes.AwayTopFiniteType`:
+forward closure **49**, reverse closure **0**. Nothing below mentions formal geometry, so an
+earlier home would be available for each declaration on its own; what keeps them in one file is
+that they are one argument — the universal property, its uniqueness, and the two consequences
+that follow from it — and that the consumer they were written for, the change of base of an
+affine-chart presentation to a basic open of its base, does not exist yet.
+
+The one edit outside this file is the generalisation of `FormalSpectrum.awayCompletion_hom_ext`
+to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in place** in
+`FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **28**. Restating the
+general form here instead would have cost no rebuild and was declined on two grounds: it would
+leave two near-duplicate rigidity statements in the tree, which is the shape the duplicate
+statement scan under `scripts/` exists to catch; and the general form is the true one, the old
+special form being recovered from it in a single line. The old name, statement and binder order
+are unchanged, so no call site moved — its one consumer outside its own file is
+`FormalSchemes.BasicOpenChartOpensSections`.
+
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. 0, §7.6 and Ch. I, §10.1.
