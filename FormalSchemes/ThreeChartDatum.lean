@@ -13,8 +13,8 @@ Every `AlgebraicGeometry.AffineChartedFibreDatum` / `AffineChartedFibreDatumX` b
 index type `ULift Bool`, where no triple of indices is pairwise distinct, so all six geometric
 triple-overlap fields (`t'`, `t_fac`, `cocycle`, `xt'`, `xt_fac`, `xcocycle`) are discharged by
 `False.elim` and the general glueing machinery of EGA I §10.7 has never been exercised on the case
-it was built for. This file supplies the first datum on a three-element index type, with genuine
-content in all six fields.
+it was built for. This file supplies the first datum with genuine content in all six fields,
+exercised at a three-element index type.
 
 ## The example
 
@@ -150,11 +150,14 @@ section Datum
 
 variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
 
-/-- **The three-chart affine-charted fibre datum.** Three copies of `Spf A`, glued along the basic
-opens `D(f_i·f_j)` by the identity of `A`, over the affine base change `Spf B`. All six geometric
-triple-overlap fields are derived from `tau` / `sigma` by the smart constructor
-`AffineChartedFibreDatumX.ofAlgebraData`, and — unlike every earlier datum — they are non-vacuous
-(see `datumX_xt'_eq`). -/
+/-- **The affine-charted fibre datum of a family of copies of `Spf A`.** One copy of `Spf A` per
+index of `J`, glued along the basic opens `D(f_i·f_j)` by the identity of `A`, over the affine base
+change `Spf B`. All six geometric triple-overlap fields are derived from `ThreeChart.tau` /
+`ThreeChart.sigma` by the smart constructor `AffineChartedFibreDatumX.ofAlgebraData` — genuine
+transitions at every index type, where every earlier datum discharged them by `False.elim` (see
+`ThreeChart.datumX_xt'_eq`). What a pairwise distinct triple of indices adds is that their
+hypotheses are satisfiable, so that content is exercised: `ULift (Fin 3)` has such a triple and the
+`ULift Bool` of those earlier data does not (`ThreeChart.exists_pairwise_distinct`). -/
 def datumX (B : Type u) [CommRing B] [Algebra R B] : AffineChartedFibreDatumX R I hI B :=
   AffineChartedFibreDatumX.ofAlgebraData hI
     (A := fun _ : J => A)
@@ -167,14 +170,23 @@ def datumX (B : Type u) [CommRing B] [Algebra R B] : AffineChartedFibreDatumX R 
     (hστ := fun i j k _ _ _ => sigma_tau hI f i j k)
     (hσc := fun i j k _ _ _ => sigma_cocycle hI f i j k)
 
-/-- **The glued three-chart formal scheme** `X`: three copies of `Spf A` glued along `D(f_i·f_j)`.
-For `f₀ = f₁ = f₂ = 1` this is `Spf A` again; in general it is a genuinely non-affine (and
-non-separated) formal scheme. -/
+/-- **The glued formal scheme** `X`: one copy of `Spf A` per index of `J`, glued along the overlaps
+`D(f_i·f_j)`. At `J := ULift (Fin 3)` with `f` constantly `1` every chart and every overlap is
+`Spf A` itself, so `X` is `Spf A` again.
+
+Nothing here says `X` is non-affine, or non-separated over `Spf R`, and no such statement is
+available at this generality: at a singleton index type there is one chart and one self-overlap and
+at an empty one there is nothing to glue, so being genuinely non-affine is a property of the index
+type and the family together, not of the datum. Contrast `ThreeChartCover.gluedX`
+(`FormalSchemes.ThreeChartCoverDatum`), whose charts are the completed localizations `A{1/f_i}`
+instead of copies of `A`, and which *is* an open formal subscheme of `Spf A`
+(`ThreeChartCover.gluedXIsoCoverSubscheme`), separated over `Spf R`
+(`ThreeChartCover.gluedX_isSeparatedOverSpf`). -/
 def gluedX (B : Type u) [CommRing B] [Algebra R B] : FormalScheme.{u} :=
   (datumX hI f B).xGlued
 
-/-- **The fibre product** `X ×_{Spf R} Spf B` of the three-chart formal scheme with the affine base
-change, assembled by the general construction of `FormalSchemes.GeneralFibreProductAffineBase`. -/
+/-- **The fibre product** `X ×_{Spf R} Spf B` of `ThreeChart.gluedX` with the affine base change,
+assembled by the general construction of `FormalSchemes.GeneralFibreProductAffineBase`. -/
 def fibreProductX (B : Type u) [CommRing B] [Algebra R B] : FormalScheme.{u} :=
   (datumX hI f B).fibreProduct
 
@@ -191,8 +203,12 @@ variable (B : Type u) [CommRing B] [Algebra R B]
 `Mathlib.Data.ULift`, applied to a `Fin 3` disequality decided by `decide`. This file used to
 restate that upstream fact as a theorem of its own; two other files restated it privately. -/
 
-/-- **The index type has a pairwise distinct triple** — unlike `ULift Bool`, so the geometric
-triple-overlap fields below are not vacuously discharged. -/
+/-- **`ULift (Fin 3)` has a pairwise distinct triple** — unlike the `ULift Bool` that every earlier
+datum is indexed by. The geometric triple-overlap fields of `ThreeChart.datumX` are derived from
+`ThreeChart.sigma` at every index type (`ThreeChart.datumX_t'_eq`, `ThreeChart.datumX_xt'_eq`);
+what a distinct triple adds is that their hypotheses are satisfiable, so that content is exercised
+rather than vacuous. `ThreeChart.datumX_xt'_zero_one_two` below is that exercise, at
+`⟨0⟩ ⟨1⟩ ⟨2⟩`. -/
 theorem exists_pairwise_distinct :
     ∃ i j k : ULift.{u} (Fin 3), i ≠ j ∧ i ≠ k ∧ j ≠ k :=
   ⟨⟨0⟩, ⟨1⟩, ⟨2⟩, ULift.up_injective.ne (by decide), ULift.up_injective.ne (by decide),
