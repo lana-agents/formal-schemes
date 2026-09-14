@@ -10,9 +10,12 @@ set_option linter.style.header false
 `FormalScheme.LocallyFG` formal scheme is again `FormalScheme.LocallyFG`, so `(X|_U)|_V` is a
 formal scheme. **Nothing on the tree said what it is.** A scan over every `FormalSchemes/*.lean`
 with its comments stripped by `scripts/closure_audit.py`, walking back over the balanced receiver
-of each `.restrictOpen`, finds **zero** occurrences anywhere in the library — statement or
-proof — where `FormalScheme.restrictOpen` is applied to a term that itself mentions it. This file
-supplies the missing comparison.
+of each `.restrictOpen`, found no occurrence — statement or proof — anywhere in the library where
+`FormalScheme.restrictOpen` was applied to a term that itself mentions it. This file supplies the
+missing comparison, so that scan is no longer empty: the declarations below are themselves among
+the sites it returns, and `FormalSchemes.GeneralSeparatedHomLocal` adds more. Re-run it and read
+the answer as a statement about *which* tree — what is recorded here is that it was empty before
+this module, and nothing keeps it empty after.
 
 ## The two directions between `Opens X` and `Opens (X|_U)`
 
