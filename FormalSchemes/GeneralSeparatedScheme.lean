@@ -31,9 +31,9 @@ consumer moves. Every concrete value in the tree — `oneChart_isSeparated`
 (`FormalSchemes.AffineSeparatedValue`), `tate_isSeparated` (`FormalSchemes.TateSeparatedValue`),
 `AlgebraicGeometry.BasicOpenCover.datumX_isSeparated` (`FormalSchemes.BasicOpenCoverSeparated`) —
 still proves the presentation-level predicate, and enters this vocabulary through
-`isSeparatedOverSpf_of_isSeparated` without being edited. Whether the presentation-level predicate
-should eventually be retired in favour of this one is a separate question, and one that should be
-argued against real consumers.
+`FormalScheme.isSeparatedOverSpf_of_isSeparated` without being edited. Whether the
+presentation-level predicate should eventually be retired in favour of this one is a separate
+question, and one that should be argued against real consumers.
 
 There is also **no concrete value here**, deliberately: the values live downstream, in the modules
 that own the objects they are about. There are three.
