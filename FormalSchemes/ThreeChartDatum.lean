@@ -19,11 +19,11 @@ content in all six fields.
 ## The example
 
 Fix an adic base `(R, I)` with `I` finitely generated, an `R`-algebra `A` which is adic for
-`I·A`, and three elements `f₀, f₁, f₂ : A`. Take three copies of `Spf A` as charts and glue the
-`i`-th to the `j`-th along the basic open `D(f_i·f_j)`, by the identity of `A`. Concretely, in the
-language of `AffineChartedFibreDatum`:
+`I·A`, an index type `J` and a family `f : J → A`. Take one copy of `Spf A` per index as charts and
+glue the `i`-th to the `j`-th along the basic open `D(f_i·f_j)`, by the identity of `A`. Concretely,
+in the language of `AffineChartedFibreDatum`:
 
-* `J := ULift (Fin 3)`, `A i := A`, and `g i j := f i * f j` (note this is **symmetric**, which is
+* `A i := A` and `g i j := f i * f j` (note this is **symmetric**, which is
   what makes the two presentations `D(g i j) ⊆ Spf A_i` and `D(g j i) ⊆ Spf A_j` of the overlap
   identifiable);
 * `τ i j : A{1/(f_i·f_j)} ≃ₐ[R] A{1/(f_j·f_i)}` is the comparison isomorphism of
@@ -36,6 +36,17 @@ language of `AffineChartedFibreDatum`:
 Note the index order in the target of `σ`: the factors are `(j→k)·(j→i)`, *not* the mirror
 `(j→i)·(j→k)` of the source. Getting this wrong makes `hσc` fail to typecheck, which is exactly the
 convention this file validates.
+
+**`J` is arbitrary, and the three-chart reading is one instantiation of it.** Nothing in the
+transition data or in its three laws inspects the index type: `ThreeChart.tau`,
+`ThreeChart.sigma`, `ThreeChart.tau_symm`, `ThreeChart.sigma_tau`, `ThreeChart.sigma_cocycle` and
+`ThreeChart.datumX` quantify over an arbitrary index type. What the title of this file refers to is
+the instantiation at `ULift (Fin 3)`, which is where the geometric triple-overlap fields are first
+*exercised* — a triple of pairwise distinct indices exists there and does not in
+`ULift Bool`, and the two declarations below that name `⟨0⟩ ⟨1⟩ ⟨2⟩` are stated at that
+instantiation and only there. The lift of the binder was taken because
+`FormalSchemes.ThreeChartCoverDatum`, which builds its transitions out of these, presents an
+arbitrary family of basic opens of `Spf A`; that module's docstring records the reason.
 
 ## Why the compatibilities are free
 
@@ -76,13 +87,13 @@ namespace ThreeChart
 
 variable {R : Type u} [CommRing R] {I : Ideal R} (hI : I.FG)
 variable {A : Type u} [CommRing A] [Algebra R A]
-variable (f : ULift.{u} (Fin 3) → A)
+variable {J : Type u} (f : J → A)
 
 /-- **The single-overlap transition** `A{1/(f_i·f_j)} ≃ₐ[R] A{1/(f_j·f_i)}`: the two chart
 presentations of the overlap `D(f_i·f_j)` of the `i`-th and `j`-th copies of `Spf A` are compared
 by the canonical isomorphism, `f_i·f_j` and `f_j·f_i` being equal elements of `A` but indexing
 different completed localizations. -/
-def tau (i j : ULift.{u} (Fin 3)) :
+def tau (i j : J) :
     awayCompletion (I.map (algebraMap R A)) (f i * f j) ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A)) (f j * f i) :=
   awayCongrEquiv I _ _ hI
@@ -93,7 +104,7 @@ def tau (i j : ULift.{u} (Fin 3)) :
 comparing the two presentations of the triple overlap `D(f_i f_j f_k)`. The two away elements are
 `f_i²f_jf_k` and `f_j²f_if_k`; neither divides the other, but each divides the square of the other,
 which is what `isUnit_algebraMap_away_of_dvd_pow` consumes. -/
-def sigma (i j k : ULift.{u} (Fin 3)) :
+def sigma (i j k : J) :
     awayCompletion (I.map (algebraMap R A)) (f i * f j * (f i * f k)) ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A)) (f j * f k * (f j * f i)) :=
   awayCongrEquiv I _ _ hI
@@ -102,14 +113,14 @@ def sigma (i j k : ULift.{u} (Fin 3)) :
 
 /-- **The transitions are mutually inverse** (the `τ_symm` field): the comparison isomorphism in
 the opposite direction is the inverse comparison isomorphism. -/
-theorem tau_symm (i j : ULift.{u} (Fin 3)) : tau hI f j i = (tau hI f i j).symm := by
+theorem tau_symm (i j : J) : tau hI f j i = (tau hI f i j).symm := by
   rw [tau, tau, awayCongrEquiv_symm]
 
 /-- **σ/τ restriction compatibility** (the `hστ` hypothesis of both smart constructors): restricting
 the double-overlap transition `σ i j k` to the single overlap agrees with `τ i j`. Both sides are
 completions of `A`-compatible localization maps `A_{f_j f_i} → A_{f_i f_j · f_i f_k}`, hence both
 are the comparison map. -/
-theorem sigma_tau (i j k : ULift.{u} (Fin 3)) :
+theorem sigma_tau (i j k : J) :
     (sigma hI f i j k).symm.toAlgHom.comp (furtherLocSnd I (f j * f k) (f j * f i) hI) =
       (furtherLocFst I (f i * f j) (f i * f k) hI).comp (tau hI f i j).symm.toAlgHom := by
   rw [sigma, tau, awayCongrEquiv_symm_toAlgHom, awayCongrEquiv_symm_toAlgHom,
@@ -123,7 +134,7 @@ theorem sigma_tau (i j k : ULift.{u} (Fin 3)) :
 the three double overlaps of a distinct triple returns the identity. Again both sides are
 comparison maps `A{1/(f_i f_j · f_i f_k)} → A{1/(f_i f_j · f_i f_k)}`, and the only such map is the
 identity. -/
-theorem sigma_cocycle (i j k : ULift.{u} (Fin 3)) :
+theorem sigma_cocycle (i j k : J) :
     (sigma hI f i j k).trans ((sigma hI f j k i).trans (sigma hI f k i j)) =
       AlgEquiv.refl (R := R)
         (A₁ := awayCompletion (I.map (algebraMap R A)) (f i * f j * (f i * f k))) := by
@@ -146,7 +157,7 @@ triple-overlap fields are derived from `tau` / `sigma` by the smart constructor
 (see `datumX_xt'_eq`). -/
 def datumX (B : Type u) [CommRing B] [Algebra R B] : AffineChartedFibreDatumX R I hI B :=
   AffineChartedFibreDatumX.ofAlgebraData hI
-    (A := fun _ : ULift.{u} (Fin 3) => A)
+    (A := fun _ : J => A)
     (g := fun i j => f i * f j)
     (topology := fun _ => (inferInstance : TopologicalSpace A))
     (isAdic := fun _ => (inferInstance : IsAdicRing (I.map (algebraMap R A))))
@@ -190,24 +201,24 @@ theorem exists_pairwise_distinct :
 /-- **Non-vacuity of the fibre-product triple.** At a pairwise distinct triple the geometric
 transition `t'` of the datum is the derived transition `AffineChartedFibreDatum.algDataT'` built
 from `sigma` — a genuine pullback-level map, not `False.elim`. -/
-theorem datumX_t'_eq (i j k : ULift.{u} (Fin 3)) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
+theorem datumX_t'_eq (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
     (datumX hI f B).t' i j k hij hik hjk =
-      AffineChartedFibreDatum.algDataT' (B := B) hI (fun _ : ULift.{u} (Fin 3) => A)
+      AffineChartedFibreDatum.algDataT' (B := B) hI (fun _ : J => A)
         (fun i j => f i * f j) (fun i j k _ _ _ => sigma hI f i j k) i j k hij hik hjk :=
   rfl
 
 /-- **Non-vacuity of the `X`-side triple.** At a pairwise distinct triple the geometric transition
 `xt'` of the datum is the derived transition `AffineChartedFibreDatumX.xAlgDataT'` built from
 `sigma`. -/
-theorem datumX_xt'_eq (i j k : ULift.{u} (Fin 3)) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
+theorem datumX_xt'_eq (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k) :
     (datumX hI f B).xt' i j k hij hik hjk =
-      AffineChartedFibreDatumX.xAlgDataT' hI (fun _ : ULift.{u} (Fin 3) => A)
+      AffineChartedFibreDatumX.xAlgDataT' hI (fun _ : J => A)
         (fun i j => f i * f j) (fun i j k _ _ _ => sigma hI f i j k) i j k hij hik hjk :=
   rfl
 
 /-- **Non-vacuity, concretely**, at the triple `0, 1, 2` of `ULift (Fin 3)`: the hypotheses of the
 geometric fields are satisfiable and the field there is the derived transition. -/
-theorem datumX_xt'_zero_one_two :
+theorem datumX_xt'_zero_one_two (f : ULift.{u} (Fin 3) → A) :
     (datumX hI f B).xt' ⟨0⟩ ⟨1⟩ ⟨2⟩ (ULift.up_injective.ne (by decide))
         (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide)) =
       AffineChartedFibreDatumX.xAlgDataT' hI (fun _ : ULift.{u} (Fin 3) => A)

@@ -6,10 +6,11 @@ set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
 /-!
-# The transitions of the three-chart open cover
+# The transitions of a basic-open cover of a formal affine
 
 The `τ` and `σ` fields of the open-cover datum of `FormalSchemes.ThreeChartCoverDatum`, and their
-three laws. Both families factor through the *common* completed localization downstairs on `A`:
+three laws. The index type is arbitrary throughout, as it is in that module. Both families factor
+through the *common* completed localization downstairs on `A`:
 
 ```
 τ i j :  A{1/f_i}{1/g_ij}  ←N—  A{1/(f_i f_j)}  —τ⁰→  A{1/(f_j f_i)}  —N→  A{1/f_j}{1/g_ji}
@@ -141,19 +142,19 @@ end Conjugation
 
 /-! ### The transitions -/
 
-variable (f : ULift.{u} (Fin 3) → A)
+variable {J : Type u} (f : J → A)
 
 /-- **The single-overlap transition** `A{1/f_i}{1/g_ij} ≃ₐ[R] A{1/f_j}{1/g_ji}`: the two
 chart-local presentations of the overlap `D(f_i) ∩ D(f_j)` are compared by passing to the common
 presentation `A{1/(f_i f_j)}` downstairs and applying 594's comparison isomorphism there. -/
-def tau (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
+def tau (hI : I.FG) (i j : J) :
     awayCompletion (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j) ≃ₐ[R]
       awayCompletion (I.map (algebraMap R (chartAlgebra I f j))) (overlapElt I f j i) :=
   (chartOverlapEquiv I f hI i j).symm.trans
     ((ThreeChart.tau hI f i j).trans (chartOverlapEquiv I f hI j i))
 
 /-- **The double-overlap transition**, built the same way from `ThreeChart.sigma`. -/
-def sigma (hI : I.FG) (i j k : ULift.{u} (Fin 3)) :
+def sigma (hI : I.FG) (i j k : J) :
     awayCompletion (I.map (algebraMap R (chartAlgebra I f i)))
         (overlapElt I f i j * overlapElt I f i k) ≃ₐ[R]
       awayCompletion (I.map (algebraMap R (chartAlgebra I f j)))
@@ -163,7 +164,7 @@ def sigma (hI : I.FG) (i j k : ULift.{u} (Fin 3)) :
 
 /-- **The transitions are mutually inverse** (the `τ_symm` field): `tau_symm_conj` applied to
 594's `ThreeChart.tau_symm`. -/
-theorem tau_symm (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
+theorem tau_symm (hI : I.FG) (i j : J) :
     tau I f hI j i = (tau I f hI i j).symm := by
   rw [tau, tau, ThreeChart.tau_symm]
   exact tau_symm_conj I (ThreeChart.tau hI f i j) (chartOverlapEquiv I f hI i j)
@@ -172,7 +173,7 @@ theorem tau_symm (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
 /-- **σ/τ restriction compatibility** (the `hστ` hypothesis of the smart constructors):
 `sigma_tau_conj` applied to 594's `ThreeChart.sigma_tau`, with the two intertwining hypotheses
 supplied by the naturality of the chart identifications. -/
-theorem sigma_tau (hI : I.FG) (i j k : ULift.{u} (Fin 3)) :
+theorem sigma_tau (hI : I.FG) (i j k : J) :
     (sigma I f hI i j k).symm.toAlgHom.comp
         (furtherLocSnd I (overlapElt I f j k) (overlapElt I f j i) hI) =
       (furtherLocFst I (overlapElt I f i j) (overlapElt I f i k) hI).comp
@@ -191,7 +192,7 @@ theorem sigma_tau (hI : I.FG) (i j k : ULift.{u} (Fin 3)) :
 
 /-- **The algebra triple cocycle** (the `hσc` hypothesis): `sigma_cocycle_conj` applied to 594's
 `ThreeChart.sigma_cocycle`. -/
-theorem sigma_cocycle (hI : I.FG) (i j k : ULift.{u} (Fin 3)) :
+theorem sigma_cocycle (hI : I.FG) (i j k : J) :
     (sigma I f hI i j k).trans ((sigma I f hI j k i).trans (sigma I f hI k i j)) =
       AlgEquiv.refl (R := R)
         (A₁ := awayCompletion (I.map (algebraMap R (chartAlgebra I f i)))
