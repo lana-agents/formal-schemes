@@ -459,7 +459,14 @@ end Map
 Both are `FormalScheme.restrictOpenMap_uniq`. The only friction is that `(Opens.map (𝟙 _)).obj V`
 and `(Opens.map (f ≫ g)).obj W` are *definitionally* but not syntactically the opens one wants, so
 the source objects of the two sides are spelled differently. For the composition law the two
-spellings unify cheaply and the statement can be written directly.
+spellings unify cheaply and the statement can be written directly, and that is now a figure:
+`FormalScheme.restrictOpenMap_comp` below hands `FormalScheme.restrictOpenMap_uniq` a term whose
+source is at `(Opens.map f.base).obj ((Opens.map g.base).obj W)` where the argument is declared at
+`(Opens.map (f ≫ g).base).obj W`, and a scratch file holding that law alone is EXIT=0 in 2.6 s
+against an import-only floor of 2.5 s, measured here. The identity law is handed a mismatch of the
+same shape, and at Mathlib's spelling of the identity it does not survive it — see
+`FormalScheme.opensMap_id_base_obj` — so the difference is which pair of spellings the unifier
+gets, not which law is being proved.
 
 **For the identity law they unify cheaply too.** This note used to say that asking unification to
 compare `X.restrictOpen hX ((Opens.map (𝟙 _)).obj V)` with `X.restrictOpen hX V` while also
@@ -469,7 +476,9 @@ equality's own type demands exactly that comparison — the law is
 `FormalScheme.restrictOpenMap_uniq`, a `change` and `rfl`, and it elaborates under default
 heartbeats at both spellings of the identity: EXIT=0 in 3.8–4.6 s per scratch file, measured here.
 (`FormalSchemes.GeneralSeparatedHomIdentity`, downstream of this file, records 2.79–2.88 s for the
-same experiment on a quieter machine; the claim rests on the exits and not on the digits.)
+same experiment on a quieter machine; the claim rests on the exits and not on the digits.) A
+scratch file importing this one and declaring nothing at all is 2.5 s here, so every per-file
+second in this paragraph is import loading plus a remainder under two tenths of one.
 
 So what `FormalScheme.restrictOpenCongr` buys `FormalScheme.restrictOpenMap_id` below is a
 right-hand side that *names* the transport along `FormalScheme.opensMap_id_base_obj` instead of
@@ -484,10 +493,31 @@ in 4.0 s rather than by running out of budget. -/
 /-- `(Opens.map (𝟙 X).base).obj V = V`, at the spelling `restrictOpenMap` produces it.
 
 Mathlib's `Opens.map_id_obj` is the same fact, but stated at `𝟙 (X : TopCat)`. Using *that* one
-here makes the identity law below **time out**: the unifier has to identify
-`(𝟙 X.toLocallyRingedSpace).base` with `𝟙 ?T` and solve for `?T` through the
-`LocallyRingedSpace → SheafedSpace → PresheafedSpace → TopCat` tower. Stated at the spelling in
-hand it is `rfl` and costs nothing. -/
+here makes the identity law below **time out**, and that much is confirmed: EXIT=1 with a
+deterministic timeout at the default budget of 200000 heartbeats, and EXIT=1 again at ten times
+that budget, so it is a runaway rather than an elaboration a larger allowance would finish.
+
+This note used to give a cause as well, and the cause does not reproduce. It said the unifier has
+to identify `(𝟙 X.toLocallyRingedSpace).base` with `𝟙 ?T` and solve for `?T` through the
+`LocallyRingedSpace → SheafedSpace → PresheafedSpace → TopCat` tower. Handed that identification
+alone — Mathlib's equation offered against exactly the one wanted here — Lean takes it at the
+import-only floor of a scratch file, and with no expected type at all the space is already fixed
+by `V`'s own type. So are the *statement* of the identity law at Mathlib's spelling, the equation
+its proof goes through, and that equation's own tactic proof: each EXIT=0 at that floor, isolated
+by leaving the other half unproved.
+
+What does not survive is the single application of `FormalScheme.restrictOpenMap_uniq`, whose
+morphism argument is declared with the preimage spelled along `.base`. The two spellings of the
+open then meet as the source object of a `Quiver.Hom`, and the unifier unfolds
+`AlgebraicGeometry.LocallyRingedSpace.Hom.toHom` 664946 times and `ContinuousMap.id` 45968 times
+before the budget goes. The tower is in that count — as the thing unfolded pointwise, not as a
+metavariable being solved — and `FormalScheme.restrictOpenMap_comp` hands the same lemma a
+mismatch of the same shape and pays nothing for it, so this is a fact about this identity and not
+about the pattern.
+
+None of which shows Mathlib's spelling is unusable here: no attribute was changed, no restated
+argument type was tried, and no normal form for `Opens.map` at an identity was looked for. Stated
+at the spelling in hand it is `rfl` and costs nothing, which is why it is stated here. -/
 theorem opensMap_id_base_obj (V : Opens X) :
     (Opens.map (𝟙 X.toLocallyRingedSpace : X.toLocallyRingedSpace ⟶ _).base).obj V = V :=
   rfl
