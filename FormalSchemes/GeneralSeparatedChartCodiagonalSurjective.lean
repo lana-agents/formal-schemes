@@ -31,19 +31,19 @@ tools an instance needs to discharge that condition, all of them stated for an *
 
 The reason the last one is the right entry point: `inl` already supplies the whole chart `A_i`, so
 an inverse of `g_ij` is the *only* thing missing, and exhibiting a witness for it is a computation
-inside the instance's own rings. `FormalSchemes/ThreeChartCoverSeparated.lean` (issue 779) consumes
+inside the instance's own rings. `FormalSchemes/BasicOpenCoverSeparated.lean` (issue 779) consumes
 it in three lines.
 
-These lemmas were first proved inside `FormalSchemes/ThreeChartCoverSeparated.lean`. They live
-here because they mention nothing about the three charts, and a consumer of them should not have
-to build that instance's tower. Measured: this module's forward closure is **178** modules, where
-the forward closure of `FormalSchemes.ThreeChartCoverSeparated` is **191**, and the three dropped
-are exactly `FormalSchemes.ThreeChartCoverCharts`, `…Transitions` and `…Datum` — the first of
-which costs ~390 s on its own (issue 737).
+These lemmas were first proved inside `FormalSchemes/BasicOpenCoverSeparated.lean`. They live here
+because they mention nothing about that cover, and a consumer of them should not have to build that
+instance's tower. Measured: this module's forward closure is **178** modules, where the forward
+closure of `FormalSchemes.BasicOpenCoverSeparated` is **191**, and the three dropped are exactly
+`FormalSchemes.BasicOpenCoverCharts`, `…Transitions` and `…Datum` — the first of which costs ~390 s
+on its own (issue 737).
 
 Being honest about the size of that win: 13 modules is modest, and it is a *build-graph* saving,
-not a memory one. Peak RSS on importing this module is ~2.9 GB against ~2.9 GB for the three-chart
-file, because the floor is Mathlib's — a single Mathlib adic-completion import already costs
+not a memory one. Peak RSS on importing this module is ~2.9 GB against ~2.9 GB for the cover's
+charts file, because the floor is Mathlib's — a single Mathlib adic-completion import already costs
 2.0 GB, and an empty file costs 0.76 GB. The closure also still contains issue 636's OOM-prone
 `TateSelfProductDSigmaInv.lean`, inherited from `GeneralSeparatedChartCodiagonal.lean` itself;
 nothing short of splitting that file removes it.
@@ -166,7 +166,7 @@ as the inverse of the overlap element is in its image.**
 
 The first factor already supplies the whole chart `A_i` (`chartCodiagonal_inl`), so this is the
 only thing missing, and `FormalSpectrum.surjective_of_algebraMap_mem_range` closes the gap. Any
-datum can consume this; for the open cover of `FormalSchemes/ThreeChartCoverDatum.lean` the witness
+datum can consume this; for the open cover of `FormalSchemes/BasicOpenCoverDatum.lean` the witness
 is the product of the two chart-local inverses of `f_i` and `f_j`. -/
 theorem chartCodiagonal_surjective_of_invSelf_mem_range (i j : DX.J) (h : i ≠ j)
     (hinv : letI := DX.commRing; letI := DX.algebra

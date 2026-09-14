@@ -1,13 +1,13 @@
 import FormalSchemes.OpenCoverHomExt
-import FormalSchemes.ThreeChartCoverToBase
+import FormalSchemes.BasicOpenCoverToBase
 
 set_option linter.style.header false
 
 /-!
 # The basic-open cover maps to `Spf A` *over* `Spf R` (EGA I §10.13, §10.15)
 
-`FormalSchemes.ThreeChartCoverToBase` supplies the morphism
-`ThreeChartCover.gluedXToBase : gluedX ⟶ Spf A` from the glued basic-open cover down to its
+`FormalSchemes.BasicOpenCoverToBase` supplies the morphism
+`BasicOpenCover.gluedXToBase : gluedX ⟶ Spf A` from the glued basic-open cover down to its
 ambient affine, together with the fact that each chart maps by an open immersion onto `D(f_i)`.
 That morphism is not yet related to anything: `gluedX` also carries the datum's structural morphism
 `(datumX I f B hI).xStructMap : gluedX ⟶ Spf R`, and nothing so far says the two are compatible.
@@ -28,15 +28,15 @@ morphism over the base — so this is the last piece of scaffolding before the i
 `gluedXToBase` is still **not** shown to be an open immersion, and its range is still **not**
 identified with the union of the `D(f_i)`. Those carry the geometry and are untouched here; what is
 proved below is a compatibility, and no amount of it adds up to the immersion. In particular
-nothing here makes the separatedness (`FormalSchemes.ThreeChartCoverSeparatedScheme`) or
-topological-finite-type (`FormalSchemes.ThreeChartCoverTopFiniteType`) results chart-free — both
+nothing here makes the separatedness (`FormalSchemes.BasicOpenCoverSeparatedScheme`) or
+topological-finite-type (`FormalSchemes.BasicOpenCoverTopFiniteType`) results chart-free — both
 still speak of a presentation's glued object, and will until the immersion lands.
 
 ## Where the proofs came from
 
 The mathematical content of this file was measured and written for PR #309 (issue 862), which
 built its own copy of the cover map before PR #308 (issue 860) landed. Review established that the
-two copies were the *same definition* — `ThreeChartCover.chartToBase` and #309's `chartInclusion`
+two copies were the *same definition* — `BasicOpenCover.chartToBase` and #309's `chartInclusion`
 are equal by `rfl`, since `awayCompletionHom (I·A) (f i)` and `algebraMap A (A{1/f_i})` are the
 same map and the two `le_comap` witnesses are proof-irrelevant — so this file keeps only #309's
 non-duplicated half, restated over the merged `gluedXToBase`. The proofs transferred verbatim.
@@ -64,7 +64,7 @@ the third recorded instance of the wall in this tree (issues 858 and 862 hit it 
 ## `A` is not assumed adic, except where it must be
 
 `FormalSpectrum.locallyRingedSpaceObj` needs only a `CommRing` and an ideal, so everything outside
-the final section carries **no hypothesis on `A`** — matching `FormalSchemes.ThreeChartCoverCharts`,
+the final section carries **no hypothesis on `A`** — matching `FormalSchemes.BasicOpenCoverCharts`,
 which deliberately does not require `A` to be adic, and `xStructMap`, which is a morphism of locally
 ringed spaces for the same reason.
 
@@ -72,31 +72,31 @@ ringed spaces for the same reason.
 above in `FormalScheme`. That is the extra hypothesis on the `Adic` section, and it is not
 restrictive where it matters: over a Noetherian base it is automatic for a topologically finite
 type `A` (`IsTopologicallyFiniteType.isAdicRing_of_noetherian`), which is precisely the setting
-`FormalSchemes.ThreeChartCoverTopFiniteType` works in.
+`FormalSchemes.BasicOpenCoverTopFiniteType` works in.
 
-## Nothing here is specific to three charts
+## Nothing here is specific to the index type
 
 The index type is arbitrary and is never case-split on; its cardinality is never used. The results
 hold for any `AffineChartedFibreDatumX` whose chart algebras are completed localizations of a
 single ambient `A`, with the chart maps to `Spf A` supplied — which is what this file's two
-inputs, `ThreeChartCover.chartToBase` and its naturality, amount to.
+inputs, `BasicOpenCover.chartToBase` and its naturality, amount to.
 
 This paragraph used to say the results *would* lift and that they had not been lifted, on the
-ground that the three-chart cover was the only such datum on the board. They have been: the whole
-tower, from `ThreeChartCover.datumX` up to `ThreeChartCover.gluedXIsoSpf`, now quantifies over an
-arbitrary index type. `FormalSchemes.ThreeChartCoverDatum` records why the lift was taken.
+ground that this cover was the only such datum on the board. They have been: the whole tower, from
+`BasicOpenCover.datumX` up to `BasicOpenCover.gluedXIsoSpf`, now quantifies over an arbitrary index
+type. `FormalSchemes.BasicOpenCoverDatum` records why the lift was taken.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.ThreeChartCover.ambientStructMap`: the ambient affine's structural morphism
+* `AlgebraicGeometry.BasicOpenCover.ambientStructMap`: the ambient affine's structural morphism
   `Spf A ⟶ Spf R`.
-* `AlgebraicGeometry.ThreeChartCover.chartToBase_comp_ambientStructMap`: each chart maps to
+* `AlgebraicGeometry.BasicOpenCover.chartToBase_comp_ambientStructMap`: each chart maps to
   `Spf A` over `Spf R`.
-* `AlgebraicGeometry.ThreeChartCover.gluedXToBase_comp_ambientStructMap`: **the cover map is a
+* `AlgebraicGeometry.BasicOpenCover.gluedXToBase_comp_ambientStructMap`: **the cover map is a
   morphism over `Spf R`.**
-* `AlgebraicGeometry.ThreeChartCover.ambientStructHom`,
-  `AlgebraicGeometry.ThreeChartCover.gluedXToBaseHom`,
-  `AlgebraicGeometry.ThreeChartCover.gluedXToBaseHom_comp_ambientStructHom`: the same two facts in
+* `AlgebraicGeometry.BasicOpenCover.ambientStructHom`,
+  `AlgebraicGeometry.BasicOpenCover.gluedXToBaseHom`,
+  `AlgebraicGeometry.BasicOpenCover.gluedXToBaseHom_comp_ambientStructHom`: the same two facts in
   the category of formal schemes, for adic `A`.
 
 ## References
@@ -112,7 +112,7 @@ universe u
 
 namespace AlgebraicGeometry
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -156,8 +156,8 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The cover map `gluedX ⟶ Spf A` is a morphism over `Spf R`**: composing it with
 `Spf A ⟶ Spf R` recovers the datum's own structural morphism.
 
-Together with `ThreeChartCover.ι_gluedXToBase` this makes the basic-open cover an object *over
-`Spf A`* over `Spf R`. That is the frame in which "`ThreeChartCover.gluedX` is an open formal
+Together with `BasicOpenCover.ι_gluedXToBase` this makes the basic-open cover an object *over
+`Spf A`* over `Spf R`. That is the frame in which "`BasicOpenCover.gluedX` is an open formal
 subscheme of `Spf A`" is to be stated — an open immersion into `Spf A` is the right statement only
 if it is a morphism over the base — and it is the last piece of scaffolding before that claim; it
 is not the claim, and it does not make the cover's separatedness or finite-type statements
@@ -195,7 +195,7 @@ def gluedXToBaseHom (hI : I.FG) :
   FormalScheme.Hom.mk (gluedXToBase I f B hI)
 
 /-- **`gluedXToBaseHom` is a morphism over `Spf R`**, the formal-scheme form of
-`ThreeChartCover.gluedXToBase_comp_ambientStructMap`. Composition in `FormalScheme` is
+`BasicOpenCover.gluedXToBase_comp_ambientStructMap`. Composition in `FormalScheme` is
 `FormalScheme.Hom.mk` of the composition of the underlying morphisms of locally ringed spaces, so
 this is that identity under `FormalScheme.Hom.ext'`. -/
 theorem gluedXToBaseHom_comp_ambientStructHom (hI : I.FG) :
@@ -205,7 +205,7 @@ theorem gluedXToBaseHom_comp_ambientStructHom (hI : I.FG) :
 
 end Adic
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

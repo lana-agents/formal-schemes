@@ -10,8 +10,8 @@ assembles the `Spec`-side open-cover datum: `Spec A` presented by the three basi
 with chart rings `C i := A_{f_i}`, overlap elements `g i j := ` the image of `f_j` in `A_{f_i}`,
 and per-chart ideals `K i := I·A_{f_i}`.
 
-It is the `Spec`-side twin of `AlgebraicGeometry.ThreeChartCover.datumX`
-(`FormalSchemes.ThreeChartCoverDatum`), and it exists for the reason that one does: it is the
+It is the `Spec`-side twin of `AlgebraicGeometry.BasicOpenCover.datumX`
+(`FormalSchemes.BasicOpenCoverDatum`), and it exists for the reason that one does: it is the
 **first datum on this line whose triple-overlap fields are not vacuous.**
 `AlgebraicGeometry.ChartedSchemeDatum.ofTwoPatch` is on `ULift Bool`, where no triple of indices
 is pairwise distinct, so its `t'`, `t_fac` and `cocycle` are `False.elim`; a construction none of
@@ -37,7 +37,7 @@ equal (`ringHom_ext_of_away`). No computation with fractions occurs anywhere in 
 
 That is why the `Spec` side is short where the completion side is not. On the completion side the
 analogous transitions are maps of *completions*, whose `A`-algebra structure does not determine
-them, and `FormalSchemes.ThreeChartCoverTransitions` has to build them by hand from the nested
+them, and `FormalSchemes.BasicOpenCoverTransitions` has to build them by hand from the nested
 chart identification of `FormalSchemes.AwayCompletionNestedNaturality`.
 
 ## Main definitions and results
@@ -59,7 +59,7 @@ chart identification of `FormalSchemes.AwayCompletionNestedNaturality`.
 (`FormalSchemes.SpecThreeChartCoverToSpec`) identifies `glued` with `Spec A`** whenever
 `Ideal.span (Set.range f) = ⊤`, and `gluedIsoSpec_intCover` exhibits that at `Spec ℤ` covered by
 `D(2)`, `D(3)`, `D(5)`. It is the `Spec`-side twin of
-`AlgebraicGeometry.ThreeChartCover.gluedXIsoSpf` (`FormalSchemes.ThreeChartCoverOpenImmersion`).
+`AlgebraicGeometry.BasicOpenCover.gluedXIsoSpf` (`FormalSchemes.BasicOpenCoverOpenImmersion`).
 
 The three ingredients are the ones that file supplies: the descent of the chart inclusions
 `Spec A_{f_i} ⟶ Spec A` through the colimit (`AlgebraicGeometry.SpecThreeChartCover.toSpec`, via
@@ -151,7 +151,7 @@ abbrev chartRing (i : ULift.{u} (Fin 3)) : Type u := Localization.Away (f i)
 
 /-- **The overlap element** `g i j : A_{f_i}`, the image of `f_j`. It cuts out
 `D(f_i) ∩ D(f_j)` inside the chart `Spec A_{f_i}`. Unlike the completion-side
-`AlgebraicGeometry.ThreeChartCover.overlapElt`, which is the image of `f_i · f_j`, this is the
+`AlgebraicGeometry.BasicOpenCover.overlapElt`, which is the image of `f_i · f_j`, this is the
 image of `f_j` alone — the two cut out the same basic open, and this spelling is the one Mathlib's
 `IsLocalization.Away.mul'` instance fires on with no transport. -/
 abbrev overlapElt (i j : ULift.{u} (Fin 3)) : chartRing f i :=

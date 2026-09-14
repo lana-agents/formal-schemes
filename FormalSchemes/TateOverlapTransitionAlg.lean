@@ -70,7 +70,7 @@ what rules it out.
 Everything generic is stated at abstract types and only then instantiated. The concrete completions
 here are `AdicCompletion` of a localization of a quotient of a restricted-power-series ring, and
 reducing such a type is what makes the kernel expensive in this tree (cf. the module notes in
-`FormalSchemes.ThreeChartCoverCharts` and issue 636). In particular the involution law is proved
+`FormalSchemes.BasicOpenCoverCharts` and issue 636). In particular the involution law is proved
 once, generically, as `AlgEquiv.symm_trans_trans_symm_of_symm_eq`.
 
 ## References

@@ -22,9 +22,10 @@ A{1/f_i}{1/(g_ij·g_ik)}   ≃ₐ[R]  A{1/(f_i f_j · f_i f_k)}
 
 Both are the nested basic-open chart identification of issue 607
 (`FormalSpectrum.awayCompletionNestedAlgEquiv`), the second composed with the transport
-`awayCongrEquivOfEq` absorbing `map_mul`. Their **naturality**
-(`awayCongrHom_chartOverlapEquiv`, `awayCongrHom_chartOverlapEquiv'`) is what
-`FormalSchemes.ThreeChartCoverTransitions` uses to reduce the datum's `hστ` obligation to the
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq` absorbing `map_mul`. Their **naturality**
+(`AlgebraicGeometry.BasicOpenCover.awayCongrHom_chartOverlapEquiv`,
+`AlgebraicGeometry.BasicOpenCover.awayCongrHom_chartOverlapEquiv'`) is what
+`FormalSchemes.BasicOpenCoverTransitions` uses to reduce the datum's hστ obligation to the
 corresponding statement downstairs on `A`; it rests on the naturality square of
 `FormalSchemes.AwayCompletionNestedNaturality`.
 
@@ -54,7 +55,7 @@ time or an out-of-memory kill:
 2. The naturality lemmas are stated with `awayCongrHom`, not `furtherLocFst`/`furtherLocSnd`, and
    are *pure applications* with no rewriting. The two families of maps are equal
    (`furtherLocFst_eq_awayCongrHom`), but that rewrite is performed in
-   `FormalSchemes.ThreeChartCoverTransitions`, where the chart algebra is a variable.
+   `FormalSchemes.BasicOpenCoverTransitions`, where the chart algebra is a variable.
 3. The transitions and the three datum laws live in separate files, and the laws are proved by
    conjugation lemmas stated with the chart algebras abstract. See the module note there.
 4. `chartOverlapEquiv` is **never delta-unfolded by the kernel inside a statement**. The naturality
@@ -81,7 +82,7 @@ universe u
 
 namespace AlgebraicGeometry
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R)
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -217,7 +218,7 @@ with restricting from `D(f_i f_j)` to `D(f_i f_j · f_i f_k)` downstairs on `Spf
 Phrased with `awayCongrHom` rather than `furtherLocFst`: the two are the same map
 (`furtherLocFst_eq_awayCongrHom`), but performing that rewrite *here*, at a doubly nested
 completion, costs minutes of kernel time. It is done instead inside
-`ThreeChartCover.sigma_tau_conj`, where the chart algebra is a variable. -/
+`BasicOpenCover.sigma_tau_conj`, where the chart algebra is a variable. -/
 theorem awayCongrHom_chartOverlapEquiv (hI : I.FG) (i j k : J)
     (x : awayCompletion (I.map (algebraMap R A)) (f i * f j)) :
     awayCongrHom I (overlapElt I f i j) (overlapElt I f i j * overlapElt I f i k) hI
@@ -249,7 +250,7 @@ theorem awayCongrHom_chartOverlapEquiv' (hI : I.FG) (i j k : J)
       (isUnit_overlapElt_mul_right I f i j k) x)
 
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

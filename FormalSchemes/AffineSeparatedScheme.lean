@@ -59,8 +59,8 @@ work, not done here:
 
 * `𝔈_q`, from `tate_isSeparated` (`FormalSchemes.TateSeparatedValue`) — a heavier import closure, so
   it belongs in its own module rather than this one;
-* the three-chart open cover, from `datumX_isSeparated`
-  (`FormalSchemes.ThreeChartCoverSeparated`) — note `ThreeChartCoverCharts` is a known
+* the basic-open cover, from `AlgebraicGeometry.BasicOpenCover.datumX_isSeparated`
+  (`FormalSchemes.BasicOpenCoverSeparated`) — note `FormalSchemes.BasicOpenCoverCharts` is a known
   memory-ceiling module, so measure before importing anything near it.
 
 Each needs the analogue of `oneChartXGluedIso_hom_comp_structMap` for its own gluing isomorphism;

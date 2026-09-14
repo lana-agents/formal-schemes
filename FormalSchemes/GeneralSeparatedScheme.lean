@@ -29,11 +29,11 @@ anywhere in the statement.
 `BothChartedFibreDatumXY.IsSeparated` is **untouched**, nothing is deprecated, and no existing
 consumer moves. Every concrete value in the tree — `oneChart_isSeparated`
 (`FormalSchemes.AffineSeparatedValue`), `tate_isSeparated` (`FormalSchemes.TateSeparatedValue`),
-`datumX_isSeparated` (`FormalSchemes.ThreeChartCoverSeparated`) — still proves the
-presentation-level predicate, and enters this vocabulary through
-`isSeparatedOverSpf_of_isSeparated` without being edited. Whether the presentation-level
-predicate should eventually be retired in favour of this one is a separate question, and one that
-should be argued against real consumers.
+`AlgebraicGeometry.BasicOpenCover.datumX_isSeparated` (`FormalSchemes.BasicOpenCoverSeparated`) —
+still proves the presentation-level predicate, and enters this vocabulary through
+`FormalScheme.isSeparatedOverSpf_of_isSeparated` without being edited. Whether the
+presentation-level predicate should eventually be retired in favour of this one is a separate
+question, and one that should be argued against real consumers.
 
 There is also **no concrete value here**, deliberately: the values live downstream, in the modules
 that own the objects they are about. There are three.
@@ -43,10 +43,11 @@ that own the objects they are about. There are three.
   (`FormalSchemes.AffineSeparatedIso`) and its structural compatibility
   `oneChartXGluedIso_hom_comp_structMap`.
 * `𝔈_q` — `tateCurveModel_isSeparatedOverSpf` (`FormalSchemes.TateSeparatedScheme`).
-* The three-chart open cover — `datumX_isSeparatedOverSpf` and `gluedX_isSeparatedOverSpf`
-  (`FormalSchemes.ThreeChartCoverSeparatedScheme`), restated chart-free as
-  `ThreeChartCover.coverSubscheme_isSeparatedOverSpf`
-  (`FormalSchemes.ThreeChartCoverOpenSubscheme`).
+* The basic-open cover — `AlgebraicGeometry.BasicOpenCover.datumX_isSeparatedOverSpf` and
+  `AlgebraicGeometry.BasicOpenCover.gluedX_isSeparatedOverSpf`
+  (`FormalSchemes.BasicOpenCoverSeparatedScheme`), restated chart-free as
+  `BasicOpenCover.coverSubscheme_isSeparatedOverSpf`
+  (`FormalSchemes.BasicOpenCoverOpenSubscheme`).
 
 ## Main results
 

@@ -30,9 +30,10 @@ layer, and then one step further:
 
 The last form is the one a concrete instance already has. `TateDiagonalClosedCover.lean` builds
 `tateSelfProductChartCover : ULift (Bool × Bool) → Opens …` together with a
-`TopologicalSpace.IsOpenCover` witness, indexed by the chart index type; the three-chart open-cover
-datum of `FormalSchemes/ThreeChartCoverDatum.lean` produces data of the same shape from its own glue
-data. Neither is a `FormalScheme.OpenCover`, and neither can be obtained from `affineCover`.
+`TopologicalSpace.IsOpenCover` witness, indexed by the chart index type; the basic-open cover datum
+of `FormalSchemes/BasicOpenCoverDatum.lean` produces data of the same shape from its own glue data.
+Neither is a `FormalScheme.OpenCover`, and neither can be obtained from
+`AlgebraicGeometry.FormalScheme.affineCover`.
 
 The three existing criteria are recovered as the `𝒰 := affineCover` special cases of the lemmas
 here; they are left in place untouched.

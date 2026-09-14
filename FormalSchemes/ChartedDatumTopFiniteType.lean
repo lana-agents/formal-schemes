@@ -30,9 +30,9 @@ algebras as the only input. That is what this file records.
 Nothing, yet — it is purely additive. The tf-type values on master
 (`tateCurveModel_isRelativelyTopFiniteType`, `FormalSchemes.TateTopFiniteType`) are about
 `tateCurveFormalGlueData`, which is a bare `FormalScheme.GlueData` and not a charted datum, so it
-is not an instance of this theorem and is left alone. The first consumer is the three-chart open
-cover (`FormalSchemes.ThreeChartCoverTopFiniteType`); any future charted datum gets its finite-type
-half by supplying one hypothesis.
+is not an instance of this theorem and is left alone. The first consumer is the basic-open cover
+(`FormalSchemes.BasicOpenCoverTopFiniteType`); any future charted datum gets its finite-type half
+by supplying one hypothesis.
 
 ## The ideal-of-definition spelling
 

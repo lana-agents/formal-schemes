@@ -1,4 +1,4 @@
-import FormalSchemes.ThreeChartCoverCharts
+import FormalSchemes.BasicOpenCoverCharts
 
 set_option linter.style.header false
 set_option linter.style.setOption false
@@ -8,7 +8,7 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # The transitions of a basic-open cover of a formal affine
 
-The `τ` and `σ` fields of the open-cover datum of `FormalSchemes.ThreeChartCoverDatum`, and their
+The `τ` and `σ` fields of the open-cover datum of `FormalSchemes.BasicOpenCoverDatum`, and their
 three laws. The index type is arbitrary throughout, as it is in that module. Both families factor
 through the *common* completed localization downstairs on `A`:
 
@@ -17,7 +17,7 @@ through the *common* completed localization downstairs on `A`:
 σ i j k : A{1/f_i}{1/(g_ij g_ik)} ←N— A{1/(f_i f_j · f_i f_k)} —σ⁰→ … —N→ A{1/f_j}{1/(g_jk g_ji)}
 ```
 
-where `N` is the chart identification of `FormalSchemes.ThreeChartCoverCharts` and `τ⁰`, `σ⁰` are
+where `N` is the chart identification of `FormalSchemes.BasicOpenCoverCharts` and `τ⁰`, `σ⁰` are
 594's comparison isomorphisms `ThreeChart.tau`, `ThreeChart.sigma` on `A` itself — the very same
 maps, reused rather than rebuilt.
 
@@ -31,7 +31,7 @@ that, with the chart algebras `A₁ A₂ A₃` left as **variables**.
 This is not stylistic. The chart algebras of an open cover are completed localizations, so the
 chart-local double overlaps are *doubly nested* completions, and any proof step that makes the
 kernel reduce one of them costs minutes and gigabytes (see the cost note in
-`FormalSchemes.ThreeChartCoverCharts`). Proving the laws with `A₁ A₂ A₃` abstract keeps every such
+`FormalSchemes.BasicOpenCoverCharts`). Proving the laws with `A₁ A₂ A₃` abstract keeps every such
 step inside a small, cheap proof; the concrete instances below are then pure substitution.
 
 ## References
@@ -48,7 +48,7 @@ universe u
 
 namespace AlgebraicGeometry
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R)
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -202,7 +202,7 @@ theorem sigma_cocycle (hI : I.FG) (i j k : J) :
     (ThreeChart.sigma hI f k i j) (chartTripleEquiv I f hI i j k) (chartTripleEquiv I f hI j k i)
     (chartTripleEquiv I f hI k i j) (ThreeChart.sigma_cocycle hI f i j k)
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

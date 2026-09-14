@@ -34,7 +34,7 @@ It is the basic-open identity `D(f_i) ∩ D(f_j) = D(f_i · f_j)` together with 
 `(A_{f_i})_{g_ij}` **is** `A` away from `f_i · f_j` (Mathlib's `IsLocalization.Away.mul'`), so the
 composite chart inclusion has range `D(f_i · f_j)` on the nose. Without such a hypothesis the
 open-immersion criterion is false — the line with two origins is the counterexample — so this is
-the statement carrying the content, exactly as `ThreeChartCover.range_overlapChart_comp_chartToBase`
+the statement carrying the content, exactly as `BasicOpenCover.range_overlapChart_comp_chartToBase`
 is on the completion side.
 
 ## Main definitions and results
@@ -47,7 +47,7 @@ is on the completion side.
 * `AlgebraicGeometry.SpecThreeChartCover.isIso_toSpec` and
   `AlgebraicGeometry.SpecThreeChartCover.gluedIsoSpec`: when `Ideal.span (Set.range f) = ⊤` it is
   an isomorphism, so `glued I f ≅ Spec A`. This is the `Spec`-side twin of
-  `AlgebraicGeometry.ThreeChartCover.gluedXIsoSpf`.
+  `AlgebraicGeometry.BasicOpenCover.gluedXIsoSpf`.
 * `AlgebraicGeometry.SpecThreeChartCover.gluedIsoSpec_intCover`: the isomorphism exhibited at
   `Spec ℤ` covered by `D(2)`, `D(3)`, `D(5)` — so the capstone is not a statement about an empty
   cover.
@@ -172,8 +172,8 @@ theorem isIso_toSpec (hcov : Ideal.span (Set.range f) = ⊤) : IsIso (toSpec I f
   refine Eq.trans (Set.iUnion_congr fun i => range_specAwayMap (f i)) this
 
 /-- **If the three basic opens cover `Spec A`, then `glued I f ≅ Spec A`.** This is the `Spec`-side
-twin of `AlgebraicGeometry.ThreeChartCover.gluedXIsoSpf`
-(`FormalSchemes.ThreeChartCoverOpenImmersion`), and it is what makes the `ChartedSchemeDatum` line
+twin of `AlgebraicGeometry.BasicOpenCover.gluedXIsoSpf`
+(`FormalSchemes.BasicOpenCoverOpenImmersion`), and it is what makes the `ChartedSchemeDatum` line
 load-bearing: until it exists, nothing says `specGlued` glues the right object. -/
 def gluedIsoSpec (hcov : Ideal.span (Set.range f) = ⊤) :
     glued I f ≅ Spec.locallyRingedSpaceObj (CommRingCat.of A) :=

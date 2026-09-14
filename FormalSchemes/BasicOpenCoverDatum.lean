@@ -1,4 +1,4 @@
-import FormalSchemes.ThreeChartCoverTransitions
+import FormalSchemes.BasicOpenCoverTransitions
 
 set_option linter.style.header false
 set_option linter.style.setOption false
@@ -19,25 +19,25 @@ examples take — an **open cover**:
 * overlap elements `g i j := ` the image of `f_i · f_j` in `A{1/f_i}`, cutting out
   `D(f_j) ∩ D(f_i)` inside the chart `Spf A{1/f_i}`.
 
-The charts and their overlap identifications are in `FormalSchemes.ThreeChartCoverCharts`, the
-transitions and their laws in `FormalSchemes.ThreeChartCoverTransitions`; this file only feeds
+The charts and their overlap identifications are in `FormalSchemes.BasicOpenCoverCharts`, the
+transitions and their laws in `FormalSchemes.BasicOpenCoverTransitions`; this file only feeds
 them to the smart constructor `AffineChartedFibreDatumX.ofAlgebraData` and records that the six
 geometric triple-overlap fields are non-vacuous at an index type that has a pairwise distinct
 triple.
 
 The glued `X` is separated over `Spf R` — the first non-Tate concrete instance of
 `BothChartedFibreDatumXY.IsSeparated` (`FormalSchemes.GeneralSeparated`). That is
-`ThreeChartCover.datumX_isSeparated` (`FormalSchemes.ThreeChartCoverSeparated`), stated of the
-formal scheme as `ThreeChartCover.datumX_isSeparatedOverSpf`
-(`FormalSchemes.ThreeChartCoverSeparatedScheme`) and chart-free as
-`ThreeChartCover.coverSubscheme_isSeparatedOverSpf` (`FormalSchemes.ThreeChartCoverOpenSubscheme`),
+`BasicOpenCover.datumX_isSeparated` (`FormalSchemes.BasicOpenCoverSeparated`), stated of the
+formal scheme as `BasicOpenCover.datumX_isSeparatedOverSpf`
+(`FormalSchemes.BasicOpenCoverSeparatedScheme`) and chart-free as
+`BasicOpenCover.coverSubscheme_isSeparatedOverSpf` (`FormalSchemes.BasicOpenCoverOpenSubscheme`),
 and it holds at every index type. It is proved from the datum's own chart codiagonals and **not**
 from any identification of `X` with a subscheme of `Spf A`. That identification is a separate
-theorem — `ThreeChartCover.isOpenImmersion_gluedXToBase` together with
-`ThreeChartCover.range_gluedXToBase_base` (`FormalSchemes.ThreeChartCoverOpenImmersion`) — and it
-too holds at every index type. What it names as an *object* is `ThreeChartCover.coverSubscheme`,
-compared with the glued `X` by `ThreeChartCover.gluedXIsoCoverSubscheme`
-(`FormalSchemes.ThreeChartCoverOpenSubscheme`).
+theorem — `BasicOpenCover.isOpenImmersion_gluedXToBase` together with
+`BasicOpenCover.range_gluedXToBase_base` (`FormalSchemes.BasicOpenCoverOpenImmersion`) — and it
+too holds at every index type. What it names as an *object* is `BasicOpenCover.coverSubscheme`,
+compared with the glued `X` by `BasicOpenCover.gluedXIsoCoverSubscheme`
+(`FormalSchemes.BasicOpenCoverOpenSubscheme`).
 
 Note that `A` itself is **not** required to be an adic ring: only the chart algebras `A{1/f_i}`
 occur as charts, and a completed localization is adic for free.
@@ -55,23 +55,26 @@ hard direction, named under "What is *not* proved here" in `FormalSchemes.Genera
 the refinement direction of `AlgebraicGeometry.FormalScheme.IsSeparatedHom`, named in
 `FormalSchemes.GeneralSeparatedHomLocal`.
 
-The geometry layer above — the modules from `FormalSchemes.ThreeChartCoverToBase` up to
-`FormalSchemes.ThreeChartCoverOpenSubscheme`, which map the glued object back to `Spf A` — was
-lifted after this one, and not by a binder change: `ThreeChartCover.isIso_gluedXToBase` and
-`ThreeChartCover.gluedXIsoSpf` used to state the covering hypothesis as a three-fold `⊔` of basic
+The geometry layer above — the modules from `FormalSchemes.BasicOpenCoverToBase` up to
+`FormalSchemes.BasicOpenCoverOpenSubscheme`, which map the glued object back to `Spf A` — was
+lifted after this one, and not by a binder change: `BasicOpenCover.isIso_gluedXToBase` and
+`BasicOpenCover.gluedXIsoSpf` used to state the covering hypothesis as a three-fold `⊔` of basic
 opens and now state it as `⨆ i, D(f_i) = ⊤`. So the whole tower is index-general.
 
-**The namespace is still named after three charts, and that is now a misnomer.** It is left standing
-deliberately rather than overlooked: the name is spelled out in modules all over this library, and
-renaming it is a large mechanical diff with no mathematical content, which is worth taking on its
-own rather than inside a lift. The rename is tracked as its own row on the board, issue 1991.
+**The namespace was AlgebraicGeometry.ThreeChartCover until the tower became index-general**, at
+which point the name said three charts and nothing here was about three. It is now
+AlgebraicGeometry.BasicOpenCover, and the ten modules named after it were renamed with it. Not
+to be confused with `FormalSpectrum.basicOpenCover` (`FormalSchemes.SpfBasicOpenCover`), which
+presents the same geometry the other way round: it covers an object that already exists, where
+this tower glues the charts and only then compares the result back to `Spf A`.
 
 ## Main definitions and results
 
-* `AlgebraicGeometry.ThreeChartCover.datumX`: the `AffineChartedFibreDatumX`, with the glued
+* `AlgebraicGeometry.BasicOpenCover.datumX`: the `AffineChartedFibreDatumX`, with the glued
   objects `gluedX` and `fibreProductX`.
-* `AlgebraicGeometry.ThreeChartCover.datumX_t'_eq`, `datumX_xt'_eq`,
-  `datumX_xt'_zero_one_two`: the non-vacuity statements.
+* `AlgebraicGeometry.BasicOpenCover.datumX_t'_eq`,
+  `AlgebraicGeometry.BasicOpenCover.datumX_xt'_eq`,
+  `AlgebraicGeometry.BasicOpenCover.datumX_xt'_zero_one_two`: the non-vacuity statements.
 
 ## References
 
@@ -88,7 +91,7 @@ universe u
 
 namespace AlgebraicGeometry
 
-namespace ThreeChartCover
+namespace BasicOpenCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R)
 variable {A : Type u} [CommRing A] [Algebra R A]
@@ -102,11 +105,11 @@ variable (B : Type u) [CommRing B] [Algebra R B]
 
 /-- **The basic-open cover datum.** `Spf A` presented by the basic opens `D(f_i)`, `i : J`, with
 chart algebras `A{1/f_i}` and overlaps `D(g_ij) = D(f_i) ∩ D(f_j)`, over the affine base change
-`Spf B`. All six geometric triple-overlap fields are derived from `ThreeChartCover.tau` /
-`ThreeChartCover.sigma` by the smart constructor `AffineChartedFibreDatumX.ofAlgebraData` — genuine
-transitions at every index type rather than `False.elim` (`ThreeChartCover.datumX_xt'_eq`). What a
+`Spf B`. All six geometric triple-overlap fields are derived from `BasicOpenCover.tau` /
+`BasicOpenCover.sigma` by the smart constructor `AffineChartedFibreDatumX.ofAlgebraData` — genuine
+transitions at every index type rather than `False.elim` (`BasicOpenCover.datumX_xt'_eq`). What a
 pairwise distinct triple of indices adds is that the hypotheses of those statements are
-satisfiable, so that content is exercised; `ThreeChartCover.datumX_xt'_zero_one_two` below is that
+satisfiable, so that content is exercised; `BasicOpenCover.datumX_xt'_zero_one_two` below is that
 exercise, at `⟨0⟩ ⟨1⟩ ⟨2⟩` of `ULift (Fin 3)`. -/
 def datumX (hI : I.FG) : AffineChartedFibreDatumX R I hI B :=
   AffineChartedFibreDatumX.ofAlgebraData hI
@@ -155,7 +158,7 @@ theorem datumX_xt'_eq (hI : I.FG) (i j k : J)
   rfl
 
 /-- **Non-vacuity, concretely**, at the triple `0, 1, 2` of `ULift (Fin 3)` — the one statement
-here that is about a particular index type, and the reason this file's own name says three. -/
+here that is about a particular index type. -/
 theorem datumX_xt'_zero_one_two (f : ULift.{u} (Fin 3) → A) (hI : I.FG) :
     (datumX I f B hI).xt' ⟨0⟩ ⟨1⟩ ⟨2⟩ (ULift.up_injective.ne (by decide))
         (ULift.up_injective.ne (by decide)) (ULift.up_injective.ne (by decide)) =
@@ -167,7 +170,7 @@ theorem datumX_xt'_zero_one_two (f : ULift.{u} (Fin 3) → A) (hI : I.FG) :
 
 end Vacuity
 
-end ThreeChartCover
+end BasicOpenCover
 
 end AlgebraicGeometry
 

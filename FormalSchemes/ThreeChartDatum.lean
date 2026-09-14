@@ -45,7 +45,7 @@ the instantiation at `ULift (Fin 3)`, which is where the geometric triple-overla
 *exercised* — a triple of pairwise distinct indices exists there and does not in
 `ULift Bool`, and the two declarations below that name `⟨0⟩ ⟨1⟩ ⟨2⟩` are stated at that
 instantiation and only there. The lift of the binder was taken because
-`FormalSchemes.ThreeChartCoverDatum`, which builds its transitions out of these, presents an
+`FormalSchemes.BasicOpenCoverDatum`, which builds its transitions out of these, presents an
 arbitrary family of basic opens of `Spf A`; that module's docstring records the reason.
 
 ## Why the compatibilities are free
@@ -177,11 +177,11 @@ def datumX (B : Type u) [CommRing B] [Algebra R B] : AffineChartedFibreDatumX R 
 Nothing here says `X` is non-affine, or non-separated over `Spf R`, and no such statement is
 available at this generality: at a singleton index type there is one chart and one self-overlap and
 at an empty one there is nothing to glue, so being genuinely non-affine is a property of the index
-type and the family together, not of the datum. Contrast `ThreeChartCover.gluedX`
-(`FormalSchemes.ThreeChartCoverDatum`), whose charts are the completed localizations `A{1/f_i}`
+type and the family together, not of the datum. Contrast `BasicOpenCover.gluedX`
+(`FormalSchemes.BasicOpenCoverDatum`), whose charts are the completed localizations `A{1/f_i}`
 instead of copies of `A`, and which *is* an open formal subscheme of `Spf A`
-(`ThreeChartCover.gluedXIsoCoverSubscheme`), separated over `Spf R`
-(`ThreeChartCover.gluedX_isSeparatedOverSpf`). -/
+(`BasicOpenCover.gluedXIsoCoverSubscheme`), separated over `Spf R`
+(`BasicOpenCover.gluedX_isSeparatedOverSpf`). -/
 def gluedX (B : Type u) [CommRing B] [Algebra R B] : FormalScheme.{u} :=
   (datumX hI f B).xGlued
 
