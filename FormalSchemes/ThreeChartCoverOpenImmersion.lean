@@ -4,16 +4,22 @@ import FormalSchemes.ThreeChartCoverToBase
 set_option linter.style.header false
 
 /-!
-# The three-chart cover is an open formal subscheme of `Spf A` (EGA I §10.13, §10.15)
+# The basic-open cover is an open formal subscheme of `Spf A` (EGA I §10.13, §10.15)
 
 `FormalSchemes.ThreeChartCoverToBase` (issue 860) builds the morphism
 `ThreeChartCover.gluedXToBase : gluedX ⟶ Spf A` and shows that each chart maps by an open immersion
 with range the basic open `D(f_i)`. Its docstring is explicit that this leaves the two statements
 carrying the geometry unproved: that the *glued* morphism is an open immersion, and that its range
-is `D(f₀) ∪ D(f₁) ∪ D(f₂)`. This file proves both.
+is the union of the `D(f_i)`. This file proves both.
 
-The consequence is the sentence the tree has been unable to write down: `gluedX` **is** an open
-formal subscheme of `Spf A`, namely the union of the three basic opens.
+The consequence is the sentence the tree has been unable to write down: `ThreeChartCover.gluedX`
+**is** an open
+formal subscheme of `Spf A`, namely the union of the basic opens.
+
+The index type is arbitrary here, as it is in the modules this one sits on. Exactly two statements
+below name three indices, both about the index type alone:
+`ThreeChartCover.iSup_basicOpen_eq_sup`, which expands the supremum at `ULift (Fin 3)`, and
+`ThreeChartCover.range_gluedXToBase_base_sup`, the three-index reading of the range.
 
 ## The one non-formal input
 
@@ -30,7 +36,7 @@ Here it is an equality, and it is the identity `D(f_i) ∩ D(f_j) = D(f_i · f_j
 overlap element `g_ij` is the image of `f_i · f_j` in `A{1/f_i}`, so `D(g_ij)` is the preimage of
 `D(f_i f_j)` under the chart (`FormalSpectrum.map_preimage_basicOpen`), and pushing it forward along
 the chart's open embedding gives `D(f_i f_j) ∩ D(f_i) = D(f_i f_j)`. That this is an *equality*
-rather than only the needed inclusion is why the three-chart datum is a genuine open cover of its
+rather than only the needed inclusion is why the cover datum is a genuine open cover of its
 image and not merely a family of open immersions.
 
 Without such a hypothesis the criterion is false — the line with two origins is glued from two
@@ -39,7 +45,7 @@ content sits, not in the topology.
 
 ## What is here and what is not
 
-Delivered: the range, the open immersion, and the corollary that when the three basic opens cover
+Delivered: the range, the open immersion, and the corollary that when the basic opens cover
 `Spf A` the cover map is an **isomorphism**, so `gluedX ≅ Spf A` in `FormalScheme`.
 
 **Not** delivered: the identification of `gluedX` with an open formal subscheme *as an object* —
@@ -55,12 +61,16 @@ question is `Spf A` itself. Building the open formal subscheme is the next issue
 * `AlgebraicGeometry.ThreeChartCover.range_overlapChart_comp_chartToBase`: the charts meet exactly
   along the overlap — the one non-formal input.
 * `AlgebraicGeometry.ThreeChartCover.range_gluedXToBase_base` and
-  `range_gluedXToBase_base_sup`: **the range is `D(f₀) ∪ D(f₁) ∪ D(f₂)`**, as an indexed union and
-  as a three-fold supremum of opens.
+  `ThreeChartCover.range_gluedXToBase_base_iSup`: **the range is the union of the `D(f_i)`**, as an
+  indexed union
+  of sets and as an indexed supremum of opens.
+* `AlgebraicGeometry.ThreeChartCover.iSup_basicOpen_eq_sup` and
+  `AlgebraicGeometry.ThreeChartCover.range_gluedXToBase_base_sup`: the three-index readings of
+  those two, as a three-fold supremum.
 * `AlgebraicGeometry.ThreeChartCover.isOpenImmersion_gluedXToBase`: **the cover map is an open
   immersion.**
 * `AlgebraicGeometry.ThreeChartCover.isIso_gluedXToBase` and
-  `AlgebraicGeometry.ThreeChartCover.gluedXIsoSpf`: if the three basic opens cover `Spf A`, it is an
+  `AlgebraicGeometry.ThreeChartCover.gluedXIsoSpf`: if the basic opens cover `Spf A`, it is an
   isomorphism, and `gluedX ≅ Spf A`.
 
 ## References
@@ -80,7 +90,7 @@ namespace ThreeChartCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
-variable (f : ULift.{u} (Fin 3) → A)
+variable {J : Type u} (f : J → A)
 
 /-! ### The charts meet exactly along their overlap -/
 
@@ -89,7 +99,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 `chartToBase i`: the overlap element is the image of `f_i · f_j`, and the preimage of a basic open
 along a morphism of formal spectra is the basic open at the image element
 (`FormalSpectrum.map_preimage_basicOpen`). -/
-theorem preimage_basicOpen_chartToBase (i j : ULift.{u} (Fin 3)) :
+theorem preimage_basicOpen_chartToBase (i j : J) :
     (chartToBase I f i).base ⁻¹'
         (basicOpen (I.map (algebraMap R A)) (f i * f j) :
           Set (FormalSpectrum (I.map (algebraMap R A)))) =
@@ -107,7 +117,7 @@ the overlap chart, pushed into `Spf A`, is `D(f_i · f_j) = D(f_i) ∩ D(f_j)`.
 This is the geometric hypothesis of `isOpenImmersion_glueChartMorphisms`, and the only step of the
 open-immersion proof that is not formal. It holds here as an equality; only `⊇` is used downstream.
 Note that it needs no `i ≠ j`: at `i = j` it reads `D(f_i²) = D(f_i)`. -/
-theorem range_overlapChart_comp_chartToBase (hI : I.FG) (i j : ULift.{u} (Fin 3)) :
+theorem range_overlapChart_comp_chartToBase (hI : I.FG) (i j : J) :
     Set.range (basicOpenChart (I.map (algebraMap R (chartAlgebra I f i)))
           (overlapElt I f i j) ≫ chartToBase I f i).base =
       Set.range (chartToBase I f i).base ∩ Set.range (chartToBase I f j).base := by
@@ -130,7 +140,7 @@ theorem range_overlapChart_comp_chartToBase (hI : I.FG) (i j : ULift.{u} (Fin 3)
 variable (B : Type u) [CommRing B] [Algebra R B]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **The range of the cover map is the union of the three basic opens.** -/
+/-- **The range of the cover map is the union of the basic opens.** -/
 theorem range_gluedXToBase_base (hI : I.FG) :
     Set.range (gluedXToBase I f B hI).base =
       ⋃ i, (FormalSpectrum.basicOpen (I.map (algebraMap R A)) (f i) :
@@ -139,31 +149,51 @@ theorem range_gluedXToBase_base (hI : I.FG) :
     (Set.iUnion_congr fun i => range_chartToBase_base I f hI i)
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **The range of the cover map is `D(f₀) ∪ D(f₁) ∪ D(f₂)`**, spelled as a three-fold supremum of
-opens rather than an indexed union over `ULift (Fin 3)`. -/
-theorem range_gluedXToBase_base_sup (hI : I.FG) :
+/-- **The range of the cover map is the union of the basic opens, read as an open** of `Spf A`
+rather than as a set — `ThreeChartCover.range_gluedXToBase_base` with the coercion pushed through
+the supremum.
+This is the form the covering hypothesis below and the open subscheme of
+`FormalSchemes.ThreeChartCoverOpenSubscheme` are both stated at. -/
+theorem range_gluedXToBase_base_iSup (hI : I.FG) :
+    Set.range (gluedXToBase I f B hI).base =
+      ((⨆ i, basicOpen (I.map (algebraMap R A)) (f i) :
+          Opens (FormalSpectrum (I.map (algebraMap R A)))) :
+        Set (FormalSpectrum (I.map (algebraMap R A)))) := by
+  rw [range_gluedXToBase_base I f B hI, Opens.coe_iSup]
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **At three indices the supremum is the three-fold `⊔`.** A statement about the index type and
+nothing else: `iSup_ulift` strips the lift and `iSup_fin_three` expands the remaining `Fin 3`.
+
+It is what lets a consumer holding the older three-fold spelling of the covering hypothesis reach
+the indexed statements below without restating its own hypothesis. -/
+theorem iSup_basicOpen_eq_sup (f : ULift.{u} (Fin 3) → A) :
+    (⨆ i, basicOpen (I.map (algebraMap R A)) (f i) :
+        Opens (FormalSpectrum (I.map (algebraMap R A)))) =
+      basicOpen (I.map (algebraMap R A)) (f ⟨0⟩) ⊔
+        basicOpen (I.map (algebraMap R A)) (f ⟨1⟩) ⊔
+        basicOpen (I.map (algebraMap R A)) (f ⟨2⟩) := by
+  simp
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The range of the cover map at three indices is `D(f₀) ∪ D(f₁) ∪ D(f₂)`**, spelled as a
+three-fold supremum of opens. The three-index reading of
+`ThreeChartCover.range_gluedXToBase_base_iSup`, kept
+because the three-fold spelling is the one this chain published first. -/
+theorem range_gluedXToBase_base_sup (f : ULift.{u} (Fin 3) → A) (hI : I.FG) :
     Set.range (gluedXToBase I f B hI).base =
       ((basicOpen (I.map (algebraMap R A)) (f ⟨0⟩) ⊔
           basicOpen (I.map (algebraMap R A)) (f ⟨1⟩) ⊔
           basicOpen (I.map (algebraMap R A)) (f ⟨2⟩) :
             Opens (FormalSpectrum (I.map (algebraMap R A)))) :
         Set (FormalSpectrum (I.map (algebraMap R A)))) := by
-  rw [range_gluedXToBase_base I f B hI]
-  ext x
-  simp only [Set.mem_iUnion, Opens.coe_sup, Set.mem_union, SetLike.mem_coe]
-  constructor
-  · rintro ⟨⟨i⟩, hi⟩
-    fin_cases i
-    · exact Or.inl (Or.inl hi)
-    · exact Or.inl (Or.inr hi)
-    · exact Or.inr hi
-  · rintro ((h | h) | h)
-    exacts [⟨⟨0⟩, h⟩, ⟨⟨1⟩, h⟩, ⟨⟨2⟩, h⟩]
+  rw [range_gluedXToBase_base_iSup I f B hI, iSup_basicOpen_eq_sup I f]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **The three-chart cover maps to `Spf A` by an open immersion.** With
-`range_gluedXToBase_base_sup` this says that `gluedX` is the open formal subscheme
-`D(f₀) ∪ D(f₁) ∪ D(f₂)` of `Spf A`.
+/-- **The basic-open cover maps to `Spf A` by an open immersion.** With
+`ThreeChartCover.range_gluedXToBase_base_iSup` this says that `ThreeChartCover.gluedX` is the open
+formal subscheme
+`⋃ D(f_i)` of `Spf A`.
 
 The charts are open immersions by `isOpenImmersion_chartToBase` (issue 860) and they meet only along
 their overlaps by `range_overlapChart_comp_chartToBase`; the general criterion supplies the rest. -/
@@ -173,21 +203,23 @@ theorem isOpenImmersion_gluedXToBase (hI : I.FG) :
     (fun i => isOpenImmersion_chartToBase I f hI i)
     (fun i j _ => (range_overlapChart_comp_chartToBase I f hI i j).ge)
 
-/-! ### When the three basic opens cover -/
+/-! ### When the basic opens cover -/
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **If the three basic opens cover `Spf A`, the cover map is an isomorphism.** An open immersion
+/-- **If the basic opens cover `Spf A`, the cover map is an isomorphism.** An open immersion
 whose range is everything is surjective on points, hence an isomorphism of locally ringed spaces
-(`LocallyRingedSpace.IsOpenImmersion.to_iso`). -/
+(`LocallyRingedSpace.IsOpenImmersion.to_iso`).
+
+At `J := ULift (Fin 3)` the hypothesis is the three-fold `⊔` this file published first, by
+`ThreeChartCover.iSup_basicOpen_eq_sup`. -/
 theorem isIso_gluedXToBase (hI : I.FG)
-    (hcov : basicOpen (I.map (algebraMap R A)) (f ⟨0⟩) ⊔
-      basicOpen (I.map (algebraMap R A)) (f ⟨1⟩) ⊔
-      basicOpen (I.map (algebraMap R A)) (f ⟨2⟩) = ⊤) :
+    (hcov : (⨆ i, basicOpen (I.map (algebraMap R A)) (f i) :
+      Opens (FormalSpectrum (I.map (algebraMap R A)))) = ⊤) :
     IsIso (gluedXToBase I f B hI) := by
   haveI := isOpenImmersion_gluedXToBase I f B hI
   haveI : Epi (gluedXToBase I f B hI).base := by
     rw [TopCat.epi_iff_surjective, ← Set.range_eq_univ,
-      range_gluedXToBase_base_sup I f B hI, hcov]
+      range_gluedXToBase_base_iSup I f B hI, hcov]
     exact Opens.coe_top
   exact LocallyRingedSpace.IsOpenImmersion.to_iso _
 
@@ -196,13 +228,12 @@ section Adic
 variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-/-- **If the three basic opens cover `Spf A`, then `gluedX ≅ Spf A` as formal schemes.** The
+/-- **If the basic opens cover `Spf A`, then `gluedX ≅ Spf A` as formal schemes.** The
 locally-ringed-space isomorphism `isIso_gluedXToBase` lifted along the fully faithful forgetful
 functor, as in `oneChartXGluedIso`. -/
 def gluedXIsoSpf (hI : I.FG)
-    (hcov : basicOpen (I.map (algebraMap R A)) (f ⟨0⟩) ⊔
-      basicOpen (I.map (algebraMap R A)) (f ⟨1⟩) ⊔
-      basicOpen (I.map (algebraMap R A)) (f ⟨2⟩) = ⊤) :
+    (hcov : (⨆ i, basicOpen (I.map (algebraMap R A)) (f i) :
+      Opens (FormalSpectrum (I.map (algebraMap R A)))) = ⊤) :
     gluedX I f B hI ≅ FormalScheme.Spf (I.map (algebraMap R A)) :=
   letI hiso := isIso_gluedXToBase I f B hI hcov
   (Functor.FullyFaithful.ofFullyFaithful

@@ -4,10 +4,10 @@ import FormalSchemes.ThreeChartCoverToBase
 set_option linter.style.header false
 
 /-!
-# The three-chart cover maps to `Spf A` *over* `Spf R` (EGA I §10.13, §10.15)
+# The basic-open cover maps to `Spf A` *over* `Spf R` (EGA I §10.13, §10.15)
 
 `FormalSchemes.ThreeChartCoverToBase` supplies the morphism
-`ThreeChartCover.gluedXToBase : gluedX ⟶ Spf A` from the glued three-chart cover down to its
+`ThreeChartCover.gluedXToBase : gluedX ⟶ Spf A` from the glued basic-open cover down to its
 ambient affine, together with the fact that each chart maps by an open immersion onto `D(f_i)`.
 That morphism is not yet related to anything: `gluedX` also carries the datum's structural morphism
 `(datumX I f B hI).xStructMap : gluedX ⟶ Spf R`, and nothing so far says the two are compatible.
@@ -26,7 +26,7 @@ morphism over the base — so this is the last piece of scaffolding before the i
 ## What is here and what is not
 
 `gluedXToBase` is still **not** shown to be an open immersion, and its range is still **not**
-identified with `D(f₀) ∪ D(f₁) ∪ D(f₂)`. Those carry the geometry and are untouched here; what is
+identified with the union of the `D(f_i)`. Those carry the geometry and are untouched here; what is
 proved below is a compatibility, and no amount of it adds up to the immersion. In particular
 nothing here makes the separatedness (`FormalSchemes.ThreeChartCoverSeparatedScheme`) or
 topological-finite-type (`FormalSchemes.ThreeChartCoverTopFiniteType`) results chart-free — both
@@ -76,20 +76,15 @@ type `A` (`IsTopologicallyFiniteType.isAdicRing_of_noetherian`), which is precis
 
 ## Nothing here is specific to three charts
 
-`ULift (Fin 3)` is never case-split on and its cardinality is never used. The results lift verbatim
-to any `AffineChartedFibreDatumX` whose chart algebras are completed localizations of a single
-ambient `A`, with the chart maps to `Spf A` supplied.
+The index type is arbitrary and is never case-split on; its cardinality is never used. The results
+hold for any `AffineChartedFibreDatumX` whose chart algebras are completed localizations of a
+single ambient `A`, with the chart maps to `Spf A` supplied — which is what this file's two
+inputs, `ThreeChartCover.chartToBase` and its naturality, amount to.
 
-**The datum below this file has since been lifted and these results have not.** The charts, the
-transitions, the datum itself and its separatedness now quantify over an arbitrary index type
-(`FormalSchemes.ThreeChartCoverDatum`, which records why), so `ThreeChartCover.datumX` accepts
-index types on which `ThreeChartCover.gluedXToBase` cannot be named. The reason for the asymmetry
-is that the lift is *not* verbatim here: `ThreeChartCover.range_gluedXToBase_base_sup`, and through
-it `ThreeChartCover.isIso_gluedXToBase` and `ThreeChartCover.gluedXIsoSpf`
-(`FormalSchemes.ThreeChartCoverOpenImmersion`), state the covering hypothesis as a three-fold `⊔`
-of basic opens whose general form is an indexed supremum, and moving to it changes those signatures
-and every call site of them. That is tracked as its own row on the board. Taken there, the lift of
-*this* file needs only `ThreeChartCover.chartToBase` and its naturality.
+This paragraph used to say the results *would* lift and that they had not been lifted, on the
+ground that the three-chart cover was the only such datum on the board. They have been: the whole
+tower, from `ThreeChartCover.datumX` up to `ThreeChartCover.gluedXIsoSpf`, now quantifies over an
+arbitrary index type. `FormalSchemes.ThreeChartCoverDatum` records why the lift was taken.
 
 ## Main definitions and results
 
@@ -121,7 +116,7 @@ namespace ThreeChartCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
-variable (f : ULift.{u} (Fin 3) → A)
+variable {J : Type u} (f : J → A)
 
 /-! ### The ambient affine over the base -/
 
@@ -143,7 +138,7 @@ The whole content is the scalar tower `R → A → A{1/f_i}`: both sides collaps
 `locallyRingedSpaceMap`, and the two underlying ring homs agree by `IsScalarTower.algebraMap_eq`.
 Unlike the double-overlap square of `chartToBase_naturality`, which genuinely needs the transition
 to fix the image of `A`, there is nothing to prove here beyond the tower. -/
-theorem chartToBase_comp_ambientStructMap (i : ULift.{u} (Fin 3)) :
+theorem chartToBase_comp_ambientStructMap (i : J) :
     chartToBase I f i ≫ ambientStructMap I =
       locallyRingedSpaceMap I (I.map (algebraMap R (chartAlgebra I f i)))
         (algebraMap R (chartAlgebra I f i)) Ideal.le_comap_map := by
@@ -161,7 +156,8 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The cover map `gluedX ⟶ Spf A` is a morphism over `Spf R`**: composing it with
 `Spf A ⟶ Spf R` recovers the datum's own structural morphism.
 
-Together with `ι_gluedXToBase` this makes the three-chart cover an object *over `Spf A`* over
+Together with `ThreeChartCover.ι_gluedXToBase` this makes the basic-open cover an object
+*over `Spf A`* over
 `Spf R`. That is the frame in which "`gluedX` is an open formal subscheme of `Spf A`" is to be
 stated — an open immersion into `Spf A` is the right statement only if it is a morphism over the
 base — and it is the last piece of scaffolding before that claim; it is not the claim, and it does

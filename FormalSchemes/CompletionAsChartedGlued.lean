@@ -156,7 +156,7 @@ def threeChartCoverGluedXIsoCompletion
       basicOpen (I.map (algebraMap R (AdicCompletion I R))) (f ⟨2⟩) = ⊤) :
     ThreeChartCover.gluedX I f R hI ≅ formalCompletion R I hI :=
   letI := AdicCompletion.isAdicRing_map I hI
-  ThreeChartCover.gluedXIsoSpf I f R hI hcov
+  ThreeChartCover.gluedXIsoSpf I f R hI ((ThreeChartCover.iSup_basicOpen_eq_sup I f).trans hcov)
 
 /-- **The covering hypothesis is satisfiable**, so the theorem above is not vacuous: taking
 `f₀ = f₁ = f₂ = 1` covers `Spf (I·R^)` by `basicOpen_one`, for every `(R, I)` with `I` finitely

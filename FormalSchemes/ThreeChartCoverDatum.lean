@@ -31,11 +31,12 @@ The glued `X` is separated over `Spf R` — the first non-Tate concrete instance
 formal scheme as `ThreeChartCover.datumX_isSeparatedOverSpf`
 (`FormalSchemes.ThreeChartCoverSeparatedScheme`), and it holds at every index type. It is proved
 from the datum's own chart codiagonals and **not** from any identification of `X` with a subscheme
-of `Spf A`; that identification is a separate theorem and it is currently available only at three
-indices, as `ThreeChartCover.isOpenImmersion_gluedXToBase` together with
-`ThreeChartCover.range_gluedXToBase_base` (`FormalSchemes.ThreeChartCoverOpenImmersion`), whose
-chart-free restatement is `ThreeChartCover.coverSubscheme_isSeparatedOverSpf`
-(`FormalSchemes.ThreeChartCoverOpenSubscheme`). See "What is still at three indices" below.
+of `Spf A`; that identification is a separate theorem —
+`ThreeChartCover.isOpenImmersion_gluedXToBase` together with
+`ThreeChartCover.range_gluedXToBase_base`
+(`FormalSchemes.ThreeChartCoverOpenImmersion`), whose chart-free restatement is
+`ThreeChartCover.coverSubscheme_isSeparatedOverSpf`
+(`FormalSchemes.ThreeChartCoverOpenSubscheme`). It holds at every index type too.
 
 Note that `A` itself is **not** required to be an adic ring: only the chart algebras `A{1/f_i}`
 occur as charts, and a completed localization is adic for free.
@@ -51,22 +52,16 @@ statement about such an open cannot be reached from a datum on a fixed finite in
 three gaps named under "What is *not* proved here" in `FormalSchemes.GeneralSeparatedHom` all pass
 through that statement.
 
+The geometry layer above — the modules from `FormalSchemes.ThreeChartCoverToBase` up to
+`FormalSchemes.ThreeChartCoverOpenSubscheme`, which map the glued object back to `Spf A` — was
+lifted after this one, and not by a binder change: `ThreeChartCover.isIso_gluedXToBase` and
+`ThreeChartCover.gluedXIsoSpf` used to state the covering hypothesis as a three-fold `⊔` of basic
+opens and now state it as `⨆ i, D(f_i) = ⊤`. So the whole tower is index-general.
+
 **The namespace is still named after three charts, and that is now a misnomer.** It is left standing
-deliberately rather than overlooked: the name is spelled out in modules all over this library, the
-geometry layer below is still written at three indices, and renaming a half-lifted chain would
-mean renaming it twice. The rename is tracked as its own row on the board, to be taken once the
-geometry layer is lifted.
-
-## What is still at three indices
-
-`FormalSchemes.ThreeChartCoverToBase`, `FormalSchemes.ThreeChartCoverOverBase`,
-`FormalSchemes.ThreeChartCoverTopFiniteType`, `FormalSchemes.ThreeChartCoverOpenImmersion` and
-`FormalSchemes.ThreeChartCoverOpenSubscheme` — everything that maps the glued object back to
-`Spf A` — are unchanged. Their
-lift is not a binder change: `ThreeChartCover.range_gluedXToBase_base_sup`,
-`ThreeChartCover.isIso_gluedXToBase` and `ThreeChartCover.gluedXIsoSpf` state the covering
-hypothesis as a three-fold `⊔` of basic opens, whose general form is an indexed supremum, and
-moving to it changes those signatures and their call sites.
+deliberately rather than overlooked: the name is spelled out in modules all over this library, and
+renaming it is a large mechanical diff with no mathematical content, which is worth taking on its
+own rather than inside a lift. The rename is tracked as its own row on the board.
 
 ## Main definitions and results
 

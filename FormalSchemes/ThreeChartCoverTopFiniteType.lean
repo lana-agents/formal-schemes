@@ -5,10 +5,10 @@ import FormalSchemes.ThreeChartCoverSeparatedScheme
 set_option linter.style.header false
 
 /-!
-# The three-chart open cover is of finite type over `Spf R`, and separated (EGA I §10.13, §10.15)
+# The basic-open cover is of finite type over `Spf R`, and separated (EGA I §10.13, §10.15)
 
-`FormalSchemes.ThreeChartCoverSeparatedScheme` (issue 852) put the open cover
-`D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A` into the scheme-level separatedness vocabulary. This file supplies
+`FormalSchemes.ThreeChartCoverSeparatedScheme` (issue 852) put the glued object of the basic-open
+cover datum into the scheme-level separatedness vocabulary. This file supplies
 its **other** EGA property — that its structural morphism is topologically of finite type — and
 then states the two together, as `FormalSchemes.AffineSeparatedTopFiniteType` and
 `FormalSchemes.TateSeparatedScheme` (issue 856) do for `Spf L` and for `𝔈_q`.
@@ -22,7 +22,8 @@ Both ingredients are general and neither is new mathematics here:
   each chart `A{1/f_i}^` is tf-type as soon as `A` is.
 
 So the only work is the ideal-of-definition bookkeeping between the two conventions, which is
-`map_algebraMap_awayCompletion` — see `chart_isTopologicallyFiniteType` below.
+`map_algebraMap_awayCompletion` — see `ThreeChartCover.chart_isTopologicallyFiniteType` below. The
+index type is arbitrary here, as it is in the modules this one sits on.
 
 ## The hypothesis, and what it is not
 
@@ -36,8 +37,8 @@ one hypothesis, and it is doing real work.
 
 As in `FormalSchemes.ThreeChartCoverSeparatedScheme`, the object is named here through its own
 presentation, as `(datumX I f B hI).xGlued`, because at the time this file was written the
-three-chart cover had no gluing isomorphism onto an independently constructed formal scheme. The
-genuinely chart-free form is about the open formal subscheme `D(f₀) ∪ D(f₁) ∪ D(f₂)` of `Spf A`;
+basic-open cover had no gluing isomorphism onto an independently constructed formal scheme. The
+genuinely chart-free form is about the open formal subscheme `⋃ D(f_i)` of `Spf A`;
 that object and the identification of `xGlued` with it now exist, in
 `FormalSchemes.ThreeChartCoverOpenSubscheme`, where both results below are restated with no
 presentation in the statement (`coverSubscheme_isRelativelyTopFiniteType`,
@@ -50,10 +51,10 @@ docstring of the separatedness file says the same thing for the same reason.
 * `AlgebraicGeometry.ThreeChartCover.chart_isTopologicallyFiniteType`: each chart `A{1/f_i}^` is
   tf-type over `(R, I)` at the ideal spelling the datum uses.
 * `AlgebraicGeometry.ThreeChartCover.datumX_isRelativelyTopFiniteType`,
-  `AlgebraicGeometry.ThreeChartCover.gluedX_isRelativelyTopFiniteType`: **the open cover is
+  `AlgebraicGeometry.ThreeChartCover.gluedX_isRelativelyTopFiniteType`: **the basic-open cover is
   topologically of finite type over `Spf R`**, in both spellings of the glued object.
 * `AlgebraicGeometry.ThreeChartCover.datumX_isSeparatedOverSpf_and_isRelativelyTopFiniteType`:
-  **both EGA properties of the open cover, in one statement.**
+  **both EGA properties of the basic-open cover, in one statement.**
 
 ## References
 
@@ -73,7 +74,7 @@ namespace ThreeChartCover
 
 variable {R : Type u} [CommRing R] (I : Ideal R) [TopologicalSpace R] [IsAdicRing I]
 variable {A : Type u} [CommRing A] [Algebra R A]
-variable (f : ULift.{u} (Fin 3) → A)
+variable {J : Type u} (f : J → A)
 variable (B : Type u) [CommRing B] [Algebra R B]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
@@ -86,14 +87,14 @@ spelling. `map_algebraMap_awayCompletion` is the bridge between the two, and it 
 explicitly: `Ideal.map` unfolds to a `span` of an image, so no unifier identifies them. -/
 theorem chart_isTopologicallyFiniteType (hI : I.FG)
     (hA : IsTopologicallyFiniteType R I A (I.map (algebraMap R A)))
-    (i : ULift.{u} (Fin 3)) :
+    (i : J) :
     IsTopologicallyFiniteType R I (chartAlgebra I f i)
       (I.map (algebraMap R (chartAlgebra I f i))) := by
   rw [map_algebraMap_awayCompletion (f i) rfl]
   exact IsTopologicallyFiniteType.awayCompletion (f i) hI hA
 
-/-- **`D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A` is topologically of finite type over `Spf R`**
-(EGA I §10.13), when `A` is.
+/-- **The glued object of the basic-open cover datum is topologically of finite type over
+`Spf R`** (EGA I §10.13), when `A` is.
 
 The hypothesis is stated at an arbitrary ideal of definition `L`, since that is the form a tf-type
 presentation comes in; `IsTopologicallyFiniteType.map_eq` moves it to the canonical spelling the
@@ -115,9 +116,9 @@ theorem gluedX_isRelativelyTopFiniteType (hI : I.FG) {L : Ideal A}
       (FormalScheme.Hom.mk (X := gluedX I f B hI) (datumX I f B hI).xStructMap) :=
   datumX_isRelativelyTopFiniteType I f B hI hA
 
-/-- **The open cover `D(f₀) ∪ D(f₁) ∪ D(f₂) ⊆ Spf A` is separated over `Spf R` and topologically of
-finite type over it** (EGA I §10.15 and §10.13), when `A` is tf-type — both EGA properties of the
-same structural morphism `(datumX I f B hI).xStructMap`, in one statement.
+/-- **The glued object of the basic-open cover datum is separated over `Spf R` and topologically
+of finite type over it** (EGA I §10.15 and §10.13), when `A` is tf-type — both EGA properties of
+the same structural morphism `(datumX I f B hI).xStructMap`, in one statement.
 
 The two halves read that morphism through different wrappers, `IsSeparatedOverSpf` taking the
 locally-ringed-space morphism and `IsRelativelyTopFiniteType` its `FormalScheme.Hom.mk`, because
