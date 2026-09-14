@@ -46,12 +46,14 @@ occur as charts, and a completed localization is adic for free.
 
 `J` is an arbitrary `Type u` here and in everything this file sits on. That was not always so: the
 datum, its charts and its transitions were written at `J := ULift (Fin 3)` and lifted afterwards,
-by replacing the binder and nothing else — no proof, no statement and no consumer changed. The
-lift was taken because an arbitrary open of `Spf A` is a union of basic opens with no bound on how
-many, and `FormalScheme.IsSeparatedOverSpf` is existential over a presentation, so a separatedness
-statement about such an open cannot be reached from a datum on a fixed finite index type. The
-three gaps named under "What is *not* proved here" in `FormalSchemes.GeneralSeparatedHom` all pass
-through that statement.
+by replacing the binder and nothing else — no proof, no statement and no consumer changed. The lift
+was taken because an arbitrary open of `Spf A` is a union of basic opens with no bound on how many,
+and `FormalScheme.IsSeparatedOverSpf` is existential over a presentation, so a separatedness
+statement about such an open cannot be reached from a datum on a fixed finite index type. Three
+open directions of §10.15 pass through that statement: the composition law and conservativity's
+hard direction, named under "What is *not* proved here" in `FormalSchemes.GeneralSeparatedHom`, and
+the refinement direction of `AlgebraicGeometry.FormalScheme.IsSeparatedHom`, named in
+`FormalSchemes.GeneralSeparatedHomLocal`.
 
 The geometry layer above — the modules from `FormalSchemes.ThreeChartCoverToBase` up to
 `FormalSchemes.ThreeChartCoverOpenSubscheme`, which map the glued object back to `Spf A` — was
@@ -98,10 +100,14 @@ section Datum
 
 variable (B : Type u) [CommRing B] [Algebra R B]
 
-/-- **The basic-open cover datum.** `Spf A` presented by the basic opens `D(f_i)`, `i : J`,
-with chart algebras `A{1/f_i}` and overlaps `D(g_ij) = D(f_i) ∩ D(f_j)`, over the affine base
-change `Spf B`. All six geometric triple-overlap fields are derived from `tau` / `sigma` by
-`AffineChartedFibreDatumX.ofAlgebraData` and are non-vacuous (see `datumX_xt'_eq`). -/
+/-- **The basic-open cover datum.** `Spf A` presented by the basic opens `D(f_i)`, `i : J`, with
+chart algebras `A{1/f_i}` and overlaps `D(g_ij) = D(f_i) ∩ D(f_j)`, over the affine base change
+`Spf B`. All six geometric triple-overlap fields are derived from `ThreeChartCover.tau` /
+`ThreeChartCover.sigma` by the smart constructor `AffineChartedFibreDatumX.ofAlgebraData` — genuine
+transitions at every index type rather than `False.elim` (`ThreeChartCover.datumX_xt'_eq`). What a
+pairwise distinct triple of indices adds is that the hypotheses of those statements are
+satisfiable, so that content is exercised; `ThreeChartCover.datumX_xt'_zero_one_two` below is that
+exercise, at `⟨0⟩ ⟨1⟩ ⟨2⟩` of `ULift (Fin 3)`. -/
 def datumX (hI : I.FG) : AffineChartedFibreDatumX R I hI B :=
   AffineChartedFibreDatumX.ofAlgebraData hI
     (A := chartAlgebra I f)

@@ -22,8 +22,9 @@ triple of indices is pairwise distinct, and `FormalSchemes/TateChainGlue.lean` h
 
 This is **not** the first non-vacuous cocycle on the tree, and the difference is in the route
 rather than in the novelty. `FormalSchemes/ThreeChartDatum.lean` supplies an
-`AffineChartedFibreDatumX` on `ULift (Fin 3)` whose six geometric triple-overlap fields are genuine
-(`ThreeChart.exists_pairwise_distinct`, `ThreeChart.datumX_t'_eq`), and
+`AffineChartedFibreDatumX` at an arbitrary index type whose six geometric triple-overlap fields are
+genuine rather than `False.elim` (`ThreeChart.datumX_t'_eq`), exercised at the pairwise distinct
+triple that `ULift (Fin 3)` supplies (`ThreeChart.exists_pairwise_distinct`), and
 `AffineChartedFibreDatum.glueData'` (`FormalSchemes/GeneralFibreProductAffineBase.lean`) turns such
 a datum into a `CategoryTheory.GlueData'`. There the cocycle is **carried as data** by the datum
 and supplied at the algebra level, from comparison isomorphisms of completed localizations plus the
