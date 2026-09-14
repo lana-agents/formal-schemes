@@ -39,11 +39,14 @@ needs — and that is how every non-vacuous `xt'` on this tree is in fact built.
 `(basicOpenChartOverlapIso (I·A_i) (g i j) (g i k)).inv`, the transported single-overlap map
 `awayCompletionTransition σ`, and `(basicOpenChartOverlapIso (I·A_j) (g j k) (g j i)).hom`; the
 smart constructor `AffineChartedFibreDatumX.ofAlgebraData` feeds it to the datum's `xt'` field.
-Two datum values on master have a pairwise distinct triple of indices and so reach it with real
-content: `ThreeChart.datumX` (`FormalSchemes/ThreeChartDatum.lean`) and `ThreeChartCover.datumX`
-(`FormalSchemes/ThreeChartCoverDatum.lean`), both on `ULift (Fin 3)` — the second being a single
-`Spf A` covered by three basic opens, which is exactly this file's situation. That `xt'` is
-genuinely `xAlgDataT'` rather than `False.elim` there is the theorem `ThreeChart.datumX_xt'_eq`.
+Two datum values on master reach it with real content: `ThreeChart.datumX`
+(`FormalSchemes/ThreeChartDatum.lean`) and `ThreeChartCover.datumX`
+(`FormalSchemes/ThreeChartCoverDatum.lean`), both at an arbitrary index type — the second being a
+single `Spf A` covered by an arbitrary family of basic opens, which is exactly this file's
+situation. That the geometric field is genuinely `AffineChartedFibreDatumX.xAlgDataT'` rather than
+`False.elim` is the theorem `ThreeChart.datumX_xt'_eq`, and it says so at every index type; what a
+pairwise distinct triple of indices adds is that the hypotheses are satisfiable, which
+`ThreeChart.exists_pairwise_distinct` supplies at `ULift (Fin 3)`.
 
 ## References
 

@@ -30,8 +30,8 @@ localizations with the same source and target are equal.
 That turns the compatibility obligations of `AffineChartedFibreDatum.ofAlgebraData` /
 `AffineChartedFibreDatumX.ofAlgebraData` (`hστ`, `hσc`, `τ_symm`) into bookkeeping whenever the
 transition data of a glued formal scheme is built from comparison maps: both sides of each equation
-are automatically the same comparison map. The three-chart datum of
-`FormalSchemes.ThreeChartDatum` is built exactly this way.
+are automatically the same comparison map. `ThreeChart.datumX` (`FormalSchemes.ThreeChartDatum`),
+at an arbitrary index type, is built exactly this way.
 
 ## Main definitions and results
 
