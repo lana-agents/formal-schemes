@@ -92,10 +92,10 @@ supplied.
   `FormalScheme.IsSeparatedOverSpf` already carries. Nothing here is deprecated and no existing
   consumer moves.
 
-**The three above are one problem with three faces, and the third is named elsewhere.** The two
-bullets in this list and the **refinement direction** of `FormalScheme.IsSeparatedHom` — recorded
-in `FormalSchemes.GeneralSeparatedHomLocal` as the half this list *needs* rather than as an entry
-on it — all reduce to the same missing statement: that `FormalScheme.IsSeparatedOverSpf` survives
+**The first two bullets above, and one direction named elsewhere, are one problem with three
+faces.** Those two and the **refinement direction** of `FormalScheme.IsSeparatedHom` — recorded in
+`FormalSchemes.GeneralSeparatedHomLocal` as the half this list *needs* rather than as an entry on
+it — all reduce to the same missing statement: that `FormalScheme.IsSeparatedOverSpf` survives
 replacing the affine base by an open subscheme the morphism factors through. Conservativity's hard
 direction needs it to return a witness from an arbitrary cover to `(R, I)`; the composition law
 needs it to compare two witnesses over a common affine; refinement needs it to carry a witness to a

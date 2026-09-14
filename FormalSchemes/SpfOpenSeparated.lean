@@ -44,8 +44,7 @@ relation to `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated` — is untou
 true as stated. A fourth bullet, asking for a value at a target that is not a `FormalScheme.Spf`
 and a morphism that is not an identity, was removed when
 `FormalSchemes.GeneralSeparatedHomRestrictOpen` supplied one. The third direction, the **refinement
-direction** of
-`AlgebraicGeometry.FormalScheme.IsSeparatedHom`, is named one file down in
+direction** of `AlgebraicGeometry.FormalScheme.IsSeparatedHom`, is named one file down in
 `FormalSchemes.GeneralSeparatedHomLocal`, which records it as the half that list *needs* for a
 composition law rather than as an entry on it.
 
