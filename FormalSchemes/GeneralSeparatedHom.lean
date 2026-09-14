@@ -93,13 +93,19 @@ supplied.
   transported, which is what makes the predicate non-vacuous but says nothing that the base-affine
   notion could not already say. `FormalSchemes.GeneralSeparatedHomIdentity` closes the identity
   case — `FormalScheme.isSeparatedHom_id` holds for *every* `FormalScheme.LocallyFG` formal
-  scheme — so the predicate is now inhabited at a non-affine target; a separated morphism between
-  two non-affine formal schemes, neither of them an identity, is still not in the tree.
-  **The heartbeat wall this list used to name as the obstruction is not one**:
-  `FormalScheme.restrictOpenMap_id`'s documented cost is a fact about the spelling
-  `𝟙 X.toLocallyRingedSpace`, and against `(𝟙 X : X ⟶ X).toLRSHom` the same law is
-  `FormalScheme.restrictOpenMap_uniq` plus a `change`
-  (`FormalScheme.restrictOpenMap_toLRSHom_id`, three lines, no heartbeat raised).
+  scheme — so the predicate is now inhabited at an arbitrary target; a separated morphism between
+  two formal schemes neither of which is a `FormalScheme.Spf`, and which is not an identity, is
+  still not in the tree.
+  **The heartbeat wall this list used to name as the obstruction is not one, and it is not a fact
+  about how the identity is spelled either.** Once the right-hand side is a bare identity, the law
+  is `FormalScheme.restrictOpenMap_uniq` plus a `change` at *both* spellings of the identity and
+  *both* spellings of the open: the four combinations were measured one scratch file at a time,
+  all four EXIT=0 under default heartbeats in 2.79–2.88 s. What `FormalScheme.restrictOpenCongr`
+  buys `FormalScheme.restrictOpenMap_id` is a right-hand side that names the transport — the form
+  that lemma wants, being the functor law up to the renaming of the open — and not tractability.
+  `FormalScheme.restrictOpenMap_toLRSHom_id` is stated because its consumer needs the law at the
+  spelling this predicate puts in the goal — `FormalScheme.Hom.toLRSHom` of the morphism, at the
+  identity — and not because that spelling is cheaper.
 * **Any relation to `BothChartedFibreDatumXY.IsSeparated`** beyond the one that
   `FormalScheme.IsSeparatedOverSpf` already carries. Nothing here is deprecated and no existing
   consumer moves.

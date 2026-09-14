@@ -11,7 +11,7 @@ supplies its first two values. **Both of those have target `Spf R`**: they are
 `FormalScheme.isSeparatedHom_of_isSeparatedOverSpf` applied to a value of the affine-base predicate,
 so neither says anything a statement over an affine base could not already say.
 
-This file supplies the first value whose **target is not affine**:
+This file supplies the first value at an **arbitrary target**:
 
 ```
 FormalScheme.isSeparatedHom_id (hX : X.LocallyFG) : FormalScheme.IsSeparatedHom hX hX (𝟙 X)
@@ -37,10 +37,13 @@ which is `AlgebraicGeometry.spf_isSeparatedOverSpf_self` below.
 
 ## What this settles, and what it does not
 
-* It settles that `FormalScheme.IsSeparatedHom` is **inhabited at a non-affine target**. Before it,
+* It settles that `FormalScheme.IsSeparatedHom` is **inhabited at an arbitrary target**. Before it,
   every value in the tree had target `Spf R`, and a predicate about general targets whose only
-  values are affine is a definition that elaborates rather than a notion.
-* It does **not** make the predicate non-trivial *over* a non-affine target in the strong sense: the
+  values are affine is a definition that elaborates rather than a notion. *Arbitrary* rather than
+  *non-affine* is the honest word: nothing on this tree exhibits a formal scheme it knows not to be
+  affine, and the concrete instance below is affine in the degenerate case where its three opens
+  already cover.
+* It does **not** make the predicate non-trivial *over* such a target in the strong sense: the
   cover this proof produces consists of **affine** opens, as every cover a value of this predicate
   can produce must, since the per-chart clause is stated over `Spf I`. A separated morphism between
   two genuinely non-affine formal schemes, neither of them an identity, is still not in the tree.
@@ -148,12 +151,26 @@ variable {X : FormalScheme.{u}}
 identity.**
 
 `FormalScheme.restrictOpenMap_id` (`FormalSchemes.OpenFormalSubscheme`) is the same law at
-`𝟙 X.toLocallyRingedSpace`, and is stated through `FormalScheme.restrictOpenCongr` because asking
-`isDefEq` to compare the two open subschemes *while also inserting an identity morphism* exhausts
-the heartbeat budget. **That cost does not appear here**: against `(𝟙 X : X ⟶ X).toLRSHom` the
-preimage `(Opens.map _).obj V` and `V` are `rfl` with no metavariable to solve, so the identity is
-recognised directly by `FormalScheme.restrictOpenMap_uniq` and the proof is three lines. The
-`change` names the spelling, because `rw` would again work at `instances` transparency.
+`𝟙 X.toLocallyRingedSpace`, with a `FormalScheme.restrictOpenCongr`-valued right-hand side that
+names the transport along `FormalScheme.opensMap_id_base_obj` instead of leaving it to
+unification. **This lemma is here for its spelling and not because that one is expensive**:
+`FormalScheme.IsSeparatedHom` puts `FormalScheme.Hom.toLRSHom` of its morphism in the goal, and at
+the identity that is `(𝟙 X : X ⟶ X).toLRSHom`, which is not the identity the other lemma is
+stated at.
+
+The cost is worth stating precisely, because this neighbourhood has carried a wrong account of it.
+Once the right-hand side is a bare identity, the proof below — `FormalScheme.restrictOpenMap_uniq`,
+a `change`, and `rfl` — goes through at *both* spellings of the identity and *both* spellings of
+the open, all four under default heartbeats and none of them slow: 2.79–2.88 s, one scratch file at
+a time, two runs each. So the `FormalScheme.restrictOpenCongr` form buys the named transport and not
+tractability, and the functor-law note in `FormalSchemes.OpenFormalSubscheme` — reverse closure
+**71**, against this file's **0** — which attributes it to the heartbeat budget is not
+reproducible. Repairing that note is deliberately outside this file's diff.
+
+The `change` is load-bearing at every one of the four spellings, and its absence is a transparency
+failure and not a budget one: without it `rw [Category.id_comp]` reports *"Did not find an
+occurrence of the pattern"* along with Lean's own note that the target is not type-correct at
+instances transparency, and it does so in 2.8 s rather than by running out of budget.
 
 Note the ascription `(𝟙 X : X ⟶ X)`: `(𝟙 X).toLRSHom` does not elaborate, since `𝟙 X` has type
 `CategoryTheory.CategoryStruct.toQuiver.1 X X`, which is not of the form field notation accepts. -/
