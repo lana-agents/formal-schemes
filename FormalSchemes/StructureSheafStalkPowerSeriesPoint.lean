@@ -210,13 +210,18 @@ closure and would put an arbitrary-point theory inside a file whose subject is o
 to `FormalSchemes.StructureSheafStalkPowerSeriesLocal`, the leaf whose subject is closest, would
 cost nothing at all in figures, because a leaf added to a leaf moves no closure. What a new module
 costs instead is prose: the module count and every reverse closure through
-`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` move by one, which is thirty-seven
-figures in twenty-three files, all of them numerals — measured by adding a scratch leaf over that
-module in a throwaway worktree and re-running the tree audit, so a later reader can re-derive it
-instead of trusting the words. At the tree this file was added to the same construction gave
-thirty-six figures in twenty-two files, and those twenty-two are exactly the files whose prose the
-commit that added this one had to touch. That cost is paid in the same commit and is the reason the
-diff is wider than the mathematics.
+`FormalSchemes.StructureSheafStalkPowerSeriesCounterexample` move by one, which is twenty-six
+figures in sixteen files — measured by adding a scratch leaf over that module in a throwaway
+worktree, re-running the tree audit and counting the per-file MISMATCH lines it prints, not the
+summary line that repeats their number, so a later reader can re-derive it instead of trusting the
+words. **That is a re-derivation and not a transcription**, and the convention is anchored rather
+than asserted: the same construction gives thirty-six in twenty-two at the tree this file was added
+to and thirty-seven in twenty-three once it was there, which are the two figures this sentence has
+carried, and those twenty-two are exactly the files whose prose the commit that added this one had
+to touch. So the older figure was right when it was taken and the tree moved under it; one commit
+back from here the construction gives twenty-five in fifteen, the difference of one being a module
+added over `FormalSchemes.FormalSpectrum` whose prose quotes that module's figure. That cost is
+paid in the same commit and is the reason the diff is wider than the mathematics.
 
 ## Main results
 

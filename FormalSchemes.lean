@@ -241,6 +241,7 @@ import FormalSchemes.GeneralSeparatedChartPreimage
 import FormalSchemes.GeneralSeparatedHom
 import FormalSchemes.GeneralSeparatedHomIdentity
 import FormalSchemes.GeneralSeparatedHomLocal
+import FormalSchemes.GeneralSeparatedHomRestrictOpen
 import FormalSchemes.GeneralSeparatedHomValues
 import FormalSchemes.GeneralSeparatedOpenCover
 import FormalSchemes.GeneralSeparatedPresentation

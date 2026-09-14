@@ -87,8 +87,8 @@ that file instead, and the two homes were costed by walking every `import Formal
 transitively over the modules under `FormalSchemes/` — a module is not counted in its own closure,
 and the aggregator at the repository root is outside the walk:
 
-* **In the hub.** `FormalSchemes.OpenFormalSubscheme` has reverse closure **74** and forward
-  closure **32**, so every edit to it rebuilds seventy-four modules, and every later edit to
+* **In the hub.** `FormalSchemes.OpenFormalSubscheme` has reverse closure **75** and forward
+  closure **32**, so every edit to it rebuilds seventy-five modules, and every later edit to
   these ten declarations does so again.
 * **As a leaf over it**, which is what this file is:
   `FormalSchemes.NestedOpenFormalSubscheme` has reverse closure **1** and forward closure **33**,

@@ -61,7 +61,7 @@ and none of the bookkeeping.
 ## Placement
 
 `FormalSchemes.GeneralSeparatedHom` is where this belongs on subject matter, and that module has
-reverse closure **4**, against `FormalSchemes.OpenFormalSubscheme`'s **74** one file down — so
+reverse closure **5**, against `FormalSchemes.OpenFormalSubscheme`'s **75** one file down — so
 the hub is cheap here in a way it is not there, and cost does not decide the placement. It is a
 new module anyway, for a reason that is not cost: `FormalSchemes.GeneralSeparatedHom` does not
 import `FormalSchemes.NestedOpenFormalSubscheme`, and putting this theorem into the hub would
