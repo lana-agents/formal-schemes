@@ -52,8 +52,8 @@ rather than the subject. Seven files use it, nineteen applications in all:
 `FormalSchemes.CofinalStalkLimit`. The only modules every one of those seven reaches are
 `FormalSchemes.AdicRing`, `FormalSchemes.FormalSpectrum` and this one, so all **three** are homes
 that add no import edge, and what picks this one out of the three is rebuild cost rather than
-edges. `FormalSchemes.AdicRing`'s reverse closure is **523** and
-`FormalSchemes.FormalSpectrum`'s reverse closure is **522**, so a declaration added to either
+edges. `FormalSchemes.AdicRing`'s reverse closure is **524** and
+`FormalSchemes.FormalSpectrum`'s reverse closure is **523**, so a declaration added to either
 rebuilds nine tenths of the tree, where this file's reverse closure is **44**.
 
 What the seven have in common is the *shape* of the containment and not its origin. Every use

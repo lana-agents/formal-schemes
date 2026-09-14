@@ -352,6 +352,7 @@ import FormalSchemes.SpfHomSchemeNatural
 import FormalSchemes.SpfIsoIdealRecovery
 import FormalSchemes.SpfIsoOverBase
 import FormalSchemes.SpfMap
+import FormalSchemes.SpfOpenSeparated
 import FormalSchemes.SpfRingEquivIso
 import FormalSchemes.SpfSectionsNontrivial
 import FormalSchemes.SpfTargetColimit
