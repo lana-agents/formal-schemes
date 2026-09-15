@@ -18,25 +18,29 @@ bookkeeping serves any target, and no consumer should have to repeat it.
 
 ## The bookkeeping, and where it is discharged
 
-`FormalScheme.GlueData.glueMorphisms` asks for compatibility at *every* pair `(i, j)`, including
-`i = j`, whereas a charted datum's transitions are only defined for `i ≠ j` — `xGlueData'` is a
-`CategoryTheory.GlueData'`, and `GlueData.ofGlueData'` fills the diagonal with `eqToHom`s guarded
-by `dite`s.
+`AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` asks for compatibility at *every* pair
+`(i, j)`, including `i = j`, whereas a charted datum's transitions are only defined for `i ≠ j` —
+`AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'` is a `CategoryTheory.GlueData'`, and
+`CategoryTheory.GlueData.ofGlueData'` fills the diagonal with `eqToHom`s guarded by `dite`s.
 
 That gap is not bridged here. `CategoryTheory.GlueData.ofGlueData'_f_comp`
 (`FormalSchemes.GlueMorphisms`) closes it once and for all `CategoryTheory.GlueData'`s, and
-`glueChartMorphisms` is its instance at `xGlueData'`: the whole of the overlap argument is that
+`AlgebraicGeometry.AffineChartedFibreDatumX.glueChartMorphisms` is its instance at
+`AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'`: the whole of the overlap argument is that
 one call, and the family `hk` is passed to it unchanged.
 
 Two details are worth recording anyway:
 
-* the general lemma is stated at the `CategoryTheory.GlueData'`, where `i` and `j` already carry
-  the index type the datum supplies, so the instance at `xGlueData'` never meets the mismatch the
-  inline proof had to bridge — `glueMorphisms` indexes by
-  `D.xFormalGlueData.toLocallyRingedSpaceGlueData.J`, which is `D.J` only by unfolding, and an
-  inline `dif_neg` needs the disequality re-typed as `¬ @Eq D.J i j` before it will fire;
+* the general lemma is stated at the `CategoryTheory.GlueData'`, where the two indices already
+  carry the index type the datum supplies, so the instance at
+  `AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'` never meets the mismatch the inline proof
+  had to bridge: `AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` indexes by the assembled
+  glue datum's index type, which is `AlgebraicGeometry.AffineChartedFibreDatumX.J` only by
+  unfolding, and an inline `dif_neg` needs the disequality re-typed with the index type ascribed
+  before it will fire;
 * the hypothesis and the chart family both need the datum's own instances in scope, so both carry
-  the `letI` prologue in their *types* — the idiom `xStructMapChart` already uses.
+  the `letI` prologue in their *types* — the idiom
+  `AlgebraicGeometry.AffineChartedFibreDatumX.xStructMapChart` already uses.
 
 ## Main definitions and results
 
@@ -75,10 +79,10 @@ This is the assembly of `AffineChartedFibreDatumX.xStructMap`
 `xStructMap` is the instance at `k := xStructMapChart` and `hk := xStructMap_naturality`.
 
 The overlap obligation `FormalScheme.GlueData.glueMorphisms` consumes is over *all* pairs, while
-`hk` only speaks of `i ≠ j`: on the diagonal `GlueData.ofGlueData'` puts an `eqToHom`, so both
-sides collapse without touching `hk`. That is
+`hk` only speaks of `i ≠ j`: on the diagonal `CategoryTheory.GlueData.ofGlueData'` puts an
+`eqToHom`, so both sides collapse without touching `hk`. That is
 `CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`), of which this
-definition is the instance at `xGlueData'`. -/
+definition is the instance at `AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'`. -/
 def glueChartMorphisms
     (k : letI := D.commRing; letI := D.algebra; letI := D.topology; letI := D.isAdic;
       ∀ i : D.J, locallyRingedSpaceObj (I.map (algebraMap R (D.A i))) ⟶ Y)
