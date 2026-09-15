@@ -91,8 +91,10 @@ variable {J : Type u} (f : J → A)
 /-! ### The charts and their overlaps -/
 
 /-- **The `i`-th chart algebra** `A{1/f_i}`: the sections of `O_{Spf A}` over the basic open
-`D(f_i)`. Unlike the charts of `FormalSchemes.ThreeChartDatum`, these genuinely differ from one
-another. -/
+`D(f_i)`. The chart algebra depends on the index through `f i`, where `ThreeChart.datumX`
+(`FormalSchemes.ThreeChartDatum`) supplies the constant family `fun _ => A`. Whether the values
+differ from one another is a property of the index type and the family together, not of this
+definition: at `f` constantly `1` they are all `A{1/1}`. -/
 abbrev chartAlgebra (i : J) : Type u :=
   awayCompletion (I.map (algebraMap R A)) (f i)
 
