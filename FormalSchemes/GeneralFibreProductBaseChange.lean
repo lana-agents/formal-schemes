@@ -1,6 +1,7 @@
 import FormalSchemes.GeneralFibreProductBothObject
 import FormalSchemes.CompletedTensorBaseChange
 import FormalSchemes.GlueDataImageInter
+import FormalSchemes.GeneralFibreProductBothOverlapRange
 
 set_option linter.style.header false
 
@@ -82,6 +83,19 @@ fields, and none of `gX`, `gY`, `τX`, `τY`, which are documentation of intent 
   and the part of one chart landing in another *is* the overlap.
 * `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated`: **the second hypothesis**, and
   the subject of the section below.
+* `AlgebraicGeometry.bothAlgDataOverlapElt` and
+  `AlgebraicGeometry.range_bothAlgDataF_base_eq_basicOpen`: the
+  dispatched overlap of two distinct product-index charts is the **basic open of one element**, in
+  all three branches of `AlgebraicGeometry.bothAlgDataF`, with
+  `AlgebraicGeometry.baseChangeHom_bothAlgDataOverlapElt` carrying that element across the base
+  change.
+* `AlgebraicGeometry.DoubleChartGlue.preimage_basicOpen_chartBaseChange_base`,
+  `AlgebraicGeometry.DoubleChartGlue.preimage_range_eq_of_range_eq_basicOpen` and
+  `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_basicOpen`: **the
+  saturation holds, as an equality, whenever the two overlaps are cut out by corresponding
+  elements** — the general criterion, which asks nothing about the transitions.
+* `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF`: **the
+  second hypothesis discharged** at a pair carrying the dispatched overlap immersions.
 * `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base_of_injective_chartBaseChange` and
   `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base`: **the glued comparison is
   injective on points**, from the square, the saturation and injectivity of the chart legs — which
@@ -130,11 +144,16 @@ and it is a second hypothesis rather than a consequence of the first:
   `CompletedTensorAwayInterchange.bothInterchangeOpenImmersion`, and the agreement of the primed
   transitions with the unprimed ones, which is itself the step `FormalSchemes.AwayBaseChangeGluedX`
   records as unavailable on its own side.
-* **The saturation is not discharged either.**
-  `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated` is a hypothesis of every
-  injectivity statement below, for the same reason the square is: at a general pair of glues it is
-  false, by the initial-overlap pair above. Both become theorems only at a pair the smart
-  constructor `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces.
+* **The saturation is discharged, and the square is not.** The two hypotheses were filed
+  together and they did not cost the same.
+  `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF` below
+  proves `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated` at a pair carrying the
+  dispatched overlap immersions, which is what the smart constructor
+  `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces, and it proves it as an
+  *equality*. What remains unproduced is the **primed glue itself**: assembling one needs the
+  transitions and the double-overlap data over `(R', I')`, which is the square's third need above
+  and not this section's. So the saturation is a theorem over hypotheses that are `rfl` for a
+  smart-constructor glue, and it waits on a constructor rather than on an argument.
 * **No cancellation, and no separation statement.** Nothing here mentions
   `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated` or
   `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`.
@@ -168,10 +187,12 @@ non-additive change to a module the fibre-product cluster sits above, and is wor
 
 ## Placement
 
-A leaf over `FormalSchemes.GeneralFibreProductBothObject`, of forward closure **64**,
-`FormalSchemes.CompletedTensorBaseChange`, of forward closure **44**, and
-`FormalSchemes.GlueDataImageInter`, of forward closure **2**: forward closure **81**, reverse
-closure **0**. `FormalSchemes.GlueMorphisms`, whose
+A leaf over four parents. `FormalSchemes.GeneralFibreProductBothObject` has forward closure
+**64**; `FormalSchemes.CompletedTensorBaseChange` has forward closure **44**;
+`FormalSchemes.GlueDataImageInter` has forward closure **2**; and
+`FormalSchemes.GeneralFibreProductBothOverlapRange` has forward closure **70**. This leaf's own
+forward closure is **87**, and this leaf's reverse closure is **0**.
+`FormalSchemes.GlueMorphisms`, whose
 `AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` this file consumes, is already inside the
 first parent's closure, so the edge to it is free and it is not imported again.
 
@@ -181,6 +202,19 @@ is **0**, so nothing downstream pays for them.
 `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι` is the one statement on the tree
 that turns *"these two chart images meet"* into *"this point is in the overlap object"*, and no
 weaker import reaches it.
+
+The fourth parent is the whole cost of the saturation section: it adds six modules — itself,
+`FormalSchemes.GeneralFibreProductBothAlgebraDataObject`,
+`FormalSchemes.CompletedTensorAwayInterchangeBoth`,
+`FormalSchemes.CompletedTensorAwayInterchangeRight`, `FormalSchemes.CompletionBasicOpen` and
+`FormalSchemes.CompletionNestedBasicOpen`. The edge was taken rather than a new leaf because this
+file's reverse closure is **0**: extending in place moves six such figures by one each and leaves
+the rest of the tree alone, where a new module would have moved eighty-seven of them.
+`AlgebraicGeometry.range_bothAlgDataF_base` is the range computation the saturation is *about* and
+no weaker import reaches it — the dispatch it consumes,
+`FormalSchemes.GeneralFibreProductBothAlgebraDataObject`, is one module below and would not have
+been enough, since restating that range here rather than consuming it is what this section
+deliberately does not do.
 
 The two parents are import-incomparable, so the statement costs either an import edge or a new
 leaf, and the edge was rejected in both directions. Adding to
@@ -662,6 +696,189 @@ end Scheme
 end BaseChange
 
 end DoubleChartGlue
+
+/-! ### The dispatched overlaps, and the saturation they satisfy -/
+
+section Saturation
+
+variable {R I A B}
+variable {R' : Type u} [CommRing R'] [Algebra R R'] {I' : Ideal R'}
+variable [∀ i, Algebra R' (A i)] [∀ i, IsScalarTower R R' (A i)]
+variable [∀ j, Algebra R' (B j)] [∀ j, IsScalarTower R R' (B j)]
+
+/-- **The preimage of a basic open under the chart-level comparison is the basic open of the
+image.** `AlgebraicGeometry.DoubleChartGlue.chartBaseChange` is `Spf` of
+`CompletedTensorProduct.baseChangeHom`, so this is `FormalSpectrum.map_preimage_basicOpen` read as
+an equality of sets rather than of opens. It is the only topology in the section below: everything
+else is the algebra of which element cuts out which overlap. -/
+theorem DoubleChartGlue.preimage_basicOpen_chartBaseChange_base (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I') (p : JX × JY)
+    (c : CompletedTensorProduct R I (A p.1) (B p.2)) :
+    ⇑(DoubleChartGlue.chartBaseChange (A := A) (B := B) hI hII' p).base ⁻¹'
+        (FormalSpectrum.basicOpen
+            (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2)) c :
+          Set (FormalSpectrum
+            (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2)))) =
+      (FormalSpectrum.basicOpen (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))
+          (CompletedTensorProduct.baseChangeHom (A := A p.1) (B := B p.2) hI hII' c) :
+        Set (FormalSpectrum
+          (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2)))) := by
+  rw [← FormalSpectrum.map_preimage_basicOpen _ _
+    (CompletedTensorProduct.baseChangeHom (A := A p.1) (B := B p.2) hI hII')
+    (CompletedTensorProduct.le_comap_baseChangeHom hI hII') c]
+  rfl
+
+/-- **The saturation is an equality, not merely a containment**, as soon as the two overlaps are
+cut out by corresponding elements: if the target's `p`-`p'` overlap is the basic open of `c` and
+the source's is the basic open of `c`'s image, then the comparison's preimage of the first *is* the
+second.
+
+This is the general criterion, and it asks nothing about the glue beyond the two ranges — which is
+the reason the saturation is cheap where the square is not. A square is an equation between
+morphisms and has to be traced through the transitions; a saturation is a containment of subsets of
+one chart, and a chart of a fibre product carries its overlaps as basic opens. -/
+theorem DoubleChartGlue.preimage_range_eq_of_range_eq_basicOpen
+    (G' : DoubleChartGlue R' I' A B) (G : DoubleChartGlue R I A B) (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I') (p p' : JX × JY) (hne : p ≠ p')
+    (c : CompletedTensorProduct R I (A p.1) (B p.2))
+    (hG : Set.range ⇑(G.f p p' hne).base =
+      (FormalSpectrum.basicOpen (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2)) c :
+        Set (FormalSpectrum (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2)))))
+    (hG' : Set.range ⇑(G'.f p p' hne).base =
+      (FormalSpectrum.basicOpen (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))
+          (CompletedTensorProduct.baseChangeHom (A := A p.1) (B := B p.2) hI hII' c) :
+        Set (FormalSpectrum
+          (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))))) :
+    ⇑(DoubleChartGlue.chartBaseChange (A := A) (B := B) hI hII' p).base ⁻¹'
+        Set.range ⇑(G.f p p' hne).base = Set.range ⇑(G'.f p p' hne).base := by
+  rw [hG, hG', DoubleChartGlue.preimage_basicOpen_chartBaseChange_base (A := A) (B := B) hI hII' p]
+
+/-- **The general criterion for the saturation**, from
+`AlgebraicGeometry.DoubleChartGlue.preimage_range_eq_of_range_eq_basicOpen` at every pair. The
+containment `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated` asks for is the
+`le_of_eq` of an equality. -/
+theorem DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_basicOpen
+    (G' : DoubleChartGlue R' I' A B) (G : DoubleChartGlue R I A B) (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I')
+    (c : ∀ (p p' : JX × JY), p ≠ p' → CompletedTensorProduct R I (A p.1) (B p.2))
+    (hG : ∀ (p p' : JX × JY) (hne : p ≠ p'), Set.range ⇑(G.f p p' hne).base =
+      (FormalSpectrum.basicOpen (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2))
+          (c p p' hne) :
+        Set (FormalSpectrum (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2)))))
+    (hG' : ∀ (p p' : JX × JY) (hne : p ≠ p'), Set.range ⇑(G'.f p p' hne).base =
+      (FormalSpectrum.basicOpen (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))
+          (CompletedTensorProduct.baseChangeHom (A := A p.1) (B := B p.2) hI hII' (c p p' hne)) :
+        Set (FormalSpectrum
+          (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))))) :
+    G'.IsBaseChangeOverlapSaturated G hI hII' := fun p p' hne =>
+  le_of_eq (DoubleChartGlue.preimage_range_eq_of_range_eq_basicOpen G' G hI hII' p p' hne
+    (c p p' hne) (hG p p' hne) (hG' p p' hne))
+
+end Saturation
+
+/-! ### The dispatched overlaps of a smart-constructor datum -/
+
+section Dispatched
+
+variable {R I A B}
+
+open scoped Classical in
+/-- **The element that cuts out the dispatched overlap.** The overlap object of two distinct
+product-index charts is `AlgebraicGeometry.bothAlgDataV`, dispatched on which coordinate differs,
+and its image in `Spf(A_{p.1} ⊗̂_R B_{p.2})` is a basic open in every branch: the basic open of
+the second factor's away-element when only the second coordinate differs, of the first factor's
+when only the first, and the intersection of the two when both differ — which is the basic open of
+their product, by `FormalSpectrum.basicOpen_mul`. Collapsing the three branches to one element is
+what lets a single criterion cover all three. -/
+noncomputable def bothAlgDataOverlapElt (gX : ∀ i _ : JX, A i) (gY : ∀ j _ : JY, B j)
+    (p p' : JX × JY) : CompletedTensorProduct R I (A p.1) (B p.2) :=
+  if p.1 = p'.1 then CompletedTensorProduct.inr R I (A p.1) (B p.2) (gY p.2 p'.2)
+  else if p.2 = p'.2 then CompletedTensorProduct.inl R I (A p.1) (B p.2) (gX p.1 p'.1)
+  else CompletedTensorProduct.inl R I (A p.1) (B p.2) (gX p.1 p'.1) *
+    CompletedTensorProduct.inr R I (A p.1) (B p.2) (gY p.2 p'.2)
+
+/-- **The dispatched overlap immersion's range is the basic open of one element.**
+`AlgebraicGeometry.range_bothAlgDataF_base` (`FormalSchemes.GeneralFibreProductBothOverlapRange`)
+already computes that range, as an intersection of two branch-dispatched sets; this restates it in
+the single-element form the criterion above consumes. Collapsing the intersection is
+`FormalSpectrum.basicOpen_mul`, and the branch where *both* coordinates agree is `absurd`. -/
+theorem range_bothAlgDataF_base_eq_basicOpen (hI : I.FG) (gX : ∀ i _ : JX, A i)
+    (gY : ∀ j _ : JY, B j) (p p' : JX × JY) (h : p ≠ p') :
+    Set.range ⇑(bothAlgDataF (R := R) (I := I) (A := A) (B := B) hI gX gY p p' h).base =
+      (FormalSpectrum.basicOpen (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2))
+          (bothAlgDataOverlapElt gX gY p p') :
+        Set (FormalSpectrum
+          (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2)))) := by
+  rw [range_bothAlgDataF_base hI gX gY p p' h]
+  unfold bothAlgDataOverlapElt
+  by_cases h1 : p.1 = p'.1
+  · rw [if_pos h1, if_pos h1, Set.univ_inter]
+    by_cases h2 : p.2 = p'.2
+    · exact absurd (Prod.ext h1 h2) h
+    · rw [if_neg h2]
+  · rw [if_neg h1, if_neg h1]
+    by_cases h2 : p.2 = p'.2
+    · rw [if_pos h2, if_pos h2, Set.inter_univ]
+    · rw [if_neg h2, if_neg h2, FormalSpectrum.basicOpen_mul,
+        TopologicalSpace.Opens.coe_inf]
+
+variable {R' : Type u} [CommRing R'] [Algebra R R'] {I' : Ideal R'}
+variable [∀ i, Algebra R' (A i)] [∀ i, IsScalarTower R R' (A i)]
+variable [∀ j, Algebra R' (B j)] [∀ j, IsScalarTower R R' (B j)]
+
+/-- **The comparison carries the dispatched overlap element to the dispatched overlap element.**
+The two `if`s branch on the same pair of coordinate equalities, so the three branches match up, and
+each is `CompletedTensorProduct.baseChangeHom_inl`, `..baseChangeHom_inr`, or their product. The
+away-elements are the *same* elements on both sides — the chart algebras do not move
+under the base change, only the base does — and that is the whole reason the saturation holds at a
+smart-constructor pair. -/
+theorem baseChangeHom_bothAlgDataOverlapElt (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I') (gX : ∀ i _ : JX, A i) (gY : ∀ j _ : JY, B j)
+    (p p' : JX × JY) :
+    CompletedTensorProduct.baseChangeHom (A := A p.1) (B := B p.2) hI hII'
+        (bothAlgDataOverlapElt (I := I) gX gY p p') =
+      bothAlgDataOverlapElt (I := I') gX gY p p' := by
+  unfold bothAlgDataOverlapElt
+  split_ifs
+  · exact CompletedTensorProduct.baseChangeHom_inr hI hII' _
+  · exact CompletedTensorProduct.baseChangeHom_inl hI hII' _
+  · rw [map_mul, CompletedTensorProduct.baseChangeHom_inl hI hII',
+      CompletedTensorProduct.baseChangeHom_inr hI hII']
+
+/-- **At a dispatched pair the saturation holds as an equality.** The hypotheses say only that the
+two glues carry the dispatched overlap immersions with the *same* away-elements, which is `rfl` for
+a glue the smart constructor `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produced. -/
+theorem DoubleChartGlue.preimage_range_eq_of_range_eq_bothAlgDataF
+    (G' : DoubleChartGlue R' I' A B) (G : DoubleChartGlue R I A B) (hI' : I'.FG) (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I') (gX : ∀ i _ : JX, A i) (gY : ∀ j _ : JY, B j)
+    (hG : ∀ (p p' : JX × JY) (hne : p ≠ p'), Set.range ⇑(G.f p p' hne).base =
+      Set.range ⇑(bothAlgDataF hI gX gY p p' hne).base)
+    (hG' : ∀ (p p' : JX × JY) (hne : p ≠ p'), Set.range ⇑(G'.f p p' hne).base =
+      Set.range ⇑(bothAlgDataF hI' gX gY p p' hne).base)
+    (p p' : JX × JY) (hne : p ≠ p') :
+    ⇑(DoubleChartGlue.chartBaseChange (A := A) (B := B) hI hII' p).base ⁻¹'
+        Set.range ⇑(G.f p p' hne).base = Set.range ⇑(G'.f p p' hne).base := by
+  rw [hG p p' hne, hG' p p' hne, range_bothAlgDataF_base_eq_basicOpen,
+    range_bothAlgDataF_base_eq_basicOpen,
+    DoubleChartGlue.preimage_basicOpen_chartBaseChange_base (A := A) (B := B) hI hII' p,
+    baseChangeHom_bothAlgDataOverlapElt (A := A) (B := B) hI hII']
+
+/-- **The saturation, discharged at a dispatched pair.** *Reach for this one*: together with a
+discharge of `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible` it is everything
+`AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base` asks for beyond the standing
+hypotheses. -/
+theorem DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF
+    (G' : DoubleChartGlue R' I' A B) (G : DoubleChartGlue R I A B) (hI' : I'.FG) (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I') (gX : ∀ i _ : JX, A i) (gY : ∀ j _ : JY, B j)
+    (hG : ∀ (p p' : JX × JY) (hne : p ≠ p'), Set.range ⇑(G.f p p' hne).base =
+      Set.range ⇑(bothAlgDataF hI gX gY p p' hne).base)
+    (hG' : ∀ (p p' : JX × JY) (hne : p ≠ p'), Set.range ⇑(G'.f p p' hne).base =
+      Set.range ⇑(bothAlgDataF hI' gX gY p p' hne).base) :
+    G'.IsBaseChangeOverlapSaturated G hI hII' := fun p p' hne =>
+  le_of_eq (DoubleChartGlue.preimage_range_eq_of_range_eq_bothAlgDataF G' G hI' hI hII' gX gY
+    hG hG' p p' hne)
+
+end Dispatched
 
 /-! ### Every datum's fibre product is one of these -/
 
