@@ -42,7 +42,11 @@ tractable first, and the same device carries the Tate two-patch prototype
 discharged by genuine proofs, at an arbitrary index type, in
 `FormalSchemes/CompletionBasicOpenGlue.lean`, over a single affine — the first *completion* glue
 datum on this tree whose cocycle condition has content. (`FormalSchemes/ThreeChartDatum.lean`
-discharges the analogous fields of an `AffineChartedFibreDatumX` on `ULift (Fin 3)`.)
+discharges the analogous fields of an `AffineChartedFibreDatumX` at every index type, derived from
+its transition data rather than by `False.elim` — `ThreeChart.datumX_t'_eq`,
+`ThreeChart.datumX_xt'_eq`; what a pairwise distinct triple of indices adds is that their
+hypotheses are satisfiable, so that content is exercised, and `ThreeChart.exists_pairwise_distinct`
+supplies such a triple at `ULift (Fin 3)`.)
 
 ## Main definitions and results
 
