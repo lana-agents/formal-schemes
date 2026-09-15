@@ -35,9 +35,13 @@ computation through `RingSplit.adicAwayUnitEquiv'`:
 
 ## Main results
 
-* `FormalSpectrum.awayCompletion_hom_ext`: **the rigidity principle.** For `I` finitely generated,
-  two ring maps `R{1/f} →+* R{1/g}` that each carry `awayCompletionIdeal I f` into
-  `awayCompletionIdeal I g` and that agree after `FormalSpectrum.awayCompletionHom I f` are equal.
+* `FormalSpectrum.awayCompletion_hom_ext'`: **the rigidity principle**, at an arbitrary complete
+  target. For `I` finitely generated, two ring maps `R{1/f} →+* A` into an `L`-adically complete
+  ring that each carry `awayCompletionIdeal I f` into `L` and that agree after
+  `FormalSpectrum.awayCompletionHom I f` are equal.
+* `FormalSpectrum.awayCompletion_hom_ext`: the same at `A = R{1/g}`, which is the form the rest of
+  this file and its consumers use; the completeness hypothesis is then discharged from finite
+  generation of `I`.
 * `FormalSpectrum.awayCompletionRestrict_unique`: `awayCompletionRestrict` is the unique such map.
 * `FormalSpectrum.awayCompletionRestrict_self`, `FormalSpectrum.awayCompletionRestrict_comp`: the
   identity and the chain law.
@@ -110,33 +114,34 @@ variable {R : Type u} [CommRing R] (I : Ideal R) (f g : R)
 ### The rigidity principle
 -/
 
-/-- **A map `R{1/f} →+* R{1/g}` is determined by its square over `R`, once it is continuous.** Two
-ring maps that each carry the ideal of definition of `R{1/f}` into that of `R{1/g}` and that agree
-after `FormalSpectrum.awayCompletionHom I f` are equal.
+/-- **A map out of `R{1/f}` is determined by its square over `R`, once it is continuous**, at an
+arbitrary complete target. Two ring maps `R{1/f} →+* A` into an `L`-adically complete ring that
+each carry the ideal of definition of `R{1/f}` into `L`, and that agree after
+`FormalSpectrum.awayCompletionHom I f`, are equal.
 
 This is `AdicCompletion.hom_ext_of_continuous` (`FormalSchemes.AdicExtend`) instantiated at
-`R{1/f}` and `R{1/g}`, with two adjustments. Its filtration hypothesis is one condition per level,
-in the module form `K ^ m • ⊤`, and is recovered from the single ideal bound below through
+`R{1/f}`, with two adjustments. Its filtration hypothesis is one condition per level, in the
+module form `K ^ m • ⊤`, and is recovered from the single ideal bound below through
 `AdicCompletion.mem_idealOfDefinition_pow_iff` (`FormalSchemes.Completion`). Its agreement
 hypothesis is on all of `Localization.Away f`, and is recovered from agreement on the image of `R`
 by `IsLocalization.ringHom_ext` at `Submonoid.powers f`.
 
-The continuity hypothesis is exactly what `FormalSpectrum.le_comap_awayCompletionRestrict` proves,
-so `awayCompletionRestrict` satisfies it; that is `awayCompletionRestrict_unique` below. -/
-theorem awayCompletion_hom_ext (hI : I.FG) {F G : awayCompletion I f →+* awayCompletion I g}
-    (hF : awayCompletionIdeal I f ≤ (awayCompletionIdeal I g).comap F)
-    (hG : awayCompletionIdeal I f ≤ (awayCompletionIdeal I g).comap G)
+The target is arbitrary because nothing in that argument looks at it beyond asking that it be
+Hausdorff: rigidity is a statement about the *source*. The case the rest of this file uses is
+`FormalSpectrum.awayCompletion_hom_ext` just below, where `(A, L)` is `R{1/g}` with its ideal of
+definition; the general form is consumed by `FormalSchemes.AwayCompletionUniversal`, where the
+target is a chart algebra and there is no second `g`. -/
+theorem awayCompletion_hom_ext' {A : Type u} [CommRing A] {L : Ideal A} [IsAdicComplete L A]
+    (hI : I.FG) {F G : awayCompletion I f →+* A} (hF : awayCompletionIdeal I f ≤ L.comap F)
+    (hG : awayCompletionIdeal I f ≤ L.comap G)
     (h : F.comp (awayCompletionHom I f) = G.comp (awayCompletionHom I f)) : F = G := by
-  haveI : IsAdicComplete (awayCompletionIdeal I g) (awayCompletion I g) :=
-    (AdicCompletion.isAdicRing_map _ (hI.map _)).toIsAdicComplete
-  have pow : ∀ (Φ : awayCompletion I f →+* awayCompletion I g),
-      awayCompletionIdeal I f ≤ (awayCompletionIdeal I g).comap Φ →
+  have pow : ∀ (Φ : awayCompletion I f →+* A),
+      awayCompletionIdeal I f ≤ L.comap Φ →
       ∀ (m : ℕ), ∀ x ∈ ((I.map (algebraMap R (Localization.Away f))) ^ m • ⊤ :
-        Submodule (Localization.Away f) (awayCompletion I f)),
-        Φ x ∈ (awayCompletionIdeal I g) ^ m := by
+        Submodule (Localization.Away f) (awayCompletion I f)), Φ x ∈ L ^ m := by
     intro Φ hΦ m x hx
     rw [← AdicCompletion.mem_idealOfDefinition_pow_iff] at hx
-    have hmap : (awayCompletionIdeal I f ^ m).map Φ ≤ awayCompletionIdeal I g ^ m := by
+    have hmap : (awayCompletionIdeal I f ^ m).map Φ ≤ L ^ m := by
       rw [Ideal.map_pow]
       exact Ideal.pow_right_mono (Ideal.map_le_iff_le_comap.mpr hΦ) m
     exact hmap (Ideal.mem_map_of_mem _ hx)
@@ -150,6 +155,23 @@ theorem awayCompletion_hom_ext (hI : I.FG) {F G : awayCompletion I f →+* awayC
   have hloc := IsLocalization.ringHom_ext (M := Submonoid.powers f) (S := Localization.Away f) key
   intro b
   simpa [AssociatedGraded.algebraMap_eq_of] using RingHom.congr_fun hloc b
+
+/-- **A map `R{1/f} →+* R{1/g}` is determined by its square over `R`, once it is continuous.** Two
+ring maps that each carry the ideal of definition of `R{1/f}` into that of `R{1/g}` and that agree
+after `FormalSpectrum.awayCompletionHom I f` are equal.
+
+This is `FormalSpectrum.awayCompletion_hom_ext'` at `(A, L) = (R{1/g}, awayCompletionIdeal I g)`,
+whose completeness `AdicCompletion.isAdicRing_map` supplies from finite generation of `I`.
+
+The continuity hypothesis is exactly what `FormalSpectrum.le_comap_awayCompletionRestrict` proves,
+so `awayCompletionRestrict` satisfies it; that is `awayCompletionRestrict_unique` below. -/
+theorem awayCompletion_hom_ext (hI : I.FG) {F G : awayCompletion I f →+* awayCompletion I g}
+    (hF : awayCompletionIdeal I f ≤ (awayCompletionIdeal I g).comap F)
+    (hG : awayCompletionIdeal I f ≤ (awayCompletionIdeal I g).comap G)
+    (h : F.comp (awayCompletionHom I f) = G.comp (awayCompletionHom I f)) : F = G := by
+  haveI : IsAdicComplete (awayCompletionIdeal I g) (awayCompletion I g) :=
+    (AdicCompletion.isAdicRing_map _ (hI.map _)).toIsAdicComplete
+  exact awayCompletion_hom_ext' I f hI hF hG h
 
 /-- **`FormalSpectrum.awayCompletionRestrict` is the unique continuous map under `R`.** Any ring map
 `R{1/f} →+* R{1/g}` carrying the ideal of definition across and restricting to

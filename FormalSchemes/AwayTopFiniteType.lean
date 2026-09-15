@@ -39,9 +39,11 @@ variables gives a presentation of `A{1/g}^` by `n + 1`.
 * `Ideal.map_algebraMap_of_tower`: transitivity of ideal extension along a tower, stated for the
   reason in the next-but-one section. The `awayCompletion`-specific consequences that used to sit
   beside it — `awayCompletionIdeal_eq_map_algebraMap` and `map_algebraMap_awayCompletion` — moved
-  to `FormalSchemes.BasicOpenChart` in issue 895; this file now consumes them from there. Nothing
-  in the tree currently uses `map_algebraMap_of_tower` itself, which was left in place rather than
-  deleted because it is a general `Ideal` fact independent of this file's subject.
+  to `FormalSchemes.BasicOpenChart` in issue 895; this file now consumes them from there. It was
+  kept here rather than deleted at a time when nothing in the tree used it, because it is a
+  general `Ideal` fact independent of this file's subject. Its consumer is
+  `Ideal.map_algebraMap_family_eq_of_tower` (`FormalSchemes.AwayCompletionUniversal`), which is
+  this statement at function level.
 
 ## Route
 

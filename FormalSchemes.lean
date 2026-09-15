@@ -76,6 +76,7 @@ import FormalSchemes.AwayCompletionRestrict
 import FormalSchemes.AwayCompletionRestrictUnique
 import FormalSchemes.AwayCompletionSelfMul
 import FormalSchemes.AwayCompletionSurjective
+import FormalSchemes.AwayCompletionUniversal
 import FormalSchemes.AwayCongrAlgebraMap
 import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.BaseChange
