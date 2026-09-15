@@ -42,6 +42,8 @@ subscheme, so a closed diagonal over `R` restricts to a closed diagonal over `R'
   (ideal of definition onto ideal of definition), and
   `CompletedTensorProduct.baseChangeHom_inl` / `CompletedTensorProduct.baseChangeHom_inr`: it
   commutes with both factor inclusions.
+* `CompletedTensorProduct.baseChangeHom_mem_pow`: the comparison is continuous at every level, in
+  the form the universal property `CompletedTensorProduct.hom_ext` consumes.
 * `CompletedTensorProduct.schemeBaseChange`: the induced morphism of formal schemes
   `Spf (A ⊗̂_{R'} B) ⟶ Spf (A ⊗̂_R B)`, and
   `CompletedTensorProduct.schemeBaseChange_isClosedImmersion`: it is a closed immersion.
@@ -168,6 +170,21 @@ theorem le_comap_baseChangeHom (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
     idealOfDefinition R I A B ≤
       (idealOfDefinition R' I' A B).comap (baseChangeHom (A := A) (B := B) hI hII') :=
   Ideal.le_comap_of_map_le (le_of_eq (map_baseChangeHom hI hII'))
+
+/-- **The comparison is continuous at every level**: it carries the `m`-th power of the source's
+ideal of definition into the `m`-th power of the target's. This is
+`CompletedTensorProduct.map_baseChangeHom` read through `Ideal.map_pow`, and it is the shape the
+universal property `CompletedTensorProduct.hom_ext` asks of each of the two maps it compares;
+`CompletedTensorProduct.le_comap_baseChangeHom` above is the same fact at `m = 1`, in the shape
+`FormalSpectrum.locallyRingedSpaceMap` asks for.
+
+`RestrictedPowerSeries.baseChangeHom_mem_pow` is the namesake for the restricted-power-series base
+change and is a different statement about a different map. -/
+theorem baseChangeHom_mem_pow (hI : I.FG) (hII' : I.map (algebraMap R R') = I') (m : ℕ)
+    {x : CompletedTensorProduct R I A B} (hx : x ∈ (idealOfDefinition R I A B) ^ m) :
+    baseChangeHom (A := A) (B := B) hI hII' x ∈ (idealOfDefinition R' I' A B) ^ m := by
+  have h := Ideal.mem_map_of_mem (baseChangeHom (A := A) (B := B) hI hII') hx
+  rwa [Ideal.map_pow, map_baseChangeHom hI hII'] at h
 
 /-- **The comparison commutes with the inclusion of the first factor.** Both sides are the image of
 the pure tensor `a ⊗ₜ 1` in their respective completions, and `CompletedTensorProduct.inl` factors
