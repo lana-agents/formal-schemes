@@ -2,9 +2,6 @@ import FormalSchemes.GeneralFibreProductBothObject
 import FormalSchemes.CompletedTensorBaseChange
 
 set_option linter.style.header false
-set_option linter.style.setOption false
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 
 /-!
 # The base change of a general fibre product, glued from its charts
@@ -224,7 +221,6 @@ variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
 abbrev doubleChartObj (p : JX × JY) : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2))
 
-set_option linter.unusedVariables false in
 /-- **The geometric glue of a two-sided fibre product over a fixed chart family.** These are
 exactly the eight geometric fields of `AlgebraicGeometry.BothChartedFibreDatum`, with the chart
 algebras `A`, `B` and the adic base `(R, I)` moved out of the structure and into its parameters.
