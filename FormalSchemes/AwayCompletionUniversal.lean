@@ -1,3 +1,4 @@
+import FormalSchemes.AwayBaseChangeTopFiniteType
 import FormalSchemes.AwayCompletionRestrictUnique
 import FormalSchemes.AwayTopFiniteType
 
@@ -14,15 +15,18 @@ What this file adds is the shape of the map that installs such a structure. That
 `FormalSpectrum.awayBaseHom`, an `AdicCompletion.mapCompletion` (`FormalSchemes.Completion`)
 transported from a localization map, and its target is again an away completion over `R`; the maps
 below go **out of** `R{1/f}` into an *arbitrary* adically complete `R`-algebra, and are *produced*
-by a universal property rather than transported. Read that way `R{1/f}` is the affine base a
-morphism `X ⟶ Spf (R, I)` acquires when it factors through the basic open `D(f)`, and the question
-this file answers is what of an affine-chart presentation of `X` over `(R, I)` survives that change
-of base.
+by a universal property rather than transported. The contrast is one of shape and not of content:
+where both constructions apply they are the same map, which is
+`FormalSpectrum.awayBaseHom_eq_awayCompletionLift` below. Read as a base ring, `R{1/f}` is the
+affine base a morphism `X ⟶ Spf (R, I)` acquires when it factors through the basic open `D(f)`, and
+the question this file answers is what of an affine-chart presentation of `X` over `(R, I)`
+survives that change of base.
 
 Three things do — an `R{1/f}`-algebra structure on each chart algebra, the ideal it induces
 there, and the `R{1/f}`-linearity of the transitions between charts — and they are the three
-outputs below. Nothing here is about formal schemes; it is all commutative algebra, which is the
-point: the geometry contributes only the hypothesis that `f` is invertible on each chart.
+outputs the change of base needs. Nothing here is about formal schemes; it is all commutative
+algebra, which is the point: the geometry contributes only the hypothesis that `f` is invertible on
+each chart.
 
 ## The universal property
 
@@ -92,6 +96,8 @@ does not settle it; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
 * `Ideal.map_algebraMap_family_eq_of_tower`: the induced ideal families agree, as functions.
 * `FormalSpectrum.algEquiv_commutes_awayCompletion`: an `R`-algebra map between complete
   `R{1/f}`-algebras is `R{1/f}`-linear.
+* `FormalSpectrum.awayBaseHom_eq_awayCompletionLift`: the structural map of the away base change is
+  the lift, so the transported and the universal `R{1/f} → A{1/(f·A)}^` are one map.
 
 ## What is *not* proved here
 
@@ -116,24 +122,35 @@ identities live, not here.
 
 ## Placement
 
-A leaf over `FormalSchemes.AwayCompletionRestrictUnique` and `FormalSchemes.AwayTopFiniteType`:
-forward closure **49**, reverse closure **0**. Nothing below mentions formal geometry, so an
-earlier home would be available for each declaration on its own; what keeps them in one file is
-that they are one argument — the universal property, its uniqueness, and the two consequences
-that follow from it — and that the consumer they were written for, the change of base of an
-affine-chart presentation to a basic open of its base, does not exist yet.
+A leaf over `FormalSchemes.AwayCompletionRestrictUnique`, `FormalSchemes.AwayTopFiniteType` and
+`FormalSchemes.AwayBaseChangeTopFiniteType`: forward closure **55**, reverse closure **0**. Nothing
+below mentions formal geometry, so an earlier home would be available on its own for each
+declaration of the universal property; what keeps them in one file is that they are one argument —
+the universal property, its uniqueness, and the two consequences that follow from it — and that the
+consumer they were written for, the change of base of an affine-chart presentation to a basic open
+of its base, does not exist yet.
+
+The identification at the end has no earlier home at all: its two ingredients,
+`FormalSpectrum.awayBaseHom` and `FormalSpectrum.awayCompletionLift`, live in modules neither of
+which is in the other's closure, so stating it costs an import edge whichever way it is taken. The
+edge runs this way because the other one, `FormalSchemes.AwayCompletionUniversal` imported into
+`FormalSchemes.AwayBaseChangeTopFiniteType`, brings a much larger subtree into a file that has
+consumers, and a new leaf over both would pay the leaf tax on every module in its own closure. The
+deltas are measured in the pull request that added the edge (issue 2019).
 
 The one edit to a declaration outside this file is the generalisation of
 `FormalSpectrum.awayCompletion_hom_ext` to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in
-place** in `FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **28**. The rest
-of the diff that created this module is prose: the figures a new leaf moves in the modules above
-it, and the sentence in `FormalSchemes.AwayTopFiniteType` recording `Ideal.map_algebraMap_of_tower`
-as unused, which output 2 below made false. Restating the general form here instead would have cost
-no rebuild and was declined on two grounds: it would leave two near-duplicate rigidity statements
-in the tree, which is the shape the duplicate statement scan under `scripts/` exists to catch; and
-the general form is the true one, the old special form being recovered from it in a single line.
-The old name, statement and binder order are unchanged, so no call site moved — its one consumer
-outside its own file is `FormalSchemes.BasicOpenChartOpensSections`.
+place** in `FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **28**. Besides
+this module's own line in the root module list, which `lake exe mk_all` maintains and which adding
+any module forces, the rest of the diff that created this module is prose: the figures a new leaf
+moves in the modules above it, and the sentence in `FormalSchemes.AwayTopFiniteType` recording
+`Ideal.map_algebraMap_of_tower` as unused, which output 2 below made false. Restating the general
+form here instead would have cost no rebuild and was declined on two grounds: it would leave two
+near-duplicate rigidity statements in the tree, which is the shape the duplicate statement scan
+under `scripts/` exists to catch; and the general form is the true one, the old special form being
+recovered from it in a single line. The old name, statement and binder order are unchanged, so no
+call site moved — its one consumer outside its own file is
+`FormalSchemes.BasicOpenChartOpensSections`.
 
 ## References
 
@@ -405,6 +422,65 @@ theorem awayCompletionChartAlgEquivBase_symm_apply (hI : I.FG) {s : A} {s' : A'}
     (awayCompletionChartAlgEquivBase I f hI e).symm y = e.symm y := rfl
 
 end Chart
+
+/-!
+### The structural map of the away base change is the lift
+-/
+
+section BaseChange
+
+variable {A : Type u} [CommRing A] [Algebra R A] {L : Ideal A}
+
+/-- **The base element is a unit in the away completion of a chart at its own image.** `f` reaches
+`A{1/(f·A)}^` through `A_{f·A}`, where it is the away element itself, so
+`IsLocalization.Away.algebraMap_isUnit` gives the unit downstairs and `IsUnit.map` carries it up
+the completion map. It is the completion-level form of
+`FormalSpectrum.isUnit_algebraMap_awayLocBase` (`FormalSchemes.AwayBaseChangeTopFiniteType`), and
+it is what the universal property below is applied at.
+
+It is stated here, where the theorem below needs the unit as a *term* in its own statement, rather
+than beside the rest of the `awayCompletion` API in `FormalSchemes.BasicOpenChart`, whose reverse
+closure is **424**: the move down rebuilds all of those, which is the price to pay once a second
+module asks for the lemma and not before — this tree's standing disposition for a general statement
+with one call site. -/
+theorem isUnit_algebraMap_awayCompletionBase :
+    IsUnit (algebraMap R (awayCompletion L (algebraMap R A f)) f) := by
+  rw [IsScalarTower.algebraMap_apply R (Localization.Away (algebraMap R A f))
+    (awayCompletion L (algebraMap R A f))]
+  exact (isUnit_algebraMap_awayLocBase (A := A) f).map _
+
+/-- **The structural map of the away base change is the lift the universal property produces.**
+`FormalSpectrum.awayBaseHom` (`FormalSchemes.AwayBaseChangeTopFiniteType`) transports the
+localization map `R_f → A_{f·A}` up the completions; `FormalSpectrum.awayCompletionLift` produces a
+map into any complete `R`-algebra in which `f` is inverted. At `A{1/(f·A)}^` both apply, and they
+agree — so the `R{1/f}`-algebra structure `FormalSpectrum.awayBaseAlgebra` is `RingHom.toAlgebra`
+of the lift, which is a `congrArg` away and is not restated here.
+
+The proof is `FormalSpectrum.eq_awayCompletionLift` and nothing else. Its only hypothesis is that
+the map be one under `R`, which `FormalSpectrum.awayBaseHom_comp_algebraMap` already proves;
+`FormalSpectrum.awayCompletionHom_eq_algebraMap` matches the two spellings of `R → R{1/f}`.
+Continuity is not a hypothesis of either side — over a basic open it is free, which is the finding
+recorded above.
+
+The `letI` supplies what `FormalSpectrum.awayCompletionLift` needs of its target and is unavoidable
+for the reason it is in `FormalSpectrum.isScalarTower_awayCompletionLift`: the instance depends on
+the proof arguments `hI` and `hL`. It is
+`FormalSpectrum.isAdicComplete_map_algebraMap_awayCompletion` at `algebraMap R A f`, read along
+`hL`. Being a `Prop`, which instance a caller supplies does not matter. -/
+theorem awayBaseHom_eq_awayCompletionLift (hI : I.FG) (hL : I.map (algebraMap R A) = L) :
+    letI : IsAdicComplete (I.map (algebraMap R (awayCompletion L (algebraMap R A f))))
+        (awayCompletion L (algebraMap R A f)) :=
+      hL ▸ isAdicComplete_map_algebraMap_awayCompletion I hI (algebraMap R A f)
+    awayBaseHom f hI hL =
+      awayCompletionLift I f (isUnit_algebraMap_awayCompletionBase (L := L) f) := by
+  letI : IsAdicComplete (I.map (algebraMap R (awayCompletion L (algebraMap R A f))))
+      (awayCompletion L (algebraMap R A f)) :=
+    hL ▸ isAdicComplete_map_algebraMap_awayCompletion I hI (algebraMap R A f)
+  refine eq_awayCompletionLift I f hI _ ?_
+  rw [awayCompletionHom_eq_algebraMap]
+  exact awayBaseHom_comp_algebraMap f hI hL
+
+end BaseChange
 
 end FormalSpectrum
 
