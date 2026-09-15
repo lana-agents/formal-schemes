@@ -552,6 +552,19 @@ def selftest() -> int:
     # location, the same token *displayed* inside a mention span, a pointer inside a fenced block,
     # and the Mathlib pointer.  Only the first is a defect, and the second is what `CONTRIBUTING.md`
     # needs in order to be able to state the rule at all.
+    doc = ("cited: `Gluing.lean:48`\n"
+           "displayed: `` `Gluing.lean:48` ``\n"
+           "```\n`Gluing.lean:52`\n```\n"
+           "`Mathlib/AlgebraicGeometry/Gluing.lean:262-423`\n")
+    want = [(1, "Gluing.lean:48")]
+    got = list(line_pointers_in_markdown(doc, fake))
+    ok = got == want
+    bad += not ok
+    print("%s  in Markdown a cited pointer is reported and a displayed one is not"
+          % ("ok  " if ok else "FAIL"))
+    if not ok:
+        print("        want %r\n        got  %r" % (want, got))
+
     # The root module list (issue 2022).  It is not excludable by shape and it is not a module, so
     # `project_paths` is the only thing that can classify it; before that entry existed all three
     # of these read the other way and a docstring could not name the file at all.  The three are
@@ -565,19 +578,6 @@ def selftest() -> int:
     ok = got == want
     bad += not ok
     print("%s  the root module list is a project path, and is not a module"
-          % ("ok  " if ok else "FAIL"))
-    if not ok:
-        print("        want %r\n        got  %r" % (want, got))
-
-    doc = ("cited: `Gluing.lean:48`\n"
-           "displayed: `` `Gluing.lean:48` ``\n"
-           "```\n`Gluing.lean:52`\n```\n"
-           "`Mathlib/AlgebraicGeometry/Gluing.lean:262-423`\n")
-    want = [(1, "Gluing.lean:48")]
-    got = list(line_pointers_in_markdown(doc, fake))
-    ok = got == want
-    bad += not ok
-    print("%s  in Markdown a cited pointer is reported and a displayed one is not"
           % ("ok  " if ok else "FAIL"))
     if not ok:
         print("        want %r\n        got  %r" % (want, got))
