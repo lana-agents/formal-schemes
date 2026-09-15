@@ -147,8 +147,8 @@ This is `completionXDatumGluedIso` at a datum that is not vacuous: `ULift (Fin 3
 pairwise-distinct triples, and `BasicOpenCover.datumX_xt'_eq` (concretely
 `BasicOpenCover.datumX_xt'_zero_one_two`) identifies the datum's
 `AlgebraicGeometry.AffineChartedFibreDatumX.xt'` there with the transition derived from
-`AlgebraicGeometry.ThreeChart.sigma`, not with `False.elim`. So the two lines agree through a real
-triple overlap and not only on objects.
+`AlgebraicGeometry.BasicOpenCover.sigma`, not with `False.elim`. So the two lines agree through a
+real triple overlap and not only on objects.
 
 The base-change factor is `B := R` — the datum's `B` records which affine base the fibre product
 is taken over and plays no part in `xGlued`. -/

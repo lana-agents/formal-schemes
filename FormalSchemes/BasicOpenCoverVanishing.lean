@@ -23,6 +23,13 @@ This is the elementary, purely algebraic half of the adic-source-descent lemma
 `le_comap_globalSectionsMap_of_cover` (issue 471); the topological reflection input and the
 quasi-compact finite-subcover reduction are the companion issues 471a / 471c.
 
+**This file is not part of the AlgebraicGeometry.BasicOpenCover tower**, which since issue 1991's
+rename owns ten of the eleven modules whose names begin with BasicOpenCover, and so surrounds this
+one — the eleventh — in an alphabetical listing. That tower (`FormalSchemes.BasicOpenCoverDatum`
+and the modules above it) glues a formal scheme out of the chart algebras of a basic-open cover of
+`Spf A` and compares the glued object back to `Spf A`; this file glues nothing, and is the
+structure-sheaf separatedness statement described above, about a single `Spf S`.
+
 ## Main result
 
 * `FormalSpectrum.mem_of_forall_basicOpen`: a section vanishing on a spanning basic-open family
