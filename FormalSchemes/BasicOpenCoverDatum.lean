@@ -16,8 +16,8 @@ itself, so being genuinely non-affine there is a property of the index type and 
 rather than of the datum, and `ThreeChart.gluedX`'s own docstring says so. This file assembles the
 other shape, the one EGA I §10.7 examples take — an **open cover**:
 
-* an index type `J` and a family `f : J → A`, chart algebras `A i := A{1/f_i}` — which genuinely
-  differ from one another;
+* an index type `J` and a family `f : J → A`, chart algebras `A i := A{1/f_i}` — a function of
+  `f i` rather than a constant family;
 * overlap elements `g i j := ` the image of `f_i · f_j` in `A{1/f_i}`, cutting out
   `D(f_j) ∩ D(f_i)` inside the chart `Spf A{1/f_i}`.
 
