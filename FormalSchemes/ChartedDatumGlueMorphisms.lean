@@ -35,7 +35,7 @@ Two details are worth recording anyway:
   carry the index type the datum supplies, so the instance at
   `AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'` never meets the mismatch the inline proof
   had to bridge: `AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` indexes by the assembled
-  glue datum's index type, which is `AlgebraicGeometry.AffineChartedFibreDatumX.J` only by
+  glue datum's index type, which is `AlgebraicGeometry.AffineChartedFibreDatum.J` only by
   unfolding, and an inline `dif_neg` needs the disequality re-typed with the index type ascribed
   before it will fire;
 * the hypothesis and the chart family both need the datum's own instances in scope, so both carry
