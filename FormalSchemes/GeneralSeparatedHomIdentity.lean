@@ -59,7 +59,7 @@ is outside the walk):
 
 * `FormalSpectrum.locallyRingedSpaceObjCongr` and its `_hom_eq_map` belong beside
   `FormalSpectrum.locallyRingedSpaceMap_id` in `FormalSchemes.FormalSpectrum`, whose reverse
-  closure is **526** — nine tenths of the tree — against this file's **1**. Declined on that ratio,
+  closure is **527** — nine tenths of the tree — against this file's **1**. Declined on that ratio,
   which the second consumer does not change: `FormalSchemes.GeneralSeparatedHomRestrictOpen` uses
   both, and records that it does.
 * `FormalScheme.restrictOpenMap_toLRSHom_id` belongs beside `FormalScheme.restrictOpenMap_id` in
