@@ -53,7 +53,8 @@ fields, and none of `gX`, `gY`, `τX`, `τY`, which are documentation of intent 
 
 * `CategoryTheory.GlueData.ofGlueData'_f_comp`: the overlap condition of an assembled
   `CategoryTheory.GlueData` has content only **off the diagonal**, so a caller owes the square only
-  at `p ≠ p'`.
+  at `p ≠ p'`, and `CategoryTheory.GlueData.ofGlueData'_f_comp_of` is the converse, which reads an
+  assembled condition back into the carried vocabulary.
 * `AlgebraicGeometry.FormalScheme.GlueData.mapGlued`: a morphism **between** two glued formal
   schemes from an index map and a compatible family of chart morphisms, with
   `AlgebraicGeometry.FormalScheme.GlueData.ι_mapGlued` and
@@ -71,7 +72,11 @@ fields, and none of `gX`, `gY`, `τX`, `τY`, which are documentation of intent 
   `CompletedTensorProduct.schemeBaseChange` underneath
   (`AlgebraicGeometry.DoubleChartGlue.chartBaseChange_eq_schemeBaseChange`), hence a closed
   immersion at every chart.
-* `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible`: **the square**.
+* `AlgebraicGeometry.DoubleChartGlue.f_comp_ι`: the glue condition of the fibre product, written in
+  the vocabulary of the carried glue rather than of the assembled datum.
+* `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible`: **the square**, and
+  `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison`, which
+  reduces it to a comparison of the two glues' overlap objects — see *Reducing the square* below.
 * `AlgebraicGeometry.DoubleChartGlue.baseChange`: the glued comparison
   `X ×_{Spf I'} Y ⟶ X ×_{Spf I} Y`, with `AlgebraicGeometry.DoubleChartGlue.ι_baseChange` and
   `AlgebraicGeometry.DoubleChartGlue.baseChange_ext`.
@@ -102,6 +107,35 @@ fields, and none of `gX`, `gY`, `τX`, `τY`, which are documentation of intent 
   `AlgebraicGeometry.DoubleChartGlue.injective_chartBaseChange_base` supplies for free once the
   adic instances are in scope.
 
+## Reducing the square to the carried overlap data
+
+`AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible` is stated with
+`AlgebraicGeometry.DoubleChartGlue.ι` in it, so as written it is a condition about the **glued**
+target. It need not be discharged in that form.
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison` produces it
+from a family `w p p' hne : G'.V p p' hne ⟶ G.V p p' hne` subject to two conditions in which the
+glued object does not occur: `w` commutes with the overlap immersions against the chart comparison,
+and `w` commutes with the overlap transitions. The proof is the target's own glue condition
+(`AlgebraicGeometry.DoubleChartGlue.f_comp_ι`) between two rewrites.
+
+The reduction is worth stating separately because the two conditions are of **different species**,
+and a pair produced by `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` meets them for
+different reasons:
+
+* The immersion condition is a commutation of `CompletedTensorProduct.baseChangeHom` with the three
+  interchange open immersions of `FormalSchemes.GeneralFibreProductBothAlgebraDataObject`'s
+  dispatch. Each branch is algebra about one pair of charts, and the two glues' overlap objects are
+  built over the *same* rings there: under `I.map (algebraMap R R') = I'` the two extended ideals
+  agree (`Ideal.map_algebraMap_of_tower`, `FormalSchemes.AwayTopFiniteType`), so no comparison of
+  away completions has to be constructed and only a transport along that equality is needed.
+* The transition condition compares the chart transitions supplied to the smart constructor on the
+  two sides. Over a general tower `R → R'` those are independent data: an `R`-algebra equivalence
+  of chart rings is not an `R'`-algebra equivalence, so the condition constrains how the primed
+  datum is chosen. It becomes automatic at `R' = R{1/f}`, where
+  `FormalSpectrum.awayCompletionChartAlgEquivBase` (`FormalSchemes.AwayCompletionUniversal`)
+  enlarges the scalars for free — that is a statement about the away completion as a source, not
+  about a general base.
+
 ## Why injectivity needs a second hypothesis
 
 `AlgebraicGeometry.DoubleChartGlue.baseChange` is injective on points as soon as its chart legs are
@@ -131,19 +165,24 @@ and it is a second hypothesis rather than a consequence of the first:
 
 * **The square is not discharged.**
   `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible` is a hypothesis of
-  `AlgebraicGeometry.DoubleChartGlue.baseChange`, and nothing here produces one at a general pair
-  of glues. This is not a gap that a harder proof closes: at a general pair the two glues are
-  *unrelated data*, and the square is then false as often as it is true. It becomes a theorem only
-  for a pair produced by the smart constructor
+  `AlgebraicGeometry.DoubleChartGlue.baseChange`, and nothing here produces one outright at a
+  general pair of glues. This is not a gap that a harder proof closes: at a general pair the two
+  glues are *unrelated data*, and the square is then false as often as it is true.
+  `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison` produces
+  one from a comparison of the two glues' overlap objects, which is again data, and nothing here
+  produces one of those either. The square becomes a theorem only for a pair produced by the smart
+  constructor
   `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData`, where the overlap objects are the
-  three-branch interchange dispatch of `FormalSchemes.GeneralFibreProductBothAlgebraDataObject` —
-  and discharging it there needs a base change of `FormalSpectrum.awayCompletion`, a commutation of
-  `CompletedTensorProduct.baseChangeHom` with each of
+  three-branch interchange dispatch of `FormalSchemes.GeneralFibreProductBothAlgebraDataObject`.
+  *Reducing the square* above says what is left there, and it is two things rather than three. The
+  outstanding one is a commutation of `CompletedTensorProduct.baseChangeHom` with each of
   `CompletedTensorAwayInterchange.interchangeOpenImmersion`,
   `CompletedTensorAwayInterchange.rightInterchangeOpenImmersion` and
-  `CompletedTensorAwayInterchange.bothInterchangeOpenImmersion`, and the agreement of the primed
-  transitions with the unprimed ones, which is itself the step `FormalSchemes.AwayBaseChangeGluedX`
-  records as unavailable on its own side.
+  `CompletedTensorAwayInterchange.bothInterchangeOpenImmersion`; no base change of
+  `FormalSpectrum.awayCompletion` is among them, because the two away completions involved are the
+  same ring. The other is the agreement of the primed transitions with the unprimed ones, which is
+  a condition on the primed datum over a general tower and is produced rather than assumed only at
+  an away base, where `FormalSchemes.AwayBaseChangeGluedX` builds it on the one-sided side.
 * **The saturation is discharged, and the square is not.** The two hypotheses were filed
   together and they did not cost the same.
   `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF` below
@@ -151,9 +190,10 @@ and it is a second hypothesis rather than a consequence of the first:
   dispatched overlap immersions, which is what the smart constructor
   `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces, and it proves it as an
   *equality*. What remains unproduced is the **primed glue itself**: assembling one needs the
-  transitions and the double-overlap data over `(R', I')`, which is the square's third need above
-  and not this section's. So the saturation is a theorem over hypotheses that are `rfl` for a
-  smart-constructor glue, and it waits on a constructor rather than on an argument.
+  transitions and the double-overlap data over `(R', I')`, which is the second of the square's two
+  outstanding needs above and not this section's. So the saturation is a theorem over hypotheses
+  that are `rfl` for a smart-constructor glue, and it waits on a constructor rather than on an
+  argument.
 * **No cancellation, and no separation statement.** Nothing here mentions
   `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated` or
   `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`.
@@ -259,6 +299,30 @@ theorem GlueData.ofGlueData'_f_comp {C : Type u} [Category.{v} C] (D : GlueData'
   · simp only [GlueData.ofGlueData', GlueData'.f', dif_neg hij, dif_neg (Ne.symm hij),
       Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
     rw [h i j hij]
+
+open scoped Classical in
+/-- **The converse: the assembled overlap condition gives back the carried one.** A family `k`
+satisfying `f i j ≫ k i = t i j ≫ f j i ≫ k j` at *every* pair of indices of
+`CategoryTheory.GlueData.ofGlueData'` satisfies the same condition at **distinct** indices in the
+vocabulary the `CategoryTheory.GlueData'` carries.
+
+This is the direction a consumer of an already-assembled glue datum needs — the assembled condition
+is what `CategoryTheory.GlueData.glue_condition` supplies, and the carried condition is what a
+statement about the carried overlap objects can be written in. Proving it here rather than at the
+assembled datum is not a matter of taste: at the assembled datum the index type is reached only
+through the definition, so the category algebra that follows the unfolding is rejected at
+`instances` transparency, while here the two indices already carry the index type the
+`CategoryTheory.GlueData'` supplies. -/
+theorem GlueData.ofGlueData'_f_comp_of {C : Type u} [Category.{v} C] (D : GlueData'.{v} C)
+    {Y : C} (k : ∀ i, D.U i ⟶ Y)
+    (h : ∀ i j : D.J, (GlueData.ofGlueData' D).f i j ≫ k i =
+      (GlueData.ofGlueData' D).t i j ≫ (GlueData.ofGlueData' D).f j i ≫ k j)
+    (i j : D.J) (hij : i ≠ j) :
+    D.f i j hij ≫ k i = D.t i j hij ≫ D.f j i hij.symm ≫ k j := by
+  have key := h i j
+  simp only [GlueData.ofGlueData', GlueData'.f', dif_neg hij, dif_neg (Ne.symm hij),
+    Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
+  exact (cancel_epi (eqToHom (dif_neg hij))).mp key
 
 end CategoryTheory
 
@@ -407,6 +471,16 @@ abbrev ι (hI : I.FG) (p : JX × JY) :
     doubleChartObj R I A B p ⟶ (G.fibreProduct hI).toLocallyRingedSpace :=
   (G.formalGlueData hI).ι p
 
+/-- **The glue condition of the fibre product, in the vocabulary of the carried glue**: the two
+ways of pushing the `p`-`p'` overlap into the glued object agree.
+`CategoryTheory.GlueData.glue_condition` says this at the assembled datum, whose overlap object is
+a `dite` and whose index type is `JX × JY` only after unfolding;
+`CategoryTheory.GlueData.ofGlueData'_f_comp_of` is the step back. -/
+theorem f_comp_ι (hI : I.FG) (p p' : JX × JY) (h : p ≠ p') :
+    G.f p p' h ≫ G.ι hI p = G.t p p' h ≫ G.f p' p h.symm ≫ G.ι hI p' :=
+  CategoryTheory.GlueData.ofGlueData'_f_comp_of G.glueData' (fun q => G.ι hI q)
+    (fun q q' => (G.lrsGlueData.toGlueData.glue_condition q q').symm) p p' h
+
 /-! ### The points of the glued fibre product -/
 
 /-- **The charts cover the glued fibre product**, with the chart index read as a pair.
@@ -531,9 +605,16 @@ def chartBaseChange (hI : I.FG) (hII' : I.map (algebraMap R R') = I') (p : JX ×
     (CompletedTensorProduct.baseChangeHom (A := A p.1) (B := B p.2) hI hII')
     (CompletedTensorProduct.le_comap_baseChangeHom hI hII')
 
-/-- **The overlap square**: the one hypothesis the glued base change needs, and the only thing this
-file does not prove. At `p ≠ p'` the chart comparisons at `p` and at `p'` must agree on the
-source's overlap of the two charts. -/
+/-- **The overlap square**: the hypothesis the glued base change needs. At `p ≠ p'` the chart
+comparisons at `p` and at `p'` must agree on the source's overlap of the two charts.
+
+It is not discharged here at a pair a smart constructor produces, but it is reduced: see
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison`, which asks
+instead for a comparison of the two glues' overlap objects and mentions the glued target nowhere.
+`AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated` is the glued base change's other
+hypothesis and is a different obligation; the reduction does not supply it, and supplies the
+*opposite* containment of the one it asks for. That one is discharged below, by
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF`. -/
 def IsBaseChangeOverlapCompatible (hI : I.FG) (hII' : I.map (algebraMap R R') = I') : Prop :=
   ∀ (p p' : JX × JY) (hne : p ≠ p'),
     G'.f p p' hne ≫ chartBaseChange hI hII' p ≫ G.ι hI p =
@@ -561,6 +642,43 @@ theorem baseChange_ext (hI' : I'.FG) (hI : I.FG) (hII' : I.map (algebraMap R R')
     (hm : ∀ p, G'.ι hI' p ≫ m = chartBaseChange hI hII' p ≫ G.ι hI p) :
     m = G'.baseChange G hI' hI hII' h :=
   G'.map_ext G hI' hI hm
+
+/-! ### Reducing the square to the carried overlap data -/
+
+/-- **The square follows from a comparison of the overlap objects.** Given a family
+`w p p' hne : G'.V p p' hne ⟶ G.V p p' hne` that commutes with the overlap immersions and with the
+overlap transitions, the glued base change's hypothesis holds.
+
+The point is what is *absent* from the two hypotheses: `AlgebraicGeometry.DoubleChartGlue.ι` does
+not appear in either, so neither mentions the glued object. The square as stated is a condition on
+the target's glue; this reduces it to two conditions on the carried overlap data of the two glues,
+each of which is a statement about one pair of charts at a time.
+
+The two hypotheses are also of different species, and a discharge will find them so. The first
+compares the overlap *immersions* — at a pair produced by
+`AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` that is a commutation of
+`CompletedTensorProduct.baseChangeHom` with the interchange open immersions, which is algebra about
+one chart. The second compares the overlap *transitions*, which at such a pair are built from the
+chart transitions supplied to the smart constructor; over a general tower `R → R'` those are
+independent data on the two sides, so the second hypothesis constrains how the primed datum is
+chosen rather than following from how it is built. -/
+theorem isBaseChangeOverlapCompatible_of_overlapComparison (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I')
+    (w : ∀ (p p' : JX × JY) (hne : p ≠ p'), G'.V p p' hne ⟶ G.V p p' hne)
+    (hfw : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G'.f p p' hne ≫ chartBaseChange (A := A) (B := B) hI hII' p = w p p' hne ≫ G.f p p' hne)
+    (htw : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G'.t p p' hne ≫ w p' p hne.symm = w p p' hne ≫ G.t p p' hne) :
+    G'.IsBaseChangeOverlapCompatible G hI hII' := by
+  intro p p' hne
+  have h1 : G'.f p p' hne ≫ chartBaseChange hI hII' p ≫ G.ι hI p =
+      w p p' hne ≫ G.f p p' hne ≫ G.ι hI p := by
+    rw [← Category.assoc, hfw p p' hne, Category.assoc]
+  have h2 : G'.t p p' hne ≫ G'.f p' p hne.symm ≫ chartBaseChange hI hII' p' ≫ G.ι hI p' =
+      w p p' hne ≫ G.t p p' hne ≫ G.f p' p hne.symm ≫ G.ι hI p' := by
+    rw [← Category.assoc (G'.f p' p hne.symm), hfw p' p hne.symm, Category.assoc,
+      ← Category.assoc, htw p p' hne, Category.assoc]
+  rw [h1, h2, G.f_comp_ι hI p p' hne]
 
 /-! ### Injectivity of the glued base change -/
 
