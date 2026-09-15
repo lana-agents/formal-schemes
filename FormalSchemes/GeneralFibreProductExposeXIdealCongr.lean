@@ -103,19 +103,22 @@ should take `eqToIso` of the equality rather than have a second definition to ke
 * **No new smart constructor.** `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` is used
   unchanged; the definitions here re-present its output and do not replace it.
 
-## Placement, and what this leaf costs
+## Placement, and what this module costs
 
-A leaf over `FormalSchemes.GeneralFibreProductExposeXAlgebraData`: forward closure **79**, reverse
-closure **0**. The three transports are general and each has a natural home earlier in the tree —
-the first two beside `FormalSpectrum.locallyRingedSpaceMap` in `FormalSchemes.SpfMap`, whose
-reverse closure is **495**, and the third beside `FormalSpectrum.basicOpenChartOverlapIso` in
-`FormalSchemes.BasicOpenChartOverlap`, whose reverse closure is **74**, both against this file's
-**0**. They are kept here on that ratio and because each has exactly one consumer, here; the
-disposition is worth re-costing when a second appears.
+Over `FormalSchemes.GeneralFibreProductExposeXAlgebraData`: forward closure **79**, reverse closure
+**1**. The three transports are general and each has a natural home earlier in the tree — the first
+two beside `FormalSpectrum.locallyRingedSpaceMap` in `FormalSchemes.SpfMap`, whose reverse closure
+is **496**, and the third beside `FormalSpectrum.basicOpenChartOverlapIso` in
+`FormalSchemes.BasicOpenChartOverlap`, whose reverse closure is **75**, both against this file's
+**1**. They are kept here on that ratio and because each has exactly one consumer in code, here;
+the disposition is worth re-costing when a second appears.
 
-The intended consumer is in the §10.15 layer, and reaching this file from there is cheap:
-`FormalSchemes.GeneralSeparatedHomLocal` has forward closure **182**, and the union of that with
-this file's is **187** — five modules, of which this one is itself.
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr` has a consumer:
+`FormalSchemes.AwayBaseChangeGluedX` discharges its ideal-family hypothesis along a tower, and at a
+basic open of the base (issue 2028). Beyond that the intended consumer is in the §10.15 layer, and
+reaching this file from there is cheap: `FormalSchemes.GeneralSeparatedHomLocal` has forward
+closure **182**, and the union of that with this file's is **187** — five modules, of which this
+one is itself.
 
 ## Main definitions and results
 
