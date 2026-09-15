@@ -39,7 +39,9 @@ subscheme, so a closed diagonal over `R` restricts to a closed diagonal over `R'
   **onto** the extension of `I'` to `A ⊗[R'] B`, for `I' = I·R'`.
 * `CompletedTensorProduct.baseChangeHom`: the comparison `A ⊗̂_R B →+* A ⊗̂_{R'} B`, with
   `CompletedTensorProduct.baseChangeHom_surjective` and `CompletedTensorProduct.map_baseChangeHom`
-  (ideal of definition onto ideal of definition).
+  (ideal of definition onto ideal of definition), and
+  `CompletedTensorProduct.baseChangeHom_inl` / `CompletedTensorProduct.baseChangeHom_inr`: it
+  commutes with both factor inclusions.
 * `CompletedTensorProduct.schemeBaseChange`: the induced morphism of formal schemes
   `Spf (A ⊗̂_{R'} B) ⟶ Spf (A ⊗̂_R B)`, and
   `CompletedTensorProduct.schemeBaseChange_isClosedImmersion`: it is a closed immersion.
@@ -166,6 +168,22 @@ theorem le_comap_baseChangeHom (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
     idealOfDefinition R I A B ≤
       (idealOfDefinition R' I' A B).comap (baseChangeHom (A := A) (B := B) hI hII') :=
   Ideal.le_comap_of_map_le (le_of_eq (map_baseChangeHom hI hII'))
+
+/-- **The comparison commutes with the inclusion of the first factor.** Both sides are the image of
+the pure tensor `a ⊗ₜ 1` in their respective completions, and `CompletedTensorProduct.inl` factors
+through `algebraMap`, so `AdicCompletion.mapCompletion_algebraMap` together with
+`CompletedTensorProduct.tensorBaseChangeHom_tmul` is the whole content. -/
+theorem baseChangeHom_inl (hI : I.FG) (hII' : I.map (algebraMap R R') = I') (a : A) :
+    baseChangeHom (A := A) (B := B) hI hII' (inl R I A B a) = inl R' I' A B a := by
+  unfold baseChangeHom inl
+  simp [AdicCompletion.mapCompletion_algebraMap]
+
+/-- **The comparison commutes with the inclusion of the second factor**, by the same computation as
+`CompletedTensorProduct.baseChangeHom_inl` on the other side of the tensor. -/
+theorem baseChangeHom_inr (hI : I.FG) (hII' : I.map (algebraMap R R') = I') (b : B) :
+    baseChangeHom (A := A) (B := B) hI hII' (inr R I A B b) = inr R' I' A B b := by
+  unfold baseChangeHom inr
+  simp [AdicCompletion.mapCompletion_algebraMap]
 
 /-! ### The comparison of formal spectra -/
 
