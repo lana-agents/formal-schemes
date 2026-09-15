@@ -65,9 +65,9 @@ does not settle it; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
   upgrades an `R`-algebra equivalence between two complete `R{1/f}`-algebras to an
   `R{1/f}`-algebra equivalence, with no hypothesis beyond finite generation of `I` and
   completeness of the target — the two composites `R{1/f} → S → T` and `R{1/f} → T` are then maps
-  under `R` into a complete target, so rigidity identifies them. `FormalSpectrum.awayCompletionChartAlgEquivBase` is the
-  same statement at the shape the chart transitions actually have,
-  `A{1/s}^ ≃ₐ[R] A'{1/s'}^`, where that completeness is automatic.
+  under `R` into a complete target, so rigidity identifies them.
+  `FormalSpectrum.awayCompletionChartAlgEquivBase` is the same statement at the shape the chart
+  transitions actually have, `A{1/s}^ ≃ₐ[R] A'{1/s'}^`, where that completeness is automatic.
 
 ## Main definitions
 
