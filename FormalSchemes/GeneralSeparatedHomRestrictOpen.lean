@@ -102,7 +102,7 @@ Two of those three helpers now **have** that second consumer, which is the event
 asks to be recorded: `FormalSpectrum.locallyRingedSpaceObjCongr` and
 `FormalSpectrum.locallyRingedSpaceObjCongr_hom_eq_map` are used here as well as by
 `AlgebraicGeometry.spf_isSeparatedOverSpf_self`. The ratio that declined their move has not changed
-— `FormalSchemes.FormalSpectrum`'s reverse closure is **528** — so this records the second consumer
+— `FormalSchemes.FormalSpectrum`'s reverse closure is **529** — so this records the second consumer
 and moves nothing.
 
 ## Main definitions and results
