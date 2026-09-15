@@ -45,7 +45,7 @@ reach a triple overlap: `oneChart_isSeparated` (`FormalSchemes.AffineSeparatedVa
 `ULift Unit` and `tate_isSeparated` (`FormalSchemes.TateSeparatedValue`) by `ULift Bool`, so in both
 the `σ`/`hστ`/`hσc` arguments are the vacuous `fun _ _ _ h _ _ => (…).elim` family — there is no
 triple of pairwise distinct indices to supply. Here the index type is a variable, the cocycle
-data is `ThreeChart.sigma` and its two laws, and `datumX_t'_eq`
+data is `BasicOpenCover.sigma` and its two laws, and `BasicOpenCover.datumX_t'_eq`
 (`FormalSchemes.BasicOpenCoverDatum`) proves that the derived geometric transition at a pairwise
 distinct triple really is that data and not `False.elim`. That the hypotheses of those statements
 are satisfiable at all is where three indices are still wanted:
