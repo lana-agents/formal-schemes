@@ -35,19 +35,38 @@ still proves the presentation-level predicate, and enters this vocabulary throug
 presentation-level predicate should eventually be retired in favour of this one is a separate
 question, and one that should be argued against real consumers.
 
-There is also **no concrete value here**, deliberately: the values live downstream, in the modules
-that own the objects they are about. There are three.
+There is also **no concrete value here**, deliberately: the values live downstream. Where the
+object has a module of its own the value lives in it; the entries below that quantify over an
+*arbitrary* object live instead in the module that needed them first.
 
 * `Spf A` — `spf_isSeparatedOverSpf` (`FormalSchemes.AffineSeparatedScheme`), read off
   `oneChart_isSeparated` through the one-chart gluing isomorphism `oneChartXGluedIso`
   (`FormalSchemes.AffineSeparatedIso`) and its structural compatibility
   `oneChartXGluedIso_hom_comp_structMap`.
-* `𝔈_q` — `tateCurveModel_isSeparatedOverSpf` (`FormalSchemes.TateSeparatedScheme`).
+* `𝔈_q` — `tateCurveModel_isSeparatedOverSpf` (`FormalSchemes.TateSeparatedScheme`), which that
+  module reaches through `tateCurveExposeX_isSeparatedOverSpf` at the datum's glued object.
 * The basic-open cover — `AlgebraicGeometry.BasicOpenCover.datumX_isSeparatedOverSpf` and
   `AlgebraicGeometry.BasicOpenCover.gluedX_isSeparatedOverSpf`
   (`FormalSchemes.BasicOpenCoverSeparatedScheme`), restated chart-free as
   `BasicOpenCover.coverSubscheme_isSeparatedOverSpf`
   (`FormalSchemes.BasicOpenCoverOpenSubscheme`).
+* Every open formal subscheme of `Spf A`, at an arbitrary open —
+  `FormalScheme.isSeparatedOverSpf_restrictOpen_Spf` (`FormalSchemes.SpfOpenSeparated`), whose
+  module also carries `BasicOpenCover.isSeparatedOverSpf_restrictOpen_of_coverOpen_eq` for an open
+  already presented as a basic-open cover.
+* `Spf I` over itself along the identity — `spf_isSeparatedOverSpf_self`
+  (`FormalSchemes.GeneralSeparatedHomIdentity`).
+* Any formal scheme that open-immerses into `Spf I`, at an arbitrary presentation —
+  `FormalScheme.isSeparatedOverSpf_of_isOpenImmersion`
+  (`FormalSchemes.GeneralSeparatedHomRestrictOpen`).
+
+**The list carries no count, deliberately.** It is a claim about the whole tree, so a new value
+anywhere falsifies it, and no script here reads one. The *three* that stood here was falsified
+three times over — by the identity value, by the arbitrary-open value and by the open-immersion
+value — and nothing noticed any of them. To rebuild the list, take the declarations whose
+conclusion is `FormalScheme.IsSeparatedOverSpf`, then drop this file's own criteria and transports,
+the conjunctions with `FormalScheme.IsRelativelyTopFiniteType` — which repackage a value rather
+than add one — and the lemmas that take a `FormalScheme.IsSeparatedOverSpf` as a hypothesis.
 
 ## Main results
 
