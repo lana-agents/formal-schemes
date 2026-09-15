@@ -21,9 +21,10 @@ point: the geometry contributes only the hypothesis that `f` is invertible on ea
 
 ## The universal property
 
-`R{1/f}` is the `I`-adic completion of `R_f`, so a ring map out of it into an `L`-adically complete
-target is determined by, and can be built from, a ring map out of `R_f`; and a ring map out of
-`R_f` is a ring map out of `R` inverting `f`. Putting the two together:
+`R{1/f}` is the `I`-adic completion of `Localization.Away f`, so a ring map out of it into an
+`L`-adically complete target is determined by, and can be built from, a ring map out of
+`Localization.Away f`; and a ring map out of that is a ring map out of `R` inverting `f`. Putting
+the two together:
 
 * `FormalSpectrum.awayCompletionLift`: an `R`-algebra `A` which is `I·A`-adically complete and in
   which the image of `f` is a unit receives a canonical `R{1/f} →+* A` under `R`.
@@ -62,9 +63,9 @@ does not settle it; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
   and which one a consumer can actually use.
 * **`R`-linear becomes `R{1/f}`-linear, for free.** `FormalSpectrum.awayCompletionAlgEquiv`
   upgrades an `R`-algebra equivalence between two complete `R{1/f}`-algebras to an
-  `R{1/f}`-algebra equivalence, with no hypothesis beyond `I.FG` and completeness of the target
-  — the two composites `R{1/f} → S → T` and `R{1/f} → T` are then maps under `R` into a complete
-  target, so rigidity identifies them. `FormalSpectrum.awayCompletionChartAlgEquivBase` is the
+  `R{1/f}`-algebra equivalence, with no hypothesis beyond finite generation of `I` and
+  completeness of the target — the two composites `R{1/f} → S → T` and `R{1/f} → T` are then maps
+  under `R` into a complete target, so rigidity identifies them. `FormalSpectrum.awayCompletionChartAlgEquivBase` is the
   same statement at the shape the chart transitions actually have,
   `A{1/s}^ ≃ₐ[R] A'{1/s'}^`, where that completeness is automatic.
 
@@ -150,7 +151,7 @@ the tactic that does move such a family is `subst`, and `subst` requires one sid
 to be a *variable*. Of the three spellings, only the last is accepted: `∀ i, K i = I·A i` is
 refused because `K i` is an application, `(fun i => K i) = fun i => I·A i` is refused for the same
 reason once the binder is peeled, and `K = fun i => I·A i` with `K : ∀ i, Ideal (A i)` a variable
-goes through. So the equation a consumer needs is one it can `generalize` into that last shape,
+goes through. So the equation a consumer needs is one it can generalize into that last shape,
 which is this one and is not the pointwise one. -/
 theorem Ideal.map_algebraMap_family_eq_of_tower {R R' : Type u} [CommRing R] [CommRing R']
     [Algebra R R'] {J : Type*} (A : J → Type u) [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
@@ -171,8 +172,9 @@ section Lift
 
 variable {A : Type u} [CommRing A] [Algebra R A]
 
-/-- **The localization half of the lift**: the ring map `R_f →+* A` attached to an `R`-algebra `A`
-in which the image of `f` is a unit, by the universal property of `Localization.Away f`. -/
+/-- **The localization half of the lift**: the ring map `Localization.Away f →+* A` attached to
+an `R`-algebra `A` in which the image of `f` is a unit, by the universal property of
+`Localization.Away f`. -/
 def awayLocLift (hf : IsUnit (algebraMap R A f)) : Localization.Away f →+* A :=
   IsLocalization.Away.lift (S := Localization.Away f) f hf
 
@@ -189,8 +191,9 @@ def awayLocLiftₐ (hf : IsUnit (algebraMap R A f)) : Localization.Away f →ₐ
     commutes' := fun r => RingHom.congr_fun (awayLocLift_comp f hf) r }
 
 /-- **Continuity of the localization lift**, in the filtration form
-`AdicCompletion.extendRingHom` (`FormalSchemes.AdicExtend`) consumes: it carries `(I·R_f)^m` into
-`(I·A)^m` for every `m`, because it is a map of `R`-algebras. -/
+`AdicCompletion.extendRingHom` (`FormalSchemes.AdicExtend`) consumes: it carries the `m`-th power
+of `I` extended to `Localization.Away f` into the `m`-th power of `I·A`, for every `m`, because it
+is a map of `R`-algebras. -/
 theorem awayLocLift_pow_le (hf : IsUnit (algebraMap R A f)) (m : ℕ) :
     (I.map (algebraMap R (Localization.Away f))) ^ m ≤
       ((I.map (algebraMap R A)) ^ m).comap (awayLocLift f hf) :=

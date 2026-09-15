@@ -40,7 +40,8 @@ computation through `RingSplit.adicAwayUnitEquiv'`:
   ring that each carry `awayCompletionIdeal I f` into `L` and that agree after
   `FormalSpectrum.awayCompletionHom I f` are equal.
 * `FormalSpectrum.awayCompletion_hom_ext`: the same at `A = R{1/g}`, which is the form the rest of
-  this file and its consumers use; the completeness hypothesis is then discharged from `I.FG`.
+  this file and its consumers use; the completeness hypothesis is then discharged from finite
+  generation of `I`.
 * `FormalSpectrum.awayCompletionRestrict_unique`: `awayCompletionRestrict` is the unique such map.
 * `FormalSpectrum.awayCompletionRestrict_self`, `FormalSpectrum.awayCompletionRestrict_comp`: the
   identity and the chain law.
@@ -160,7 +161,7 @@ ring maps that each carry the ideal of definition of `R{1/f}` into that of `R{1/
 after `FormalSpectrum.awayCompletionHom I f` are equal.
 
 This is `FormalSpectrum.awayCompletion_hom_ext'` at `(A, L) = (R{1/g}, awayCompletionIdeal I g)`,
-whose completeness `AdicCompletion.isAdicRing_map` supplies from `I.FG`.
+whose completeness `AdicCompletion.isAdicRing_map` supplies from finite generation of `I`.
 
 The continuity hypothesis is exactly what `FormalSpectrum.le_comap_awayCompletionRestrict` proves,
 so `awayCompletionRestrict` satisfies it; that is `awayCompletionRestrict_unique` below. -/
