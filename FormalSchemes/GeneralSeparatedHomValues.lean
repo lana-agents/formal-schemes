@@ -38,13 +38,14 @@ import closure, which is why it is named here rather than taken.
 ## Why the values live here rather than in the modules that own the objects
 
 `FormalSchemes.GeneralSeparatedScheme` records the rule that a value belongs in the module that owns
-its object, and the three `FormalScheme.IsSeparatedOverSpf` values follow it. This file does not,
-for a reason that is about imports rather than taste: `FormalScheme.IsSeparatedHom` is stated
-through the restriction calculus of `FormalSchemes.OpenFormalSubscheme`, which
-`FormalSchemes.AffineSeparatedScheme` does not import, so stating the first value in its owner would
-add an import edge into the middle of the tree and rebuild everything downstream of it. Collecting
-both values in one leaf module costs one module and moves nothing. If a third value arrives whose
-owner already imports the restriction calculus, it belongs in that owner and not here.
+its object, and the `FormalScheme.IsSeparatedOverSpf` values at `Spf A`, `𝔈_q` and the basic-open
+cover follow it. This file does not, for a reason that is about imports rather than taste:
+`FormalScheme.IsSeparatedHom` is stated through the restriction calculus of
+`FormalSchemes.OpenFormalSubscheme`, which `FormalSchemes.AffineSeparatedScheme` does not import,
+so stating the first value in its owner would add an import edge into the middle of the tree and
+rebuild everything downstream of it. Collecting both values in one leaf module costs one module and
+moves nothing. If a third value arrives whose owner already imports the restriction calculus, it
+belongs in that owner and not here.
 
 ## Main results
 
