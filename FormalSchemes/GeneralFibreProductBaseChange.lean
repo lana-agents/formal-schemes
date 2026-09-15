@@ -1,5 +1,6 @@
 import FormalSchemes.GeneralFibreProductBothObject
 import FormalSchemes.CompletedTensorBaseChange
+import FormalSchemes.GlueDataImageInter
 
 set_option linter.style.header false
 set_option linter.style.setOption false
@@ -76,6 +77,44 @@ fields, and none of `gX`, `gY`, `τX`, `τY`, which are documentation of intent 
 * `AlgebraicGeometry.DoubleChartGlue.baseChange`: the glued comparison
   `X ×_{Spf I'} Y ⟶ X ×_{Spf I} Y`, with `AlgebraicGeometry.DoubleChartGlue.ι_baseChange` and
   `AlgebraicGeometry.DoubleChartGlue.baseChange_ext`.
+* `AlgebraicGeometry.DoubleChartGlue.ι_jointly_surjective`,
+  `AlgebraicGeometry.DoubleChartGlue.injective_ι_base`,
+  `AlgebraicGeometry.DoubleChartGlue.ι_glue_apply` and
+  `AlgebraicGeometry.DoubleChartGlue.preimage_range_ι`: the glued fibre product read at a point —
+  the charts cover it, each chart immersion is injective, the glue identifies exactly the overlap,
+  and the part of one chart landing in another *is* the overlap.
+* `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated`: **the second hypothesis**, and
+  the subject of the section below.
+* `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base_of_injective_chartBaseChange` and
+  `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base`: **the glued comparison is
+  injective on points**, from the square, the saturation and injectivity of the chart legs — which
+  `AlgebraicGeometry.DoubleChartGlue.injective_chartBaseChange_base` supplies for free once the
+  adic instances are in scope.
+
+## Why injectivity needs a second hypothesis
+
+`AlgebraicGeometry.DoubleChartGlue.baseChange` is injective on points as soon as its chart legs are
+*and* the source overlaps are saturated: at `p ≠ p'`, a point of the source's `p`-th chart whose
+comparison image lies in the target's overlap of `p` and `p'` must already lie in the *source's*
+overlap of the same pair. That is `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated`,
+and it is a second hypothesis rather than a consequence of the first:
+
+* **Chartwise injectivity does not glue.** Two points of *different* source charts can share an
+  image while no chart leg identifies anything, so no strengthening of the chart-level statement
+  reaches the glued map — `CompletedTensorProduct.schemeBaseChange_isClosedImmersion` included. The
+  missing content is about the glue, not about the charts.
+* **The square does not supply it.**
+  `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible` says the two chart comparisons
+  agree *where the source glues*. It says nothing about where the **target** glues, which is
+  exactly what injectivity of the glued map is about.
+* **At a general pair injectivity is false.** Take `R' = R`, `I' = I`, the same chart family, `G`
+  any glue with a nonempty overlap at some `p ≠ p'`, and `G'` the same charts with every overlap
+  object replaced by the initial locally ringed space
+  (`AlgebraicGeometry.LocallyRingedSpace.emptyIsInitial`). Each square is then an equation between
+  two morphisms out of an initial object and holds; the source is the charts side by side, the
+  target glues two of them, and the comparison identifies the two copies of the overlap. **This is
+  an argument and not a formalisation** — no such pair is constructed below, and the file's
+  contribution is the named hypothesis and the theorem over it.
 
 ## What is not proved here
 
@@ -94,11 +133,19 @@ fields, and none of `gX`, `gY`, `τX`, `τY`, which are documentation of intent 
   `CompletedTensorAwayInterchange.bothInterchangeOpenImmersion`, and the agreement of the primed
   transitions with the unprimed ones, which is itself the step `FormalSchemes.AwayBaseChangeGluedX`
   records as unavailable on its own side.
+* **The saturation is not discharged either.**
+  `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated` is a hypothesis of every
+  injectivity statement below, for the same reason the square is: at a general pair of glues it is
+  false, by the initial-overlap pair above. Both become theorems only at a pair the smart
+  constructor `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces.
 * **No cancellation, and no separation statement.** Nothing here mentions
   `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated` or
-  `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`, and nothing here says the glued comparison
-  is injective, a closed immersion, or anything else beyond being a morphism restricting to
-  `CompletedTensorProduct.schemeBaseChange` on each chart.
+  `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`.
+* **Injectivity is all the glued comparison gets.** Nothing here says it is a closed immersion, or
+  that its range is closed. That does not follow from the two hypotheses plus chartwise closedness
+  — the range of the glued map is a union of chart images, and closedness of such a union is a
+  question about the target's glue that neither hypothesis answers. Continuity, on the other hand,
+  is free: the base map of a morphism of locally ringed spaces is a morphism of topological spaces.
 * **The general base is not available and is not an oversight.** Every statement below carries
   `I.map (algebraMap R R') = I'`, inherited from `CompletedTensorProduct.map_baseChangeHom`;
   `FormalSchemes.CompletedTensorBaseChange` records why, and `FormalSchemes.AdicOnSections` is the
@@ -124,11 +171,19 @@ non-additive change to a module the fibre-product cluster sits above, and is wor
 
 ## Placement
 
-A leaf over `FormalSchemes.GeneralFibreProductBothObject`, of forward closure **64**, and
-`FormalSchemes.CompletedTensorBaseChange`, of forward closure **44**: forward closure **79**,
-reverse closure **0**. `FormalSchemes.GlueMorphisms`, whose
+A leaf over `FormalSchemes.GeneralFibreProductBothObject`, of forward closure **64**,
+`FormalSchemes.CompletedTensorBaseChange`, of forward closure **44**, and
+`FormalSchemes.GlueDataImageInter`, of forward closure **2**: forward closure **81**, reverse
+closure **0**. `FormalSchemes.GlueMorphisms`, whose
 `AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` this file consumes, is already inside the
 first parent's closure, so the edge to it is free and it is not imported again.
+
+The third parent is the whole cost of the injectivity section: it and
+`FormalSchemes.GlueDataCarrier` are the only two modules it adds, and this file's reverse closure
+is **0**, so nothing downstream pays for them.
+`AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι` is the one statement on the tree
+that turns *"these two chart images meet"* into *"this point is in the overlap object"*, and no
+weaker import reaches it.
 
 The two parents are import-incomparable, so the statement costs either an import edge or a new
 leaf, and the edge was rejected in both directions. Adding to
@@ -322,6 +377,78 @@ abbrev ι (hI : I.FG) (p : JX × JY) :
     doubleChartObj R I A B p ⟶ (G.fibreProduct hI).toLocallyRingedSpace :=
   (G.formalGlueData hI).ι p
 
+/-! ### The points of the glued fibre product -/
+
+/-- **The charts cover the glued fibre product**, with the chart index read as a pair.
+`AlgebraicGeometry.FormalScheme.GlueData.ι_jointly_surjective` says the same thing over
+`(G.formalGlueData hI).toLocallyRingedSpaceGlueData.J`, which is `JX × JY` only after unfolding two
+definitions; this restatement is the one a `by_cases` on a pair of indices can consume. -/
+theorem ι_jointly_surjective (hI : I.FG) (u : (G.fibreProduct hI).toLocallyRingedSpace) :
+    ∃ (p : JX × JY) (x : (doubleChartObj R I A B p).toPresheafedSpace),
+      (G.ι hI p).base x = u :=
+  (G.formalGlueData hI).ι_jointly_surjective u
+
+/-- **Each chart immersion is injective on points**, being an open immersion. -/
+theorem injective_ι_base (hI : I.FG) (p : JX × JY) :
+    Function.Injective ⇑(G.ι hI p).base :=
+  ((G.formalGlueData hI).ι_isOpenImmersion p).base_open.injective
+
+/-- The assembled glue datum's overlap inclusion, off the diagonal, in the vocabulary of the
+carried glue. `CategoryTheory.GlueData.ofGlueData'` prefixes an `eqToHom` transporting along the
+`dite` that defines its overlap object, and `dif_neg` is the whole content. -/
+theorem lrsGlueData_f (p p' : JX × JY) (h : p ≠ p') :
+    G.lrsGlueData.toGlueData.f p p' = eqToHom (dif_neg h) ≫ G.f p p' h :=
+  dif_neg h
+
+/-- **The assembled overlap inclusion has the same range as the carried one.** The `eqToHom` of
+`AlgebraicGeometry.DoubleChartGlue.lrsGlueData_f` is an isomorphism, so it is invisible to the
+range. This is what lets the statements a caller reads stay in the vocabulary of the carried glue —
+its own overlap inclusions and transitions — while the proofs that produce them work in the
+assembled one. -/
+theorem range_lrsGlueData_f (p p' : JX × JY) (h : p ≠ p') :
+    Set.range ⇑(G.lrsGlueData.toGlueData.f p p').base = Set.range ⇑(G.f p p' h).base := by
+  have haux : ∀ {X Y Z : LocallyRingedSpace.{u}} (e : X = Y) (g : Y ⟶ Z),
+      Set.range ⇑(eqToHom e ≫ g).base = Set.range ⇑g.base := by
+    rintro X Y Z rfl g
+    simp
+  rw [G.lrsGlueData_f p p' h]
+  exact haux _ _
+
+/-- **The glue condition at a point**: a point of the `p`-`p'` overlap has the same image in the
+glued fibre product whether it is pushed into the `p`-th chart or transported and pushed into the
+`p'`-th one. This is `CategoryTheory.GlueData.glue_condition` for the assembled datum, read through
+`AlgebraicGeometry.LocallyRingedSpace.comp_base`.
+
+The overlap object is the assembled one rather than `G.V p p' h`: the two `eqToHom`s of
+`AlgebraicGeometry.DoubleChartGlue.lrsGlueData_f` do not cancel against each other pointwise, and
+nothing below needs them to — a point of the assembled overlap is all the statement is asked
+for. -/
+theorem ι_glue_apply (hI : I.FG) (p p' : JX × JY)
+    (v : G.lrsGlueData.toGlueData.V (p, p')) :
+    (G.ι hI p').base ((G.lrsGlueData.toGlueData.f p' p).base
+        ((G.lrsGlueData.toGlueData.t p p').base v)) =
+      (G.ι hI p).base ((G.lrsGlueData.toGlueData.f p p').base v) := by
+  have key := G.lrsGlueData.toGlueData.glue_condition p p'
+  have keyb : (G.lrsGlueData.toGlueData.t p p').base ≫ (G.lrsGlueData.toGlueData.f p' p).base ≫
+      (G.lrsGlueData.toGlueData.ι p').base =
+      (G.lrsGlueData.toGlueData.f p p').base ≫ (G.lrsGlueData.toGlueData.ι p).base := by
+    rw [← LocallyRingedSpace.comp_base, ← LocallyRingedSpace.comp_base,
+      ← LocallyRingedSpace.comp_base, key]
+  have hv := ConcreteCategory.congr_hom keyb v
+  rw [ConcreteCategory.comp_apply, ConcreteCategory.comp_apply,
+    ConcreteCategory.comp_apply] at hv
+  exact hv
+
+/-- **The part of one chart that lands in another is exactly their overlap.** This is
+`AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι` read at the assembled glue datum
+and carried back into the carried vocabulary by
+`AlgebraicGeometry.DoubleChartGlue.range_lrsGlueData_f`. It is the only place the injectivity
+argument below looks at the *target's* glue, and it is why that argument needs a glue-level input
+rather than a chart-level one. -/
+theorem preimage_range_ι (hI : I.FG) (p p' : JX × JY) (h : p ≠ p') :
+    ⇑(G.ι hI p).base ⁻¹' Set.range ⇑(G.ι hI p').base = Set.range ⇑(G.f p p' h).base :=
+  (G.lrsGlueData.preimage_range_ι p' p).trans (G.range_lrsGlueData_f p p' h)
+
 /-! ### A morphism of glued fibre products -/
 
 section Map
@@ -405,6 +532,91 @@ theorem baseChange_ext (hI' : I'.FG) (hI : I.FG) (hII' : I.map (algebraMap R R')
     m = G'.baseChange G hI' hI hII' h :=
   G'.map_ext G hI' hI hm
 
+/-! ### Injectivity of the glued base change -/
+
+/-- **The overlap saturation condition**, the second hypothesis the glued comparison needs: at
+`p ≠ p'`, a point of the source's `p`-th chart whose comparison image lies in the target's overlap
+of `p` and `p'` already lies in the source's overlap of that pair.
+
+It is independent of `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible`, which
+constrains the comparison only where the *source* glues; this constrains it where the *target*
+does. The module docstring's *Why injectivity needs a second hypothesis* says why neither implies
+the other and why no chart-level strengthening replaces this one.
+
+Only the containment is asked for. In the pair a smart constructor produces both sides are built
+from the same away-completion data and an equality is the expected answer, but nothing here proves
+that, and nothing here needs it. -/
+def IsBaseChangeOverlapSaturated (hI : I.FG) (hII' : I.map (algebraMap R R') = I') : Prop :=
+  ∀ (p p' : JX × JY) (hne : p ≠ p'),
+    ⇑(chartBaseChange (A := A) (B := B) hI hII' p).base ⁻¹' Set.range ⇑(G.f p p' hne).base ⊆
+      Set.range ⇑(G'.f p p' hne).base
+
+/-- **The glued base change at a point of a chart.** This is
+`AlgebraicGeometry.DoubleChartGlue.ι_baseChange` read through
+`AlgebraicGeometry.LocallyRingedSpace.comp_base`. -/
+theorem ι_baseChange_apply (hI' : I'.FG) (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (h : G'.IsBaseChangeOverlapCompatible G hI hII') (p : JX × JY)
+    (x : (doubleChartObj R' I' A B p).toPresheafedSpace) :
+    (G'.baseChange G hI' hI hII' h).base ((G'.ι hI' p).base x) =
+      (G.ι hI p).base ((chartBaseChange hI hII' p).base x) := by
+  have key := G'.ι_baseChange G hI' hI hII' h p
+  have keyb : (G'.ι hI' p).base ≫ (G'.baseChange G hI' hI hII' h).base =
+      (chartBaseChange (A := A) (B := B) hI hII' p).base ≫ (G.ι hI p).base := by
+    rw [← LocallyRingedSpace.comp_base, ← LocallyRingedSpace.comp_base, key]
+  have hx := ConcreteCategory.congr_hom keyb x
+  rw [ConcreteCategory.comp_apply, ConcreteCategory.comp_apply] at hx
+  exact hx
+
+/-- **The glued base change is injective on points**, given the square, the saturation, and
+injectivity of every chart leg.
+
+The argument is the one the chart legs cannot make. Two source points with the same image sit in
+charts `p` and `p'`; at `p = p'` the two chart immersions and the chart leg settle it. At `p ≠ p'`
+the common image puts the first point's comparison image in the target's `p`-`p'` overlap
+(`AlgebraicGeometry.DoubleChartGlue.preimage_range_ι`), the saturation moves that conclusion back
+across the comparison into the *source's* overlap, and
+`AlgebraicGeometry.DoubleChartGlue.ι_glue_apply` transports the first point to a point of the
+`p'`-th source chart with the same image in the glued source. That transported point and the second
+one now sit in one chart, so the chart leg and the target's `p'`-th immersion identify them.
+**Nowhere does the argument use anything about a chart leg beyond injectivity**, which is why
+`AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base` can hand it a closed immersion and
+gain nothing extra. -/
+theorem injective_baseChange_base_of_injective_chartBaseChange (hI' : I'.FG) (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I')
+    (h : G'.IsBaseChangeOverlapCompatible G hI hII')
+    (hsat : G'.IsBaseChangeOverlapSaturated G hI hII')
+    (hinj : ∀ p : JX × JY,
+      Function.Injective ⇑(chartBaseChange (A := A) (B := B) hI hII' p).base) :
+    Function.Injective ⇑(G'.baseChange G hI' hI hII' h).base := by
+  intro u u' huu'
+  obtain ⟨p, x, rfl⟩ := G'.ι_jointly_surjective hI' u
+  obtain ⟨p', y, rfl⟩ := G'.ι_jointly_surjective hI' u'
+  have hchart : (G.ι hI p).base ((chartBaseChange hI hII' p).base x) =
+      (G.ι hI p').base ((chartBaseChange hI hII' p').base y) := by
+    rw [← G'.ι_baseChange_apply G hI' hI hII' h p, ← G'.ι_baseChange_apply G hI' hI hII' h p']
+    exact huu'
+  by_cases hne : p = p'
+  · subst hne
+    exact congrArg _ (hinj p (G.injective_ι_base hI p hchart))
+  · have hx : ⇑(chartBaseChange (A := A) (B := B) hI hII' p).base x ∈
+        Set.range ⇑(G.f p p' hne).base := by
+      rw [← G.preimage_range_ι hI p p' hne]
+      exact ⟨_, hchart.symm⟩
+    obtain ⟨w, hw⟩ := hsat p p' hne hx
+    obtain ⟨v, hv⟩ : x ∈ Set.range ⇑(G'.lrsGlueData.toGlueData.f p p').base := by
+      rw [G'.range_lrsGlueData_f p p' hne]
+      exact ⟨w, hw⟩
+    have hglue := G'.ι_glue_apply hI' p p' v
+    rw [hv] at hglue
+    have hy : (G'.lrsGlueData.toGlueData.f p' p).base
+        ((G'.lrsGlueData.toGlueData.t p p').base v) = y := by
+      apply hinj p'
+      apply G.injective_ι_base hI p'
+      rw [← G'.ι_baseChange_apply G hI' hI hII' h p', ← G'.ι_baseChange_apply G hI' hI hII' h p',
+        hglue]
+      exact huu'
+    rw [← hglue, hy]
+
 section Scheme
 
 variable [TopologicalSpace R] [IsAdicRing I]
@@ -416,13 +628,38 @@ variable
 
 /-- **The chart-level comparison is `CompletedTensorProduct.schemeBaseChange`**, so by
 `CompletedTensorProduct.schemeBaseChange_isClosedImmersion` every chart leg of
-`AlgebraicGeometry.DoubleChartGlue.baseChange` is a closed immersion of affine formal schemes.
-Whether the glued morphism inherits anything from that is not settled here. -/
+`AlgebraicGeometry.DoubleChartGlue.baseChange` is a closed immersion of affine formal schemes. What
+the glued morphism inherits from that is **injectivity and nothing more**, and only against a
+second hypothesis: `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base` keeps the
+injectivity half of this closed immersion and asks for the saturation besides. -/
 theorem chartBaseChange_eq_schemeBaseChange (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
     (p : JX × JY) :
     chartBaseChange (A := A) (B := B) hI hII' p =
       (CompletedTensorProduct.schemeBaseChange (A := A p.1) (B := B p.2) hI hII').toLRSHom :=
   rfl
+
+/-- **Every chart leg of the glued base change is injective on points**, being a closed immersion
+by `CompletedTensorProduct.schemeBaseChange_isClosedImmersion`. This is the hypothesis
+`AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base_of_injective_chartBaseChange` asks
+for, and it is the only part of the chart-level closed immersion that the glued statement uses. -/
+theorem injective_chartBaseChange_base (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (p : JX × JY) :
+    Function.Injective ⇑(chartBaseChange (A := A) (B := B) hI hII' p).base :=
+  (CompletedTensorProduct.schemeBaseChange_isClosedImmersion
+    (A := A p.1) (B := B p.2) hI hII').base_closedEmbedding.injective
+
+/-- **The glued base change is injective on points.** *Reach for this one*: over an adic base the
+chart legs are closed immersions, so the only thing a caller owes beyond the square is the
+saturation.
+`AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base_of_injective_chartBaseChange` is the
+form to reach for when the chart legs are not of that shape, and it is what this proof consumes. -/
+theorem injective_baseChange_base (hI' : I'.FG) (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I')
+    (h : G'.IsBaseChangeOverlapCompatible G hI hII')
+    (hsat : G'.IsBaseChangeOverlapSaturated G hI hII') :
+    Function.Injective ⇑(G'.baseChange G hI' hI hII' h).base :=
+  G'.injective_baseChange_base_of_injective_chartBaseChange G hI' hI hII' h hsat fun p =>
+    injective_chartBaseChange_base hI hII' p
 
 end Scheme
 
