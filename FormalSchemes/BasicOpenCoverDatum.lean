@@ -10,9 +10,11 @@ set_option synthInstance.maxHeartbeats 1000000
 
 Issue 594 (`FormalSchemes.ThreeChartDatum`) gave the first `AffineChartedFibreDatumX` whose
 geometric triple-overlap fields are exercised, but in the shape "one copy of `Spf A` per index,
-glued along `D(f_i·f_j)`": every chart algebra there is literally `A`, and the glued object is a
-genuinely non-separated formal scheme. This file assembles the other shape, the one EGA I §10.7
-examples take — an **open cover**:
+glued along `D(f_i·f_j)`": every chart algebra there is literally `A`. What that shape glues to is
+not settled at that generality — at `f` constantly `1` every chart and every overlap is `Spf A`
+itself, so being genuinely non-affine there is a property of the index type and the family together
+rather than of the datum, and `ThreeChart.gluedX`'s own docstring says so. This file assembles the
+other shape, the one EGA I §10.7 examples take — an **open cover**:
 
 * an index type `J` and a family `f : J → A`, chart algebras `A i := A{1/f_i}` — which genuinely
   differ from one another;
@@ -123,8 +125,9 @@ def datumX (hI : I.FG) : AffineChartedFibreDatumX R I hI B :=
     (hστ := fun i j k _ _ _ => sigma_tau I f hI i j k)
     (hσc := fun i j k _ _ _ => sigma_cocycle I f hI i j k)
 
-/-- **The glued formal scheme** `X = ⋃ D(f_i) ⊆ Spf A`. Unlike the glued object of
-`FormalSchemes.ThreeChartDatum`, this one is an *open subscheme of an affine formal scheme*. -/
+/-- **The glued formal scheme** `X = ⋃ D(f_i) ⊆ Spf A`. It is an *open subscheme of an affine
+formal scheme*, identified with `BasicOpenCover.coverSubscheme` by
+`BasicOpenCover.gluedXIsoCoverSubscheme`. -/
 def gluedX (hI : I.FG) : FormalScheme.{u} :=
   (datumX I f B hI).xGlued
 
