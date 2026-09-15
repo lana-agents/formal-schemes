@@ -25,8 +25,13 @@ diagonal needs no such identity**: `FormalScheme.GlueData.isOpenImmersion_glueMo
 containment only for `i ≠ j`, so the diagonal case is discharged without rewriting a range at all.
 The `dite` conditions live at `D.J` while the glue datum indexes by
 `D.xFormalGlueData.toLocallyRingedSpaceGlueData.J`, so the disequality has to be re-typed as
-`¬ @Eq D.J i j` before `dif_neg` fires — the same step, for the same reason, that
-`glueChartMorphisms` itself performs.
+`¬ @Eq D.J i j` before `dif_neg` fires.
+`AlgebraicGeometry.AffineChartedFibreDatumX.glueChartMorphisms` used to perform the same step for
+the same reason; since issue 2048 it does not, because its overlap obligation is discharged by
+`CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`), which is stated at
+the `CategoryTheory.GlueData'` and so never meets the mismatch. **No such general statement covers
+the range identity below**, which is about `f` rather than about the overlap condition, so the
+re-typing is still done here by hand.
 
 The hypothesis a consumer must supply is therefore stated in the datum's own spelling, and only for
 `i ≠ j`: on the diagonal nothing is asked of the consumer at all.

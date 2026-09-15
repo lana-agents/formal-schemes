@@ -13,24 +13,34 @@ basic-open overlaps `Spf (A i{1/g i j})` and the transitions `τ i j`. Building 
 it means supplying one morphism per chart and checking they agree on the double overlaps.
 
 `FormalSchemes.GeneralFibreProductExposeXStructMap` already does this once, for the structural
-morphism `xGlued ⟶ Spf R`. This file abstracts that assembly over the target: the same three-line
-`GlueData.ofGlueData'` bookkeeping serves any target, and no consumer should have to repeat it.
+morphism `xGlued ⟶ Spf R`. This file abstracts that assembly over the target: the same diagonal
+bookkeeping serves any target, and no consumer should have to repeat it.
 
-## The bookkeeping, and why it is worth factoring out
+## The bookkeeping, and where it is discharged
 
-`FormalScheme.GlueData.glueMorphisms` asks for compatibility at *every* pair `(i, j)`, including
-`i = j`, whereas a charted datum's transitions are only defined for `i ≠ j` — `xGlueData'` is a
-`CategoryTheory.GlueData'`, and `GlueData.ofGlueData'` fills the diagonal with `eqToHom`s guarded
-by `dite`s. Discharging that costs a `by_cases`, a `GlueData.t_id` collapse on the diagonal, and
-off it a `simp only` unfolding four definitions to expose the `dite`s.
+`AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` asks for compatibility at *every* pair
+`(i, j)`, including `i = j`, whereas a charted datum's transitions are only defined for `i ≠ j` —
+`AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'` is a `CategoryTheory.GlueData'`, and
+`CategoryTheory.GlueData.ofGlueData'` fills the diagonal with `eqToHom`s guarded by `dite`s.
 
-Two details bite every time and are settled here once:
+That gap is not bridged here. `CategoryTheory.GlueData.ofGlueData'_f_comp`
+(`FormalSchemes.GlueMorphisms`) closes it once and for all `CategoryTheory.GlueData'`s, and
+`AlgebraicGeometry.AffineChartedFibreDatumX.glueChartMorphisms` is its instance at
+`AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'`: the whole of the overlap argument is that
+one call, and the family `hk` is passed to it unchanged.
 
-* the disequalities must be re-typed as `¬ @Eq D.J i j` before `dif_neg` will fire, because the
-  `dite` conditions live at `D.J` while `glueMorphisms` indexes by
-  `D.xFormalGlueData.toLocallyRingedSpaceGlueData.J`, which is `D.J` only by unfolding;
+Two details are worth recording anyway:
+
+* the general lemma is stated at the `CategoryTheory.GlueData'`, where the two indices already
+  carry the index type the datum supplies, so the instance at
+  `AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'` never meets the mismatch the inline proof
+  had to bridge: `AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` indexes by the assembled
+  glue datum's index type, which is `AlgebraicGeometry.AffineChartedFibreDatum.J` only by
+  unfolding, and an inline `dif_neg` needs the disequality re-typed with the index type ascribed
+  before it will fire;
 * the hypothesis and the chart family both need the datum's own instances in scope, so both carry
-  the `letI` prologue in their *types* — the idiom `xStructMapChart` already uses.
+  the `letI` prologue in their *types* — the idiom
+  `AlgebraicGeometry.AffineChartedFibreDatumX.xStructMapChart` already uses.
 
 ## Main definitions and results
 
@@ -69,8 +79,10 @@ This is the assembly of `AffineChartedFibreDatumX.xStructMap`
 `xStructMap` is the instance at `k := xStructMapChart` and `hk := xStructMap_naturality`.
 
 The overlap obligation `FormalScheme.GlueData.glueMorphisms` consumes is over *all* pairs, while
-`hk` only speaks of `i ≠ j`: on the diagonal the glue transition is the identity
-(`GlueData.t_id`), so both sides collapse without touching `hk`. -/
+`hk` only speaks of `i ≠ j`: on the diagonal `CategoryTheory.GlueData.ofGlueData'` puts an
+`eqToHom`, so both sides collapse without touching `hk`. That is
+`CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`), of which this
+definition is the instance at `AlgebraicGeometry.AffineChartedFibreDatumX.xGlueData'`. -/
 def glueChartMorphisms
     (k : letI := D.commRing; letI := D.algebra; letI := D.topology; letI := D.isAdic;
       ∀ i : D.J, locallyRingedSpaceObj (I.map (algebraMap R (D.A i))) ⟶ Y)
@@ -80,20 +92,8 @@ def glueChartMorphisms
           awayCompletionTransition (D.g i j) (D.g j i) (D.τ i j h) ≫
             basicOpenChart (I.map (algebraMap R (D.A j))) (D.g j i) ≫ k j) :
     D.xGlued.toLocallyRingedSpace ⟶ Y :=
-  D.xFormalGlueData.glueMorphisms k (by
-    intro i j
-    by_cases hij : i = j
-    · -- diagonal: `t i i = 𝟙`, so both sides collapse to `f i i ≫ k i`.
-      subst hij
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · -- off-diagonal: unfold the `GlueData.ofGlueData'` `dite`-forms; the conditions are on
-      -- `= : D.J`, so re-type the disequalities in `¬ @Eq D.J` form before `dif_neg` will fire.
-      have hij' : ¬ @Eq D.J i j := hij
-      have hji' : ¬ @Eq D.J j i := fun heq => hij heq.symm
-      simp only [xFormalGlueData, xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',
-        CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [hk i j hij'])
+  D.xFormalGlueData.glueMorphisms k
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.xGlueData' k hk)
 
 /-- **The glued morphism restricts to `k i` along each glue inclusion.** -/
 @[reassoc (attr := simp)]

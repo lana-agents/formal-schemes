@@ -53,10 +53,6 @@ fields, and none of `gX`, `gY`, `τX`, `τY`, which are documentation of intent 
 
 ## Main definitions and results
 
-* `CategoryTheory.GlueData.ofGlueData'_f_comp`: the overlap condition of an assembled
-  `CategoryTheory.GlueData` has content only **off the diagonal**, so a caller owes the square only
-  at `p ≠ p'`, and `CategoryTheory.GlueData.ofGlueData'_f_comp_of` is the converse, which reads an
-  assembled condition back into the carried vocabulary.
 * `AlgebraicGeometry.FormalScheme.GlueData.mapGlued`: a morphism **between** two glued formal
   schemes from an index map and a compatible family of chart morphisms, with
   `AlgebraicGeometry.FormalScheme.GlueData.ι_mapGlued` and
@@ -228,21 +224,17 @@ and it is a second hypothesis rather than a consequence of the first:
 
 ## Implementation notes
 
-`CategoryTheory.GlueData.ofGlueData'_f_comp` is the general form of a bookkeeping step this tree
-already does inline: the proof of `AlgebraicGeometry.AffineChartedFibreDatumX.glueChartMorphisms`
-(`FormalSchemes.ChartedDatumGlueMorphisms`) is the same `by_cases`, the same `dif_neg` unfolding
-and the same closing `rw`, specialised to one `CategoryTheory.GlueData'`. Stated generally it needs
-one thing less: that proof has to re-type its disequalities in `¬ @Eq _ i j` form before `dif_neg`
-will fire, because the `dite` conditions live at the `CategoryTheory.GlueData'.J` of the charted
-datum's glue while `AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` indexes by the
-`CategoryTheory.GlueData.J` of the assembled one, and the two agree only by unfolding. A lemma
-stated at the former never meets the mismatch.
-
-The general lemma is **not** moved down beside
-`AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` in `FormalSchemes.GlueMorphisms`, whose
-reverse closure is **275**, against this file's **0**. Rerouting
-`AlgebraicGeometry.AffineChartedFibreDatumX.glueChartMorphisms` through it is a separate,
-non-additive change to a module the fibre-product cluster sits above, and is worth its own row.
+The off-diagonal bookkeeping this file's glue conditions need —
+`CategoryTheory.GlueData.ofGlueData'_f_comp` and its converse
+`CategoryTheory.GlueData.ofGlueData'_f_comp_of` — is **not** stated here. It lives in
+`FormalSchemes.GlueMorphisms`, beside
+`AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms`, which is the declaration that asks for the
+condition at every pair; this file reaches that module through its imports and uses both from
+there. They were first stated here and moved down (issue 2048) once a second consumer appeared:
+the proof of `AlgebraicGeometry.AffineChartedFibreDatumX.glueChartMorphisms`
+(`FormalSchemes.ChartedDatumGlueMorphisms`) had been doing the same `by_cases`, the same `dif_neg`
+unfolding and the same closing `rw` inline, and now calls
+`CategoryTheory.GlueData.ofGlueData'_f_comp` instead.
 
 ## Placement
 
@@ -311,54 +303,7 @@ noncomputable section
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
 open CompletedTensorProduct
 
-universe v u
-
-namespace CategoryTheory
-
-open scoped Classical in
-/-- **The overlap condition of an assembled glue datum has content only off the diagonal.**
-`CategoryTheory.GlueData.ofGlueData'` sends the diagonal to an `eqToHom`, so the condition
-`f i j ≫ k i = t i j ≫ f j i ≫ k j` that `AlgebraicGeometry.LocallyRingedSpace.GlueData.desc` asks
-for at *every* pair follows from the same condition at pairs of **distinct** indices, which is the
-only place a `CategoryTheory.GlueData'` carries data at all. -/
-theorem GlueData.ofGlueData'_f_comp {C : Type u} [Category.{v} C] (D : GlueData'.{v} C)
-    {Y : C} (k : ∀ i, D.U i ⟶ Y)
-    (h : ∀ (i j : D.J) (hij : i ≠ j), D.f i j hij ≫ k i = D.t i j hij ≫ D.f j i hij.symm ≫ k j)
-    (i j : D.J) :
-    (GlueData.ofGlueData' D).f i j ≫ k i =
-      (GlueData.ofGlueData' D).t i j ≫ (GlueData.ofGlueData' D).f j i ≫ k j := by
-  by_cases hij : i = j
-  · subst hij
-    simp [GlueData.ofGlueData', GlueData'.f']
-  · simp only [GlueData.ofGlueData', GlueData'.f', dif_neg hij, dif_neg (Ne.symm hij),
-      Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-    rw [h i j hij]
-
-open scoped Classical in
-/-- **The converse: the assembled overlap condition gives back the carried one.** A family `k`
-satisfying `f i j ≫ k i = t i j ≫ f j i ≫ k j` at *every* pair of indices of
-`CategoryTheory.GlueData.ofGlueData'` satisfies the same condition at **distinct** indices in the
-vocabulary the `CategoryTheory.GlueData'` carries.
-
-This is the direction a consumer of an already-assembled glue datum needs — the assembled condition
-is what `CategoryTheory.GlueData.glue_condition` supplies, and the carried condition is what a
-statement about the carried overlap objects can be written in. Proving it here rather than at the
-assembled datum is not a matter of taste: at the assembled datum the index type is reached only
-through the definition, so the category algebra that follows the unfolding is rejected at
-`instances` transparency, while here the two indices already carry the index type the
-`CategoryTheory.GlueData'` supplies. -/
-theorem GlueData.ofGlueData'_f_comp_of {C : Type u} [Category.{v} C] (D : GlueData'.{v} C)
-    {Y : C} (k : ∀ i, D.U i ⟶ Y)
-    (h : ∀ i j : D.J, (GlueData.ofGlueData' D).f i j ≫ k i =
-      (GlueData.ofGlueData' D).t i j ≫ (GlueData.ofGlueData' D).f j i ≫ k j)
-    (i j : D.J) (hij : i ≠ j) :
-    D.f i j hij ≫ k i = D.t i j hij ≫ D.f j i hij.symm ≫ k j := by
-  have key := h i j
-  simp only [GlueData.ofGlueData', GlueData'.f', dif_neg hij, dif_neg (Ne.symm hij),
-    Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact (cancel_epi (eqToHom (dif_neg hij))).mp key
-
-end CategoryTheory
+universe u
 
 namespace AlgebraicGeometry
 
