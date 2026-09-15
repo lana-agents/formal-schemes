@@ -7,12 +7,17 @@ set_option linter.style.header false
 # `R{1/f}` as a base ring: its universal property, and what becomes `R{1/f}`-linear
 
 `FormalSpectrum.awayCompletion I f` — the completed localization `R{1/f}` — is built in
-`FormalSchemes.BasicOpenChart` as the ring of the basic-open chart of `Spf (R, I)`, and every
-statement about it on this tree so far reads it as an *object over* `(R, I)`. This file reads it
-the other way round, as a **base ring in its own right**: it is the affine base a morphism
-`X ⟶ Spf (R, I)` acquires when it factors through the basic open `D(f)`, and the question this
-file answers is what of an affine-chart presentation of `X` over `(R, I)` survives that change of
-base.
+`FormalSchemes.BasicOpenChart` as the ring of the basic-open chart of `Spf (R, I)`, and reading it
+as a **base ring in its own right** is not new here: `FormalSpectrum.awayBaseAlgebra`
+(`FormalSchemes.AwayBaseChangeTopFiniteType`) already makes `A{1/(c·A)}^` an `R{1/c}^`-algebra.
+What this file adds is the shape of the map that installs such a structure. That one is
+`FormalSpectrum.awayBaseHom`, an `AdicCompletion.mapCompletion` (`FormalSchemes.Completion`)
+transported from a localization map, and its target is again an away completion over `R`; the maps
+below go **out of** `R{1/f}` into an *arbitrary* adically complete `R`-algebra, and are *produced*
+by a universal property rather than transported. Read that way `R{1/f}` is the affine base a
+morphism `X ⟶ Spf (R, I)` acquires when it factors through the basic open `D(f)`, and the question
+this file answers is what of an affine-chart presentation of `X` over `(R, I)` survives that change
+of base.
 
 Three things do — an `R{1/f}`-algebra structure on each chart algebra, the ideal it induces
 there, and the `R{1/f}`-linearity of the transitions between charts — and they are the three
@@ -118,15 +123,17 @@ that they are one argument — the universal property, its uniqueness, and the t
 that follow from it — and that the consumer they were written for, the change of base of an
 affine-chart presentation to a basic open of its base, does not exist yet.
 
-The one edit outside this file is the generalisation of `FormalSpectrum.awayCompletion_hom_ext`
-to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in place** in
-`FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **28**. Restating the
-general form here instead would have cost no rebuild and was declined on two grounds: it would
-leave two near-duplicate rigidity statements in the tree, which is the shape the duplicate
-statement scan under `scripts/` exists to catch; and the general form is the true one, the old
-special form being recovered from it in a single line. The old name, statement and binder order
-are unchanged, so no call site moved — its one consumer outside its own file is
-`FormalSchemes.BasicOpenChartOpensSections`.
+The one edit to a declaration outside this file is the generalisation of
+`FormalSpectrum.awayCompletion_hom_ext` to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in
+place** in `FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **28**. The rest
+of the diff that created this module is prose: the figures a new leaf moves in the modules above
+it, and the sentence in `FormalSchemes.AwayTopFiniteType` recording `Ideal.map_algebraMap_of_tower`
+as unused, which output 2 below made false. Restating the general form here instead would have cost
+no rebuild and was declined on two grounds: it would leave two near-duplicate rigidity statements
+in the tree, which is the shape the duplicate statement scan under `scripts/` exists to catch; and
+the general form is the true one, the old special form being recovered from it in a single line.
+The old name, statement and binder order are unchanged, so no call site moved — its one consumer
+outside its own file is `FormalSchemes.BasicOpenChartOpensSections`.
 
 ## References
 
@@ -263,9 +270,12 @@ binder of the Spf–Γ round trip `FormalSpectrum.spfGammaEquiv`
 it is built under `R`, and being under `R` is already the continuity.
 
 `FormalSpectrum.le_comap_of_comp_awayCompletionHom` (`FormalSchemes.BasicOpenChart`) is the same
-argument with the target specialised to another completed localization of the *same* ring `R`;
-this one takes an arbitrary `R`-algebra and lands in `I·A` rather than in a second ideal of
-definition, so neither is an instance of the other. -/
+argument with the target specialised to another completed localization of the *same* ring `R`. That
+one is recoverable from this one at `A = awayCompletion I g`, but not by instantiation alone:
+`FormalSpectrum.awayCompletionHom_eq_algebraMap` and `FormalSpectrum.map_awayCompletionHom` have to
+be rewritten through first, to read `awayCompletionIdeal I g` as an extension of `I`. Both are
+stated for that reason — and in any case the older one could not be replaced by this one, since it
+is proved in a module this file imports. -/
 theorem le_comap_of_comp_awayCompletionHom_eq_algebraMap {F : awayCompletion I f →+* A}
     (hF : F.comp (awayCompletionHom I f) = algebraMap R A) :
     awayCompletionIdeal I f ≤ (I.map (algebraMap R A)).comap F := by
