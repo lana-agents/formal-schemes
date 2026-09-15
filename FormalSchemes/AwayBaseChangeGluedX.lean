@@ -78,6 +78,15 @@ the base enters only through the ideal and every other argument is a `Prop`. One
 variable ideal closes it, which is `AdicCompletion.mapCompletion_heq` below. No conjugation
 transport of the species of `FormalSpectrum.basicOpenChartOverlapIso_conj_heq` is needed.
 
+**The primed `IsAdicRing` witnesses go the same way (issue 2042).** They are the last primed thing
+the statement asked a caller for, and they were asked for as an *instance binder* rather than as a
+hypothesis, which is why discharging the primed data left them standing. The chart ideal of the
+away base is the chart ideal of the base, so the witness transports along that equality by `▸`;
+that is `AlgebraicGeometry.AffineChartedFibreDatumX.isAdicRing_awayBaseChartIdeal`, and
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase'` is the congruence
+with it applied. A `letI` is admissible there because it stands in the *conclusion*, after every
+binder, rather than before the binders whose types depend on it.
+
 ## What is not proved here
 
 **No datum is constructed.** `τ`, `σ` and their three identities over `R` are still inputs, and
@@ -128,6 +137,10 @@ home earlier in the tree; they are kept here on that ratio, which is the disposi
   constructed from the unprimed data, with their three identities and their two `HEq`s.
 * `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase`: the congruence at
   `R' = R{1/f}` with the primed data discharged.
+* `AlgebraicGeometry.AffineChartedFibreDatumX.isAdicRing_awayBaseChartIdeal` and
+  `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase'`: the same
+  congruence with the primed *adicity* discharged as well, which is the form a caller holding only
+  an `(R, I)`-presentation can apply.
 
 ## References
 
@@ -747,6 +760,76 @@ theorem ofAlgebraData_xGlued_eq_awayBase
       (isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg) g τ)
     (awayBaseOverlap_coe_heq hI f A
       (isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg) g σ)
+
+omit isAdicA' in
+/-- **The primed adicity is not a hypothesis, it is a transport.** The chart ideal of the away base
+*is* the chart ideal of the base — that is
+`AlgebraicGeometry.AffineChartedFibreDatumX.awayBaseChartIdeal` — and `IsAdicRing` is a `Prop`
+class over a fixed topology on the chart, so the witness moves along that equality with nothing but
+`▸`. This is the whole content of the primed `IsAdicRing` instance binder the section above
+carries, and it is what lets the corollary below drop it. -/
+theorem isAdicRing_awayBaseChartIdeal
+    (halg : ∀ i, letI := (isAdicA i).toIsAdicComplete
+      algebraMap (awayCompletion I f) (A i) = awayCompletionLift I f (hf i)) (i : J) :
+    IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+      (algebraMap (awayCompletion I f) (A i))) :=
+  awayBaseChartIdeal f A (isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg) i ▸
+    isAdicA i
+
+omit isAdicA' in
+/-- **The congruence at `R' = R{1/f}` with nothing primed in the context either.** This is
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase` with its last primed
+obligation removed: that theorem discharges the primed transition *data* but still reads the primed
+adicity off an instance binder, which a caller holding only a presentation over `(R, I)` has to
+manufacture. Here it is produced by
+`AlgebraicGeometry.AffineChartedFibreDatumX.isAdicRing_awayBaseChartIdeal` instead.
+
+**Reach for this one.** The two statements have the same conclusion and the same hypotheses; the
+only difference is where the primed `IsAdicRing` witnesses come from, and this one asks the caller
+for nothing that the unprimed presentation does not already give. The instance-bearing form stays
+because this proof consumes it, and because a caller who already holds the primed witnesses — for
+instance one that built them some other way — can still use it directly.
+
+The two `letI`s are in the *conclusion*, after every binder, which is why they do not run into the
+difficulty the `## The shape of the `R{1/f}` case` section above describes: that one is about a
+`letI` standing *before* the binders whose types depend on it. -/
+theorem ofAlgebraData_xGlued_eq_awayBase'
+    (halg : ∀ i, letI := (isAdicA i).toIsAdicComplete
+      algebraMap (awayCompletion I f) (A i) = awayCompletionLift I f (hf i))
+    (τ : ∀ (i j : J), i ≠ j →
+      (awayCompletion (I.map (algebraMap R (A i))) (g i j) ≃ₐ[R]
+        awayCompletion (I.map (algebraMap R (A j))) (g j i)))
+    (τ_symm : ∀ (i j : J) (h : i ≠ j), τ j i h.symm = (τ i j h).symm)
+    (σ : ∀ (i j k : J), i ≠ j → i ≠ k → j ≠ k →
+      (awayCompletion (I.map (algebraMap R (A i))) (g i j * g i k) ≃ₐ[R]
+        awayCompletion (I.map (algebraMap R (A j))) (g j k * g j i)))
+    (hστ : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
+      (σ i j k hij hik hjk).symm.toAlgHom.comp
+          (CompletedTensorAwayInterchange.furtherLocSnd I (g j k) (g j i) hI) =
+        (CompletedTensorAwayInterchange.furtherLocFst I (g i j) (g i k) hI).comp
+          (τ i j hij).symm.toAlgHom)
+    (hσc : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
+      (σ i j k hij hik hjk).trans ((σ j k i hjk hij.symm hik.symm).trans
+        (σ k i j hik.symm hjk.symm hij)) =
+        AlgEquiv.refl (R := R)
+          (A₁ := awayCompletion (I.map (algebraMap R (A i))) (g i j * g i k))) :
+    letI tower := isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg
+    letI : ∀ i, IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+        (algebraMap (awayCompletion I f) (A i))) :=
+      isAdicRing_awayBaseChartIdeal f A hf halg
+    (AffineChartedFibreDatumX.ofAlgebraData (B := B')
+        (hI.map (algebraMap R (awayCompletion I f))) A g
+        (awayBaseTransition hI f A tower g τ)
+        (awayBaseTransition_symm hI f A tower g τ τ_symm)
+        (awayBaseOverlap hI f A tower g σ)
+        (awayBaseOverlap_transition hI f A tower g τ σ hστ)
+        (awayBaseOverlap_cocycle hI f A tower g σ hσc)).xGlued =
+      (AffineChartedFibreDatumX.ofAlgebraData (B := B) hI A g τ τ_symm σ hστ hσc).xGlued := by
+  letI tower := isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg
+  letI : ∀ i, IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+      (algebraMap (awayCompletion I f) (A i))) :=
+    isAdicRing_awayBaseChartIdeal f A hf halg
+  exact ofAlgebraData_xGlued_eq_awayBase hI f A hf g halg τ τ_symm σ hστ hσc
 
 end AwayBaseCorollary
 
