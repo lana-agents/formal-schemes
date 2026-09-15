@@ -282,6 +282,29 @@ def project_modules() -> set[str]:
     }
 
 
+# The root module list.  It is a project file and the tree has occasion to cite it by name --
+# `CONTRIBUTING.md`'s account of what adding a module costs is about this file -- but it sits at
+# the repository root rather than under `FormalSchemes/`, so neither spelling in `project_paths`
+# reaches it, and it is not excludable by shape either: `IDENTIFIER` matches it, so without this
+# entry it is sent to `#check @FormalSchemes.lean` and reported UNRESOLVED.  It belongs here and
+# not in `project_modules` because it is a *path*.  The module of the same file is `FormalSchemes`,
+# which that set already carries; adding `FormalSchemes.lean` there would assert a module nothing
+# imports, and the two sets print under one heading but do not mean the same thing.
+ROOT_MODULE_LIST = "FormalSchemes.lean"
+
+
+def project_paths() -> set[str]:
+    """Both spellings the tree uses: the path, and the bare file name after a locative.
+
+    For every file but one those are two different strings; for the root module list they are the
+    same string, which is why it reads as a single `add` rather than as a pair.
+    """
+    paths = set(glob.glob("FormalSchemes/*.lean"))
+    paths |= {os.path.basename(f) for f in paths}
+    paths.add(ROOT_MODULE_LIST)
+    return paths
+
+
 def resolve_declarations(tokens: list[str]) -> set[str]:
     """Return the subset of `tokens` that `#check @token` fails to resolve."""
     if not tokens:
@@ -529,6 +552,23 @@ def selftest() -> int:
     # location, the same token *displayed* inside a mention span, a pointer inside a fenced block,
     # and the Mathlib pointer.  Only the first is a defect, and the second is what `CONTRIBUTING.md`
     # needs in order to be able to state the rule at all.
+    # The root module list (issue 2022).  It is not excludable by shape and it is not a module, so
+    # `project_paths` is the only thing that can classify it; before that entry existed all three
+    # of these read the other way and a docstring could not name the file at all.  The three are
+    # asserted together because the fix is as much about *where* the entry goes as about its being
+    # there.  Independent of the working directory: the two globs may come back empty, and neither
+    # answer below depends on them.
+    want = [("excluded by shape", None), ("a project path", True), ("a project module", False)]
+    got = [("excluded by shape", is_excluded(ROOT_MODULE_LIST)),
+           ("a project path", ROOT_MODULE_LIST in project_paths()),
+           ("a project module", ROOT_MODULE_LIST in project_modules())]
+    ok = got == want
+    bad += not ok
+    print("%s  the root module list is a project path, and is not a module"
+          % ("ok  " if ok else "FAIL"))
+    if not ok:
+        print("        want %r\n        got  %r" % (want, got))
+
     doc = ("cited: `Gluing.lean:48`\n"
            "displayed: `` `Gluing.lean:48` ``\n"
            "```\n`Gluing.lean:52`\n```\n"
@@ -558,9 +598,7 @@ def main() -> int:
 
     sites, unbalanced, nested = collect(args)
     modules = project_modules()
-    # Both spellings the tree uses: the path, and the bare file name after a locative.
-    paths = set(glob.glob("FormalSchemes/*.lean"))
-    paths |= {os.path.basename(f) for f in paths}
+    paths = project_paths()
 
     excluded, candidates = {}, []
     for tok in sorted(sites):
