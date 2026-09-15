@@ -141,16 +141,16 @@ deltas are measured in the pull request that added the edge (issue 2019).
 The one edit to a declaration outside this file is the generalisation of
 `FormalSpectrum.awayCompletion_hom_ext` to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in
 place** in `FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **28**. Besides
-this module's own line in the root module list, which `lake exe mk_all` maintains and which adding
-any module forces, the rest of the diff that created this module is prose: the figures a new leaf
-moves in the modules above it, and the sentence in `FormalSchemes.AwayTopFiniteType` recording
-`Ideal.map_algebraMap_of_tower` as unused, which output 2 below made false. Restating the general
-form here instead would have cost no rebuild and was declined on two grounds: it would leave two
-near-duplicate rigidity statements in the tree, which is the shape the duplicate statement scan
-under `scripts/` exists to catch; and the general form is the true one, the old special form being
-recovered from it in a single line. The old name, statement and binder order are unchanged, so no
-call site moved — its one consumer outside its own file is
-`FormalSchemes.BasicOpenChartOpensSections`.
+this module's own line in the root module list `FormalSchemes.lean`, which `lake exe mk_all`
+maintains and which adding any module forces, the rest of the diff that created this module is
+prose: the figures a new leaf moves in the modules above it, and the sentence in
+`FormalSchemes.AwayTopFiniteType` recording `Ideal.map_algebraMap_of_tower` as unused, which output
+2 below made false. Restating the general form here instead would have cost no rebuild and was
+declined on two grounds: it would leave two near-duplicate rigidity statements in the tree, which
+is the shape the duplicate statement scan under `scripts/` exists to catch; and the general form is
+the true one, the old special form being recovered from it in a single line. The old name,
+statement and binder order are unchanged, so no call site moved — its one consumer outside its own
+file is `FormalSchemes.BasicOpenChartOpensSections`.
 
 ## References
 
