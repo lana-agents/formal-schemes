@@ -33,13 +33,13 @@ subscheme, so a closed diagonal over `R` restricts to a closed diagonal over `R'
 ## Main definitions and results
 
 * `CompletedTensorProduct.tensorBaseChangeHom`: the uncompleted comparison
-  `A ⊗[R] B →ₐ[R] A ⊗[R'] B`, with `tensorBaseChangeHom_tmul` computing it on pure tensors and
-  `tensorBaseChangeHom_surjective`.
+  `A ⊗[R] B →ₐ[R] A ⊗[R'] B`, with `CompletedTensorProduct.tensorBaseChangeHom_tmul` computing it
+  on pure tensors and `CompletedTensorProduct.tensorBaseChangeHom_surjective`.
 * `CompletedTensorProduct.map_tensorBaseChangeHom`: the extension of `I` to `A ⊗[R] B` is carried
   **onto** the extension of `I'` to `A ⊗[R'] B`, for `I' = I·R'`.
 * `CompletedTensorProduct.baseChangeHom`: the comparison `A ⊗̂_R B →+* A ⊗̂_{R'} B`, with
-  `baseChangeHom_surjective` and `map_baseChangeHom` (ideal of definition onto ideal of
-  definition).
+  `CompletedTensorProduct.baseChangeHom_surjective` and `CompletedTensorProduct.map_baseChangeHom`
+  (ideal of definition onto ideal of definition).
 * `CompletedTensorProduct.schemeBaseChange`: the induced morphism of formal schemes
   `Spf (A ⊗̂_{R'} B) ⟶ Spf (A ⊗̂_R B)`, and
   `CompletedTensorProduct.schemeBaseChange_isClosedImmersion`: it is a closed immersion.
@@ -47,7 +47,7 @@ subscheme, so a closed diagonal over `R` restricts to a closed diagonal over `R'
 ## What is not proved here
 
 * **Nothing glued.** The comparison here is between two *affine* completed tensor products. The
-  charts of a general fibre product `AlgebraicGeometry.BothChartedFibreDatumXY.generalFibreProduct`
+  charts of a general fibre product `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct`
   (`FormalSchemes.GeneralFibreProductBothObject`) are of exactly this shape, one per ordered pair
   of charts, but assembling these affine comparisons into a morphism of glued formal schemes needs
   them to commute with the datum's transitions, and that is not done here.
@@ -58,9 +58,10 @@ subscheme, so a closed diagonal over `R` restricts to a closed diagonal over `R'
   `FormalSchemes.GeneralSeparatedRange`), and the range of a map is the preimage of the range of
   its composite with an injection.
 * **The general base is not available and is not an oversight.** Every statement below carries
-  `I.map (algebraMap R R') = I'`. Dropping it breaks `map_baseChangeHom`, and with it the closed
-  immersion; the containment `I' ≤ (I·A).comap` that a general base would need is refuted on this
-  tree (`FormalSchemes.AdicOnSections`, witness `FormalSpectrum.cofinalSpfIso`).
+  `I.map (algebraMap R R') = I'`. Dropping it breaks `CompletedTensorProduct.map_baseChangeHom`,
+  and with it the closed immersion; the containment `I' ≤ (I·A).comap` that a general base would
+  need is refuted on this tree (`FormalSchemes.AdicOnSections`, witness
+  `FormalSpectrum.cofinalSpfIso`).
 
 ## References
 
