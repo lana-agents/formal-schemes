@@ -59,8 +59,9 @@ its conclusions.
 else. That is `FormalSpectrum.le_comap_of_comp_awayCompletionHom_eq_algebraMap`, a two-line
 consequence, and it is what discharges the hypotheses of both
 `FormalSpectrum.awayCompletion_hom_ext'` and `FormalSpectrum.eq_awayCompletionLift` at every use
-site in this file. For a general adic base `(R', I')` the question is a real one and this file
-does not settle it; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
+site in this file. For a general adic base `(R', I')` the question is a real one, this file does
+not settle it, and its on-the-nose form is refuted elsewhere on the tree — see *What is not proved
+here* below; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
 
 ## The two outputs that follow
 
@@ -103,16 +104,26 @@ does not settle it; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
 
 **The general affine base is untouched.** Nothing below produces an `R'`-algebra structure on a
 chart from a factorisation through an arbitrary `Spf (R', I')`; the input is always an inverted
-element of `R`, and `FormalSpectrum.awayCompletionLift` is the only construction offered. In
-particular the question whether the map `R' →+* A` supplied by `FormalSpectrum.globalSectionsMap`
-(`FormalSchemes.SpfGamma`) is continuous is neither answered nor answerable here.
+element of `R`, and `FormalSpectrum.awayCompletionLift` is the only construction offered. The map
+`R' →+* A` that `FormalSpectrum.globalSectionsMap` (`FormalSchemes.SpfGamma`) supplies carries no
+continuity hypothesis, and that it should carry `I'` into `I·A` is not an open question but one
+this tree refutes: the refutation is recorded in `FormalSchemes.AdicOnSections`, and its witness is
+`FormalSpectrum.cofinalSpfIso` (`FormalSchemes.CofinalSheafComparisonIso`), which presents one adic
+ring at two ideals of definition at once — so even an isomorphism of formal spectra can match
+incompatible levels of the two filtrations. What makes the question empty below is therefore not
+the universal property but the fact that the ideal of definition of `R{1/f}` is the extension of
+`I`; where the base ideal is merely cofinal with the extension the containment is false, and
+`Ideal.IsCofinal` is the form that survives (`FormalSchemes.AdicCofinalOpenImmersion`).
 
 **No datum is base-changed.** `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData`
 (`FormalSchemes.GeneralFibreProductExposeXAlgebraData`) is not used below and that module is not
 imported here; assembling these three outputs into a datum over `R{1/f}` needs a congruence for
-that constructor along the ideal-family equality, which is a separate statement and is not
-here. Nothing here says anything about `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`,
-fibre products or diagonals.
+that constructor along the ideal-family equality. That congruence is **not** missing: it is
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr`
+(`FormalSchemes.GeneralFibreProductExposeXIdealCongr`), its conclusion is an equality of formal
+schemes, and the hypothesis it takes is output 2 below in the same function-level spelling. What is
+absent here is the assembly, not the comparison. Nothing here says anything about
+`AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`, fibre products or diagonals.
 
 **The `σ`-cocycle and the `τ`-symmetry identities are not restated over `R{1/f}`.**
 `FormalSpectrum.awayCompletionAlgEquiv` does not change the underlying function of an equivalence
