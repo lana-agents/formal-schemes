@@ -17,7 +17,8 @@ single-overlap `R`-algebra transitions `τX`, `τY` (with symmetries). This file
 **object-level** fields of the two-sided smart constructor `BothChartedFibreDatum.ofAlgebraData`
 (sibling brick 332b): the coordinate-difference-dispatched overlap object `bothAlgDataV`, the
 overlap immersion `bothAlgDataF` with its open-immersion witness `bothAlgDataHf`, the transition
-`bothAlgDataT`, and the self-inverse law `bothAlgDataT_inv`. The triple-overlap fields
+`bothAlgDataT` with its three shape reductions `bothAlgDataT_snd`/`_fst`/`_both`, and the
+self-inverse law `bothAlgDataT_inv`. The triple-overlap fields
 `t'`/`t_fac`/`cocycle` (which genuinely use `⊗̂`-associativity) are deferred to brick 332b.
 
 ## The 3-way dispatch
@@ -187,6 +188,47 @@ def bothAlgDataT (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
       (mapSpfIso hI (τX p.1 p'.1 h1) (τY p.2 p'.2 h2)).hom ≫
       eqToHom (bothAlgDataV_both hI gX gY p' p h.symm (fun e => h1 e.symm)
         (fun e => h2 e.symm)).symm
+
+/-! ### Shape reductions of the double-overlap transition `bothAlgDataT` -/
+
+section Reductions
+
+variable (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+  (τX : ∀ (i i' : JX), i ≠ i' →
+    (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
+  (τY : ∀ (j j' : JY), j ≠ j' →
+    (awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R (B j'))) (gY j' j)))
+variable (hI : I.FG) (p p' : JX × JY) (h : p ≠ p')
+
+/-- Reduction of `bothAlgDataT` in the *second-coordinate-differs* shape (`p.1 = p'.1`). -/
+theorem bothAlgDataT_snd (h1 : p.1 = p'.1) :
+    bothAlgDataT hI gX gY τX τY p p' h =
+      eqToHom (bothAlgDataV_snd hI gX gY p p' h h1) ≫
+        (mapSpfIso hI (eqAlgEquivA h1) (τY p.2 p'.2 (fun e => h (Prod.ext h1 e)))).hom ≫
+        eqToHom (bothAlgDataV_snd hI gX gY p' p h.symm h1.symm).symm := by
+  unfold bothAlgDataT; rw [dif_pos h1]
+
+/-- Reduction of `bothAlgDataT` in the *first-coordinate-differs* shape (`p.1 ≠ p'.1`,
+`p.2 = p'.2`). -/
+theorem bothAlgDataT_fst (h1 : p.1 ≠ p'.1) (h2 : p.2 = p'.2) :
+    bothAlgDataT hI gX gY τX τY p p' h =
+      eqToHom (bothAlgDataV_fst hI gX gY p p' h h1 h2) ≫
+        (mapSpfIso hI (τX p.1 p'.1 h1) (eqAlgEquivB h2)).hom ≫
+        eqToHom (bothAlgDataV_fst hI gX gY p' p h.symm (fun e => h1 e.symm) h2.symm).symm := by
+  unfold bothAlgDataT; rw [dif_neg h1, dif_pos h2]
+
+/-- Reduction of `bothAlgDataT` in the *both-coordinates-differ* shape. -/
+theorem bothAlgDataT_both (h1 : p.1 ≠ p'.1) (h2 : p.2 ≠ p'.2) :
+    bothAlgDataT hI gX gY τX τY p p' h =
+      eqToHom (bothAlgDataV_both hI gX gY p p' h h1 h2) ≫
+        (mapSpfIso hI (τX p.1 p'.1 h1) (τY p.2 p'.2 h2)).hom ≫
+        eqToHom (bothAlgDataV_both hI gX gY p' p h.symm (fun e => h1 e.symm)
+          (fun e => h2 e.symm)).symm := by
+  unfold bothAlgDataT; rw [dif_neg h1, dif_neg h2]
+
+end Reductions
 
 /-- Cancellation of `mapSpfIso`'s forward leg against the forward leg of the inverse pair. -/
 theorem mapSpfIso_hom_symm_hom (hI : I.FG) {A₀ B₀ A₀' B₀' : Type u} [CommRing A₀] [CommRing B₀]
