@@ -21,7 +21,7 @@ complement is `IsLocalization.algebraMapSubmonoid_primeCompl_comap` below.
 
 It sits in its own file rather than beside its `Localization.Away` sibling because the two are used
 at opposite scales, and it is the ratio and not either figure that decides.
-`FormalSchemes.LocalizationQuotient` has reverse closure **523**, counted by walking every
+`FormalSchemes.LocalizationQuotient` has reverse closure **524**, counted by walking every
 `import FormalSchemes.` line, transitively, over the modules under `FormalSchemes/` (a module is
 not counted in its own closure, and the aggregator at the repository root is outside the walk).
 This module's reverse closure is **19**, and exactly one module imports it directly,

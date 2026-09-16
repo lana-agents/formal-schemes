@@ -238,20 +238,22 @@ unfolding and the same closing `rw` inline, and now calls
 
 ## Placement
 
-A leaf over six parents. `FormalSchemes.GeneralFibreProductBothObject` has forward closure
+Over six parents. `FormalSchemes.GeneralFibreProductBothObject` has forward closure
 **64**; `FormalSchemes.CompletedTensorBaseChange` has forward closure **44**;
 `FormalSchemes.GlueDataImageInter` has forward closure **2**;
 `FormalSchemes.GeneralFibreProductBothOverlapRange` has forward closure **70**;
 `FormalSchemes.CompletedTensorAwayInterchangePullbackLegs` has forward closure **37**; and
-`FormalSchemes.AwayTopFiniteType` has forward closure **28**. This leaf's own
-forward closure is **93**, and this leaf's reverse closure is **0**.
+`FormalSchemes.AwayTopFiniteType` has forward closure **28**. This file's own
+forward closure is **93**, and this file's reverse closure is **1** —
+`FormalSchemes.GeneralSeparatedBaseChange`, which consumes the injectivity theorem (issue 2035).
+This module was a leaf when it landed and the paragraph below was written then.
 `FormalSchemes.GlueMorphisms`, whose
 `AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` this file consumes, is already inside the
 first parent's closure, so the edge to it is free and it is not imported again.
 
 The third parent is the whole cost of the injectivity section: it and
 `FormalSchemes.GlueDataCarrier` are the only two modules it adds, and this file's reverse closure
-is **0**, so nothing downstream pays for them.
+is **1**, so almost nothing downstream pays for them.
 `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι` is the one statement on the tree
 that turns *"these two chart images meet"* into *"this point is in the overlap object"*, and no
 weaker import reaches it.
@@ -261,7 +263,7 @@ The fourth parent is the whole cost of the saturation section: it adds six modul
 `FormalSchemes.CompletedTensorAwayInterchangeBoth`,
 `FormalSchemes.CompletedTensorAwayInterchangeRight`, `FormalSchemes.CompletionBasicOpen` and
 `FormalSchemes.CompletionNestedBasicOpen`. The edge was taken rather than a new leaf because this
-file's reverse closure is **0**: extending in place moves six such figures by one each and leaves
+file's reverse closure is **1**: extending in place moves six such figures by one each and leaves
 the rest of the tree alone, where a new module would have moved ninety-three of them.
 `AlgebraicGeometry.range_bothAlgDataF_base` is the range computation the saturation is *about* and
 no weaker import reaches it — the dispatch it consumes,
@@ -285,12 +287,12 @@ move by one each, against ninety-three for a new module.
 The two parents are import-incomparable, so the statement costs either an import edge or a new
 leaf, and the edge was rejected in both directions. Adding to
 `FormalSchemes.GeneralFibreProductBothObject` puts the whole completed-tensor base change inside
-the closure of a module whose reverse closure is **67**; adding to
-`FormalSchemes.CompletedTensorBaseChange`, whose reverse closure is **1**, puts the entire
-fibre-product cluster inside a module that is otherwise affine throughout. A leaf keeps both
-parents at the cost they were landed at, and this file's own reverse closure is **0**, so nothing
-pays for it. This is the disposition `FormalSchemes.AwayBaseChangeGluedX` reached, for the same
-pair of reasons, on the one-sided side of the same question.
+the closure of a module whose reverse closure is **68**; adding to
+`FormalSchemes.CompletedTensorBaseChange`, whose reverse closure is **2**, puts the entire
+fibre-product cluster inside a module that is otherwise affine throughout. A separate module keeps
+both parents at the cost they were landed at, and this file's own reverse closure is **1**, so
+almost nothing pays for it. This is the disposition `FormalSchemes.AwayBaseChangeGluedX` reached,
+for the same pair of reasons, on the one-sided side of the same question.
 
 ## References
 

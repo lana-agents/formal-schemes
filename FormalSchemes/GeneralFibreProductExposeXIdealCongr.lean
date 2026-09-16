@@ -106,17 +106,20 @@ should take `eqToIso` of the equality rather than have a second definition to ke
 ## Placement, and what this module costs
 
 Over `FormalSchemes.GeneralFibreProductExposeXAlgebraData`: forward closure **79**, reverse closure
-**1**. The three transports are general and each has a natural home earlier in the tree — the first
+**2**. The three transports are general and each has a natural home earlier in the tree — the first
 two beside `FormalSpectrum.locallyRingedSpaceMap` in `FormalSchemes.SpfMap`, whose reverse closure
-is **498**, and the third beside `FormalSpectrum.basicOpenChartOverlapIso` in
-`FormalSchemes.BasicOpenChartOverlap`, whose reverse closure is **75**, both against this file's
-**1**. They are kept here on that ratio and because each has exactly one consumer in code, here;
+is **499**, and the third beside `FormalSpectrum.basicOpenChartOverlapIso` in
+`FormalSchemes.BasicOpenChartOverlap`, whose reverse closure is **76**, both against this file's
+**2**. They are kept here on that ratio and because each has exactly one consumer in code, here;
 the disposition is worth re-costing when a second appears.
 
-`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr` has a consumer:
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr` has two consumers.
 `FormalSchemes.AwayBaseChangeGluedX` discharges its ideal-family hypothesis along a tower, and at a
-basic open of the base (issue 2028). Beyond that the intended consumer is in the §10.15 layer, and
-reaching this file from there is cheap: `FormalSchemes.GeneralSeparatedHomLocal` has forward
+basic open of the base (issue 2028). `FormalSchemes.GeneralSeparatedBaseChange` is the §10.15
+consumer this paragraph was written expecting (issue 2035): it reads the congruence at a diagonal
+datum, to identify the two glued factors that a base change of separatedness compares. Reaching
+this file from the §10.15 layer is cheap, as that module's own imports bear out:
+`FormalSchemes.GeneralSeparatedHomLocal` has forward
 closure **182**, and the union of that with this file's is **187** — five modules, of which this
 one is itself.
 
