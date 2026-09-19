@@ -108,10 +108,10 @@ either way puts one of them inside the other's subtree and makes every later con
 parent pay for the other. A leaf keeps both parents at the cost they were landed at, and
 `FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **0**, so nothing pays for it.
 
-`FormalSchemes.AwayCompletionUniversal`'s reverse closure becomes **1**, and
-`FormalSchemes.GeneralFibreProductExposeXIdealCongr`'s reverse closure becomes **1**; the figures
-recorded in the modules this one reaches move by one each, and every delta is measured in the pull
-request that added this module (issue 2028).
+`FormalSchemes.AwayCompletionUniversal`'s reverse closure is **1**, and
+`FormalSchemes.GeneralFibreProductExposeXIdealCongr`'s reverse closure is **2**; the figures
+recorded in the modules this one reaches moved by one each when it landed, and every delta is
+measured in the pull request that added this module (issue 2028).
 
 The construction of the primed data (issue 2038) is added **in place** rather than in a module of
 its own: `FormalSchemes.AwayBaseChangeGluedX`'s reverse closure is **0**, so extending this file
