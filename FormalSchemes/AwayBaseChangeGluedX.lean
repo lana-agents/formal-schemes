@@ -100,23 +100,24 @@ is an equality of glued objects and stops there.
 
 ## Placement
 
-A leaf over `FormalSchemes.AwayCompletionUniversal` and
+Over `FormalSchemes.AwayCompletionUniversal` and
 `FormalSchemes.GeneralFibreProductExposeXIdealCongr`: forward closure **93**, reverse closure
-**0**. The two parents are import-incomparable, so the statement costs either an import edge or a
-new leaf, and the edge was rejected in both directions: each parent was itself a leaf, so an edge
-either way puts one of them inside the other's subtree and makes every later consumer of that
-parent pay for the other. A leaf keeps both parents at the cost they were landed at, and
-`FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **0**, so nothing pays for it.
+**1**, whose one member is `FormalSchemes.AwayBaseChangeChartTransition` and arrived later. The two
+parents are import-incomparable, so the statement costs either an import edge or a module of its
+own, and the edge was rejected in both directions: each parent was itself a leaf, so an edge either
+way puts one of them inside the other's subtree and makes every later consumer of that parent pay
+for the other. A module of its own keeps both parents at the cost they were landed at, and
+`FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **1**, so one module pays for it.
 
-`FormalSchemes.AwayCompletionUniversal`'s reverse closure is **1**, and
-`FormalSchemes.GeneralFibreProductExposeXIdealCongr`'s reverse closure is **2**; the figures
+`FormalSchemes.AwayCompletionUniversal`'s reverse closure is **2**, and
+`FormalSchemes.GeneralFibreProductExposeXIdealCongr`'s reverse closure is **3**; the figures
 recorded in the modules this one reaches moved by one each when it landed, and every delta is
 measured in the pull request that added this module (issue 2028).
 
 The construction of the primed data (issue 2038) is added **in place** rather than in a module of
-its own: `FormalSchemes.AwayBaseChangeGluedX`'s reverse closure is **0**, so extending this file
-re-elaborates this file and the root module list and nothing else, and moves no stated figure
-anywhere on the tree. The general transports the construction introduces —
+its own: `FormalSchemes.AwayBaseChangeGluedX`'s reverse closure is **1**, so extending this file
+re-elaborates this file, that one consumer and the root module list and nothing else, and moves no
+stated figure anywhere on the tree. The general transports the construction introduces —
 `FormalSpectrum.awayTransport`, `FormalSpectrum.awayTransportRingHom` and
 `AdicCompletion.mapCompletion_heq` — each have exactly one consumer, here, and each has a natural
 home earlier in the tree; they are kept here on that ratio, which is the disposition

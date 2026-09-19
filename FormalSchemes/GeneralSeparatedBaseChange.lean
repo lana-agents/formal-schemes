@@ -110,7 +110,7 @@ maps, for two measured reasons. That module's subject, stated in its own title, 
 `eqToHom` **prefix** is invisible to a base map — a fact about precomposition with an isomorphism,
 whose proof is surjectivity of that isomorphism's base map. Left cancellation against an injective
 **postcomposition** is the other side of a composite and shares no step with it. And
-`FormalSchemes.LocallyRingedSpaceRange` has reverse closure **260**: putting a lemma with one
+`FormalSchemes.LocallyRingedSpaceRange` has reverse closure **261**: putting a lemma with one
 consumer there adds it to the environment of that many modules and re-elaborates all of them,
 against this file's **0**. If a second consumer appears at a module this one cannot reach, the move
 is cheap and that file is where it goes.

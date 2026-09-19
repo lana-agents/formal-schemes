@@ -63,6 +63,7 @@ import FormalSchemes.AnnulusOverlapProper
 import FormalSchemes.AnnulusSpecialFibre
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
+import FormalSchemes.AwayBaseChangeChartTransition
 import FormalSchemes.AwayBaseChangeGluedX
 import FormalSchemes.AwayBaseChangeTopFiniteType
 import FormalSchemes.AwayChartStructMap
