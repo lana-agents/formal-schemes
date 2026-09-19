@@ -340,7 +340,7 @@ already inside the closure of the six: `FormalSchemes.CompletedTensorFunctor` an
 `AlgebraicGeometry.bothAlgDataV` / `..bothAlgDataF` / `..bothAlgDataT` themselves;
 `FormalSchemes.LocallyRingedSpaceRange`, which the injectivity corollary reads an `eqToHom`
 through, arrives with the third. So this file's forward closure stays **93**, its reverse closure
-stays **0**, and the tree's import graph does not move.
+stays **1**, and the tree's import graph does not move.
 
 The first two parents are import-incomparable, so the statement costs either an import edge or a
 new leaf, and the edge was rejected in both directions. Adding to
