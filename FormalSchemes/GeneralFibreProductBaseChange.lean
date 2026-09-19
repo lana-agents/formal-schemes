@@ -38,9 +38,13 @@ there is no equality to state, and only a morphism can relate the two glued obje
 A morphism out of a glued formal scheme is a compatible family of chart morphisms
 (`AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms`, `FormalSchemes.GlueMorphisms`). The
 compatibility is a square relating the chart comparison at `p` to the fibre product's transition
-between the `p`-th and `p'`-th charts. **That square is an input here, not an output**, and it is
-named: `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible`. The reason is measured
-rather than assumed and is recorded under *What is not proved here* below.
+between the `p`-th and `p'`-th charts. **At a general pair of glues that square is an input, not an
+output**, and it is named: `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible`. The
+reason is measured rather than assumed and is recorded under *What is not proved here* below. At a
+pair the smart constructor `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces it
+becomes an output —
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData` — over one further
+input on the primed transitions, and that is the arc of the last three sections.
 
 To state two fibre products over two bases at once, the chart family has to be a *parameter* and
 not a field. `AlgebraicGeometry.BothChartedFibreDatum` carries `A` and `B` as fields, so two of
@@ -123,6 +127,25 @@ fields, and none of `gX`, `gY`, `τX`, `τY`, which are documentation of intent 
   and `AlgebraicGeometry.DoubleChartGlue.rightInterchangeOpenImmersion_comp_chartBaseChange` and
   `AlgebraicGeometry.DoubleChartGlue.bothInterchangeOpenImmersion_comp_chartBaseChange` are the two
   squares in this file's chart vocabulary.
+* `CompletedTensorProduct.mapSpf_comp_baseChange`: **the chart comparison is natural in the pair of
+  chart algebras**, which is the transition half's whole geometric content — the ring square under
+  it is `CompletedTensorProduct.baseChangeHom_comp_map`
+  (`FormalSchemes.CompletedTensorBaseChange`), and
+  `CompletedTensorAwayInterchange.mapSpfIso_hom_comp_interchangeChartBaseChange`,
+  `CompletedTensorAwayInterchange.mapSpfIso_hom_comp_rightInterchangeChartBaseChange` and
+  `CompletedTensorAwayInterchange.mapSpfIso_hom_comp_bothInterchangeChartBaseChange` are it at the
+  three branches, where the transitions live at away ideals that are the same ideal under
+  different terms.
+* `AlgebraicGeometry.bothAlgDataChartBaseChange`: **the comparison of the two glues' overlap
+  objects at a dispatched pair** — the `w` the reduction asks for — with
+  `AlgebraicGeometry.bothAlgDataF_comp_chartBaseChange` and
+  `AlgebraicGeometry.bothAlgDataT_comp_bothAlgDataChartBaseChange` its two conditions, the second
+  over the named hypothesis `AlgebraicGeometry.IsChartTransitionBaseChange`.
+* `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData`: **the square,
+  discharged** at a pair whose overlap objects, immersions and transitions are the dispatched ones,
+  and `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base_of_bothAlgData`: **the glued
+  comparison of such a pair is injective on points**, which is the square and the saturation used
+  together.
 
 ## Reducing the square to the carried overlap data
 
@@ -152,10 +175,14 @@ different reasons:
 * The transition condition compares the chart transitions supplied to the smart constructor on the
   two sides. Over a general tower `R → R'` those are independent data: an `R`-algebra equivalence
   of chart rings is not an `R'`-algebra equivalence, so the condition constrains how the primed
-  datum is chosen. It becomes automatic at `R' = R{1/f}`, where
+  datum is chosen. **That constraint is named below**:
+  `AlgebraicGeometry.IsChartTransitionBaseChange` says the primed transitions are the unprimed ones
+  read over `R'`, and over it the condition is a theorem,
+  `AlgebraicGeometry.bothAlgDataT_comp_bothAlgDataChartBaseChange`. It is *not* a theorem
+  without it, and the constraint is not vacuous: it becomes automatic at `R' = R{1/f}`, where
   `FormalSpectrum.awayCompletionChartAlgEquivBase` (`FormalSchemes.AwayCompletionUniversal`)
   enlarges the scalars for free — that is a statement about the away completion as a source, not
-  about a general base.
+  about a general base, and nothing here produces it at a general tower.
 
 ## Why injectivity needs a second hypothesis
 
@@ -184,41 +211,48 @@ and it is a second hypothesis rather than a consequence of the first:
 
 ## What is not proved here
 
-* **The square is not discharged.**
+* **The square is not discharged at a general pair of glues, and cannot be.**
   `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible` is a hypothesis of
   `AlgebraicGeometry.DoubleChartGlue.baseChange`, and nothing here produces one outright at a
-  general pair of glues. This is not a gap that a harder proof closes: at a general pair the two
+  general pair. This is not a gap that a harder proof closes: at a general pair the two
   glues are *unrelated data*, and the square is then false as often as it is true.
   `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison` produces
-  one from a comparison of the two glues' overlap objects, which is again data, and nothing here
-  produces one of those either. The square becomes a theorem only for a pair produced by the smart
+  one from a comparison of the two glues' overlap objects, which is again data;
+  `AlgebraicGeometry.bothAlgDataChartBaseChange` below is that comparison **at a dispatched pair**,
+  and it is the only one here. The square becomes a theorem for a pair produced by the smart
   constructor
   `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData`, where the overlap objects are the
-  three-branch interchange dispatch of `FormalSchemes.GeneralFibreProductBothAlgebraDataObject`.
-  *Reducing the square* above says what is left there, and it is two things rather than three. The
+  three-branch interchange dispatch of `FormalSchemes.GeneralFibreProductBothAlgebraDataObject`,
+  and `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData` below is
+  that theorem.
+  *Reducing the square* above says what it costs, and it is two things rather than three. The
   first is a commutation of `CompletedTensorProduct.baseChangeHom` with each of the three
-  interchange open immersions, and all three are discharged below —
+  interchange open immersions —
   `CompletedTensorAwayInterchange.interchangeOpenImmersion_comp_baseChange`,
   `CompletedTensorAwayInterchange.rightInterchangeOpenImmersion_comp_baseChange` and
-  `CompletedTensorAwayInterchange.bothInterchangeOpenImmersion_comp_baseChange`. **The assembly of
-  the three across the `eqToHom` dispatch of `AlgebraicGeometry.bothAlgDataF` is not**, and neither
-  is the family they assemble into. No base change of
+  `CompletedTensorAwayInterchange.bothInterchangeOpenImmersion_comp_baseChange` — assembled across
+  the `eqToHom` dispatch of `AlgebraicGeometry.bothAlgDataF` by
+  `AlgebraicGeometry.bothAlgDataF_comp_chartBaseChange`. No base change of
   `FormalSpectrum.awayCompletion` is among any of them, because the two away completions involved
   are the same ring. The second is the agreement of the primed transitions with the unprimed ones,
-  which is a condition on the primed datum over a general tower and is produced rather than assumed
-  only at an away base, where `FormalSchemes.AwayBaseChangeGluedX` builds it on the one-sided
-  side.
-* **The saturation is discharged, and the square is not.** The two hypotheses were filed
-  together and they did not cost the same.
+  which over a general tower is a condition on the primed datum and **remains one**: it is assumed,
+  under the name `AlgebraicGeometry.IsChartTransitionBaseChange`, and it is produced rather than
+  assumed only at an away base, where `FormalSchemes.AwayBaseChangeGluedX` builds it on the
+  one-sided side. Nothing here produces it, and nothing here constructs the primed glue whose
+  transitions it would constrain.
+* **Both hypotheses are discharged at a dispatched pair, and they did not cost the same.** The
+  saturation is a statement about two ranges; the square had to be traced through three branches of
+  the dispatch and through the transitions besides, and it needs an input the saturation does not.
   `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF` below
   proves `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated` at a pair carrying the
   dispatched overlap immersions, which is what the smart constructor
   `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces, and it proves it as an
   *equality*. What remains unproduced is the **primed glue itself**: assembling one needs the
-  transitions and the double-overlap data over `(R', I')`, which is the second of the square's two
-  outstanding needs above and not this section's. So the saturation is a theorem over hypotheses
-  that are `rfl` for a smart-constructor glue, and it waits on a constructor rather than on an
-  argument.
+  transitions and the double-overlap data over `(R', I')`, and nothing here builds either. So both
+  statements are theorems over hypotheses that are `rfl` for a smart-constructor glue, and they
+  wait on a constructor rather than on an argument;
+  `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base_of_bothAlgData` is the two of them
+  used together.
 * **No cancellation, and no separation statement.** Nothing here mentions
   `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated` or
   `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`.
@@ -295,6 +329,16 @@ not. The sixth is
 `Ideal.map_algebraMap_of_tower`, which is the whole of this section's ideal bookkeeping. Both edges
 were taken rather than a new leaf on the same arithmetic as the fourth: six reverse-closure figures
 move by one each, against ninety-three for a new module.
+
+The transition half and the assembly below add **no parent at all**. Every module they need is
+already inside the closure of the six: `FormalSchemes.CompletedTensorFunctor` and
+`FormalSchemes.CompletedTensorMapSpfIso`, which is where `CompletedTensorProduct.mapSpf` and
+`CompletedTensorProduct.mapSpfIso` are defined, arrive with the fourth parent through
+`FormalSchemes.GeneralFibreProductBothAlgebraDataObject`, and so do the dispatched
+`AlgebraicGeometry.bothAlgDataV` / `..bothAlgDataF` / `..bothAlgDataT` themselves;
+`FormalSchemes.LocallyRingedSpaceRange`, which the injectivity corollary reads an `eqToHom`
+through, arrives with the third. So this file's forward closure stays **93**, its reverse closure
+stays **0**, and the tree's import graph does not move.
 
 The first two parents are import-incomparable, so the statement costs either an import edge or a
 new leaf, and the edge was rejected in both directions. Adding to
@@ -601,9 +645,12 @@ def chartBaseChange (hI : I.FG) (hII' : I.map (algebraMap R R') = I') (p : JX ×
 /-- **The overlap square**: the hypothesis the glued base change needs. At `p ≠ p'` the chart
 comparisons at `p` and at `p'` must agree on the source's overlap of the two charts.
 
-It is not discharged here at a pair a smart constructor produces, but it is reduced: see
-`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison`, which asks
-instead for a comparison of the two glues' overlap objects and mentions the glued target nowhere.
+It is an input at a general pair of glues and an *output* at a pair a smart constructor produces:
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison` reduces it
+to a comparison of the two glues' overlap objects and mentions the glued target nowhere, and
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData` below discharges
+it at the dispatched pair, over the one hypothesis
+`AlgebraicGeometry.IsChartTransitionBaseChange` that the reduction's transition half needs.
 `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated` is the glued base change's other
 hypothesis and is a different obligation; the reduction does not supply it, and supplies the
 *opposite* containment of the one it asks for. That one is discharged below, by
@@ -1511,6 +1558,585 @@ theorem bothInterchangeOpenImmersion_comp_chartBaseChange (hI : I.FG)
           (Ideal.map_algebraMap_of_tower I I' hII').symm a b hI hII' ≫
         CompletedTensorAwayInterchange.bothInterchangeOpenImmersion I a b hI :=
   CompletedTensorAwayInterchange.bothInterchangeOpenImmersion_comp_baseChange a b hI hII'
+
+end AlgebraicGeometry.DoubleChartGlue
+
+/-! ## The transition half, and the assembly across the dispatch
+
+The immersion half above is one square per branch of `AlgebraicGeometry.bothAlgDataF`. What the
+glued comparison still needs is the *transition* half of
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison`, and then
+the assembly of both halves across the `eqToHom` dispatch.
+
+Over a general tower `R → R'` the transition half is **not** a theorem: the primed datum's chart
+transitions are independent data, and *Reducing the square* above says why. It becomes one as soon
+as the primed transitions are the unprimed ones read as `R'`-algebra equivalences, which is what
+`AlgebraicGeometry.IsChartTransitionBaseChange` names. That hypothesis is stated as a
+heterogeneous equality of the underlying **functions** rather than of the equivalences: the two
+live at the away ideals `I'·A i` and `I·A i`, which are the same ideal
+(`Ideal.map_algebraMap_of_tower`) under different terms, so no homogeneous equation between them
+can even be written down without a transport.
+-/
+
+namespace AlgEquiv
+
+variable {S S' X Y : Type u} [CommSemiring S] [CommSemiring S'] [Semiring X] [Semiring Y]
+variable [Algebra S X] [Algebra S Y] [Algebra S' X] [Algebra S' Y]
+
+/-- **Two algebra equivalences over different bases with the same underlying function have the
+same inverse.** Needed because the squares below compare an `R'`-algebra transition with an
+`R`-algebra one, and `CompletedTensorProduct.mapSpfIso`'s forward leg is
+`CompletedTensorProduct.mapSpf` of the *inverses*. -/
+theorem symm_apply_eq_of_coe_eq {e : X ≃ₐ[S] Y} {e' : X ≃ₐ[S'] Y} (h : ⇑e = ⇑e') (y : Y) :
+    e.symm y = e'.symm y := by
+  apply e'.injective
+  rw [e'.apply_symm_apply, ← congrFun h (e.symm y), e.apply_symm_apply]
+
+end AlgEquiv
+
+namespace CompletedTensorProduct
+
+variable {R R' A B A₂ B₂ : Type u} [CommRing R] [CommRing R'] [CommRing A] [CommRing B]
+variable [CommRing A₂] [CommRing B₂]
+variable [Algebra R R'] [Algebra R A] [Algebra R B] [Algebra R' A] [Algebra R' B]
+variable [Algebra R A₂] [Algebra R B₂] [Algebra R' A₂] [Algebra R' B₂]
+variable [IsScalarTower R R' A] [IsScalarTower R R' B]
+variable [IsScalarTower R R' A₂] [IsScalarTower R R' B₂]
+variable {I : Ideal R} {I' : Ideal R'}
+
+/-- **The geometric form of `CompletedTensorProduct.baseChangeHom_comp_map`**: the chart comparison
+commutes with `CompletedTensorProduct.mapSpf` of a pair of chart-algebra maps, provided the primed
+pair has the same underlying functions as the unprimed one.
+
+Every leg is a `FormalSpectrum.locallyRingedSpaceMap`, so
+`FormalSpectrum.locallyRingedSpaceMap_comp` merges each side into one and what is left is the ring
+square under `FormalSpectrum.locallyRingedSpaceMap_congr`. Nothing here moves a chart: both sides
+are taken at the *same* four chart algebras, which is exactly why this square is free of the
+transports the three branch statements below pay. -/
+theorem mapSpf_comp_baseChange (f : A →ₐ[R] A₂) (g : B →ₐ[R] B₂) (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I') (f' : A →ₐ[R'] A₂) (g' : B →ₐ[R'] B₂)
+    (hf : ∀ a, f' a = f a) (hg : ∀ b, g' b = g b) :
+    mapSpf (R := R') (I := I') (fg_of_map_eq hI hII') f' g' ≫
+        FormalSpectrum.locallyRingedSpaceMap (idealOfDefinition R I A B)
+          (idealOfDefinition R' I' A B) (baseChangeHom (A := A) (B := B) hI hII')
+          (le_comap_baseChangeHom hI hII') =
+      FormalSpectrum.locallyRingedSpaceMap (idealOfDefinition R I A₂ B₂)
+          (idealOfDefinition R' I' A₂ B₂) (baseChangeHom (A := A₂) (B := B₂) hI hII')
+          (le_comap_baseChangeHom hI hII') ≫
+        mapSpf hI f g := by
+  have key : (map (fg_of_map_eq hI hII') f' g').comp (baseChangeHom (A := A) (B := B) hI hII') =
+      (baseChangeHom (A := A₂) (B := B₂) hI hII').comp (map hI f g) :=
+    baseChangeHom_comp_map f g hI hII' (map (fg_of_map_eq hI hII') f' g')
+      (fun m x hx => map_mem_pow (fg_of_map_eq hI hII') f' g' m hx)
+      (fun a => by rw [map_inl, hf a]) (fun b => by rw [map_inr, hg b])
+  have hlhs : idealOfDefinition R I A B ≤ (idealOfDefinition R' I' A₂ B₂).comap
+      ((map (fg_of_map_eq hI hII') f' g').comp (baseChangeHom (A := A) (B := B) hI hII')) := by
+    rw [← Ideal.comap_comap]
+    exact (le_comap_baseChangeHom hI hII').trans
+      (Ideal.comap_mono (map_isAdicHom (fg_of_map_eq hI hII') f' g').le_comap)
+  have hrhs : idealOfDefinition R I A B ≤ (idealOfDefinition R' I' A₂ B₂).comap
+      ((baseChangeHom (A := A₂) (B := B₂) hI hII').comp (map hI f g)) := by
+    rw [← Ideal.comap_comap]
+    exact (map_isAdicHom hI f g).le_comap.trans
+      (Ideal.comap_mono (le_comap_baseChangeHom hI hII'))
+  rw [mapSpf_eq, mapSpf_eq, ← FormalSpectrum.locallyRingedSpaceMap_comp _ _ _ _ _ _ _ hlhs,
+    ← FormalSpectrum.locallyRingedSpaceMap_comp _ _ _ _ _ _ _ hrhs]
+  exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ key
+
+end CompletedTensorProduct
+
+namespace CompletedTensorAwayInterchange
+
+variable {R R' A B A₂ B₂ : Type u} [CommRing R] [CommRing R'] [CommRing A] [CommRing B]
+variable [CommRing A₂] [CommRing B₂]
+variable [Algebra R R'] [Algebra R A] [Algebra R B] [Algebra R' A] [Algebra R' B]
+variable [Algebra R A₂] [Algebra R B₂] [Algebra R' A₂] [Algebra R' B₂]
+variable [IsScalarTower R R' A] [IsScalarTower R R' B]
+variable [IsScalarTower R R' A₂] [IsScalarTower R R' B₂]
+variable {I : Ideal R} {I' : Ideal R'}
+
+/-- **The transition square at the first-factor branch**: the overlap comparison
+`CompletedTensorAwayInterchange.interchangeChartBaseChange` commutes with
+`CompletedTensorProduct.mapSpfIso` of a pair of transitions, the first of which localizes the first
+factor.
+
+The first factor's transition is given twice — once over `R'` at a *variable* away ideal `K` and
+once over `R` at `I·A` — and the two are related only by a heterogeneous equality of their
+underlying functions, because that is all that can be said: the two away completions are the same
+ring under different terms. One `subst` on `K` collapses the transport, after which
+`CompletedTensorProduct.mapSpf_comp_baseChange` is the whole content and
+`AlgEquiv.symm_apply_eq_of_coe_eq` turns the agreement of the two pairs into the agreement of their
+inverses, which is what `CompletedTensorProduct.mapSpfIso`'s forward leg is built from. -/
+theorem mapSpfIso_hom_comp_interchangeChartBaseChange {K : Ideal A} {K₂ : Ideal A₂}
+    (hK : K = I.map (algebraMap R A)) (hK₂ : K₂ = I.map (algebraMap R A₂))
+    (a : A) (a₂ : A₂) (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (eA : awayCompletion (I.map (algebraMap R A)) a ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R A₂)) a₂)
+    (eA' : awayCompletion K a ≃ₐ[R'] awayCompletion K₂ a₂) (heA : HEq ⇑eA' ⇑eA)
+    (eB : B ≃ₐ[R] B₂) (eB' : B ≃ₐ[R'] B₂) (heB : ⇑eB' = ⇑eB) :
+    (mapSpfIso (R := R') (I := I') (fg_of_map_eq hI hII') eA' eB').hom ≫
+        interchangeChartBaseChange (B := B₂) hK₂ a₂ hI hII' =
+      interchangeChartBaseChange (B := B) hK a hI hII' ≫ (mapSpfIso hI eA eB).hom := by
+  subst hK
+  subst hK₂
+  have heA' : ⇑eA' = ⇑eA := eq_of_heq heA
+  simp only [interchangeChartBaseChange, eqToHom_refl, Category.id_comp, mapSpfIso_hom]
+  exact mapSpf_comp_baseChange (A := awayCompletion (I.map (algebraMap R A₂)) a₂) (B := B₂)
+    (A₂ := awayCompletion (I.map (algebraMap R A)) a) (B₂ := B)
+    eA.symm.toAlgHom eB.symm.toAlgHom hI hII' eA'.symm.toAlgHom eB'.symm.toAlgHom
+    (fun x => AlgEquiv.symm_apply_eq_of_coe_eq heA' x)
+    (fun x => AlgEquiv.symm_apply_eq_of_coe_eq heB x)
+
+/-- **The transition square at the second-factor branch**, the mirror of
+`CompletedTensorAwayInterchange.mapSpfIso_hom_comp_interchangeChartBaseChange` on the other side of
+the tensor: here the *second* factor is localized, so it is the second transition that is given at
+a variable away ideal and the first that is given over both bases on the nose. -/
+theorem mapSpfIso_hom_comp_rightInterchangeChartBaseChange {K : Ideal B} {K₂ : Ideal B₂}
+    (hK : K = I.map (algebraMap R B)) (hK₂ : K₂ = I.map (algebraMap R B₂))
+    (b : B) (b₂ : B₂) (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (eA : A ≃ₐ[R] A₂) (eA' : A ≃ₐ[R'] A₂) (heA : ⇑eA' = ⇑eA)
+    (eB : awayCompletion (I.map (algebraMap R B)) b ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R B₂)) b₂)
+    (eB' : awayCompletion K b ≃ₐ[R'] awayCompletion K₂ b₂) (heB : HEq ⇑eB' ⇑eB) :
+    (mapSpfIso (R := R') (I := I') (fg_of_map_eq hI hII') eA' eB').hom ≫
+        rightInterchangeChartBaseChange (A := A₂) hK₂ b₂ hI hII' =
+      rightInterchangeChartBaseChange (A := A) hK b hI hII' ≫ (mapSpfIso hI eA eB).hom := by
+  subst hK
+  subst hK₂
+  have heB' : ⇑eB' = ⇑eB := eq_of_heq heB
+  simp only [rightInterchangeChartBaseChange, eqToHom_refl, Category.id_comp, mapSpfIso_hom]
+  exact mapSpf_comp_baseChange (A := A₂) (B := awayCompletion (I.map (algebraMap R B₂)) b₂)
+    (A₂ := A) (B₂ := awayCompletion (I.map (algebraMap R B)) b)
+    eA.symm.toAlgHom eB.symm.toAlgHom hI hII' eA'.symm.toAlgHom eB'.symm.toAlgHom
+    (fun x => AlgEquiv.symm_apply_eq_of_coe_eq heA x)
+    (fun x => AlgEquiv.symm_apply_eq_of_coe_eq heB' x)
+
+/-- **The transition square at the both-factor branch.** Both factors are localized, so both
+transitions are given at variable away ideals and both agreements are heterogeneous; two `subst`s
+collapse the two transports and nothing else changes. Unlike the *immersion* square at this branch
+(`CompletedTensorAwayInterchange.bothInterchangeOpenImmersion_comp_baseChange`), no transport is
+carried past a leg here: the two away ideals meet the comparison at its ends rather than inside it,
+because `CompletedTensorProduct.mapSpfIso` is one map and not a composite of two. -/
+theorem mapSpfIso_hom_comp_bothInterchangeChartBaseChange {K : Ideal A} {K₂ : Ideal A₂}
+    {L : Ideal B} {L₂ : Ideal B₂}
+    (hK : K = I.map (algebraMap R A)) (hK₂ : K₂ = I.map (algebraMap R A₂))
+    (hL : L = I.map (algebraMap R B)) (hL₂ : L₂ = I.map (algebraMap R B₂))
+    (a : A) (a₂ : A₂) (b : B) (b₂ : B₂) (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (eA : awayCompletion (I.map (algebraMap R A)) a ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R A₂)) a₂)
+    (eA' : awayCompletion K a ≃ₐ[R'] awayCompletion K₂ a₂) (heA : HEq ⇑eA' ⇑eA)
+    (eB : awayCompletion (I.map (algebraMap R B)) b ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R B₂)) b₂)
+    (eB' : awayCompletion L b ≃ₐ[R'] awayCompletion L₂ b₂) (heB : HEq ⇑eB' ⇑eB) :
+    (mapSpfIso (R := R') (I := I') (fg_of_map_eq hI hII') eA' eB').hom ≫
+        bothInterchangeChartBaseChange hK₂ hL₂ a₂ b₂ hI hII' =
+      bothInterchangeChartBaseChange hK hL a b hI hII' ≫ (mapSpfIso hI eA eB).hom := by
+  subst hK
+  subst hK₂
+  subst hL
+  subst hL₂
+  have heA' : ⇑eA' = ⇑eA := eq_of_heq heA
+  have heB' : ⇑eB' = ⇑eB := eq_of_heq heB
+  simp only [bothInterchangeChartBaseChange, eqToHom_refl, Category.id_comp, mapSpfIso_hom]
+  exact mapSpf_comp_baseChange
+    (A := awayCompletion (I.map (algebraMap R A₂)) a₂)
+    (B := awayCompletion (I.map (algebraMap R B₂)) b₂)
+    (A₂ := awayCompletion (I.map (algebraMap R A)) a)
+    (B₂ := awayCompletion (I.map (algebraMap R B)) b)
+    eA.symm.toAlgHom eB.symm.toAlgHom hI hII' eA'.symm.toAlgHom eB'.symm.toAlgHom
+    (fun x => AlgEquiv.symm_apply_eq_of_coe_eq heA' x)
+    (fun x => AlgEquiv.symm_apply_eq_of_coe_eq heB' x)
+
+end CompletedTensorAwayInterchange
+
+namespace AlgebraicGeometry
+
+variable {R R' : Type u} [CommRing R] [CommRing R'] [Algebra R R']
+variable {I : Ideal R} {I' : Ideal R'}
+variable {JX JY : Type u} {A : JX → Type u} {B : JY → Type u}
+variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
+variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
+variable [∀ i, Algebra R' (A i)] [∀ i, IsScalarTower R R' (A i)]
+variable [∀ j, Algebra R' (B j)] [∀ j, IsScalarTower R R' (B j)]
+variable {gX : ∀ i _ : JX, A i} {gY : ∀ j _ : JY, B j}
+
+/-! ### The shared-coordinate transports do not see the base -/
+
+omit [Algebra R R'] [∀ i, IsScalarTower R R' (A i)] [∀ j, IsScalarTower R R' (B j)] in
+/-- **`AlgebraicGeometry.eqAlgEquivA` has the same underlying function over either base.** It is
+the transport of `AlgEquiv.refl` along an equality of chart indices, so it is the identity in
+both, and the dispatch's shared-coordinate branch needs exactly that agreement. -/
+theorem coe_eqAlgEquivA_base {i i' : JX} (h : i = i') :
+    ⇑(eqAlgEquivA (R := R') (A := A) h) = ⇑(eqAlgEquivA (R := R) (A := A) h) := by
+  subst h; rfl
+
+omit [Algebra R R'] [∀ i, IsScalarTower R R' (A i)] [∀ j, IsScalarTower R R' (B j)] in
+/-- **`AlgebraicGeometry.eqAlgEquivB` has the same underlying function over either base**, the
+mirror of `AlgebraicGeometry.coe_eqAlgEquivA_base`. -/
+theorem coe_eqAlgEquivB_base {j j' : JY} (h : j = j') :
+    ⇑(eqAlgEquivB (R := R') (B := B) h) = ⇑(eqAlgEquivB (R := R) (B := B) h) := by
+  subst h; rfl
+
+/-! ### The dispatched comparison of the two glues' overlap objects -/
+
+open scoped Classical in
+/-- **The comparison of the two glues' overlap objects at a dispatched pair** — the `w` that
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison` asks for,
+at a pair `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces.
+
+It dispatches on the same three branches as `AlgebraicGeometry.bothAlgDataV`, and in each the
+middle leg is the branch's overlap comparison from the two sections above — the away ideal is
+supplied as `Ideal.map_algebraMap_of_tower` read backwards, which is what pins it to the *primed*
+localized chart at the source and the unprimed one at the target. The two `eqToHom`s are the
+dispatch's own, one on each side. -/
+def bothAlgDataChartBaseChange (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (gX : ∀ i _ : JX, A i) (gY : ∀ j _ : JY, B j) (p p' : JX × JY) (h : p ≠ p') :
+    bothAlgDataV (R := R') (I := I') (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' h ⟶
+      bothAlgDataV hI gX gY p p' h :=
+  if h1 : p.1 = p'.1 then
+    eqToHom (bothAlgDataV_snd (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' h h1) ≫
+      CompletedTensorAwayInterchange.rightInterchangeChartBaseChange (A := A p.1)
+        (Ideal.map_algebraMap_of_tower I I' hII').symm (gY p.2 p'.2) hI hII' ≫
+      eqToHom (bothAlgDataV_snd hI gX gY p p' h h1).symm
+  else if h2 : p.2 = p'.2 then
+    eqToHom (bothAlgDataV_fst (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' h h1 h2) ≫
+      CompletedTensorAwayInterchange.interchangeChartBaseChange (B := B p.2)
+        (Ideal.map_algebraMap_of_tower I I' hII').symm (gX p.1 p'.1) hI hII' ≫
+      eqToHom (bothAlgDataV_fst hI gX gY p p' h h1 h2).symm
+  else
+    eqToHom (bothAlgDataV_both (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' h h1 h2) ≫
+      CompletedTensorAwayInterchange.bothInterchangeChartBaseChange
+        (Ideal.map_algebraMap_of_tower I I' hII').symm
+        (Ideal.map_algebraMap_of_tower I I' hII').symm (gX p.1 p'.1) (gY p.2 p'.2) hI hII' ≫
+      eqToHom (bothAlgDataV_both hI gX gY p p' h h1 h2).symm
+
+open scoped Classical in
+/-- Reduction of `AlgebraicGeometry.bothAlgDataChartBaseChange` in the *second-coordinate-differs*
+shape (`p.1 = p'.1`). -/
+theorem bothAlgDataChartBaseChange_snd (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (p p' : JX × JY) (h : p ≠ p') (h1 : p.1 = p'.1) :
+    bothAlgDataChartBaseChange (A := A) (B := B) hI hII' gX gY p p' h =
+      eqToHom (bothAlgDataV_snd (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' h h1) ≫
+        CompletedTensorAwayInterchange.rightInterchangeChartBaseChange (A := A p.1)
+          (Ideal.map_algebraMap_of_tower I I' hII').symm (gY p.2 p'.2) hI hII' ≫
+        eqToHom (bothAlgDataV_snd hI gX gY p p' h h1).symm := by
+  unfold bothAlgDataChartBaseChange; exact dif_pos h1
+
+open scoped Classical in
+/-- Reduction of `AlgebraicGeometry.bothAlgDataChartBaseChange` in the *first-coordinate-differs*
+shape (`p.1 ≠ p'.1`, `p.2 = p'.2`). -/
+theorem bothAlgDataChartBaseChange_fst (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (p p' : JX × JY) (h : p ≠ p') (h1 : ¬ p.1 = p'.1) (h2 : p.2 = p'.2) :
+    bothAlgDataChartBaseChange (A := A) (B := B) hI hII' gX gY p p' h =
+      eqToHom (bothAlgDataV_fst (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY
+          p p' h h1 h2) ≫
+        CompletedTensorAwayInterchange.interchangeChartBaseChange (B := B p.2)
+          (Ideal.map_algebraMap_of_tower I I' hII').symm (gX p.1 p'.1) hI hII' ≫
+        eqToHom (bothAlgDataV_fst hI gX gY p p' h h1 h2).symm := by
+  unfold bothAlgDataChartBaseChange; rw [dif_neg h1, dif_pos h2]
+
+open scoped Classical in
+/-- Reduction of `AlgebraicGeometry.bothAlgDataChartBaseChange` in the *both-coordinates-differ*
+shape. -/
+theorem bothAlgDataChartBaseChange_both (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (p p' : JX × JY) (h : p ≠ p') (h1 : ¬ p.1 = p'.1) (h2 : ¬ p.2 = p'.2) :
+    bothAlgDataChartBaseChange (A := A) (B := B) hI hII' gX gY p p' h =
+      eqToHom (bothAlgDataV_both (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY
+          p p' h h1 h2) ≫
+        CompletedTensorAwayInterchange.bothInterchangeChartBaseChange
+          (Ideal.map_algebraMap_of_tower I I' hII').symm
+          (Ideal.map_algebraMap_of_tower I I' hII').symm (gX p.1 p'.1) (gY p.2 p'.2) hI hII' ≫
+        eqToHom (bothAlgDataV_both hI gX gY p p' h h1 h2).symm := by
+  unfold bothAlgDataChartBaseChange; rw [dif_neg h1, dif_neg h2]
+
+/-! ### The immersion half, assembled across the dispatch -/
+
+open scoped Classical in
+/-- **The immersion condition at a dispatched pair.** *Reach for this one*: the dispatched overlap
+immersion of the primed base, followed by the chart comparison, is
+`AlgebraicGeometry.bothAlgDataChartBaseChange` followed by the dispatched overlap immersion of the
+unprimed base — which is the first hypothesis of
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison` at every
+pair at once.
+
+Each branch is the branch's square from the two sections above, conjugated by the dispatch's own
+`eqToHom` on each side; the conjugation is free, since the two transports meet and cancel by
+`eqToHom_trans`. **That the `eqToHom` crossing is free was not known before this row** — it is what
+rows 2058 and 2059 deliberately stopped short of. -/
+theorem bothAlgDataF_comp_chartBaseChange (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (gX : ∀ i _ : JX, A i) (gY : ∀ j _ : JY, B j) (p p' : JX × JY) (h : p ≠ p') :
+    bothAlgDataF (R := R') (I := I') (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' h ≫
+        DoubleChartGlue.chartBaseChange (A := A) (B := B) hI hII' p =
+      bothAlgDataChartBaseChange hI hII' gX gY p p' h ≫ bothAlgDataF hI gX gY p p' h := by
+  simp only [bothAlgDataF, bothAlgDataChartBaseChange]
+  split_ifs with h1 h2
+  · simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [DoubleChartGlue.rightInterchangeOpenImmersion_comp_chartBaseChange hI hII' p
+      (gY p.2 p'.2)]
+  · simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [DoubleChartGlue.interchangeOpenImmersion_comp_chartBaseChange hI hII' p (gX p.1 p'.1)]
+  · simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [DoubleChartGlue.bothInterchangeOpenImmersion_comp_chartBaseChange hI hII' p
+      (gX p.1 p'.1) (gY p.2 p'.2)]
+
+/-! ### The transition half, assembled across the dispatch -/
+
+/-- **The primed chart transitions are the unprimed ones read over `R'`.** This is the input the
+transition half needs and the immersion half does not, and it is a *condition on how the primed
+datum is chosen* rather than a consequence of how it is built — *Reducing the square* above says
+why, and `FormalSchemes.AwayCompletionUniversal`'s rigidity of the away completion is why the
+`R'`-upgrade is not available over a general tower.
+
+It is stated as a heterogeneous equality of the underlying **functions**. The two transitions live
+at the away ideals `I'·A i` and `I·A i`, which `Ideal.map_algebraMap_of_tower` says are the same
+ideal under different terms, so their types are propositionally and not definitionally equal and no
+homogeneous equation between them can be written down. A caller who builds the primed transitions
+by transporting the unprimed ones has the `HEq` by `HEq.rfl` after the transport's own `subst`. -/
+structure IsChartTransitionBaseChange
+    (τX : ∀ (i i' : JX), i ≠ i' →
+      (FormalSpectrum.awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
+        FormalSpectrum.awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
+    (τY : ∀ (j j' : JY), j ≠ j' →
+      (FormalSpectrum.awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
+        FormalSpectrum.awayCompletion (I.map (algebraMap R (B j'))) (gY j' j)))
+    (τX' : ∀ (i i' : JX), i ≠ i' →
+      (FormalSpectrum.awayCompletion (I'.map (algebraMap R' (A i))) (gX i i') ≃ₐ[R']
+        FormalSpectrum.awayCompletion (I'.map (algebraMap R' (A i'))) (gX i' i)))
+    (τY' : ∀ (j j' : JY), j ≠ j' →
+      (FormalSpectrum.awayCompletion (I'.map (algebraMap R' (B j))) (gY j j') ≃ₐ[R']
+        FormalSpectrum.awayCompletion (I'.map (algebraMap R' (B j'))) (gY j' j))) : Prop where
+  /-- The `X`-side transitions have the same underlying function on both sides of the tower. -/
+  heqX : ∀ (i i' : JX) (h : i ≠ i'), HEq ⇑(τX' i i' h) ⇑(τX i i' h)
+  /-- The `Y`-side transitions have the same underlying function on both sides of the tower. -/
+  heqY : ∀ (j j' : JY) (h : j ≠ j'), HEq ⇑(τY' j j' h) ⇑(τY j j' h)
+
+open scoped Classical in
+/-- **The transition condition at a dispatched pair**, under
+`AlgebraicGeometry.IsChartTransitionBaseChange`. *Reach for this one*: it is the second hypothesis
+of `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison` at every
+pair at once.
+
+Each branch is the branch's transition square from the section above, conjugated by the dispatch's
+`eqToHom`s exactly as the immersion half is, and the conjugation is free for the same reason. The
+`X`- and `Y`-side shared-coordinate legs are `AlgebraicGeometry.eqAlgEquivA` and
+`..eqAlgEquivB`, whose agreement across the tower is
+`AlgebraicGeometry.coe_eqAlgEquivA_base` / `..coe_eqAlgEquivB_base` and needs no hypothesis. -/
+theorem bothAlgDataT_comp_bothAlgDataChartBaseChange (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I')
+    (τX : ∀ (i i' : JX), i ≠ i' →
+      (FormalSpectrum.awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
+        FormalSpectrum.awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
+    (τY : ∀ (j j' : JY), j ≠ j' →
+      (FormalSpectrum.awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
+        FormalSpectrum.awayCompletion (I.map (algebraMap R (B j'))) (gY j' j)))
+    (τX' : ∀ (i i' : JX), i ≠ i' →
+      (FormalSpectrum.awayCompletion (I'.map (algebraMap R' (A i))) (gX i i') ≃ₐ[R']
+        FormalSpectrum.awayCompletion (I'.map (algebraMap R' (A i'))) (gX i' i)))
+    (τY' : ∀ (j j' : JY), j ≠ j' →
+      (FormalSpectrum.awayCompletion (I'.map (algebraMap R' (B j))) (gY j j') ≃ₐ[R']
+        FormalSpectrum.awayCompletion (I'.map (algebraMap R' (B j'))) (gY j' j)))
+    (hτ : IsChartTransitionBaseChange τX τY τX' τY') (p p' : JX × JY) (h : p ≠ p') :
+    bothAlgDataT (R := R') (I := I') (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY
+          τX' τY' p p' h ≫
+        bothAlgDataChartBaseChange hI hII' gX gY p' p h.symm =
+      bothAlgDataChartBaseChange hI hII' gX gY p p' h ≫
+        bothAlgDataT hI gX gY τX τY p p' h := by
+  by_cases h1 : p.1 = p'.1
+  · have hb : p.2 ≠ p'.2 := fun e => h (Prod.ext h1 e)
+    rw [bothAlgDataT_snd gX gY τX' τY' (CompletedTensorProduct.fg_of_map_eq hI hII') p p' h h1,
+      bothAlgDataT_snd gX gY τX τY hI p p' h h1,
+      bothAlgDataChartBaseChange_snd hI hII' p p' h h1,
+      bothAlgDataChartBaseChange_snd hI hII' p' p h.symm h1.symm]
+    simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [reassoc_of%
+      CompletedTensorAwayInterchange.mapSpfIso_hom_comp_rightInterchangeChartBaseChange
+        (A := A p.1) (A₂ := A p'.1) (B := B p.2) (B₂ := B p'.2)
+        (Ideal.map_algebraMap_of_tower I I' hII').symm
+        (Ideal.map_algebraMap_of_tower I I' hII').symm (gY p.2 p'.2) (gY p'.2 p.2) hI hII'
+        (eqAlgEquivA h1) (eqAlgEquivA h1) (coe_eqAlgEquivA_base h1) (τY p.2 p'.2 hb)
+        (τY' p.2 p'.2 hb) (hτ.heqY p.2 p'.2 hb)]
+  · by_cases h2 : p.2 = p'.2
+    · rw [bothAlgDataT_fst gX gY τX' τY' (CompletedTensorProduct.fg_of_map_eq hI hII')
+          p p' h h1 h2, bothAlgDataT_fst gX gY τX τY hI p p' h h1 h2,
+        bothAlgDataChartBaseChange_fst hI hII' p p' h h1 h2,
+        bothAlgDataChartBaseChange_fst hI hII' p' p h.symm (fun e => h1 e.symm) h2.symm]
+      simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+      rw [reassoc_of%
+        CompletedTensorAwayInterchange.mapSpfIso_hom_comp_interchangeChartBaseChange
+          (A := A p.1) (A₂ := A p'.1) (B := B p.2) (B₂ := B p'.2)
+          (Ideal.map_algebraMap_of_tower I I' hII').symm
+          (Ideal.map_algebraMap_of_tower I I' hII').symm (gX p.1 p'.1) (gX p'.1 p.1) hI hII'
+          (τX p.1 p'.1 h1) (τX' p.1 p'.1 h1) (hτ.heqX p.1 p'.1 h1) (eqAlgEquivB h2)
+          (eqAlgEquivB h2) (coe_eqAlgEquivB_base h2)]
+    · rw [bothAlgDataT_both gX gY τX' τY' (CompletedTensorProduct.fg_of_map_eq hI hII')
+          p p' h h1 h2, bothAlgDataT_both gX gY τX τY hI p p' h h1 h2,
+        bothAlgDataChartBaseChange_both hI hII' p p' h h1 h2,
+        bothAlgDataChartBaseChange_both hI hII' p' p h.symm (fun e => h1 e.symm)
+          (fun e => h2 e.symm)]
+      simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+      rw [reassoc_of%
+        CompletedTensorAwayInterchange.mapSpfIso_hom_comp_bothInterchangeChartBaseChange
+          (A := A p.1) (A₂ := A p'.1) (B := B p.2) (B₂ := B p'.2)
+          (Ideal.map_algebraMap_of_tower I I' hII').symm
+          (Ideal.map_algebraMap_of_tower I I' hII').symm
+          (Ideal.map_algebraMap_of_tower I I' hII').symm
+          (Ideal.map_algebraMap_of_tower I I' hII').symm
+          (gX p.1 p'.1) (gX p'.1 p.1) (gY p.2 p'.2) (gY p'.2 p.2) hI hII'
+          (τX p.1 p'.1 h1) (τX' p.1 p'.1 h1) (hτ.heqX p.1 p'.1 h1) (τY p.2 p'.2 h2)
+          (τY' p.2 p'.2 h2) (hτ.heqY p.2 p'.2 h2)]
+
+end AlgebraicGeometry
+
+/-! ## The square, and the glued comparison, at a dispatched pair
+
+Both halves in one statement, and the corollary the row exists for. The two glues enter through
+their `V`, `f` and `t` alone — the square is a condition on exactly those three of the eight
+geometric fields, and `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible` mentions no
+other. A glue that
+`AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produced, read through
+`AlgebraicGeometry.BothChartedFibreDatum.toDoubleChartGlue`, satisfies the three hypotheses by
+`rfl` and `Category.id_comp`; asking instead for such a datum on both sides would drag in the
+primed double-overlap data `σX`, `σY` and their cocycles, none of which occurs in any statement
+here.
+-/
+
+namespace AlgebraicGeometry.DoubleChartGlue
+
+variable {R R' : Type u} [CommRing R] [CommRing R'] [Algebra R R']
+variable {I : Ideal R} {I' : Ideal R'}
+variable {JX JY : Type u} {A : JX → Type u} {B : JY → Type u}
+variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
+variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
+variable [∀ i, Algebra R' (A i)] [∀ i, IsScalarTower R R' (A i)]
+variable [∀ j, Algebra R' (B j)] [∀ j, IsScalarTower R R' (B j)]
+variable {gX : ∀ i _ : JX, A i} {gY : ∀ j _ : JY, B j}
+
+/-- **The overlap square, discharged at a dispatched pair.** *Reach for this one*: given two glues
+whose overlap objects, overlap immersions and overlap transitions are the dispatched ones of
+`AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` over the two bases — with the *same*
+away-elements `gX`, `gY`, which is what makes the two sides comparable at all — and given that the
+primed chart transitions are the unprimed ones read over `R'`, the hypothesis of
+`AlgebraicGeometry.DoubleChartGlue.baseChange` holds.
+
+The proof is `AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_overlapComparison`
+at `w := AlgebraicGeometry.bothAlgDataChartBaseChange`, conjugated by the two glues' own
+identifications; its two hypotheses are
+`AlgebraicGeometry.bothAlgDataF_comp_chartBaseChange` and
+`AlgebraicGeometry.bothAlgDataT_comp_bothAlgDataChartBaseChange`.
+
+The three hypotheses per glue are the shape a smart-constructor glue meets by `rfl`: for
+`(AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData …).toDoubleChartGlue` the object
+hypothesis is `fun _ _ _ => rfl`, and the immersion and transition ones are then
+`Category.id_comp` read backwards. -/
+theorem isBaseChangeOverlapCompatible_of_bothAlgData
+    (G' : DoubleChartGlue R' I' A B) (G : DoubleChartGlue R I A B)
+    (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (τX : ∀ (i i' : JX), i ≠ i' →
+      (FormalSpectrum.awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
+        FormalSpectrum.awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
+    (τY : ∀ (j j' : JY), j ≠ j' →
+      (FormalSpectrum.awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
+        FormalSpectrum.awayCompletion (I.map (algebraMap R (B j'))) (gY j' j)))
+    (τX' : ∀ (i i' : JX), i ≠ i' →
+      (FormalSpectrum.awayCompletion (I'.map (algebraMap R' (A i))) (gX i i') ≃ₐ[R']
+        FormalSpectrum.awayCompletion (I'.map (algebraMap R' (A i'))) (gX i' i)))
+    (τY' : ∀ (j j' : JY), j ≠ j' →
+      (FormalSpectrum.awayCompletion (I'.map (algebraMap R' (B j))) (gY j j') ≃ₐ[R']
+        FormalSpectrum.awayCompletion (I'.map (algebraMap R' (B j'))) (gY j' j)))
+    (hτ : IsChartTransitionBaseChange τX τY τX' τY')
+    (hGV : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G.V p p' hne = bothAlgDataV hI gX gY p p' hne)
+    (hGf : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G.f p p' hne = eqToHom (hGV p p' hne) ≫ bothAlgDataF hI gX gY p p' hne)
+    (hGt : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G.t p p' hne = eqToHom (hGV p p' hne) ≫ bothAlgDataT hI gX gY τX τY p p' hne ≫
+        eqToHom (hGV p' p hne.symm).symm)
+    (hG'V : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G'.V p p' hne =
+        bothAlgDataV (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' hne)
+    (hG'f : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G'.f p p' hne = eqToHom (hG'V p p' hne) ≫
+        bothAlgDataF (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' hne)
+    (hG't : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G'.t p p' hne = eqToHom (hG'V p p' hne) ≫
+        bothAlgDataT (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY τX' τY' p p' hne ≫
+        eqToHom (hG'V p' p hne.symm).symm) :
+    G'.IsBaseChangeOverlapCompatible G hI hII' := by
+  refine isBaseChangeOverlapCompatible_of_overlapComparison G' G hI hII'
+    (fun p p' hne => eqToHom (hG'V p p' hne) ≫
+      bothAlgDataChartBaseChange hI hII' gX gY p p' hne ≫ eqToHom (hGV p p' hne).symm)
+    (fun p p' hne => ?_) (fun p p' hne => ?_)
+  · rw [hG'f p p' hne, hGf p p' hne]
+    simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [bothAlgDataF_comp_chartBaseChange hI hII' gX gY p p' hne]
+  · rw [hG't p p' hne, hGt p p' hne]
+    simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [reassoc_of% bothAlgDataT_comp_bothAlgDataChartBaseChange hI hII' τX τY τX' τY' hτ p p' hne]
+
+section Scheme
+
+variable [TopologicalSpace R] [IsAdicRing I]
+variable [∀ i, TopologicalSpace (A i)] [∀ i, IsAdicRing (I.map (algebraMap R (A i)))]
+variable [∀ j, TopologicalSpace (B j)] [∀ j, IsAdicRing (I.map (algebraMap R (B j)))]
+variable [∀ p : JX × JY, IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2))]
+variable
+  [∀ p : JX × JY, IsAdicRing (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))]
+
+/-- **The glued base change of a dispatched pair is injective on points.** *Reach for this one*:
+this is what the square was for. Both hypotheses of
+`AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base` are discharged here — the square by
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData` above and the
+saturation by
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF`, whose
+range hypotheses follow from the two `f` identifications because an `eqToHom` is invisible to a
+range (`AlgebraicGeometry.LocallyRingedSpace.range_eqToHom_comp_base`).
+
+The saturation is **not** proved here and was never this row's: it landed with the range
+computation, and the only thing this statement adds to it is that the two hypotheses are now
+simultaneously available at one pair. -/
+theorem injective_baseChange_base_of_bothAlgData
+    (G' : DoubleChartGlue R' I' A B) (G : DoubleChartGlue R I A B)
+    (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (τX : ∀ (i i' : JX), i ≠ i' →
+      (FormalSpectrum.awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
+        FormalSpectrum.awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
+    (τY : ∀ (j j' : JY), j ≠ j' →
+      (FormalSpectrum.awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
+        FormalSpectrum.awayCompletion (I.map (algebraMap R (B j'))) (gY j' j)))
+    (τX' : ∀ (i i' : JX), i ≠ i' →
+      (FormalSpectrum.awayCompletion (I'.map (algebraMap R' (A i))) (gX i i') ≃ₐ[R']
+        FormalSpectrum.awayCompletion (I'.map (algebraMap R' (A i'))) (gX i' i)))
+    (τY' : ∀ (j j' : JY), j ≠ j' →
+      (FormalSpectrum.awayCompletion (I'.map (algebraMap R' (B j))) (gY j j') ≃ₐ[R']
+        FormalSpectrum.awayCompletion (I'.map (algebraMap R' (B j'))) (gY j' j)))
+    (hτ : IsChartTransitionBaseChange τX τY τX' τY')
+    (hGV : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G.V p p' hne = bothAlgDataV hI gX gY p p' hne)
+    (hGf : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G.f p p' hne = eqToHom (hGV p p' hne) ≫ bothAlgDataF hI gX gY p p' hne)
+    (hGt : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G.t p p' hne = eqToHom (hGV p p' hne) ≫ bothAlgDataT hI gX gY τX τY p p' hne ≫
+        eqToHom (hGV p' p hne.symm).symm)
+    (hG'V : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G'.V p p' hne =
+        bothAlgDataV (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' hne)
+    (hG'f : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G'.f p p' hne = eqToHom (hG'V p p' hne) ≫
+        bothAlgDataF (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY p p' hne)
+    (hG't : ∀ (p p' : JX × JY) (hne : p ≠ p'),
+      G'.t p p' hne = eqToHom (hG'V p p' hne) ≫
+        bothAlgDataT (CompletedTensorProduct.fg_of_map_eq hI hII') gX gY τX' τY' p p' hne ≫
+        eqToHom (hG'V p' p hne.symm).symm) :
+    Function.Injective ⇑(G'.baseChange G (CompletedTensorProduct.fg_of_map_eq hI hII') hI hII'
+      (isBaseChangeOverlapCompatible_of_bothAlgData G' G hI hII' τX τY τX' τY' hτ hGV hGf hGt
+        hG'V hG'f hG't)).base :=
+  G'.injective_baseChange_base G (CompletedTensorProduct.fg_of_map_eq hI hII') hI hII' _
+    (isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF G' G
+      (CompletedTensorProduct.fg_of_map_eq hI hII') hI hII' gX gY
+      (fun p p' hne => by rw [hGf p p' hne, LocallyRingedSpace.range_eqToHom_comp_base])
+      (fun p p' hne => by rw [hG'f p p' hne, LocallyRingedSpace.range_eqToHom_comp_base]))
+
+end Scheme
 
 end AlgebraicGeometry.DoubleChartGlue
 

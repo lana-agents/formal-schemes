@@ -34,6 +34,9 @@ functoriality `mapSpf_comp`, and (for mixed leaves) `interchangeOpenImmersion_eq
 independent algebra identities on the two tensor factors: the genuine-σ factor is exactly
 `hστX`/`hστY`, and the shared-coordinate transport factor is discharged by `AlgHom.id_comp`.
 
+The three reductions are stated beside `AlgebraicGeometry.bothAlgDataT` itself, in
+`FormalSchemes.GeneralFibreProductBothAlgebraDataObject`, and consumed here.
+
 The three *same-shape* leaves (`snd_snd`, `fst_fst`, `both_both_both`), whose source and target legs
 are both plain `mapSpf`, are proved here as the `bothAlgDataT'_fac_*` lemmas.
 The twelve *mixed-shape* leaves require, in addition, the self-multiply expand/collapse and
@@ -61,48 +64,6 @@ variable {JX JY : Type u}
 variable {A : JX → Type u} {B : JY → Type u}
 variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
 variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
-
-/-! ### Shape reductions of the double-overlap transition `bothAlgDataT` -/
-
-section Reductions
-
-variable (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
-  (τX : ∀ (i i' : JX), i ≠ i' →
-    (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
-      awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
-  (τY : ∀ (j j' : JY), j ≠ j' →
-    (awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
-      awayCompletion (I.map (algebraMap R (B j'))) (gY j' j)))
-variable (hI : I.FG) (p p' : JX × JY) (h : p ≠ p')
-
-/-- Reduction of `bothAlgDataT` in the *second-coordinate-differs* shape (`p.1 = p'.1`). -/
-theorem bothAlgDataT_snd (h1 : p.1 = p'.1) :
-    bothAlgDataT hI gX gY τX τY p p' h =
-      eqToHom (bothAlgDataV_snd hI gX gY p p' h h1) ≫
-        (mapSpfIso hI (eqAlgEquivA h1) (τY p.2 p'.2 (fun e => h (Prod.ext h1 e)))).hom ≫
-        eqToHom (bothAlgDataV_snd hI gX gY p' p h.symm h1.symm).symm := by
-  unfold bothAlgDataT; rw [dif_pos h1]
-
-/-- Reduction of `bothAlgDataT` in the *first-coordinate-differs* shape (`p.1 ≠ p'.1`,
-`p.2 = p'.2`). -/
-theorem bothAlgDataT_fst (h1 : p.1 ≠ p'.1) (h2 : p.2 = p'.2) :
-    bothAlgDataT hI gX gY τX τY p p' h =
-      eqToHom (bothAlgDataV_fst hI gX gY p p' h h1 h2) ≫
-        (mapSpfIso hI (τX p.1 p'.1 h1) (eqAlgEquivB h2)).hom ≫
-        eqToHom (bothAlgDataV_fst hI gX gY p' p h.symm (fun e => h1 e.symm) h2.symm).symm := by
-  unfold bothAlgDataT; rw [dif_neg h1, dif_pos h2]
-
-/-- Reduction of `bothAlgDataT` in the *both-coordinates-differ* shape. -/
-theorem bothAlgDataT_both (h1 : p.1 ≠ p'.1) (h2 : p.2 ≠ p'.2) :
-    bothAlgDataT hI gX gY τX τY p p' h =
-      eqToHom (bothAlgDataV_both hI gX gY p p' h h1 h2) ≫
-        (mapSpfIso hI (τX p.1 p'.1 h1) (τY p.2 p'.2 h2)).hom ≫
-        eqToHom (bothAlgDataV_both hI gX gY p' p h.symm (fun e => h1 e.symm)
-          (fun e => h2 e.symm)).symm := by
-  unfold bothAlgDataT; rw [dif_neg h1, dif_neg h2]
-
-end Reductions
-
 /-! ### The same-shape `t_fac` leaves
 
 The three leaves whose source and target legs are both plain `mapSpf` (no interchange immersion):

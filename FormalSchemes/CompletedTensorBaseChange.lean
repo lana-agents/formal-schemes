@@ -44,6 +44,10 @@ subscheme, so a closed diagonal over `R` restricts to a closed diagonal over `R'
   commutes with both factor inclusions.
 * `CompletedTensorProduct.baseChangeHom_mem_pow`: the comparison is continuous at every level, in
   the form the universal property `CompletedTensorProduct.hom_ext` consumes.
+* `CompletedTensorProduct.baseChangeHom_comp_map`: the comparison is **natural in the pair of
+  chart algebras**, against `CompletedTensorProduct.map`, over a primed lift given by its values on
+  the two canonical maps. This is the ring square the transition half of a *glued* comparison
+  needs, and it is the same `CompletedTensorProduct.hom_ext` as the two lines above it.
 * `CompletedTensorProduct.schemeBaseChange`: the induced morphism of formal schemes
   `Spf (A ⊗̂_{R'} B) ⟶ Spf (A ⊗̂_R B)`, and
   `CompletedTensorProduct.schemeBaseChange_isClosedImmersion`: it is a closed immersion.
@@ -201,6 +205,56 @@ theorem baseChangeHom_inr (hI : I.FG) (hII' : I.map (algebraMap R R') = I') (b :
     baseChangeHom (A := A) (B := B) hI hII' (inr R I A B b) = inr R' I' A B b := by
   unfold baseChangeHom inr
   simp [AdicCompletion.mapCompletion_algebraMap]
+
+/-! ### The comparison against the functoriality of the completed tensor product -/
+
+section Functoriality
+
+variable {A₂ B₂ : Type u} [CommRing A₂] [CommRing B₂]
+variable [Algebra R A₂] [Algebra R B₂] [Algebra R' A₂] [Algebra R' B₂]
+variable [IsScalarTower R R' A₂] [IsScalarTower R R' B₂]
+
+/-- **The comparison is natural in the pair of chart algebras**: the functorial map of a pair of
+`R`-algebra maps followed by the comparison at the target charts is the comparison at the source
+charts followed by the primed functorial map of the *same* pair of maps, read over `R'`.
+
+Both sides are ring maps out of `A ⊗̂_R B`, so `CompletedTensorProduct.hom_ext` compares them on
+`CompletedTensorProduct.inl` and `CompletedTensorProduct.inr`: the two continuity obligations are
+`CompletedTensorProduct.map_mem_pow` and `CompletedTensorProduct.baseChangeHom_mem_pow` composed in
+the two orders, and the two generator obligations are `CompletedTensorProduct.map_inl` /
+`..map_inr` against `CompletedTensorProduct.baseChangeHom_inl` / `..baseChangeHom_inr`.
+
+The primed lift is a **hypothesis** `φ` given by its values on the two canonical maps rather than
+the term `CompletedTensorProduct.map (fg_of_map_eq hI hII') f' g'` for an `R'`-algebra pair
+`(f', g')`, for the same reason `CompletedTensorAwayInterchange.baseChangeHom_comp_gCHom`
+(`FormalSchemes.GeneralFibreProductBaseChange`) quantifies over one: a consumer at a *localized*
+chart has `A₂` presented by a term whose away ideal is the primed one, which is the same ring under
+a different term, and a `φ` given by its generator values does not mention it. Where the charts do
+not move, `CompletedTensorProduct.map` of an `R'`-algebra pair agreeing with `(f, g)` is such a
+`φ`. -/
+theorem baseChangeHom_comp_map (f : A →ₐ[R] A₂) (g : B →ₐ[R] B₂) (hI : I.FG)
+    (hII' : I.map (algebraMap R R') = I')
+    (φ : CompletedTensorProduct R' I' A B →+* CompletedTensorProduct R' I' A₂ B₂)
+    (hφ : ∀ (m : ℕ) (x : CompletedTensorProduct R' I' A B),
+      x ∈ (idealOfDefinition R' I' A B) ^ m → φ x ∈ (idealOfDefinition R' I' A₂ B₂) ^ m)
+    (hφl : ∀ a : A, φ (inl R' I' A B a) = inl R' I' A₂ B₂ (f a))
+    (hφr : ∀ b : B, φ (inr R' I' A B b) = inr R' I' A₂ B₂ (g b)) :
+    φ.comp (baseChangeHom (A := A) (B := B) hI hII') =
+      (baseChangeHom (A := A₂) (B := B₂) hI hII').comp (map hI f g) := by
+  haveI : IsAdicComplete (idealOfDefinition R' I' A₂ B₂) (CompletedTensorProduct R' I' A₂ B₂) :=
+    (isAdicRing R' I' A₂ B₂ (fg_of_map_eq hI hII')).toIsAdicComplete
+  refine hom_ext (idealOfDefinition R' I' A₂ B₂) hI (fun m x hx => ?_) (fun m x hx => ?_)
+    (fun a => ?_) (fun b => ?_)
+  · rw [RingHom.comp_apply]
+    exact hφ m _ (baseChangeHom_mem_pow hI hII' m hx)
+  · rw [RingHom.comp_apply]
+    exact baseChangeHom_mem_pow hI hII' m (map_mem_pow hI f g m hx)
+  · rw [RingHom.comp_apply, RingHom.comp_apply, baseChangeHom_inl, hφl a, map_inl,
+      baseChangeHom_inl]
+  · rw [RingHom.comp_apply, RingHom.comp_apply, baseChangeHom_inr, hφr b, map_inr,
+      baseChangeHom_inr]
+
+end Functoriality
 
 /-! ### The comparison of formal spectra -/
 
