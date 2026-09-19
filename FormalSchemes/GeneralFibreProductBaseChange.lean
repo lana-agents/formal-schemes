@@ -43,7 +43,10 @@ output**, and it is named: `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverla
 reason is measured rather than assumed and is recorded under *What is not proved here* below. At a
 pair the smart constructor `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces it
 becomes an output —
-`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData` — over one further
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData`, and
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_ofAlgebraDataGlue`
+(`FormalSchemes.GeneralFibreProductBaseChangeOfAlgebraData`) is that statement written out at such
+a pair — over one further
 input on the primed transitions, and that is the arc of the last three sections.
 
 To state two fibre products over two bases at once, the chart family has to be a *parameter* and
@@ -241,8 +244,12 @@ and it is a second hypothesis rather than a consequence of the first:
   under the name `AlgebraicGeometry.IsChartTransitionBaseChange`, and it is produced rather than
   assumed only at an away base, where `AlgebraicGeometry.isChartTransitionBaseChange_awayBase`
   (`FormalSchemes.AwayBaseChangeChartTransition`) discharges it out of the one-sided transport of
-  `FormalSchemes.AwayBaseChangeGluedX`. Nothing here produces it, and nothing anywhere constructs
-  the primed glue whose transitions it would constrain.
+  `FormalSchemes.AwayBaseChangeGluedX`. Nothing here produces it, and nothing anywhere *derives*
+  the primed glue whose transitions it would constrain from the unprimed one.
+  `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraDataGlue`
+  (`FormalSchemes.GeneralFibreProductBaseChangeOfAlgebraData`) assembles a glue over `(R', I')` out
+  of primed algebra data a caller supplies, which is a different thing and leaves the base change
+  of the datum exactly where it was.
 * **Both hypotheses are discharged at a dispatched pair, and they did not cost the same.** The
   saturation is a statement about two ranges; the square had to be traced through three branches of
   the dispatch and through the transitions besides, and it needs an input the saturation does not.
@@ -250,10 +257,12 @@ and it is a second hypothesis rather than a consequence of the first:
   proves `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapSaturated` at a pair carrying the
   dispatched overlap immersions, which is what the smart constructor
   `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData` produces, and it proves it as an
-  *equality*. What remains unproduced is the **primed glue itself**: assembling one needs the
-  transitions and the double-overlap data over `(R', I')`, and nothing here builds either. So both
-  statements are theorems over hypotheses that are `rfl` for a smart-constructor glue, and they
-  wait on a constructor rather than on an argument;
+  *equality*. What remains underived is the **primed glue itself**: assembling one out of the
+  unprimed datum needs the transitions and the double-overlap data over `(R', I')`, and nothing
+  here builds either. So both statements are theorems over hypotheses that are `rfl` for a
+  smart-constructor glue — `AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraDataGlue_V` and its
+  two companions (`FormalSchemes.GeneralFibreProductBaseChangeOfAlgebraData`) are those three
+  proofs, measured — and they waited on a constructor rather than on an argument;
   `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base_of_bothAlgData` is the two of them
   used together.
 * **No cancellation, and no separation statement.** Nothing here mentions
@@ -291,8 +300,11 @@ Over six parents. `FormalSchemes.GeneralFibreProductBothObject` has forward clos
 `FormalSchemes.GeneralFibreProductBothOverlapRange` has forward closure **70**;
 `FormalSchemes.CompletedTensorAwayInterchangePullbackLegs` has forward closure **37**; and
 `FormalSchemes.AwayTopFiniteType` has forward closure **28**. This file's own
-forward closure is **93**, and this file's reverse closure is **2** —
-`FormalSchemes.GeneralSeparatedBaseChange`, which consumes the injectivity theorem (issue 2035).
+forward closure is **93**, and this file's reverse closure is **3** —
+`FormalSchemes.GeneralSeparatedBaseChange`, which consumes the injectivity theorem (issue 2035);
+`FormalSchemes.AwayBaseChangeChartTransition`, which discharges the transition hypothesis at an
+away base (issue 2070); and `FormalSchemes.GeneralFibreProductBaseChangeOfAlgebraData`, which
+states the square and the injectivity at a smart-constructor pair (issue 2074).
 This module was a leaf when it landed and the paragraph below was written then.
 `FormalSchemes.GlueMorphisms`, whose
 `AlgebraicGeometry.FormalScheme.GlueData.glueMorphisms` this file consumes, is already inside the
@@ -300,7 +312,7 @@ first parent's closure, so the edge to it is free and it is not imported again.
 
 The third parent is the whole cost of the injectivity section: it and
 `FormalSchemes.GlueDataCarrier` are the only two modules it adds, and this file's reverse closure
-is **2**, so almost nothing downstream pays for them.
+is **3**, so almost nothing downstream pays for them.
 `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι` is the one statement on the tree
 that turns *"these two chart images meet"* into *"this point is in the overlap object"*, and no
 weaker import reaches it.
@@ -313,7 +325,7 @@ The fourth parent is the whole cost of the saturation section: it adds six modul
 `CompletedTensorAwayInterchange.rightInterchangeOpenImmersion` and
 `CompletedTensorAwayInterchange.bothInterchangeOpenImmersion` are defined, so the second and third
 interchange branches below arrive with this parent at no further cost. The edge was taken rather
-than a new leaf because this file's reverse closure is **2**: extending in place moves six such
+than a new leaf because this file's reverse closure is **3**: extending in place moves six such
 figures by one each and leaves the rest of the tree alone, where a new module would have moved
 ninety-three of them.
 `AlgebraicGeometry.range_bothAlgDataF_base` is the range computation the saturation is *about* and
@@ -343,16 +355,16 @@ already inside the closure of the six: `FormalSchemes.CompletedTensorFunctor` an
 `AlgebraicGeometry.bothAlgDataV` / `..bothAlgDataF` / `..bothAlgDataT` themselves;
 `FormalSchemes.LocallyRingedSpaceRange`, which the injectivity corollary reads an `eqToHom`
 through, arrives with `FormalSchemes.GeneralFibreProductBothObject`. So this file's forward
-closure stays **93**, this file's reverse closure is **2**, and nothing in this section adds an
+closure stays **93**, this file's reverse closure is **3**, and nothing in this section adds an
 import line.
 
 The first two parents are import-incomparable, so the statement costs either an import edge or a
 new leaf, and the edge was rejected in both directions. Adding to
 `FormalSchemes.GeneralFibreProductBothObject` puts the whole completed-tensor base change inside
-the closure of a module whose reverse closure is **69**; adding to
-`FormalSchemes.CompletedTensorBaseChange`, whose reverse closure is **3**, puts the entire
+the closure of a module whose reverse closure is **70**; adding to
+`FormalSchemes.CompletedTensorBaseChange`, whose reverse closure is **4**, puts the entire
 fibre-product cluster inside a module that is otherwise affine throughout. A separate module keeps
-both parents at the cost they were landed at, and this file's own reverse closure is **2**, so
+both parents at the cost they were landed at, and this file's own reverse closure is **3**, so
 almost nothing pays for it. This is the disposition `FormalSchemes.AwayBaseChangeGluedX` reached,
 for the same pair of reasons, on the one-sided side of the same question.
 
@@ -2030,10 +2042,15 @@ identifications; its two hypotheses are
 `AlgebraicGeometry.bothAlgDataF_comp_chartBaseChange` and
 `AlgebraicGeometry.bothAlgDataT_comp_bothAlgDataChartBaseChange`.
 
-The three hypotheses per glue are the shape a smart-constructor glue meets by `rfl`: for
-`(AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData …).toDoubleChartGlue` the object
-hypothesis is `fun _ _ _ => rfl`, and the immersion and transition ones are then
-`Category.id_comp` read backwards. -/
+The three hypotheses per glue are the shape a smart-constructor glue meets by `rfl`, and
+`FormalSchemes.GeneralFibreProductBaseChangeOfAlgebraData` measures what that shape costs. For
+`AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraDataGlue`, which is
+`(AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData …).toDoubleChartGlue` read at the ambient
+chart family, the object hypothesis is `fun _ _ _ => rfl` and the immersion one is
+`Category.id_comp` read backwards; the transition one needs `Category.comp_id` besides, because it
+carries an `eqToHom` at each end. The reading is not optional — at the literal
+`(..ofAlgebraData …).toDoubleChartGlue` this statement does not elaborate at all — and that file
+records why. -/
 theorem isBaseChangeOverlapCompatible_of_bothAlgData
     (G' : DoubleChartGlue R' I' A B) (G : DoubleChartGlue R I A B)
     (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
