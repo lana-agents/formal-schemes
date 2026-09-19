@@ -4,6 +4,13 @@ import FormalSchemes.GeneralFibreProductExposeXIdealCongr
 import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 
 set_option linter.style.header false
+-- This file carries six per-declaration `set_option`s, three `maxHeartbeats 800000` and three
+-- `backward.isDefEq.respectTransparency false`, on
+-- `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁`, on
+-- `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₂` and on
+-- `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`; the measurement behind
+-- them is commented at each. The line below is what keeps the style linter quiet about those six,
+-- and it is named here so that disabling the linter is itself visible rather than silent.
 set_option linter.style.setOption false
 
 /-!
@@ -164,7 +171,7 @@ where a reader would look for a statement about
 `AlgebraicGeometry.BothChartedFibreDatumXY.pr₁`, nor
 `FormalSchemes.GeneralFibreProductLiftUniqueAdic`, which states the uniqueness — so the projection
 squares cannot be written there without two new import edges, and the reverse closure of
-`FormalSchemes.GeneralFibreProductBaseChange` is **1** against this file's **0**. Here the fourth
+`FormalSchemes.GeneralFibreProductBaseChange` is **2** against this file's **0**. Here the fourth
 import adds only itself: `FormalSchemes.GeneralFibreProductLiftUniqueAdic` has forward closure
 **143**, and every one of those modules was reached already.
 
@@ -523,8 +530,11 @@ equality of locally ringed spaces and not merely an isomorphism — and `ι` com
 products over the two bases.
 
 Only two things are asked of `ι`: that it be injective on points, and that the two diagonals be
-related by it. Continuity is free, and closedness of `ι`'s own range is never used. See this file's
-*What is not proved here* for why the triangle is a hypothesis and not a theorem. -/
+related by it. Continuity is free, and closedness of `ι`'s own range is never used. The triangle
+stays a hypothesis **here** because `ι` is arbitrary: it is a theorem for
+`AlgebraicGeometry.DoubleChartGlue.baseChange`, by
+`AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange` below, and nothing discharges
+it for any other comparison. See this file's *The argument, in three steps*, step 3. -/
 theorem isSeparated_of_isSeparated_of_diagonal_factorization
     (hsrc : (diagonalDatum DX' σX' hστX' hσcX').xGlued.toLocallyRingedSpace =
       (diagonalDatum DX σX hστX hσcX).xGlued.toLocallyRingedSpace)
@@ -911,7 +921,9 @@ separated over `Spf R'`.
 The comparison is `AlgebraicGeometry.DoubleChartGlue.baseChange` and its injectivity is
 `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base`, so the square and the saturation
 below are that morphism's two hypotheses and are the only things this proof asks of the glue. The
-remaining hypothesis is the triangle discussed in this file's *What is not proved here*.
+triangle is **not** a hypothesis here: it is
+`AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`, proved above and supplied at
+the call site. See this file's *The argument, in three steps*, step 3.
 
 The conclusion is about a **datum**, `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated`. It is
 not `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`, which quantifies existentially over a
