@@ -179,7 +179,9 @@ different reasons:
   `AlgebraicGeometry.IsChartTransitionBaseChange` says the primed transitions are the unprimed ones
   read over `R'`, and over it the condition is a theorem,
   `AlgebraicGeometry.bothAlgDataT_comp_bothAlgDataChartBaseChange`. It is *not* a theorem
-  without it, and the constraint is not vacuous: it becomes automatic at `R' = R{1/f}`, where
+  without it, and the constraint is not vacuous: it is discharged at `R' = R{1/f}` by
+  `AlgebraicGeometry.isChartTransitionBaseChange_awayBase`
+  (`FormalSchemes.AwayBaseChangeChartTransition`), where
   `FormalSpectrum.awayCompletionChartAlgEquivBase` (`FormalSchemes.AwayCompletionUniversal`)
   enlarges the scalars for free — that is a statement about the away completion as a source, not
   about a general base, and nothing here produces it at a general tower.
@@ -237,9 +239,10 @@ and it is a second hypothesis rather than a consequence of the first:
   are the same ring. The second is the agreement of the primed transitions with the unprimed ones,
   which over a general tower is a condition on the primed datum and **remains one**: it is assumed,
   under the name `AlgebraicGeometry.IsChartTransitionBaseChange`, and it is produced rather than
-  assumed only at an away base, where `FormalSchemes.AwayBaseChangeGluedX` builds it on the
-  one-sided side. Nothing here produces it, and nothing here constructs the primed glue whose
-  transitions it would constrain.
+  assumed only at an away base, where `AlgebraicGeometry.isChartTransitionBaseChange_awayBase`
+  (`FormalSchemes.AwayBaseChangeChartTransition`) discharges it out of the one-sided transport of
+  `FormalSchemes.AwayBaseChangeGluedX`. Nothing here produces it, and nothing anywhere constructs
+  the primed glue whose transitions it would constrain.
 * **Both hypotheses are discharged at a dispatched pair, and they did not cost the same.** The
   saturation is a statement about two ranges; the square had to be traced through three branches of
   the dispatch and through the transitions besides, and it needs an input the saturation does not.
@@ -288,7 +291,7 @@ Over six parents. `FormalSchemes.GeneralFibreProductBothObject` has forward clos
 `FormalSchemes.GeneralFibreProductBothOverlapRange` has forward closure **70**;
 `FormalSchemes.CompletedTensorAwayInterchangePullbackLegs` has forward closure **37**; and
 `FormalSchemes.AwayTopFiniteType` has forward closure **28**. This file's own
-forward closure is **93**, and this file's reverse closure is **1** —
+forward closure is **93**, and this file's reverse closure is **2** —
 `FormalSchemes.GeneralSeparatedBaseChange`, which consumes the injectivity theorem (issue 2035).
 This module was a leaf when it landed and the paragraph below was written then.
 `FormalSchemes.GlueMorphisms`, whose
@@ -297,7 +300,7 @@ first parent's closure, so the edge to it is free and it is not imported again.
 
 The third parent is the whole cost of the injectivity section: it and
 `FormalSchemes.GlueDataCarrier` are the only two modules it adds, and this file's reverse closure
-is **1**, so almost nothing downstream pays for them.
+is **2**, so almost nothing downstream pays for them.
 `AlgebraicGeometry.LocallyRingedSpace.GlueData.preimage_range_ι` is the one statement on the tree
 that turns *"these two chart images meet"* into *"this point is in the overlap object"*, and no
 weaker import reaches it.
@@ -310,7 +313,7 @@ The fourth parent is the whole cost of the saturation section: it adds six modul
 `CompletedTensorAwayInterchange.rightInterchangeOpenImmersion` and
 `CompletedTensorAwayInterchange.bothInterchangeOpenImmersion` are defined, so the second and third
 interchange branches below arrive with this parent at no further cost. The edge was taken rather
-than a new leaf because this file's reverse closure is **1**: extending in place moves six such
+than a new leaf because this file's reverse closure is **2**: extending in place moves six such
 figures by one each and leaves the rest of the tree alone, where a new module would have moved
 ninety-three of them.
 `AlgebraicGeometry.range_bothAlgDataF_base` is the range computation the saturation is *about* and
@@ -340,16 +343,16 @@ already inside the closure of the six: `FormalSchemes.CompletedTensorFunctor` an
 `AlgebraicGeometry.bothAlgDataV` / `..bothAlgDataF` / `..bothAlgDataT` themselves;
 `FormalSchemes.LocallyRingedSpaceRange`, which the injectivity corollary reads an `eqToHom`
 through, arrives with `FormalSchemes.GeneralFibreProductBothObject`. So this file's forward
-closure stays **93**, this file's reverse closure is **1**, and nothing in this section adds an
+closure stays **93**, this file's reverse closure is **2**, and nothing in this section adds an
 import line.
 
 The first two parents are import-incomparable, so the statement costs either an import edge or a
 new leaf, and the edge was rejected in both directions. Adding to
 `FormalSchemes.GeneralFibreProductBothObject` puts the whole completed-tensor base change inside
-the closure of a module whose reverse closure is **68**; adding to
-`FormalSchemes.CompletedTensorBaseChange`, whose reverse closure is **2**, puts the entire
+the closure of a module whose reverse closure is **69**; adding to
+`FormalSchemes.CompletedTensorBaseChange`, whose reverse closure is **3**, puts the entire
 fibre-product cluster inside a module that is otherwise affine throughout. A separate module keeps
-both parents at the cost they were landed at, and this file's own reverse closure is **1**, so
+both parents at the cost they were landed at, and this file's own reverse closure is **2**, so
 almost nothing pays for it. This is the disposition `FormalSchemes.AwayBaseChangeGluedX` reached,
 for the same pair of reasons, on the one-sided side of the same question.
 
