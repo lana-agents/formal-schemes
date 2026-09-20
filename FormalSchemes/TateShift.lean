@@ -140,15 +140,13 @@ theorem tateChain_glueMorphisms_compat [TopologicalSpace R] [IsAdicRing I] [IsNo
 
 /-! ### The adjacent-overlap cruxes -/
 
-set_option maxHeartbeats 1600000 in
--- Unfolding `CategoryTheory.GlueData.glue_condition` at the shifted indices through
--- `GlueData.ofGlueData'` is expensive; raise it.
 /-- **The forward adjacent-overlap identity for a difference-preserving reindexing `σ`.** If `σ`
 carries the adjacent pair `(i, j)` (with `j = i + 1`) to an adjacent pair `(σ i, σ j)` (still a
 forward step), then the `x`-chart into `U (σ i)` agrees, over the chart transition
 `Spf A{1/x} ≅ Spf A{1/y}`, with the `y`-chart into `U (σ j)`. This is exactly
-`CategoryTheory.GlueData.glue_condition` at the shifted indices, unfolded through
-`GlueData.ofGlueData'`. -/
+`CategoryTheory.GlueData.glue_condition` at the shifted indices, read back into the
+`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+(`FormalSchemes.GlueMorphisms`). -/
 theorem tateShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) (σ : ULift.{u} ℤ → ULift.{u} ℤ) {i j : ULift.{u} ℤ}
     (h1 : (σ j).down - (σ i).down = 1) :
@@ -158,21 +156,15 @@ theorem tateShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoe
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
   have hij' : ¬ @Eq (ULift.{u} ℤ) (σ i) (σ j) := by
     intro h; rw [h] at h1; omega
-  have hji' : ¬ @Eq (ULift.{u} ℤ) (σ j) (σ i) := fun h => hij' h.symm
-  have key :=
-    (tateChainFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition
-      (σ i) (σ j)
-  simp only [tateChainFormalGlueData, tateChainLRSGlueData, tateChainGlueData',
-    CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji',
-    Category.assoc] at key
+  have key := CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateChainGlueData' R I q hq hI) _
+    (fun i j => ((tateChainFormalGlueData R I q hq
+      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm) (σ i) (σ j) hij'
+  simp only [tateChainGlueData'] at key
   rw [tateF_forward R I q h1, tateT, dif_pos h1,
     tateF_backward R I q (show (σ i).down - (σ j).down = -1 by omega)] at key
   simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact ((cancel_epi (eqToHom _)).mp key).symm
+  exact (cancel_epi (eqToHom _)).mp key
 
-set_option maxHeartbeats 1600000 in
--- Unfolding `CategoryTheory.GlueData.glue_condition` at the shifted indices through
--- `GlueData.ofGlueData'` is expensive; raise it.
 /-- **The backward adjacent-overlap identity for a difference-preserving reindexing `σ`.** The
 analogue of `tateShift_overlap_forward_gen` for a backward step `j = i - 1`. -/
 theorem tateShift_overlap_backward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
@@ -184,18 +176,15 @@ theorem tateShift_overlap_backward_gen [TopologicalSpace R] [IsAdicRing I] [IsNo
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
   have hij' : ¬ @Eq (ULift.{u} ℤ) (σ i) (σ j) := by
     intro h; rw [h] at h2; omega
-  have hji' : ¬ @Eq (ULift.{u} ℤ) (σ j) (σ i) := fun h => hij' h.symm
   have h1 : ¬ (σ j).down - (σ i).down = 1 := by omega
-  have key :=
-    (tateChainFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition
-      (σ i) (σ j)
-  simp only [tateChainFormalGlueData, tateChainLRSGlueData, tateChainGlueData',
-    CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji',
-    Category.assoc] at key
+  have key := CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateChainGlueData' R I q hq hI) _
+    (fun i j => ((tateChainFormalGlueData R I q hq
+      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm) (σ i) (σ j) hij'
+  simp only [tateChainGlueData'] at key
   rw [tateF_backward R I q h2, tateT, dif_neg h1, dif_pos h2,
     tateF_forward R I q (show (σ i).down - (σ j).down = 1 by omega)] at key
   simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact ((cancel_epi (eqToHom _)).mp key).symm
+  exact (cancel_epi (eqToHom _)).mp key
 
 /-! ### The shift self-maps of `T` -/
 

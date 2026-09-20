@@ -111,7 +111,9 @@ def pr₁ChartSelf (p : D.JX × D.JY) :
 /-- **The exposed `X`'s glue relation on the double overlap.** For distinct `X`-charts `i ≠ i'`,
 `X`'s basic-open overlap chart followed by the glue inclusion `ι_i` equals the `X`-side transition
 `awayCompletionTransition` followed by the `(i',i)`-overlap chart and `ι_{i'}`. This is the glue
-condition of `xLrsGlueData` on the `(i,i')`-overlap, unfolded through `GlueData.ofGlueData'`. -/
+condition of `xLrsGlueData` on the `(i,i')`-overlap, read back into the
+`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+(`FormalSchemes.GlueMorphisms`). -/
 theorem x_glue_rel (i i' : D.JX) (h : i ≠ i') :
     letI := D.commRingA
     letI := D.algebraA
@@ -120,14 +122,8 @@ theorem x_glue_rel (i i' : D.JX) (h : i ≠ i') :
         basicOpenChart (I.map (algebraMap R (D.A i'))) (D.gX i' i) ≫ D.xFormalGlueData.ι i' := by
   letI := D.commRingA
   letI := D.algebraA
-  have hij' : ¬ @Eq D.JX i i' := h
-  have hji' : ¬ @Eq D.JX i' i := fun heq => h heq.symm
-  have key := D.xLrsGlueData.toGlueData.glue_condition i i'
-  simp only [xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',
-    CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
-    eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  rw [cancel_epi] at key
-  exact key.symm
+  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of D.xGlueData' _
+    (fun i j => (D.xLrsGlueData.toGlueData.glue_condition i j).symm) i i' h
 
 /-! ### The overlap ideal-convention bridge and its two squares (first-differ shape) -/
 

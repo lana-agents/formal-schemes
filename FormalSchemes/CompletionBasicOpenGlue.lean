@@ -628,12 +628,9 @@ private theorem cbOverlap_snd (i j : ι) :
 private theorem cbGlueι (i j : ι) (hij : i ≠ j) :
     cbFf I hI f i j ≫ completionBasicOpenι I hI f i =
       cbT_map I hI f i j ≫ cbFf I hI f j i ≫ completionBasicOpenι I hI f j := by
-  have h := ((completionBasicOpenLRSGlueData I hI f).toGlueData.glue_condition i j).symm
-  simp only [completionBasicOpenLRSGlueData, CategoryTheory.GlueData.ofGlueData',
-    CategoryTheory.GlueData'.f', completionBasicOpenGlueData', dif_neg hij,
-    dif_neg (Ne.symm hij), Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
-    Category.id_comp] at h
-  exact (cancel_epi _).mp h
+  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (completionBasicOpenGlueData' I hI f) _
+    (fun i j => ((completionBasicOpenLRSGlueData I hI f).toGlueData.glue_condition i j).symm)
+    i j hij
 
 
 /-! ### The comparison is an isomorphism

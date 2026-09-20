@@ -18,9 +18,10 @@ This file supplies that relation and the descent principle it unlocks.
 
 * The **glue condition**, `completionTwoPatch_glue_condition₀` / `..₁`: the two chart inclusions
   agree over the overlap, after the identification `completionGlueLRSIso`. This is
-  `CategoryTheory.GlueData.glue_condition` at the two `ULift Bool` indices, unfolded through
-  `CategoryTheory.GlueData.ofGlueData'` so that it reads in the completion vocabulary rather than
-  in the implementation's `eqToHom`-decorated `GlueData'.f'`.
+  `CategoryTheory.GlueData.glue_condition` at the two `ULift Bool` indices, read back through
+  `CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`) so that it reads
+  in the completion vocabulary rather than in the implementation's `eqToHom`-decorated
+  `GlueData'.f'`.
 * The **descent**, `completionTwoPatchDesc`: a pair of morphisms out of the two charts that agree
   over the overlap glues to a single morphism out of `completionTwoPatch`, restricting to the given
   pair on each chart (`completionTwoPatchι₀_comp_desc`, `..ι₁_comp_desc`) and being the only such
@@ -39,7 +40,9 @@ The index type is `ULift Bool`, with `⟨false⟩` the `A`-side chart and `⟨tr
 in `CompletionGlueTwoPatch.lean`. The datum is **not** symmetric — the two patches are different
 rings — so each statement below is given at both index pairs rather than parametrised over a
 `b : Bool`. The `₁`-orientations follow from the `₀`-ones by cancelling the overlap isomorphism, so
-only the `₀`-orientations pay for the `GlueData.ofGlueData'` unfolding.
+only the `₀`-orientations meet the `GlueData.ofGlueData'` bookkeeping at all — and since issue 2064
+they do not pay for it either, because `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+(`FormalSchemes.GlueMorphisms`) performs the unfolding once, at the `CategoryTheory.GlueData'`.
 
 ## Main definitions and results
 
@@ -116,14 +119,6 @@ theorem completionTwoPatchFormalGlueData_t_true_false :
         eqToHom (dif_neg cgcNe).symm :=
   dif_neg cgcNe'
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The index type of the constructed glue data is
--- `(completionTwoPatchFormalGlueData ..).toLocallyRingedSpaceGlueData.J`, which reduces to
--- `ULift Bool` only by unfolding the three `def`s `completionTwoPatchFormalGlueData`,
--- `completionTwoPatchLRSGlueData` and `completionTwoPatchGlueData'` — past `instances`
--- transparency. Rewriting with the unfolding lemmas above therefore leaves a term Lean will not
--- re-typecheck at that level. Same requirement as in `FormalScheme.GlueData.gluedFormalScheme`.
 /-- **The two charts of the glued completion agree over their overlap** (EGA I, 10.8): including the
 overlap `formalCompletion A_a (I·A_a)` into the `A`-chart and then into the glued completion is the
 same as identifying it with `formalCompletion B_b (J·B_b)` along `completionGlueLRSIso`, including
@@ -139,13 +134,11 @@ theorem completionTwoPatch_glue_condition₀ :
           completionTwoPatchι₁ I hI a J hJ b θ hθ =
       (formalCompletion.basicOpenImmersion I hI a).toLRSHom ≫
         completionTwoPatchι₀ I hI a J hJ b θ hθ := by
-  have key := (completionTwoPatchFormalGlueData I hI a J hJ b θ
-    hθ).toLocallyRingedSpaceGlueData.toGlueData.glue_condition ⟨false⟩ ⟨true⟩
-  rw [completionTwoPatchFormalGlueData_t_false_true,
-    completionTwoPatchFormalGlueData_f_true_false,
-    completionTwoPatchFormalGlueData_f_false_true] at key
-  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact (cancel_epi (eqToHom (dif_neg cgcNe))).mp key
+  exact (CategoryTheory.GlueData.ofGlueData'_f_comp_of
+    (completionTwoPatchGlueData' I hI a J hJ b θ hθ) _
+    (fun i j => ((completionTwoPatchFormalGlueData I hI a J hJ b θ
+      hθ).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm)
+    ⟨false⟩ ⟨true⟩ cgcNe).symm
 
 /-- **The two charts of the glued completion agree over their overlap, read from the `B` side.**
 This is `completionTwoPatch_glue_condition₀` with the overlap isomorphism moved across, so it needs
@@ -183,8 +176,11 @@ private theorem cgcK_true (k₀ : (formalCompletion A I hI).toLocallyRingedSpace
 
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
--- Same transparency requirement as in `completionTwoPatch_glue_condition₀` above, for the same
--- reason: the obligation is quantified over the constructed glue data's own index type.
+-- The obligation is quantified over the constructed glue data's own index type, which reduces to
+-- `ULift Bool` only past `instances` transparency, so the rewrites below are otherwise rejected as
+-- ill-typed. `completionTwoPatch_glue_condition₀` above needed the same option until issue 2064
+-- rerouted it through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, which is stated at the
+-- `CategoryTheory.GlueData'` and so never meets the mismatch.
 /-- **Descent of a morphism out of the glued completion** (EGA I, 10.8): a morphism `k₀` out of the
 `A`-chart and a morphism `k₁` out of the `B`-chart which agree over the overlap glue to a single
 morphism out of `completionTwoPatch`.
