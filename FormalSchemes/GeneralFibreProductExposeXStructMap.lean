@@ -108,25 +108,15 @@ theorem xStructMap_naturality (i j : D.J) (h : i ≠ j) :
   exact RingHom.ext fun r => ((D.τ i j h).symm.commutes r).symm
 
 /-- **The glued structural morphism of the exposed affine-charted `X`** `X ⟶ Spf R`, assembled from
-the per-chart structural morphisms `xStructMapChart i : Spf(A i) ⟶ Spf R` via `glueMorphisms`. Off
-the diagonal the overlap obligation is `xStructMap_naturality`; on the diagonal it collapses through
-`GlueData.t_id`. -/
+the per-chart structural morphisms `xStructMapChart i : Spf(A i) ⟶ Spf R` via `glueMorphisms`. The
+overlap obligation is `xStructMap_naturality`, passed unchanged to
+`CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`), which asks for it
+only at distinct indices: on the diagonal `CategoryTheory.GlueData.ofGlueData'` puts an `eqToHom`,
+so both sides collapse without touching the naturality family. -/
 def xStructMap :
     D.xGlued.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
-  D.xFormalGlueData.glueMorphisms (fun i => D.xStructMapChart i) (by
-    intro i j
-    by_cases hij : i = j
-    · -- diagonal: `t i i = 𝟙`, so both sides collapse to `f i i ≫ xStructMapChart`.
-      subst hij
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · -- off-diagonal: unfold the `GlueData.ofGlueData'` `if`-forms; the dite conditions are on
-      -- `= : D.J`, so re-type the disequalities in `¬ Eq` form before rewriting.
-      have hij' : ¬ @Eq D.J i j := hij
-      have hji' : ¬ @Eq D.J j i := fun heq => hij heq.symm
-      simp only [xFormalGlueData, xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',
-        CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [D.xStructMap_naturality i j hij'])
+  D.xFormalGlueData.glueMorphisms (fun i => D.xStructMapChart i)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.xGlueData' _ D.xStructMap_naturality)
 
 /-- **The structural morphism restricts to `xStructMapChart i` along each glue inclusion.** -/
 @[reassoc (attr := simp)]
