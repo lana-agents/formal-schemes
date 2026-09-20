@@ -120,9 +120,19 @@ its own: `FormalSchemes.AwayBaseChangeGluedX`'s reverse closure is **2**, so ext
 re-elaborates this file, its two consumers and the root module list and nothing else, and moves no
 stated figure anywhere on the tree. The general transports the construction introduces —
 `FormalSpectrum.awayTransport`, `FormalSpectrum.awayTransportRingHom` and
-`AdicCompletion.mapCompletion_heq` — each have exactly one consumer, here, and each has a natural
-home earlier in the tree; they are kept here on that ratio, which is the disposition
-`FormalSchemes.GeneralFibreProductExposeXIdealCongr` took for its own three transports.
+`AdicCompletion.mapCompletion_heq` — are each consumed by exactly one module, this one, and each
+has a natural home earlier in the tree. Both sides of that ratio, since a ratio with one side is
+not a measurement: `FormalSchemes.Completion`, where `AdicCompletion.mapCompletion` is defined,
+has reverse closure **468**; `FormalSchemes.AdicCompletionCongrIdealAlg`, the alternative home for
+the `AdicCompletion`-level transport, has reverse closure **194**; and
+`FormalSchemes.AwayCompletionUniversal`, where the two `awayTransport` statements would go, has
+reverse closure **3**. `FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **2**, and
+every one of the three homes above carries a larger one, so moving a transport would put a
+statement this file alone reads into the environment of modules that do not read it. They are
+kept here on that ratio, which is the disposition
+`FormalSchemes.GeneralFibreProductExposeXIdealCongr` took for its own three transports — and the
+count there is of consuming modules too: two of its three transports are read by two declarations
+in that file, the third by one, and none of the three is read outside it.
 
 ## Main results
 

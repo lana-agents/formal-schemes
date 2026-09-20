@@ -115,8 +115,8 @@ the statement costs either two import edges or a module of its own. The edges we
 `FormalSchemes.GeneralSeparatedBaseChange` was itself a leaf until this module, and an edge into
 `FormalSchemes.GeneralSeparatedScheme` would put the whole `FormalSchemes.AwayBaseChangeGluedX`
 subtree into the environment of every consumer of `FormalSchemes.GeneralSeparatedScheme`.
-`FormalSchemes.GeneralSeparatedScheme`'s reverse closure is **13**, and none of those modules is
-about a change of base.
+`FormalSchemes.GeneralSeparatedScheme`'s reverse closure is **13**, and none of the twelve besides
+this module is about a change of base.
 
 A leaf leaves all three subjects alone and moves no forward closure anywhere, at the price of the
 reverse closure of every module it imports moving by one.
