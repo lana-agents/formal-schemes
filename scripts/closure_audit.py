@@ -63,11 +63,38 @@ is wrong about the rest.  The rule implemented below is read off the prose that 
    module*, or a masked opener) means the file itself; a backticked `FormalSchemes.Foo` or
    `FormalSchemes/Foo.lean` means that module; an anaphor (*that file*, *its module*, *whose*)
    means the nearest module token before the anaphor;
-3. and a claim is **declined** -- reported, not guessed at -- when it is plural (*"forward closures
+3. a bare possessive pronoun standing between the last anchor and the figure normally **declines**
+   the claim, because nothing in the surface text recovers what it points at -- with one
+   exception, read off the grammar rather than off proximity: a pronoun in a later coordinate of
+   a conjunction inherits the subject the **immediately preceding** coordinate states, when that
+   coordinate names exactly one subject and none of its tokens is itself an anaphor.  Two tokens
+   for the *same* module still name one subject, which is what keeps the tree's usual *"Over `X`:
+   this file's forward closure is **1**, its reverse closure is **0**"* spelling readable rather
+   than ambiguous.  *"So this file's forward closure stays **93**, its reverse closure is **3**"*
+   is one sentence measuring one module twice, and the second coordinate drops the subject
+   because the first just supplied it;
+4. and a claim is **declined** -- reported, not guessed at -- when it is plural (*"forward closures
    42 and 6"* is two claims about two modules), when the anaphor has no module token to resolve
-   against (*"its module has reverse closure 9"*, where *its* is a declaration's), or when an
+   against (*"its module has reverse closure 9"*, where *its* is a declaration's), when an
    indefinite leaf intervenes (*"a leaf whose own forward closure is 231"* is about a module that
-   does not exist).
+   does not exist), or when the pronoun above has no unique subject one coordinate back.
+
+### Why the pronoun was worth a rule
+
+Row 2072 measured the hole with a positive control, and it is the worst-shaped one this script
+has had: in *"this file's forward closure stays **93**, its reverse closure is **3**"* the
+**forward** figure was checked and the **reverse** figure beside it was declined, so one sentence
+had one audited numeral vouching for one unaudited one.  Breaking the forward figure gave
+`MISMATCH : 1`; breaking the reverse figure gave `MISMATCH : 0` and a line in the declined list.
+Reverse closures are the half this script exists for -- they rot with nothing in the owning file's
+diff -- so the declined half was the expensive half.
+
+The rule stays a reading and not a guess, and `--selftest` pins each way it could stop being one:
+a subject two coordinates back is not inherited, a subject across a full stop is not inherited,
+two coordinate-mates naming *different* modules are not inherited from (two naming the *same* one
+are -- a masked `## Placement` opener beside a *this file's* is the tree's commonest spelling),
+an anaphor is not chained into, and an indefinite leaf after the inherited anchor still blocks.
+Each of those five is a separate case that fails under a separate loosening of the rule.
 
 ## The noun beside the figure
 
@@ -202,7 +229,32 @@ ANAPHOR = re.compile(r"\b(?:[Tt]hat (?:file|module|consumer|leaf)(?:'s)?|whose)\
 # correct prose.  A demonstrative (*that file*) names something that has just been the subject; a
 # possessive pronoun does not, and nothing in the surface text recovers what it points at.
 # `itself` is not a hit: there is no word boundary after `its` inside it.
+#
+# There is exactly one shape where the surface text *does* recover it, and `_inherited` below
+# reads that one and no other: a pronoun in a later coordinate of a conjunction, whose subject is
+# the one the preceding coordinate states.  *"So this file's forward closure stays **93**, its
+# reverse closure is **3**"* is one sentence making two measurements of one module, and the second
+# coordinate omits the subject precisely because the first just gave it.  That is not proximity
+# reasoning -- the inherited anchor is the one the grammar supplies, and it is taken only when the
+# preceding coordinate supplies exactly one.
 DECLINER = re.compile(r"\b[Ii]ts\b")
+
+# A coordinate boundary within one sentence.  The comma is the marker; a following conjunction is
+# consumed with it so that the coordinate starts at its subject.  Backticked module names carry no
+# comma, and `_mask_openers` has already run, so a `## Placement` opener listing three parents
+# cannot be split here.
+CONJUNCT = re.compile(r",\s*(?:(?:and|but|so|while|yet)\s+)?")
+
+# A contrast marker standing between the coordinate boundary and the pronoun cancels the
+# inheritance, because the tree writes contrasts with exactly this word and always against a
+# *different* subject: `GeneralSeparatedHomLocal.lean` reads *"`FormalSchemes.GeneralSeparated\
+# HomLocal` has reverse closure **0** and forward closure **182**, against `FormalSchemes.General\
+# SeparatedHom`'s forward closure of **180**"*, and `StructureSheafStalkAlgebraic.lean` reads
+# *"...'s reverse closure is 0, where this file's reverse closure is 10"*.  Both spell their
+# second subject out today.  If either is ever shortened to *its*, the coordinate rule alone would
+# inherit the first subject and report a confident MISMATCH against correct prose -- the one
+# outcome that is worse than the decline it replaces.
+CONTRAST = re.compile(r"\b(?:against|where|whereas|versus|compared\s+(?:to|with))\b")
 
 # An indefinite leaf between the anchor and the figure: the figure is about a module that does not
 # exist, so there is nothing to compare it against.
@@ -356,6 +408,68 @@ def _mask_openers(window: str) -> str:
     return out
 
 
+def _coordinates(masked: str) -> list[tuple[int, int]]:
+    """The comma-separated coordinates of `masked`'s **last sentence**, as `(start, end)` offsets.
+
+    Bounded by the sentence rather than by the window, because a conjunction is a within-sentence
+    construction: a pronoun cannot inherit a subject across a full stop, and the one live decline
+    this script has ever had to keep -- *"... was the near miss. That file already imports `Bot`,
+    recording the same cost. Its reverse closure ..."* -- is exactly that shape.  Restricting to
+    the last sentence leaves it with no preceding coordinate at all, which is why it stays
+    declined for a reason rather than by accident.
+    """
+    start = max((b.end() for b in BREAK.finditer(masked)), default=0)
+    out, pos = [], start
+    for m in CONJUNCT.finditer(masked, start):
+        out.append((pos, m.start()))
+        pos = m.end()
+    out.append((pos, len(masked)))
+    return out
+
+
+def _inherited(masked: str, anchors: list) -> tuple | None:
+    """The anchor a possessive pronoun in the window's last coordinate inherits, or `None`.
+
+    Three conditions, each of which is a way the inheritance could be a guess rather than a
+    reading, and all three have to hold:
+
+    * the pronoun is in the coordinate the figure is in, **that coordinate carries no anchor of
+      its own** -- if it did, the ordinary last-anchor rule would already have resolved it -- and
+      no `CONTRAST` word stands between the coordinate boundary and the pronoun.  A contrast is
+      the one construction that *announces* a change of subject, so inheriting across one is
+      inheriting exactly where the grammar says not to;
+    * the **immediately preceding** coordinate names **exactly one subject**.  Not one anchor
+      token: a `## Placement` opener is masked as a self anchor, so *"Over `X`: this file's
+      forward closure is **1**, its reverse closure ..."* carries two tokens that designate the
+      same module, and declining that would decline the tree's commonest spelling of this shape.
+      Two tokens that designate *different* modules is a sentence comparing them and the pronoun
+      could be either, so that declines; no token at all means the subject is further back than
+      one coordinate, which is the proximity reasoning this script refuses;
+    * every one of those tokens is `this file` / `this module` / `this leaf` or a named module --
+      **not** an anaphor.  An anaphor is itself a resolution, and chaining one into a pronoun is
+      two inferences deep.
+
+    Every other shape returns `None` and declines exactly as before.
+    """
+    coords = _coordinates(masked)
+    if len(coords) < 2:
+        return None
+    (prev_start, prev_end), (last_start, last_end) = coords[-2], coords[-1]
+    pron = DECLINER.search(masked, last_start, last_end)
+    if pron is None:
+        return None
+    if any(last_start <= a[0] < last_end for a in anchors):
+        return None
+    if CONTRAST.search(masked, last_start, pron.start()):
+        return None
+    inner = [a for a in anchors if prev_start <= a[0] < prev_end]
+    if not inner or any(kind == "anaphor" for _pos, kind, _name in inner):
+        return None
+    if len({(kind, name) for _pos, kind, name in inner}) != 1:
+        return None
+    return max(inner)
+
+
 def attribute(window: str, self_module: str) -> tuple[str | None, str | None]:
     """Which module the figure at the end of `window` is about, as `(module, declined reason)`."""
     masked = _mask_openers(window)
@@ -366,8 +480,12 @@ def attribute(window: str, self_module: str) -> tuple[str | None, str | None]:
     if not anchors:
         return None, "no anchor"
     pos, kind, name = max(anchors)
-    if DECLINER.search(masked[max(a[0] for a in anchors):]):
-        return None, "possessive pronoun: its antecedent is the subject, not the last module named"
+    if DECLINER.search(masked[pos:]):
+        inherit = _inherited(masked, anchors)
+        if inherit is None:
+            return None, ("possessive pronoun: its antecedent is the subject, "
+                          "not the last module named")
+        pos, kind, name = inherit
     if kind == "anaphor":
         before = [(m.start(), m.group(1).replace("/", ".")) for m in MODULE_TOKEN.finditer(masked)
                   if m.end() <= pos]
@@ -592,6 +710,38 @@ def selftest() -> int:
          "*Adding this to `FormalSchemes.Cmp`* was the near miss. That file already imports "
          "`FormalSchemes.Bot`, recording the same cost. Its reverse closure ",
          (None, "possessive pronoun: its antecedent is the subject, not the last module named")),
+        ("a possessive in a later coordinate inherits the subject of the preceding one",
+         "arrives with the third. So this file's forward closure stays **93**, its reverse "
+         "closure ", (S, None)),
+        ("the inherited subject can be a named module rather than the file",
+         "So `FormalSchemes.AdicRing`'s forward closure is **12**, and its reverse closure ",
+         ("FormalSchemes.AdicRing", None)),
+        ("a preceding coordinate naming two modules is not inherited from",
+         "So `FormalSchemes.Bot` reaches `FormalSchemes.Cmp` already, and its reverse closure ",
+         (None, "possessive pronoun: its antecedent is the subject, not the last module named")),
+        ("two anchors in the preceding coordinate that designate one module are inherited",
+         "## Placement Over `FormalSchemes.Bot`: this file's forward closure is **1**, its "
+         "reverse closure ", (S, None)),
+        ("a self anchor beside a named one in the preceding coordinate is not inherited from",
+         "So this file already imports `FormalSchemes.Bot`, and its reverse closure ",
+         (None, "possessive pronoun: its antecedent is the subject, not the last module named")),
+        ("a pronoun opening its own sentence inherits nothing across the full stop",
+         "This file's forward closure is **4**, measured. Its reverse closure ",
+         (None, "possessive pronoun: its antecedent is the subject, not the last module named")),
+        ("a coordinate two back is not the one inherited from",
+         "So this file's forward closure is **4**, the tree does not move, and its reverse "
+         "closure ",
+         (None, "possessive pronoun: its antecedent is the subject, not the last module named")),
+        ("a contrast between the coordinate boundary and the pronoun cancels the inheritance",
+         "`FormalSchemes.Bot` has reverse closure **0** and forward closure **182**, against its "
+         "forward closure ",
+         (None, "possessive pronoun: its antecedent is the subject, not the last module named")),
+        ("`where` is a contrast too, in this tree's prose",
+         "`FormalSchemes.Bot`'s reverse closure is **0**, where its reverse closure ",
+         (None, "possessive pronoun: its antecedent is the subject, not the last module named")),
+        ("an indefinite leaf between the inherited anchor and the figure still blocks",
+         "So this file's forward closure is **4**, and a new leaf above it would raise its "
+         "reverse closure ", (None, "indefinite leaf between the anchor and the figure")),
         ("an indefinite leaf is declined",
          "reachable only through `FormalSchemes.Cmp`, a leaf whose own forward closure ",
          (None, "indefinite leaf between the anchor and the figure")),
@@ -630,6 +780,23 @@ def selftest() -> int:
         check("a wrong `counted with itself` companion figure is caught",
               sorted((m["module"], m["stated"], m["actual"]) for m in mis),
               [("FormalSchemes.Mid", 7, 2), ("FormalSchemes.Top", 9, 3)])
+
+        # End to end, and the shape row 2072 was filed for: one sentence makes two measurements of
+        # one module and names the subject once.  Before the coordinate rule the **reverse** half
+        # was declined while the forward half beside it was checked, so a stale reverse figure --
+        # the kind that goes wrong with nothing in its own file's diff -- passed silently.  The
+        # `attribute` case above pins the resolver; this pins that `audit` reports it, which is a
+        # different claim and the one that matters.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **3**. -/\n")
+        write("Mid", "public import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: this file's forward closure is **1**, its\n"
+                     "reverse closure is **9**. -/\n")
+        write("Top", "import FormalSchemes.Mid\n/-! Nothing measured here. -/\n")
+        mis, dec, _sz = audit(d)
+        check("a stale figure behind a possessive in a later coordinate is now a MISMATCH",
+              ([(m["module"], m["kind"], m["stated"], m["actual"]) for m in mis],
+               [c["declined"] for c in dec]),
+              ([("FormalSchemes.Mid", "reverse", 9, 1)], []))
 
     with tempfile.TemporaryDirectory() as d:
         os.makedirs(os.path.join(d, "FormalSchemes"))

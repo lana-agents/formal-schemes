@@ -524,9 +524,13 @@ Two spellings are worth preferring for that reason alone, since both are checked
 
 * name the module — `` `FormalSchemes.Foo`'s reverse closure is **N** ``, or *"the reverse closure
   of `` `FormalSchemes.Foo` `` is **N** modules"* — rather than writing *"its reverse closure"*. A
-  bare possessive pronoun is the one anaphor the checker refuses to resolve, because twice on this
-  tree its antecedent was the paragraph's subject while the last module actually named was a
-  different one mentioned in passing;
+  bare possessive pronoun is the anaphor the checker resolves least: it takes one shape only,
+  a pronoun in a later coordinate of a conjunction whose *immediately preceding* coordinate names
+  exactly one subject, as in *"this file's forward closure stays **93**, its reverse closure is
+  **3**"*. Everywhere else it declines, because twice on this tree the antecedent was the
+  paragraph's subject while the last module actually named was a different one mentioned in
+  passing. A pronoun that opens its own sentence, or that reaches back past one coordinate, or
+  that sits after a coordinate naming two modules, is still unchecked (row 2072);
 * refer back by **name or by *that file***, never by a definite description. *That file*, *that
   module* and *whose* are resolved, to the nearest module named before them; *the first*, *the
   former* and *the latter* are not anchors at all, so the figure falls through to whatever module
