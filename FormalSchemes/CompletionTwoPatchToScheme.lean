@@ -251,23 +251,6 @@ theorem specTwoPatch_jointly_surjective (x : specTwoPatch a b θ) :
 
 private theorem spNe : ¬ @Eq (ULift.{u} Bool) ⟨false⟩ ⟨true⟩ := by simp
 
-private theorem spNe' : ¬ @Eq (ULift.{u} Bool) ⟨true⟩ ⟨false⟩ := by simp
-
-private theorem spGD_t :
-    (specTwoPatchLRSGlueData a b θ).toGlueData.t ⟨false⟩ ⟨true⟩ =
-      eqToHom (dif_neg spNe) ≫ (specGlueIso a b θ).hom ≫ eqToHom (dif_neg spNe').symm :=
-  dif_neg spNe
-
-private theorem spGD_f₀ :
-    (specTwoPatchLRSGlueData a b θ).toGlueData.f ⟨false⟩ ⟨true⟩ =
-      eqToHom (dif_neg spNe) ≫ spF₀ a :=
-  dif_neg spNe
-
-private theorem spGD_f₁ :
-    (specTwoPatchLRSGlueData a b θ).toGlueData.f ⟨true⟩ ⟨false⟩ =
-      eqToHom (dif_neg spNe') ≫ spF₁ b :=
-  dif_neg spNe'
-
 /-- **The two affine charts of the glued scheme agree on the overlap**: including `Spec A_a` into
 `Spec A` and then into the glued object is the same as transporting it to `Spec B_b` by `Spec θ`
 and including that into `Spec B` and then into the glued object. This is the target-side input to
