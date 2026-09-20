@@ -130,7 +130,10 @@ The target is arbitrary because nothing in that argument looks at it beyond aski
 Hausdorff: rigidity is a statement about the *source*. The case the rest of this file uses is
 `FormalSpectrum.awayCompletion_hom_ext` just below, where `(A, L)` is `R{1/g}` with its ideal of
 definition; the general form is consumed by `FormalSchemes.AwayCompletionUniversal`, where the
-target is a chart algebra and there is no second `g`. -/
+target is a chart algebra and there is no second `g`, and by
+`FormalSchemes.AwayBaseChangeSeparated`, where the target is a chart algebra again and the two maps
+compared are a factorisation through a basic open of the base and
+`FormalSpectrum.awayCompletionLift`. -/
 theorem awayCompletion_hom_ext' {A : Type u} [CommRing A] {L : Ideal A} [IsAdicComplete L A]
     (hI : I.FG) {F G : awayCompletion I f →+* A} (hF : awayCompletionIdeal I f ≤ L.comap F)
     (hG : awayCompletionIdeal I f ≤ L.comap G)

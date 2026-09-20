@@ -47,9 +47,11 @@ and none of the bookkeeping.
   an open subscheme over an open of the affine base, which is a statement about the
   presentation-level predicate `BothChartedFibreDatumXY.IsSeparated`.
   `FormalSchemes.AwayBaseChangeSeparated` supplies that statement at a **basic** open of the base,
-  and only for a source presented in the `AffineChartedFibreDatumX.ofAlgebraData` vocabulary with
-  the localising element inverted on every chart (issue 1998); the arbitrary open of an arbitrary
-  formal scheme this bullet needs is still nowhere on the tree.
+  for a source that is separated over the affine base and whose structural morphism factors
+  through that basic open — no presentation is asked of the caller, and the localising element is
+  inverted on every chart as a consequence rather than as a hypothesis (issues 1998, 2098) — but
+  its conclusion names the resulting structural morphism only existentially; the arbitrary open of
+  an arbitrary formal scheme this bullet needs is still nowhere on the tree.
   **Nothing here should be read as bringing the composition law close.**
 * It does **not** touch conservativity's hard direction, which needs a basic-open refinement of the
   target cover and is recorded in the same list.
