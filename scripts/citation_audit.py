@@ -33,7 +33,13 @@ crosses over, and for the use/mention rule it reads off the document.
 malformed-span checks below, the line-pointer predicate and the Markdown scan, and needs no build.
 
 Resolution of the declaration case is done by elaborating one `#check @Token` per distinct token
-in a single throwaway Lean file, which costs one `import FormalSchemes` and a few seconds.
+in a single throwaway Lean file, which costs one `import FormalSchemes` and a few seconds.  That
+probe is the one part of this script that needs a built tree, and a probe that does not elaborate
+used to answer "nothing is unresolved" rather than failing -- an `import` that fails puts the only
+error on line 1, where no token lives, so every token came back resolved.  It now exits **2** and
+says so; see `probe_unresolved` for the two fatal shapes and `CONTRIBUTING.md` for how to
+recognise the old failure in a report someone else ran.  Exit 1 still means the audit measured the
+tree and found something.
 """
 
 from __future__ import annotations
@@ -305,8 +311,77 @@ def project_paths() -> set[str]:
     return paths
 
 
+class ProbeDidNotElaborate(RuntimeError):
+    """The `#check` probe failed before it reached a `#check`, so its silence means nothing.
+
+    Raised rather than returned, and never converted into "everything is unresolved": a false
+    alarm on every mid-build tree would be as useless as the false clean this replaces, and an
+    author who has been told the probe did not run knows exactly what to do about it.
+    """
+
+
+def probe_unresolved(transcript: str, path: str, header: int, tokens: list[str],
+                     returncode: int) -> set[str]:
+    """Read one probe transcript into the unresolved set, or refuse to read it at all.
+
+    Split out of `resolve_declarations` so that `--selftest` can reach it without a build.  That
+    split is the whole point of the guard: the failure being guarded against is a *missing*
+    `unknownIdentifier` line, and nothing that cannot be handed a transcript can tell an empty
+    answer apart from a clean one.
+
+    Two things are fatal, and neither subsumes the other (issue 2099).
+
+    * An `error` at or above `header`.  That is the `import`-and-`open` region, where nothing this
+      audit is about lives.  An `import` that fails puts the *only* error there and no `#check` is
+      ever elaborated, which is the failure that shipped a false figure three times in thirty
+      hours; an `open` that has stopped naming a namespace errors there too while the `#check`s
+      below carry on resolving against the wrong set, which the exit-code rule cannot see.
+    * A non-zero exit with **no error attributed to a `#check` line at all**.  That is `lake`
+      failing before `lean` ran, or `lean` dying without a diagnosis this reader can place.
+
+    Deliberately *not* "non-zero exit with an empty unresolved set": a tree whose only complaint is
+    one ambiguous name exits non-zero, resolves everything, and has measured the whole population.
+    Failing that run would trade this row's false clean for a false alarm.
+    """
+    unresolved, stray, region, attributed = set(), [], False, 0
+    for line in transcript.splitlines():
+        m = re.match(re.escape(path) + r":(\d+):\d+: error(.*)", line)
+        if not m:
+            if line.lstrip().startswith("error"):
+                # Attributed to no line of the probe: `lake`'s own complaint, before `lean`.
+                stray.append(line.strip())
+            continue
+        idx = int(m.group(1)) - header - 1
+        if idx < 0:
+            region = True
+            stray.append(line.strip())
+            continue
+        if idx < len(tokens):
+            # Counted before the class is looked at: it is evidence that the probe reached this
+            # `#check`, which is all the exit-code rule needs.
+            attributed += 1
+        if "unknownIdentifier" not in m.group(2):
+            # An ambiguous or overloaded name resolves — to more than one constant.  That is a
+            # different complaint, and not this script's.
+            continue
+        if idx < len(tokens):
+            unresolved.add(tokens[idx])
+    if region or (returncode != 0 and tokens and not attributed):
+        raise ProbeDidNotElaborate(
+            "the resolution probe did not elaborate, so this run measured nothing.\n"
+            + ("".join("    %s\n" % f for f in stray[:5]) if stray else
+               "    `lake env lean` exited %d and printed nothing this reader could place.\n"
+               % returncode)
+            + "    Run a full `lake build` first: a probe whose `import FormalSchemes` fails\n"
+              "    reports every token as resolving.")
+    return unresolved
+
+
 def resolve_declarations(tokens: list[str]) -> set[str]:
-    """Return the subset of `tokens` that `#check @token` fails to resolve."""
+    """Return the subset of `tokens` that `#check @token` fails to resolve.
+
+    Raises `ProbeDidNotElaborate` if the probe cannot be believed; see `probe_unresolved`.
+    """
     if not tokens:
         return set()
     with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False) as h:
@@ -321,19 +396,7 @@ def resolve_declarations(tokens: list[str]) -> set[str]:
         text=True,
     )
     os.unlink(path)
-    unresolved = set()
-    for line in (proc.stdout + proc.stderr).splitlines():
-        m = re.match(re.escape(path) + r":(\d+):\d+: error(.*)", line)
-        if not m:
-            continue
-        idx = int(m.group(1)) - header - 1
-        if "unknownIdentifier" not in m.group(2):
-            # An ambiguous or overloaded name resolves — to more than one constant.  That is a
-            # different complaint, and not this script's.
-            continue
-        if 0 <= idx < len(tokens):
-            unresolved.add(tokens[idx])
-    return unresolved
+    return probe_unresolved(proc.stdout + proc.stderr, path, header, tokens, proc.returncode)
 
 
 def merge_line_comments(regions):
@@ -581,6 +644,44 @@ def selftest() -> int:
           % ("ok  " if ok else "FAIL"))
     if not ok:
         print("        want %r\n        got  %r" % (want, got))
+
+    # The probe guard (issue 2099).  Every transcript below is a real one, shortened: the script
+    # answered `0 UNRESOLVED` on the first of them three times in thirty hours, once into a
+    # shipped pull-request body, because the only error sat on the `import` line where no token
+    # lives.  These four cases are the reason `probe_unresolved` is a function and not a loop
+    # inside `resolve_declarations` -- `--selftest` invokes no `lake`, so a transcript is the only
+    # way to reach the failure at all.  `header` is 3 here as in the real probe, so the first
+    # `#check` is line 4.
+    probe = "/probe.lean"
+    def guard(name, transcript, tokens, rc, want):
+        nonlocal bad
+        try:
+            got = probe_unresolved(transcript, probe, 3, tokens, rc)
+        except ProbeDidNotElaborate:
+            got = "FATAL"
+        ok = got == want
+        bad += not ok
+        print("%s  %s" % ("ok  " if ok else "FAIL", name))
+        if not ok:
+            print("        want %r\n        got  %r" % (want, got))
+
+    guard("a probe whose `import` failed is fatal, and is not an empty unresolved set",
+          probe + ":1:0: error: unknown module prefix 'FormalSchemes'\n",
+          ["Foo.bar", "Foo.baz"], 1, "FATAL")
+    guard("a healthy transcript still names exactly the token that did not resolve",
+          probe + ":5:8: error(lean.unknownIdentifier): Unknown identifier `Foo.baz`\n",
+          ["Foo.bar", "Foo.baz", "Foo.qux"], 1, {"Foo.baz"})
+    guard("a `lake` failure before `lean` ran is fatal, though it names no line of the probe",
+          "error: no such file or directory (error code: 2)\n", ["Foo.bar"], 1, "FATAL")
+    guard("a probe that failed and said nothing at all is fatal on its exit code alone",
+          "", ["Foo.bar"], 1, "FATAL")
+    guard("an `open` that stopped naming a namespace is fatal even while the `#check`s answer",
+          probe + ":2:5: error: unknown namespace 'FormalSpectrum'\n"
+          + probe + ":5:8: error(lean.unknownIdentifier): Unknown identifier `Foo.baz`\n",
+          ["Foo.bar", "Foo.baz"], 1, "FATAL")
+    guard("an error at a `#check` line that is not an unknown identifier is neither",
+          probe + ":4:8: error(lean.ambiguous): ambiguous, possible interpretations …\n",
+          ["Foo.bar", "Foo.baz"], 1, set())
     return 1 if bad else 0
 
 
@@ -610,7 +711,14 @@ def main() -> int:
 
     pointers = [t for t in sorted(sites) if project_line_pointer(t, paths)]
     md_pointers = markdown_line_pointers(paths)
-    unresolved = resolve_declarations(candidates)
+    try:
+        unresolved = resolve_declarations(candidates)
+    except ProbeDidNotElaborate as exc:
+        # Nothing is printed before this.  The population counts below are read off the sources
+        # and would have been right either way, which is exactly what makes a report carrying
+        # them and a zero UNRESOLVED line indistinguishable from a clean run.
+        print("PROBE FAILED: %s" % exc, file=sys.stderr)
+        return 2
     resolved = [t for t in candidates if t not in unresolved]
 
     n = lambda ts: sum(len(sites[t]) for t in ts)
