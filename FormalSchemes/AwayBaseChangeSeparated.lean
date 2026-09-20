@@ -293,11 +293,13 @@ theorem le_comap_awayCompletionLift (hfu : IsUnit (algebraMap R A f)) :
 a source (`FormalSpectrum.awayCompletion_hom_ext'`) compares the two maps `R{1/f} →+* A`: both are
 continuous for the ideals of definition, and both restrict to `R → A` over the base.
 
-**This is the hypothesis `halg` of
-`AlgebraicGeometry.AffineChartedFibreDatumX.isSeparatedOverSpf_awayBase`** for the algebra
-structure `RingHom.toAlgebra` of the lift — at which that hypothesis is `rfl` — and it says that
-no *other*
-`R{1/f}`-algebra structure compatible with the geometry is available. -/
+**This is what makes the hypothesis `halg` of
+`AlgebraicGeometry.AffineChartedFibreDatumX.isSeparatedOverSpf_awayBase` costless.** At the
+`RingHom.toAlgebra` structure of the lift that hypothesis is `rfl`; what this theorem adds is that
+no *other* `R{1/f}`-algebra structure compatible with the geometry is available. It is not itself
+what discharges that hypothesis — its consumer is
+`FormalSpectrum.eq_locallyRingedSpaceMap_awayCompletionLift`, and through it the per-chart half of
+step 3. -/
 theorem globalSectionsMap_eq_awayCompletionLift (hI : I.FG)
     (u : locallyRingedSpaceObj (I.map (algebraMap R A)) ⟶
       locallyRingedSpaceObj (I.map (algebraMap R (awayCompletion I f))))
@@ -670,8 +672,10 @@ double-overlap data and the two laws, which is exactly what
 and transporting the presentation along that equality re-presents the same formal scheme in the
 `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` vocabulary.
 
-The instance arguments of the final term are supplied by name rather than by `inferInstance`:
-elaborating them by unification costs more than the default budget allows. -/
+The four instance arguments read off `DX` in the final term are supplied by name rather than by
+`‹_›`: with `‹_›` in their place the same proof exceeds the default heartbeat budget. Typeclass
+synthesis is not what costs — the two `BX` instances are `inferInstance`, and so are all six if
+they are written that way, at the default budget either way. -/
 theorem FormalScheme.isSeparatedOverSpf_exists_ofAlgebraData {X : FormalScheme.{u}}
     {s : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I}
     (hsep : FormalScheme.IsSeparatedOverSpf hI X s) :
