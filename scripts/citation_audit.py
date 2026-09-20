@@ -337,7 +337,15 @@ class ProbeDidNotElaborate(RuntimeError):
 
 
 class ProbeTreeIsStale(RuntimeError):
-    """`.lake` holds a build of *other* sources, so the probe would answer about another tree.
+    """`.lake` is not established to be a build of this checkout, so the probe must not answer.
+
+    Raised on both branches of `probe_stale`: the one where `lake` listed out-of-date targets, so
+    that `.lake` holding a build of *other* sources is a fact, and the one where `lake` failed for
+    a reason of its own, so that it is merely unestablished and the tree may be perfectly current.
+    The class does not tell them apart because a caller cannot act on the difference -- the
+    question is "can I believe this report" either way -- while the *message* names which happened
+    in its lead sentence, which it did not before issue 2113.  The name is kept for the commoner
+    case rather than widened to cover both, since it is what four sites already state.
 
     A sibling of `ProbeDidNotElaborate`, raised for the same reason and carrying the same exit
     code: this run measured nothing.  They are worth telling apart in the *message* and not in the
@@ -380,25 +388,33 @@ def probe_stale(transcript: str, returncode: int, target: str) -> list[str]:
     must not answer.  There is no false-alarm surface above a zero exit, which is what lets the
     rule be this blunt.
 
-    The other two rules are about the *message* and not the verdict: name the out-of-date targets
-    when `lake` listed them, and otherwise quote `lake`'s own first lines.  Naming the module is
-    this instrument's whole advantage over the one refuted below.
+    The other rules are about the *message* and not the verdict, and the message must claim only
+    what its branch establishes.  When `lake` listed out-of-date targets, staleness is a fact and
+    the refusal says so and names them -- naming the module is this instrument's whole advantage
+    over the one refuted below.  When `lake` failed for a reason of its own, or failed silently,
+    all that is established is that `lake` did not answer, so the refusal says *that* and quotes
+    `lake`'s own first lines; the tree may be perfectly current.  The two leads are deliberately
+    disjoint strings and `--selftest` asserts each branch does not carry the other's, because a
+    single shared lead is what this said before issue 2113 and nothing could see it.
     """
     if returncode == 0:
         return []
     m = _LAKE_FAILURES.search(transcript)
     named = _LAKE_TARGET.findall(m.group(1)) if m else []
     if named:
+        lead = ("`.lake` is not a build of this checkout, so the probe would resolve against\n"
+                "    sources nobody asked it about.\n")
         detail = "    out of date:\n" + "".join("      %s\n" % t for t in named[:5]) + (
             "      ... and %d more\n" % (len(named) - 5) if len(named) > 5 else "")
     else:
+        lead = ("`lake` did not answer, so whether `.lake` is a build of this checkout is\n"
+                "    unknown -- and an audit that cannot establish it will not answer either.\n")
         lines = [l.strip() for l in transcript.splitlines() if l.strip()]
         detail = ("".join("    %s\n" % l for l in lines[:5]) if lines else
                   "    `lake build --no-build %s` exited %d and printed nothing.\n"
                   % (target, returncode))
     raise ProbeTreeIsStale(
-        "`.lake` is not a build of this checkout, so the probe would resolve against\n"
-        "    sources nobody asked it about.\n"
+        lead
         + detail
         + "    `lake env lean` sets `LEAN_PATH` and hands the probe whatever oleans are on\n"
           "    disk; it does not check them against the working tree.  Run a full\n"
@@ -809,19 +825,28 @@ def selftest() -> int:
     # and the last two from a `lake` that failed for a reason of its own.  The third and fourth
     # exist because the *message* has rules too: without them a loosening that stopped naming the
     # out-of-date module, or stopped quoting `lake` when it listed none, would pass.
-    def build(name, transcript, rc, want, wants=()):
+    # The two lead sentences, pinned as literals rather than imported from `probe_stale`, so that
+    # rewording one is a deliberate act with a failing test attached (issue 2113).  Each branch
+    # asserts its own lead *and* the absence of the other's: before 2113 the refusal opened with
+    # the staleness sentence on all three branches, and cases 3 and 4 asserted only on the detail
+    # line, which is why three sessions on this file never saw it.  A collapse back to one shared
+    # lead now fails two cases in whichever direction it collapses.
+    _STALE_LEAD = "`.lake` is not a build of this checkout"
+    _UNKNOWN_LEAD = "`lake` did not answer, so whether `.lake` is a build of this checkout is"
+
+    def build(name, transcript, rc, want, wants=(), nots=()):
         nonlocal bad
         msg = ""
         try:
             got = probe_stale(transcript, rc, LIBRARY)
         except ProbeTreeIsStale as exc:
             got, msg = "FATAL", str(exc)
-        ok = got == want and all(w in msg for w in wants)
+        ok = got == want and all(w in msg for w in wants) and not any(w in msg for w in nots)
         bad += not ok
         print("%s  %s" % ("ok  " if ok else "FAIL", name))
         if not ok:
-            print("        want %r containing %r\n        got  %r containing %r"
-                  % (want, list(wants), got, msg))
+            print("        want %r containing %r and not %r\n        got  %r containing %r"
+                  % (want, list(wants), list(nots), got, msg))
 
     build("an up-to-date tree passes the gate and is not an empty list of complaints",
           "All targets up-to-date (3506 jobs).\n", 0, [])
@@ -847,12 +872,13 @@ def selftest() -> int:
           "- FormalSchemes.GeneralFibreProductBaseChange\n"
           "- FormalSchemes.CompletionGlueTwoPatchCondition\n"
           "- FormalSchemes.CompletionBasicOpenGlue\n", 3, "FATAL",
-          ("out of date:", "FormalSchemes.TateShift", "FormalSchemes.CompletionBasicOpenGlue"))
-    build("a `lake` that failed for a reason of its own is fatal, and its own line is quoted",
+          ("out of date:", "FormalSchemes.TateShift", "FormalSchemes.CompletionBasicOpenGlue",
+           _STALE_LEAD), (_UNKNOWN_LEAD,))
+    build("a `lake` that failed for a reason of its own says only that `lake` did not answer",
           "error: unknown target 'FormalSchemez'\n", 1, "FATAL",
-          ("unknown target 'FormalSchemez'",))
+          ("unknown target 'FormalSchemez'", _UNKNOWN_LEAD), (_STALE_LEAD,))
     build("a `lake` that failed and said nothing at all is fatal on its exit code alone",
-          "", 2, "FATAL", ("exited 2 and printed nothing",))
+          "", 2, "FATAL", ("exited 2 and printed nothing", _UNKNOWN_LEAD), (_STALE_LEAD,))
     return 1 if bad else 0
 
 

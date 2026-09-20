@@ -662,6 +662,29 @@ a ten-line walk, and row 1841 ran it over every delta the sweep still reports an
 right, near endpoint and far.) If a figure `--sweep` reports is a plain measurement of this tree,
 rewrite it in the checked spelling rather than leaving it for the next sweep.
 
+## The option cross-reference convention
+
+Every `set_option` here is justified in an adjacent `--` comment, and many of those comments are
+cross-references — *"Same transparency requirement as `X`"* — which are claims about `X` and not
+about the file they sit in. **A pull request that removes a `set_option` must run
+`python3 scripts/option_reference_audit.py --tree`**, which resolves each such sentence's anchor
+and reports a MISMATCH when the declaration it names carries no option of the family it claims;
+removing an option cannot fail a build, so nothing else on this tree or in CI can see the class,
+and three sentences of it were left false by one pull request and found by a reviewer reading the
+diff by hand (issue 2106). It reads sources, needs no build, and like `scripts/citation_audit.py`
+and `scripts/closure_audit.py` it is an author's instrument rather than a gate: it is in neither
+`.github/workflows/` nor `.orchestra/validation.sh`. Its `declined` population — a sentence
+pointing at a module or at a Mathlib declaration rather than at one of ours — is an honest answer
+and not a failure, exactly as in `scripts/closure_audit.py`; and a past-tense sentence — *"`X`
+needed the same option until …"* — is counted as `historical` and not checked, since it is true
+precisely when `X` carries nothing.
+
+Unlike the closure audit it has a standing backlog, so **read the printed lines rather than the
+exit status**: at the commit that adds it there is exactly one MISMATCH, in
+`FormalSchemes/ChartedSchemeDatumChartOverlap.lean`, and it is filed rather than repaired because
+which declaration that sentence should name is a judgement and not a typo. That count is one
+measurement at one commit and is not maintained here; re-run the script.
+
 ## Line width
 
 Every line is at most **100 characters and 100 display columns** — two separate limits, since a
