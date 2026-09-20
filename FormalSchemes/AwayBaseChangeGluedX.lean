@@ -131,8 +131,8 @@ every one of the three homes above carries a larger one, so moving a transport w
 statement this file alone reads into the environment of modules that do not read it. They are
 kept here on that ratio, which is the disposition
 `FormalSchemes.GeneralFibreProductExposeXIdealCongr` took for its own three transports — and the
-count there is of consuming modules too: each of its transports is read by two declarations in
-that file and by nothing outside it.
+count there is of consuming modules too: two of its three transports are read by two declarations
+in that file, the third by one, and none of the three is read outside it.
 
 ## Main results
 
