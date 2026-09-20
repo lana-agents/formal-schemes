@@ -1,8 +1,17 @@
 import FormalSchemes.GeneralSeparatedRange
 import FormalSchemes.GeneralFibreProductBaseChange
 import FormalSchemes.GeneralFibreProductExposeXIdealCongr
+import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 
 set_option linter.style.header false
+-- This file carries six per-declaration `set_option`s, three `maxHeartbeats 800000` and three
+-- `backward.isDefEq.respectTransparency false`, on
+-- `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁`, on
+-- `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₂` and on
+-- `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`; the measurement behind
+-- them is commented at each. The line below is what keeps the style linter quiet about those six,
+-- and it is named here so that disabling the linter is itself visible rather than silent.
+set_option linter.style.setOption false
 
 /-!
 # Separatedness descends along the base change of the diagonal (EGA I §10.15)
@@ -18,13 +27,13 @@ This file draws the consequence for a **base change of the adic base**. If the s
 over `(R, I)` and over `(R', I')`, the glued factor `X` is literally the same formal scheme
 (`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr`), the two fibre products
 are related by the glued comparison of `FormalSchemes.GeneralFibreProductBaseChange`, and
-separatedness over the first base gives separatedness over the second — **provided the two
-diagonals are related by that comparison**, which is this file's one hypothesis and is discussed
-under *What is not proved here*.
+separatedness over the first base gives separatedness over the second. The triangle relating the
+two diagonals to that comparison — the one thing the cancellation needs beyond injectivity — is
+proved here and is no longer a hypothesis; it is the subject of the third step below.
 
-## The argument, in two steps
+## The argument, in three steps
 
-Both steps are re-derived here and neither is taken from a summary.
+All three steps are re-derived here and none is taken from a summary.
 
 1. **Separatedness is closedness of a range.** Quoted from the tree rather than from a description:
    `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_diagonal_base` is an
@@ -42,29 +51,51 @@ Both steps are re-derived here and neither is taken from a summary.
    `ι`**, and `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base` supplies it for the
    glued base change against its two hypotheses.
 
-## What is not proved here
+3. **The triangle is a uniqueness argument, not a chartwise check.**
+   `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'` is
+   `AlgebraicGeometry.BothChartedFibreDatumXY.fibreLiftOf` of the identity pair over a refined
+   chart family chosen by `Classical.choice`
+   (`AlgebraicGeometry.BothChartedFibreDatumXY.adicDiagonalCharts`), so nothing about how it
+   restricts to a chart of the glued source is available and no lemma of that shape can be
+   written. What characterises it is its two projection triangles together with
+   `AlgebraicGeometry.BothChartedFibreDatumXY.fibreLift_unique_adicOverBase`, and that is how
+   `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange` is proved. The same-base
+   precedent is `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_transport`
+   (`FormalSchemes.GeneralSeparatedPresentation`), which consumes
+   `AlgebraicGeometry.BothChartedFibreDatumXY.compareIso_hom_comp_pr₁`; the two statements this
+   file supplies in its place are
+   `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁` and
+   `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₂`. Unlike the precedent, the two
+   competing morphisms here do **not** share a source, and carrying that source equality is the
+   one piece of plumbing the precedent does not supply.
 
-**The triangle `Δ' ≫ ι = Δ` is a hypothesis of both theorems below and is not discharged.** It is
-not bookkeeping and it is not free:
+## What the chartwise half costs, and the third statement it needs
 
-* `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'` is
-  `AlgebraicGeometry.BothChartedFibreDatumXY.fibreLiftOf` of the identity pair over a refined chart
-  family chosen by `Classical.choice`
-  (`AlgebraicGeometry.BothChartedFibreDatumXY.adicDiagonalCharts`), so nothing about how it
-  restricts to a chart of the glued source is available, and the triangle cannot be checked
-  chartwise.
-* What characterises it is its two projection triangles together with
-  `AlgebraicGeometry.BothChartedFibreDatumXY.fibreLift_unique_adicOverBase`. That is exactly how
-  the same-base transport `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_transport`
-  (`FormalSchemes.GeneralSeparatedPresentation`) is proved, and it consumes
-  `AlgebraicGeometry.BothChartedFibreDatumXY.compareIso_hom_comp_pr₁` — the statement that the
-  comparison commutes with the first projection.
-* **The base-change analogue of that statement does not exist on this tree.** Nothing says
-  `AlgebraicGeometry.DoubleChartGlue.baseChange` commutes with
-  `AlgebraicGeometry.BothChartedFibreDatumXY.pr₁`, and nothing says the chart-level
-  `AlgebraicGeometry.DoubleChartGlue.chartBaseChange` commutes with
-  `AlgebraicGeometry.BothChartedFibreDatumXY.pr₁ChartSelf`. Both are missing, the second is the
-  input to the first, and neither is this file's subject.
+The two projection squares are proved chartwise, and each chart square is one
+`FormalSpectrum.locallyRingedSpaceMap_comp` merging the composite into a single map, one
+`FormalSpectrum.locallyRingedSpaceMap_congr` at a ring identity, and one transport of the source
+ideal. The ring identities are `CompletedTensorProduct.baseChangeHom_inl` and
+`CompletedTensorProduct.baseChangeHom_inr`, both already on the tree; the two squares are
+`AlgebraicGeometry.DoubleChartGlue.chartBaseChange_comp_inl` and
+`AlgebraicGeometry.DoubleChartGlue.chartBaseChange_comp_inr`.
+
+It is **not** enough. A chartwise argument also has to move the glue inclusions of the *target*
+across the identification of the two glued factors, and nothing on the tree said that either:
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr` identifies the two glued
+`X`s and says nothing about their chart inclusions.
+`AlgebraicGeometry.AffineChartedFibreDatumX.ι_xGluedOfIdeals_congr` is that statement, proved by
+the same `subst` chain as the congruence it accompanies and finished by proof irrelevance.
+
+One more thing is needed and it is not mathematics. A base change is stated at
+`AlgebraicGeometry.DoubleChartGlue`, whose chart family is a parameter; a projection is stated at
+`AlgebraicGeometry.BothChartedFibreDatumXY`, whose chart family is a field. The two glued objects
+agree by `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct_eq`, which is `rfl`, but at
+a literal `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair that `rfl` is a defeq
+check between two large terms, and it is what the raised heartbeat limits below pay for.
+`AlgebraicGeometry.BothChartedFibreDatumXY.ι_carried_comp_pr₁` and
+`AlgebraicGeometry.BothChartedFibreDatumXY.ι_carried_comp_pr₂` move the check to a datum that is a
+variable wherever it can be moved; what is left is one such check per statement that composes the
+two vocabularies, and there is no way to state those without one.
 
 ## Is the implication an `Iff`?
 
@@ -91,18 +122,58 @@ is what is stated.
   `AlgebraicGeometry.BothChartedFibreDatumXY.xGlued_diagonalDatum_ofAlgebraData_congr`: the glue
   carried by the diagonal datum of a factor presented by algebra data, and the identification of
   the two glued factors that the theorem below needs as its source equality.
+* `FormalSpectrum.locallyRingedSpaceMap_eq_comp_eqToHom` and
+  `AlgebraicGeometry.AffineChartedFibreDatumX.ι_xGluedOfIdeals_congr`: **two transports**, one for
+  the source ideal of a map of formal spectra and one for the chart inclusions of a glued `X`
+  under a change of ideal family.
+* `AlgebraicGeometry.BothChartedFibreDatumXY.ι_carried_comp_pr₁` and
+  `AlgebraicGeometry.BothChartedFibreDatumXY.ι_carried_comp_pr₂`: **the two projections read
+  against the carried glue**, `rfl` at a datum that is a variable and the bridge between the two
+  vocabularies everything below is stated in.
+* `AlgebraicGeometry.DoubleChartGlue.chartBaseChange_comp_inl` and
+  `AlgebraicGeometry.DoubleChartGlue.chartBaseChange_comp_inr`: **the chart-level base change
+  against the two chart projections**, whose content is two ring identities of
+  `FormalSchemes.CompletedTensorBaseChange`.
+* `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁` and
+  `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₂`: **the glued base change against
+  the two projections**, the base-change analogue of
+  `AlgebraicGeometry.BothChartedFibreDatumXY.compareIso_hom_comp_pr₁`.
+* `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`: **the triangle**, `Δ' ≫ ι
+  = Δ` at the `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair.
 * `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_of_isSeparated_baseChange`: **the
   implication at the glued base change**, where the comparison is
-  `AlgebraicGeometry.DoubleChartGlue.baseChange` and injectivity is discharged from its overlap
-  square and its overlap saturation.
+  `AlgebraicGeometry.DoubleChartGlue.baseChange`, injectivity is discharged from its overlap
+  square and its overlap saturation, and the triangle is discharged by the statement above. It has
+  **no** triangle hypothesis.
+
+The hypothesised form is kept only where the hypothesis is not the same statement:
+`AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_of_isSeparated_of_diagonal_factorization`
+asks for an *arbitrary* injective comparison receiving the two diagonals, and nothing here
+discharges that for a comparison other than
+`AlgebraicGeometry.DoubleChartGlue.baseChange`. Re-stating the specialisation below with the
+triangle still hypothesised would be a second copy of one theorem, not a second theorem, so there
+is no such variant.
 
 ## Placement
 
-A leaf over `FormalSchemes.GeneralSeparatedRange`, `FormalSchemes.GeneralFibreProductBaseChange`
-and `FormalSchemes.GeneralFibreProductExposeXIdealCongr`: forward closure **184** project modules
-besides itself (185 counted with itself), reverse closure **0**. None of the three imports is
-implied by the others — the first two are incomparable, and the third contributes **5** modules
-that neither of them reaches.
+A leaf over `FormalSchemes.GeneralSeparatedRange`, `FormalSchemes.GeneralFibreProductBaseChange`,
+`FormalSchemes.GeneralFibreProductExposeXIdealCongr` and
+`FormalSchemes.GeneralFibreProductLiftUniqueAdic`: forward closure **185** project modules besides
+itself (186 counted with itself), reverse closure **0**. None of the four imports is implied by
+the others: each of them contributes modules that none of the other three reaches.
+
+The fourth import is the uniqueness statement the triangle runs on, and it is the reason
+everything above is here rather than in `FormalSchemes.GeneralFibreProductBaseChange`, which is
+where a reader would look for a statement about
+`AlgebraicGeometry.DoubleChartGlue.chartBaseChange`. The forward closure of
+`FormalSchemes.GeneralFibreProductBaseChange` is **93**, and it contains neither
+`FormalSchemes.GeneralFibreProductBothProjectionLeft`, which states
+`AlgebraicGeometry.BothChartedFibreDatumXY.pr₁`, nor
+`FormalSchemes.GeneralFibreProductLiftUniqueAdic`, which states the uniqueness — so the projection
+squares cannot be written there without two new import edges, and the reverse closure of
+`FormalSchemes.GeneralFibreProductBaseChange` is **2** against this file's **0**. Here the fourth
+import adds only itself: `FormalSchemes.GeneralFibreProductLiftUniqueAdic` has forward closure
+**143**, and every one of those modules was reached already.
 
 The two locally-ringed-space lemmas are here and **not** in
 `FormalSchemes.LocallyRingedSpaceRange`, which is this tree's home for range statements about base
@@ -127,6 +198,24 @@ open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum Topol
 open CompletedTensorAwayInterchange CompletedTensorProduct
 
 universe u
+
+namespace FormalSpectrum
+
+/-- **A `FormalSpectrum.locallyRingedSpaceMap` transports along an equality of its source ideal.**
+The two maps have the same underlying ring homomorphism and the same target; only the ideal of the
+*source* formal spectrum moves, and the transport is the `eqToHom` of that equality.
+
+`FormalSpectrum.locallyRingedSpaceMap_congr` is the companion statement in the other argument —
+same ideals, equal ring homomorphisms — and neither implies the other. -/
+theorem locallyRingedSpaceMap_eq_comp_eqToHom {S T : Type u} [CommRing S] [CommRing T]
+    {K L : Ideal S} (h : L = K) (M : Ideal T) (φ : S →+* T) (hK : K ≤ M.comap φ)
+    (hL : L ≤ M.comap φ) :
+    locallyRingedSpaceMap K M φ hK =
+      locallyRingedSpaceMap L M φ hL ≫ eqToHom (congrArg locallyRingedSpaceObj h) := by
+  subst h
+  simp
+
+end FormalSpectrum
 
 namespace AlgebraicGeometry
 
@@ -164,7 +253,233 @@ theorem isClosed_range_base_of_isClosed_range_comp {X Y Z : LocallyRingedSpace.{
 
 end LocallyRingedSpace
 
+namespace AffineChartedFibreDatumX
+
+/-! ### The chart inclusions of a glued `X` transport with its ideal family -/
+
+section IdealCongr
+
+variable {J : Type u} {A : J → Type u} [∀ i, CommRing (A i)]
+variable [topology : ∀ i : J, TopologicalSpace (A i)] {g : ∀ (i : J), J → A i}
+
+/-- **The chart inclusions transport along
+`AlgebraicGeometry.AffineChartedFibreDatumX.xGluedOfIdeals_congr`.** That congruence identifies the
+two glued formal schemes; this says the identification is compatible with the `i`-th chart
+inclusion, the chart objects themselves being identified by the ideal family equation.
+
+Without this, the congruence is unusable against anything built chartwise: a morphism out of the
+glued `X` is determined by its restrictions, and the restrictions live over chart objects that the
+congruence moves. The proof is the same `subst` chain as the congruence itself, finished by proof
+irrelevance on the five `Prop`-valued arguments the two glue data do not share. -/
+theorem ι_xGluedOfIdeals_congr {K K' : ∀ i : J, Ideal (A i)} (hK : K = K')
+    {hKfg : ∀ i : J, (K i).FG} {hK'fg : ∀ i : J, (K' i).FG}
+    [adic : ∀ i : J, IsAdicRing (K i)] [adic' : ∀ i : J, IsAdicRing (K' i)]
+    {t : ∀ (i j : J), i ≠ j →
+      (locallyRingedSpaceObj (awayCompletionIdeal (K i) (g i j)) ⟶
+        locallyRingedSpaceObj (awayCompletionIdeal (K j) (g j i)))}
+    {t_inv} {t'} {t_fac} {cocycle}
+    {u : ∀ (i j : J), i ≠ j →
+      (locallyRingedSpaceObj (awayCompletionIdeal (K' i) (g i j)) ⟶
+        locallyRingedSpaceObj (awayCompletionIdeal (K' j) (g j i)))}
+    {u_inv} {u'} {u_fac} {ucocycle}
+    (ht : ∀ (i j : J) (h : i ≠ j), HEq (t i j h) (u i j h))
+    (ht' : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
+      HEq (t' i j k hij hik hjk) (u' i j k hij hik hjk))
+    (i : J) :
+    (xFormalGlueDataOfIdeals g K hKfg t t_inv t' t_fac cocycle).ι i ≫
+        eqToHom (congrArg FormalScheme.toLocallyRingedSpace
+          (xGluedOfIdeals_congr hK ht ht')) =
+      eqToHom (congrArg locallyRingedSpaceObj (congrFun hK i)) ≫
+        (xFormalGlueDataOfIdeals g K' hK'fg u u_inv u' u_fac ucocycle).ι i := by
+  subst hK
+  have hteq : t = u := by
+    funext i j h
+    exact eq_of_heq (ht i j h)
+  subst hteq
+  have ht'eq : t' = u' := by
+    funext i j k hij hik hjk
+    exact eq_of_heq (ht' i j k hij hik hjk)
+  subst ht'eq
+  obtain rfl : hK'fg = hKfg := rfl
+  obtain rfl : adic' = adic := rfl
+  obtain rfl : u_inv = t_inv := rfl
+  obtain rfl : u_fac = t_fac := rfl
+  obtain rfl : ucocycle = cocycle := rfl
+  exact Category.comp_id _
+
+end IdealCongr
+
+end AffineChartedFibreDatumX
+
+namespace DoubleChartGlue
+
+/-! ### The chart-level base change against the two chart projections -/
+
+section ChartProjection
+
+variable {R : Type u} [CommRing R] {I : Ideal R}
+variable {R' : Type u} [CommRing R'] [Algebra R R'] {I' : Ideal R'}
+variable {JX JY : Type u} {A : JX → Type u} {B : JY → Type u}
+variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)] [∀ i, Algebra R' (A i)]
+variable [∀ i, IsScalarTower R R' (A i)]
+variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)] [∀ j, Algebra R' (B j)]
+variable [∀ j, IsScalarTower R R' (B j)]
+
+/-- **The chart comparison commutes with the first chart projection.** Both
+`AlgebraicGeometry.DoubleChartGlue.chartBaseChange` and
+`AlgebraicGeometry.BothChartedFibreDatumXY.pr₁ChartSelf` are
+`FormalSpectrum.locallyRingedSpaceMap` — of `CompletedTensorProduct.baseChangeHom` and of
+`CompletedTensorProduct.inl` respectively — so `FormalSpectrum.locallyRingedSpaceMap_comp` merges
+the composite into one map and the whole content is the ring identity
+`CompletedTensorProduct.baseChangeHom_inl`.
+
+The `eqToHom` is the only thing the two sides do not share: the projections land in
+`Spf (A_{p.1})` over *different* ideals of definition, `I'·A_{p.1}` and `I·A_{p.1}`, which the
+caller's ideal-family hypothesis identifies. -/
+theorem chartBaseChange_comp_inl (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (p : JX × JY) (hKp : I'.map (algebraMap R' (A p.1)) = I.map (algebraMap R (A p.1))) :
+    chartBaseChange (A := A) (B := B) hI hII' p ≫
+        locallyRingedSpaceMap (I.map (algebraMap R (A p.1)))
+          (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2))
+          (CompletedTensorProduct.inl R I (A p.1) (B p.2)).toRingHom
+          CompletedTensorProduct.inl_isAdicHom.le_comap =
+      locallyRingedSpaceMap (I'.map (algebraMap R' (A p.1)))
+          (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))
+          (CompletedTensorProduct.inl R' I' (A p.1) (B p.2)).toRingHom
+          CompletedTensorProduct.inl_isAdicHom.le_comap ≫
+        eqToHom (congrArg locallyRingedSpaceObj hKp) := by
+  have hcomp : (CompletedTensorProduct.baseChangeHom (A := A p.1) (B := B p.2) hI hII').comp
+      (CompletedTensorProduct.inl R I (A p.1) (B p.2)).toRingHom =
+      (CompletedTensorProduct.inl R' I' (A p.1) (B p.2)).toRingHom :=
+    RingHom.ext fun a => CompletedTensorProduct.baseChangeHom_inl hI hII' a
+  have hle : I.map (algebraMap R (A p.1)) ≤
+      (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2)).comap
+        (CompletedTensorProduct.inl R' I' (A p.1) (B p.2)).toRingHom := by
+    rw [← hKp]
+    exact CompletedTensorProduct.inl_isAdicHom.le_comap
+  have key : chartBaseChange (A := A) (B := B) hI hII' p ≫
+      locallyRingedSpaceMap (I.map (algebraMap R (A p.1)))
+        (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2))
+        (CompletedTensorProduct.inl R I (A p.1) (B p.2)).toRingHom
+        CompletedTensorProduct.inl_isAdicHom.le_comap =
+      locallyRingedSpaceMap (I.map (algebraMap R (A p.1)))
+        (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))
+        (CompletedTensorProduct.inl R' I' (A p.1) (B p.2)).toRingHom hle := by
+    rw [chartBaseChange, ← locallyRingedSpaceMap_comp (hIK := by rw [hcomp]; exact hle)]
+    exact locallyRingedSpaceMap_congr _ _ _ _ _ _ hcomp
+  rw [key]
+  exact locallyRingedSpaceMap_eq_comp_eqToHom hKp _ _ hle
+    CompletedTensorProduct.inl_isAdicHom.le_comap
+
+/-- **The chart comparison commutes with the second chart projection**, by the same computation as
+`AlgebraicGeometry.DoubleChartGlue.chartBaseChange_comp_inl` on the other side of the tensor, over
+`CompletedTensorProduct.baseChangeHom_inr`. -/
+theorem chartBaseChange_comp_inr (hI : I.FG) (hII' : I.map (algebraMap R R') = I')
+    (p : JX × JY) (hKp : I'.map (algebraMap R' (B p.2)) = I.map (algebraMap R (B p.2))) :
+    chartBaseChange (A := A) (B := B) hI hII' p ≫
+        locallyRingedSpaceMap (I.map (algebraMap R (B p.2)))
+          (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2))
+          (CompletedTensorProduct.inr R I (A p.1) (B p.2)).toRingHom
+          CompletedTensorProduct.inr_isAdicHom.le_comap =
+      locallyRingedSpaceMap (I'.map (algebraMap R' (B p.2)))
+          (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))
+          (CompletedTensorProduct.inr R' I' (A p.1) (B p.2)).toRingHom
+          CompletedTensorProduct.inr_isAdicHom.le_comap ≫
+        eqToHom (congrArg locallyRingedSpaceObj hKp) := by
+  have hcomp : (CompletedTensorProduct.baseChangeHom (A := A p.1) (B := B p.2) hI hII').comp
+      (CompletedTensorProduct.inr R I (A p.1) (B p.2)).toRingHom =
+      (CompletedTensorProduct.inr R' I' (A p.1) (B p.2)).toRingHom :=
+    RingHom.ext fun a => CompletedTensorProduct.baseChangeHom_inr hI hII' a
+  have hle : I.map (algebraMap R (B p.2)) ≤
+      (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2)).comap
+        (CompletedTensorProduct.inr R' I' (A p.1) (B p.2)).toRingHom := by
+    rw [← hKp]
+    exact CompletedTensorProduct.inr_isAdicHom.le_comap
+  have key : chartBaseChange (A := A) (B := B) hI hII' p ≫
+      locallyRingedSpaceMap (I.map (algebraMap R (B p.2)))
+        (CompletedTensorProduct.idealOfDefinition R I (A p.1) (B p.2))
+        (CompletedTensorProduct.inr R I (A p.1) (B p.2)).toRingHom
+        CompletedTensorProduct.inr_isAdicHom.le_comap =
+      locallyRingedSpaceMap (I.map (algebraMap R (B p.2)))
+        (CompletedTensorProduct.idealOfDefinition R' I' (A p.1) (B p.2))
+        (CompletedTensorProduct.inr R' I' (A p.1) (B p.2)).toRingHom hle := by
+    rw [chartBaseChange, ← locallyRingedSpaceMap_comp (hIK := by rw [hcomp]; exact hle)]
+    exact locallyRingedSpaceMap_congr _ _ _ _ _ _ hcomp
+  rw [key]
+  exact locallyRingedSpaceMap_eq_comp_eqToHom hKp _ _ hle
+    CompletedTensorProduct.inr_isAdicHom.le_comap
+
+end ChartProjection
+
+end DoubleChartGlue
+
+
 namespace BothChartedFibreDatumXY
+
+/-! ### The projections read against the carried glue -/
+
+section CarriedGlue
+
+variable {R : Type u} [CommRing R] {I : Ideal R} {hI : I.FG}
+variable (D : BothChartedFibreDatumXY R I hI)
+
+/-- **The first projection restricts to `pr₁ChartSelf p ≫ ι p.1` along each chart inclusion of the
+*carried* glue.** This is `AlgebraicGeometry.BothChartedFibreDatumXY.ι_pr₁` with its glue inclusion
+spelled in the `AlgebraicGeometry.DoubleChartGlue` vocabulary, and `rfl` is the whole difference:
+`AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct_eq`.
+
+It is stated separately because the identification is **not free at a concrete datum**. At a
+literal `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair the two sides of that
+`rfl` are large terms; here the datum is a variable, so the check is done on small ones and every
+instantiation is free. Written inline at the concrete pair instead, the same `have` did not
+elaborate inside the default heartbeat limit. -/
+theorem ι_carried_comp_pr₁
+    (hV : letI := D.commRingA; letI := D.algebraA; letI := D.commRingB; letI := D.algebraB
+      ∀ p p' (h : p ≠ p'), D.V p p' h = bothAlgDataV hI D.gX D.gY p p' h)
+    (hf : letI := D.commRingA; letI := D.algebraA; letI := D.commRingB; letI := D.algebraB
+      ∀ p p' (h : p ≠ p'),
+        D.f p p' h = eqToHom (hV p p' h) ≫ bothAlgDataF hI D.gX D.gY p p' h)
+    (ht : letI := D.commRingA; letI := D.algebraA; letI := D.commRingB; letI := D.algebraB
+      ∀ p p' (h : p ≠ p'),
+        D.t p p' h = eqToHom (hV p p' h) ≫ bothAlgDataT hI D.gX D.gY D.τX D.τY p p' h ≫
+          eqToHom (hV p' p h.symm).symm)
+    (p : D.JX × D.JY) :
+    letI := D.commRingA
+    letI := D.algebraA
+    letI := D.commRingB
+    letI := D.algebraB
+    letI := D.topologyA
+    letI := D.isAdicA
+    (D.toBothChartedFibreDatum.toDoubleChartGlue.formalGlueData hI).ι p ≫ D.pr₁ hV hf ht =
+      D.pr₁ChartSelf p ≫ D.xFormalGlueData.ι p.1 :=
+  D.ι_pr₁ hV hf ht p
+
+/-- **The second projection restricts to `pr₂ChartSelf p ≫ ι p.2` along each chart inclusion of the
+carried glue**, the companion of
+`AlgebraicGeometry.BothChartedFibreDatumXY.ι_carried_comp_pr₁`, `rfl` for the same reason and
+stated at a variable datum for the same one. -/
+theorem ι_carried_comp_pr₂
+    (hV : letI := D.commRingA; letI := D.algebraA; letI := D.commRingB; letI := D.algebraB
+      ∀ p p' (h : p ≠ p'), D.V p p' h = bothAlgDataV hI D.gX D.gY p p' h)
+    (hf : letI := D.commRingA; letI := D.algebraA; letI := D.commRingB; letI := D.algebraB
+      ∀ p p' (h : p ≠ p'),
+        D.f p p' h = eqToHom (hV p p' h) ≫ bothAlgDataF hI D.gX D.gY p p' h)
+    (ht : letI := D.commRingA; letI := D.algebraA; letI := D.commRingB; letI := D.algebraB
+      ∀ p p' (h : p ≠ p'),
+        D.t p p' h = eqToHom (hV p p' h) ≫ bothAlgDataT hI D.gX D.gY D.τX D.τY p p' h ≫
+          eqToHom (hV p' p h.symm).symm)
+    (p : D.JX × D.JY) :
+    letI := D.commRingA
+    letI := D.algebraA
+    letI := D.commRingB
+    letI := D.algebraB
+    letI := D.topologyB
+    letI := D.isAdicB
+    (D.toBothChartedFibreDatum.toDoubleChartGlue.formalGlueData hI).ι p ≫ D.pr₂ hV hf ht =
+      D.pr₂ChartSelf p ≫ D.yFormalGlueData.ι p.2 :=
+  D.ι_pr₂ hV hf ht p
+
+end CarriedGlue
 
 /-! ### The implication, with the comparison abstract -/
 
@@ -215,8 +530,11 @@ equality of locally ringed spaces and not merely an isomorphism — and `ι` com
 products over the two bases.
 
 Only two things are asked of `ι`: that it be injective on points, and that the two diagonals be
-related by it. Continuity is free, and closedness of `ι`'s own range is never used. See this file's
-*What is not proved here* for why the triangle is a hypothesis and not a theorem. -/
+related by it. Continuity is free, and closedness of `ι`'s own range is never used. The triangle
+stays a hypothesis **here** because `ι` is arbitrary: it is a theorem for
+`AlgebraicGeometry.DoubleChartGlue.baseChange`, by
+`AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange` below, and nothing discharges
+it for any other comparison. See this file's *The argument, in three steps*, step 3. -/
 theorem isSeparated_of_isSeparated_of_diagonal_factorization
     (hsrc : (diagonalDatum DX' σX' hστX' hσcX').xGlued.toLocallyRingedSpace =
       (diagonalDatum DX σX hστX hσcX).xGlued.toLocallyRingedSpace)
@@ -346,6 +664,255 @@ theorem xGlued_diagonalDatum_ofAlgebraData_congr
     (AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr (B := BX) (B' := BX') hI hI' A g
       τ τ_symm σ hστ hσc τ' τ'_symm σ' hστ' hσc' hK hτ hσ)
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
+set_option maxHeartbeats 800000 in
+-- A raised limit, and the measurement behind it. The statements below compose a morphism written
+-- at `AlgebraicGeometry.DoubleChartGlue` with one written at
+-- `AlgebraicGeometry.BothChartedFibreDatumXY`; the two objects agree by
+-- `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct_eq`, which is `rfl`, but at a
+-- literal `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair the two sides of that
+-- `rfl` are large terms and the defeq check that bridges them is what runs out. All three fail at
+-- the default 200000; the two projection squares pass at 400000 and the triangle at 800000, so the
+-- bound is set uniformly at 800000. The route that would remove it is to ascribe the comparison
+-- once, in a `def` whose type is written in the datum vocabulary, and state everything against
+-- that; it is a separate change and is not attempted here.
+set_option backward.isDefEq.respectTransparency false in
+/-- **The glued base change commutes with the first projection.** At one chart family `A`, one away
+family `g` and two adic bases whose induced ideal families agree, the comparison
+`AlgebraicGeometry.DoubleChartGlue.baseChange` followed by the first projection of the `(R, I)`
+fibre product is the first projection of the `(R', I')` one followed by the identification of the
+two glued factors.
+
+This is the base-change analogue of
+`AlgebraicGeometry.BothChartedFibreDatumXY.compareIso_hom_comp_pr₁`, and it is what the triangle
+below runs on. The proof is chartwise — `AlgebraicGeometry.FormalScheme.GlueData.hom_ext` on the
+*source* glue — and each chart square is
+`AlgebraicGeometry.DoubleChartGlue.chartBaseChange_comp_inl` against
+`AlgebraicGeometry.AffineChartedFibreDatumX.ι_xGluedOfIdeals_congr`, the first for the chart
+objects and the second for the glue inclusions of the target.
+
+The chart index is bound at `J × J` rather than at the glue datum's own index type: unfolding that
+type is what the `instances` transparency level will not do, and every `rw` below needs it. -/
+theorem baseChange_comp_pr₁ (hII' : I.map (algebraMap R R') = I')
+    (hK : (fun i => I'.map (algebraMap R' (A i))) = fun i => I.map (algebraMap R (A i)))
+    (hτ : ∀ (i j : J) (h : i ≠ j), HEq (⇑(τ' i j h)) (⇑(τ i j h)))
+    (hσ : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
+      HEq (⇑(σ' i j k hij hik hjk)) (⇑(σ i j k hij hik hjk)))
+    (hsq : DoubleChartGlue.IsBaseChangeOverlapCompatible
+      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX')
+      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI hII') :
+    (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX').baseChange
+        (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI' hI hII' hsq ≫
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc).pr₁ (ofFactors_hV _ _ _ _ _ _ _ _) (ofFactors_hf _ _ _ _ _ _ _ _)
+        (ofFactors_ht _ _ _ _ _ _ _ _) =
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+        hστ' hσc') σ' hστ' hσc').pr₁ (ofFactors_hV _ _ _ _ _ _ _ _)
+        (ofFactors_hf _ _ _ _ _ _ _ _) (ofFactors_ht _ _ _ _ _ _ _ _) ≫
+      eqToHom (xGlued_diagonalDatum_ofAlgebraData_congr hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm
+        σ' hστ' hσc' (BX := BX) (BX' := BX') hK hτ hσ) := by
+  letI := (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ
+    hσc) σ hστ hσc).commRingA
+  letI := (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ
+    hσc) σ hστ hσc).algebraA
+  letI := (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+    hστ' hσc') σ' hστ' hσc').commRingA
+  letI := (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+    hστ' hσc') σ' hστ' hσc').algebraA
+  refine ((diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX').formalGlueData
+    hI').hom_ext (fun p : J × J => ?_)
+  rw [DoubleChartGlue.ι_baseChange_assoc,
+    (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+      σ hστ hσc).ι_carried_comp_pr₁ (ofFactors_hV _ _ _ _ _ _ _ _)
+      (ofFactors_hf _ _ _ _ _ _ _ _) (ofFactors_ht _ _ _ _ _ _ _ _) p]
+  conv_rhs =>
+    rw [← Category.assoc,
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+        hστ' hσc') σ' hστ' hσc').ι_carried_comp_pr₁ (ofFactors_hV _ _ _ _ _ _ _ _)
+        (ofFactors_hf _ _ _ _ _ _ _ _) (ofFactors_ht _ _ _ _ _ _ _ _) p, Category.assoc]
+  have hchart : DoubleChartGlue.chartBaseChange (A := A) (B := A) hI hII' p ≫
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc).pr₁ChartSelf p =
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+        hστ' hσc') σ' hστ' hσc').pr₁ChartSelf p ≫
+      eqToHom (congrArg locallyRingedSpaceObj (congrFun hK p.1)) :=
+    DoubleChartGlue.chartBaseChange_comp_inl hI hII' p (congrFun hK p.1)
+  have hxι : (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm
+        σ' hστ' hσc') σ' hστ' hσc').xFormalGlueData.ι p.1 ≫
+      eqToHom (xGlued_diagonalDatum_ofAlgebraData_congr hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm
+        σ' hστ' hσc' (BX := BX) (BX' := BX') hK hτ hσ) =
+      eqToHom (congrArg locallyRingedSpaceObj (congrFun hK p.1)) ≫
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc).xFormalGlueData.ι p.1 :=
+    AffineChartedFibreDatumX.ι_xGluedOfIdeals_congr (hKfg := fun _ => hI'.map _)
+      (hK'fg := fun _ => hI.map _) hK
+      (AffineChartedFibreDatumX.awayCompletionTransition_heq A g hK hτ)
+      (AffineChartedFibreDatumX.xAlgDataT'_heq hI hI' A g hK hσ) p.1
+  rw [← Category.assoc, hchart, Category.assoc, hxι]
+
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
+set_option maxHeartbeats 800000 in
+-- A raised limit, and the measurement behind it. The statements below compose a morphism written
+-- at `AlgebraicGeometry.DoubleChartGlue` with one written at
+-- `AlgebraicGeometry.BothChartedFibreDatumXY`; the two objects agree by
+-- `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct_eq`, which is `rfl`, but at a
+-- literal `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair the two sides of that
+-- `rfl` are large terms and the defeq check that bridges them is what runs out. All three fail at
+-- the default 200000; the two projection squares pass at 400000 and the triangle at 800000, so the
+-- bound is set uniformly at 800000. The route that would remove it is to ascribe the comparison
+-- once, in a `def` whose type is written in the datum vocabulary, and state everything against
+-- that; it is a separate change and is not attempted here.
+set_option backward.isDefEq.respectTransparency false in
+/-- **The glued base change commutes with the second projection**, by the same chartwise argument
+as `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁` on the other side of the tensor,
+over `AlgebraicGeometry.DoubleChartGlue.chartBaseChange_comp_inr`.
+
+The target is the *exposed second* factor, which for a diagonal datum is the same glued `X`, so the
+identification on the right is the same one. -/
+theorem baseChange_comp_pr₂ (hII' : I.map (algebraMap R R') = I')
+    (hK : (fun i => I'.map (algebraMap R' (A i))) = fun i => I.map (algebraMap R (A i)))
+    (hτ : ∀ (i j : J) (h : i ≠ j), HEq (⇑(τ' i j h)) (⇑(τ i j h)))
+    (hσ : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
+      HEq (⇑(σ' i j k hij hik hjk)) (⇑(σ i j k hij hik hjk)))
+    (hsq : DoubleChartGlue.IsBaseChangeOverlapCompatible
+      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX')
+      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI hII') :
+    (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX').baseChange
+        (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI' hI hII' hsq ≫
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc).pr₂ (ofFactors_hV _ _ _ _ _ _ _ _) (ofFactors_hf _ _ _ _ _ _ _ _)
+        (ofFactors_ht _ _ _ _ _ _ _ _) =
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+        hστ' hσc') σ' hστ' hσc').pr₂ (ofFactors_hV _ _ _ _ _ _ _ _)
+        (ofFactors_hf _ _ _ _ _ _ _ _) (ofFactors_ht _ _ _ _ _ _ _ _) ≫
+      eqToHom (xGlued_diagonalDatum_ofAlgebraData_congr hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm
+        σ' hστ' hσc' (BX := BX) (BX' := BX') hK hτ hσ) := by
+  letI := (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ
+    hσc) σ hστ hσc).commRingB
+  letI := (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ
+    hσc) σ hστ hσc).algebraB
+  letI := (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+    hστ' hσc') σ' hστ' hσc').commRingB
+  letI := (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+    hστ' hσc') σ' hστ' hσc').algebraB
+  refine ((diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX').formalGlueData
+    hI').hom_ext (fun p : J × J => ?_)
+  rw [DoubleChartGlue.ι_baseChange_assoc,
+    (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+      σ hστ hσc).ι_carried_comp_pr₂ (ofFactors_hV _ _ _ _ _ _ _ _)
+      (ofFactors_hf _ _ _ _ _ _ _ _) (ofFactors_ht _ _ _ _ _ _ _ _) p]
+  conv_rhs =>
+    rw [← Category.assoc,
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+        hστ' hσc') σ' hστ' hσc').ι_carried_comp_pr₂ (ofFactors_hV _ _ _ _ _ _ _ _)
+        (ofFactors_hf _ _ _ _ _ _ _ _) (ofFactors_ht _ _ _ _ _ _ _ _) p, Category.assoc]
+  have hchart : DoubleChartGlue.chartBaseChange (A := A) (B := A) hI hII' p ≫
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc).pr₂ChartSelf p =
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
+        hστ' hσc') σ' hστ' hσc').pr₂ChartSelf p ≫
+      eqToHom (congrArg locallyRingedSpaceObj (congrFun hK p.2)) :=
+    DoubleChartGlue.chartBaseChange_comp_inr hI hII' p (congrFun hK p.2)
+  have hxι : (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm
+        σ' hστ' hσc') σ' hστ' hσc').yFormalGlueData.ι p.2 ≫
+      eqToHom (xGlued_diagonalDatum_ofAlgebraData_congr hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm
+        σ' hστ' hσc' (BX := BX) (BX' := BX') hK hτ hσ) =
+      eqToHom (congrArg locallyRingedSpaceObj (congrFun hK p.2)) ≫
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc).yFormalGlueData.ι p.2 :=
+    AffineChartedFibreDatumX.ι_xGluedOfIdeals_congr (hKfg := fun _ => hI'.map _)
+      (hK'fg := fun _ => hI.map _) hK
+      (AffineChartedFibreDatumX.awayCompletionTransition_heq A g hK hτ)
+      (AffineChartedFibreDatumX.xAlgDataT'_heq hI hI' A g hK hσ) p.2
+  rw [← Category.assoc, hchart, Category.assoc, hxι]
+
+set_option maxHeartbeats 800000 in
+-- A raised limit, and the measurement behind it. The statements below compose a morphism written
+-- at `AlgebraicGeometry.DoubleChartGlue` with one written at
+-- `AlgebraicGeometry.BothChartedFibreDatumXY`; the two objects agree by
+-- `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct_eq`, which is `rfl`, but at a
+-- literal `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair the two sides of that
+-- `rfl` are large terms and the defeq check that bridges them is what runs out. All three fail at
+-- the default 200000; the two projection squares pass at 400000 and the triangle at 800000, so the
+-- bound is set uniformly at 800000. The route that would remove it is to ascribe the comparison
+-- once, in a `def` whose type is written in the datum vocabulary, and state everything against
+-- that; it is a separate change and is not attempted here.
+set_option backward.isDefEq.respectTransparency false in
+/-- **The two diagonals are related by the glued base change.** The triangle `Δ' ≫ ι = Δ` at the
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair, with `ι` the glued base change and
+the two sources identified by
+`AlgebraicGeometry.BothChartedFibreDatumXY.xGlued_diagonalDatum_ofAlgebraData_congr`.
+
+**It cannot be checked chartwise, and that is an absence of the object rather than a difficulty.**
+`AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'` is
+`AlgebraicGeometry.BothChartedFibreDatumXY.fibreLiftOf` of the identity pair over
+`AlgebraicGeometry.BothChartedFibreDatumXY.adicDiagonalCharts`, a refined chart family produced by
+`Classical.choice`, so there is no lemma describing its restriction to a chart of the glued source
+and no way to state one. What characterises it is its two projection triangles together with
+`AlgebraicGeometry.BothChartedFibreDatumXY.fibreLift_unique_adicOverBase`, and that is how this is
+proved — at the `(R, I)`-side datum, against
+`AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁` and
+`AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₂`.
+
+`AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_transport`
+(`FormalSchemes.GeneralSeparatedPresentation`) is the same-base precedent and has the same shape.
+It needs no transport, because its two competing morphisms share a source; these do not, and
+carrying the source equality is the one piece of plumbing that precedent does not supply. The
+uniqueness is therefore applied to `eqToHom hsrc.symm ≫ Δ' ≫ ι` against `Δ`, both out of the
+`(R, I)`-side glued factor, and the stated form is recovered by cancelling the transport. -/
+theorem diagonal'_comp_baseChange (hII' : I.map (algebraMap R R') = I')
+    (hK : (fun i => I'.map (algebraMap R' (A i))) = fun i => I.map (algebraMap R (A i)))
+    (hτ : ∀ (i j : J) (h : i ≠ j), HEq (⇑(τ' i j h)) (⇑(τ i j h)))
+    (hσ : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
+      HEq (⇑(σ' i j k hij hik hjk)) (⇑(σ i j k hij hik hjk)))
+    (hsq : DoubleChartGlue.IsBaseChangeOverlapCompatible
+      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX')
+      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI hII') :
+    diagonal' (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ' hστ' hσc')
+        σ' hστ' hσc' ≫
+      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX').baseChange
+        (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI' hI hII' hsq =
+      eqToHom (xGlued_diagonalDatum_ofAlgebraData_congr hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm
+        σ' hστ' hσc' (BX := BX) (BX' := BX') hK hτ hσ) ≫
+      diagonal' (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc := by
+  have hsrc : (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm
+        σ' hστ' hσc') σ' hστ' hσc').xGlued.toLocallyRingedSpace =
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc).xGlued.toLocallyRingedSpace :=
+    xGlued_diagonalDatum_ofAlgebraData_congr hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm σ' hστ'
+      hσc' (BX := BX) (BX' := BX') hK hτ hσ
+  have hbc1 := baseChange_comp_pr₁ hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm σ' hστ' hσc' hII'
+    hK hτ hσ hsq
+  have hbc2 := baseChange_comp_pr₂ hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm σ' hστ' hσc' hII'
+    hK hτ hσ hsq
+  have hkey : eqToHom hsrc.symm ≫ diagonal' (AffineChartedFibreDatumX.ofAlgebraData (B := BX')
+        hI' A g τ' τ'_symm σ' hστ' hσc') σ' hστ' hσc' ≫
+      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX').baseChange
+        (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI' hI hII' hsq =
+      diagonal' (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc := by
+    refine (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ
+      hσc) σ hστ hσc).fibreLift_unique_adicOverBase (ofFactors_hV _ _ _ _ _ _ _ _)
+      (ofFactors_hf _ _ _ _ _ _ _ _) (ofFactors_ht _ _ _ _ _ _ _ _) _ _
+      (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
+        σ hστ hσc).xStructMap
+      (adicOverBase_xStructMap (diagonalDatum (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI
+        A g τ τ_symm σ hστ hσc) σ hστ hσc)) ?_ ?_ ?_
+    · simp only [Category.assoc]
+      rw [hbc1, reassoc_of% (diagonal'_comp_pr₁ (AffineChartedFibreDatumX.ofAlgebraData
+        (B := BX') hI' A g τ' τ'_symm σ' hστ' hσc') σ' hστ' hσc'), diagonal'_comp_pr₁]
+      simp
+    · simp only [Category.assoc]
+      rw [hbc2, reassoc_of% (diagonal'_comp_pr₂ (AffineChartedFibreDatumX.ofAlgebraData
+        (B := BX') hI' A g τ' τ'_symm σ' hστ' hσc') σ' hστ' hσc'), diagonal'_comp_pr₂]
+      simp
+    · simp only [Category.assoc]
+      rw [reassoc_of% hbc1, reassoc_of% (diagonal'_comp_pr₁ (AffineChartedFibreDatumX.ofAlgebraData
+        (B := BX') hI' A g τ' τ'_symm σ' hστ' hσc') σ' hστ' hσc')]
+      simp
+  rw [← hkey, ← Category.assoc, eqToHom_trans, eqToHom_refl, Category.id_comp]
+
 /-- **Separatedness descends along the glued base change.** One chart family `A`, one away family
 `g`, two adic bases `(R, I)` and `(R', I')` with `I' = I·R'`, and two sets of algebra data whose
 induced ideal families and transitions agree: if the factor is separated over `Spf R` then it is
@@ -354,7 +921,9 @@ separated over `Spf R'`.
 The comparison is `AlgebraicGeometry.DoubleChartGlue.baseChange` and its injectivity is
 `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base`, so the square and the saturation
 below are that morphism's two hypotheses and are the only things this proof asks of the glue. The
-remaining hypothesis is the triangle discussed in this file's *What is not proved here*.
+triangle is **not** a hypothesis here: it is
+`AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`, proved above and supplied at
+the call site. See this file's *The argument, in three steps*, step 3.
 
 The conclusion is about a **datum**, `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated`. It is
 not `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`, which quantifies existentially over a
@@ -372,14 +941,6 @@ theorem isSeparated_of_isSeparated_baseChange
     (hsat : DoubleChartGlue.IsBaseChangeOverlapSaturated
       (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX')
       (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI hII')
-    (htri : diagonal' (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ'
-          hστ' hσc') σ' hστ' hσc' ≫
-        (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX').baseChange
-          (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI' hI hII' hsq =
-      eqToHom (xGlued_diagonalDatum_ofAlgebraData_congr hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm
-          σ' hστ' hσc' (BX := BX) (BX' := BX') hK hτ hσ) ≫
-        diagonal' (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc)
-          σ hστ hσc)
     (hsep : IsSeparated
       (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc) σ hστ hσc) :
     IsSeparated (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ' hστ' hσc')
@@ -395,7 +956,9 @@ theorem isSeparated_of_isSeparated_baseChange
     (xGlued_diagonalDatum_ofAlgebraData_congr hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm σ' hστ'
       hσc' (BX := BX) (BX' := BX') hK hτ hσ)
     ((diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX').baseChange
-      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI' hI hII' hsq) ?_ htri hsep
+      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI' hI hII' hsq) ?_
+    (diagonal'_comp_baseChange hI hI' A g τ τ_symm σ hστ hσc τ' τ'_symm σ' hστ' hσc' hII' hK hτ
+      hσ hsq) hsep
   exact DoubleChartGlue.injective_baseChange_base _ _ hI' hI hII' hsq hsat
 
 end OfAlgebraData
