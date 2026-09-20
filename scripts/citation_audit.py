@@ -333,9 +333,10 @@ def probe_unresolved(transcript: str, path: str, header: int, tokens: list[str],
 
     * An `error` at or above `header`.  That is the `import`-and-`open` region, where nothing this
       audit is about lives.  An `import` that fails puts the *only* error there and no `#check` is
-      ever elaborated, which is the failure that shipped a false figure three times in thirty
-      hours; an `open` that has stopped naming a namespace errors there too while the `#check`s
-      below carry on resolving against the wrong set, which the exit-code rule cannot see.
+      ever elaborated; this script answered `0 UNRESOLVED` through that failure three times in
+      thirty hours, once into a shipped pull-request body.  An `open` that has stopped naming a
+      namespace errors there too while the `#check`s below carry on resolving against the wrong
+      set, which the exit-code rule cannot see.
     * A non-zero exit with **no error attributed to a `#check` line at all**.  That is `lake`
       failing before `lean` ran, or `lean` dying without a diagnosis this reader can place.
 
@@ -648,7 +649,7 @@ def selftest() -> int:
     # The probe guard (issue 2099).  Every transcript below is a real one, shortened: the script
     # answered `0 UNRESOLVED` on the first of them three times in thirty hours, once into a
     # shipped pull-request body, because the only error sat on the `import` line where no token
-    # lives.  These four cases are the reason `probe_unresolved` is a function and not a loop
+    # lives.  These six cases are the reason `probe_unresolved` is a function and not a loop
     # inside `resolve_declarations` -- `--selftest` invokes no `lake`, so a transcript is the only
     # way to reach the failure at all.  `header` is 3 here as in the real probe, so the first
     # `#check` is line 4.
