@@ -171,7 +171,7 @@ where a reader would look for a statement about
 `AlgebraicGeometry.BothChartedFibreDatumXY.pr₁`, nor
 `FormalSchemes.GeneralFibreProductLiftUniqueAdic`, which states the uniqueness — so the projection
 squares cannot be written there without two new import edges, and the reverse closure of
-`FormalSchemes.GeneralFibreProductBaseChange` is **2** against this file's **0**. Here the fourth
+`FormalSchemes.GeneralFibreProductBaseChange` is **3** against this file's **0**. Here the fourth
 import adds only itself: `FormalSchemes.GeneralFibreProductLiftUniqueAdic` has forward closure
 **143**, and every one of those modules was reached already.
 
