@@ -62,8 +62,7 @@ theorem tateSelfProduct_second_glue_condition_inv_ft (hq : q ∈ I) (hI : I.FG) 
         (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ := by
   have hij : ({ down := (false, true) } : ULift.{u} (Bool × Bool)) ≠
       { down := (false, false) } := by decide
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateSelfProductGlueData'Inv R I q hq hI) _
-    (fun i j => ((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.glue_condition i j).symm)
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateSelfProductGlueData'Inv R I q hq hI)
     ⟨(false, true)⟩ ⟨(false, false)⟩ hij
 
 omit [IsNoetherianRing R] in
@@ -75,8 +74,7 @@ theorem tateSelfProduct_second_glue_condition_inv_tf (hq : q ∈ I) (hI : I.FG) 
         (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
   have hij : ({ down := (true, false) } : ULift.{u} (Bool × Bool)) ≠ { down := (true, true) } := by
     decide
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateSelfProductGlueData'Inv R I q hq hI) _
-    (fun i j => ((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.glue_condition i j).symm)
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateSelfProductGlueData'Inv R I q hq hI)
     ⟨(true, false)⟩ ⟨(true, true)⟩ hij
 
 omit [IsNoetherianRing R] in
@@ -90,8 +88,7 @@ theorem tateSelfProduct_first_glue_condition_inv_ft (hq : q ∈ I) (hI : I.FG) :
         (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(true, true)⟩ := by
   have hij : ({ down := (false, true) } : ULift.{u} (Bool × Bool)) ≠ { down := (true, true) } := by
     decide
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateSelfProductGlueData'Inv R I q hq hI) _
-    (fun i j => ((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.glue_condition i j).symm)
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateSelfProductGlueData'Inv R I q hq hI)
     ⟨(false, true)⟩ ⟨(true, true)⟩ hij
 
 omit [IsNoetherianRing R] in
@@ -103,8 +100,7 @@ theorem tateSelfProduct_first_glue_condition_inv_tf (hq : q ∈ I) (hI : I.FG) :
         (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ := by
   have hij : ({ down := (true, false) } : ULift.{u} (Bool × Bool)) ≠
       { down := (false, false) } := by decide
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateSelfProductGlueData'Inv R I q hq hI) _
-    (fun i j => ((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.glue_condition i j).symm)
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateSelfProductGlueData'Inv R I q hq hI)
     ⟨(true, false)⟩ ⟨(false, false)⟩ hij
 
 end AlgebraicGeometry

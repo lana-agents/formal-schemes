@@ -273,15 +273,14 @@ private theorem spGD_f₁ :
 and including that into `Spec B` and then into the glued object. This is the target-side input to
 the overlap obligation of `completionTwoPatchToScheme`; it is the glue condition of
 `specTwoPatchLRSGlueData` with the `GlueData.ofGlueData'` bookkeeping stripped by
-`CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`). -/
+`CategoryTheory.GlueData.ofGlueData'_ι_comp` (`FormalSchemes.GlueMorphisms`). -/
 theorem specTwoPatch_glue :
     Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap A (Localization.Away a))) ≫
         specTwoPatchι₀ a b θ =
       (specGlueIso a b θ).hom ≫
         Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap B (Localization.Away b))) ≫
           specTwoPatchι₁ a b θ := by
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (specTwoPatchGlueData' a b θ) _
-    (fun i j => ((specTwoPatchLRSGlueData a b θ).toGlueData.glue_condition i j).symm)
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (specTwoPatchGlueData' a b θ)
     (⟨false⟩ : ULift.{u} Bool) ⟨true⟩ spNe
 
 end Glued

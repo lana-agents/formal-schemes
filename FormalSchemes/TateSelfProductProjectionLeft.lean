@@ -85,8 +85,7 @@ theorem tateCurve_glue_condition (hq : q ∈ I) (hI : I.FG) :
         coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
           (tateCurveFormalGlueData R I q hq hI).ι ⟨true⟩ := by
   have h01 : ({ down := false } : ULift.{u} Bool) ≠ { down := true } := by decide
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateCurveGlueData' R I q hq hI) _
-    (fun i j => ((tateCurveLRSGlueData R I q hq hI).toGlueData.glue_condition i j).symm)
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateCurveGlueData' R I q hq hI)
     ⟨false⟩ ⟨true⟩ h01
 
 /-- The `x`-overlap circular glue relation of `𝔈_q`. -/

@@ -36,16 +36,23 @@ whose assembled `f i i` is an `eqToHom`. So the condition displayed above, which
 `CategoryTheory.GlueData.ofGlueData'_f_comp` supplies the whole family from the distinct-index
 case, and `CategoryTheory.GlueData.ofGlueData'_f_comp_of` reads an assembled condition back into
 the vocabulary the `CategoryTheory.GlueData'` carries.
+`CategoryTheory.GlueData.ofGlueData'_ι_comp` is that converse at the one family every consumer in
+this tree actually supplies, the assembled datum's own `ι`, whose hypothesis is
+`CategoryTheory.GlueData.glue_condition` and holds outright — so it asks for no hypothesis at all,
+only the two indices and a proof that they differ.
 
-These two are about Mathlib's `CategoryTheory.GlueData'` alone — no formal scheme and no locally
-ringed space occurs in either — and they live here rather than lower down because this is the
-module that states the condition they are about.
+These three are about Mathlib's `CategoryTheory.GlueData'` alone — no formal scheme and no locally
+ringed space occurs in any of them — and they live here rather than lower down because this is the
+module that states the condition they are about. The third asks in addition that the glued object
+exist (`HasMulticoequalizer`), since `ι` is a morphism into it.
 
 ## Main definitions
 
 * `CategoryTheory.GlueData.ofGlueData'_f_comp`: the overlap condition of an assembled
   `CategoryTheory.GlueData` follows from the same condition at **distinct** indices, and
   `CategoryTheory.GlueData.ofGlueData'_f_comp_of` is the converse.
+* `CategoryTheory.GlueData.ofGlueData'_ι_comp`: the converse at the canonical family `ι`, where
+  the hypothesis is discharged by `CategoryTheory.GlueData.glue_condition`.
 * `FormalScheme.GlueData.glueMorphisms`: the glued morphism `T ⟶ Y`.
 * `FormalScheme.GlueData.ι_glueMorphisms`: it restricts to `k i` along each `ι i`.
 * `FormalScheme.GlueData.hom_ext`: two morphisms out of `T` agreeing on every piece are equal.
@@ -110,6 +117,30 @@ theorem GlueData.ofGlueData'_f_comp_of {C : Type u} [Category.{v} C] (D : GlueDa
   simp only [GlueData.ofGlueData', GlueData'.f', dif_neg hij, dif_neg (Ne.symm hij),
     Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
   exact (cancel_epi (eqToHom (dif_neg hij))).mp key
+
+/-- **The converse at the canonical family, where there is nothing left to supply.** The glue
+inclusions `ι` of an assembled `CategoryTheory.GlueData.ofGlueData'` satisfy the overlap condition
+at **distinct** indices in the vocabulary the `CategoryTheory.GlueData'` carries.
+
+This is `CategoryTheory.GlueData.ofGlueData'_f_comp_of` at `k := ι`, and it is the only family this
+tree's consumers ever pass: the general lemma's hypothesis is then
+`CategoryTheory.GlueData.glue_condition`, which holds outright, so the specialisation takes no
+hypothesis. It also absorbs an orientation flip — Mathlib states
+`CategoryTheory.GlueData.glue_condition` as `t i j ≫ f j i ≫ ι j = f i j ≫ ι i`, the opposite way
+round from the hypothesis above — so a consumer neither supplies the family nor `.symm`s the
+condition.
+
+The general form is kept and this one is proved from it: it is where the `dite` unfolding is
+actually done, and a `k` other than `ι` is the general case. No consumer on this tree supplies
+such a `k` — `AlgebraicGeometry.DoubleChartGlue.f_comp_ι`
+(`FormalSchemes.GeneralFibreProductBaseChange`), the one that spells its family out rather than
+leaving it to unification, supplies the canonical `ι` under another name. -/
+theorem GlueData.ofGlueData'_ι_comp {C : Type u} [Category.{v} C] (D : GlueData'.{v} C)
+    [HasMulticoequalizer (GlueData.ofGlueData' D).diagram] (i j : D.J) (hij : i ≠ j) :
+    D.f i j hij ≫ (GlueData.ofGlueData' D).ι i =
+      D.t i j hij ≫ D.f j i hij.symm ≫ (GlueData.ofGlueData' D).ι j :=
+  GlueData.ofGlueData'_f_comp_of D _
+    (fun i j => ((GlueData.ofGlueData' D).glue_condition i j).symm) i j hij
 
 end CategoryTheory
 

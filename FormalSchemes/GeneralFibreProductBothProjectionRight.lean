@@ -115,7 +115,7 @@ def pr₂ChartSelf (p : D.JX × D.JY) :
 `Y`'s basic-open overlap chart followed by the glue inclusion `ι_j` equals the `Y`-side transition
 `awayCompletionTransition` followed by the `(j',j)`-overlap chart and `ι_{j'}`. This is the glue
 condition of `yLrsGlueData` on the `(j,j')`-overlap, read back into the
-`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_ι_comp`
 (`FormalSchemes.GlueMorphisms`). -/
 theorem y_glue_rel (j j' : D.JY) (h : j ≠ j') :
     letI := D.commRingB
@@ -125,8 +125,7 @@ theorem y_glue_rel (j j' : D.JY) (h : j ≠ j') :
         basicOpenChart (I.map (algebraMap R (D.B j'))) (D.gY j' j) ≫ D.yFormalGlueData.ι j' := by
   letI := D.commRingB
   letI := D.algebraB
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of D.yGlueData' _
-    (fun j j' => (D.yLrsGlueData.toGlueData.glue_condition j j').symm) j j' h
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp D.yGlueData' j j' h
 
 /-! ### The overlap ideal-convention bridge and its two squares (second-differ shape) -/
 

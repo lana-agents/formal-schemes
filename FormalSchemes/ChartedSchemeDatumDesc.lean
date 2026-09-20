@@ -52,7 +52,7 @@ other way for the **canonical** family `k = specι`, reading the datum-level sta
 `CategoryTheory.GlueData.glue_condition`; nothing supplies its hypothesis because it has none.
 Neither is derivable from the other. Only `specLRSGlueData_compat` still performs the `dite`
 unfolding, through the private `specGD_f` / `specGD_t`; `specAwayMap_comp_specι` is one call to
-`CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`), which performs it
+`CategoryTheory.GlueData.ofGlueData'_ι_comp` (`FormalSchemes.GlueMorphisms`), which performs it
 once and for all at the `CategoryTheory.GlueData'` — and, because it is stated where the indices
 already carry that type, without the transparency option the other direction still needs.
 
@@ -106,8 +106,9 @@ set_option backward.isDefEq.respectTransparency false in
 -- `D.specLRSGlueData.J`; the two are `D.J` only after unfolding two `def`s, so without this the
 -- rewritten target is rejected as ill-typed at `instances` transparency. The converse direction,
 -- `specAwayMap_comp_specι` below, needed the same option until it was rerouted through
--- `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, which is stated where the two indices already
--- carry the `CategoryTheory.GlueData'`'s own type and so never meets the mismatch.
+-- `CategoryTheory.GlueData.ofGlueData'_f_comp_of` and then its `ι`-specialisation
+-- `CategoryTheory.GlueData.ofGlueData'_ι_comp`, which are stated where the two indices already
+-- carry the `CategoryTheory.GlueData'`'s own type and so never meet the mismatch.
 /-- **The datum-level compatibility implies the one the glue diagram imposes.** On the diagonal the
 glue transition is the identity (`CategoryTheory.GlueData.t_id`) and the condition is trivial. Off
 the diagonal, `specGD_f` and `specGD_t` expose `f i j` as `eqToHom _ ≫ specAwayMap (g i j)` and
@@ -197,7 +198,7 @@ theorem isIso_desc
 `Spec ((C i)_{g_ij})` into `Spec (C i)` and then into the glued scheme is the same as transporting
 it along `Spec (θ i j)` and including through the `j`-th chart. This is
 `CategoryTheory.GlueData.glue_condition` for `specLRSGlueData` with the `GlueData.ofGlueData'`
-bookkeeping stripped by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+bookkeeping stripped by `CategoryTheory.GlueData.ofGlueData'_ι_comp`
 (`FormalSchemes.GlueMorphisms`), and it is `AlgebraicGeometry.specTwoPatch_glue`
 (`FormalSchemes.CompletionTwoPatchToScheme`) at an arbitrary index type.
 
@@ -209,8 +210,7 @@ supplied, and reads the datum-level statement off `glue_condition` for the canon
 theorem specAwayMap_comp_specι (i j : D.J) (h : i ≠ j) :
     specAwayMap (D.g i j) ≫ D.specι i =
       (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫ specAwayMap (D.g j i) ≫ D.specι j := by
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of D.specGlueData' _
-    (fun i j => (D.specLRSGlueData.toGlueData.glue_condition i j).symm) i j h
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp D.specGlueData' i j h
 
 end ChartedSchemeDatum
 

@@ -182,7 +182,7 @@ theorem spfτsymm_awayInl (i j : D.J) (h : i ≠ j) :
 basic-open overlap chart followed by the glue inclusion `ι_i` equals the `X`-side transition
 `awayCompletionTransition` followed by the `(j,i)`-overlap chart and `ι_j`. This is the glue
 condition of `xLrsGlueData` on the `(i,j)`-overlap, read back into the
-`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_ι_comp`
 (`FormalSchemes.GlueMorphisms`). -/
 theorem x_glue_rel (i j : D.J) (h : i ≠ j) :
     letI := D.commRing
@@ -192,8 +192,7 @@ theorem x_glue_rel (i j : D.J) (h : i ≠ j) :
         basicOpenChart (I.map (algebraMap R (D.A j))) (D.g j i) ≫ D.xFormalGlueData.ι j := by
   letI := D.commRing
   letI := D.algebra
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of D.xGlueData' _
-    (fun i j => (D.xLrsGlueData.toGlueData.glue_condition i j).symm) i j h
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp D.xGlueData' i j h
 
 /-! ### The double-overlap compatibility square of the first projection -/
 

@@ -82,7 +82,7 @@ carries the adjacent pair `(i, j)` (with `j = i + 1`) to an adjacent pair `(σ i
 forward step), then the `x`-chart into `U (σ i)` agrees, over the 𝔾m-inversion chart transition
 `Spf A{1/x} ≅ Spf A{1/y}`, with the `y`-chart into `U (σ j)`. This is exactly
 `CategoryTheory.GlueData.glue_condition` at the shifted indices, read back into the
-`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_ι_comp`
 (`FormalSchemes.GlueMorphisms`). `…Inv` analogue of `tateShift_overlap_forward_gen`. -/
 theorem tateInvShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) (σ : ULift.{u} ℤ → ULift.{u} ℤ) {i j : ULift.{u} ℤ}
@@ -93,9 +93,8 @@ theorem tateInvShift_overlap_forward_gen [TopologicalSpace R] [IsAdicRing I] [Is
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
   have hij' : ¬ @Eq (ULift.{u} ℤ) (σ i) (σ j) := by
     intro h; rw [h] at h1; omega
-  have key := CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateChainInvGlueData' R I q hq hI) _
-    (fun i j => ((tateChainInvFormalGlueData R I q hq
-      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm) (σ i) (σ j) hij'
+  have key := CategoryTheory.GlueData.ofGlueData'_ι_comp (tateChainInvGlueData' R I q hq hI)
+    (σ i) (σ j) hij'
   simp only [tateChainInvGlueData'] at key
   rw [tateF_forward R I q h1, tateTInv, dif_pos h1,
     tateF_backward R I q (show (σ i).down - (σ j).down = -1 by omega)] at key
@@ -114,9 +113,8 @@ theorem tateInvShift_overlap_backward_gen [TopologicalSpace R] [IsAdicRing I] [I
   have hij' : ¬ @Eq (ULift.{u} ℤ) (σ i) (σ j) := by
     intro h; rw [h] at h2; omega
   have h1 : ¬ (σ j).down - (σ i).down = 1 := by omega
-  have key := CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateChainInvGlueData' R I q hq hI) _
-    (fun i j => ((tateChainInvFormalGlueData R I q hq
-      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm) (σ i) (σ j) hij'
+  have key := CategoryTheory.GlueData.ofGlueData'_ι_comp (tateChainInvGlueData' R I q hq hI)
+    (σ i) (σ j) hij'
   simp only [tateChainInvGlueData'] at key
   rw [tateF_backward R I q h2, tateTInv, dif_neg h1, dif_pos h2,
     tateF_forward R I q (show (σ i).down - (σ j).down = 1 by omega)] at key

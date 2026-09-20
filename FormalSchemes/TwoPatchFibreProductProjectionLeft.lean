@@ -306,15 +306,14 @@ theorem spfESymm_comp_spfAwayY_comp_baseBridge (hI : I.FG) :
 target equals the annulus chart transition followed by the `y`-overlap chart into the glued target:
 `annulusOverlapChart ≫ ι₀ = annulusChartTransitionSpf.hom ≫ annulusOverlapChartY ≫ ι₁`. This is the
 `glue_condition` of `tateTwoPatchLRSGlueData` on the `(false, true)` overlap, read back into the
-`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_ι_comp`
 (`FormalSchemes.GlueMorphisms`). -/
 theorem tateTwoPatch_glue_rel [IsNoetherianRing R] (hI : I.FG) :
     annulusOverlapChart R I q ≫ (tateTwoPatchFormalGlueData R I q hI).ι ⟨false⟩ =
       (annulusChartTransitionSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
         (tateTwoPatchFormalGlueData R I q hI).ι ⟨true⟩ := by
   have h01 : ({ down := false } : ULift.{u} Bool) ≠ { down := true } := by decide
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateTwoPatchGlueData' R I q hI) _
-    (fun i j => ((tateTwoPatchLRSGlueData R I q hI).toGlueData.glue_condition i j).symm)
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateTwoPatchGlueData' R I q hI)
     ⟨false⟩ ⟨true⟩ h01
 
 /-! ### The double-overlap compatibility squares -/
