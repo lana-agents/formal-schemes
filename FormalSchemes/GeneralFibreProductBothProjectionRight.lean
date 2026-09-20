@@ -114,7 +114,9 @@ def pr₂ChartSelf (p : D.JX × D.JY) :
 /-- **The exposed `Y`'s glue relation on the double overlap.** For distinct `Y`-charts `j ≠ j'`,
 `Y`'s basic-open overlap chart followed by the glue inclusion `ι_j` equals the `Y`-side transition
 `awayCompletionTransition` followed by the `(j',j)`-overlap chart and `ι_{j'}`. This is the glue
-condition of `yLrsGlueData` on the `(j,j')`-overlap, unfolded through `GlueData.ofGlueData'`. -/
+condition of `yLrsGlueData` on the `(j,j')`-overlap, read back into the
+`CategoryTheory.GlueData'`'s own vocabulary by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+(`FormalSchemes.GlueMorphisms`). -/
 theorem y_glue_rel (j j' : D.JY) (h : j ≠ j') :
     letI := D.commRingB
     letI := D.algebraB
@@ -123,14 +125,8 @@ theorem y_glue_rel (j j' : D.JY) (h : j ≠ j') :
         basicOpenChart (I.map (algebraMap R (D.B j'))) (D.gY j' j) ≫ D.yFormalGlueData.ι j' := by
   letI := D.commRingB
   letI := D.algebraB
-  have hij' : ¬ @Eq D.JY j j' := h
-  have hji' : ¬ @Eq D.JY j' j := fun heq => h heq.symm
-  have key := D.yLrsGlueData.toGlueData.glue_condition j j'
-  simp only [yLrsGlueData, yGlueData', CategoryTheory.GlueData.ofGlueData',
-    CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
-    eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  rw [cancel_epi] at key
-  exact key.symm
+  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of D.yGlueData' _
+    (fun j j' => (D.yLrsGlueData.toGlueData.glue_condition j j').symm) j j' h
 
 /-! ### The overlap ideal-convention bridge and its two squares (second-differ shape) -/
 

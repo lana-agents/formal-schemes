@@ -268,27 +268,21 @@ private theorem spGD_f₁ :
       eqToHom (dif_neg spNe') ≫ spF₁ b :=
   dif_neg spNe'
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The same transparency requirement as in `FormalSchemes.Gluing`: the glue datum is a `def`, so
--- `(specTwoPatchLRSGlueData ..).J` does not reduce to `ULift Bool` at `instances` transparency and
--- the rewrites below are rejected as ill-typed without this.
 /-- **The two affine charts of the glued scheme agree on the overlap**: including `Spec A_a` into
 `Spec A` and then into the glued object is the same as transporting it to `Spec B_b` by `Spec θ`
 and including that into `Spec B` and then into the glued object. This is the target-side input to
 the overlap obligation of `completionTwoPatchToScheme`; it is the glue condition of
-`specTwoPatchLRSGlueData` with the `GlueData.ofGlueData'` bookkeeping stripped. -/
+`specTwoPatchLRSGlueData` with the `GlueData.ofGlueData'` bookkeeping stripped by
+`CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`). -/
 theorem specTwoPatch_glue :
     Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap A (Localization.Away a))) ≫
         specTwoPatchι₀ a b θ =
       (specGlueIso a b θ).hom ≫
         Spec.locallyRingedSpaceMap (CommRingCat.ofHom (algebraMap B (Localization.Away b))) ≫
           specTwoPatchι₁ a b θ := by
-  have h := (specTwoPatchLRSGlueData a b θ).toGlueData.glue_condition
-    (⟨false⟩ : ULift.{u} Bool) ⟨true⟩
-  rw [spGD_t, spGD_f₀, spGD_f₁] at h
-  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at h
-  exact ((cancel_epi (eqToHom (dif_neg spNe))).mp h).symm
+  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (specTwoPatchGlueData' a b θ) _
+    (fun i j => ((specTwoPatchLRSGlueData a b θ).toGlueData.glue_condition i j).symm)
+    (⟨false⟩ : ULift.{u} Bool) ⟨true⟩ spNe
 
 end Glued
 

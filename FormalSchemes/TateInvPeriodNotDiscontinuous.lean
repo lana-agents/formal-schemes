@@ -71,9 +71,6 @@ namespace AlgebraicGeometry
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I) (hI : I.FG)
 
-set_option maxHeartbeats 1600000 in
--- The four-case unfolding of `CategoryTheory.GlueData.ofGlueData'` gives a large term; raise the
--- budget, exactly as `tateChainInv_glueMorphisms_compat` does.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The glue condition of the inversion-glued chain, read on the two charts.** For consecutive
 indices `j = i + 1`, the `x`-chart of the patch `U_i` and the `y`-chart of the patch `U_j` have the
@@ -89,16 +86,14 @@ theorem annulusOverlapChart_comp_ι {i j : ULift.{u} ℤ} (h : j.down - i.down =
       (annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
         (tateChainInvFormalGlueData R I q hq hI).ι j := by
   have hij : ¬ @Eq (ULift.{u} ℤ) i j := fun e => by rw [e] at h; omega
-  have hji : ¬ @Eq (ULift.{u} ℤ) j i := fun e => hij e.symm
-  have key := (tateChainInvFormalGlueData R I q hq
-    hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j
-  simp only [tateChainInvFormalGlueData, tateChainInvLRSGlueData, tateChainInvGlueData',
-    CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij,
-    dif_neg hji, Category.assoc] at key
+  have key := CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateChainInvGlueData' R I q hq hI) _
+    (fun i j => ((tateChainInvFormalGlueData R I q hq
+      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm) i j hij
+  simp only [tateChainInvGlueData'] at key
   rw [tateF_forward R I q h, tateTInv, dif_pos h,
     tateF_backward R I q (show i.down - j.down = -1 by omega)] at key
   simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact (cancel_epi _).mp key.symm
+  exact (cancel_epi _).mp key
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The glue condition of the chain, read at one point.** The `x`-chart image of `v` seen in the

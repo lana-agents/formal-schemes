@@ -185,8 +185,9 @@ theorem tateChartSection_tateChartIndex_emod (i : ULift.{u} ℤ) :
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The two-chart model's glue condition at the pair `(⟨b⟩, ⟨!b⟩)`**, with both the overlap chart
-and the transition spelled out. Obtained from `CategoryTheory.GlueData.glue_condition` by unfolding
-`GlueData.ofGlueData'` off the diagonal (the two indices `⟨b⟩`, `⟨!b⟩` are distinct) and cancelling
+and the transition spelled out. Obtained from `CategoryTheory.GlueData.glue_condition` by
+`CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`), which unfolds
+`GlueData.ofGlueData'` off the diagonal (the two indices `⟨b⟩`, `⟨!b⟩` are distinct) and cancels
 the `eqToHom` prefix common to `f i j` and `t i j`. -/
 theorem tateCurveModel_glue_condition_desc (b : Bool) :
     coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
@@ -197,14 +198,10 @@ theorem tateCurveModel_glue_condition_desc (b : Bool) :
           (tateCurveFormalGlueData R I q hq hI).ι ⟨!b⟩ := by
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
   have hij' : ¬ @Eq (ULift.{u} Bool) ⟨b⟩ ⟨!b⟩ := by simp [ULift.ext_iff]
-  have hji' : ¬ @Eq (ULift.{u} Bool) ⟨!b⟩ ⟨b⟩ := fun h => hij' h.symm
-  have key :=
-    (tateCurveFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition
-      ⟨b⟩ ⟨!b⟩
-  simp only [tateCurveFormalGlueData, tateCurveLRSGlueData, tateCurveGlueData',
-    CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji',
-    Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact ((cancel_epi (eqToHom _)).mp key).symm
+  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateCurveGlueData' R I q hq hI) _
+    (fun i j => ((tateCurveFormalGlueData R I q hq
+      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm)
+    ⟨b⟩ ⟨!b⟩ hij'
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `x`-chart of one chart of `𝔈_q` is the `y`-chart of the other**, over the 𝔾m-inversion.

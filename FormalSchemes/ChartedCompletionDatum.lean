@@ -467,22 +467,16 @@ theorem completionFormalGlueData_t (i j : D.J) (h : i ≠ j) :
       eqToHom (dif_neg h) ≫ (D.overlapIso i j h).hom ≫ eqToHom (dif_neg h.symm).symm :=
   dif_neg h
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The same transparency requirement as in `FormalSchemes.CompletionGlueTwoPatchCondition`: the
--- glue datum is a `def`, so its index type does not reduce to `D.J` at `instances` transparency
--- and the rewrites below are rejected as ill-typed without this.
 /-- **The chart completions agree over their overlaps inside the glued completion.** This is
 `CategoryTheory.GlueData.glue_condition` with the `GlueData.ofGlueData'` bookkeeping cancelled off
-both sides; it is the hypothesis `FormalScheme.GlueData.glueMorphisms` consumes. -/
+both sides by `CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`); it is
+the hypothesis `FormalScheme.GlueData.glueMorphisms` consumes. -/
 theorem completion_glue_condition (i j : D.J) (h : i ≠ j) :
     (D.overlapIso i j h).hom ≫ D.overlapImmersion j i ≫ D.completionι j =
       D.overlapImmersion i j ≫ D.completionι i := by
-  have key := D.completionFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j
-  rw [D.completionFormalGlueData_t i j h, D.completionFormalGlueData_f j i h.symm,
-    D.completionFormalGlueData_f i j h] at key
-  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact (cancel_epi (eqToHom (dif_neg h))).mp key
+  exact (CategoryTheory.GlueData.ofGlueData'_f_comp_of D.completionGlueData' _
+    (fun i j => (D.completionFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.glue_condition
+      i j).symm) i j h).symm
 
 section Desc
 

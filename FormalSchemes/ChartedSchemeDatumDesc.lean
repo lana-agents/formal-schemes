@@ -50,8 +50,11 @@ Both are here, and the pair is easy to mistake for a duplication. `specLRSGlueDa
 input transformer and its hypothesis is supplied by the caller. `specAwayMap_comp_specι` goes the
 other way for the **canonical** family `k = specι`, reading the datum-level statement off
 `CategoryTheory.GlueData.glue_condition`; nothing supplies its hypothesis because it has none.
-Neither is derivable from the other. They now share one spelling of the `dite` unfolding, the
-private `specGD_f` / `specGD_t`, rather than one naming it and the other doing it inline.
+Neither is derivable from the other. Only `specLRSGlueData_compat` still performs the `dite`
+unfolding, through the private `specGD_f` / `specGD_t`; `specAwayMap_comp_specι` is one call to
+`CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`), which performs it
+once and for all at the `CategoryTheory.GlueData'` — and, because it is stated where the indices
+already carry that type, without the transparency option the other direction still needs.
 
 ## Main definitions and results
 
@@ -101,8 +104,10 @@ set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- `specGD_f` / `specGD_t` are stated at `D.J`, while the indices here are at
 -- `D.specLRSGlueData.J`; the two are `D.J` only after unfolding two `def`s, so without this the
--- rewritten target is rejected as ill-typed at `instances` transparency. Same requirement as
--- `specAwayMap_comp_specι` below.
+-- rewritten target is rejected as ill-typed at `instances` transparency. The converse direction,
+-- `specAwayMap_comp_specι` below, needed the same option until it was rerouted through
+-- `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, which is stated where the two indices already
+-- carry the `CategoryTheory.GlueData'`'s own type and so never meets the mismatch.
 /-- **The datum-level compatibility implies the one the glue diagram imposes.** On the diagonal the
 glue transition is the identity (`CategoryTheory.GlueData.t_id`) and the condition is trivial. Off
 the diagonal, `specGD_f` and `specGD_t` expose `f i j` as `eqToHom _ ≫ specAwayMap (g i j)` and
@@ -188,16 +193,12 @@ theorem isIso_desc
 
 /-! ### The glue condition at the canonical family -/
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The glue datum is a `def`, so `(D.specLRSGlueData).J` does not reduce to `D.J` at `instances`
--- transparency and the rewrites below are rejected as ill-typed without this. Same requirement as
--- in `FormalSchemes.CompletionTwoPatchToScheme`.
 /-- **The affine charts of the glued scheme agree over their overlaps**: including
 `Spec ((C i)_{g_ij})` into `Spec (C i)` and then into the glued scheme is the same as transporting
 it along `Spec (θ i j)` and including through the `j`-th chart. This is
 `CategoryTheory.GlueData.glue_condition` for `specLRSGlueData` with the `GlueData.ofGlueData'`
-bookkeeping stripped, and it is `AlgebraicGeometry.specTwoPatch_glue`
+bookkeeping stripped by `CategoryTheory.GlueData.ofGlueData'_f_comp_of`
+(`FormalSchemes.GlueMorphisms`), and it is `AlgebraicGeometry.specTwoPatch_glue`
 (`FormalSchemes.CompletionTwoPatchToScheme`) at an arbitrary index type.
 
 This is the **converse direction** to `specLRSGlueData_compat` above, and neither derives the
@@ -208,10 +209,8 @@ supplied, and reads the datum-level statement off `glue_condition` for the canon
 theorem specAwayMap_comp_specι (i j : D.J) (h : i ≠ j) :
     specAwayMap (D.g i j) ≫ D.specι i =
       (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫ specAwayMap (D.g j i) ≫ D.specι j := by
-  have key := D.specLRSGlueData.toGlueData.glue_condition i j
-  rw [D.specGD_t i j h, D.specGD_f j i h.symm, D.specGD_f i j h] at key
-  simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp] at key
-  exact ((cancel_epi (eqToHom (dif_neg h))).mp key).symm
+  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of D.specGlueData' _
+    (fun i j => (D.specLRSGlueData.toGlueData.glue_condition i j).symm) i j h
 
 end ChartedSchemeDatum
 
