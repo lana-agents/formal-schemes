@@ -35,6 +35,22 @@ failed to synthesize instance of type class
     (@BothChartedFibreDatum.algebraA R _ I hI (ofAlgebraData …) i))
 ```
 
+**That transcript is one probe's failure, not the only one.** Write the same statement with the
+two `AlgebraicGeometry.BothChartedFibreDatum.toDoubleChartGlue`s in head position — applied to the
+overlap-compatibility predicate rather than to a theorem whose hypotheses are already in play — and
+no `IsScalarTower` obligation is ever reached, because the datum's chart algebras fail to reduce
+one step earlier:
+
+```
+failed to synthesize instance of type class
+  (i : (BothChartedFibreDatum.ofAlgebraData gX gY τX' τY' … hστX' hστY').JX) →
+    CommRing ((BothChartedFibreDatum.ofAlgebraData gX gY τX' τY' … hστX' hστY').A i)
+```
+
+A reader who meets that one is looking at this paragraph's wall and not at a different problem: the
+mechanism below and the cure account for both, and only the class of the first unsatisfied
+obligation moves with the probe.
+
 `AlgebraicGeometry.BothChartedFibreDatum.toDoubleChartGlue`'s type `letI`-binds the datum's own
 `commRingA`, `algebraA`, `commRingB`, `algebraB`, so unifying its result against the theorem's
 `AlgebraicGeometry.DoubleChartGlue R I A B` assigns those fields to the theorem's instance
@@ -48,7 +64,7 @@ the `def` `..ofAlgebraData` to see that the datum's field *is* the ambient insta
 read at type `AlgebraicGeometry.DoubleChartGlue R I A B`: the ascription is checked at `default`
 transparency, where the datum's fields do reduce to the ambient instances, so the definition is
 accepted and every later mention of it carries the ambient instance signature. Nothing is made
-`@[reducible]`, no `set_option` appears in this file, and neither
+`@[reducible]`, this file needs no `set_option` beyond `linter.style.header false`, and neither
 `..ofAlgebraData` nor `..toDoubleChartGlue` is restated, generalised or weakened.
 
 The idiom is not new here: `AlgebraicGeometry.BothChartedFibreDatumXY.diagonalDoubleChartGlue`

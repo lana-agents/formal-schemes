@@ -350,11 +350,13 @@ were taken rather than a new leaf on the same arithmetic as the fourth: six reve
 move by one each, against ninety-three for a new module.
 
 The transition half and the assembly below add **no parent at all**. Every module they need is
-already inside the closure of the six: `FormalSchemes.CompletedTensorFunctor` and
-`FormalSchemes.CompletedTensorMapSpfIso`, which is where `CompletedTensorProduct.mapSpf` and
-`CompletedTensorProduct.mapSpfIso` are defined, arrive with the fourth parent through
-`FormalSchemes.GeneralFibreProductBothAlgebraDataObject`, and so do the dispatched
-`AlgebraicGeometry.bothAlgDataV` / `..bothAlgDataF` / `..bothAlgDataT` themselves;
+already inside the closure of the six:
+`FormalSchemes.GeneralFibreProductBothAlgebraDataObject`, which dispatches
+`AlgebraicGeometry.bothAlgDataV` / `..bothAlgDataF` / `..bothAlgDataT`, arrives with the fourth
+parent `FormalSchemes.GeneralFibreProductBothOverlapRange` and with no other, while
+`FormalSchemes.CompletedTensorFunctor` and `FormalSchemes.CompletedTensorMapSpfIso`, which is
+where `CompletedTensorProduct.mapSpf` and `CompletedTensorProduct.mapSpfIso` are defined, are
+inside the first parent `FormalSchemes.GeneralFibreProductBothObject`'s closure already;
 `FormalSchemes.LocallyRingedSpaceRange`, which the injectivity corollary reads an `eqToHom`
 through, arrives with `FormalSchemes.GeneralFibreProductBothObject`. So this file's forward
 closure stays **93**, this file's reverse closure is **4**, and nothing in this section adds an
