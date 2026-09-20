@@ -40,6 +40,16 @@ error on line 1, where no token lives, so every token came back resolved.  It no
 says so; see `probe_unresolved` for the two fatal shapes and `CONTRIBUTING.md` for how to
 recognise the old failure in a report someone else ran.  Exit 1 still means the audit measured the
 tree and found something.
+
+A *built* tree is not the same thing as a build **of this tree**, and that is the second way the
+probe can be wrong (issue 2109).  `lake env lean` sets `LEAN_PATH` and hands the probe whatever
+oleans are on disk; on a checkout whose `.lake` was built from another branch it answers fluently
+about those sources while the population counts beside it are read off these ones.  The probe is
+therefore gated on `lake build --no-build FormalSchemes`, which compares Lake's own traces, builds
+nothing, costs about two seconds and names the modules that are out of date.  That refusal exits
+**2** as well: for a caller it is the same question -- can this report be believed -- and it has
+the same remedy.  See `tree_is_current`, which also records why the mtime comparison proposed for
+this job is wrong.
 """
 
 from __future__ import annotations
@@ -298,6 +308,12 @@ def project_modules() -> set[str]:
 # imports, and the two sets print under one heading but do not mean the same thing.
 ROOT_MODULE_LIST = "FormalSchemes.lean"
 
+# The library the probe imports, and therefore the one the staleness gate asks `lake` about.  It is
+# a constant rather than two string literals so that the gate and the `import` it guards cannot
+# drift apart: a gate that certifies a different target from the one the probe reads would be worse
+# than no gate, because it would certify it confidently.
+LIBRARY = "FormalSchemes"
+
 
 def project_paths() -> set[str]:
     """Both spellings the tree uses: the path, and the bare file name after a locative.
@@ -318,6 +334,101 @@ class ProbeDidNotElaborate(RuntimeError):
     alarm on every mid-build tree would be as useless as the false clean this replaces, and an
     author who has been told the probe did not run knows exactly what to do about it.
     """
+
+
+class ProbeTreeIsStale(RuntimeError):
+    """`.lake` holds a build of *other* sources, so the probe would answer about another tree.
+
+    A sibling of `ProbeDidNotElaborate`, raised for the same reason and carrying the same exit
+    code: this run measured nothing.  They are worth telling apart in the *message* and not in the
+    exit status, because a caller branches on "can I believe this report", which is one question,
+    while an author branches on the sentence, which names which of the two happened.  The remedy is
+    also the same one -- run a full `lake build` -- so a third numeral would buy a distinction
+    nobody acts on, against four sites that state this convention (this class, the module
+    docstring, and `CONTRIBUTING.md` in two places) and would all have to be kept in step with it.
+
+    This failure is strictly nastier than the one issue 2099 closed.  A probe that did not
+    elaborate leaves a *recognisable* artefact: population right, `UNRESOLVED` exactly `0`.  A
+    probe run against a stale `.lake` leaves a plausible non-zero number that no signature
+    distinguishes from a true one -- the report is about the built tree while the population counts
+    beside it are read off the checkout's sources.
+    """
+
+
+# The block `lake` ends an unsuccessful run with.  The `✖ [n/m] Building X` lines above it carry
+# the same names, but only this block is a list and only it is what `lake` calls the answer.  Its
+# absence is not fatal on its own: the message falls back to quoting `lake`'s own lines, so a
+# change to this format costs the report its module names and not its verdict.
+_LAKE_FAILURES = re.compile(r"^Some required targets logged failures:\n((?:[ \t]*-[ \t]+\S+\n?)+)",
+                            re.M)
+_LAKE_TARGET = re.compile(r"^[ \t]*-[ \t]+(\S+)[ \t]*$", re.M)
+
+
+def probe_stale(transcript: str, returncode: int, target: str) -> list[str]:
+    """Read one `lake build --no-build` result, or refuse to let the probe run at all.
+
+    Returns the empty list when the build is current.  Split out of `tree_is_current` so that
+    `--selftest` can reach it without a `lake`, exactly as `probe_unresolved` is split out of
+    `resolve_declarations`, and for the same reason: a guard nobody has watched fire is not a guard
+    (issue 2072).
+
+    The predicate is one rule -- **`lake` exits 0, or this run measured nothing** -- and it is
+    deliberately the whole of it.  `--no-build` compares Lake's own traces and content hashes, so
+    a zero exit is the strongest statement available that the oleans the probe will import were
+    built from the sources this script just read.  Anything else, including a `lake` that failed
+    for a reason of its own, leaves that unestablished, and an instrument that cannot establish it
+    must not answer.  There is no false-alarm surface above a zero exit, which is what lets the
+    rule be this blunt.
+
+    The other two rules are about the *message* and not the verdict: name the out-of-date targets
+    when `lake` listed them, and otherwise quote `lake`'s own first lines.  Naming the module is
+    this instrument's whole advantage over the one refuted below.
+    """
+    if returncode == 0:
+        return []
+    m = _LAKE_FAILURES.search(transcript)
+    named = _LAKE_TARGET.findall(m.group(1)) if m else []
+    if named:
+        detail = "    out of date:\n" + "".join("      %s\n" % t for t in named[:5]) + (
+            "      ... and %d more\n" % (len(named) - 5) if len(named) > 5 else "")
+    else:
+        lines = [l.strip() for l in transcript.splitlines() if l.strip()]
+        detail = ("".join("    %s\n" % l for l in lines[:5]) if lines else
+                  "    `lake build --no-build %s` exited %d and printed nothing.\n"
+                  % (target, returncode))
+    raise ProbeTreeIsStale(
+        "`.lake` is not a build of this checkout, so the probe would resolve against\n"
+        "    sources nobody asked it about.\n"
+        + detail
+        + "    `lake env lean` sets `LEAN_PATH` and hands the probe whatever oleans are on\n"
+          "    disk; it does not check them against the working tree.  Run a full\n"
+          "    `lake build` and re-run this audit.")
+
+
+def tree_is_current(target: str = LIBRARY) -> None:
+    """Refuse to run the probe against a `.lake` built from sources other than the checkout's.
+
+    Costs one `lake build --no-build <target>`, which **builds nothing**: it exits immediately
+    when a target is out of date rather than starting the rebuild, so the stale case is as cheap
+    as the healthy one -- measured on this tree at 2.0s and 1.9s respectively, against a probe
+    that already costs several.  That is the property which makes the gate affordable: a check
+    that started a two-hour rebuild to find out would not be run.
+
+    *An mtime comparison is not a weaker version of this check; it is a different and false one,
+    and it was implemented and refuted before this was written (issue 2109).*  The proposal was to
+    stamp the report with the root `.olean`'s mtime against the newest tracked `.lean`, on the
+    argument that a comparison cannot false-alarm.  It false-alarms on a healthy tree: `git
+    checkout` rewrites the mtime of every file it touches and `lake exe cache get` unpacks oleans
+    with times of its own, so a fully built, genuinely up-to-date tree routinely carries a root
+    olean *older* than its newest source -- by 8567s when the row was filed, and reproducibly by
+    any `touch` of a source whose content does not change.  Lake does not care, because Lake
+    compares traces and content hashes (`.lake/build/lib/lean/*.trace`; `lake --help`: `--rehash`
+    "hash all files for traces (do not trust .hash files)").  Asking Lake is therefore both exact
+    and the only thing that cannot disagree with what the probe will actually import.
+    """
+    proc = subprocess.run(["lake", "build", "--no-build", target],
+                          capture_output=True, text=True)
+    probe_stale(proc.stdout + proc.stderr, proc.returncode, target)
 
 
 def probe_unresolved(transcript: str, path: str, header: int, tokens: list[str],
@@ -381,12 +492,19 @@ def probe_unresolved(transcript: str, path: str, header: int, tokens: list[str],
 def resolve_declarations(tokens: list[str]) -> set[str]:
     """Return the subset of `tokens` that `#check @token` fails to resolve.
 
-    Raises `ProbeDidNotElaborate` if the probe cannot be believed; see `probe_unresolved`.
+    Raises `ProbeDidNotElaborate` if the probe cannot be believed; see `probe_unresolved`.  Raises
+    `ProbeTreeIsStale` if the tree it would be believed *about* is not this checkout.
+
+    The staleness gate sits here, below the empty-token early return, so that it guards the probe
+    and not the script: `--diff` on a range with no `*.lean` in it never imports anything, and
+    charging such a run two seconds and a possible refusal would be a cost with nothing on the
+    other side of it.  `--tree` always has tokens, so it is always gated.
     """
     if not tokens:
         return set()
+    tree_is_current()
     with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False) as h:
-        h.write("import FormalSchemes\n" + OPEN_SET)
+        h.write("import %s\n" % LIBRARY + OPEN_SET)
         for t in tokens:
             h.write("#check @%s\n" % t)
         path = h.name
@@ -683,6 +801,58 @@ def selftest() -> int:
     guard("an error at a `#check` line that is not an unknown identifier is neither",
           probe + ":4:8: error(lean.ambiguous): ambiguous, possible interpretations …\n",
           ["Foo.bar", "Foo.baz"], 1, set())
+
+    # The staleness gate (issue 2109).  `--selftest` invokes no `lake`, so again a transcript is
+    # the only way to reach the refusal.  All four below are real and shortened: the first from a
+    # healthy tree, the second from a checkout whose `.lake` had been built from another branch --
+    # this row's own slot, unaltered, which is how the gap was measured rather than supposed --
+    # and the last two from a `lake` that failed for a reason of its own.  The third and fourth
+    # exist because the *message* has rules too: without them a loosening that stopped naming the
+    # out-of-date module, or stopped quoting `lake` when it listed none, would pass.
+    def build(name, transcript, rc, want, wants=()):
+        nonlocal bad
+        msg = ""
+        try:
+            got = probe_stale(transcript, rc, LIBRARY)
+        except ProbeTreeIsStale as exc:
+            got, msg = "FATAL", str(exc)
+        ok = got == want and all(w in msg for w in wants)
+        bad += not ok
+        print("%s  %s" % ("ok  " if ok else "FAIL", name))
+        if not ok:
+            print("        want %r containing %r\n        got  %r containing %r"
+                  % (want, list(wants), got, msg))
+
+    build("an up-to-date tree passes the gate and is not an empty list of complaints",
+          "All targets up-to-date (3506 jobs).\n", 0, [])
+    # Verbatim, not shortened, and that matters: `lake` interleaves a `✖`/`error` pair per module
+    # above the list, so the *fifth* non-empty line is still the third module.  A loosening that
+    # stopped reading the list and fell back to quoting `lake`'s first five lines would name
+    # `TateShift` either way and pass a shortened transcript.  `CompletionBasicOpenGlue` is
+    # reachable only through the list, so asserting it is what makes that rule visible.
+    build("an out-of-date tree is fatal, and the report names every module `lake` listed",
+          "✖ [2741/2931] Building FormalSchemes.TateShift\n"
+          "error: target is out-of-date and needs to be rebuilt\n"
+          "✖ [2951/3506] Building FormalSchemes.TwoPatchFibreProductProjectionLeft\n"
+          "error: target is out-of-date and needs to be rebuilt\n"
+          "✖ [3053/3506] Building FormalSchemes.GeneralFibreProductBaseChange\n"
+          "error: target is out-of-date and needs to be rebuilt\n"
+          "✖ [3222/3506] Building FormalSchemes.CompletionGlueTwoPatchCondition\n"
+          "error: target is out-of-date and needs to be rebuilt\n"
+          "✖ [3284/3506] Building FormalSchemes.CompletionBasicOpenGlue\n"
+          "error: target is out-of-date and needs to be rebuilt\n"
+          "Some required targets logged failures:\n"
+          "- FormalSchemes.TateShift\n"
+          "- FormalSchemes.TwoPatchFibreProductProjectionLeft\n"
+          "- FormalSchemes.GeneralFibreProductBaseChange\n"
+          "- FormalSchemes.CompletionGlueTwoPatchCondition\n"
+          "- FormalSchemes.CompletionBasicOpenGlue\n", 3, "FATAL",
+          ("out of date:", "FormalSchemes.TateShift", "FormalSchemes.CompletionBasicOpenGlue"))
+    build("a `lake` that failed for a reason of its own is fatal, and its own line is quoted",
+          "error: unknown target 'FormalSchemez'\n", 1, "FATAL",
+          ("unknown target 'FormalSchemez'",))
+    build("a `lake` that failed and said nothing at all is fatal on its exit code alone",
+          "", 2, "FATAL", ("exited 2 and printed nothing",))
     return 1 if bad else 0
 
 
@@ -714,10 +884,12 @@ def main() -> int:
     md_pointers = markdown_line_pointers(paths)
     try:
         unresolved = resolve_declarations(candidates)
-    except ProbeDidNotElaborate as exc:
+    except (ProbeDidNotElaborate, ProbeTreeIsStale) as exc:
         # Nothing is printed before this.  The population counts below are read off the sources
         # and would have been right either way, which is exactly what makes a report carrying
-        # them and a zero UNRESOLVED line indistinguishable from a clean run.
+        # them and a zero UNRESOLVED line indistinguishable from a clean run -- and, for the
+        # stale case, what makes a report carrying them and a *plausible* UNRESOLVED line
+        # indistinguishable from a true one.  Both exit 2: see `ProbeTreeIsStale`.
         print("PROBE FAILED: %s" % exc, file=sys.stderr)
         return 2
     resolved = [t for t in candidates if t not in unresolved]
