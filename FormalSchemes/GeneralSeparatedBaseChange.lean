@@ -29,7 +29,10 @@ over `(R, I)` and over `(R', I')`, the glued factor `X` is literally the same fo
 are related by the glued comparison of `FormalSchemes.GeneralFibreProductBaseChange`, and
 separatedness over the first base gives separatedness over the second. The triangle relating the
 two diagonals to that comparison — the one thing the cancellation needs beyond injectivity — is
-proved here and is no longer a hypothesis; it is the subject of the third step below.
+proved here and is no longer a hypothesis; it is the subject of the third step below. Neither are
+the comparison's own two hypotheses, the overlap square and the overlap saturation: both are
+theorems at the diagonal and are discharged here too. **So the implication below asks nothing at
+all about the glue**, and what a caller supplies is only that the two sets of algebra data agree.
 
 ## The argument, in three steps
 
@@ -49,7 +52,8 @@ All three steps are re-derived here and none is taken from a summary.
    a preimage of a closed set under a continuous map is closed, and the base map of a morphism of
    locally ringed spaces is continuous by construction. **Injectivity is all that is asked of
    `ι`**, and `AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base` supplies it for the
-   glued base change against its two hypotheses.
+   glued base change against its two hypotheses — both of which are discharged here, so a caller
+   of this file supplies neither.
 
 3. **The triangle is a uniqueness argument, not a chartwise check.**
    `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'` is
@@ -140,11 +144,23 @@ is what is stated.
   `AlgebraicGeometry.BothChartedFibreDatumXY.compareIso_hom_comp_pr₁`.
 * `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`: **the triangle**, `Δ' ≫ ι
   = Δ` at the `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair.
+* `AlgebraicGeometry.BothChartedFibreDatumXY.isChartTransitionBaseChange_diagonal`: **the
+  transition agreement at the diagonal is the `HEq` of transitions a caller already holds**, since
+  `AlgebraicGeometry.IsChartTransitionBaseChange` has one field per chart family and the diagonal
+  supplies the same family twice.
+* `AlgebraicGeometry.BothChartedFibreDatumXY.isBaseChangeOverlapCompatible_diagonalDoubleChartGlue`
+  and
+  `AlgebraicGeometry.BothChartedFibreDatumXY.isBaseChangeOverlapSaturated_diagonalDoubleChartGlue`:
+  **the glued comparison's two hypotheses, discharged at the diagonal** — the square over the
+  transition agreement, and the saturation over nothing at all.
 * `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_of_isSeparated_baseChange`: **the
   implication at the glued base change**, where the comparison is
   `AlgebraicGeometry.DoubleChartGlue.baseChange`, injectivity is discharged from its overlap
-  square and its overlap saturation, and the triangle is discharged by the statement above. It has
-  **no** triangle hypothesis.
+  square and its overlap saturation, and the triangle is discharged by
+  `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`. It has **no** triangle
+  hypothesis, **no** square hypothesis and **no** saturation hypothesis: all three are theorems
+  above, and what is left is `hK`, `hτ`, `hσ` — the two data agree — and the separatedness being
+  descended.
 
 The hypothesised form is kept only where the hypothesis is not the same statement:
 `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_of_isSeparated_of_diagonal_factorization`
@@ -171,7 +187,7 @@ where a reader would look for a statement about
 `AlgebraicGeometry.BothChartedFibreDatumXY.pr₁`, nor
 `FormalSchemes.GeneralFibreProductLiftUniqueAdic`, which states the uniqueness — so the projection
 squares cannot be written there without two new import edges, and the reverse closure of
-`FormalSchemes.GeneralFibreProductBaseChange` is **2** against this file's **0**. Here the fourth
+`FormalSchemes.GeneralFibreProductBaseChange` is **3** against this file's **0**. Here the fourth
 import adds only itself: `FormalSchemes.GeneralFibreProductLiftUniqueAdic` has forward closure
 **143**, and every one of those modules was reached already.
 
@@ -913,17 +929,98 @@ theorem diagonal'_comp_baseChange (hII' : I.map (algebraMap R R') = I')
       simp
   rw [← hkey, ← Category.assoc, eqToHom_trans, eqToHom_refl, Category.id_comp]
 
+/-! ### The two glue hypotheses, discharged at the diagonal -/
+
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I']
+  [Algebra R R'] [∀ i, IsScalarTower R R' (A i)] [∀ i : J, TopologicalSpace (A i)]
+  [∀ i : J, IsAdicRing (I.map (algebraMap R (A i)))]
+  [∀ i : J, IsAdicRing (I'.map (algebraMap R' (A i)))] in
+/-- **At the diagonal the two-family transition condition is the one-family one, taken twice.**
+`AlgebraicGeometry.IsChartTransitionBaseChange` is a structure with exactly two fields, one per
+chart family; the diagonal supplies the same family on both sides, so both fields are the single
+`HEq` of underlying functions that
+`AlgebraicGeometry.BothChartedFibreDatumXY.xGlued_diagonalDatum_ofAlgebraData_congr` already asks
+for under the name `hτ`.
+
+That is why the two hypotheses discharged below cost a caller *nothing*: the input they need is
+one a caller of
+`AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_of_isSeparated_baseChange` was already
+supplying for the congruence. The `σ`-half of that congruence, `hσ`, is **not** part of this
+condition and is not part of either discharge — the double-overlap transitions are used to
+identify the two glued factors and never to compare the two overlap glues. -/
+theorem isChartTransitionBaseChange_diagonal
+    (hτ : ∀ (i j : J) (h : i ≠ j), HEq (⇑(τ' i j h)) (⇑(τ i j h))) :
+    IsChartTransitionBaseChange τ τ τ' τ' :=
+  ⟨hτ, hτ⟩
+
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
+/-- **The overlap square at the diagonal glue is a theorem, not a hypothesis.** *Reach for this
+one* instead of carrying `AlgebraicGeometry.DoubleChartGlue.IsBaseChangeOverlapCompatible` as an
+assumption: it is
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData` with all six of
+its identifications filled in.
+
+`AlgebraicGeometry.BothChartedFibreDatumXY.diagonalDoubleChartGlue` is
+`AlgebraicGeometry.BothChartedFibreDatum.ofAlgebraData`'s glue of one factor taken twice —
+`AlgebraicGeometry.BothChartedFibreDatumXY.toBothChartedFibreDatum` of
+`AlgebraicGeometry.BothChartedFibreDatumXY.ofFactors` *is* that smart constructor — and it already
+reads the result at the ambient chart family. So its `V`, `f` and `t` are the dispatched
+`AlgebraicGeometry.bothAlgDataV` / `..bothAlgDataF` / `..bothAlgDataT` by `rfl`, and the six
+hypotheses are three proofs used twice: `rfl`, `Category.id_comp` read backwards, and — for the
+transition, which carries an `eqToHom` at **each** end — `Category.id_comp` and `Category.comp_id`
+together.
+
+The transition agreement is the only genuine input, and
+`AlgebraicGeometry.BothChartedFibreDatumXY.isChartTransitionBaseChange_diagonal` builds it from a
+hypothesis the diagonal's callers already hold. -/
+theorem isBaseChangeOverlapCompatible_diagonalDoubleChartGlue
+    (hII' : I.map (algebraMap R R') = I')
+    (hτbc : IsChartTransitionBaseChange τ τ τ' τ') :
+    DoubleChartGlue.IsBaseChangeOverlapCompatible
+      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX')
+      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI hII' :=
+  DoubleChartGlue.isBaseChangeOverlapCompatible_of_bothAlgData _ _ hI hII' τ τ τ' τ' hτbc
+    (fun _ _ _ => rfl) (fun _ _ _ => (Category.id_comp _).symm)
+    (fun _ _ _ => ((Category.id_comp _).trans (Category.comp_id _)).symm)
+    (fun _ _ _ => rfl) (fun _ _ _ => (Category.id_comp _).symm)
+    (fun _ _ _ => ((Category.id_comp _).trans (Category.comp_id _)).symm)
+
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
+/-- **The saturation at the diagonal glue is a theorem over no input at all.** *Reach for this
+one*: unlike the square it needs neither the transition agreement nor anything else about how the
+primed datum was chosen.
+
+`AlgebraicGeometry.DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF` asks only
+that the two glues carry the dispatched overlap immersions, and at
+`AlgebraicGeometry.BothChartedFibreDatumXY.diagonalDoubleChartGlue` each side is `rfl`. The two
+hypotheses are the same one away family `g` on both sides of the tower, which is what makes the
+diagonal a diagonal. -/
+theorem isBaseChangeOverlapSaturated_diagonalDoubleChartGlue
+    (hII' : I.map (algebraMap R R') = I') :
+    DoubleChartGlue.IsBaseChangeOverlapSaturated
+      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX')
+      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI hII' :=
+  DoubleChartGlue.isBaseChangeOverlapSaturated_of_range_eq_bothAlgDataF _ _ hI' hI hII' g g
+    (fun _ _ _ => rfl) (fun _ _ _ => rfl)
+
 /-- **Separatedness descends along the glued base change.** One chart family `A`, one away family
 `g`, two adic bases `(R, I)` and `(R', I')` with `I' = I·R'`, and two sets of algebra data whose
 induced ideal families and transitions agree: if the factor is separated over `Spf R` then it is
 separated over `Spf R'`.
 
 The comparison is `AlgebraicGeometry.DoubleChartGlue.baseChange` and its injectivity is
-`AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base`, so the square and the saturation
-below are that morphism's two hypotheses and are the only things this proof asks of the glue. The
-triangle is **not** a hypothesis here: it is
+`AlgebraicGeometry.DoubleChartGlue.injective_baseChange_base`, whose two hypotheses — the overlap
+square and the overlap saturation — are **not** hypotheses here either: they are
+`AlgebraicGeometry.BothChartedFibreDatumXY.isBaseChangeOverlapCompatible_diagonalDoubleChartGlue`
+and
+`AlgebraicGeometry.BothChartedFibreDatumXY.isBaseChangeOverlapSaturated_diagonalDoubleChartGlue`,
+and the only input either needs is the transition agreement, which
+`AlgebraicGeometry.BothChartedFibreDatumXY.isChartTransitionBaseChange_diagonal` assembles from
+`hτ` below. The triangle is **not** a hypothesis either: it is
 `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`, proved above and supplied at
-the call site. See this file's *The argument, in three steps*, step 3.
+the call site. See this file's *The argument, in three steps*, step 3. **So this statement asks
+nothing at all about the glue**: what is left is that the two sets of algebra data agree, and the
+separatedness being descended.
 
 The conclusion is about a **datum**, `AlgebraicGeometry.BothChartedFibreDatumXY.IsSeparated`. It is
 not `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`, which quantifies existentially over a
@@ -935,12 +1032,6 @@ theorem isSeparated_of_isSeparated_baseChange
     (hτ : ∀ (i j : J) (h : i ≠ j), HEq (⇑(τ' i j h)) (⇑(τ i j h)))
     (hσ : ∀ (i j k : J) (hij : i ≠ j) (hik : i ≠ k) (hjk : j ≠ k),
       HEq (⇑(σ' i j k hij hik hjk)) (⇑(σ i j k hij hik hjk)))
-    (hsq : DoubleChartGlue.IsBaseChangeOverlapCompatible
-      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX')
-      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI hII')
-    (hsat : DoubleChartGlue.IsBaseChangeOverlapSaturated
-      (diagonalDoubleChartGlue hI' A g τ' τ'_symm σ' hστ' hσc' BX')
-      (diagonalDoubleChartGlue hI A g τ τ_symm σ hστ hσc BX) hI hII')
     (hsep : IsSeparated
       (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc) σ hστ hσc) :
     IsSeparated (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ' hστ' hσc')
@@ -949,6 +1040,11 @@ theorem isSeparated_of_isSeparated_baseChange
     CompletedTensorProduct.isAdicRing R I (A p.1) (A p.2) hI
   haveI : ∀ p : J × J, IsAdicRing (idealOfDefinition R' I' (A p.1) (A p.2)) := fun p =>
     CompletedTensorProduct.isAdicRing R' I' (A p.1) (A p.2) hI'
+  have hsq := isBaseChangeOverlapCompatible_diagonalDoubleChartGlue hI hI' A g τ τ_symm σ hστ hσc
+    τ' τ'_symm σ' hστ' hσc' (BX := BX) (BX' := BX') hII'
+    (isChartTransitionBaseChange_diagonal A g τ τ' hτ)
+  have hsat := isBaseChangeOverlapSaturated_diagonalDoubleChartGlue hI hI' A g τ τ_symm σ hστ hσc
+    τ' τ'_symm σ' hστ' hσc' (BX := BX) (BX' := BX') hII'
   refine isSeparated_of_isSeparated_of_diagonal_factorization
     (AffineChartedFibreDatumX.ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc) σ hστ hσc
     (AffineChartedFibreDatumX.ofAlgebraData (B := BX') hI' A g τ' τ'_symm σ' hστ' hσc')

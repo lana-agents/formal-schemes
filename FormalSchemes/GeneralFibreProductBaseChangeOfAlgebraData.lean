@@ -101,7 +101,7 @@ not enough for `t`.
   `AlgebraicGeometry.BothChartedFibreDatumXY.diagonalDoubleChartGlue`. The two corollaries below do
   apply there — the diagonal glue is `..ofAlgebraData`'s glue of one factor taken twice, and its
   three identifications are the same three proofs — but stating that costs
-  `FormalSchemes.GeneralSeparatedBaseChange`'s forward closure of **184** modules and belongs with
+  `FormalSchemes.GeneralSeparatedBaseChange`'s forward closure of **185** modules and belongs with
   the row that tightens that file's hypotheses.
 
 ## Placement
@@ -129,8 +129,8 @@ There is a third home that costs **no** import at all:
 `FormalSchemes.GeneralSeparatedBaseChange`'s reverse closure is **0**, so putting these
 declarations there would move no figure anywhere. It is declined on subject and on reach:
 `FormalSchemes.GeneralSeparatedBaseChange`'s subject is §10.15 separatedness,
-`FormalSchemes.GeneralSeparatedBaseChange`'s forward closure is **184**, and a consumer of the
-fibre-product base change that is not about separatedness would pay seventy-nine modules for a
+`FormalSchemes.GeneralSeparatedBaseChange`'s forward closure is **185**, and a consumer of the
+fibre-product base change that is not about separatedness would pay eighty modules for a
 statement that has nothing to do with the diagonal.
 
 A leaf leaves all three subjects alone and moves no forward closure anywhere, at the price of the
