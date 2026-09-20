@@ -229,25 +229,16 @@ theorem pr₁_naturality (i j : D.J) (h : i ≠ j) :
 
 /-- **The first projection of the general fibre product** `pr₁ : X ×_{Spf R} Spf B ⟶ X`, glued from
 the per-chart first projections `pr₁Chart_i` composed with the glue inclusions of the exposed `X`,
-via `FormalScheme.GlueData.glueMorphisms`. Off the diagonal the overlap obligation is
-`pr₁_naturality`; on the diagonal it collapses through `GlueData.t_id`. -/
+via `FormalScheme.GlueData.glueMorphisms`. The overlap obligation is `pr₁_naturality`, passed
+unchanged to `CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`), which
+asks for it only at distinct indices: on the diagonal `CategoryTheory.GlueData.ofGlueData'` puts an
+`eqToHom`, so both sides collapse without touching it. -/
 def pr₁ :
     (D.fibreProduct).toLocallyRingedSpace ⟶ (D.xGlued).toLocallyRingedSpace :=
   letI := D.commRing
   letI := D.algebra
-  D.formalGlueData.glueMorphisms (fun i => D.pr₁Chart i ≫ D.xFormalGlueData.ι i) (by
-    intro i j
-    by_cases hij : i = j
-    · subst hij
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · have hij' : ¬ @Eq D.J i j := hij
-      have hji' : ¬ @Eq D.J j i := fun heq => hij heq.symm
-      simp only [AffineChartedFibreDatum.formalGlueData, AffineChartedFibreDatum.lrsGlueData,
-        AffineChartedFibreDatum.glueData', CategoryTheory.GlueData.ofGlueData',
-        CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      congr 1
-      exact D.pr₁_naturality i j hij')
+  D.formalGlueData.glueMorphisms (fun i => D.pr₁Chart i ≫ D.xFormalGlueData.ι i)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.glueData' _ D.pr₁_naturality)
 
 /-- **The first projection restricts to `pr₁Chart_i ≫ ι_i` along each glue inclusion.** -/
 @[reassoc (attr := simp)]

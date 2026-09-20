@@ -425,9 +425,10 @@ theorem bothAlgData_pr₂_naturality (i i' : D.JX) (j j' : D.JY) (h : (i, j) ≠
 into the glued factor `Y`, glued from the per-chart second projections `pr₂ChartSelf p` composed
 with the glue inclusions of the exposed `Y`, via `FormalScheme.GlueData.glueMorphisms`. The three
 concreteness hypotheses `hV`/`hf`/`ht` pin the carried abstract glue of `D` to the concrete
-`bothAlgData*` (holding by `rfl` for any `ofAlgebraData`-built datum); off the diagonal the overlap
-obligation reduces to `bothAlgData_pr₂_naturality`, on the diagonal it collapses through
-`GlueData.t_id`. -/
+`bothAlgData*` (holding by `rfl` for any `ofAlgebraData`-built datum). The overlap obligation is
+supplied by `CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`) from the
+distinct-index case alone, where it reduces to `bothAlgData_pr₂_naturality`; on the diagonal
+`CategoryTheory.GlueData.ofGlueData'` puts an `eqToHom` and both sides collapse. -/
 def pr₂
     (hV : letI := D.commRingA; letI := D.algebraA; letI := D.commRingB; letI := D.algebraB
       ∀ p p' (h : p ≠ p'), D.V p p' h = bothAlgDataV hI D.gX D.gY p p' h)
@@ -446,23 +447,14 @@ def pr₂
   letI := D.algebraB
   letI := D.topologyB
   letI := D.isAdicB
-  D.formalGlueData.glueMorphisms (fun p => D.pr₂ChartSelf p ≫ D.yFormalGlueData.ι p.2) (by
-    intro p p'
-    by_cases hpp : p = p'
-    · subst hpp
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · obtain ⟨i, j⟩ := p
-      obtain ⟨i', j'⟩ := p'
-      have hpp' : ((i, j) : D.JX × D.JY) ≠ (i', j') := hpp
-      have hp'p : ((i', j') : D.JX × D.JY) ≠ (i, j) := fun heq => hpp heq.symm
-      simp only [BothChartedFibreDatum.formalGlueData, BothChartedFibreDatum.lrsGlueData,
-        BothChartedFibreDatum.glueData', CategoryTheory.GlueData.ofGlueData',
-        CategoryTheory.GlueData'.f', dif_neg hpp', dif_neg hp'p, Category.assoc,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+  D.formalGlueData.glueMorphisms (fun p => D.pr₂ChartSelf p ≫ D.yFormalGlueData.ι p.2)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.glueData' _ (by
+      rintro ⟨i, j⟩ ⟨i', j'⟩ hpp'
+      simp only [BothChartedFibreDatum.glueData']
       rw [hf (i, j) (i', j') hpp', ht (i, j) (i', j') hpp', hf (i', j') (i, j) hpp'.symm]
       simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
       congr 1
-      exact D.bothAlgData_pr₂_naturality i i' j j' hpp')
+      exact D.bothAlgData_pr₂_naturality i i' j j' hpp'))
 
 /-- **The second projection restricts to `pr₂ChartSelf p ≫ ι p.2` along each glue inclusion.** -/
 @[reassoc (attr := simp)]

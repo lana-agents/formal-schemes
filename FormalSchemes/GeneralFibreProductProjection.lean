@@ -103,26 +103,16 @@ theorem pr₂_naturality (i j : D.J) (h : i ≠ j) :
 /-- **The second projection of the general fibre product** `pr₂ : X ×_{Spf R} Spf B ⟶ Spf B`,
 glued from the affine second projections `Spf(inr) : Spf(A_i ⊗̂_R B) ⟶ Spf B` via
 `FormalScheme.GlueData.glueMorphisms`, using the double-overlap compatibility squares
-`pr₂_naturality`. Off the diagonal the overlap obligation is `pr₂_naturality`; on the diagonal it
-collapses through `GlueData.t_id`. -/
+`pr₂_naturality`. That family is passed unchanged to
+`CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`), which asks for it
+only at distinct indices: on the diagonal `CategoryTheory.GlueData.ofGlueData'` puts an `eqToHom`,
+so both sides collapse without touching it. -/
 def pr₂ :
     (D.fibreProduct).toLocallyRingedSpace ⟶ locallyRingedSpaceObj (I.map (algebraMap R B)) :=
   letI := D.commRing
   letI := D.algebra
-  D.formalGlueData.glueMorphisms (fun i => pr₂Chart R I B (D.A i)) (by
-    intro i j
-    by_cases hij : i = j
-    · -- diagonal: `t i i = 𝟙`, so both sides collapse to `f i i ≫ pr₂Chart`.
-      subst hij
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · -- off-diagonal: unfold the `GlueData.ofGlueData'` `if`-forms; the dite conditions are on
-      -- `= : D.J`, so re-type the disequalities in `¬ Eq` form before rewriting.
-      have hij' : ¬ @Eq D.J i j := hij
-      have hji' : ¬ @Eq D.J j i := fun heq => hij heq.symm
-      simp only [formalGlueData, lrsGlueData, glueData', CategoryTheory.GlueData.ofGlueData',
-        CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [D.pr₂_naturality i j hij'])
+  D.formalGlueData.glueMorphisms (fun i => pr₂Chart R I B (D.A i))
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.glueData' _ D.pr₂_naturality)
 
 /-- **The second projection restricts to `pr₂Chart(A_i)` along each glue inclusion.** -/
 @[reassoc (attr := simp)]

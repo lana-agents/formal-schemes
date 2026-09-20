@@ -249,17 +249,8 @@ theorem xStructMap_naturality (i j : D.JX) (h : i ≠ j) :
 structural morphisms via `glueMorphisms`. -/
 def xStructMap :
     D.xGlued.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
-  D.xFormalGlueData.glueMorphisms (fun i => D.xStructMapChart i) (by
-    intro i j
-    by_cases hij : i = j
-    · subst hij
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · have hij' : ¬ @Eq D.JX i j := hij
-      have hji' : ¬ @Eq D.JX j i := fun heq => hij heq.symm
-      simp only [xFormalGlueData, xLrsGlueData, xGlueData', CategoryTheory.GlueData.ofGlueData',
-        CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [D.xStructMap_naturality i j hij'])
+  D.xFormalGlueData.glueMorphisms (fun i => D.xStructMapChart i)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.xGlueData' _ D.xStructMap_naturality)
 
 /-- **The `X`-structural morphism restricts to `xStructMapChart i` along each glue inclusion.** -/
 @[reassoc (attr := simp)]
@@ -371,17 +362,8 @@ theorem yStructMap_naturality (j j' : D.JY) (h : j ≠ j') :
 structural morphisms via `glueMorphisms`. -/
 def yStructMap :
     D.yGlued.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
-  D.yFormalGlueData.glueMorphisms (fun j => D.yStructMapChart j) (by
-    intro j j'
-    by_cases hjj' : j = j'
-    · subst hjj'
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · have hjj'' : ¬ @Eq D.JY j j' := hjj'
-      have hj'j : ¬ @Eq D.JY j' j := fun heq => hjj' heq.symm
-      simp only [yFormalGlueData, yLrsGlueData, yGlueData', CategoryTheory.GlueData.ofGlueData',
-        CategoryTheory.GlueData'.f', dif_neg hjj'', dif_neg hj'j, Category.assoc,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [D.yStructMap_naturality j j' hjj''])
+  D.yFormalGlueData.glueMorphisms (fun j => D.yStructMapChart j)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.yGlueData' _ D.yStructMap_naturality)
 
 /-- **The `Y`-structural morphism restricts to `yStructMapChart j` along each glue inclusion.** -/
 @[reassoc (attr := simp)]
