@@ -49,9 +49,9 @@ and none of the bookkeeping.
   `FormalSchemes.AwayBaseChangeSeparated` supplies that statement at a **basic** open of the base,
   for a source that is separated over the affine base and whose structural morphism factors
   through that basic open — no presentation is asked of the caller, and the localising element is
-  inverted on every chart as a consequence rather than as a hypothesis (issues 1998, 2098) — but
-  its conclusion names the resulting structural morphism only existentially; the arbitrary open of
-  an arbitrary formal scheme this bullet needs is still nowhere on the tree.
+  inverted on every chart as a consequence rather than as a hypothesis (issues 1998, 2098), and
+  its conclusion is at the factorisation the caller supplied (issue 2111) — but the arbitrary open
+  of an arbitrary formal scheme this bullet needs is still nowhere on the tree.
   **Nothing here should be read as bringing the composition law close.**
 * It does **not** touch conservativity's hard direction, which needs a basic-open refinement of the
   target cover and is recorded in the same list.
