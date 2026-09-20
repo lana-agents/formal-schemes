@@ -299,7 +299,7 @@ continuous for the ideals of definition, and both restrict to `R → A` over the
 no *other* `R{1/f}`-algebra structure compatible with the geometry is available. It is not itself
 what discharges that hypothesis — its consumer is
 `FormalSpectrum.eq_locallyRingedSpaceMap_awayCompletionLift`, and through it the per-chart half of
-step 3. -/
+identifying the structural morphism of the away-base presentation with the factorisation. -/
 theorem globalSectionsMap_eq_awayCompletionLift (hI : I.FG)
     (u : locallyRingedSpaceObj (I.map (algebraMap R A)) ⟶
       locallyRingedSpaceObj (I.map (algebraMap R (awayCompletion I f))))
@@ -547,7 +547,7 @@ theorem isSeparatedOverSpf_awayBase_of_presentation {X : FormalScheme.{u}}
 end AffineChartedFibreDatumX
 
 /-!
-### Steps 1 and 2 at a presentation, and the basic-open statement they free
+### The presentation and the chart hypotheses, and the basic-open statement they free
 
 The two declarations of this section that carry no `f` are the consumer-shaped form of
 `AlgebraicGeometry.AffineChartedFibreDatumX.eq_ofAlgebraData`: an arbitrary presentation of a
