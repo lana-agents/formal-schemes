@@ -176,8 +176,11 @@ private theorem cgcK_true (k₀ : (formalCompletion A I hI).toLocallyRingedSpace
 
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
--- Same transparency requirement as in `completionTwoPatch_glue_condition₀` above, for the same
--- reason: the obligation is quantified over the constructed glue data's own index type.
+-- The obligation is quantified over the constructed glue data's own index type, which reduces to
+-- `ULift Bool` only past `instances` transparency, so the rewrites below are otherwise rejected as
+-- ill-typed. `completionTwoPatch_glue_condition₀` above needed the same option until issue 2064
+-- rerouted it through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, which is stated at the
+-- `CategoryTheory.GlueData'` and so never meets the mismatch.
 /-- **Descent of a morphism out of the glued completion** (EGA I, 10.8): a morphism `k₀` out of the
 `A`-chart and a morphism `k₁` out of the `B`-chart which agree over the overlap glue to a single
 morphism out of `completionTwoPatch`.

@@ -144,10 +144,10 @@ private theorem spidxNe' : ¬ @Eq (ULift.{u} Bool) ⟨true⟩ ⟨false⟩ := by 
 
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
--- The same transparency requirement as `specTwoPatch_glue` in
--- `FormalSchemes.CompletionTwoPatchToScheme`: the glue datum is a `def`, so its index type does not
--- reduce to `ULift Bool` at `instances` transparency and the rewrite below is otherwise rejected as
--- ill-typed.
+-- The glue datum is a `def`, so its index type does not reduce to `ULift Bool` at `instances`
+-- transparency and the rewrite below is otherwise rejected as ill-typed. `specTwoPatch_glue`
+-- (`FormalSchemes.CompletionTwoPatchToScheme`) needed the same option until issue 2064 rerouted it
+-- through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`.
 /-- **The `A`-side overlap inclusion of the two-patch glue datum is the localization chart.**
 Its range on underlying spaces is that of `Spec` of `A → A_a`, namely the basic open `D(a)`; the
 `eqToHom` that `GlueData.ofGlueData'` inserts is invisible to the range. -/

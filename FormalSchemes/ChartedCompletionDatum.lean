@@ -484,7 +484,12 @@ variable {Y : LocallyRingedSpace.{u}}
 
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
--- Same transparency requirement as in `completion_glue_condition`, for the same reason.
+-- The glue datum is a `def`, so its index type does not reduce to the datum's own at `instances`
+-- transparency and the rewrites below are rejected as ill-typed without this.
+-- `ChartedCompletionDatum.completion_glue_condition` above needed the same option until issue 2064
+-- rerouted it through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, which is stated where the
+-- indices already carry the `CategoryTheory.GlueData'`'s own type; the obligation here is still
+-- quantified over the constructed glue data's, so it still meets the mismatch.
 /-- **Descent of a morphism out of the glued completion**: a family of morphisms out of the chart
 completions which agree over every overlap glues to a single morphism out of `completionGlued`.
 On the diagonal the obligation of `FormalScheme.GlueData.glueMorphisms` collapses because
