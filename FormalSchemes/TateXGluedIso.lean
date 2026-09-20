@@ -443,9 +443,7 @@ private theorem tcm_glue_raw (hq : q ∈ I) (hI : I.FG) {i j : tateModelIdx R I 
     tcChartU R I q hq hI i ≫ (tateCurveFormalGlueData R I q hq hI).ι i =
       tcTransition R I q hI ≫ tcChartU R I q hq hI j ≫
         (tateCurveFormalGlueData R I q hq hI).ι j := by
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateCurveGlueData' R I q hq hI) _
-    (fun i j => ((tateCurveFormalGlueData R I q hq
-      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm) i j hij
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateCurveGlueData' R I q hq hI) i j hij
 
 
 namespace AffineChartedFibreDatumX
@@ -512,9 +510,7 @@ into the `i`-th piece agrees, after the transition, with the one into the `j`-th
 theorem xGlueData_glue_raw {i j : D.xIdx} (hij : i ≠ j) :
     D.xChartU i j ≫ D.xFormalGlueData.ι i =
       D.xTransitionU hij ≫ D.xChartU j i ≫ D.xFormalGlueData.ι j := by
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of D.xGlueData' _
-    (fun i j => (D.xFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.glue_condition
-      i j).symm) i j hij
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp D.xGlueData' i j hij
 
 
 end Generic

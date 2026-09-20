@@ -86,9 +86,8 @@ theorem annulusOverlapChart_comp_ι {i j : ULift.{u} ℤ} (h : j.down - i.down =
       (annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫
         (tateChainInvFormalGlueData R I q hq hI).ι j := by
   have hij : ¬ @Eq (ULift.{u} ℤ) i j := fun e => by rw [e] at h; omega
-  have key := CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateChainInvGlueData' R I q hq hI) _
-    (fun i j => ((tateChainInvFormalGlueData R I q hq
-      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm) i j hij
+  have key := CategoryTheory.GlueData.ofGlueData'_ι_comp (tateChainInvGlueData' R I q hq hI)
+    i j hij
   simp only [tateChainInvGlueData'] at key
   rw [tateF_forward R I q h, tateTInv, dif_pos h,
     tateF_backward R I q (show i.down - j.down = -1 by omega)] at key

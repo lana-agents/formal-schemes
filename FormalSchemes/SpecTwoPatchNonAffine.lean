@@ -147,7 +147,8 @@ set_option backward.isDefEq.respectTransparency false in
 -- The glue datum is a `def`, so its index type does not reduce to `ULift Bool` at `instances`
 -- transparency and the rewrite below is otherwise rejected as ill-typed. `specTwoPatch_glue`
 -- (`FormalSchemes.CompletionTwoPatchToScheme`) needed the same option until issue 2064 rerouted it
--- through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`.
+-- through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, now its `ι`-specialisation
+-- `CategoryTheory.GlueData.ofGlueData'_ι_comp`.
 /-- **The `A`-side overlap inclusion of the two-patch glue datum is the localization chart.**
 Its range on underlying spaces is that of `Spec` of `A → A_a`, namely the basic open `D(a)`; the
 `eqToHom` that `GlueData.ofGlueData'` inserts is invisible to the range. -/

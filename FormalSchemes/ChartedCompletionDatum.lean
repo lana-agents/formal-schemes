@@ -469,14 +469,12 @@ theorem completionFormalGlueData_t (i j : D.J) (h : i ≠ j) :
 
 /-- **The chart completions agree over their overlaps inside the glued completion.** This is
 `CategoryTheory.GlueData.glue_condition` with the `GlueData.ofGlueData'` bookkeeping cancelled off
-both sides by `CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`); it is
+both sides by `CategoryTheory.GlueData.ofGlueData'_ι_comp` (`FormalSchemes.GlueMorphisms`); it is
 the hypothesis `FormalScheme.GlueData.glueMorphisms` consumes. -/
 theorem completion_glue_condition (i j : D.J) (h : i ≠ j) :
     (D.overlapIso i j h).hom ≫ D.overlapImmersion j i ≫ D.completionι j =
       D.overlapImmersion i j ≫ D.completionι i := by
-  exact (CategoryTheory.GlueData.ofGlueData'_f_comp_of D.completionGlueData' _
-    (fun i j => (D.completionFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.glue_condition
-      i j).symm) i j h).symm
+  exact (CategoryTheory.GlueData.ofGlueData'_ι_comp D.completionGlueData' i j h).symm
 
 section Desc
 
@@ -487,9 +485,10 @@ set_option backward.isDefEq.respectTransparency false in
 -- The glue datum is a `def`, so its index type does not reduce to the datum's own at `instances`
 -- transparency and the rewrites below are rejected as ill-typed without this.
 -- `ChartedCompletionDatum.completion_glue_condition` above needed the same option until issue 2064
--- rerouted it through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, which is stated where the
--- indices already carry the `CategoryTheory.GlueData'`'s own type; the obligation here is still
--- quantified over the constructed glue data's, so it still meets the mismatch.
+-- rerouted it through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, now its `ι`-specialisation
+-- `CategoryTheory.GlueData.ofGlueData'_ι_comp`, which are stated where the indices already carry
+-- the `CategoryTheory.GlueData'`'s own type; the obligation here is still quantified over the
+-- constructed glue data's, so it still meets the mismatch.
 /-- **Descent of a morphism out of the glued completion**: a family of morphisms out of the chart
 completions which agree over every overlap glues to a single morphism out of `completionGlued`.
 On the diagonal the obligation of `FormalScheme.GlueData.glueMorphisms` collapses because

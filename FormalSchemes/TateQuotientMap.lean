@@ -185,10 +185,10 @@ theorem tateChartSection_tateChartIndex_emod (i : ULift.{u} ℤ) :
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The two-chart model's glue condition at the pair `(⟨b⟩, ⟨!b⟩)`**, with both the overlap chart
-and the transition spelled out. Obtained from `CategoryTheory.GlueData.glue_condition` by
-`CategoryTheory.GlueData.ofGlueData'_f_comp_of` (`FormalSchemes.GlueMorphisms`), which unfolds
-`GlueData.ofGlueData'` off the diagonal (the two indices `⟨b⟩`, `⟨!b⟩` are distinct) and cancels
-the `eqToHom` prefix common to `f i j` and `t i j`. -/
+and the transition spelled out. It is `CategoryTheory.GlueData.ofGlueData'_ι_comp`
+(`FormalSchemes.GlueMorphisms`) at the distinct indices `⟨b⟩`, `⟨!b⟩`: that lemma reads
+`CategoryTheory.GlueData.glue_condition` back through `GlueData.ofGlueData'` off the diagonal and
+cancels the `eqToHom` prefix common to `f i j` and `t i j`. -/
 theorem tateCurveModel_glue_condition_desc (b : Bool) :
     coprod.desc (annulusOverlapChart R I q) (annulusOverlapChartY R I q) ≫
         (tateCurveFormalGlueData R I q hq hI).ι ⟨b⟩ =
@@ -198,10 +198,7 @@ theorem tateCurveModel_glue_condition_desc (b : Bool) :
           (tateCurveFormalGlueData R I q hq hI).ι ⟨!b⟩ := by
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
   have hij' : ¬ @Eq (ULift.{u} Bool) ⟨b⟩ ⟨!b⟩ := by simp [ULift.ext_iff]
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateCurveGlueData' R I q hq hI) _
-    (fun i j => ((tateCurveFormalGlueData R I q hq
-      hI).toLocallyRingedSpaceGlueData.toGlueData.glue_condition i j).symm)
-    ⟨b⟩ ⟨!b⟩ hij'
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateCurveGlueData' R I q hq hI) ⟨b⟩ ⟨!b⟩ hij'
 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `x`-chart of one chart of `𝔈_q` is the `y`-chart of the other**, over the 𝔾m-inversion.

@@ -218,8 +218,7 @@ theorem tateSelfProduct_glue_raw_inv (hq : q ∈ I) (hI : I.FG) {i j : Bool × B
         tateSelfProductGlueF R I q hI j i h.symm ≫
           (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨j⟩ := by
   have hij : ({ down := i } : ULift.{u} (Bool × Bool)) ≠ ⟨j⟩ := fun e => h (congrArg ULift.down e)
-  exact CategoryTheory.GlueData.ofGlueData'_f_comp_of (tateSelfProductGlueData'Inv R I q hq hI) _
-    (fun i j => ((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.glue_condition i j).symm)
+  exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateSelfProductGlueData'Inv R I q hq hI)
     ⟨i⟩ ⟨j⟩ hij
 
 /-! ### The overlap obligation -/
