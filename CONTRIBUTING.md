@@ -662,6 +662,25 @@ a ten-line walk, and row 1841 ran it over every delta the sweep still reports an
 right, near endpoint and far.) If a figure `--sweep` reports is a plain measurement of this tree,
 rewrite it in the checked spelling rather than leaving it for the next sweep.
 
+## The `set_option` cross-reference convention
+
+Every `set_option` here is justified in an adjacent comment, and many of those comments are
+cross-references — *"Same transparency requirement as `completion_glue_condition`, for the same
+reason"*, *"the same accommodation `ThickeningCocone.lean` makes"*. **That sentence is a claim
+about the declaration or module it names, not about the file it sits in**, so the edit that
+falsifies it is a refactor somewhere else that removes the option, and nothing in a build can
+notice: removing an option cannot fail an elaboration. `python3 scripts/option_reference_audit.py
+--tree` checks each such sentence against the options its anchor still carries — by English word,
+so *"transparency"* about a declaration that only raises `maxHeartbeats` is a `MISMATCH` — and
+`--selftest` checks the reading rules against canned sources with no build. **A pull request that
+removes a `set_option` must run it**; one that only adds declarations need not.
+
+Like the other two it is **not** run by `.github/workflows/` or by `.orchestra/validation.sh`, and
+for the same reason: it is an author's instrument, and a sentence a *different* pull request
+falsified is not this branch's defect. It reads the tree at the current working directory, not the
+directory the script is in. It has a standing backlog of **2**, both filed as issue 2123, so
+`--tree` returns 1 today; the number moving is the signal, as with the citation audit.
+
 ## Line width
 
 Every line is at most **100 characters and 100 display columns** — two separate limits, since a

@@ -380,9 +380,27 @@ def probe_stale(transcript: str, returncode: int, target: str) -> list[str]:
     must not answer.  There is no false-alarm surface above a zero exit, which is what lets the
     rule be this blunt.
 
-    The other two rules are about the *message* and not the verdict: name the out-of-date targets
+    The other rules are about the *message* and not the verdict: name the out-of-date targets
     when `lake` listed them, and otherwise quote `lake`'s own first lines.  Naming the module is
     this instrument's whole advantage over the one refuted below.
+
+    **And the lead sentence is one of those rules**, which is why there are two of them (issue
+    2113).  *"`.lake` is not a build of this checkout"* is established only on the branch where
+    `lake` listed out-of-date targets.  On the other -- `lake` exited non-zero for a reason of its
+    own, an unknown target, a lockfile complaint, a toolchain that is not installed, or nothing
+    printed at all -- the tree may be perfectly current and what this run knows is only that
+    *`lake` could not tell it*.  The verdict is the same on both, deliberately and for the reason
+    above; the sentence is not, because the sentence is what an author reads and acts on.  The
+    closing paragraph is shared, because the remedy is genuinely the same one.
+
+    One consequence of splitting on `named` rather than on a verdict, stated here rather than
+    left to be found: if `lake` ever stops printing the `Some required targets logged failures:`
+    block, a genuinely out-of-date tree falls to the fallback and is told *"`lake` did not
+    answer"* when `lake` answered unparseably.  That is a strictly smaller error than today's --
+    the sentence understates what is known instead of asserting what is not -- the detail block
+    still quotes `lake`'s own lines directly underneath, and the verdict and the remedy are
+    unchanged either way.  Narrowing it further would mean a heuristic that tries to tell "stale"
+    from "`lake` broke", which is a false-alarm surface where there is currently none.
     """
     if returncode == 0:
         return []
@@ -396,9 +414,12 @@ def probe_stale(transcript: str, returncode: int, target: str) -> list[str]:
         detail = ("".join("    %s\n" % l for l in lines[:5]) if lines else
                   "    `lake build --no-build %s` exited %d and printed nothing.\n"
                   % (target, returncode))
+    lead = ("`.lake` is not a build of this checkout, so the probe would resolve against\n"
+            "    sources nobody asked it about.\n" if named else
+            "`lake` did not answer, so whether `.lake` is a build of this checkout is\n"
+            "    unknown, and an audit that cannot establish that will not answer either.\n")
     raise ProbeTreeIsStale(
-        "`.lake` is not a build of this checkout, so the probe would resolve against\n"
-        "    sources nobody asked it about.\n"
+        lead
         + detail
         + "    `lake env lean` sets `LEAN_PATH` and hands the probe whatever oleans are on\n"
           "    disk; it does not check them against the working tree.  Run a full\n"
@@ -809,19 +830,24 @@ def selftest() -> int:
     # and the last two from a `lake` that failed for a reason of its own.  The third and fourth
     # exist because the *message* has rules too: without them a loosening that stopped naming the
     # out-of-date module, or stopped quoting `lake` when it listed none, would pass.
-    def build(name, transcript, rc, want, wants=()):
+    # `nots` is what keeps the two lead sentences apart (issue 2113).  Before it, cases 3 and 4
+    # asserted only on the *detail* -- so the refusal opened "`.lake` is not a build of this
+    # checkout" on a branch that had established no such thing, and three sessions' attention on
+    # this file did not see it.  A loosening that collapses the two sentences back into one now
+    # fails three cases instead of none.
+    def build(name, transcript, rc, want, wants=(), nots=()):
         nonlocal bad
         msg = ""
         try:
             got = probe_stale(transcript, rc, LIBRARY)
         except ProbeTreeIsStale as exc:
             got, msg = "FATAL", str(exc)
-        ok = got == want and all(w in msg for w in wants)
+        ok = got == want and all(w in msg for w in wants) and not any(n in msg for n in nots)
         bad += not ok
         print("%s  %s" % ("ok  " if ok else "FAIL", name))
         if not ok:
-            print("        want %r containing %r\n        got  %r containing %r"
-                  % (want, list(wants), got, msg))
+            print("        want %r containing %r and not %r\n        got  %r containing %r"
+                  % (want, list(wants), list(nots), got, msg))
 
     build("an up-to-date tree passes the gate and is not an empty list of complaints",
           "All targets up-to-date (3506 jobs).\n", 0, [])
@@ -847,12 +873,21 @@ def selftest() -> int:
           "- FormalSchemes.GeneralFibreProductBaseChange\n"
           "- FormalSchemes.CompletionGlueTwoPatchCondition\n"
           "- FormalSchemes.CompletionBasicOpenGlue\n", 3, "FATAL",
-          ("out of date:", "FormalSchemes.TateShift", "FormalSchemes.CompletionBasicOpenGlue"))
-    build("a `lake` that failed for a reason of its own is fatal, and its own line is quoted",
+          ("out of date:", "FormalSchemes.TateShift", "FormalSchemes.CompletionBasicOpenGlue",
+           "`.lake` is not a build of this checkout"),
+          ("`lake` did not answer",))
+    build("a `lake` that failed for a reason of its own says `lake` did not answer, not `.lake`"
+          " is stale",
           "error: unknown target 'FormalSchemez'\n", 1, "FATAL",
-          ("unknown target 'FormalSchemez'",))
-    build("a `lake` that failed and said nothing at all is fatal on its exit code alone",
-          "", 2, "FATAL", ("exited 2 and printed nothing",))
+          ("unknown target 'FormalSchemez'", "`lake` did not answer",
+           "is a build of this checkout is\n    unknown", "Run a full\n    `lake build`"),
+          ("`.lake` is not a build of this checkout",))
+    build("a `lake` that failed and said nothing at all is fatal on its exit code alone, and"
+          " claims no more than that",
+          "", 2, "FATAL",
+          ("exited 2 and printed nothing", "`lake` did not answer",
+           "Run a full\n    `lake build`"),
+          ("`.lake` is not a build of this checkout",))
     return 1 if bad else 0
 
 
