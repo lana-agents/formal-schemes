@@ -403,6 +403,18 @@ Nothing in `.github/workflows/` runs `scripts/citation_audit.py`. It is an instr
 runs by hand under this convention, not a gate, so **the printed lines are the signal, not the exit
 status**: `--tree` returns 1 on the standing backlog alone and will while the backlog is non-empty.
 
+**Run it after a full build, and know what a report made before one looks like.** Almost every
+line of the report is read off the sources and is right whether or not the tree is built; the only
+ones the probe can touch are the `resolves as declaration` and `UNRESOLVED` counts, which sit in
+the middle of the count block and trade off against each other, and the per-token list below them.
+A probe whose `import FormalSchemes` fails puts its one error on line 1, where no token lives, so
+every token used to be counted as resolving. **A report whose population and excluded categories
+look right and whose `UNRESOLVED` is `0` is exactly what a broken probe produced** — three
+sessions re-derived that independently and one shipped the zero in a pull-request body before the
+script learned to refuse (issue 2099). It now exits **2** and names the cause instead of
+answering; exit 1 still means it measured the tree and found something. When you quote a `0` here,
+quote the positive control beside it — a token you know does not exist must come back UNRESOLVED.
+
 Clearing the backlog is not a prerequisite for anything. The convention binds the diff; the
 tree-wide number is there so that the backlog is a known quantity rather than a surprise.
 
