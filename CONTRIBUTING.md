@@ -415,6 +415,18 @@ script learned to refuse (issue 2099). It now exits **2** and names the cause in
 answering; exit 1 still means it measured the tree and found something. When you quote a `0` here,
 quote the positive control beside it — a token you know does not exist must come back UNRESOLVED.
 
+**A stale `.lake` is not the same failure, and it is the nastier one** (issue 2109). `lake env
+lean` hands the probe whatever oleans are on disk and does not check them against the working
+tree, so on a checkout whose `.lake` was built from another branch the probe answers fluently
+about *those* sources while the population beside it is read off *these* ones — producing a
+plausible non-zero `UNRESOLVED` that no signature distinguishes from a true one, where an unbuilt
+tree at least produced a recognisable `0`. The script now refuses that too, by name: it gates the
+probe on `lake build --no-build FormalSchemes` — the library the probe imports — and, when a
+target is out of date, prints the modules `lake` named and **exits 2 without printing a report**.
+Two seconds, and it builds nothing. So exit **2** means *this run measured nothing*, in either of
+its two ways and with the same remedy (run a full `lake build`); the sentence that follows the
+message says which happened.
+
 Clearing the backlog is not a prerequisite for anything. The convention binds the diff; the
 tree-wide number is there so that the backlog is a known quantity rather than a surprise.
 
