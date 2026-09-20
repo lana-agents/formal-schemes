@@ -566,12 +566,8 @@ its own overlap inclusions and transitions — while the proofs that produce the
 assembled one. -/
 theorem range_lrsGlueData_f (p p' : JX × JY) (h : p ≠ p') :
     Set.range ⇑(G.lrsGlueData.toGlueData.f p p').base = Set.range ⇑(G.f p p' h).base := by
-  have haux : ∀ {X Y Z : LocallyRingedSpace.{u}} (e : X = Y) (g : Y ⟶ Z),
-      Set.range ⇑(eqToHom e ≫ g).base = Set.range ⇑g.base := by
-    rintro X Y Z rfl g
-    simp
   rw [G.lrsGlueData_f p p' h]
-  exact haux _ _
+  exact LocallyRingedSpace.range_eqToHom_comp_base _ _
 
 /-- **The glue condition at a point**: a point of the `p`-`p'` overlap has the same image in the
 glued fibre product whether it is pushed into the `p`-th chart or transported and pushed into the
