@@ -172,11 +172,12 @@ is no such variant.
 
 ## Placement
 
-A leaf over `FormalSchemes.GeneralSeparatedRange`, `FormalSchemes.GeneralFibreProductBaseChange`,
+Over `FormalSchemes.GeneralSeparatedRange`, `FormalSchemes.GeneralFibreProductBaseChange`,
 `FormalSchemes.GeneralFibreProductExposeXIdealCongr` and
 `FormalSchemes.GeneralFibreProductLiftUniqueAdic`: forward closure **185** project modules besides
-itself (186 counted with itself), reverse closure **0**. None of the four imports is implied by
-the others: each of them contributes modules that none of the other three reaches.
+itself (186 counted with itself), reverse closure **1**, whose one member is
+`FormalSchemes.AwayBaseChangeSeparated` and arrived later (issue 1998). None of the four imports
+is implied by the others: each of them contributes modules that none of the other three reaches.
 
 The fourth import is the uniqueness statement the triangle runs on, and it is the reason
 everything above is here rather than in `FormalSchemes.GeneralFibreProductBaseChange`, which is
@@ -187,7 +188,7 @@ where a reader would look for a statement about
 `AlgebraicGeometry.BothChartedFibreDatumXY.pr₁`, nor
 `FormalSchemes.GeneralFibreProductLiftUniqueAdic`, which states the uniqueness — so the projection
 squares cannot be written there without two new import edges, and the reverse closure of
-`FormalSchemes.GeneralFibreProductBaseChange` is **3** against this file's **0**. Here the fourth
+`FormalSchemes.GeneralFibreProductBaseChange` is **4** against this file's **1**. Here the fourth
 import adds only itself: `FormalSchemes.GeneralFibreProductLiftUniqueAdic` has forward closure
 **143**, and every one of those modules was reached already.
 
@@ -197,9 +198,9 @@ maps, for two measured reasons. That module's subject, stated in its own title, 
 `eqToHom` **prefix** is invisible to a base map — a fact about precomposition with an isomorphism,
 whose proof is surjectivity of that isomorphism's base map. Left cancellation against an injective
 **postcomposition** is the other side of a composite and shares no step with it. And
-`FormalSchemes.LocallyRingedSpaceRange` has reverse closure **262**: putting a lemma with one
+`FormalSchemes.LocallyRingedSpaceRange` has reverse closure **263**: putting a lemma with one
 consumer there adds it to the environment of that many modules and re-elaborates all of them,
-against this file's **0**. If a second consumer appears at a module this one cannot reach, the move
+against this file's **1**. If a second consumer appears at a module this one cannot reach, the move
 is cheap and that file is where it goes.
 
 ## References

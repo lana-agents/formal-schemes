@@ -65,6 +65,7 @@ import FormalSchemes.AssociatedGraded
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.AwayBaseChangeChartTransition
 import FormalSchemes.AwayBaseChangeGluedX
+import FormalSchemes.AwayBaseChangeSeparated
 import FormalSchemes.AwayBaseChangeTopFiniteType
 import FormalSchemes.AwayChartStructMap
 import FormalSchemes.AwayCompletionAway

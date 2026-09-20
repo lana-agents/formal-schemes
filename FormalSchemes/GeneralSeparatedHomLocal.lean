@@ -45,7 +45,11 @@ and none of the bookkeeping.
   for a composition law, since refining the target cover against two morphisms is exactly what that
   list names as the obstruction. It would require `FormalScheme.IsSeparatedOverSpf` to restrict to
   an open subscheme over an open of the affine base, which is a statement about the
-  presentation-level predicate `BothChartedFibreDatumXY.IsSeparated` and is nowhere on the tree.
+  presentation-level predicate `BothChartedFibreDatumXY.IsSeparated`.
+  `FormalSchemes.AwayBaseChangeSeparated` supplies that statement at a **basic** open of the base,
+  and only for a source presented in the `AffineChartedFibreDatumX.ofAlgebraData` vocabulary with
+  the localising element inverted on every chart (issue 1998); the arbitrary open of an arbitrary
+  formal scheme this bullet needs is still nowhere on the tree.
   **Nothing here should be read as bringing the composition law close.**
 * It does **not** touch conservativity's hard direction, which needs a basic-open refinement of the
   target cover and is recorded in the same list.

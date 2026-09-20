@@ -106,11 +106,11 @@ should take `eqToIso` of the equality rather than have a second definition to ke
 ## Placement, and what this module costs
 
 Over `FormalSchemes.GeneralFibreProductExposeXAlgebraData`: forward closure **79**, reverse closure
-**3**. The three transports are general and each has a natural home earlier in the tree — the first
+**4**. The three transports are general and each has a natural home earlier in the tree — the first
 two beside `FormalSpectrum.locallyRingedSpaceMap` in `FormalSchemes.SpfMap`, whose reverse closure
-is **501**, and the third beside `FormalSpectrum.basicOpenChartOverlapIso` in
-`FormalSchemes.BasicOpenChartOverlap`, whose reverse closure is **77**, both against this file's
-**3**. They are kept here on that ratio and because each has exactly one consumer in code, here;
+is **502**, and the third beside `FormalSpectrum.basicOpenChartOverlapIso` in
+`FormalSchemes.BasicOpenChartOverlap`, whose reverse closure is **78**, both against this file's
+**4**. They are kept here on that ratio and because each has exactly one consumer in code, here;
 the disposition is worth re-costing when a second appears.
 
 `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr` has two consumers.

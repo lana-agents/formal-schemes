@@ -102,21 +102,22 @@ is an equality of glued objects and stops there.
 
 Over `FormalSchemes.AwayCompletionUniversal` and
 `FormalSchemes.GeneralFibreProductExposeXIdealCongr`: forward closure **93**, reverse closure
-**1**, whose one member is `FormalSchemes.AwayBaseChangeChartTransition` and arrived later. The two
+**2**, whose two members are `FormalSchemes.AwayBaseChangeChartTransition` (issue 2070) and
+`FormalSchemes.AwayBaseChangeSeparated` (issue 1998), both of which arrived later. The two
 parents are import-incomparable, so the statement costs either an import edge or a module of its
 own, and the edge was rejected in both directions: each parent was itself a leaf, so an edge either
 way puts one of them inside the other's subtree and makes every later consumer of that parent pay
 for the other. A module of its own keeps both parents at the cost they were landed at, and
-`FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **1**, so one module pays for it.
+`FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **2**, so two modules pay for it.
 
-`FormalSchemes.AwayCompletionUniversal`'s reverse closure is **2**, and
-`FormalSchemes.GeneralFibreProductExposeXIdealCongr`'s reverse closure is **3**; the figures
+`FormalSchemes.AwayCompletionUniversal`'s reverse closure is **3**, and
+`FormalSchemes.GeneralFibreProductExposeXIdealCongr`'s reverse closure is **4**; the figures
 recorded in the modules this one reaches moved by one each when it landed, and every delta is
 measured in the pull request that added this module (issue 2028).
 
 The construction of the primed data (issue 2038) is added **in place** rather than in a module of
-its own: `FormalSchemes.AwayBaseChangeGluedX`'s reverse closure is **1**, so extending this file
-re-elaborates this file, that one consumer and the root module list and nothing else, and moves no
+its own: `FormalSchemes.AwayBaseChangeGluedX`'s reverse closure is **2**, so extending this file
+re-elaborates this file, its two consumers and the root module list and nothing else, and moves no
 stated figure anywhere on the tree. The general transports the construction introduces —
 `FormalSpectrum.awayTransport`, `FormalSpectrum.awayTransportRingHom` and
 `AdicCompletion.mapCompletion_heq` — each have exactly one consumer, here, and each has a natural
