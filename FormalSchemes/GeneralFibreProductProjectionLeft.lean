@@ -40,8 +40,7 @@ The compatibility datum `glueMorphisms` consumes on the double overlap is the na
   (`interchangeOpenImmersion_comp_locallyRingedSpaceMap_inl`, #133);
 * the base-changed transition `t = (mapSpfIso τ (refl B)).hom` commutes with `inl`
   (`CompletedTensorProduct.mapSpf_comp_inlMap`);
-* the exposed `X`'s own glue relation `x_glue_rel` (its `LocallyRingedSpace.GlueData` glue
-  condition, unfolded through `GlueData.ofGlueData'`).
+* the exposed `X`'s own glue relation `AlgebraicGeometry.AffineChartedFibreDatumX.x_glue_rel`.
 
 ## Main definitions
 
