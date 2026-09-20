@@ -35,8 +35,10 @@ three identities, their two `HEq`s and the primed adicity are all produced by
 over `Spf R` and a factorisation of the structural morphism through `Spf R{1/f}`, and derives the
 presentation, the unit and the algebra structure from them — the presentation from
 `AlgebraicGeometry.AffineChartedFibreDatumX.eq_ofAlgebraData`, the other two from the
-factorisation, chart by chart. What it gives up in exchange is named in
-*What is not proved here*.
+factorisation, chart by chart. **And it concludes at the factorisation the caller supplied**
+rather than at a morphism it produces: identifying the two is
+`AlgebraicGeometry.AffineChartedFibreDatumX.xStructMap_awayBase_comp_awayBaseChart` against
+`AlgebraicGeometry.AffineChartedFibreDatumX.factorsThrough_awayBase_unique`.
 
 ## The argument, in three steps
 
@@ -96,17 +98,6 @@ to an open subscheme *over an open of the affine base* — and this file supplie
 open of the base is a **basic** open. Getting from an arbitrary open subscheme of an arbitrary
 formal scheme to that shape is the residue, and it is not done here.
 
-**The structural morphism of the presentation-free statement is existentially quantified.**
-`AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_awayBase_of_factorsThrough` produces *some*
-morphism into `Spf R{1/f}` over which the source is separated, and it is the one the away-base
-presentation carries. That it is the factorisation the caller supplied holds chart by chart —
-`AlgebraicGeometry.AffineChartedFibreDatumX.ι_comp_eq_of_factorsThrough` — and the two morphisms
-are then compared across glue data whose pieces agree only along the transport
-`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase'`. Carrying that
-transport down to the glue inclusions is what remains, and it is not done here. The uniqueness
-statement `AlgebraicGeometry.AffineChartedFibreDatumX.factorsThrough_awayBase_unique` says that
-whichever morphism the comparison eventually names, there is no choice about it.
-
 `FormalSchemes.GeneralSeparatedHom`'s not-proved list is therefore left exactly as it stands.
 `FormalSchemes.GeneralSeparatedHomLocal`'s said that the required statement *is nowhere on the
 tree*; that clause is the one sentence this module falsifies, and it is repaired there to name
@@ -158,6 +149,13 @@ would all be rebuilt.
   formal scheme.
 * `AlgebraicGeometry.AffineChartedFibreDatumX.isSeparatedOverSpf_awayBase_of_presentation`: the
   same statement about an arbitrary formal scheme presented by that datum, on both sides.
+* `AlgebraicGeometry.AffineChartedFibreDatumX.ι_ofAlgebraData_xGlued_eq_awayBase'`: the glue
+  inclusions transport along
+  `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase'`.
+* `AlgebraicGeometry.AffineChartedFibreDatumX.xStructMapChart_awayBase_comp_awayBaseChart` and
+  `AlgebraicGeometry.AffineChartedFibreDatumX.xStructMap_awayBase_comp_awayBaseChart`: the
+  away-base structural morphism, followed by the basic open of the base, **is** the structural
+  morphism the caller started from — chart by chart and then at the glued object.
 * `FormalSpectrum.isUnit_algebraMap_of_factorsThrough`: a chart whose structural morphism factors
   through the basic open of the base has the localising element inverted.
 * `FormalSpectrum.globalSectionsMap_eq_awayCompletionLift` and
@@ -169,8 +167,9 @@ would all be rebuilt.
   `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf` holds a smart-constructor presentation.
 * `AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_awayBase_of_factorsThrough`: **the
   presentation-free form** — separatedness over `Spf R` plus a factorisation of the structural
-  morphism through `Spf R{1/f}` gives separatedness over `Spf R{1/f}`, with no presentation in the
-  statement and neither of the two chart hypotheses above it asked of the caller.
+  morphism through `Spf R{1/f}` gives separatedness over `Spf R{1/f}` **at that factorisation**,
+  with no presentation in the statement, nothing existentially quantified in the conclusion, and
+  neither of the two chart hypotheses above it asked of the caller.
 
 ## References
 
@@ -544,6 +543,168 @@ theorem isSeparatedOverSpf_awayBase_of_presentation {X : FormalScheme.{u}}
       ((FormalScheme.isSeparatedOverSpf_iff_of_iso hI e he).mpr hsep))
   exact e.hom_inv_id_assoc _
 
+/-! ### The away-base structural morphism, at the presentation the caller started from -/
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The chart inclusions transport along
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase'`.** That equality
+identifies the two glued formal schemes; this says the identification is compatible with the `i`-th
+chart inclusion, the chart objects themselves being identified by
+`AlgebraicGeometry.AffineChartedFibreDatumX.awayBaseChartIdeal`.
+
+This is `AlgebraicGeometry.AffineChartedFibreDatumX.ι_xGluedOfIdeals_congr`
+(`FormalSchemes.GeneralSeparatedBaseChange`) at the primed data
+`FormalSchemes.AwayBaseChangeGluedX` builds, exactly as
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase'` is
+`AlgebraicGeometry.AffineChartedFibreDatumX.xGluedOfIdeals_congr` at them: the two `HEq` families
+are the same `AlgebraicGeometry.AffineChartedFibreDatumX.awayCompletionTransition_heq` and
+`AlgebraicGeometry.AffineChartedFibreDatumX.xAlgDataT'_heq` that theorem consumes, and the
+`CategoryTheory.eqToHom` arguments are proofs of the same equations, so proof irrelevance
+identifies them. **The four intermediate rungs of the congruence ladder need no companion of their
+own**, which is the measurement this declaration records. -/
+theorem ι_ofAlgebraData_xGlued_eq_awayBase' (i : J) :
+    letI tower := isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg
+    letI : ∀ i, IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+        (algebraMap (awayCompletion I f) (A i))) :=
+      isAdicRing_awayBaseChartIdeal f A hf halg
+    (ofAlgebraData (B := B') (hI.map (algebraMap R (awayCompletion I f))) A g
+        (awayBaseTransition hI f A tower g τ)
+        (awayBaseTransition_symm hI f A tower g τ τ_symm)
+        (awayBaseOverlap hI f A tower g σ)
+        (awayBaseOverlap_transition hI f A tower g τ σ hστ)
+        (awayBaseOverlap_cocycle hI f A tower g σ hσc)).xFormalGlueData.ι i ≫
+      eqToHom (congrArg FormalScheme.toLocallyRingedSpace
+        (ofAlgebraData_xGlued_eq_awayBase' (B := B) (B' := B') hI f A hf g halg
+          τ τ_symm σ hστ hσc)) =
+      eqToHom (congrArg locallyRingedSpaceObj (awayBaseChartIdeal f A tower i)) ≫
+        (ofAlgebraData (B := B) hI A g τ τ_symm σ hστ hσc).xFormalGlueData.ι i := by
+  letI tower := isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg
+  letI : ∀ i, IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+      (algebraMap (awayCompletion I f) (A i))) :=
+    isAdicRing_awayBaseChartIdeal f A hf halg
+  exact ι_xGluedOfIdeals_congr
+    (hKfg := fun _ => (hI.map (algebraMap R (awayCompletion I f))).map _)
+    (hK'fg := fun _ => hI.map _)
+    (Ideal.map_algebraMap_family_eq_of_tower A I)
+    (awayCompletionTransition_heq A g (Ideal.map_algebraMap_family_eq_of_tower A I)
+      (awayBaseTransition_coe_heq hI f A tower g τ))
+    (xAlgDataT'_heq hI (hI.map (algebraMap R (awayCompletion I f))) A g
+      (Ideal.map_algebraMap_family_eq_of_tower A I)
+      (awayBaseOverlap_coe_heq hI f A tower g σ))
+    i
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The away-base chart lies over the base chart, through the basic open of the base.** On chart
+`i` the away-base presentation's structural morphism `Spf(A_i) ⟶ Spf R{1/f}`, followed by
+`FormalSpectrum.awayBaseChart`, is the base presentation's `Spf(A_i) ⟶ Spf R` — the two chart
+objects being identified by
+`AlgebraicGeometry.AffineChartedFibreDatumX.awayBaseChartIdeal`.
+
+There is no geometry in it: both sides are one `FormalSpectrum.locallyRingedSpaceMap`
+(`FormalSpectrum.locallyRingedSpaceMap_comp`), and the two ring maps agree because the chart is an
+`R{1/f}`-algebra over `R` — `IsScalarTower.algebraMap_eq` at the tower
+`AlgebraicGeometry.AffineChartedFibreDatumX.isScalarTower_of_algebraMap_eq_awayCompletionLift`
+produces from the identification of the chart's `R{1/f}`-algebra structure with
+`FormalSpectrum.awayCompletionLift`. -/
+theorem xStructMapChart_awayBase_comp_awayBaseChart (i : J) :
+    letI tower := isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg
+    letI : ∀ i, IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+        (algebraMap (awayCompletion I f) (A i))) :=
+      isAdicRing_awayBaseChartIdeal f A hf halg
+    haveI : IsAdicRing (I.map (algebraMap R (awayCompletion I f))) :=
+      map_awayCompletionHom I f ▸ isAdicRing_awayCompletionIdeal I f hI
+    (ofAlgebraData (B := B') (hI.map (algebraMap R (awayCompletion I f))) A g
+        (awayBaseTransition hI f A tower g τ)
+        (awayBaseTransition_symm hI f A tower g τ τ_symm)
+        (awayBaseOverlap hI f A tower g σ)
+        (awayBaseOverlap_transition hI f A tower g τ σ hστ)
+        (awayBaseOverlap_cocycle hI f A tower g σ hσc)).xStructMapChart i ≫
+        awayBaseChart I f =
+      eqToHom (congrArg locallyRingedSpaceObj (awayBaseChartIdeal f A tower i)) ≫
+        (ofAlgebraData (B := B) hI A g τ τ_symm σ hστ hσc).xStructMapChart i := by
+  letI tower := isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg
+  letI : ∀ i, IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+      (algebraMap (awayCompletion I f) (A i))) :=
+    isAdicRing_awayBaseChartIdeal f A hf halg
+  haveI : IsAdicRing (I.map (algebraMap R (awayCompletion I f))) :=
+    map_awayCompletionHom I f ▸ isAdicRing_awayCompletionIdeal I f hI
+  letI := tower i
+  have htower : (algebraMap (awayCompletion I f) (A i)).comp (algebraMap R (awayCompletion I f)) =
+      algebraMap R (A i) := (IsScalarTower.algebraMap_eq R (awayCompletion I f) (A i)).symm
+  have hK : I ≤ ((I.map (algebraMap R (awayCompletion I f))).map
+      (algebraMap (awayCompletion I f) (A i))).comap (algebraMap R (A i)) :=
+    (awayBaseChartIdeal f A tower i) ▸ Ideal.le_comap_map
+  change locallyRingedSpaceMap (I.map (algebraMap R (awayCompletion I f)))
+        ((I.map (algebraMap R (awayCompletion I f))).map (algebraMap (awayCompletion I f) (A i)))
+        (algebraMap (awayCompletion I f) (A i)) Ideal.le_comap_map ≫
+      locallyRingedSpaceMap I (I.map (algebraMap R (awayCompletion I f)))
+        (algebraMap R (awayCompletion I f)) Ideal.le_comap_map =
+    eqToHom (congrArg locallyRingedSpaceObj (awayBaseChartIdeal f A tower i)) ≫
+      locallyRingedSpaceMap I (I.map (algebraMap R (A i))) (algebraMap R (A i)) Ideal.le_comap_map
+  rw [← locallyRingedSpaceMap_comp (hIK := le_comap_comp (algebraMap R (awayCompletion I f))
+      (algebraMap (awayCompletion I f) (A i)) Ideal.le_comap_map Ideal.le_comap_map),
+    eqToHom_comp_locallyRingedSpaceMap (awayBaseChartIdeal f A tower i).symm
+      (algebraMap R (A i)) Ideal.le_comap_map hK]
+  exact locallyRingedSpaceMap_congr _ _ _ _ _ _ htower
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+set_option linter.style.setOption false in
+-- The glue inclusion's codomain is the glued formal scheme of
+-- `AlgebraicGeometry.AffineChartedFibreDatumX.xFormalGlueData`, and the structural morphism's
+-- domain is `AlgebraicGeometry.AffineChartedFibreDatumX.xGlued`; the two are the same by `rfl`,
+-- but the latter is semireducible, so the motive `rw` builds for the step below is rejected at
+-- the `instances` transparency level. Measured rather than assumed: with the option removed this
+-- proof is the only thing in the file that fails, and it fails on that motive, not on a budget —
+-- the heartbeat count is unchanged and no heartbeat limit is raised anywhere in this file.
+set_option backward.isDefEq.respectTransparency false in
+/-- **The away-base presentation's structural morphism is the caller's, read through the basic open
+of the base.** Composed with `FormalSpectrum.awayBaseChart` it is the structural morphism of the
+presentation over `(R, I)`, transported along
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData_xGlued_eq_awayBase'`.
+
+The proof is chartwise — `AlgebraicGeometry.FormalScheme.GlueData.hom_ext` on the away-base glue —
+and each chart square is
+`AlgebraicGeometry.AffineChartedFibreDatumX.xStructMapChart_awayBase_comp_awayBaseChart` against
+`AlgebraicGeometry.AffineChartedFibreDatumX.ι_ofAlgebraData_xGlued_eq_awayBase'`, the first for the
+chart objects and the second for the glue inclusions.
+
+**This is what removes the existential** from
+`AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_awayBase_of_factorsThrough`: it says the
+away-base structural morphism *factors the caller's own structural morphism through the basic
+open*, and `AlgebraicGeometry.AffineChartedFibreDatumX.factorsThrough_awayBase_unique` says there
+is only one such factorisation. -/
+theorem xStructMap_awayBase_comp_awayBaseChart :
+    letI tower := isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg
+    letI : ∀ i, IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+        (algebraMap (awayCompletion I f) (A i))) :=
+      isAdicRing_awayBaseChartIdeal f A hf halg
+    haveI : IsAdicRing (I.map (algebraMap R (awayCompletion I f))) :=
+      map_awayCompletionHom I f ▸ isAdicRing_awayCompletionIdeal I f hI
+    (ofAlgebraData (B := B') (hI.map (algebraMap R (awayCompletion I f))) A g
+        (awayBaseTransition hI f A tower g τ)
+        (awayBaseTransition_symm hI f A tower g τ τ_symm)
+        (awayBaseOverlap hI f A tower g σ)
+        (awayBaseOverlap_transition hI f A tower g τ σ hστ)
+        (awayBaseOverlap_cocycle hI f A tower g σ hσc)).xStructMap ≫ awayBaseChart I f =
+      eqToHom (congrArg FormalScheme.toLocallyRingedSpace
+          (ofAlgebraData_xGlued_eq_awayBase' (B := B) (B' := B') hI f A hf g halg
+            τ τ_symm σ hστ hσc)) ≫
+        (ofAlgebraData (B := B) hI A g τ τ_symm σ hστ hσc).xStructMap := by
+  letI tower := isScalarTower_of_algebraMap_eq_awayCompletionLift f A hf halg
+  letI : ∀ i, IsAdicRing ((I.map (algebraMap R (awayCompletion I f))).map
+      (algebraMap (awayCompletion I f) (A i))) :=
+    isAdicRing_awayBaseChartIdeal f A hf halg
+  haveI : IsAdicRing (I.map (algebraMap R (awayCompletion I f))) :=
+    map_awayCompletionHom I f ▸ isAdicRing_awayCompletionIdeal I f hI
+  refine FormalScheme.GlueData.hom_ext _ (fun i => ?_)
+  have hι := ι_ofAlgebraData_xGlued_eq_awayBase' (B := B) (B' := B') hI f A hf g halg
+    τ τ_symm σ hστ hσc i
+  have hchart := xStructMapChart_awayBase_comp_awayBaseChart (B := B) (B' := B') hI f A hf g halg
+    τ τ_symm σ hστ hσc i
+  conv_lhs => rw [← Category.assoc, ι_xStructMap]
+  conv_rhs => rw [← Category.assoc, hι, Category.assoc, ι_xStructMap]
+  exact hchart
+
 end AffineChartedFibreDatumX
 
 /-!
@@ -614,8 +775,8 @@ theorem isUnit_algebraMap_of_xStructMap_factorsThrough
 factorisation to chart `i`.
 
 This is the per-chart half of identifying the structural morphism of the away-base presentation
-with the factorisation itself; see this file's *What is not proved here* for the half that is
-missing. -/
+with the factorisation itself; the glued half is
+`AlgebraicGeometry.AffineChartedFibreDatumX.xStructMap_awayBase_comp_awayBaseChart`. -/
 theorem ι_comp_eq_of_factorsThrough
     (t : D.xGlued.toLocallyRingedSpace ⟶
       locallyRingedSpaceObj (I.map (algebraMap R (awayCompletion I f))))
@@ -725,18 +886,19 @@ supplies the unit, and at the `RingHom.toAlgebra` structure of
 `FormalSpectrum.awayCompletionLift` the identification of the algebra structure with the lift is
 `rfl`.
 
-**The structural morphism of the conclusion is existentially quantified, and that is the one thing
-this statement does not settle.** It is the one the away-base presentation carries, and identifying
-it with the factorisation is the residue recorded in this file's *What is not proved here*. -/
+**The structural morphism of the conclusion is the factorisation `t` itself.** The one the
+away-base presentation carries factors `sX` through the basic open
+(`AlgebraicGeometry.AffineChartedFibreDatumX.xStructMap_awayBase_comp_awayBaseChart`), and
+`AlgebraicGeometry.AffineChartedFibreDatumX.factorsThrough_awayBase_unique` says a structural
+morphism factors through the basic open of its base in at most one way; so the two are equal and
+the statement can name the caller's own morphism. -/
 theorem FormalScheme.isSeparatedOverSpf_awayBase_of_factorsThrough {X : FormalScheme.{u}}
     {sX : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I}
     (t : X.toLocallyRingedSpace ⟶
       locallyRingedSpaceObj (I.map (algebraMap R (awayCompletion I f))))
     (ht : t ≫ awayBaseChart I f = sX)
     (hsep : FormalScheme.IsSeparatedOverSpf hI X sX) :
-    ∃ s' : X.toLocallyRingedSpace ⟶
-        locallyRingedSpaceObj (I.map (algebraMap R (awayCompletion I f))),
-      FormalScheme.IsSeparatedOverSpf (hI.map (algebraMap R (awayCompletion I f))) X s' := by
+    FormalScheme.IsSeparatedOverSpf (hI.map (algebraMap R (awayCompletion I f))) X t := by
   obtain ⟨BX, _, _, J, A, cA, aA, tA, adA, g, τ, τ_symm, σ, hστ, hσc, e, he⟩ :=
     FormalScheme.isSeparatedOverSpf_exists_ofAlgebraData hI hsep
   letI := cA
@@ -752,8 +914,15 @@ theorem FormalScheme.isSeparatedOverSpf_awayBase_of_factorsThrough {X : FormalSc
     (awayCompletionLift I f (hf i)).toAlgebra
   have halg : ∀ i, letI := (adA i).toIsAdicComplete
       algebraMap (awayCompletion I f) (A i) = awayCompletionLift I f (hf i) := fun _ => rfl
-  exact ⟨_, isSeparatedOverSpf_awayBase_of_presentation (B := BX) (B' := awayCompletion I f)
-    hI f A hf g halg τ τ_symm σ hστ hσc e he hsep⟩
+  convert isSeparatedOverSpf_awayBase_of_presentation (B := BX) (B' := awayCompletion I f)
+    hI f A hf g halg τ τ_symm σ hστ hσc e he hsep using 2
+  refine (cancel_epi e.hom).mp ?_
+  rw [Iso.hom_inv_id_assoc]
+  refine (ofAlgebraData (B := BX) hI A g τ τ_symm σ hστ hσc).factorsThrough_awayBase_unique hI f
+    _ _ (by rw [Category.assoc, ht, he]) ?_
+  rw [Category.assoc, xStructMap_awayBase_comp_awayBaseChart (B := BX) (B' := awayCompletion I f)
+      hI f A hf g halg τ τ_symm σ hστ hσc, ← Category.assoc, eqToHom_trans, eqToHom_refl,
+    Category.id_comp]
 
 end AwayBaseFactorisation
 
