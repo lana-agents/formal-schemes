@@ -280,9 +280,15 @@ which is strictly weaker. The two hypotheses are not interchangeable, and the re
 few declarations above: `FormalSpectrum.awayCompletionRestrict_eq_mapCompletion` says a ring map
 `Localization.Away f →+* Localization.Away g` under `R` need not exist at all for a general basic
 inclusion of `Spf R`. Where both apply, prefer the incumbent — it is an `≃ₐ[R]`, it has the
-rigidity lemmas around it, and `FormalSchemes.BasicOpenCoverCharts` records, measured, that a
-datum's transition field is built from `CompletedTensorAwayInterchange.awayCongrEquivOfEq` at an
-*equality* of away elements rather than from any congruence at equal basic opens. -/
+rigidity lemmas around it, and it is what a charted datum's `τ` field is built from:
+`AlgebraicGeometry.ThreeChart.tau` (`FormalSchemes.ThreeChartDatum`) is
+`CompletedTensorAwayInterchange.awayCongrEquiv` at two mutual divisibilities, conjugated by the
+nested chart identification in `AlgebraicGeometry.BasicOpenCover.tau`. Only the `σ` field takes
+the other route, for a reason `FormalSchemes.BasicOpenCoverCharts` records as measured: the
+`AlgebraicGeometry.BasicOpenCover.chartTripleEquiv` there uses
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq` at an *equality* of away elements, because the
+incumbent at the doubly nested product drags `IsLocalization.Away.lift` through it. Neither field
+is built from a congruence at equal basic opens. -/
 noncomputable def awayCompletionCongrBasicOpen (hI : I.FG) (hfg : basicOpen I f = basicOpen I g) :
     awayCompletion I f ≃+* awayCompletion I g where
   toFun := awayCompletionRestrict I f g hI hfg.ge

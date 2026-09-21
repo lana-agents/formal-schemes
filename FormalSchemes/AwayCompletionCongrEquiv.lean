@@ -42,8 +42,9 @@ at an arbitrary index type, is built exactly this way.
 * `CompletedTensorAwayInterchange.awayCongrEquiv`: the comparison isomorphism when `D(x) = D(y)`.
   Its hypothesis is `D(x) = D(y)` in `Spec A`, in the form of mutual unit-ness in the
   localizations, because `IsLocalization.Away.lift` is what builds it. The weaker hypothesis
-  `D(f) = D(g)` in `Spf (R, I)` also gives an isomorphism, but only over the base and by a
-  different route — `FormalSpectrum.awayCompletionCongrBasicOpen`
+  `D(f) = D(g)` in `Spf (R, I)` also gives an isomorphism, by a different route and without the
+  composition and identity laws that surround this one:
+  `FormalSpectrum.awayCompletionCongrBasicOpen`
   (`FormalSchemes.AwayCompletionRestrictUnique`), out of the rigidity of
   `FormalSpectrum.awayCompletionRestrict`. The two files are import-incomparable, so neither
   statement is available where the other is proved.
