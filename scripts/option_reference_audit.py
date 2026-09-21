@@ -58,9 +58,13 @@ so a reader can see which answered without opening the file.
 
 File-scoped `linter.*` options are the one exclusion, and it is load-bearing rather than tidy --
 every module carries `linter.style.header false`, so attributing it would make the fallback
-family `any` vacuously true tree-wide.  Measured: it turns both of the tree's standing
-`MISMATCH`es into passes.  A *scoped* `linter.style.setOption false in` is a different thing and
-stays in; it is written one declaration at a time, beside the option it suppresses the linter for.
+family `any` vacuously true tree-wide.  Measured at `0c91a57`: admitting them took the modules
+carrying an option from 198 of 582 to all 582, and turned both of that commit's standing
+`MISMATCH`es into passes.  Issue 2123 has since repaired those two, so the second half of that
+witness is history; the census half still reads the same way at `8acc6b7`, and the rule is
+watched by a `--selftest` case.  A *scoped* `linter.style.setOption false in` is a different
+thing and stays in; it is written one declaration at a time, beside the option it suppresses the
+linter for.
 
 ## The scope stack, and the figure that watches it
 
@@ -134,10 +138,17 @@ one of thirty declarations still carries the option -- and it is exactly as stro
 is, which is the property that matters.  It fires when the module drops the accommodation
 altogether, which is the way these sentences actually go wrong.
 
-The measured cost of declining them instead: `--tree` reports **12** attributed against **15**
-declined, a scanner whose declined block is bigger than the population it rules on -- which issue
-2106 names as the sign of one that is measuring nothing.  Checking them makes it **22** against
-**5**, and turns one of the two standing `MISMATCH`es from invisible into reported.
+The measured cost of declining them instead, at `0c91a57` -- the last commit before issue 2123
+repaired the two cross-references these figures count: `--tree` reported **12** attributed
+against **15** declined, a scanner whose declined block is bigger than the population it rules
+on, which issue 2106 names as the sign of one that is measuring nothing.  Checking them made it
+**22** against **5**, and turned one of the two `MISMATCH`es standing at that commit from
+invisible into reported.  **That ratio is a measurement with a commit attached, not a live figure
+about the tree, and it is not restamped here**; at `8acc6b7` the same run gives **11** against
+**14** declining and **20** against **5** checking, with no `MISMATCH` left for the second clause
+to be about.  Issue 2128 is why it is written this way: a docstring that quotes its own
+population turns every repair the scanner prompts into a two-file change, and nothing on this
+tree reads `scripts/` to notice when the second file goes stale.
 
 ## Which backtick is the anchor
 
@@ -187,9 +198,12 @@ FILE_SET_OPTION = re.compile(r"^\s*set_option\s+([A-Za-z0-9_.]+)\s+\S+\s*$")
 # `linter.style.header false` is exactly one line in each of the 582 modules.  File-scoped
 # `linter.*` options are excluded from the table, and that exclusion is load-bearing rather than
 # tidy -- attributing them would give **every** module an option, which makes the fallback
-# family `any` vacuously true tree-wide.  Measured: it turns both standing `MISMATCH`es
-# (`FormalSchemes.Gluing`, `AlgebraicGeometry.ChartedSchemeDatum.specGD_f`) into passes, because
-# each of those files carries `linter.style.header` and nothing else file-scoped.  A *scoped*
+# family `any` vacuously true tree-wide.  Measured at `0c91a57`: it turned both of that commit's
+# standing `MISMATCH`es (`FormalSchemes.Gluing`, `AlgebraicGeometry.ChartedSchemeDatum.specGD_f`)
+# into passes, because each of those files carries `linter.style.header` and nothing else
+# file-scoped.  Issue 2123 repaired both in #747, so that witness is dated rather than live; what
+# the present tree still shows is the census -- admitting `linter.*` takes the modules carrying
+# an option from 198 of 582 to all 582 at `8acc6b7` -- and the `--selftest` case below.  A *scoped*
 # `linter.style.setOption false in` is a different thing and stays in: it is written one
 # declaration at a time, beside the option it is suppressing the linter for.
 FILE_SCOPED_BOILERPLATE = re.compile(r"^linter\.")
@@ -225,7 +239,9 @@ SECTION = re.compile(r"^\s*(?:noncomputable\s+)?section\b\s*(\S*)")
 END = re.compile(r"^\s*end\b\s*(\S*)")
 
 # The option families, keyed by the English word a sentence uses for them.  `any` is the fallback
-# and is not in here: it accepts every scoped option name.
+# and is not in here: it asks only that the anchor carry some option at all, scoped or
+# file-scoped.  It read "every scoped option name" until issue 2128; issue 2126 de-scoped the same
+# claim in the module docstring above and left this copy of it behind.
 FAMILIES = {
     "transparency": re.compile(r"Transparency|defeqAttrib"),
     "heartbeats": re.compile(r"[Hh]eartbeats|maxRecDepth"),
@@ -608,7 +624,7 @@ def anchors_in(sentence: str) -> list[str]:
     return found
 
 
-def resolve(token: str, table: dict[str, set[str]]) -> list[str]:
+def resolve(token: str, table: dict[str, dict[str, str]]) -> list[str]:
     """Every declaration of the tree the anchor could name, by `.`-component suffix.
 
     A sentence writes `specGD_f` for `AlgebraicGeometry.specGD_f` and
@@ -621,8 +637,8 @@ def resolve(token: str, table: dict[str, set[str]]) -> list[str]:
     return sorted(n for n in table if n.split(".")[-len(parts):] == parts)
 
 
-def references(sources: dict[str, str], table: dict[str, set[str]],
-               by_module: dict[str, set[str]]):
+def references(sources: dict[str, str], table: dict[str, dict[str, str]],
+               by_module: dict[str, dict[str, str]]):
     """Pass 2: every cross-reference sentence in the tree's comments, judged or declined."""
     modules = set(by_module)
     vocabulary = {o for options in table.values() for o in options}
@@ -1072,8 +1088,9 @@ def selftest() -> int:
 
     # File-scoped `linter.*` is the one form that is boilerplate, and excluding it is what keeps
     # the fallback family `any` from becoming vacuously true: every module of this tree carries
-    # `linter.style.header false`, so admitting it turns both of the tree's standing
-    # `MISMATCH`es into passes.  Measured, not asserted -- see the loosening in the pull request.
+    # `linter.style.header false`, so admitting it would give every module an option.  Measured
+    # at `0c91a57`, not asserted: it turned both of that commit's standing `MISMATCH`es into
+    # passes.  Issue 2123 has since repaired both, so this case is what watches the rule now.
     boilerplate = {"FormalSchemes/Carrier.lean": _src(
         "set_option linter.style.header false",
         "namespace AlgebraicGeometry",

@@ -678,8 +678,10 @@ removes a `set_option` must run it**; one that only adds declarations need not.
 Like the other two it is **not** run by `.github/workflows/` or by `.orchestra/validation.sh`, and
 for the same reason: it is an author's instrument, and a sentence a *different* pull request
 falsified is not this branch's defect. It reads the tree at the current working directory, not the
-directory the script is in. It has a standing backlog of **2**, both filed as issue 2123, so
-`--tree` returns 1 today; the number moving is the signal, as with the citation audit.
+directory the script is in. It had a standing backlog of **2** at `0c91a57`, both filed as issue
+2123 and repaired by #747, so `--tree` returned 1 there; at `8acc6b7` the backlog is **0** and it
+returns 0. Those are measurements with commits attached rather than a figure about the tree today
+(issue 2128); the number moving is the signal, as with the citation audit.
 
 ## Line width
 
