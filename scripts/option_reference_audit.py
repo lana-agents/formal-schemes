@@ -41,6 +41,27 @@ sentence claims?*  Whether the stated **reason** is the true reason is not mecha
 and is out of scope -- a sentence can say "for the same reason" about two genuinely different
 reasons and no scanner will know.
 
+## Both spellings of `set_option`, kept apart
+
+An option reaches a declaration two ways, and this tree uses the second one far more:
+`set_option NAME VALUE in` attaches to the next declaration, while a bare `set_option NAME VALUE`
+applies to the rest of the enclosing scope and so is carried by every declaration below it until
+the `end` of the `section` or `namespace` it sits in.  **258 of this tree's 406 non-linter
+options are the second kind, and all 258 are budget raises** -- so a table built only from the
+`... in` form answers *"carries nothing"* for most of the tree and reports a false `MISMATCH` on
+every true sentence about a budget.  The census is beside `SET_OPTION` below.
+
+The two are recorded separately rather than unioned, because they are different strengths of
+truth: a declaration that carries its own raise is a stronger subject than one that merely sits
+below a file-scoped raise.  `--tree` marks the weaker case `file-scoped` on the line it checks,
+so a reader can see which answered without opening the file.
+
+File-scoped `linter.*` options are the one exclusion, and it is load-bearing rather than tidy --
+every module carries `linter.style.header false`, so attributing it would make the fallback
+family `any` vacuously true tree-wide.  Measured: it turns both of the tree's standing
+`MISMATCH`es into passes.  A *scoped* `linter.style.setOption false in` is a different thing and
+stays in; it is written one declaration at a time, beside the option it suppresses the linter for.
+
 ## The family question: matched on the English word
 
 `maxHeartbeats` and `backward.isDefEq.respectTransparency` are the two options that carry
@@ -53,7 +74,7 @@ into "carries some option" would pass it.
 
 The cost of that choice is sentences whose noun names no family at all -- *"the same option"*,
 *"the same accommodation"*.  Those fall back to the family `any`, which asks only that the anchor
-carry some `set_option ... in`; that is weak, and it is reported as an attributed check rather
+carry some option at all; that is weak, and it is reported as an attributed check rather
 than hidden, because a declaration that carries **no** option at all is the case these sentences
 actually go wrong in.  The measurement that justifies keeping the split is in `--tree`'s
 `by family` line: the tree's cross-references are majority-`transparency`, so the strong
@@ -87,8 +108,9 @@ be: that is a guess `closure_audit.py` would refuse to make and so does this.
 
 But the sentence does not claim anything about a particular declaration.  It claims the **module**
 makes the accommodation, and that is checkable without choosing: does any declaration in that
-module carry an option of the family?  So they are attributed, against the union of the module's
-scoped options.  The check is weaker than the per-declaration one -- a module keeps passing while
+module carry an option of the family?  So they are attributed, against the union of the options
+the module's declarations carry.  The check is weaker than the per-declaration one -- a module
+keeps passing while
 one of thirty declarations still carries the option -- and it is exactly as strong as the sentence
 is, which is the property that matters.  It fires when the module drops the accommodation
 altogether, which is the way these sentences actually go wrong.
@@ -114,15 +136,50 @@ The rule that matters is pinned by a loosening in `--selftest`.
 """
 
 import argparse
+import contextlib
 import glob
+import io
 import os
 import re
 import sys
 
-# `set_option NAME VALUE in` -- the *scoped* form, which is the only one that attaches to a
-# declaration.  A bare `set_option linter.style.header false` with no `in` is file-scoped
-# boilerplate (582 of them, one per module) and is not what any of these sentences is about.
+# `set_option NAME VALUE in` -- the form that attaches to the next declaration, and
+# `set_option NAME VALUE` with no `in` -- the form that applies to the rest of the enclosing
+# scope.  **Both are carried by the declarations below them**, and the second is where this
+# tree spells most of its budget raises.  Censused over `FormalSchemes/**/*.lean` (582 files)
+# through `code_only`, at `0c91a57`:
+#
+#     form                   total   non-linter   which options
+#     scoped, `... in`         312          148   92 backward.isDefEq.respectTransparency,
+#                                                 42 maxHeartbeats, 8 synthInstance.maxHeartbeats,
+#                                                 5 backward.defeqAttrib.useBackward, 1 maxRecDepth
+#     file-scoped, no `in`    1015          258   132 maxHeartbeats,
+#                                                 120 synthInstance.maxHeartbeats, 6 maxRecDepth
+#                                                 -- and nothing else
+#
+# So of the two families below, `transparency` is 97/97 scoped and fully covered, while
+# `heartbeats` is 51 scoped against 258 file-scoped across 132 of the 582 files.  Reading only
+# the `... in` form left ~83% of the budget population invisible and every sentence about a
+# file-scoped raise a false `MISMATCH`.
 SET_OPTION = re.compile(r"^\s*set_option\s+([A-Za-z0-9_.]+)\s+\S+\s+in\s*$")
+FILE_SET_OPTION = re.compile(r"^\s*set_option\s+([A-Za-z0-9_.]+)\s+\S+\s*$")
+
+# The one form that is boilerplate, and the only reason the old comment's "582" looked right:
+# `linter.style.header false` is exactly one line in each of the 582 modules.  File-scoped
+# `linter.*` options are excluded from the table, and that exclusion is load-bearing rather than
+# tidy -- attributing them would give **every** module an option, which makes the fallback
+# family `any` vacuously true tree-wide.  Measured: it turns both standing `MISMATCH`es
+# (`FormalSchemes.Gluing`, `AlgebraicGeometry.ChartedSchemeDatum.specGD_f`) into passes, because
+# each of those files carries `linter.style.header` and nothing else file-scoped.  A *scoped*
+# `linter.style.setOption false in` is a different thing and stays in: it is written one
+# declaration at a time, beside the option it is suppressing the linter for.
+FILE_SCOPED_BOILERPLATE = re.compile(r"^linter\.")
+
+# `set_option ... in example` -- an `example` is a command, so it consumes the pending options
+# and they must not fall through to the next named declaration.  The population of that shape is
+# **0** on this tree, so this changes no verdict here; it is written because this loop is where
+# such a hole would live and a table nobody has watched go wrong is not a table.
+EXAMPLE = re.compile(r"^\s*example\b")
 
 DECL = re.compile(r"^\s*(?:@\[[^\]]*\]\s*)?"
                   r"(?:private\s+|protected\s+|noncomputable\s+|partial\s+|unsafe\s+|scoped\s+)*"
@@ -238,44 +295,83 @@ def code_only(text: str) -> str:
     return "\n".join(out)
 
 
-def option_table(sources: dict[str, str]) -> tuple[dict[str, set[str]], dict[str, set[str]]]:
-    """Pass 1: the scoped options carried, by declaration and by module.
+OWN, INHERITED = "own", "file"
+
+
+def _merge(into: dict[str, str], carried: dict[str, str]) -> None:
+    """Union `carried` into `into`, never downgrading an `own` record to an `INHERITED` one."""
+    for option, scope in carried.items():
+        if into.get(option) != OWN:
+            into[option] = scope
+
+
+def option_table(sources: dict[str, str]) -> tuple[dict[str, dict[str, str]],
+                                                   dict[str, dict[str, str]]]:
+    """Pass 1: the options carried, by declaration and by module, each tagged with its scope.
 
     A `set_option ... in` binds to the next declaration, across any number of intervening
     comments, attributes and other `... in` modifiers, so the pending set is cleared by a
-    declaration and by nothing else.  Names are qualified by the `namespace` stack because this
-    tree really does declare one stem twice -- `mono_coequalizer_π_c_app` exists in both
-    `AlgebraicGeometry.PresheafedSpace` and `AlgebraicGeometry.SheafedSpace`, and a sentence that
-    writes the qualifier means the one it wrote.
+    declaration and by nothing else -- `@[reassoc]` and `include ... in` on lines of their own
+    are 363 and 672 lines of this tree and are correctly transparent here.  Names are qualified
+    by the `namespace` stack because this tree really does declare one stem twice --
+    `mono_coequalizer_π_c_app` exists in both `AlgebraicGeometry.PresheafedSpace` and
+    `AlgebraicGeometry.SheafedSpace`, and a sentence that writes the qualifier means the one it
+    wrote.
+
+    A `set_option` with no `in` applies to the **rest of the enclosing scope**, so it is carried
+    by every declaration below it and reverts at the `end` of the `section` or `namespace` it
+    was written in.  That is why the scope stack keeps a dict per level rather than only a name:
+    `end` pops the options the level introduced along with the level.
+
+    The two scopes are kept apart in the record -- `OWN` against `INHERITED` -- rather than
+    unioned into one set, because they are different strengths of truth.  A sentence about a
+    declaration that carries its own raise says more than one about a declaration that merely
+    sits below a file-scoped raise, and `report` prints which of the two answered so the reader
+    can tell.
     """
-    table: dict[str, set[str]] = {}
-    by_module: dict[str, set[str]] = {}
+    table: dict[str, dict[str, str]] = {}
+    by_module: dict[str, dict[str, str]] = {}
     for path in sorted(sources):
         module = module_name(path)
-        by_module.setdefault(module, set())
+        by_module.setdefault(module, {})
         stack, pending = [], []
+        levels: list[dict[str, None]] = [{}]
         for line in code_only(sources[path]).split("\n"):
             m = SET_OPTION.match(line)
             if m:
                 pending.append(m.group(1))
                 continue
+            m = FILE_SET_OPTION.match(line)
+            if m:
+                if not FILE_SCOPED_BOILERPLATE.match(m.group(1)):
+                    levels[-1][m.group(1)] = None
+                continue
             m = NAMESPACE.match(line)
             if m:
                 stack.append(("ns", m.group(1)))
+                levels.append({})
                 continue
             if SECTION.match(line):
                 stack.append(("sec", SECTION.match(line).group(1)))
+                levels.append({})
                 continue
             if END.match(line):
                 if stack:
                     stack.pop()
+                if len(levels) > 1:
+                    levels.pop()
+                continue
+            if EXAMPLE.match(line):
+                pending = []
                 continue
             m = DECL.match(line)
             if m:
                 prefix = ".".join(n for kind, n in stack if kind == "ns")
                 name = (prefix + "." + m.group(1)) if prefix else m.group(1)
-                table.setdefault(name, set()).update(pending)
-                by_module[module].update(pending)
+                carried = {o: INHERITED for level in levels for o in level}
+                carried.update({o: OWN for o in pending})
+                _merge(table.setdefault(name, {}), carried)
+                _merge(by_module[module], carried)
                 pending = []
     return table, by_module
 
@@ -361,10 +457,27 @@ def family_of(sentence: str) -> str:
     return "any"
 
 
-def carries(options: set[str], family: str) -> bool:
+def matching(options: dict[str, str], family: str) -> list[str]:
+    """The options of `options` that answer `family`; `any` accepts them all."""
     if family == "any":
-        return bool(options)
-    return any(FAMILIES[family].search(o) for o in options)
+        return sorted(options)
+    return sorted(o for o in options if FAMILIES[family].search(o))
+
+
+def carries(options: dict[str, str], family: str) -> bool:
+    return bool(matching(options, family))
+
+
+def answered_by(options: dict[str, str], family: str) -> str:
+    """Which scope makes the sentence true: its own option, or one it inherits, or neither.
+
+    A declaration carrying both is reported as `OWN`, which is the stronger reading and the one
+    the sentence is most likely to have meant.
+    """
+    scopes = {options[o] for o in matching(options, family)}
+    if not scopes:
+        return ""
+    return OWN if OWN in scopes else INHERITED
 
 
 def mask_backticks(sentence: str) -> str:
@@ -523,27 +636,33 @@ def read_tree(root: str = ".") -> dict[str, str]:
     return out
 
 
-def describe(ref: dict, options: set[str]) -> str:
+def render(options: dict[str, str]) -> str:
+    return ", ".join("%s%s" % (o, "" if options[o] == OWN else " (file-scoped)")
+                     for o in sorted(options))
+
+
+def describe(ref: dict, options: dict[str, str]) -> str:
     return ("%s `%s` carries {%s}, which is no `%s` option"
-            % (ref["kind"], ref["candidates"][0], ", ".join(sorted(options)) or "nothing",
-               ref["family"]))
+            % (ref["kind"], ref["candidates"][0], render(options) or "nothing", ref["family"]))
 
 
-def options_of(ref: dict, table, by_module) -> set[str]:
+def options_of(ref: dict, table, by_module) -> dict[str, str]:
     source = by_module if ref["kind"] == "module" else table
-    return source.get(ref["candidates"][0], set())
+    return source.get(ref["candidates"][0], {})
 
 
 def report(sources: dict[str, str]) -> int:
     table, by_module = option_table(sources)
     mismatches, attributed, declined = audit(sources)
-    with_options = {n for n, o in table.items() if o}
+    own = {n for n, o in table.items() if OWN in o.values()}
+    inherited = {n for n, o in table.items() if o} - own
     counts: dict[str, int] = {}
     for ref in attributed + declined:
         counts[ref["family"]] = counts.get(ref["family"], 0) + 1
     print("modules under FormalSchemes/   : %5d" % len(sources))
-    print("declarations with a set_option : %5d   (of %d declarations seen)"
-          % (len(with_options), len(table)))
+    print("declarations with a set_option : %5d   (of %d declarations seen; %d carry their own,"
+          " %d only inherit a file-scoped one)"
+          % (len(own) + len(inherited), len(table), len(own), len(inherited)))
     print("cross-references attributed    : %5d" % len(attributed))
     print("  MISMATCH                     : %5d" % len(mismatches))
     print("  declined (see below)         : %5d   (not a failure: see the module docstring)"
@@ -551,9 +670,11 @@ def report(sources: dict[str, str]) -> int:
     print("  by family                    : %s"
           % ", ".join("%s %d" % (k, counts[k]) for k in sorted(counts)))
     for ref in sorted(attributed, key=lambda r: (r["path"], r["line"])):
-        print("  %s  %s:%d  %s `%s` (%s)"
+        scope = answered_by(options_of(ref, table, by_module), ref["family"])
+        print("  %s  %s:%d  %s `%s` (%s%s)"
               % ("MISMATCH" if not ref["ok"] else "checked ", ref["path"], ref["line"],
-                 ref["kind"], ref["candidates"][0], ref["family"]))
+                 ref["kind"], ref["candidates"][0], ref["family"],
+                 ", file-scoped" if scope == INHERITED else ""))
     for ref in sorted(mismatches, key=lambda r: (r["path"], r["line"])):
         print("  MISMATCH  %s:%d  %s"
               % (ref["path"], ref["line"], describe(ref, options_of(ref, table, by_module))))
@@ -766,15 +887,142 @@ def selftest() -> int:
           run("nothing to see here", wrapped),
           (["anchor_with_nothing"], ["anchor_with_nothing"], []))
 
-    # A file-scoped `set_option` with no `in` binds to the module, not to the next declaration.
-    scoped = {"FormalSchemes/Carrier.lean": _src(
+    # A file-scoped `set_option` with no `in` applies to the rest of the enclosing scope, so it
+    # is carried by every declaration below it *and* by the module.  This is where this tree
+    # spells 258 of its 406 non-linter options and 258 of its 309 budget raises, so the
+    # `heartbeats` family is only reachable at all through this shape -- which is why both
+    # halves are asserted here rather than only the declaration one.  The case this replaces
+    # asserted the declaration half and carried a comment claiming the module half; the code
+    # implemented neither, so the false half was never watched.
+    file_scoped = {"FormalSchemes/Carrier.lean": _src(
         "set_option maxHeartbeats 400000",
+        "set_option synthInstance.maxHeartbeats 1000000",
         "namespace AlgebraicGeometry",
         "theorem anchor_with_nothing : True := trivial",
         "end AlgebraicGeometry")}
-    check("a file-scoped `set_option` is not attributed to the declaration below it",
-          run("The same heartbeats raise as `anchor_with_nothing` needs, same reason.", scoped),
+    check("a file-scoped `set_option` is carried by the declaration below it",
+          run("The same heartbeats raise as `anchor_with_nothing` needs, same reason.",
+              file_scoped),
+          ([], ["anchor_with_nothing"], []))
+    check("a file-scoped `set_option` is carried by the module too",
+          run("The same budget raise `FormalSchemes.Carrier` makes, for the same reason.",
+              file_scoped),
+          ([], ["FormalSchemes.Carrier"], []))
+    check("a familyless noun passes on a file-scoped option, as it does on a scoped one",
+          run("The same accommodation as `FormalSchemes.Carrier` makes, same reason.",
+              file_scoped),
+          ([], ["FormalSchemes.Carrier"], []))
+    check("a transparency claim about a file-scoped budget raise still fires",
+          run("Same transparency requirement as `anchor_with_nothing`, same reason.",
+              file_scoped),
           (["anchor_with_nothing"], ["anchor_with_nothing"], []))
+
+    # The scope really is a scope: `end` reverts it.  Without this the fix would be "attribute
+    # to the rest of the file", which is a different and wrong rule.
+    sectioned = {"FormalSchemes/Carrier.lean": _src(
+        "namespace AlgebraicGeometry",
+        "section",
+        "set_option maxHeartbeats 400000",
+        "theorem anchor_with_transparency : True := trivial",
+        "end",
+        "theorem anchor_with_nothing : True := trivial",
+        "end AlgebraicGeometry")}
+    check("a file-scoped option inside a `section` reaches a declaration in it",
+          run("The same heartbeats raise as `anchor_with_transparency` needs, same reason.",
+              sectioned),
+          ([], ["anchor_with_transparency"], []))
+    check("and does not reach one after the matching `end`",
+          run("The same heartbeats raise as `anchor_with_nothing` needs, same reason.",
+              sectioned),
+          (["anchor_with_nothing"], ["anchor_with_nothing"], []))
+
+    # File-scoped `linter.*` is the one form that is boilerplate, and excluding it is what keeps
+    # the fallback family `any` from becoming vacuously true: every module of this tree carries
+    # `linter.style.header false`, so admitting it turns both of the tree's standing
+    # `MISMATCH`es into passes.  Measured, not asserted -- see the loosening in the pull request.
+    boilerplate = {"FormalSchemes/Carrier.lean": _src(
+        "set_option linter.style.header false",
+        "namespace AlgebraicGeometry",
+        "theorem anchor_with_nothing : True := trivial",
+        "end AlgebraicGeometry")}
+    check("a file-scoped `linter.*` option is boilerplate and is not attributed",
+          run("The same accommodation as `anchor_with_nothing` makes, same reason.", boilerplate),
+          (["anchor_with_nothing"], ["anchor_with_nothing"], []))
+
+    # `set_option ... in` before an `example` is consumed by the `example`.  Population 0 on this
+    # tree, so this pins a hole rather than closing a live one.
+    exemplar = {"FormalSchemes/Carrier.lean": _src(
+        "namespace AlgebraicGeometry",
+        "set_option backward.isDefEq.respectTransparency false in",
+        "example : True := trivial",
+        "theorem anchor_with_nothing : True := trivial",
+        "end AlgebraicGeometry")}
+    check("a scoped option consumed by an `example` does not fall through to the next theorem",
+          run("Same transparency requirement as `anchor_with_nothing`, same reason.", exemplar),
+          (["anchor_with_nothing"], ["anchor_with_nothing"], []))
+
+    # The two scopes are kept apart in the record, which is what lets `report` say which
+    # answered.  Asserted against the table directly: `run` only reports anchors.
+    own_and_inherited = _src(
+        "set_option maxHeartbeats 400000",
+        "namespace AlgebraicGeometry",
+        "set_option maxHeartbeats 800000 in",
+        "theorem its_own : True := trivial",
+        "theorem inherits : True := trivial",
+        "end AlgebraicGeometry")
+    table, by_module = option_table({"FormalSchemes/Carrier.lean": own_and_inherited})
+    check("a declaration's own option outranks the file-scoped one of the same name",
+          table["AlgebraicGeometry.its_own"], {"maxHeartbeats": OWN})
+    check("a declaration that only sits below the raise is recorded as inheriting it",
+          table["AlgebraicGeometry.inherits"], {"maxHeartbeats": INHERITED})
+    check("`answered_by` names the scope the verdict rests on",
+          (answered_by(table["AlgebraicGeometry.its_own"], "heartbeats"),
+           answered_by(table["AlgebraicGeometry.inherits"], "heartbeats"),
+           answered_by(table["AlgebraicGeometry.inherits"], "transparency")),
+          (OWN, INHERITED, ""))
+
+    # Namesakes are the only place the two scopes are merged rather than built together, and a
+    # plain `update` there silently downgrades the stronger record to the weaker one depending
+    # on which file sorts first.  Without this case that precedence rule fails no loosening at
+    # all, which is the defect it exists to prevent one level up.
+    twins, _ = option_table({
+        "FormalSchemes/TwinA.lean": _src(
+            "namespace AlgebraicGeometry",
+            "set_option maxHeartbeats 400000 in",
+            "theorem twin : True := trivial",
+            "end AlgebraicGeometry"),
+        "FormalSchemes/TwinB.lean": _src(
+            "set_option maxHeartbeats 800000",
+            "namespace AlgebraicGeometry",
+            "theorem twin : True := trivial",
+            "end AlgebraicGeometry")})
+    check("merging namesakes keeps the stronger record: own is not downgraded by a later file",
+          twins["AlgebraicGeometry.twin"], {"maxHeartbeats": OWN})
+
+    # `report` is the only thing that prints `by family` and the only thing that prints which
+    # scope answered, so neither was reachable from a case at all until here -- and the tree's
+    # own `by family` is `any 17, transparency 10`, with no `heartbeats` member to watch.  This
+    # runs the whole report over the file-scoped shape, which is the one that makes that family
+    # reachable, and reads the two lines back.
+    reported = io.StringIO()
+    with contextlib.redirect_stdout(reported):
+        report({"FormalSchemes/Budget.lean": _src(
+                    "set_option maxHeartbeats 400000",
+                    "namespace AlgebraicGeometry",
+                    "set_option synthInstance.maxHeartbeats 1000000 in",
+                    "theorem carries_its_own : True := trivial",
+                    "theorem only_inherits : True := trivial",
+                    "end AlgebraicGeometry"),
+                "FormalSchemes/Site.lean": _src(
+                    "-- The same heartbeats raise as `carries_its_own` needs, same reason.",
+                    "",
+                    "-- The same heartbeats raise as `only_inherits` needs, same reason.")})
+    lines = reported.getvalue().split("\n")
+    check("`by family` reaches the `heartbeats` family through the file-scoped shape",
+          [l.split(":")[1].strip() for l in lines if "by family" in l], ["heartbeats 2"])
+    check("the report says which scope answered, and only when it is the weaker one",
+          [l.split("(")[-1].rstrip(")") for l in lines if l.startswith("  checked")],
+          ["heartbeats", "heartbeats, file-scoped"])
 
     return 1 if bad else 0
 

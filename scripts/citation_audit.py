@@ -834,7 +834,9 @@ def selftest() -> int:
     # asserted only on the *detail* -- so the refusal opened "`.lake` is not a build of this
     # checkout" on a branch that had established no such thing, and three sessions' attention on
     # this file did not see it.  A loosening that collapses the two sentences back into one now
-    # fails three cases instead of none.
+    # fails two cases instead of none -- cases 3 and 4; case 2 still passes, because collapsing
+    # to the *old* sentence is exactly what its own assertions ask for.  (Collapsing the other
+    # way, to the new sentence, fails case 2 alone.  No collapse fails three.)
     def build(name, transcript, rc, want, wants=(), nots=()):
         nonlocal bad
         msg = ""
