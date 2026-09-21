@@ -93,16 +93,21 @@ about no other `R'`.
 
 **The refinement direction of §10.15 is still open**, and so are the composition law and the hard
 direction of conservativity. `FormalSchemes/GeneralSeparatedHomLocal.lean` names what the
-refinement direction requires — that `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf` restrict
-to an open subscheme *over an open of the affine base* — and this file supplies that only when the
-open of the base is a **basic** open. Getting from an arbitrary open subscheme of an arbitrary
-formal scheme to that shape is the residue, and it is not done here.
+refinement direction requires — that `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf` survive
+*restricting the source* to an open subscheme and *replacing the affine base* by an open of it —
+and this file supplies the second of those two, and only when the open of the base is a **basic**
+open. The source half is the residue, and it is not done here.
+`FormalSchemes.AwayBaseFactorisationRange` (issue 2139) is where the two are ordered: it shows the
+base half has no factorisation to consume until the source half has been taken.
 
-`FormalSchemes.GeneralSeparatedHom`'s not-proved list is therefore left exactly as it stands.
-`FormalSchemes.GeneralSeparatedHomLocal`'s bullet is the one this module falsifies, and it has
-been repaired there **twice** — for *is nowhere on the tree* (issue 1998) and for the existentially
-quantified structural morphism (issue 2111) — and it names this module and says in the same breath
-that the arbitrary open it needs is still missing.
+`FormalSchemes.GeneralSeparatedHom`'s not-proved list is left exactly as it stands by *this*
+module. Its bullets still stand; the paragraph below them that named the missing statement was
+repaired by issue 2139, which found it naming the half this file landed rather than the half still
+open. `FormalSchemes.GeneralSeparatedHomLocal`'s bullet is the one this module falsifies, and it
+has been repaired there **three times** — for *is nowhere on the tree* (issue 1998), for the
+existentially quantified structural morphism (issue 2111) and for which of the two halves is still
+missing (issue 2139) — and it names this module and says in the same breath that the arbitrary
+open it needs is still missing.
 **No list is weakened and no direction is claimed.**
 
 **No datum is constructed and no presentation is produced.** The `(R, I)`-presentation is an input
@@ -115,8 +120,10 @@ separatedness over `Spf R`, and nothing below is an `Iff`.
 
 ## Placement
 
-A leaf over `FormalSchemes.GeneralSeparatedBaseChange`, `FormalSchemes.GeneralSeparatedScheme` and
-`FormalSchemes.AwayBaseChangeGluedX`: forward closure **201**, reverse closure **0**.
+Over `FormalSchemes.GeneralSeparatedBaseChange`, `FormalSchemes.GeneralSeparatedScheme` and
+`FormalSchemes.AwayBaseChangeGluedX`: forward closure **201**, reverse closure **1**. It was a leaf
+until `FormalSchemes.AwayBaseFactorisationRange`, whose subject is what the hypothesis `ht` of
+`FormalScheme.isSeparatedOverSpf_awayBase_of_factorsThrough` below asks of a source.
 
 The three parents are pairwise import-incomparable — `FormalSchemes.GeneralSeparatedBaseChange`
 has forward closure **185**, `FormalSchemes.GeneralSeparatedScheme` **178** and
@@ -125,11 +132,12 @@ the statement costs either two import edges or a module of its own. The edges we
 `FormalSchemes.GeneralSeparatedBaseChange` was itself a leaf until this module, and an edge into
 `FormalSchemes.GeneralSeparatedScheme` would put the whole `FormalSchemes.AwayBaseChangeGluedX`
 subtree into the environment of every consumer of `FormalSchemes.GeneralSeparatedScheme`.
-`FormalSchemes.GeneralSeparatedScheme`'s reverse closure is **13**, and none of the twelve besides
-this module is about a change of base.
+`FormalSchemes.GeneralSeparatedScheme`'s reverse closure is **14**, and of the thirteen besides
+this module the only one about a change of base is `FormalSchemes.AwayBaseFactorisationRange`,
+which is a leaf over this one.
 
-A leaf leaves all three subjects alone and moves no forward closure anywhere, at the price of the
-reverse closure of every module it imports moving by one.
+A module of its own leaves all three subjects alone and moves no forward closure anywhere, at the
+price of the reverse closure of every module it imports moving by one.
 
 The two sections added below for the basic-open factorisation are here for the same reason read
 the other way round. `FormalSpectrum.globalSectionsMap`, `FormalSpectrum.awayCompletionLift`,

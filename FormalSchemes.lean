@@ -67,6 +67,7 @@ import FormalSchemes.AwayBaseChangeChartTransition
 import FormalSchemes.AwayBaseChangeGluedX
 import FormalSchemes.AwayBaseChangeSeparated
 import FormalSchemes.AwayBaseChangeTopFiniteType
+import FormalSchemes.AwayBaseFactorisationRange
 import FormalSchemes.AwayChartStructMap
 import FormalSchemes.AwayCompletionAway
 import FormalSchemes.AwayCompletionCongrEquiv

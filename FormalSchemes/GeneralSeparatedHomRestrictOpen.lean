@@ -93,7 +93,7 @@ and moves nothing.
 
 `FormalScheme.isOpenImmersion_restrictOpenMap` is general and belongs beside
 `FormalScheme.restrictOpenMap` in `FormalSchemes.OpenFormalSubscheme`. That module's reverse
-closure is **75** against this file's **0**, and the instance has one consumer, here; it is
+closure is **76** against this file's **0**, and the instance has one consumer, here; it is
 declined on the same ratio and for the same reason as the three helpers
 `FormalSchemes.GeneralSeparatedHomIdentity` declines, and is worth re-costing when a second
 consumer appears.
@@ -102,7 +102,7 @@ Two of those three helpers now **have** that second consumer, which is the event
 asks to be recorded: `FormalSpectrum.locallyRingedSpaceObjCongr` and
 `FormalSpectrum.locallyRingedSpaceObjCongr_hom_eq_map` are used here as well as by
 `AlgebraicGeometry.spf_isSeparatedOverSpf_self`. The ratio that declined their move has not changed
-— `FormalSchemes.FormalSpectrum`'s reverse closure is **533** — so this records the second consumer
+— `FormalSchemes.FormalSpectrum`'s reverse closure is **534** — so this records the second consumer
 and moves nothing.
 
 ## Main definitions and results
