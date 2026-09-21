@@ -4,7 +4,7 @@ import FormalSchemes.GeneralFibreProductExposeXIdealCongr
 import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 
 set_option linter.style.header false
--- This file carries six per-declaration `set_option`s, three `maxHeartbeats 800000` and three
+-- This file carries six per-declaration `set_option`s, three heartbeat raises and three
 -- `backward.isDefEq.respectTransparency false`, on
 -- `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁`, on
 -- `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₂` and on
@@ -682,17 +682,21 @@ theorem xGlued_diagonalDatum_ofAlgebraData_congr
       τ τ_symm σ hστ hσc τ' τ'_symm σ' hστ' hσc' hK hτ hσ)
 
 omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 -- A raised limit, and the measurement behind it. The statements below compose a morphism written
 -- at `AlgebraicGeometry.DoubleChartGlue` with one written at
 -- `AlgebraicGeometry.BothChartedFibreDatumXY`; the two objects agree by
 -- `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct_eq`, which is `rfl`, but at a
 -- literal `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair the two sides of that
 -- `rfl` are large terms and the defeq check that bridges them is what runs out. All three fail at
--- the default 200000; the two projection squares pass at 400000 and the triangle at 800000, so the
--- bound is set uniformly at 800000. The route that would remove it is to ascribe the comparison
--- once, in a `def` whose type is written in the datum vocabulary, and state everything against
--- that; it is a separate change and is not attempted here.
+-- the default 200000; the two projection squares fail at 300000 and pass at 400000, while the
+-- triangle still fails at 400000 and is left at 800000, so the bounds are per-declaration rather
+-- than uniform. Ascribing the comparison once, in a `def` whose type is written in the datum
+-- vocabulary, removes neither option (issue 2083): all three proofs are chartwise by
+-- `AlgebraicGeometry.FormalScheme.GlueData.hom_ext` on the glue, which puts the glue vocabulary
+-- back into every goal, so an ascription on the statement never reaches the proof. Naming the glue
+-- in the datum vocabulary at a literal
+-- `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair is issue 2074's instance wall.
 set_option backward.isDefEq.respectTransparency false in
 /-- **The glued base change commutes with the first projection.** At one chart family `A`, one away
 family `g` and two adic bases whose induced ideal families agree, the comparison
@@ -768,17 +772,21 @@ theorem baseChange_comp_pr₁ (hII' : I.map (algebraMap R R') = I')
   rw [← Category.assoc, hchart, Category.assoc, hxι]
 
 omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
-set_option maxHeartbeats 800000 in
+set_option maxHeartbeats 400000 in
 -- A raised limit, and the measurement behind it. The statements below compose a morphism written
 -- at `AlgebraicGeometry.DoubleChartGlue` with one written at
 -- `AlgebraicGeometry.BothChartedFibreDatumXY`; the two objects agree by
 -- `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct_eq`, which is `rfl`, but at a
 -- literal `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair the two sides of that
 -- `rfl` are large terms and the defeq check that bridges them is what runs out. All three fail at
--- the default 200000; the two projection squares pass at 400000 and the triangle at 800000, so the
--- bound is set uniformly at 800000. The route that would remove it is to ascribe the comparison
--- once, in a `def` whose type is written in the datum vocabulary, and state everything against
--- that; it is a separate change and is not attempted here.
+-- the default 200000; the two projection squares fail at 300000 and pass at 400000, while the
+-- triangle still fails at 400000 and is left at 800000, so the bounds are per-declaration rather
+-- than uniform. Ascribing the comparison once, in a `def` whose type is written in the datum
+-- vocabulary, removes neither option (issue 2083): all three proofs are chartwise by
+-- `AlgebraicGeometry.FormalScheme.GlueData.hom_ext` on the glue, which puts the glue vocabulary
+-- back into every goal, so an ascription on the statement never reaches the proof. Naming the glue
+-- in the datum vocabulary at a literal
+-- `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair is issue 2074's instance wall.
 set_option backward.isDefEq.respectTransparency false in
 /-- **The glued base change commutes with the second projection**, by the same chartwise argument
 as `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁` on the other side of the tensor,
@@ -850,10 +858,14 @@ set_option maxHeartbeats 800000 in
 -- `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct_eq`, which is `rfl`, but at a
 -- literal `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair the two sides of that
 -- `rfl` are large terms and the defeq check that bridges them is what runs out. All three fail at
--- the default 200000; the two projection squares pass at 400000 and the triangle at 800000, so the
--- bound is set uniformly at 800000. The route that would remove it is to ascribe the comparison
--- once, in a `def` whose type is written in the datum vocabulary, and state everything against
--- that; it is a separate change and is not attempted here.
+-- the default 200000; the two projection squares fail at 300000 and pass at 400000, while the
+-- triangle still fails at 400000 and is left at 800000, so the bounds are per-declaration rather
+-- than uniform. Ascribing the comparison once, in a `def` whose type is written in the datum
+-- vocabulary, removes neither option (issue 2083): all three proofs are chartwise by
+-- `AlgebraicGeometry.FormalScheme.GlueData.hom_ext` on the glue, which puts the glue vocabulary
+-- back into every goal, so an ascription on the statement never reaches the proof. Naming the glue
+-- in the datum vocabulary at a literal
+-- `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair is issue 2074's instance wall.
 set_option backward.isDefEq.respectTransparency false in
 /-- **The two diagonals are related by the glued base change.** The triangle `Δ' ≫ ι = Δ` at the
 `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair, with `ι` the glued base change and
