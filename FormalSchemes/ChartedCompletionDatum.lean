@@ -455,18 +455,6 @@ theorem completionGlued_jointly_surjective (x : D.completionGlued.toLocallyRinge
 
 /-! ### The glue condition, and morphisms out of the glued completion -/
 
-/-- The constructed glue map, off the diagonal, in the completion vocabulary. -/
-theorem completionFormalGlueData_f (i j : D.J) (h : i ≠ j) :
-    D.completionFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.f i j =
-      eqToHom (dif_neg h) ≫ D.overlapImmersion i j :=
-  dif_neg h
-
-/-- The constructed transition, off the diagonal, in the completion vocabulary. -/
-theorem completionFormalGlueData_t (i j : D.J) (h : i ≠ j) :
-    D.completionFormalGlueData.toLocallyRingedSpaceGlueData.toGlueData.t i j =
-      eqToHom (dif_neg h) ≫ (D.overlapIso i j h).hom ≫ eqToHom (dif_neg h.symm).symm :=
-  dif_neg h
-
 /-- **The chart completions agree over their overlaps inside the glued completion.** This is
 `CategoryTheory.GlueData.glue_condition` with the `GlueData.ofGlueData'` bookkeeping cancelled off
 both sides by `CategoryTheory.GlueData.ofGlueData'_ι_comp` (`FormalSchemes.GlueMorphisms`); it is
