@@ -1,0 +1,437 @@
+#!/usr/bin/env python3
+"""Flag a docstring paragraph that has been left with a word or two stranded on a line of its own.
+
+A figure repair that lengthens a word -- `two` to `three`, `three` to `four` -- re-fills the
+paragraph it sits in, and can push the tail of a sentence onto a line by itself:
+
+    ...the root module list and nothing else, and moves
+    no
+    stated figure anywhere on the tree. ...
+
+**Nothing standing on this tree reads that.**  `lake build --wfail` is silent, `closure_audit.py`
+reads figures and not fills, `citation_audit.py` resolves names, and the width check is silent
+because the line is *short* rather than long.  The board has named two classes of figure defect --
+digits, which `closure_audit --tree` catches, and word-spellings, which only a hand-written scan
+catches -- and this is a third.  Issue 2139's forty-one-site figure repair introduced two of them
+and issue 2154 repaired them by hand; this is the instrument.
+
+Usage, from the repository root.  No `lake`, no build, no environment.
+
+    python3 scripts/reflow_widow_scan.py --diff upstream/master...HEAD
+    python3 scripts/reflow_widow_scan.py --tree
+    python3 scripts/reflow_widow_scan.py --selftest
+
+**`--diff` is the mode that earns this script.**  The useful question is *"did this diff strand a
+word?"*, not *"how many are on the tree?"* -- the standing population is a wart with precedent, and
+issue 2159 argues on measurement that it should not be swept.  `--tree` exists so that the number
+can be seen not to grow, and it prints no verdict: a flag here is a **question**, exactly as in
+`docstring_signature_scan.py`, and this script is deliberately **not** in
+`.orchestra/validation.sh`.
+
+## The predicate, and the four rejected alternatives that are the argument for it
+
+Issue 2154 proposed *"non-indented lines of at most two words inside a doc span"*.  Run it and
+it is useless, because the last line of every filled paragraph is short.  Each refinement below was
+measured on this tree rather than reasoned about; the figures are at `4873811` under **this file's
+own paragraph segmentation**, and a pull request that adds a module moves all of them, so
+re-measure rather than quoting them.
+
+    population  predicate, each row adding a conjunct to the one above
+    ----------  --------------------------------------------------------------------------
+    2064 lines  a <=2-word line inside a doc span -- the last line of every filled
+                paragraph, so this is every paragraph
+     206 lines  ... and its first word fits on the line above at **99** -- the wrong width:
+                this tree fills at **100**, so almost nothing qualifies
+    3765 paras  a greedy refill of the paragraph at 100 differs from what is there --
+                **this tree is not greedily filled**, and that is deliberate: authors break
+                before long backticked names
+     684 paras  ... and the refill **saves at least one line** -- still mostly sense-breaks
+                that happen to be compressible, with nothing short stranded in them
+     212 paras  ... and the paragraph holds a <=2-*plain*-word line -- close
+    **210/214** ... and that line is not forced short by an unbreakable neighbour, and is
+                not the paragraph's first -- **the predicate**
+
+The two conjuncts do different jobs and neither works alone.  *Saves a line* rules out the
+thousands of paragraphs this tree breaks for sense at no cost in lines.  *Holds a short plain line*
+rules out the several hundred whose only compressible line is a long backticked name the author put
+on a line of its own on purpose -- **plain** means every word on it is backtick-free and at most
+`--max-token` characters.
+
+## The exclusion, which is the case an instrument must not flag
+
+A short line can be short because **what follows it cannot fit beside it**.  Issue 2154 named
+`GeneralSeparatedBaseChange.lean`'s bare `and` as a widow and it is not one: it sits between two
+hundred-column backticked declaration names, so no refill can absorb it, and the paragraph's refill
+saves a line somewhere else entirely.  A line is therefore **not** reported when the next line of
+its paragraph is a single token that does not fit beside it, and **not** reported when it is the
+paragraph's first line, which has nothing above it to be pulled onto.  `--selftest` pins both, the
+first as a negative fixture built from that shape, so a later loosening that starts flagging
+unbreakable neighbours fails rather than passing quietly.
+
+## Where the population comes from, and why it is wider than issue 2159 measured
+
+Every `/-! ... -/` **and** `/-- ... -/` block, with fenced blocks, lists, tables, headings and
+indented lines excluded -- they are not filled prose and must never be rewrapped.  Declaration
+docstrings are in scope because two of the three standing instances issue 2159 names are in one
+(`StructureSheaf.lean`'s `one.` and `StructureSheafStalkPowerSeriesCounterexample.lean`'s `it.`);
+a module-docstring-only population reads 103 paragraphs here and **contains neither**.  That
+is why the figures above are larger than 2159's 136 / 139: the conjuncts are that row's, the
+population is wider, and the wider one is what it takes to hold the instances the row itself names.
+
+**This is not an autoformatter.**  It reports a line and the refill that would absorb it; it never
+rewrites a file.  Repairing a widow is a judgement about the smallest window that removes it --
+issue 2154's two repairs are two lines into one and four into three -- and a full greedy refill
+of a paragraph routinely destroys breaks the author chose.
+"""
+
+from __future__ import annotations
+
+import argparse
+import glob
+import os
+import re
+import subprocess
+import sys
+import unicodedata
+
+
+WIDTH = 100
+MAX_TOKEN = 14
+
+# A line that is not filled prose.  Indented text, a list item, a table row, a heading, a block
+# quote, a fence, and the `/-` and `-/` delimiters themselves: rewrapping any of them is wrong, so
+# none of them may be inside a paragraph this script considers.
+STRUCTURAL = re.compile(r"^\s|^[*\-|#>+]|^\d+\.|^```|^/-|^-/")
+
+
+def cols(text: str) -> int:
+    """Display width, with combining marks at zero and East Asian wide characters at two."""
+    return sum(0 if unicodedata.combining(c) else
+               (2 if unicodedata.east_asian_width(c) in ("W", "F") else 1) for c in text)
+
+
+def refill(lines: list[str], width: int) -> list[str]:
+    """`lines` re-flowed greedily at `width`, which is what a fill would have produced."""
+    out: list[str] = []
+    current = ""
+    for word in " ".join(lines).split():
+        trial = word if not current else current + " " + word
+        if cols(trial) > width and current:
+            out.append(current)
+            current = word
+        else:
+            current = trial
+    if current:
+        out.append(current)
+    return out
+
+
+def doc_spans(text: str, opener: str) -> list[tuple[int, int]]:
+    """Inclusive 1-based line ranges of `opener ... -/` blocks, nesting-aware.
+
+    Scanned directly rather than recovered by comparing a stripped copy against the original: the
+    two disagree by two characters at every `-/`, and aligning them is where sessions have lost
+    time.
+    """
+    spans: list[tuple[int, int]] = []
+    depth, start = 0, 0
+    for number, line in enumerate(text.split("\n"), 1):
+        i = 0
+        while i < len(line):
+            if depth and line.startswith("-/", i):
+                depth -= 1
+                i += 2
+                if depth == 0:
+                    spans.append((start, number))
+                continue
+            if depth == 0 and line.startswith(opener, i):
+                depth, start = 1, number
+                i += len(opener)
+                continue
+            if depth and line.startswith("/-", i):
+                depth += 1
+                i += 2
+                continue
+            i += 1
+    return spans
+
+
+def paragraphs(text: str,
+               openers: tuple[str, ...] = ("/-!", "/--")) -> list[list[tuple[int, str]]]:
+    """Every run of two or more consecutive filled-prose lines inside a block docstring."""
+    inside: set[int] = set()
+    for opener in openers:
+        for first, last in doc_spans(text, opener):
+            inside |= set(range(first, last + 1))
+    return _paragraphs_of(text.split("\n"), lambda n: n in inside)
+
+
+def _paragraphs_of(lines: list[str], is_doc) -> list[list[tuple[int, str]]]:
+    out: list[list[tuple[int, str]]] = []
+    current: list[tuple[int, str]] = []
+    fenced = False
+    for number, line in enumerate(lines, 1):
+        usable = bool(line.strip()) and is_doc(number)
+        if usable and line.strip().startswith("```"):
+            fenced = not fenced
+            if current:
+                out.append(current)
+                current = []
+            continue
+        if usable and not fenced and not STRUCTURAL.match(line):
+            current.append((number, line))
+        elif current:
+            out.append(current)
+            current = []
+    if current:
+        out.append(current)
+    return [p for p in out if len(p) >= 2]
+
+
+def is_short_plain(line: str, max_token: int = MAX_TOKEN) -> bool:
+    """At most two words, none backticked and none longer than `max_token` characters."""
+    words = line.split()
+    return 1 <= len(words) <= 2 and all("`" not in w and len(w) <= max_token for w in words)
+
+
+def widows(paragraph: list[tuple[int, str]], width: int = WIDTH,
+           max_token: int = MAX_TOKEN) -> list[tuple[int, str]]:
+    """The stranded lines of `paragraph`, or `[]` if there are none.
+
+    Both conjuncts, then the two exclusions.  See the module docstring for what each rules out and
+    what breaks if it is dropped.
+    """
+    lines = [line for _, line in paragraph]
+    if len(lines) - len(refill(lines, width)) < 1:
+        return []
+    out = []
+    for index, (number, line) in enumerate(paragraph):
+        if not is_short_plain(line, max_token):
+            continue
+        if index == 0:
+            continue
+        if index + 1 < len(paragraph):
+            following = paragraph[index + 1][1].split()
+            if len(following) == 1 and cols(line) + 1 + cols(following[0]) > width:
+                continue
+        out.append((number, line))
+    return out
+
+
+def lean_files(root: str) -> list[str]:
+    """Every module under `FormalSchemes/`, by a filesystem walk rather than `git ls-files`.
+
+    A `git archive` extraction is not a repository, and both ends of a `--diff` comparison are
+    routinely read out of one.
+    """
+    out = []
+    for base, _, entries in os.walk(os.path.join(root, "FormalSchemes")):
+        for entry in entries:
+            if entry.endswith(".lean"):
+                out.append(os.path.relpath(os.path.join(base, entry), root))
+    return sorted(out)
+
+
+def scan_text(text: str, width: int, max_token: int):
+    found = []
+    for paragraph in paragraphs(text):
+        stranded = widows(paragraph, width, max_token)
+        if stranded:
+            found.append((paragraph, stranded))
+    return found
+
+
+def scan_tree(root: str, width: int, max_token: int):
+    out = []
+    for path in lean_files(root):
+        with open(os.path.join(root, path), encoding="utf-8") as handle:
+            text = handle.read()
+        for paragraph, stranded in scan_text(text, width, max_token):
+            out.append((path, paragraph, stranded))
+    return out
+
+
+def show(path: str, paragraph, stranded, width: int) -> None:
+    lines = [line for _, line in paragraph]
+    print("  %s:%d  paragraph of %d lines, refills to %d"
+          % (path, paragraph[0][0], len(lines), len(refill(lines, width))))
+    for number, line in stranded:
+        print("      :%d  %r" % (number, line.strip()))
+
+
+def report_tree(root: str, width: int, max_token: int) -> int:
+    hits = scan_tree(root, width, max_token)
+    modules = len(lean_files(root))
+    stranded = sum(len(s) for _, _, s in hits)
+    print("modules under FormalSchemes/      : %5d" % modules)
+    print("fill width / max plain word       : %5d / %d" % (width, max_token))
+    print("FLAGGED: paragraphs with a stranded line : %5d   (%d lines)" % (len(hits), stranded))
+    for path, paragraph, s in hits:
+        show(path, paragraph, s, width)
+    print()
+    print("A flag is a question, not a finding: re-fill the paragraph by the smallest window that")
+    print("absorbs the line, or decline it by name with a reason.  This scan has no verdict or")
+    print("exit code of its own -- the standing population is a wart with precedent (issue 2159),")
+    print("and `--diff` is the mode that keeps it from growing.")
+    return 0
+
+
+def report_diff(diff_range: str, root: str, width: int, max_token: int) -> int:
+    base, _, head = diff_range.partition("...")
+    if not head:
+        base, _, head = diff_range.partition("..")
+    changed = subprocess.run(["git", "-C", root, "diff", "--name-only", diff_range,
+                              "--", "*.lean"],
+                             capture_output=True, text=True, check=True).stdout.split()
+    print("range                             : %s" % diff_range)
+    print("`.lean` files it touches          : %5d" % len(changed))
+    print("fill width / max plain word       : %5d / %d" % (width, max_token))
+    introduced = []
+    for path in changed:
+        before = subprocess.run(["git", "-C", root, "show", "%s:%s" % (base, path)],
+                                capture_output=True, text=True)
+        after = subprocess.run(["git", "-C", root, "show", "%s:%s" % (head, path)],
+                               capture_output=True, text=True)
+        if after.returncode:
+            continue
+        was = set()
+        if before.returncode == 0:
+            for _, stranded in scan_text(before.stdout, width, max_token):
+                was |= {line.strip() for _, line in stranded}
+        for paragraph, stranded in scan_text(after.stdout, width, max_token):
+            fresh = [(n, l) for n, l in stranded if l.strip() not in was]
+            if fresh:
+                introduced.append((path, paragraph, fresh))
+    print("FLAGGED: stranded lines this range introduces : %5d"
+          % sum(len(s) for _, _, s in introduced))
+    for path, paragraph, s in introduced:
+        show(path, paragraph, s, width)
+    print()
+    print("A flag is a question, not a finding: re-fill the paragraph by the smallest window that")
+    print("absorbs the line, or decline it by name.  Comparison is by the stranded line's *text*,")
+    print("not its number, so a paragraph that merely moved down the file is not reported.")
+    return 0
+
+
+def selftest() -> int:
+    """Pin both conjuncts, both exclusions, and this file's own docstring.  No build, no tree."""
+    ok = fail = 0
+
+    def check(label, got, want):
+        nonlocal ok, fail
+        if got == want:
+            ok += 1
+            print("ok    %s" % label)
+        else:
+            fail += 1
+            print("FAIL  %s: got %r, wanted %r" % (label, got, want))
+
+    def doc(*body):
+        return "/-!\n" + "\n".join(body) + "\n-/\n"
+
+    def numbers(text):
+        return [n for p, s in scan_text(text, WIDTH, MAX_TOKEN) for n, _ in s]
+
+    long_word = "a" * 96
+
+    # --- the two real shapes, from issue 2139's diff ------------------------------------------
+    check("a stranded word after a full line is reported (issue 2139's `no`)",
+          numbers(doc("x" * 97, "no", "stated figure anywhere on the tree, and more besides.")),
+          [3])
+    check("a stranded pair at the end of a paragraph is reported",
+          numbers(doc("y" * 80, "four imports")), [3])
+
+    # --- the first conjunct alone is not enough: a sense-break costs no line -------------------
+    sense_break = doc("z" * 95, "index pairs.")
+    check("a short last line whose paragraph does not refill shorter is NOT reported",
+          numbers(sense_break), [])
+    check("... and that paragraph really does contain a short plain line, so only the refill"
+          " conjunct is keeping it out", is_short_plain("index pairs."), True)
+
+    # --- the second conjunct alone is not enough: a saved line with nothing short in it --------
+    saves_but_long = doc("z" * 40, "w" * 40, "`" + "q" * 30 + "`")
+    check("a paragraph that refills shorter but strands nothing short is NOT reported",
+          numbers(saves_but_long), [])
+    check("... and that paragraph really does refill shorter",
+          len(refill([l for _, l in paragraphs(saves_but_long)[0]], WIDTH)) < 3, True)
+
+    # --- exclusion 1: the negative fixture, built from issue 2154's `:1029` shape --------------
+    unbreakable = doc("`" + long_word + "`", "and", "`" + long_word + "`",
+                      "and the rest of it", "which continues here.")
+    check("a short line wedged between unbreakable names is NOT reported (the `:1029` shape)",
+          numbers(unbreakable), [])
+    # The same paragraph with the successor exclusion dropped: `and` comes back, so the negative
+    # fixture above is passing because of that exclusion and not because the refill saves nothing.
+    wedged = paragraphs(unbreakable)[0]
+    check("... and the fixture is sighted: the refill does save a line there",
+          len([l for _, l in wedged]) - len(refill([l for _, l in wedged], WIDTH)), 1)
+    check("... and dropping the successor exclusion would report `and`",
+          [n for i, (n, l) in enumerate(wedged) if i and is_short_plain(l)], [3])
+
+    # --- exclusion 2: a paragraph's first line has nothing above it ----------------------------
+    first_line = doc("This is", "`" + long_word + "`", "with a tail that shortens the refill.")
+    check("a short FIRST line of a paragraph is NOT reported", numbers(first_line), [])
+
+    # --- what must never be rewrapped ----------------------------------------------------------
+    check("a list item is not filled prose",
+          numbers(doc("x" * 97, "* no", "stated figure anywhere on the tree, and more besides.")),
+          [])
+    check("a table row is not filled prose",
+          numbers(doc("| a | b |", "| - | - |", "| c | d |")), [])
+    check("a heading is not filled prose", numbers(doc("## no", "x" * 97)), [])
+    check("an indented line is not filled prose",
+          numbers(doc("x" * 97, "  no", "stated figure anywhere on the tree, and more besides.")),
+          [])
+    check("a fenced block is not filled prose",
+          numbers(doc("```", "x" * 97, "no", "```")), [])
+
+    # --- the population -----------------------------------------------------------------------
+    declaration = "/--\n" + "x" * 95 + "\none\nand a tail to make the refill shorter.\n-/\n"
+    check("a declaration docstring is in scope, because two standing instances live in one",
+          [n for p, s in scan_text(declaration, WIDTH, MAX_TOKEN) for n, _ in s], [3])
+    check("a `--` comment is not scanned: it is not filled prose and is code-adjacent",
+          numbers("-- " + "x" * 94 + "\n-- no\n-- stated figure anywhere, and more.\n"), [])
+    check("a backticked word is not plain, however short",
+          is_short_plain("`no`"), False)
+    check("a long unbacked word is not plain either",
+          is_short_plain("a" * 15), False)
+
+    # --- the lexer ----------------------------------------------------------------------------
+    check("a nested `/- ... -/` does not close the docstring early",
+          doc_spans("/-!\n/- inner -/\ntail\n-/\n", "/-!"), [(1, 4)])
+    check("`/--` and `/-!` are found separately",
+          (doc_spans("/-- a -/\n/-!\nb\n-/\n", "/--"), doc_spans("/-- a -/\n/-!\nb\n-/\n", "/-!")),
+          ([(1, 1)], [(2, 4)]))
+
+    # --- dogfooding: this script's own docstring ------------------------------------------------
+    own = [n for p, s in
+           [(p, widows(p)) for p in _paragraphs_of(__doc__.split("\n"), lambda _n: True)]
+           for n, _ in s]
+    check("this script's own module docstring strands nothing", own, [])
+
+    print("\n%d ok / %d FAIL" % (ok, fail))
+    return 1 if fail else 0
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--tree", action="store_true", help="the standing population")
+    parser.add_argument("--diff", metavar="RANGE", help="stranded lines a `git diff` range adds")
+    parser.add_argument("--root", default=".", help="tree to scan; may be an extraction")
+    parser.add_argument("--width", type=int, default=WIDTH, help="the fill width this tree uses")
+    parser.add_argument("--max-token", type=int, default=MAX_TOKEN,
+                        help="longest word a line may hold and still count as plain")
+    parser.add_argument("--selftest", action="store_true", help="needs no build and no tree")
+    args = parser.parse_args()
+
+    if args.selftest:
+        return selftest()
+    if args.diff:
+        return report_diff(args.diff, args.root, args.width, args.max_token)
+    if args.tree:
+        return report_tree(args.root, args.width, args.max_token)
+    parser.error("one of --tree, --diff or --selftest is required")
+
+
+if __name__ == "__main__":
+    sys.exit(main())
