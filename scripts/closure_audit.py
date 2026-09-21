@@ -44,9 +44,15 @@ Stated the same way in a dozen `## Placement` paragraphs, and this script implem
   warning either way.  The same regex shape run over Mathlib is wrong today for exactly this
   reason -- `Mathlib/Tactic/FunProp.lean:48` writes `import Mathlib.Analysis.Complex.Trigonometric`
   inside a fenced block in its module docstring, and a walk that follows it reports this project's
-  Mathlib closure as 2727 where Lean loads 2650.  Under `FormalSchemes/` the population is **0** of
-  1186 import lines, so `code_only` below moves nothing on this tree; it is here so that the first
-  docstring to quote a Lean snippet does not move an audited figure with nothing in the diff.
+  Mathlib closure as 2727 where Lean loads 2650.  Under `FormalSchemes/` that population is **0**:
+  no *project* import line on this tree sits inside a comment span.  Project import lines are the
+  ones `IMPORT` below matches -- not every line beginning with `import`, which is a larger
+  population this walk does not follow, and naming which of the two is meant is the point of this
+  sentence: the **0** is true of the first and false of the second.  At `d178d6d`, where the
+  sentence was written, it was 0 of **1186** project import lines, against 1332 `import` lines of
+  any kind of which 1324 survive `code_only`; at `aa79516` it is 0 of **1243**, against 1394 and
+  1382.  So `code_only` below moves nothing on this tree; it is here so that the first docstring
+  to quote a Lean snippet does not move an audited figure with nothing in the diff.
 
 ## Which module a claim is about
 
