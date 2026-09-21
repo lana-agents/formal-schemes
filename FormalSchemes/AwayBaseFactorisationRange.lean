@@ -73,21 +73,42 @@ restricted from a given one, and that module says in terms that the general case
 ## Placement
 
 A new module rather than a section of `FormalSchemes.AwayBaseChangeSeparated`, which is where (B)
-and the rest of the factorisation API live. That file does not import
-`FormalSchemes.OpenFormalSubscheme`, which the composite below needs to name
-`FormalScheme.restrictOpen`, and putting the composite there would push that import onto every one
-of that module's dependents to serve one theorem. The first three results would fit there; the
-module is not worth splitting in two to save one import edge on a leaf.
+and the rest of the factorisation API live. **The reason is this docstring, and the price it was
+bought at is stated below rather than implied.** The first version of this paragraph gave a
+different reason — that putting the composite there would push the
+`FormalSchemes.OpenFormalSubscheme` import, which the composite needs to name
+`FormalScheme.restrictOpen`, onto every one of that module's dependents. At the commit this file
+was written against, `FormalSchemes.AwayBaseChangeSeparated` had no dependents at all — that
+module's reverse closure is **1** today and this file is the one — so the import would have been
+carried by that module itself and by nothing else. The cost priced there was the empty set.
 
 `FormalSchemes.AwayBaseFactorisationRange` has reverse closure **0** and forward closure **203**,
 against `FormalSchemes.AwayBaseChangeSeparated`'s forward closure of **201**. The difference is
 that module itself together with `FormalSchemes.OpenFormalSubscheme`, whose own forward closure of
-**32** already lies inside it.
+**32** already lies inside it — and that containment is what makes the comparison lopsided. Because
+those thirty-two are already inside, the import edge would have added
+`FormalSchemes.OpenFormalSubscheme` and nothing else to anyone's reckoning: one reverse-closure
+figure moves, its own, and one forward-closure figure with it, the alternative host's. A module of
+its own moves one such figure for every module it reaches instead, and
+`FormalSchemes.AwayBaseFactorisationRange`'s forward closure is **203**.
+
+So the trade is one figure against 203, and what it bought is this docstring. The obstruction, why
+`FormalSchemes.TargetBasicRefinement` does not supply what §10.13's step needs, and the ordering of
+(A) and (B) are §10.15 exposition; on this tree a module docstring is where such a thing is found,
+and inside a file whose subject is (B) it would not be.
+`FormalSchemes.GeneralFibreProductBaseChange`'s Placement paragraph records the same trade decided
+the other way on the figures alone. Here the figures alone point the other way, and the exposition
+is why they are overruled — which is the part a placement paragraph has to say out loud, because
+the next reader facing this call will read whatever stands here as precedent.
 
 ## Main results
 
 * `FormalSpectrum.map_mem_basicOpen_iff`: a point of `Spf S` maps into `D(f)` exactly when it lies
   in `D(φ f)`.
+* `FormalSpectrum.range_map_subset_basicOpen_of_isUnit`: if `φ f` is a unit then the whole range of
+  `FormalSpectrum.map φ` lies in `D(f)` — the general fact the chart statement below is the
+  instance of, advertised here because on this tree a module's own results list is what says which
+  of its public declarations are meant to be used.
 * `FormalSpectrum.range_awayBaseChart_base_subset`: the basic-open chart of the base lands in
   `D(f)`.
 * `AlgebraicGeometry.FormalScheme.range_base_subset_basicOpen_of_factorsThrough`: **a factorisation

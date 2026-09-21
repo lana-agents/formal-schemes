@@ -119,8 +119,7 @@ measured in the pull request that added this module (issue 2028).
 The construction of the primed data (issue 2038) is added **in place** rather than in a module of
 its own: `FormalSchemes.AwayBaseChangeGluedX`'s reverse closure is **3**, so extending this file
 re-elaborates this file, its three consumers and the root module list and nothing else, and moves
-no
-stated figure anywhere on the tree. The general transports the construction introduces —
+no stated figure anywhere on the tree. The general transports the construction introduces —
 `FormalSpectrum.awayTransport`, `FormalSpectrum.awayTransportRingHom` and
 `AdicCompletion.mapCompletion_heq` — are each consumed by exactly one module, this one, and each
 has a natural home earlier in the tree. Both sides of that ratio, since a ratio with one side is

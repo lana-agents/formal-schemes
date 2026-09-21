@@ -100,7 +100,16 @@ it — all reduce to the same missing statement. **That statement is source rest
 fixed affine base.** Conservativity's hard direction needs it to shrink the source to
 `X|_{g⁻¹D(d)}` before the base can be changed; the composition law needs it to compare two
 witnesses over a common affine; refinement needs it to carry a witness to a finer cover. None of
-the three is closer than the others, and none is reachable without it.
+the three is reachable without it, but since issue 2139 they are no longer equidistant from it, and
+the two asymmetries run the same way. Conservativity's face is the one the tree has a **term**
+for — `FormalScheme.not_exists_factorsThrough_awayBase`
+(`FormalSchemes.AwayBaseFactorisationRange`) is what rules out reaching it by base change at an
+unshrunk source, while the composition law's and refinement's dependence on source restriction is
+read off their own bullets above and is reasoning rather than a theorem. And conservativity's face
+is the one whose next step is already assembled:
+`FormalScheme.isSeparatedOverSpf_restrictOpen_awayBase_of_restrictOpen` is the composite with
+source restriction as an explicit hypothesis, so that direction is one application away once the
+statement lands, where the other two have no such composite waiting.
 
 **Replacing the affine base by an open subscheme the morphism factors through is no longer what is
 missing**, and it is no longer what these three wait on.

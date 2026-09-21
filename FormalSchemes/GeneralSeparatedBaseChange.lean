@@ -176,10 +176,9 @@ Over `FormalSchemes.GeneralSeparatedRange`, `FormalSchemes.GeneralFibreProductBa
 `FormalSchemes.GeneralFibreProductExposeXIdealCongr` and
 `FormalSchemes.GeneralFibreProductLiftUniqueAdic`: forward closure **185** project modules besides
 itself (186 counted with itself), reverse closure **2**, whose two members are
-`FormalSchemes.AwayBaseChangeSeparated` (issue 1998) and
-`FormalSchemes.AwayBaseFactorisationRange` (issue 2139), both of which arrived later. None of the
-four imports
-is implied by the others: each of them contributes modules that none of the other three reaches.
+`FormalSchemes.AwayBaseChangeSeparated` (issue 1998) and `FormalSchemes.AwayBaseFactorisationRange`
+(issue 2139), both of which arrived later. None of the four imports is implied by the others: each
+of them contributes modules that none of the other three reaches.
 
 The fourth import is the uniqueness statement the triangle runs on, and it is the reason
 everything above is here rather than in `FormalSchemes.GeneralFibreProductBaseChange`, which is
