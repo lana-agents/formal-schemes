@@ -48,9 +48,12 @@ computation through `RingSplit.adicAwayUnitEquiv'`:
 * `FormalSpectrum.awayCompletionRestrict_eq_mapCompletion`: a completed localization map under `R`
   is the canonical restriction.
 * `FormalSpectrum.awayCompletionRestrict_eq_awayCompletionMulHomLeft`: the nested instance.
-* `FormalSpectrum.awayCompletionCongrBasicOpen`: two presentations of the *same* basic
-  open are canonically the same ring under `R` — the restriction is an isomorphism when
-  `D(f) = D(g)`, by the two laws above. Issue 2148 §3 is what asks for it.
+* `FormalSpectrum.awayCompletionCongrBasicOpen`, `FormalSpectrum.awayCompletionCongrBasicOpenAlg`:
+  two presentations of the *same* basic open are canonically the same ring under `R` — the
+  restriction is an isomorphism when `D(f) = D(g)`, by the two laws above. Issue 2148 §3 is what
+  asks for it. It is *not* the tree's general comparison isomorphism of completed localizations,
+  which is `CompletedTensorAwayInterchange.awayCongrEquiv`; the two hypotheses differ and the
+  docstring says how.
 * `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict_of_le_comap`: **conditional.** If the
   structure-sheaf restriction is continuous in the same sense, it is `awayCompletionRestrict`. The
   hypothesis is discharged, and the identification stated unconditionally, in
@@ -266,9 +269,20 @@ other way as its inverse: both composites are the identity by the chain law and
 `FormalSpectrum.awayCompletionRestrict_self`.
 
 Issue 2148 §3 names this as the half that the topological
-`FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen` does not supply — the map of rings under `R`
-that an affine-charted datum's transition field is built from, once a refined overlap has been
-presented from two different charts. It is two lines from the two laws above it. -/
+`FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen` does not supply, once a refined overlap has
+been presented from two different charts. It is two lines from the two laws above it.
+
+**How this differs from the tree's incumbent comparison isomorphism**, which is
+`CompletedTensorAwayInterchange.awayCongrEquiv` (`FormalSchemes.AwayCompletionCongrEquiv`): that
+one asks for mutual unit-ness in the *localizations*, which is `D(x) = D(y)` in `Spec A`, because
+it is built from `IsLocalization.Away.lift`; this one asks only for `D(f) = D(g)` in `Spf (R, I)`,
+which is strictly weaker. The two hypotheses are not interchangeable, and the reason is recorded a
+few declarations above: `FormalSpectrum.awayCompletionRestrict_eq_mapCompletion` says a ring map
+`Localization.Away f →+* Localization.Away g` under `R` need not exist at all for a general basic
+inclusion of `Spf R`. Where both apply, prefer the incumbent — it is an `≃ₐ[R]`, it has the
+rigidity lemmas around it, and `FormalSchemes.BasicOpenCoverCharts` records, measured, that a
+datum's transition field is built from `CompletedTensorAwayInterchange.awayCongrEquivOfEq` at an
+*equality* of away elements rather than from any congruence at equal basic opens. -/
 noncomputable def awayCompletionCongrBasicOpen (hI : I.FG) (hfg : basicOpen I f = basicOpen I g) :
     awayCompletion I f ≃+* awayCompletion I g where
   toFun := awayCompletionRestrict I f g hI hfg.ge
@@ -293,6 +307,17 @@ theorem awayCompletionCongrBasicOpen_awayCompletionHom (hI : I.FG)
     awayCompletionCongrBasicOpen I f g hI hfg (awayCompletionHom I f r) =
       awayCompletionHom I g r :=
   awayCompletionRestrict_awayCompletionHom I f g hI hfg.ge r
+
+/-- **The `R`-algebra form.** Issue 2148 §3 asks for the `R`-algebra isomorphism and not only the
+ring isomorphism, so it is shipped: `FormalSpectrum.awayCompletionCongrBasicOpen` is a map under
+`R` by the lemma above, and `FormalSpectrum.awayCompletionHom_eq_algebraMap`
+(`FormalSchemes.BasicOpenChart`) identifies that structural map with the algebra map. -/
+noncomputable def awayCompletionCongrBasicOpenAlg (hI : I.FG)
+    (hfg : basicOpen I f = basicOpen I g) :
+    awayCompletion I f ≃ₐ[R] awayCompletion I g :=
+  AlgEquiv.ofRingEquiv (f := awayCompletionCongrBasicOpen I f g hI hfg) fun r => by
+    simp only [← awayCompletionHom_eq_algebraMap]
+    exact awayCompletionCongrBasicOpen_awayCompletionHom I f g hI hfg r
 
 /-!
 ### The identification with the structure-sheaf restriction, reduced to one bound
