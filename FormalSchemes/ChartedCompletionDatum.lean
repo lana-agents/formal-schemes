@@ -61,7 +61,9 @@ equation between two `formalCompletion.map`s, and read it off `hσθ`.
 * `AlgebraicGeometry.ChartedCompletionDatum`: the datum — chart rings with their own finitely
   generated ideals, away elements, localization transitions `θ` and `σ`, and their laws.
 * `AlgebraicGeometry.ChartedCompletionDatum.toChartedSchemeDatum`,
-  `..specGlued`, `..specι`: the ambient scheme, by `ofAlgebraData`.
+  `..specGlued`, `..specι`: the ambient scheme, by `ChartedSchemeDatum.ofAlgebraData`, with
+  `..toChartedSchemeDatum_J` recording that the index type does not move — the `rfl` that every
+  inherited chart-level lemma below spends as an argument coercion rather than citing.
 * `AlgebraicGeometry.ChartedCompletionDatum.hσK`, `..hθ_symm`: the two derived ideal
   compatibilities.
 * `AlgebraicGeometry.ChartedCompletionDatum.chart`, `..overlap`, `..overlapImmersion`,
@@ -178,7 +180,21 @@ variable (D : ChartedCompletionDatum.{u})
 def toChartedSchemeDatum : ChartedSchemeDatum.{u} :=
   ChartedSchemeDatum.ofAlgebraData D.C D.g D.K D.θ D.θ_symm D.hθ D.σ D.hσθ D.hσc
 
-/-- The index type is unchanged by passing to the ambient datum. -/
+/-- **The index type is unchanged by passing to the ambient datum.**
+
+No proof on this tree cites this lemma by name, and that is what it is for: the equation is spent
+*silently* instead, as an argument coercion, wherever an `i : ChartedCompletionDatum.J` is handed
+to a lemma of the ambient datum — `..specι` just below, `..specScheme` and `..specSchemeι` in
+`FormalSchemes.ChartedSchemeDatumScheme`, and the chart-level facts re-read at this datum in
+`FormalSchemes.ChartedCompletionSupport`, `FormalSchemes.ChartedCompletionClosed`,
+`FormalSchemes.ChartedCompletionEmbedding` and `FormalSchemes.ChartedCompletionToScheme`.
+
+All of those elaborate because the two spellings agree at **default** transparency. They do
+**not** agree at *reducible* transparency, since `ChartedCompletionDatum.toChartedSchemeDatum` and
+`AlgebraicGeometry.ChartedSchemeDatum.ofAlgebraData` are two `def`s in the way — the same gap that
+cost `FormalSchemes.ChartedSchemeDatumDesc` a transparency option until issue 2150. So the one
+thing the unnamed equation cannot do is take part in a rewrite, and that is what stating it
+buys. -/
 theorem toChartedSchemeDatum_J : D.toChartedSchemeDatum.J = D.J := rfl
 
 /-- **The glued ambient scheme.** -/
