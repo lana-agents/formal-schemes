@@ -53,8 +53,9 @@ triple is empty, which likewise does not mention `t`.
 * `AlgebraicGeometry.tateChainInv`: the glued formal scheme `T_inv`.
 * `AlgebraicGeometry.tateChainInv_glueMorphisms_compat`: the abstract criterion for gluing a
   family `k : ∀ i, Spf A ⟶ Y` out of `T_inv` — it is enough that the `x`- and `y`-charts agree
-  with `k` over the 𝔾m-inversion transition on each adjacent pair. The four-case split it performs
-  (diagonal, far, two adjacent directions) is the only content of every such gluing, so it is
+  with `k` over the 𝔾m-inversion transition on each adjacent pair. The three-case split it
+  performs (far and the two adjacent directions — the diagonal is discharged by
+  `CategoryTheory.GlueData.ofGlueData'_f_comp`) is the only content of every such gluing, so it is
   stated once here rather than repeated at each use.
 * `AlgebraicGeometry.tateChainInvStructMap`: the structural morphism `T_inv ⟶ Spf R`, assembled by
   `glueMorphisms` from the per-patch `annulusStructMap`. It is the criterion above at
@@ -224,15 +225,15 @@ def tateChainInv (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] : FormalScheme.
 
 /-! ### The abstract gluing criterion -/
 
-set_option maxHeartbeats 1600000 in
--- The four-case unfolding of the glue datum `GlueData.ofGlueData'` produces a large term;
--- raise the budget.
 /-- **Abstract criterion for gluing a family of morphisms out of the inversion-glued Tate chain.**
 A family `k i : Spf A ⟶ Y` is compatible with the gluing (i.e. satisfies the obligation of
 `FormalScheme.GlueData.glueMorphisms`) as soon as the `x`- and `y`-charts agree with `k` over the
 𝔾m-inversion chart transition on each adjacent pair. `…Inv` analogue of
-`tateChain_glueMorphisms_compat` (`FormalSchemes.TateShift`). The four-case split is the whole
-content: diagonal via `t_id`, far via initiality of the empty overlap, adjacent via `hf` / `hb`.
+`tateChain_glueMorphisms_compat` (`FormalSchemes.TateShift`). The three-case split is the whole
+content: far via initiality of the empty overlap, adjacent via `hf` / `hb`; the diagonal is
+`CategoryTheory.GlueData.ofGlueData'_f_comp`'s, which is also why no heartbeat raise is needed
+here — the raise this declaration used to carry was paying for the `GlueData.ofGlueData'`
+unfolding, not for the content.
 `tateChainInvStructMap` below is the instance at `k = annulusStructMap`, and
 `FormalSchemes.TateShiftInv` uses it for the shifts. -/
 theorem tateChainInv_glueMorphisms_compat [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
@@ -250,28 +251,23 @@ theorem tateChainInv_glueMorphisms_compat [TopologicalSpace R] [IsAdicRing I] [I
         (tateChainInvFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.f j i ≫
           k j := by
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
-  by_cases hij : i = j
-  · subst hij
-    simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-  · have hij' : ¬ @Eq (ULift.{u} ℤ) i j := hij
-    have hji' : ¬ @Eq (ULift.{u} ℤ) j i := fun h => hij h.symm
-    simp only [tateChainInvFormalGlueData, tateChainInvLRSGlueData, tateChainInvGlueData',
-      CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij',
-      dif_neg hji', Category.assoc]
-    by_cases h1 : j.down - i.down = 1
-    · rw [tateF_forward R I q h1, tateTInv, dif_pos h1,
-        tateF_backward R I q (show i.down - j.down = -1 by omega)]
+  refine CategoryTheory.GlueData.ofGlueData'_f_comp (tateChainInvGlueData' R I q hq hI) k ?_ i j
+  intro i j _
+  -- Expose the carried `f`/`t` as `tateF`/`tateTInv`.  Clean goal, with no `dite` and no
+  -- `eqToHom`: `tateF i j ≫ k i = tateTInv i j ≫ tateF j i ≫ k j`, all out of `tateV i j`.
+  simp only [tateChainInvGlueData']
+  by_cases h1 : j.down - i.down = 1
+  · rw [tateF_forward R I q h1, tateTInv, dif_pos h1,
+      tateF_backward R I q (show i.down - j.down = -1 by omega)]
+    simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [hf i j h1]
+  · by_cases h2 : j.down - i.down = -1
+    · rw [tateF_backward R I q h2, tateTInv, dif_neg h1, dif_pos h2,
+        tateF_forward R I q (show i.down - j.down = 1 by omega)]
       simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [hf i j h1]
-    · by_cases h2 : j.down - i.down = -1
-      · rw [tateF_backward R I q h2, tateTInv, dif_neg h1, dif_pos h2,
-          tateF_forward R I q (show i.down - j.down = 1 by omega)]
-        simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-        rw [hb i j h2]
-      · haveI : IsEmpty (tateV R I q i j) := (tateV_far R I q h1 h2) ▸ inferInstance
-        simp only [eqToHom_trans_assoc]
-        congr 1
-        exact (LocallyRingedSpace.isInitialOfIsEmpty (X := tateV R I q i j)).hom_ext _ _
+      rw [hb i j h2]
+    · haveI : IsEmpty (tateV R I q i j) := (tateV_far R I q h1 h2) ▸ inferInstance
+      exact (LocallyRingedSpace.isInitialOfIsEmpty (X := tateV R I q i j)).hom_ext _ _
 
 /-- **The glued structural morphism of the inversion-glued Tate chain** `T_inv ⟶ Spf R`, assembled
 from the per-patch `annulusStructMap : Spf A ⟶ Spf R` by `glueMorphisms`. The overlap compatibility

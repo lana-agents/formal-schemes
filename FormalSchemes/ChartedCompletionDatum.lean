@@ -480,33 +480,18 @@ section Desc
 
 variable {Y : LocallyRingedSpace.{u}}
 
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The glue datum is a `def`, so its index type does not reduce to the datum's own at `instances`
--- transparency and the rewrites below are rejected as ill-typed without this.
--- `ChartedCompletionDatum.completion_glue_condition` above needed the same option until issue 2064
--- rerouted it through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, now its `ι`-specialisation
--- `CategoryTheory.GlueData.ofGlueData'_ι_comp`, which are stated where the indices already carry
--- the `CategoryTheory.GlueData'`'s own type; the obligation here is still quantified over the
--- constructed glue data's, so it still meets the mismatch.
 /-- **Descent of a morphism out of the glued completion**: a family of morphisms out of the chart
 completions which agree over every overlap glues to a single morphism out of `completionGlued`.
-On the diagonal the obligation of `FormalScheme.GlueData.glueMorphisms` collapses because
-`CategoryTheory.GlueData.t_id` makes the transition the identity. -/
+The hypothesis `hk` is already the overlap condition in the `CategoryTheory.GlueData'`'s own
+vocabulary, which is the vocabulary `CategoryTheory.GlueData.ofGlueData'_f_comp`
+(`FormalSchemes.GlueMorphisms`) asks for, so there is nothing left to do here. -/
 def completionDesc
     (k : ∀ i : D.J, (formalCompletion (D.C i) (D.K i) (D.hK i)).toLocallyRingedSpace ⟶ Y)
     (hk : ∀ (i j : D.J) (h : i ≠ j),
       D.overlapImmersion i j ≫ k i = (D.overlapIso i j h).hom ≫ D.overlapImmersion j i ≫ k j) :
     D.completionGlued.toLocallyRingedSpace ⟶ Y :=
-  D.completionFormalGlueData.glueMorphisms k (by
-    intro i j
-    by_cases hij : i = j
-    · subst hij
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · rw [D.completionFormalGlueData_f i j hij, D.completionFormalGlueData_t i j hij,
-        D.completionFormalGlueData_f j i (Ne.symm hij)]
-      simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      exact congrArg _ (hk i j hij))
+  D.completionFormalGlueData.glueMorphisms k
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.completionGlueData' k hk)
 
 /-- **The descended morphism restricts to the given morphism on each chart.** -/
 theorem completionι_comp_desc

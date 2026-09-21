@@ -36,8 +36,9 @@ quotient by the **square** of the shift, hence has period `q²` — see the peri
   their round-trip identities `tateShiftFunInv_tateShiftFun` / `tateShiftFun_tateShiftFunInv`.
 * `tateChain_glueMorphisms_compat`: the abstract compatibility criterion for gluing a family
   `k : ∀ i, Spf A ⟶ Y` out of `T` — namely that the `x`- and `y`-charts agree over the chart
-  transition on adjacent patches. Proved by the same four-case split as `tateChainStructMap`
-  (diagonal / far / forward / backward); the adjacent cases just rewrite by the supplied hypotheses.
+  transition on adjacent patches. Proved by the same three-case split as `tateChainStructMap`
+  (far / forward / backward, the diagonal being `CategoryTheory.GlueData.ofGlueData'_f_comp`'s);
+  the adjacent cases just rewrite by the supplied hypotheses.
 * `tateShift_overlap_forward_gen` / `tateShift_overlap_backward_gen`: for **any** index map `σ`
   preserving the index difference on an adjacent pair, the two per-patch inclusions
   `annulusOverlapChart(Y) ≫ ι (σ ·)` agree over the chart transition. These are read off
@@ -91,15 +92,14 @@ def tateShiftFunInv (i : ULift.{u} ℤ) : ULift.{u} ℤ := ⟨i.down - 1⟩
 
 /-! ### The abstract gluing criterion -/
 
-set_option maxHeartbeats 1600000 in
--- The four-case unfolding of the glue datum `GlueData.ofGlueData'` produces a large term;
--- raise the budget.
 /-- **Abstract criterion for gluing a family of morphisms out of the Tate chain.** A family
 `k i : Spf A ⟶ Y` is compatible with the gluing (i.e. satisfies the obligation of
 `FormalScheme.GlueData.glueMorphisms`) as soon as the `x`- and `y`-charts agree with `k` over the
-chart transition on each adjacent pair. The proof is the same four-case split as
-`tateChainStructMap` (diagonal via `t_id`; far via initiality of the empty overlap; adjacent via
-`hf` / `hb`). -/
+chart transition on each adjacent pair. The proof is the same three-case split as
+`tateChainStructMap` (far via initiality of the empty overlap; adjacent via `hf` / `hb`); the
+diagonal is discharged by `CategoryTheory.GlueData.ofGlueData'_f_comp`
+(`FormalSchemes.GlueMorphisms`), which also keeps the whole `GlueData.ofGlueData'` unfolding out
+of the goal. -/
 theorem tateChain_glueMorphisms_compat [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) {Y : LocallyRingedSpace.{u}}
     (k : ∀ _ : ULift.{u} ℤ, locallyRingedSpaceObj (annulusIdealOfDefinition R I q) ⟶ Y)
@@ -115,28 +115,23 @@ theorem tateChain_glueMorphisms_compat [TopologicalSpace R] [IsAdicRing I] [IsNo
         (tateChainFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.f j i ≫
           k j := by
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
-  by_cases hij : i = j
-  · subst hij
-    simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-  · have hij' : ¬ @Eq (ULift.{u} ℤ) i j := hij
-    have hji' : ¬ @Eq (ULift.{u} ℤ) j i := fun h => hij h.symm
-    simp only [tateChainFormalGlueData, tateChainLRSGlueData, tateChainGlueData',
-      CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij',
-      dif_neg hji', Category.assoc]
-    by_cases h1 : j.down - i.down = 1
-    · rw [tateF_forward R I q h1, tateT, dif_pos h1,
-        tateF_backward R I q (show i.down - j.down = -1 by omega)]
+  refine CategoryTheory.GlueData.ofGlueData'_f_comp (tateChainGlueData' R I q hq hI) k ?_ i j
+  intro i j _
+  -- Expose the carried `f`/`t` as `tateF`/`tateT`.  Clean goal, with no `dite` and no `eqToHom`:
+  -- `tateF i j ≫ k i = tateT i j ≫ tateF j i ≫ k j`, all out of `tateV i j`.
+  simp only [tateChainGlueData']
+  by_cases h1 : j.down - i.down = 1
+  · rw [tateF_forward R I q h1, tateT, dif_pos h1,
+      tateF_backward R I q (show i.down - j.down = -1 by omega)]
+    simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [hf i j h1]
+  · by_cases h2 : j.down - i.down = -1
+    · rw [tateF_backward R I q h2, tateT, dif_neg h1, dif_pos h2,
+        tateF_forward R I q (show i.down - j.down = 1 by omega)]
       simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [hf i j h1]
-    · by_cases h2 : j.down - i.down = -1
-      · rw [tateF_backward R I q h2, tateT, dif_neg h1, dif_pos h2,
-          tateF_forward R I q (show i.down - j.down = 1 by omega)]
-        simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-        rw [hb i j h2]
-      · haveI : IsEmpty (tateV R I q i j) := (tateV_far R I q h1 h2) ▸ inferInstance
-        simp only [eqToHom_trans_assoc]
-        congr 1
-        exact (LocallyRingedSpace.isInitialOfIsEmpty (X := tateV R I q i j)).hom_ext _ _
+      rw [hb i j h2]
+    · haveI : IsEmpty (tateV R I q i j) := (tateV_far R I q h1 h2) ▸ inferInstance
+      exact (LocallyRingedSpace.isInitialOfIsEmpty (X := tateV R I q i j)).hom_ext _ _
 
 /-! ### The adjacent-overlap cruxes -/
 

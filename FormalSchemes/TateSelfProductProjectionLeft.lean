@@ -31,8 +31,10 @@ The `𝔈_q` model is now glued from two annulus charts by the **𝔾m-inversion
 transitions (`tateSelfProductFirstTransitionInv`, `tateSelfProductRightTransitionInv`,
 `tateSelfProductBothTransitionInv`).
 
-The compatibility datum consumed by `glueMorphisms` on each of the sixteen chart pairs `(i, j)`
-splits by the *difference type* of `i, j`:
+The compatibility datum `FormalScheme.GlueData.glueMorphisms` consumes is quantified over all
+sixteen chart pairs `(i, j)`, but `CategoryTheory.GlueData.ofGlueData'_f_comp`
+(`FormalSchemes.GlueMorphisms`) discharges the four diagonal ones, so it is supplied here at the
+twelve pairs of **distinct** charts, splitting by the *difference type* of `i, j`:
 
 * second coordinate differs (`i.1 = j.1`): the first projection is invariant under the second-factor
   inversion transition (`rightTransitionInv_comp_firstProj`), so both sides land in the same glue
@@ -390,31 +392,27 @@ theorem bothShape_rev (hq : q ∈ I) (hI : I.FG) :
 
 /-- **The first projection of the four-chart Tate self-fibre product** `pr₁ : 𝔈_q ×_{Spf R} 𝔈_q ⟶
 𝔈_q`, glued from the four affine first projections `pr₁Chart` (composed with the glue inclusions of
-`𝔈_q`) via `FormalScheme.GlueData.glueMorphisms`, using the sixteen-case compatibility squares. -/
+`𝔈_q`) via `FormalScheme.GlueData.glueMorphisms`, using the twelve distinct-pair compatibility
+squares; the four diagonal pairs are `CategoryTheory.GlueData.ofGlueData'_f_comp`'s. -/
 def tateSelfProductPr₁ (hq : q ∈ I) (hI : I.FG) :
     (tateSelfProductInv R I q hq hI).toLocallyRingedSpace ⟶
       (tateCurveModel R I q hq hI).toLocallyRingedSpace :=
   (tateSelfProductFormalGlueDataInv R I q hq hI).glueMorphisms
     (fun i => pr₁Chart R I q (annulusAlgebra R I q) ≫
-      (tateCurveFormalGlueData R I q hq hI).ι ⟨i.down.1⟩) (by
-      intro i j
-      by_cases hij : i = j
-      · subst hij
-        simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-      · have hij' : ¬ @Eq (ULift.{u} (Bool × Bool)) i j := hij
-        have hji' : ¬ @Eq (ULift.{u} (Bool × Bool)) j i := fun heq => hij heq.symm
-        simp only [tateSelfProductFormalGlueDataInv, tateSelfProductLRSGlueDataInv,
-          tateSelfProductGlueData'Inv, CategoryTheory.GlueData.ofGlueData',
-          CategoryTheory.GlueData'.f', dif_neg hij', dif_neg hji', Category.assoc,
-          eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-        congr 1
-        rcases i with ⟨⟨_ | _, _ | _⟩⟩ <;> rcases j with ⟨⟨_ | _, _ | _⟩⟩ <;>
-          first
-            | exact absurd rfl hij'
-            | exact secondShape R I q hq hI _
-            | exact firstShape_fwd R I q hq hI
-            | exact firstShape_rev R I q hq hI
-            | exact bothShape_fwd R I q hq hI
-            | exact bothShape_rev R I q hq hI)
+      (tateCurveFormalGlueData R I q hq hI).ι ⟨i.down.1⟩)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp (tateSelfProductGlueData'Inv R I q hq hI) _ (by
+      intro i j hij
+      -- Expose the carried `f`/`t`.  Clean goal, with no `dite` and no `eqToHom` to strip.  The
+      -- twelve distinct-pair squares are the whole remaining content; `rcases` still opens all
+      -- sixteen branches and the four diagonal ones are killed by the disequality hypothesis.
+      simp only [tateSelfProductGlueData'Inv]
+      rcases i with ⟨⟨_ | _, _ | _⟩⟩ <;> rcases j with ⟨⟨_ | _, _ | _⟩⟩ <;>
+        first
+          | exact absurd rfl hij
+          | exact secondShape R I q hq hI _
+          | exact firstShape_fwd R I q hq hI
+          | exact firstShape_rev R I q hq hI
+          | exact bothShape_fwd R I q hq hI
+          | exact bothShape_rev R I q hq hI))
 
 end AlgebraicGeometry
