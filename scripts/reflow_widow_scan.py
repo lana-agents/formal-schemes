@@ -57,16 +57,50 @@ rules out the several hundred whose only compressible line is a long backticked 
 on a line of its own on purpose -- **plain** means every word on it is backtick-free and at most
 `--max-token` characters.
 
-## The exclusion, which is the case an instrument must not flag
+## The two exclusions, and the case an instrument must not flag
 
-A short line can be short because **what follows it cannot fit beside it**.  Issue 2154 named
-`GeneralSeparatedBaseChange.lean`'s bare `and` as a widow and it is not one: it sits between two
-hundred-column backticked declaration names, so no refill can absorb it, and the paragraph's refill
-saves a line somewhere else entirely.  A line is therefore **not** reported when the next line of
-its paragraph is a single token that does not fit beside it, and **not** reported when it is the
-paragraph's first line, which has nothing above it to be pulled onto.  `--selftest` pins both, the
-first as a negative fixture built from that shape, so a later loosening that starts flagging
-unbreakable neighbours fails rather than passing quietly.
+A short line can be short because **what follows it cannot fit beside it**, and a short line can be
+the **first** of its paragraph, with nothing above it to be pulled onto.  Neither is a widow, so a
+line is not reported in either case.
+
+**Start with the tree's famous negative, and with the conjunct that actually excludes it.**  Issue
+2154 named `GeneralSeparatedBaseChange.lean`'s bare `and` as a widow and it is not one -- and the
+reason is the **first conjunct**, not either exclusion.  Its paragraph is thirteen lines and
+refills into thirteen, saving nothing, so `widows` returns at its opening
+`len(lines) - len(refill(...)) < 1` and no exclusion is ever consulted.  That is exactly the reason
+issue 2159 gave.  An earlier version of this paragraph credited the successor exclusion instead,
+understandably: the `and` *is* wedged between long backticked names, `3 + 1 + 97` columns, so that
+test would fire too **if it were reached**.  **A line can meet two rules and be excluded by only
+one of them, and the prose has to name the one that runs first.**
+
+**So the exclusions are justified on their own instances, and there is exactly one of each.**
+Measured at `90be36d`, over the 214 short-plain lines living in paragraphs that refill shorter:
+
+    excluded by                                  lines  which
+    -------------------------------------------  -----  -------------------------------------
+    the next line is a single unfittable token       1  `AwayBaseChangeSeparated.lean:892`,
+                                                        `discharged here:`
+    the line is its paragraph's first                1  `TateInvNodeChartQuotientSpf.lean:216`,
+                                                        `This is`
+    both                                             0
+    reported                                       212
+
+The second is **not** the first in disguise: `This is` is 7 columns and the backticked name below
+it is 89, which fits at 100.  **Two exclusions, one line each** is the figure to weigh before
+loosening either, and it is the honest one -- each rests on a single line of this tree, and neither
+rests on the `and`.
+
+`--selftest` pins both on **synthetic** paragraphs rather than on those two lines.  The successor
+fixture's paragraph deliberately *does* refill shorter, so that it tests the exclusion and not the
+first conjunct; the `and`'s own shape -- a short line in a paragraph that refills to the same
+length -- is pinned separately, by the fixture that has no exclusion in it at all.
+
+**And the `and`'s line number is the best advertisement in this file for `--diff` over `--tree`.**
+Issue 2154 quoted it as `:1030`, which was right at issue 2154's tree.  Issue 2159 quoted `:1030`
+at a base it defines as *"`4873811` plus row 2154's own two reflows"*, where it is `:1029` -- moved
+by one because the second of those reflows refilled the `four imports` widow four lines above it
+into three.  A figure about a line number goes stale when the line above it is repaired, which is
+this scan's own subject landing on the prose about this scan.
 
 ## Where the population comes from, and why it is wider than issue 2159 measured
 
@@ -74,9 +108,27 @@ Every `/-! ... -/` **and** `/-- ... -/` block, with fenced blocks, lists, tables
 indented lines excluded -- they are not filled prose and must never be rewrapped.  Declaration
 docstrings are in scope because two of the three standing instances issue 2159 names are in one
 (`StructureSheaf.lean`'s `one.` and `StructureSheafStalkPowerSeriesCounterexample.lean`'s `it.`);
-a module-docstring-only population reads 103 paragraphs here and **contains neither**.  That
-is why the figures above are larger than 2159's 136 / 139: the conjuncts are that row's, the
-population is wider, and the wider one is what it takes to hold the instances the row itself names.
+a module-docstring-only population reads 103 paragraphs here and **contains neither**.
+
+**The gap to issue 2159's 136 / 139 is unexplained, and this file does not claim to explain it.**
+The conjuncts are that row's and reproduce; the segmentation is what differs, and sweeping it at
+`4873811` lands nowhere near that row's intermediate figures of 3193 and 493 either:
+
+    segmentation                      refill differs   saves a line   reported
+    --------------------------------  --------------  -------------  ----------
+    this file (`/-!` and `/--`)                 3765            684   210 / 214
+    `/-!` only                                  1845            331   103 / 105
+    `/--` only                                  1920            353   107 / 109
+    structural-line rule dropped                6991           2772  1207 / 1274
+    fenced-block rule dropped                   3777            688   210 / 214
+
+The three ratios against 3193 / 493 / 136 are not constant, so it is not one uniform scope
+difference either.  What **is** established is narrower and is enough to fix the population: any
+module-docstring-only reading is wrong, because two of that row's own ground-truth widows are in
+`/--` blocks.  The lesson is the general one -- *a prose specification can pin a predicate and
+cannot pin a population.*  Both of 2159's conjuncts transferred without ambiguity and its
+segmentation did not.  **Publish the segmentation rule, or a ground-truth list the next reader can
+check theirs against**; 2159 named five specific lines, and those five are what settled this.
 
 **This is not an autoformatter.**  It reports a line and the refill that would absorb it; it never
 rewrites a file.  Repairing a widow is a judgement about the smallest window that removes it --
@@ -341,10 +393,13 @@ def selftest() -> int:
     check("a stranded pair at the end of a paragraph is reported",
           numbers(doc("y" * 80, "four imports")), [3])
 
-    # --- the first conjunct alone is not enough: a sense-break costs no line -------------------
+    # --- the first conjunct alone is not enough, and this is issue 2154's `:1029` shape --------
+    # A short plain line in a paragraph that refills to the same length.  That -- and not either
+    # exclusion -- is what keeps `GeneralSeparatedBaseChange.lean`'s bare `and` out: see the
+    # module docstring.  This fixture is what stands between a loosening and flagging it.
     sense_break = doc("z" * 95, "index pairs.")
-    check("a short last line whose paragraph does not refill shorter is NOT reported",
-          numbers(sense_break), [])
+    check("a short last line whose paragraph does not refill shorter is NOT reported"
+          " (the `and`'s shape)", numbers(sense_break), [])
     check("... and that paragraph really does contain a short plain line, so only the refill"
           " conjunct is keeping it out", is_short_plain("index pairs."), True)
 
@@ -355,13 +410,16 @@ def selftest() -> int:
     check("... and that paragraph really does refill shorter",
           len(refill([l for _, l in paragraphs(saves_but_long)[0]], WIDTH)) < 3, True)
 
-    # --- exclusion 1: the negative fixture, built from issue 2154's `:1029` shape --------------
+    # --- exclusion 1: the successor is a single token that will not fit beside the line --------
+    # Synthetic, and deliberately NOT issue 2154's `:1029` shape: this paragraph *does* refill
+    # shorter, so it reaches the exclusion instead of stopping at the first conjunct.  Its one
+    # instance on the tree is `AwayBaseChangeSeparated.lean:892`.
     unbreakable = doc("`" + long_word + "`", "and", "`" + long_word + "`",
                       "and the rest of it", "which continues here.")
-    check("a short line wedged between unbreakable names is NOT reported (the `:1029` shape)",
+    check("a short line whose successor is a single unfittable token is NOT reported",
           numbers(unbreakable), [])
-    # The same paragraph with the successor exclusion dropped: `and` comes back, so the negative
-    # fixture above is passing because of that exclusion and not because the refill saves nothing.
+    # Sightedness: the paragraph really does save a line, so the exclusion -- and not the first
+    # conjunct -- is what keeps `and` out of the report.
     wedged = paragraphs(unbreakable)[0]
     check("... and the fixture is sighted: the refill does save a line there",
           len([l for _, l in wedged]) - len(refill([l for _, l in wedged], WIDTH)), 1)
@@ -369,8 +427,15 @@ def selftest() -> int:
           [n for i, (n, l) in enumerate(wedged) if i and is_short_plain(l)], [3])
 
     # --- exclusion 2: a paragraph's first line has nothing above it ----------------------------
+    # Independent of exclusion 1, as its one tree instance is: at
+    # `TateInvNodeChartQuotientSpf.lean:216` the successor fits beside the line and only this
+    # exclusion applies.
     first_line = doc("This is", "`" + long_word + "`", "with a tail that shortens the refill.")
     check("a short FIRST line of a paragraph is NOT reported", numbers(first_line), [])
+    check("... and the fixture is sighted: that line really is short and plain",
+          is_short_plain("This is"), True)
+    check("... and dropping the first-line exclusion would report it",
+          [n for i, (n, l) in enumerate(paragraphs(first_line)[0]) if is_short_plain(l)], [2])
 
     # --- what must never be rewrapped ----------------------------------------------------------
     check("a list item is not filled prose",
