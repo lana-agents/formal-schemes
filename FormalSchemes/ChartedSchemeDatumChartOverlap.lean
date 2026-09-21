@@ -120,8 +120,7 @@ variable (D : ChartedSchemeDatum.{u})
 set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- The glue datum is a `def`, so `D.specLRSGlueData.J` does not reduce to `D.J` at `instances`
--- transparency and the `dif_neg` below is otherwise rejected as ill-typed. Same requirement as
--- `specGD_f` in `FormalSchemes.ChartedSchemeDatumDesc`.
+-- transparency and the `dif_neg` below is otherwise rejected as ill-typed.
 /-- **Off the diagonal the glue datum's overlap inclusion is the affine chart of the basic open.**
 `CategoryTheory.GlueData.ofGlueData'` precedes it with an `eqToHom`, which is an isomorphism and so
 invisible to a range (`AlgebraicGeometry.LocallyRingedSpace.range_eqToHom_comp_base`). -/
