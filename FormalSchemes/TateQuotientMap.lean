@@ -228,8 +228,9 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Abstract criterion for gluing a family of morphisms out of the two-chart model `𝔈_q`.** A
 family `k b : Spf A ⟶ Y` satisfies the obligation of `FormalScheme.GlueData.glueMorphisms` as soon
 as the `x`- and `y`-charts agree with `k` over the 𝔾m-inversion chart transition. The two-chart
-analogue of `tateChainInv_glueMorphisms_compat`; on the diagonal the transition is the identity
-(`GlueData.t_id`), and off it the overlap is a coproduct, so the obligation is checked summandwise
+analogue of `tateChainInv_glueMorphisms_compat`; the diagonal is discharged by
+`CategoryTheory.GlueData.ofGlueData'_f_comp`, and off it the overlap is a coproduct, so the
+obligation is checked summandwise
 by `coprod.hom_ext`. -/
 theorem tateCurveModel_glueMorphisms_compat {Y : LocallyRingedSpace.{u}}
     (k : ∀ _ : ULift.{u} Bool, locallyRingedSpaceObj (annulusIdealOfDefinition R I q) ⟶ Y)
@@ -243,24 +244,21 @@ theorem tateCurveModel_glueMorphisms_compat {Y : LocallyRingedSpace.{u}}
         (tateCurveFormalGlueData R I q hq hI).toLocallyRingedSpaceGlueData.toGlueData.f j i ≫
           k j := by
   haveI : IsAdicRing (annulusIdealOfDefinition R I q) := annulus_isAdicRing R I q hI
-  by_cases hij : i = j
-  · subst hij
-    simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-  · have hij' : ¬ @Eq (ULift.{u} Bool) i j := hij
-    have hji' : ¬ @Eq (ULift.{u} Bool) j i := fun h => hij h.symm
-    have hj : j = ⟨!i.down⟩ := by
-      obtain ⟨bi⟩ := i; obtain ⟨bj⟩ := j
-      cases bi <;> cases bj <;> simp_all
-    subst hj
-    simp only [tateCurveFormalGlueData, tateCurveLRSGlueData, tateCurveGlueData',
-      CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij',
-      dif_neg hji', Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-    congr 1
-    refine coprod.hom_ext ?_ ?_
-    · rw [coprod.inl_desc_assoc, coprod.inl_desc_assoc, Category.assoc, coprod.inr_desc_assoc]
-      exact hx i.down
-    · rw [coprod.inr_desc_assoc, coprod.inr_desc_assoc, Category.assoc, coprod.inl_desc_assoc]
-      exact hy i.down
+  refine CategoryTheory.GlueData.ofGlueData'_f_comp (tateCurveGlueData' R I q hq hI) k ?_ i j
+  -- The disequality `i ≠ j` is read out of the context by the closing tactic below, which is
+  -- what rules out the two equal-index cases.
+  intro i j hij
+  have hj : j = ⟨!i.down⟩ := by
+    obtain ⟨bi⟩ := i; obtain ⟨bj⟩ := j
+    cases bi <;> cases bj <;> simp_all
+  subst hj
+  -- Expose the carried `f`/`t`.  Clean goal, with no `dite` and no `eqToHom` to strip.
+  simp only [tateCurveGlueData']
+  refine coprod.hom_ext ?_ ?_
+  · rw [coprod.inl_desc_assoc, coprod.inl_desc_assoc, Category.assoc, coprod.inr_desc_assoc]
+    exact hx i.down
+  · rw [coprod.inr_desc_assoc, coprod.inr_desc_assoc, Category.assoc, coprod.inl_desc_assoc]
+    exact hy i.down
 
 /-! ### The quotient map -/
 

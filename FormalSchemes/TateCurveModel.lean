@@ -227,8 +227,8 @@ def tateCurveModel (hq : q ∈ I) (hI : I.FG) [IsNoetherianRing R] : FormalSchem
 
 /-- **The glued structural morphism of the Tate curve model** `𝔈_q ⟶ Spf R`, assembled from the
 per-patch structural morphisms `annulusStructMap : Spf A ⟶ Spf R` via `glueMorphisms`. The overlap
-compatibility is verified by casing on whether the two indices coincide: on the diagonal the
-transition `t` is the identity so both sides collapse to `annulusStructMap`; off the diagonal the
+compatibility is supplied at distinct indices by `CategoryTheory.GlueData.ofGlueData'_f_comp`
+(`FormalSchemes.GlueMorphisms`), which discharges the diagonal itself; off the diagonal the
 overlap is the coproduct `Spf A{1/x} ⨿ Spf A{1/y}`, and the obligation is checked summandwise by
 `coprod.hom_ext`, landing on the two geometric crux identities
 `annulusOverlapChart_comp_structMap_inv` (the `x`-summand) and
@@ -236,23 +236,17 @@ overlap is the coproduct `Spf A{1/x} ⨿ Spf A{1/y}`, and the obligation is chec
 def tateCurveModelStructMap [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) :
     (tateCurveModel R I q hq hI).toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
-  (tateCurveFormalGlueData R I q hq hI).glueMorphisms (fun _ => annulusStructMap R I q hI) (by
-    intro i j
-    by_cases hij : i = j
-    · subst hij
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · have hij' : ¬ @Eq (ULift.{u} Bool) i j := hij
-      have hji' : ¬ @Eq (ULift.{u} Bool) j i := fun h => hij h.symm
-      simp only [tateCurveFormalGlueData, tateCurveLRSGlueData, tateCurveGlueData',
-        CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij',
-        dif_neg hji', Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      congr 1
+  (tateCurveFormalGlueData R I q hq hI).glueMorphisms (fun _ => annulusStructMap R I q hI)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp (tateCurveGlueData' R I q hq hI) _ (by
+      intro i j _
+      -- Expose the carried `f`/`t`.  Clean goal, with no `dite` and no `eqToHom` to strip.
+      simp only [tateCurveGlueData']
       refine coprod.hom_ext ?_ ?_
       · rw [coprod.inl_desc_assoc, coprod.inl_desc_assoc, Category.assoc,
           coprod.inr_desc_assoc]
         exact annulusOverlapChart_comp_structMap_inv R I q hI
       · rw [coprod.inr_desc_assoc, coprod.inr_desc_assoc, Category.assoc,
           coprod.inl_desc_assoc]
-        exact annulusOverlapChartY_comp_structMap_inv R I q hI)
+        exact annulusOverlapChartY_comp_structMap_inv R I q hI))
 
 end AlgebraicGeometry

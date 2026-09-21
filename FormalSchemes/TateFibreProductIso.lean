@@ -154,23 +154,16 @@ def glueOut
   letI := D.algebraA
   letI := D.commRingB
   letI := D.algebraB
-  D.formalGlueData.glueMorphisms k (by
-    intro p p'
-    by_cases hpp : p = p'
-    · subst hpp
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · obtain ⟨i, j⟩ := p
-      obtain ⟨i', j'⟩ := p'
-      have hpp' : ((i, j) : D.JX × D.JY) ≠ (i', j') := hpp
-      have hp'p : ((i', j') : D.JX × D.JY) ≠ (i, j) := fun heq => hpp heq.symm
-      simp only [BothChartedFibreDatum.formalGlueData, BothChartedFibreDatum.lrsGlueData,
-        BothChartedFibreDatum.glueData', CategoryTheory.GlueData.ofGlueData',
-        CategoryTheory.GlueData'.f', dif_neg hpp', dif_neg hp'p, Category.assoc,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-      rw [hf (i, j) (i', j') hpp', ht (i, j) (i', j') hpp', hf (i', j') (i, j) hp'p]
+  D.formalGlueData.glueMorphisms k
+    (CategoryTheory.GlueData.ofGlueData'_f_comp D.toBothChartedFibreDatum.glueData' k (by
+      intro p p' hpp
+      -- Expose the carried `V`/`f`/`t`.  Clean goal, with no `dite`: the only `eqToHom`s left are
+      -- the ones `hf`/`ht` themselves introduce.
+      simp only [BothChartedFibreDatum.glueData']
+      rw [hf p p' hpp, ht p p' hpp, hf p' p hpp.symm]
       simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
       congr 1
-      exact hk (i, j) (i', j') hpp')
+      exact hk p p' hpp))
 
 /-- `glueOut` restricts to `k p` along each glue inclusion. -/
 theorem ι_glueOut

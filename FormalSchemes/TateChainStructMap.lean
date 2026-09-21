@@ -16,10 +16,12 @@ structural morphism `annulusStructMap : Spf A ⟶ Spf R` over the base.
 The eventual goal (issue 209) is to assemble these per-patch structural morphisms into the single
 glued structural morphism `tateChainStructMap : T ⟶ Spf R`, via the morphism-gluing combinator
 `FormalScheme.GlueData.glueMorphisms` (`FormalSchemes.GlueMorphisms`). Its compatibility obligation
-`f i j ≫ k i = t i j ≫ f j i ≫ k j` (with `k i = annulusStructMap` for every `i`) is verified by
-casing on the index difference `d = j.down - i.down`:
+`f i j ≫ k i = t i j ≫ f j i ≫ k j` (with `k i = annulusStructMap` for every `i`) is quantified
+over *every* pair, but it has content only at pairs of **distinct** indices, and
+`CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`) supplies the diagonal
+— where both sides collapse to `annulusStructMap` — from the distinct-index case. What is left is
+verified by casing on the index difference `d = j.down - i.down`:
 
-* **diagonal** `d = 0` (`i = j`): both sides collapse to `annulusStructMap`;
 * **far** `|d| ≥ 2`: the overlap `V(i, j)` is the empty (initial) locally ringed space, so any two
   morphisms out of it agree;
 * **forward** `d = 1` / **backward** `d = -1`: both reduce to the geometric *crux* identity
@@ -55,7 +57,8 @@ The final assembly is **not yet delivered** here:
   below), and needs a cheaper route than the naive scalar-tower rewrite chain;
 * the geometric crux lemma `annulusOverlapChart ≫ s = (annulusChartTransitionSpf).hom ≫
   annulusOverlapChartY ≫ s` built from it via `locallyRingedSpaceMap_comp`/`_congr`;
-* `tateChainStructMap` itself via `glueMorphisms` with the four-case `h`-obligation above.
+* `tateChainStructMap` itself via `FormalScheme.GlueData.glueMorphisms` with the `h`-obligation
+  above, supplied at distinct indices only.
 
 ## References
 
@@ -317,29 +320,23 @@ theorem annulusOverlapChartY_comp_structMap [TopologicalSpace R] [IsAdicRing I] 
   rw [annulusOverlapChart_comp_structMap R I q hI, Iso.inv_hom_id_assoc]
 
 /-- **The glued structural morphism of the formal Tate chain** `T ⟶ Spf R`, assembled from the
-per-patch structural morphisms `annulusStructMap : Spf A ⟶ Spf R` via `glueMorphisms`. The overlap
-compatibility is verified by casing on the index difference: on the diagonal both sides collapse to
-`annulusStructMap`; on non-adjacent overlaps the source is the empty (initial) locally ringed space,
-so any two maps out of it agree; on adjacent overlaps it is the geometric crux
+per-patch structural morphisms `annulusStructMap : Spf A ⟶ Spf R` via
+`FormalScheme.GlueData.glueMorphisms`. The overlap compatibility is supplied at distinct indices
+by `CategoryTheory.GlueData.ofGlueData'_f_comp`
+(`FormalSchemes.GlueMorphisms`), which discharges the diagonal itself, and is verified there by
+casing on the index difference: on non-adjacent overlaps the source is the empty (initial) locally
+ringed space, so any two maps out of it agree; on adjacent overlaps it is the geometric crux
 `annulusOverlapChart_comp_structMap` (forward) / `annulusOverlapChartY_comp_structMap`
 (backward). -/
 def tateChainStructMap [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
     (hq : q ∈ I) (hI : I.FG) :
     (tateChain R I q hq hI).toLocallyRingedSpace ⟶ locallyRingedSpaceObj I :=
-  (tateChainFormalGlueData R I q hq hI).glueMorphisms (fun _ => annulusStructMap R I q hI) (by
-    intro i j
-    by_cases hij : i = j
-    · -- diagonal: `t i i = 𝟙`, so both sides collapse to `f i i ≫ annulusStructMap`.
-      subst hij
-      simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-    · -- off-diagonal: unfold the `GlueData.ofGlueData'` `if`-forms into `tateF`/`tateT`. The dite
-      -- conditions live at `ULift ℤ`, so re-type the disequalities before rewriting.
-      have hij' : ¬ @Eq (ULift.{u} ℤ) i j := hij
-      have hji' : ¬ @Eq (ULift.{u} ℤ) j i := fun h => hij h.symm
-      simp only [tateChainFormalGlueData, tateChainLRSGlueData, tateChainGlueData',
-        CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij',
-        dif_neg hji', Category.assoc]
-      -- Clean goal: `tateF i j ≫ s = tateT i j ≫ tateF j i ≫ s`, all out of `tateV i j`.
+  (tateChainFormalGlueData R I q hq hI).glueMorphisms (fun _ => annulusStructMap R I q hI)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp (tateChainGlueData' R I q hq hI) _ (by
+      intro i j _
+      -- Expose the carried `f`/`t` as `tateF`/`tateT`.  Clean goal, with no `dite` and no
+      -- `eqToHom`: `tateF i j ≫ s = tateT i j ≫ tateF j i ≫ s`, all out of `tateV i j`.
+      simp only [tateChainGlueData']
       by_cases h1 : j.down - i.down = 1
       · -- forward step `d = 1`: reduce to the forward crux.
         rw [tateF_forward R I q h1, tateT, dif_pos h1,
@@ -354,8 +351,6 @@ def tateChainStructMap [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R]
           rw [annulusOverlapChartY_comp_structMap R I q hI]
         · -- far step `|d| ≥ 2`: the source `tateV i j` is empty (initial).
           haveI : IsEmpty (tateV R I q i j) := (tateV_far R I q h1 h2) ▸ inferInstance
-          simp only [eqToHom_trans_assoc]
-          congr 1
-          exact (LocallyRingedSpace.isInitialOfIsEmpty (X := tateV R I q i j)).hom_ext _ _)
+          exact (LocallyRingedSpace.isInitialOfIsEmpty (X := tateV R I q i j)).hom_ext _ _))
 
 end AlgebraicGeometry

@@ -856,22 +856,16 @@ def tateSelfProductDiagonal (hq : q ∈ I) (hI : I.FG) :
       (tateSelfProductInv R I q hq hI).toLocallyRingedSpace :=
   (tateCurveFormalGlueData R I q hq hI).glueMorphisms
     (fun b => diagChart R I q hI ≫
-      (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩) (by
-      intro i j
-      by_cases hij : i = j
-      · subst hij
-        simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-      · have hij' : ¬ @Eq (ULift.{u} Bool) i j := hij
-        have hji' : ¬ @Eq (ULift.{u} Bool) j i := fun h => hij h.symm
-        simp only [tateCurveFormalGlueData, tateCurveLRSGlueData, tateCurveGlueData',
-          CategoryTheory.GlueData.ofGlueData', CategoryTheory.GlueData'.f', dif_neg hij',
-          dif_neg hji', Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-        congr 1
-        rcases i with ⟨_ | _⟩ <;> rcases j with ⟨_ | _⟩ <;>
-          first
-            | exact absurd rfl hij'
-            | exact diagBothGlue_fwd R I q hq hI
-            | exact diagBothGlue_rev R I q hq hI)
+      (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(b.down, b.down)⟩)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp (tateCurveGlueData' R I q hq hI) _ (by
+      intro i j hij
+      -- Expose the carried `f`/`t`.  Clean goal, with no `dite` and no `eqToHom` to strip.
+      simp only [tateCurveGlueData']
+      rcases i with ⟨_ | _⟩ <;> rcases j with ⟨_ | _⟩ <;>
+        first
+          | exact absurd rfl hij
+          | exact diagBothGlue_fwd R I q hq hI
+          | exact diagBothGlue_rev R I q hq hI))
 
 /-- **The diagonal is a section of the first projection**: `Δ ≫ pr₁ = 𝟙`. -/
 theorem tateSelfProductDiagonal_comp_pr₁ (hq : q ∈ I) (hI : I.FG) :
