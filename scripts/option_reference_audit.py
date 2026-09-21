@@ -627,9 +627,16 @@ def anchors_in(sentence: str) -> list[str]:
 def resolve(token: str, table: dict[str, dict[str, str]]) -> list[str]:
     """Every declaration of the tree the anchor could name, by `.`-component suffix.
 
-    A sentence writes `specGD_f` for `AlgebraicGeometry.specGD_f` and
-    `SheafedSpace.mono_coequalizer_π_c_app` for the longer thing, so matching is on the suffix and
-    the sentence's own qualifier is what narrows it.
+    A sentence writes `SheafedSpace.mono_coequalizer_π_c_app` for the longer thing, so matching is
+    on the suffix and the sentence's own qualifier is what narrows it.  That example carries its
+    own measurement: at `429003c` the bare `mono_coequalizer_π_c_app` names **two** declarations,
+    `AlgebraicGeometry.PresheafedSpace.mono_coequalizer_π_c_app` and the `SheafedSpace` one, and
+    the one qualifier the sentence writes cuts it to a single name.
+
+    It is anchored because the example that stood beside it was not.  This docstring paired the
+    above with a bare `specGD_f` for its qualified form until issue 2150 deleted the declaration:
+    an illustration outlived its subject, and since nothing here reads its own docstring, no
+    instrument on this tree could say so.  An anchored example stays true when the pair moves.
     """
     if token in table:
         return [token]

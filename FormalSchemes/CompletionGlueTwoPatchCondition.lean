@@ -29,18 +29,20 @@ This file supplies that relation and the descent principle it unlocks.
 
 The four unfolding lemmas `completionTwoPatchFormalGlueData_f_false_true` and friends record what
 the assembled glue data's `f` and `t` are at the two off-diagonal index pairs, in the completion
-vocabulary. **They describe the datum; they are not a step in any argument on this tree.** Since
-issue 2150 no proof in this file unfolds the `GlueData.ofGlueData'` `dite` by hand: both places
-that did — `completionTwoPatch_glue_condition₀` and `completionTwoPatchDesc` — now go through
-`CategoryTheory.GlueData.ofGlueData'_ι_comp` and `CategoryTheory.GlueData.ofGlueData'_f_comp`,
-which perform the unfolding once and for all at the `CategoryTheory.GlueData'`. They are kept, and
-kept public, because this file's *Main definitions and results* list names them, and on this tree
-that list is a file's statement of what it offers. Until issue 2150 this paragraph justified them
-instead by predicting that anything else reasoning about `completionTwoPatch` would need the same
-translation; nothing ever did, and the prediction is withdrawn rather than left standing. The two
-index disequalities `cgcNe` and `cgcNe'` occur in their right-hand sides and are public for that
-reason — and `cgcNe` has a consumer outside this file, in
-`FormalSchemes.ChartedCompletionSupport`.
+vocabulary. **They describe the datum; they are not a step in any argument on this tree.** Their
+own proofs are `dif_neg`, which makes them the only place in this file where the
+`GlueData.ofGlueData'` `dite` is unfolded by hand: what changed at issue 2150 is not that the
+unfolding stopped occurring here but that no argument pays for it as a step any more. The two that
+used to now perform it once and for all at the `CategoryTheory.GlueData'` instead —
+`completionTwoPatch_glue_condition₀` since issue 2064, through
+`CategoryTheory.GlueData.ofGlueData'_ι_comp`, and `completionTwoPatchDesc` since issue 2150,
+through `CategoryTheory.GlueData.ofGlueData'_f_comp`. The four are kept, and kept public, because
+this file's *Main definitions and results* list names them, and on this tree that list is a file's
+statement of what it offers. Until issue 2150 this paragraph justified them instead by predicting
+that anything else reasoning about `completionTwoPatch` would need the same translation; nothing
+ever did, and the prediction is withdrawn rather than left standing. The two index disequalities
+`cgcNe` and `cgcNe'` occur in their right-hand sides and are public for that reason — and `cgcNe`
+has a consumer outside this file, in `FormalSchemes.ChartedCompletionSupport`.
 
 ## The `⟨false⟩ = A`, `⟨true⟩ = B` convention
 
