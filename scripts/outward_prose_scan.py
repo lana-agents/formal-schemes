@@ -36,7 +36,7 @@ human**, exactly as in `docstring_signature_scan.py`, and the output is modelled
 rather than on `closure_audit.py`.  For the same reason this is **not** wired into
 `.orchestra/validation.sh`.
 
-## The four things that are easy to get wrong
+## The five things that are easy to get wrong
 
 * **Comment spans are found directly, by a lexer, not by diffing a stripped copy against the
   original.**  A stripper that blanks code and a stripper that blanks comments are both fine for
@@ -62,6 +62,40 @@ rather than on `closure_audit.py`.  For the same reason this is **not** wired in
   declared in another file entirely.  **Excluding touched files loses it**, and the in-file sweep
   that was supposed to cover it is exactly the windowed scan that missed it.  `--exclude-touched`
   is available and is not the default.
+* **A `git diff` names two paths, not one, and either may be `/dev/null`.**  `changed_lines` keeps
+  the `-` side and the `+` side in separate variables and keys each at its own path.  One variable
+  attributes a deleted file's hunks to whatever file preceded it in the diff: on `ba2e4ce` (issue
+  805 / PR #290, which deletes two modules and modifies eight) that is **8 names lost and 9
+  invented**, and the lost ones are the names the commit is about.  The same root cause drops a
+  rename's `-` side, because it looks the old lines up at the *new* path and `git show` then exits
+  non-zero; `befe0fd` renames ten `.lean` files -- twenty paths -- in one commit, and fixing this
+  recovers **13** of the 37 names in its range.  And the headers cannot be recognised by shape:
+  under `--unified=0` a deleted `-- comment` renders in the diff **body** as `--- comment`, **171**
+  times across this tree's last two hundred commits (in 70 of them) when this was written, so a
+  header is read only while one is pending after a `diff --git` line.
+
+## What this scan cannot reach, and it is not a window width
+
+This scan is anchored on a **name**.  Three consequences, all of them established by measurement on
+this tree rather than by argument, and none of them fixed by widening `WINDOW`:
+
+* A claim whose subject is a **population** -- *"only the `₀`-orientations meet the bookkeeping"*,
+  *"no proof in this file unfolds the `dite`"*, *"each statement below is given at both index
+  pairs"* -- is outside its reach whenever the declarations that falsify it are not named in the
+  sentence, because there is then no name for the anchor to key on.  Issue 2158 is exactly that
+  shape, and forcing the four lemma names in by hand still does not reach it.
+* A sentence that was **false when it was written** is outside its reach too: no diff ever changes
+  a name in it, so `--diff` never supplies the key.
+* **A hit's line number is not its excerpt.**  The ±230-character window is anchored on the
+  occurrence, so it can land a pointer *inside* a defective paragraph while clipping the defective
+  clause out of what is printed.  That is what happened to issue 2158: the LIVE run of PR #761
+  emitted `CompletionGlueTwoPatchCondition.lean:54  completionTwoPatchDesc`, four lines below the
+  false clause, and the printed context began after it.  **The `file:line` is the finding; the
+  excerpt is a hint.**
+
+Issue 2156 item 1 was catchable only because that sentence happens to *name* a declaration the diff
+changed.  Read a green run as "no sentence naming a changed declaration sits beside a cue", which
+is what it says, and not as coverage of the population class.
 
 ## The cue list, and why it is a flag rather than a constant
 
@@ -225,27 +259,64 @@ def declarations(text: str) -> list[tuple[int, str]]:
     return found
 
 
+def header_path(line: str) -> str | None:
+    """The path a `--- `/`+++ ` header names, or `None` when that side is `/dev/null`.
+
+    The `a/` / `b/` prefixes are stripped when present and tolerated when they are not, so a diff
+    taken with `diff.noprefix` still resolves.
+    """
+    value = line[4:].split("\t")[0]
+    if value == "/dev/null":
+        return None
+    for prefix in ("a/", "b/"):
+        if value.startswith(prefix):
+            return value[len(prefix):]
+    return value
+
+
 def changed_lines(diff: str) -> dict[str, tuple[set[int], set[int]]]:
     """`{path: (lines changed on the `-` side, lines changed on the `+` side)}` from a `git diff`.
 
     Needs `--unified=0`: with context lines the ranges cover code nobody touched, and a scan keyed
     on *changed declarations* would then take the whole file.
+
+    **The two sides are tracked separately and keyed at their own paths**, because they are not
+    always the same path and either of them may be absent.  A deletion is `+++ /dev/null`, an
+    addition is `--- /dev/null`, and a rename names the old path on one side and the new on the
+    other; a parser with one `path` variable attributes a deleted file's hunks to whatever file
+    preceded it in the diff, which is 8 names lost and 9 invented on this repository's own
+    `ba2e4ce`.  A rename resolves its `-` side at the **old** path, which is where `git show
+    <base>:<path>` can find it.
+
+    **The file headers are recognised only while one is pending**, i.e. between a `diff --git` line
+    and the `+++ ` that closes the pair.  Shape alone is not enough: under `--unified=0` a deleted
+    `-- comment` renders in the diff *body* as `--- comment`, and this tree's last two hundred
+    commits contain 171 such lines, in 70 of them.
     """
     out: dict[str, tuple[set[int], set[int]]] = {}
-    path = None
+    old_path = new_path = None
+    pending = False
     for line in diff.split("\n"):
-        if line.startswith("+++ b/"):
-            path = line[6:]
-            out.setdefault(path, (set(), set()))
+        if line.startswith("diff --git "):
+            old_path = new_path = None
+            pending = True
             continue
-        if line.startswith("--- a/") and path is None:
+        if pending and line.startswith("--- "):
+            old_path = header_path(line)
+            continue
+        if pending and line.startswith("+++ "):
+            new_path = header_path(line)
+            pending = False
             continue
         hit = HUNK.match(line)
-        if hit and path is not None:
-            old, old_n, new, new_n = (int(hit.group(1)), int(hit.group(2) or 1),
-                                      int(hit.group(3)), int(hit.group(4) or 1))
-            out[path][0].update(range(old, old + old_n))
-            out[path][1].update(range(new, new + new_n))
+        if not hit:
+            continue
+        old, old_n, new, new_n = (int(hit.group(1)), int(hit.group(2) or 1),
+                                  int(hit.group(3)), int(hit.group(4) or 1))
+        if old_path is not None and old_n:
+            out.setdefault(old_path, (set(), set()))[0].update(range(old, old + old_n))
+        if new_path is not None and new_n:
+            out.setdefault(new_path, (set(), set()))[1].update(range(new, new + new_n))
     return out
 
 
@@ -279,7 +350,9 @@ def names_from_diff(diff_range: str, root: str = ".") -> tuple[set[str], set[str
     """`(declaration names changed in the range, `.lean` files the range touches)`.
 
     Both ends are walked, so a *deleted* declaration is still a name to scan for -- prose that
-    describes how a deleted proof worked is exactly the class this instrument is about.
+    describes how a deleted proof worked is exactly the class this instrument is about.  That is
+    why `changed_lines` keys each side at its own path: a deleted module's names live at
+    `<base>:<old path>` and nowhere else, and a renamed one's `-` side does too.
     """
     base, _, head = diff_range.partition("...")
     if not head:
@@ -363,7 +436,7 @@ def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, patt
     if touched:
         inside = sorted(touched & set(lean_files(root)))
         print("the diff's own files             : %4d   (%d of them scanned, not excluded)"
-              % (len(touched), len(inside) - len(touched & exclude)))
+              % (len(touched), len(set(inside) - exclude)))
     print("cue pattern                      : %s" % pattern)
     print("FLAGGED: prose naming a changed declaration beside a proof-method cue : %4d"
           % len(hits))
@@ -493,11 +566,34 @@ def selftest() -> int:
     check("a change on a scope-closing `end` attributes to no declaration",
           touched_declarations(src, {5}), set())
     check("an empty change set names nothing", touched_declarations(src, set()), set())
+    modify = ("diff --git a/A.lean b/A.lean\n--- a/A.lean\n+++ b/A.lean\n")
     check("hunk headers with no explicit length mean one line",
-          changed_lines("+++ b/A.lean\n@@ -3 +3 @@\n-x\n+y\n"), {"A.lean": ({3}, {3})})
+          changed_lines(modify + "@@ -3 +3 @@\n-x\n+y\n"), {"A.lean": ({3}, {3})})
     check("hunk headers with a zero-length side are read as empty on that side",
-          changed_lines("+++ b/A.lean\n@@ -3,0 +4,2 @@\n+y\n+z\n"),
+          changed_lines(modify + "@@ -3,0 +4,2 @@\n+y\n+z\n"),
           {"A.lean": (set(), {4, 5})})
+    deletion = ("diff --git a/B.lean b/B.lean\ndeleted file mode 100644\n"
+                "--- a/B.lean\n+++ /dev/null\n@@ -1,2 +0,0 @@\n-x\n-y\n")
+    check("a deleted file's hunks attribute to its own old side, not to the file before it",
+          changed_lines(modify + "@@ -3 +3 @@\n-x\n+y\n" + deletion),
+          {"A.lean": ({3}, {3}), "B.lean": ({1, 2}, set())})
+    check("a deleted file alone in the diff yields its own old-side lines",
+          changed_lines(deletion), {"B.lean": ({1, 2}, set())})
+    check("a removed `-- comment` in the body is not read as a file header",
+          changed_lines(modify + "@@ -3,2 +3 @@\n--- not a header\n-x\n+y\n"),
+          {"A.lean": ({3, 4}, {3})})
+    check("an added `++ ...` line in the body is not read as a file header",
+          changed_lines(modify + "@@ -3 +3,2 @@\n-x\n+++ not a header\n+y\n"),
+          {"A.lean": ({3}, {3, 4})})
+    check("a rename resolves the old side at the old path",
+          changed_lines("diff --git a/Old.lean b/New.lean\nsimilarity index 90%\n"
+                        "rename from Old.lean\nrename to New.lean\n"
+                        "--- a/Old.lean\n+++ b/New.lean\n@@ -7 +9 @@\n-x\n+y\n"),
+          {"Old.lean": ({7}, set()), "New.lean": (set(), {9})})
+    check("an added file's hunks attribute to its new side only",
+          changed_lines("diff --git a/C.lean b/C.lean\nnew file mode 100644\n"
+                        "--- /dev/null\n+++ b/C.lean\n@@ -0,0 +1,2 @@\n+x\n+y\n"),
+          {"C.lean": (set(), {1, 2})})
 
     print("\n%d ok / %d FAIL" % (ok, fail))
     return 1 if fail else 0
