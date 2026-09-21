@@ -80,7 +80,7 @@ Spf A{1/x} ⟶ U_i ⟶ T_inv   =   Spf A{1/x} ≅ Spf A{1/y} ⟶ U_j ⟶ T_inv.
 ```
 This is `CategoryTheory.GlueData.glue_condition` with the `f` and `t` fields of
 `tateChainInvGlueData'` unfolded on the adjacent pair; the unfolding is the forward half of the
-four-case split performed by `tateChainInv_glueMorphisms_compat`. -/
+three-case split performed by `tateChainInv_glueMorphisms_compat`. -/
 theorem annulusOverlapChart_comp_ι {i j : ULift.{u} ℤ} (h : j.down - i.down = 1) :
     annulusOverlapChart R I q ≫ (tateChainInvFormalGlueData R I q hq hI).ι i =
       (annulusChartTransitionInvSpf R I q hI).hom ≫ annulusOverlapChartY R I q ≫

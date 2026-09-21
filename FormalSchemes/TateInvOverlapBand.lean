@@ -347,9 +347,11 @@ theorem isTateInvOverlapCompatibleAt_of_far (hS : IsOpen S)
 
 /-- **The overlap condition runs over the adjacent pairs alone.** Everything off the band
 `j - i = ±1` is automatic: the diagonal by `isTateInvOverlapCompatibleAt_self` and the rest by
-`isTateInvOverlapCompatibleAt_of_far`. This is the section-level form of the four-case split of
+`isTateInvOverlapCompatibleAt_of_far`. That four-case split is the section-level counterpart of
 `AlgebraicGeometry.tateChainInv_glueMorphisms_compat` (`FormalSchemes.TateChainInvGlue`), which
-performs the same split at the level of morphisms. -/
+makes the same reduction at the level of morphisms in three cases: there the diagonal is
+discharged by `CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`) before
+the proof's own split begins. -/
 theorem isTateInvOverlapCompatible_iff_adjacent (hS : IsOpen S)
     (s : (FormalSpectrum.locallyRingedSpaceObj (annulusIdealOfDefinition R I q)).presheaf.obj
       (op (tateInvPatchSaturateOpens hq hI hS))) :

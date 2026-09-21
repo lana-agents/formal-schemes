@@ -59,11 +59,13 @@ here.
   `CommRingCat.of PUnit`, so every section ring over such an overlap is a subsingleton and the
   condition there is automatic. At `i = j` the overlap is the patch itself,
   `CategoryTheory.GlueData.f_id` makes `f i i` an isomorphism and `CategoryTheory.GlueData.t_id`
-  makes `t i i` the identity. This is the section-level form of the four-case
-  split of `AlgebraicGeometry.tateChainInv_glueMorphisms_compat`
-  (`FormalSchemes.TateChainInvGlue`); the reason it is not free is that
-  `tateV_far` is an equality of locally ringed spaces, so reaching the `IsEmpty` instance means
-  unfolding `CategoryTheory.GlueData.ofGlueData'` exactly as that morphism-level proof does.
+  makes `t i i` the identity. This is the section-level form of the case split of
+  `AlgebraicGeometry.tateChainInv_glueMorphisms_compat` (`FormalSchemes.TateChainInvGlue`), whose
+  proof leaves the diagonal to `CategoryTheory.GlueData.ofGlueData'_f_comp`
+  (`FormalSchemes.GlueMorphisms`) and cases only on far / forward / backward. The reason the far
+  case is not free is that `tateV_far` is an equality of locally ringed spaces, so reaching the
+  `IsEmpty` instance means transporting along that equality, exactly as that morphism-level proof
+  does with `(tateV_far …) ▸ inferInstance`.
 * **Naming the two legs on an adjacent pair.** `AlgebraicGeometry.tateF` and
   `AlgebraicGeometry.tateTInv` present them through `annulusOverlapChart`,
   `annulusOverlapChartY` and the `𝔾m`-inversion transition, but each behind an
