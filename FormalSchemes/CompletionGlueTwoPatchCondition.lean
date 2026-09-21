@@ -49,12 +49,16 @@ has a consumer outside this file, in `FormalSchemes.ChartedCompletionSupport`.
 The index type is `ULift Bool`, with `⟨false⟩` the `A`-side chart and `⟨true⟩` the `B`-side one, as
 in `CompletionGlueTwoPatch.lean`. The datum is **not** symmetric — the two patches are different
 rings — so each statement below is given at both index pairs rather than parametrised over a
-`b : Bool`. The `₁`-orientations follow from the `₀`-ones by cancelling the overlap isomorphism, so
-only the `₀`-orientations meet the `GlueData.ofGlueData'` bookkeeping at all — and since issue 2064
-they do not pay for it either, because the unfolding is performed once at the
-`CategoryTheory.GlueData'`: by `CategoryTheory.GlueData.ofGlueData'_ι_comp` for the glue condition
-and, since issue 2150, by `CategoryTheory.GlueData.ofGlueData'_f_comp` for `completionTwoPatchDesc`
-(both `FormalSchemes.GlueMorphisms`).
+`b : Bool`. Only one of those second orientations comes free: `completionTwoPatch_glue_condition₁`
+really is `..₀` with the overlap isomorphism moved across, while `completionTwoPatchι₁_comp_desc`
+is an independent instance of `FormalScheme.GlueData.ι_glueMorphisms` at the other index and the
+four `completionTwoPatchFormalGlueData_*` lemmas are four independent `dif_neg`s. What meets the
+`GlueData.ofGlueData'` bookkeeping at all is those four, `..glue_condition₀` and
+`completionTwoPatchDesc`; the last two do not pay for it, because the unfolding is performed once
+at the `CategoryTheory.GlueData'` — by `CategoryTheory.GlueData.ofGlueData'_ι_comp` for the glue
+condition since issue 2064, and by `CategoryTheory.GlueData.ofGlueData'_f_comp` for the descent
+since issue 2150 (both `FormalSchemes.GlueMorphisms`). The four are the subject of the paragraph
+above, which is where the claim about them is stated and where a repair to it belongs.
 
 ## Main definitions and results
 
