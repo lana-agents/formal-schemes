@@ -1224,6 +1224,17 @@ def selftest() -> int:
         in a detail block is indented twelve."""
         return [l for l in lines if l.startswith("    ") and not l.startswith("     ")]
 
+    def header(lines: list[str], label: str) -> str:
+        """The one header line labelled `label`, whole.
+
+        `figures` above keeps only the digits after the colon, so neither the prose that says
+        which digit is which nor the column the digits are padded to reaches it.  Empty string
+        when the label is not unique, for the reason `figures` returns `[]`: a renamed label
+        should fail the case, not pass it on a line that is no longer there.
+        """
+        hit = [l for l in lines if l.split(":", 1)[0].strip() == label]
+        return hit[0] if len(hit) == 1 else ""
+
     whole_report = {
         "FormalSchemes/Bare.lean": _src(
             "namespace AlgebraicGeometry",
@@ -1291,6 +1302,37 @@ def selftest() -> int:
                   len(reported_table), len(reported_own), len(reported_inherited),
                   len(reported_att), len(reported_mis), len(reported_dec)]),
           [1, 2, 3, 4, 5, 6, 9, 11])
+
+    # The glosses, as text.  `figures` above keeps only the digits after the colon, and nothing
+    # else in this suite reads the prose beside them, so all three parentheticals on this report
+    # were one `sed` from gone with `--selftest` green and `--tree`'s exit code unmoved -- each
+    # of the three measured 0-FAIL at `aa79516`, which is what row 2143 is.  The `declined` one
+    # is the one that matters: `declined` is *not* a failure, and on the line itself the gloss
+    # is the only evidence a reader has for that, which is row 2131's goal 4.
+    #
+    # The counts stay `len()`-derived, so this cannot drift from the code the way a hard-coded
+    # line would.  What is literal is the label, the gloss, and the column the count is padded
+    # to -- and **the column is newly pinned on purpose**: PR #751 disclosed `%5d` as
+    # deliberately unwatched, and asserting the whole line closes that as a side effect.
+    #
+    # A loosening of this case has to be scoped to the `print` it is about.  Pinning literal
+    # prose means the expectation *is* the prose, so a module-wide substitution of a gloss
+    # rewrites both ends and reports 0-FAIL however well the case works; substitute the whole
+    # `print(...)` statement in `report` instead.  That holds for every case that pins prose
+    # rather than a format string, and it is why the digits were the easy half.
+    check("the three header glosses are printed as written, in the column their counts are"
+          " padded to",
+          (header(printed, "declarations with a set_option"),
+           header(printed, "scope stack underflows"),
+           header(printed, "declined (see below)")),
+          ("declarations with a set_option : "
+           + str(len(reported_own) + len(reported_inherited)).rjust(5)
+           + "   (of %d declarations seen; %d carry their own, %d only inherit a file-scoped"
+             " one)" % (len(reported_table), len(reported_own), len(reported_inherited)),
+           "scope stack underflows         : " + str(len(reported_underflows)).rjust(5)
+           + "   (files where an `end` closed a scope this walk never opened)",
+           "  declined (see below)         : " + str(len(reported_dec)).rjust(5)
+           + "   (not a failure: see the module docstring)"))
     check("`by family` tallies the declined references too, not only the attributed ones",
           [l.split(":", 1)[1].strip() for l in printed
            if l.split(":", 1)[0].strip() == "by family"],
