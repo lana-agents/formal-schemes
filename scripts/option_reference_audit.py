@@ -62,6 +62,25 @@ family `any` vacuously true tree-wide.  Measured: it turns both of the tree's st
 `MISMATCH`es into passes.  A *scoped* `linter.style.setOption false in` is a different thing and
 stays in; it is written one declaration at a time, beside the option it suppresses the linter for.
 
+## The scope stack, and the figure that watches it
+
+*"The rest of the enclosing scope"* means the scanner has to know where scopes open and close,
+and it learns that from three regexes: `NAMESPACE`, `SECTION` and `END`.  Two things ride on the
+same stack -- which `namespace` qualifies a declaration's name, and which `end` reverts a bare
+`set_option` -- so an opening line one of them misses is a hole in both at once.  Measured
+against Lean rather than reasoned about, with a command that prints `getOptions` at each point:
+a raise written at namespace scope still reads `some 400000` after an inner section's `end`, and
+one written inside that section reads `none` immediately after it.  Both readings are pinned by
+a case.
+
+`SECTION` read only the bare spelling until issue 2130, and **`noncomputable section` is 546 of
+this tree's 975 section-opening lines** -- so 239 of the 582 files closed a scope the walk had
+never opened, and each of those `end`s popped the enclosing *namespace* instead.  Nothing said
+so: the two guards that stop the stack popping past empty are exactly where a missed opener goes
+quiet.  So `option_table` now returns the underflow count as well, and `--tree` prints it as
+`scope stack underflows`.  It is **0** on this tree and the point of it is the day it is not:
+**a blind spot that prints no number is indistinguishable from no blind spot.**
+
 ## The family question: matched on the English word
 
 `maxHeartbeats` and `backward.isDefEq.respectTransparency` are the two options that carry
@@ -185,8 +204,24 @@ DECL = re.compile(r"^\s*(?:@\[[^\]]*\]\s*)?"
                   r"(?:private\s+|protected\s+|noncomputable\s+|partial\s+|unsafe\s+|scoped\s+)*"
                   r"(?:theorem|lemma|def|abbrev|instance|structure|class|inductive|opaque)"
                   r"\s+([^\s({\[:⦃⟨]+)")
+# The three openers the scope stack is built from.  Two things ride on that stack -- qualifying
+# a declaration by its `namespace`, and the scope a bare `set_option` reverts at -- so an opening
+# line one of these misses is a hole in both.  Censused over `FormalSchemes/**/*.lean` (582
+# files) through `code_only`:
+#
+#     regex       matches   opening lines of its kind that it misses
+#     NAMESPACE       850   0
+#     SECTION         975   0   -- 429 bare `section`, 546 `noncomputable section`
+#     END            1518   0   -- and 0 of them indented, which would be a false pop
+#
+# `SECTION` read only the bare spelling until issue 2130, which missed all 546 of the other one
+# and left 239 files closing a scope the scanner never opened.  `noncomputable` is the only
+# modifier admitted, and the reason is Lean's parser rather than this tree's habits: `private
+# section` and `protected section` are both rejected at the `section` token itself
+# (`unexpected token 'section'; expected 'lemma'`, measured), so admitting them would be
+# admitting syntax that cannot occur, not syntax this tree happens not to write.
 NAMESPACE = re.compile(r"^\s*namespace\s+(\S+)")
-SECTION = re.compile(r"^\s*section\b\s*(\S*)")
+SECTION = re.compile(r"^\s*(?:noncomputable\s+)?section\b\s*(\S*)")
 END = re.compile(r"^\s*end\b\s*(\S*)")
 
 # The option families, keyed by the English word a sentence uses for them.  `any` is the fallback
@@ -306,7 +341,8 @@ def _merge(into: dict[str, str], carried: dict[str, str]) -> None:
 
 
 def option_table(sources: dict[str, str]) -> tuple[dict[str, dict[str, str]],
-                                                   dict[str, dict[str, str]]]:
+                                                   dict[str, dict[str, str]],
+                                                   dict[str, int]]:
     """Pass 1: the options carried, by declaration and by module, each tagged with its scope.
 
     A `set_option ... in` binds to the next declaration, across any number of intervening
@@ -328,9 +364,19 @@ def option_table(sources: dict[str, str]) -> tuple[dict[str, dict[str, str]],
     declaration that carries its own raise says more than one about a declaration that merely
     sits below a file-scoped raise, and `report` prints which of the two answered so the reader
     can tell.
+
+    The third return is the **underflow census**: files where an `end` closed a scope this walk
+    never opened, keyed by path and counted.  It is the walk's own account of whether it
+    understood the file, and it is returned rather than swallowed because the two guards below
+    (`if stack` and `if len(levels) > 1`) are otherwise where a missed opener goes quiet -- the
+    stack simply stops popping and no figure moves.  Issue 2130 is exactly that: `SECTION` did
+    not know `noncomputable section`, 239 of the 582 files underflowed, and nothing said so.
+    `report` prints the count, so the next opener a regex misses is a number rather than
+    nothing.
     """
     table: dict[str, dict[str, str]] = {}
     by_module: dict[str, dict[str, str]] = {}
+    underflows: dict[str, int] = {}
     for path in sorted(sources):
         module = module_name(path)
         by_module.setdefault(module, {})
@@ -360,6 +406,8 @@ def option_table(sources: dict[str, str]) -> tuple[dict[str, dict[str, str]],
                     stack.pop()
                 if len(levels) > 1:
                     levels.pop()
+                else:
+                    underflows[path] = underflows.get(path, 0) + 1
                 continue
             if EXAMPLE.match(line):
                 pending = []
@@ -373,7 +421,7 @@ def option_table(sources: dict[str, str]) -> tuple[dict[str, dict[str, str]],
                 _merge(table.setdefault(name, {}), carried)
                 _merge(by_module[module], carried)
                 pending = []
-    return table, by_module
+    return table, by_module, underflows
 
 
 def module_name(path: str) -> str:
@@ -615,7 +663,7 @@ def references(sources: dict[str, str], table: dict[str, set[str]],
 
 def audit(sources: dict[str, str]):
     """Every cross-reference in `sources`, as `(mismatches, attributed, declined)`."""
-    table, by_module = option_table(sources)
+    table, by_module, _ = option_table(sources)
     mismatches, attributed, declined = [], [], []
     for ref in references(sources, table, by_module):
         if ref["declined"]:
@@ -652,7 +700,7 @@ def options_of(ref: dict, table, by_module) -> dict[str, str]:
 
 
 def report(sources: dict[str, str]) -> int:
-    table, by_module = option_table(sources)
+    table, by_module, underflows = option_table(sources)
     mismatches, attributed, declined = audit(sources)
     own = {n for n, o in table.items() if OWN in o.values()}
     inherited = {n for n, o in table.items() if o} - own
@@ -663,6 +711,12 @@ def report(sources: dict[str, str]) -> int:
     print("declarations with a set_option : %5d   (of %d declarations seen; %d carry their own,"
           " %d only inherit a file-scoped one)"
           % (len(own) + len(inherited), len(table), len(own), len(inherited)))
+    print("scope stack underflows         : %5d   (files where an `end` closed a scope this"
+          " walk never opened)" % len(underflows))
+    for path in sorted(underflows)[:5]:
+        print("    %s  (%d)" % (path, underflows[path]))
+    if len(underflows) > 5:
+        print("    ... and %d more" % (len(underflows) - 5))
     print("cross-references attributed    : %5d" % len(attributed))
     print("  MISMATCH                     : %5d" % len(mismatches))
     print("  declined (see below)         : %5d   (not a failure: see the module docstring)"
@@ -936,6 +990,86 @@ def selftest() -> int:
               sectioned),
           (["anchor_with_nothing"], ["anchor_with_nothing"], []))
 
+    # `noncomputable section` is how this tree opens a section -- 546 of its 975 section-opening
+    # lines -- and `SECTION` did not match it until issue 2130.  The two shapes below are the
+    # two the old regex got *backwards*, in opposite directions, so each needs its own case.
+    # Both were measured against Lean itself rather than reasoned about, with a `#opt` command
+    # that prints `getOptions` at each point: in (a) the raise reads `some 400000` after the
+    # section's `end` and `none` only after `end AlgebraicGeometry`; in (b) it reads `none`
+    # immediately after the `end`.
+    nc_namespace = {"FormalSchemes/Carrier.lean": _src(
+        "namespace AlgebraicGeometry",
+        "set_option maxHeartbeats 400000",
+        "noncomputable section",
+        "theorem inside_the_section : True := trivial",
+        "end",
+        "theorem after_the_section : True := trivial",
+        "end AlgebraicGeometry")}
+    check("a `noncomputable section` opens a scope, so its `end` does not revert the"
+          " namespace's raise",
+          run("The same heartbeats raise as `after_the_section` needs, same reason.",
+              nc_namespace),
+          ([], ["after_the_section"], []))
+    check("and the declaration inside the section inherits it too",
+          run("The same heartbeats raise as `inside_the_section` needs, same reason.",
+              nc_namespace),
+          ([], ["inside_the_section"], []))
+
+    nc_reverts = {"FormalSchemes/Carrier.lean": _src(
+        "noncomputable section",
+        "set_option maxHeartbeats 400000",
+        "end",
+        "namespace AlgebraicGeometry",
+        "theorem after_the_section : True := trivial",
+        "end AlgebraicGeometry")}
+    check("a raise written inside a `noncomputable section` reverts at its `end`",
+          run("The same heartbeats raise as `after_the_section` needs, same reason.",
+              nc_reverts),
+          (["after_the_section"], ["after_the_section"], []))
+
+    # The stack's *other* consumer, which predates the option scope by the whole life of the
+    # scanner: qualifying a name by its enclosing `namespace`.  A missed `section` push makes
+    # the matching `end` pop the namespace early, so the declaration after it is qualified with
+    # the wrong prefix -- and on a tree that declares one stem in two namespaces that is how a
+    # sentence gets checked against the wrong declaration.  Asserted against the table, since
+    # `run` reports anchors rather than names.
+    # The trailing declaration is not decoration: without it nothing watches `end` popping the
+    # *namespace* stack at all -- a loosening that stops popping it leaves both qualified names
+    # unchanged and fails no case.  That guard has been unwatched since the scanner was built,
+    # and it is the same 0-FAIL shape issue 2126's author hit on their own precedence rule.
+    qualified, _, _ = option_table({"FormalSchemes/Carrier.lean": _src(
+        "namespace AlgebraicGeometry",
+        "noncomputable section",
+        "theorem inside_the_section : True := trivial",
+        "end",
+        "theorem after_the_section : True := trivial",
+        "end AlgebraicGeometry",
+        "theorem outside_every_namespace : True := trivial")})
+    check("a name after a `noncomputable section` closes keeps its namespace qualifier, and one"
+          " after the namespace closes loses it",
+          sorted(qualified),
+          ["AlgebraicGeometry.after_the_section", "AlgebraicGeometry.inside_the_section",
+           "outside_every_namespace"])
+
+    # The underflow census: the walk's own account of whether it understood the file.  Both
+    # halves are asserted, because a diagnostic that can only ever report zero is the same dead
+    # rule this row is about -- it is what the two `if` guards in `option_table` were doing
+    # before, and 239 of the 582 files were underflowing while `--tree` printed nothing.
+    _, _, balanced = option_table({"FormalSchemes/Carrier.lean": _src(
+        "namespace AlgebraicGeometry",
+        "noncomputable section",
+        "theorem anchor_with_nothing : True := trivial",
+        "end",
+        "end AlgebraicGeometry")})
+    check("a file whose scopes balance reports no underflow", balanced, {})
+    _, _, stray = option_table({"FormalSchemes/Carrier.lean": _src(
+        "namespace AlgebraicGeometry",
+        "theorem anchor_with_nothing : True := trivial",
+        "end AlgebraicGeometry",
+        "end")})
+    check("an `end` that closes a scope the walk never opened is counted and named",
+          stray, {"FormalSchemes/Carrier.lean": 1})
+
     # File-scoped `linter.*` is the one form that is boilerplate, and excluding it is what keeps
     # the fallback family `any` from becoming vacuously true: every module of this tree carries
     # `linter.style.header false`, so admitting it turns both of the tree's standing
@@ -970,7 +1104,7 @@ def selftest() -> int:
         "theorem its_own : True := trivial",
         "theorem inherits : True := trivial",
         "end AlgebraicGeometry")
-    table, by_module = option_table({"FormalSchemes/Carrier.lean": own_and_inherited})
+    table, _, _ = option_table({"FormalSchemes/Carrier.lean": own_and_inherited})
     check("a declaration's own option outranks the file-scoped one of the same name",
           table["AlgebraicGeometry.its_own"], {"maxHeartbeats": OWN})
     check("a declaration that only sits below the raise is recorded as inheriting it",
@@ -985,7 +1119,7 @@ def selftest() -> int:
     # plain `update` there silently downgrades the stronger record to the weaker one depending
     # on which file sorts first.  Without this case that precedence rule fails no loosening at
     # all, which is the defect it exists to prevent one level up.
-    twins, _ = option_table({
+    twins, _, _ = option_table({
         "FormalSchemes/TwinA.lean": _src(
             "namespace AlgebraicGeometry",
             "set_option maxHeartbeats 400000 in",
