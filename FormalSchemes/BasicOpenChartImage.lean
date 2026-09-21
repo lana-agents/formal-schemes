@@ -39,6 +39,9 @@ presentation is needed: the away-of-away algebra isomorphisms of
   `Spec S → Spec A` is `D(r * b)` for some `b : A`. This is the ring-theoretic content, and it is
   Mathlib's `basicOpen_basicOpen_is_basicOpen` argument with the scheme-theoretic wrapping removed.
 * `FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen`: the statement for `Spf`.
+* `FormalSpectrum.exists_refined_overlap_element`: its consumer — the overlap of a basic open
+  of one chart with a basic open of another is a basic open, with its element in the ambient
+  chart algebra. Issue 2148 goal 1.
 
 ## References
 
@@ -163,5 +166,42 @@ theorem basicOpen_basicOpenChart_is_basicOpen (hI : I.FG) (h : awayCompletion I 
       hbase
   rw [himg2, hb, hf']
   rfl
+
+/-- **The overlap of a basic open of one chart with a basic open of another is a basic open**, and
+its element can be taken in the ambient chart algebra.
+
+Refining an affine chart family by basic opens — the step statement (A) of EGA I §10.15 waits on
+(issue 2148) — needs, for refined indices *⟨i, h⟩* and *⟨j, h'⟩*, an element of *A_i{1/h}* cutting
+out the overlap of *D(h) ⊆ Spf A_i* with *D(h') ⊆ Spf A_j*. Issue 2139 sketched
+*"the old overlap element localised"*, which is wrong: the image of *g_ij* cuts out
+*D(h) ∩ D(g_ij)*, the whole of chart *i*'s overlap with chart *j*, and *τ_ij⁻¹(h')* lives in
+*A_i{1/g_ij}* rather than in *A_i{1/h}*.
+
+The element is the one `FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen` above produces from
+the *τ*-transport of *D(h')*, pushed into *A_i{1/h}*; the right-hand side is that overlap read
+inside *Spf (A_i{1/h})*. Nothing here mentions a chart family — the two overlap elements and the
+transition are the data of two charts, and *h*, *h'* refine them. -/
+theorem exists_refined_overlap_element (hI : I.FG)
+    {Ai Aj : Type u} [CommRing Ai] [CommRing Aj] [Algebra R Ai] [Algebra R Aj]
+    (gij : Ai) (gji : Aj)
+    (τ : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (h : Ai) (h' : Aj) :
+    ∃ e : Ai,
+      (basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) h)
+            (awayCompletionHom (I.map (algebraMap R Ai)) h e) :
+              Set (FormalSpectrum (awayCompletionIdeal (I.map (algebraMap R Ai)) h)))
+        = basicOpenChartBase (I.map (algebraMap R Ai)) h ⁻¹'
+            (basicOpenChartBase (I.map (algebraMap R Ai)) gij ''
+              (basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)
+                  (τ.symm (awayCompletionHom (I.map (algebraMap R Aj)) gji h')) :
+                Set (FormalSpectrum (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)))) := by
+  obtain ⟨e, he⟩ := basicOpen_basicOpenChart_is_basicOpen (I.map (algebraMap R Ai)) gij (hI.map _)
+    (τ.symm (awayCompletionHom (I.map (algebraMap R Aj)) gji h'))
+  refine ⟨e, ?_⟩
+  rw [he]
+  ext v
+  simp only [Set.mem_preimage, SetLike.mem_coe, mem_basicOpen]
+  exact not_congr (mem_asIdeal_basicOpenChartBase_iff (I.map (algebraMap R Ai)) h v e).symm
 
 end FormalSpectrum

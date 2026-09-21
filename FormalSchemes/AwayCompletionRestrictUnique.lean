@@ -48,6 +48,9 @@ computation through `RingSplit.adicAwayUnitEquiv'`:
 * `FormalSpectrum.awayCompletionRestrict_eq_mapCompletion`: a completed localization map under `R`
   is the canonical restriction.
 * `FormalSpectrum.awayCompletionRestrict_eq_awayCompletionMulHomLeft`: the nested instance.
+* `FormalSpectrum.awayCompletionCongrBasicOpen`: two presentations of the *same* basic
+  open are canonically the same ring under `R` — the restriction is an isomorphism when
+  `D(f) = D(g)`, by the two laws above. Issue 2148 §3 is what asks for it.
 * `FormalSpectrum.basicOpenRes_eq_awayCompletionRestrict_of_le_comap`: **conditional.** If the
   structure-sheaf restriction is continuous in the same sense, it is `awayCompletionRestrict`. The
   hypothesis is discharged, and the identification stated unconditionally, in
@@ -252,6 +255,44 @@ theorem awayCompletionRestrict_eq_awayCompletionMulHomLeft (hI : I.FG)
   awayCompletionRestrict_unique I f (f * g) hI hle
     (le_comap_awayCompletionMulHomLeft I f g hI)
     (awayCompletionMulHomLeft_comp_awayCompletionHom I f g hI)
+
+/-!
+### Two presentations of the same basic open
+-/
+
+/-- **Two presentations of the same basic open are canonically the same ring under `R`.** When
+`D(f) = D(g)`, `FormalSpectrum.awayCompletionRestrict` is an isomorphism, with the restriction the
+other way as its inverse: both composites are the identity by the chain law and
+`FormalSpectrum.awayCompletionRestrict_self`.
+
+Issue 2148 §3 names this as the half that the topological
+`FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen` does not supply — the map of rings under `R`
+that an affine-charted datum's transition field is built from, once a refined overlap has been
+presented from two different charts. It is two lines from the two laws above it. -/
+noncomputable def awayCompletionCongrBasicOpen (hI : I.FG) (hfg : basicOpen I f = basicOpen I g) :
+    awayCompletion I f ≃+* awayCompletion I g where
+  toFun := awayCompletionRestrict I f g hI hfg.ge
+  invFun := awayCompletionRestrict I g f hI hfg.le
+  left_inv x := by
+    have h := awayCompletionRestrict_comp I (f := f) (g := g) (h := f) hI hfg.ge hfg.le
+    rw [awayCompletionRestrict_self] at h
+    exact congrArg (fun F => F x) h
+  right_inv x := by
+    have h := awayCompletionRestrict_comp I (f := g) (g := f) (h := g) hI hfg.le hfg.ge
+    rw [awayCompletionRestrict_self] at h
+    exact congrArg (fun F => F x) h
+  map_add' := map_add _
+  map_mul' := map_mul _
+
+/-- **`FormalSpectrum.awayCompletionCongrBasicOpen` is a map under `R`**, so it upgrades to an
+`R`-algebra equivalence wherever one is wanted. Immediate from
+`FormalSpectrum.awayCompletionRestrict_awayCompletionHom`, since the isomorphism *is* that
+restriction. -/
+theorem awayCompletionCongrBasicOpen_awayCompletionHom (hI : I.FG)
+    (hfg : basicOpen I f = basicOpen I g) (r : R) :
+    awayCompletionCongrBasicOpen I f g hI hfg (awayCompletionHom I f r) =
+      awayCompletionHom I g r :=
+  awayCompletionRestrict_awayCompletionHom I f g hI hfg.ge r
 
 /-!
 ### The identification with the structure-sheaf restriction, reduced to one bound
