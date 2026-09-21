@@ -95,10 +95,12 @@ set_option backward.isDefEq.respectTransparency false in
 -- (`FormalSchemes.ActionQuotientFormalScheme`) read one point at a time, and the option is on that
 -- definition for the same comparison; those two are the only sites that need it *for that
 -- comparison*, which is not a claim about the tree's other
--- `set_option backward.isDefEq.respectTransparency false` blocks — there are 53 of them, in 30
+-- `set_option backward.isDefEq.respectTransparency false` blocks — there are 87 of them, in 41
 -- other files, and they justify themselves locally. The measurement, and the tree-wide rule this
 -- comment used to assert in place of it, are recorded there rather than repeated here (issue
--- 1531).
+-- 1531). They were 53 and 30 when issue 1531 wrote them, and 89 and 43 immediately before issue
+-- 2150 removed two of the blocks. No instrument on this tree reads this sentence, so the pair is
+-- only ever as fresh as the last row that happened to measure it.
 /-- **The pointwise chart theorem.** A separating open `U ∋ x` gives an affine formal chart of the
 quotient at `π x`, with no hypothesis at any other point of `X`.
 
