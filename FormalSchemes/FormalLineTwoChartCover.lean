@@ -115,7 +115,7 @@ attribute [local instance] isAdicRing_twoChartRing
 set_option linter.style.setOption false in
 -- The `covers` field compares a point of `(Spf formalLineIdeal).toPresheafedSpace` with a point of
 -- `FormalSpectrum formalLineIdeal`; the two are `rfl` but not at `instances` transparency, which is
--- the transparency instance search and `rw` work at. Same accommodation as `Gluing.lean` and
+-- the transparency instance search and `rw` work at. Same accommodation as
 -- `OpenCoverGlueMorphisms.lean`.
 set_option backward.isDefEq.respectTransparency false in
 /-- **`D(2)` and `D(3)` as an open cover of `Spf ℤ⟦X⟧`**, by the two affine formal schemes
