@@ -50,11 +50,13 @@ Both are here, and the pair is easy to mistake for a duplication. `specLRSGlueDa
 input transformer and its hypothesis is supplied by the caller. `specAwayMap_comp_specι` goes the
 other way for the **canonical** family `k = specι`, reading the datum-level statement off
 `CategoryTheory.GlueData.glue_condition`; nothing supplies its hypothesis because it has none.
-Neither is derivable from the other. Only `specLRSGlueData_compat` still performs the `dite`
-unfolding, through the private `specGD_f` / `specGD_t`; `specAwayMap_comp_specι` is one call to
-`CategoryTheory.GlueData.ofGlueData'_ι_comp` (`FormalSchemes.GlueMorphisms`), which performs it
-once and for all at the `CategoryTheory.GlueData'` — and, because it is stated where the indices
-already carry that type, without the transparency option the other direction still needs.
+Neither is derivable from the other. **Neither performs the `dite` unfolding any longer**: each is
+one call to a lemma stated at the `CategoryTheory.GlueData'` in `FormalSchemes.GlueMorphisms` —
+`ChartedSchemeDatum.specLRSGlueData_compat` to `CategoryTheory.GlueData.ofGlueData'_f_comp`, and
+`ChartedSchemeDatum.specAwayMap_comp_specι` to `CategoryTheory.GlueData.ofGlueData'_ι_comp`.
+Because those are stated where the two indices already carry the `CategoryTheory.GlueData'`'s own
+type, neither meets the index mismatch, and the `backward.isDefEq.respectTransparency false` this
+file carried until issue 2150 is gone.
 
 ## Main definitions and results
 
@@ -88,49 +90,27 @@ variable (D : ChartedSchemeDatum.{u}) {Z : LocallyRingedSpace.{u}}
 
 /-! ### The glue datum's compatibility, in the datum's own terms -/
 
-/-- The constructed glue map of the ambient scheme, off the diagonal. -/
-private theorem specGD_f (i j : D.J) (h : i ≠ j) :
-    D.specLRSGlueData.toGlueData.f i j = eqToHom (dif_neg h) ≫ specAwayMap (D.g i j) :=
-  dif_neg h
+/-- **The datum-level compatibility implies the one the glue diagram imposes.** This is
+`CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`) at
+`AlgebraicGeometry.ChartedSchemeDatum.specGlueData'`: the hypothesis asked for below *is* that
+lemma's hypothesis, spelled in the datum's `g` and `θ` rather than in the
+`CategoryTheory.GlueData'`'s `f` and `t`, and the two spellings are the same term.
 
-/-- The constructed transition of the ambient scheme, off the diagonal. -/
-private theorem specGD_t (i j : D.J) (h : i ≠ j) :
-    D.specLRSGlueData.toGlueData.t i j =
-      eqToHom (dif_neg h) ≫ (specGlueIso (D.g i j) (D.g j i) (D.θ i j h)).hom ≫
-        eqToHom (dif_neg h.symm).symm :=
-  dif_neg h
-
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- `specGD_f` / `specGD_t` are stated at `D.J`, while the indices here are at
--- `D.specLRSGlueData.J`; the two are `D.J` only after unfolding two `def`s, so without this the
--- rewritten target is rejected as ill-typed at `instances` transparency. The converse direction,
--- `specAwayMap_comp_specι` below, needed the same option until it was rerouted through
--- `CategoryTheory.GlueData.ofGlueData'_f_comp_of` and then its `ι`-specialisation
--- `CategoryTheory.GlueData.ofGlueData'_ι_comp`, which are stated where the two indices already
--- carry the `CategoryTheory.GlueData'`'s own type and so never meet the mismatch.
-/-- **The datum-level compatibility implies the one the glue diagram imposes.** On the diagonal the
-glue transition is the identity (`CategoryTheory.GlueData.t_id`) and the condition is trivial. Off
-the diagonal, `specGD_f` and `specGD_t` expose `f i j` as `eqToHom _ ≫ specAwayMap (g i j)` and
-`t i j` as `eqToHom _ ≫ specGlueIso _ _ (θ i j) ≫ eqToHom _`; the two inner transports cancel and
-what is left is the hypothesis as stated, with one transport in front of both sides.
-
-The `(i : D.J)` ascription in the case split is load-bearing: the index of the glue datum is
-`D.specLRSGlueData.J`, which is `D.J` only after unfolding two `def`s, and a `Ne` at the wrong one
-of the two spellings does not match the `dite` that `GlueData.ofGlueData'` produces. -/
+Until issue 2150 the unfolding was performed here instead, by a private pair of `dif_neg`
+one-liners exposing `f i j` and `t i j` off the diagonal and a `simp only` cancelling the two
+inner transports. That route states the unfolding at `ChartedSchemeDatum.J` while the goal's
+indices are at the index type of `ChartedSchemeDatum.specLRSGlueData` — the same type only after
+unfolding two `def`s — and so needed `backward.isDefEq.respectTransparency false`. The general
+lemma is stated where both indices already carry the `CategoryTheory.GlueData'`'s own index type,
+so it never meets the mismatch and the option is gone. -/
 theorem specLRSGlueData_compat
     (k : ∀ i, Spec.locallyRingedSpaceObj (CommRingCat.of (D.C i)) ⟶ Z)
     (h : ∀ (i j : D.J) (hij : i ≠ j), specAwayMap (D.g i j) ≫ k i =
       (specGlueIso (D.g i j) (D.g j i) (D.θ i j hij)).hom ≫ specAwayMap (D.g j i) ≫ k j)
     (i j : D.specLRSGlueData.J) :
     D.specLRSGlueData.toGlueData.f i j ≫ k i =
-      D.specLRSGlueData.toGlueData.t i j ≫ D.specLRSGlueData.toGlueData.f j i ≫ k j := by
-  obtain rfl | hij0 := eq_or_ne i j
-  · rw [D.specLRSGlueData.toGlueData.t_id i, Category.id_comp]
-  · have hij : @Ne D.J i j := hij0
-    rw [D.specGD_f i j hij, D.specGD_t i j hij, D.specGD_f j i hij.symm]
-    simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-    rw [h i j hij]
+      D.specLRSGlueData.toGlueData.t i j ≫ D.specLRSGlueData.toGlueData.f j i ≫ k j :=
+  CategoryTheory.GlueData.ofGlueData'_f_comp D.specGlueData' k h i j
 
 /-! ### The universal property -/
 

@@ -27,12 +27,20 @@ This file supplies that relation and the descent principle it unlocks.
   pair on each chart (`completionTwoPatchι₀_comp_desc`, `..ι₁_comp_desc`) and being the only such
   morphism (`completionTwoPatchDesc_unique`).
 
-The four unfolding lemmas `completionTwoPatchFormalGlueData_f_false_true` and friends are stated
-publicly rather than kept private, because they are the dictionary between the constructed glue
-data and the completion vocabulary, and anything else reasoning about `completionTwoPatch` needs
-the same translation. The two index disequalities `cgcNe` and `cgcNe'` are public for the same
-reason: they occur in the right-hand sides of those four lemmas, so a downstream file that can only
-`rw` with them but not restate them has half a dictionary.
+The four unfolding lemmas `completionTwoPatchFormalGlueData_f_false_true` and friends record what
+the assembled glue data's `f` and `t` are at the two off-diagonal index pairs, in the completion
+vocabulary. **They describe the datum; they are not a step in any argument on this tree.** Since
+issue 2150 no proof in this file unfolds the `GlueData.ofGlueData'` `dite` by hand: both places
+that did — `completionTwoPatch_glue_condition₀` and `completionTwoPatchDesc` — now go through
+`CategoryTheory.GlueData.ofGlueData'_ι_comp` and `CategoryTheory.GlueData.ofGlueData'_f_comp`,
+which perform the unfolding once and for all at the `CategoryTheory.GlueData'`. They are kept, and
+kept public, because this file's *Main definitions and results* list names them, and on this tree
+that list is a file's statement of what it offers. Until issue 2150 this paragraph justified them
+instead by predicting that anything else reasoning about `completionTwoPatch` would need the same
+translation; nothing ever did, and the prediction is withdrawn rather than left standing. The two
+index disequalities `cgcNe` and `cgcNe'` occur in their right-hand sides and are public for that
+reason — and `cgcNe` has a consumer outside this file, in
+`FormalSchemes.ChartedCompletionSupport`.
 
 ## The `⟨false⟩ = A`, `⟨true⟩ = B` convention
 
@@ -42,15 +50,16 @@ rings — so each statement below is given at both index pairs rather than param
 `b : Bool`. The `₁`-orientations follow from the `₀`-ones by cancelling the overlap isomorphism, so
 only the `₀`-orientations meet the `GlueData.ofGlueData'` bookkeeping at all — and since issue 2064
 they do not pay for it either, because the unfolding is performed once at the
-`CategoryTheory.GlueData'`, now by `CategoryTheory.GlueData.ofGlueData'_ι_comp`
-(`FormalSchemes.GlueMorphisms`).
+`CategoryTheory.GlueData'`: by `CategoryTheory.GlueData.ofGlueData'_ι_comp` for the glue condition
+and, since issue 2150, by `CategoryTheory.GlueData.ofGlueData'_f_comp` for `completionTwoPatchDesc`
+(both `FormalSchemes.GlueMorphisms`).
 
 ## Main definitions and results
 
 * `cgcNe`, `cgcNe'`: the two indices of the datum are distinct, with the index type ascribed.
 * `completionTwoPatchFormalGlueData_f_false_true` and its three siblings: the constructed glue
   maps and transitions in terms of `formalCompletion.basicOpenImmersion` and
-  `completionGlueLRSIso`.
+  `completionGlueLRSIso`. They describe the datum and are consumed by nothing.
 * `completionTwoPatch_glue_condition₀`, `completionTwoPatch_glue_condition₁`: the glued object is
   glued — the two charts agree over the overlap.
 * `completionTwoPatchDesc`: a morphism out of the glued completion from a compatible pair.
@@ -164,30 +173,15 @@ private def cgcK (k₀ : (formalCompletion A I hI).toLocallyRingedSpace ⟶ Y)
   | ⟨false⟩ => k₀
   | ⟨true⟩ => k₁
 
-private theorem cgcK_false (k₀ : (formalCompletion A I hI).toLocallyRingedSpace ⟶ Y)
-    (k₁ : (formalCompletion B J hJ).toLocallyRingedSpace ⟶ Y) :
-    cgcK I hI a J hJ b θ hθ k₀ k₁ ⟨false⟩ = k₀ := rfl
-
-private theorem cgcK_true (k₀ : (formalCompletion A I hI).toLocallyRingedSpace ⟶ Y)
-    (k₁ : (formalCompletion B J hJ).toLocallyRingedSpace ⟶ Y) :
-    cgcK I hI a J hJ b θ hθ k₀ k₁ ⟨true⟩ = k₁ := rfl
-
-set_option linter.style.setOption false in
-set_option backward.isDefEq.respectTransparency false in
--- The obligation is quantified over the constructed glue data's own index type, which reduces to
--- `ULift Bool` only past `instances` transparency, so the rewrites below are otherwise rejected as
--- ill-typed. `completionTwoPatch_glue_condition₀` above needed the same option until issue 2064
--- rerouted it through `CategoryTheory.GlueData.ofGlueData'_f_comp_of`, now its `ι`-specialisation
--- `CategoryTheory.GlueData.ofGlueData'_ι_comp`; both are stated at the `CategoryTheory.GlueData'`
--- and so never meet the mismatch.
 /-- **Descent of a morphism out of the glued completion** (EGA I, 10.8): a morphism `k₀` out of the
 `A`-chart and a morphism `k₁` out of the `B`-chart which agree over the overlap glue to a single
 morphism out of `completionTwoPatch`.
 
 This is `FormalScheme.GlueData.glueMorphisms` with its obligation discharged. That obligation is
-quantified over all four index pairs and stated in terms of the constructed glue data: on the
-diagonal it collapses because `CategoryTheory.GlueData.t_id` makes the transition the identity, and
-off the diagonal the two cases are `hk` and `hk` read backwards through the overlap isomorphism.
+quantified over all four index pairs and stated in terms of the constructed glue data;
+`CategoryTheory.GlueData.ofGlueData'_f_comp` (`FormalSchemes.GlueMorphisms`) reduces it to the two
+off-diagonal pairs in the vocabulary `completionTwoPatchGlueData'` carries, where the two cases are
+`hk` and `hk` read backwards through the overlap isomorphism.
 
 Since `completionTwoPatch` is not affine in general, this is the general way to produce a morphism
 out of it; the canonical `X_{/Y} ⟶ X` of 10.8 for a two-chart scheme is the instance where `k₀` and
@@ -200,24 +194,14 @@ def completionTwoPatchDesc (k₀ : (formalCompletion A I hI).toLocallyRingedSpac
         (formalCompletion.basicOpenImmersion J hJ b).toLRSHom ≫ k₁) :
     (completionTwoPatch I hI a J hJ b θ hθ).toLocallyRingedSpace ⟶ Y :=
   (completionTwoPatchFormalGlueData I hI a J hJ b θ hθ).glueMorphisms
-    (cgcK I hI a J hJ b θ hθ k₀ k₁) (by
-      intro i j
-      by_cases hij : i = j
-      · subst hij
-        simp only [CategoryTheory.GlueData.t_id, Category.id_comp]
-      · rcases i with ⟨_ | _⟩ <;> rcases j with ⟨_ | _⟩
-        · exact absurd rfl hij
-        · rw [completionTwoPatchFormalGlueData_f_false_true,
-            completionTwoPatchFormalGlueData_t_false_true,
-            completionTwoPatchFormalGlueData_f_true_false, cgcK_false, cgcK_true]
-          simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-          exact congrArg _ hk
-        · rw [completionTwoPatchFormalGlueData_f_true_false,
-            completionTwoPatchFormalGlueData_t_true_false,
-            completionTwoPatchFormalGlueData_f_false_true, cgcK_false, cgcK_true]
-          simp only [Category.assoc, eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
-          exact congrArg _ (by rw [hk, Iso.inv_hom_id_assoc])
-        · exact absurd rfl hij)
+    (cgcK I hI a J hJ b θ hθ k₀ k₁)
+    (CategoryTheory.GlueData.ofGlueData'_f_comp (completionTwoPatchGlueData' I hI a J hJ b θ hθ)
+      (cgcK I hI a J hJ b θ hθ k₀ k₁) (fun i j hij => match i, j, hij with
+        | ⟨false⟩, ⟨true⟩, _ => hk
+        | ⟨true⟩, ⟨false⟩, _ =>
+          ((completionGlueLRSIso I hI a J hJ b θ hθ).inv_comp_eq.mpr hk).symm
+        | ⟨false⟩, ⟨false⟩, h => absurd rfl h
+        | ⟨true⟩, ⟨true⟩, h => absurd rfl h))
 
 variable (k₀ : (formalCompletion A I hI).toLocallyRingedSpace ⟶ Y)
   (k₁ : (formalCompletion B J hJ).toLocallyRingedSpace ⟶ Y)
