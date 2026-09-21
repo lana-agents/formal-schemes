@@ -1175,6 +1175,185 @@ def selftest() -> int:
           [l.split("(")[-1].rstrip(")") for l in lines if l.startswith("  checked")],
           ["heartbeats", "heartbeats, file-scoped"])
 
+    # `report` is the whole of `--tree`: `main` is `return report(read_tree())`.  It makes
+    # fourteen `print` calls -- nine header shapes and five inside its three per-reference
+    # loops -- and returns `1 if mismatches else 0`, and the case above reads back exactly two
+    # of them.  Everything else was unwatched, the **return value** included: the call above
+    # discards it inside a `redirect_stdout`, so *"`--tree` exits 1 on any `MISMATCH`"* -- the
+    # sentence every row on this umbrella quotes as its acceptance -- was checked by nothing.
+    # Fourteen rendering loosenings were measured against this suite at `2223716` for issue
+    # 2131 and every one of them passed, including *print `MISMATCH : 0`* and *say `checked` on
+    # the line that failed*: a report can lie to its reader over an honest exit code, and an
+    # exit code is no use to a reader who is reading the report.
+    #
+    # The fixture below is one report with every branch of it reached.  The counts are read
+    # back against `len()` of the objects `report` derives them from, on the *same* sources, so
+    # a case cannot drift from the code the way a hard-coded figure would; the rendering, which
+    # has no `len()` to compare against, is pinned as text.  The eight populations are pairwise
+    # distinct and none is zero -- asserted below, because that is what makes a swapped or a
+    # constant figure visible, and shrinking the fixture should have to delete the case that
+    # says so.
+    #
+    # Left deliberately unwatched: `report` sorts all three loops by `(path, line)` and **no
+    # fixture can see that sort**.  `references` walks `sorted(sources)` and, within a file,
+    # yields in line order, so the sorted order is the discovery order on every input and
+    # Python's sort is stable -- loosening the key to a constant leaves `--selftest` green and
+    # `--tree` byte-identical, measured both ways.  The sort is insurance against a future
+    # `references` that yields out of order, not a rule this suite can hold.
+
+    def run_report(sources: dict[str, str]) -> tuple[int, list[str]]:
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = report(sources)
+        return code, out.getvalue().rstrip("\n").split("\n")
+
+    def figures(lines: list[str], label: str) -> list[int]:
+        """The integers printed on the one header line labelled `label`, in printed order.
+
+        A header line is `label : ...`, and the per-reference lines that open with the same
+        word carry a `path:line` before their first colon, so matching the whole field keeps
+        the two apart -- `MISMATCH` is both a count label and a verdict.
+        """
+        hit = [l for l in lines if l.split(":", 1)[0].strip() == label]
+        if len(hit) != 1:
+            return []
+        return [int(n) for n in re.findall(r"\d+", hit[0].split(":", 1)[1])]
+
+    def listed(lines: list[str]) -> list[str]:
+        """The underflow file list and its tail: indented four spaces, where a quoted sentence
+        in a detail block is indented twelve."""
+        return [l for l in lines if l.startswith("    ") and not l.startswith("     ")]
+
+    whole_report = {
+        "FormalSchemes/Bare.lean": _src(
+            "namespace AlgebraicGeometry",
+            "theorem nothing_here : True := trivial",
+            "theorem nothing_either : True := trivial",
+            "end AlgebraicGeometry"),
+        "FormalSchemes/Carrier.lean": _src(
+            "set_option maxHeartbeats 400000",
+            "namespace AlgebraicGeometry",
+            "set_option backward.isDefEq.respectTransparency false in",
+            "theorem carries_its_own : True := trivial",
+            "set_option maxRecDepth 4000 in",
+            "theorem carries_another : True := trivial",
+            "set_option backward.isDefEq.respectTransparency false in",
+            "theorem carries_a_third : True := trivial",
+            "theorem only_inherits : True := trivial",
+            "theorem also_inherits : True := trivial",
+            "theorem inherits_too : True := trivial",
+            "theorem and_one_more : True := trivial",
+            "end AlgebraicGeometry"),
+        "FormalSchemes/Notes.lean": _src(
+            "-- The same accommodation `Nowhere.lean` makes, for the same reason."),
+        # `Sheaf` and not `Budget`: the family comes from the *sentence*, so a module named
+        # after an option family would make the `any` fallback below read as a budget claim.
+        "FormalSchemes/Sheaf.lean": _src(
+            "set_option maxHeartbeats 800000",
+            "namespace AlgebraicGeometry",
+            "theorem sheaf_one : True := trivial",
+            "theorem sheaf_two : True := trivial",
+            "end AlgebraicGeometry"),
+        "FormalSchemes/Site.lean": _src(
+            "-- The same heartbeats raise as `only_inherits` needs, for the same reason.",
+            "",
+            "-- Same transparency requirement as `carries_its_own`, for the same reason.",
+            "",
+            "-- The same accommodation as `FormalSchemes.Sheaf` makes, for the same reason.",
+            "",
+            "-- Same transparency requirement as `nothing_here`, for the same reason.",
+            "",
+            "-- Same transparency requirement as `Mathlib.Order.Basic.le_refl`, same reason."),
+    }
+    code, printed = run_report(whole_report)
+    reported_table, _, reported_underflows = option_table(whole_report)
+    reported_mis, reported_att, reported_dec = audit(whole_report)
+    reported_own = {n for n, o in reported_table.items() if OWN in o.values()}
+    reported_inherited = {n for n, o in reported_table.items() if o} - reported_own
+
+    check("`--tree` exits 1 on a MISMATCH, which is `report`'s return value and not its output",
+          code, 1)
+    check("every header count is the population it claims to count",
+          (figures(printed, "modules under FormalSchemes/"),
+           figures(printed, "declarations with a set_option"),
+           figures(printed, "scope stack underflows"),
+           figures(printed, "cross-references attributed"),
+           figures(printed, "MISMATCH"),
+           figures(printed, "declined (see below)")),
+          ([len(whole_report)],
+           [len(reported_own) + len(reported_inherited), len(reported_table),
+            len(reported_own), len(reported_inherited)],
+           [len(reported_underflows)], [len(reported_att)], [len(reported_mis)],
+           [len(reported_dec)]))
+    check("the fixture's populations are pairwise distinct and none is zero, so a swapped or"
+          " constant figure cannot pass",
+          sorted([len(whole_report), len(reported_own) + len(reported_inherited),
+                  len(reported_table), len(reported_own), len(reported_inherited),
+                  len(reported_att), len(reported_mis), len(reported_dec)]),
+          [1, 2, 3, 4, 5, 6, 9, 11])
+    check("`by family` tallies the declined references too, not only the attributed ones",
+          [l.split(":", 1)[1].strip() for l in printed
+           if l.split(":", 1)[0].strip() == "by family"],
+          ["any 2, heartbeats 1, transparency 3"])
+    check("each reference gets its own verdict and answering scope, and both detail blocks"
+          " quote the sentence they are about",
+          printed[[i for i, l in enumerate(printed)
+                   if l.split(":", 1)[0].strip() == "by family"][0] + 1:],
+          ["  checked   FormalSchemes/Site.lean:1  declaration"
+           " `AlgebraicGeometry.only_inherits` (heartbeats, file-scoped)",
+           "  checked   FormalSchemes/Site.lean:3  declaration"
+           " `AlgebraicGeometry.carries_its_own` (transparency)",
+           "  checked   FormalSchemes/Site.lean:5  module `FormalSchemes.Sheaf`"
+           " (any, file-scoped)",
+           "  MISMATCH  FormalSchemes/Site.lean:7  declaration"
+           " `AlgebraicGeometry.nothing_here` (transparency)",
+           "  MISMATCH  FormalSchemes/Site.lean:7  declaration"
+           " `AlgebraicGeometry.nothing_here` carries {nothing}, which is no `transparency`"
+           " option",
+           "            Same transparency requirement as `nothing_here`, for the same reason.",
+           "  declined  FormalSchemes/Notes.lean:1  not on this tree: no module answers to"
+           " `Nowhere.lean`",
+           "            The same accommodation `Nowhere.lean` makes, for the same reason.",
+           "  declined  FormalSchemes/Site.lean:9  not on this tree:"
+           " `Mathlib.Order.Basic.le_refl` is not a declaration under FormalSchemes/",
+           "            Same transparency requirement as `Mathlib.Order.Basic.le_refl`, same"
+           " reason."])
+
+    # The other direction of the exit convention, on the same sources with the one false
+    # sentence deleted -- and with the declined reference in `Notes.lean` left where it is,
+    # since *"declined is not a failure"* is a claim about the exit code that nothing else here
+    # makes.  A `return 0` and a `return 1` are each one character from the other.
+    repaired = dict(whole_report)
+    repaired["FormalSchemes/Site.lean"] = _src(
+        "-- The same heartbeats raise as `only_inherits` needs, for the same reason.")
+    check("`--tree` exits 0 once the false sentence is gone, declined reference and all",
+          run_report(repaired)[0], 0)
+
+    # The underflow census as its reader sees it, which is one layer above the `option_table`
+    # cases above.  `report` names at most five files and then counts the rest, and that tail
+    # needs **six underflowing files**: an underflow is counted per file, so six stray `end`s
+    # in one file count 6 against one key and still print one line.  Nothing had ever executed
+    # the tail before this case -- no tree has six underflowing files since issue 2130.
+    code, printed = run_report({"FormalSchemes/Carrier.lean": _src(
+        "namespace AlgebraicGeometry",
+        "theorem anchor_with_nothing : True := trivial",
+        "end AlgebraicGeometry",
+        "end")})
+    check("one underflowing file is counted, named, and given its stray-`end` count",
+          (code, figures(printed, "scope stack underflows"), listed(printed)),
+          (0, [1], ["    FormalSchemes/Carrier.lean  (1)"]))
+    _, printed = run_report({"FormalSchemes/Stray%d.lean" % i: _src("end")
+                             for i in range(1, 7)})
+    check("six underflowing files print the first five and then say how many are left",
+          (figures(printed, "scope stack underflows"), listed(printed)),
+          ([6], ["    FormalSchemes/Stray1.lean  (1)", "    FormalSchemes/Stray2.lean  (1)",
+                 "    FormalSchemes/Stray3.lean  (1)", "    FormalSchemes/Stray4.lean  (1)",
+                 "    FormalSchemes/Stray5.lean  (1)", "    ... and 1 more"]))
+    _, printed = run_report({"FormalSchemes/Carrier.lean": _src(*(["end"] * 6))})
+    check("six stray `end`s in one file are one underflowing file and not six, so no tail",
+          (figures(printed, "scope stack underflows"), listed(printed)),
+          ([1], ["    FormalSchemes/Carrier.lean  (6)"]))
+
     return 1 if bad else 0
 
 
