@@ -273,8 +273,8 @@ def unquote_path(value: str) -> str:
     """git's C-style quoting, undone; anything unquoted is returned as it came.
 
     A path with a character outside the portable set is written in the diff header **in quotes and
-    byte-escaped** -- `"a/F\\303\\266\\303\\266.lean"` -- unless `core.quotePath` is off, which is not
-    the default.  Taking that spelling literally makes `git show <rev>:<path>` fail, and before the
+    byte-escaped** -- `"a/F\\303\\266.lean"` -- unless `core.quotePath` is off, which is not the
+    default.  Taking that spelling literally makes `git show <rev>:<path>` fail, and before the
     unresolved-sides counter below existed the run then reported zero names and looked green.
     There is no such path under `FormalSchemes/` today; this is what the counter found the first
     time it was pointed at a synthetic one, and the fix is cheaper than the next silent run.
@@ -732,7 +732,8 @@ def selftest() -> int:
     # needs it yet, and a silent zero-name run is the failure it would otherwise be.
     check("a C-quoted path in a header is unquoted back to the path on disk",
           changed_lines('diff --git "a/Dö.lean" "b/Dö.lean"\n'
-                        '--- "a/D\\303\\266.lean"\n+++ "b/D\\303\\266.lean"\n@@ -1 +1 @@\n-x\n+y\n'),
+                        '--- "a/D\\303\\266.lean"\n+++ "b/D\\303\\266.lean"\n'
+                        '@@ -1 +1 @@\n-x\n+y\n'),
           {"Dö.lean": ({1}, {1})})
     check("a quoted path's simple escapes are undone too",
           unquote_path('"a/x\\ty\\\\z.lean"'), "a/x\ty\\z.lean")
