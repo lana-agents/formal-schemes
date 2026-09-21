@@ -36,7 +36,7 @@ human**, exactly as in `docstring_signature_scan.py`, and the output is modelled
 rather than on `closure_audit.py`.  For the same reason this is **not** wired into
 `.orchestra/validation.sh`.
 
-## The five things that are easy to get wrong
+## The six things that are easy to get wrong
 
 * **Comment spans are found directly, by a lexer, not by diffing a stripped copy against the
   original.**  A stripper that blanks code and a stripper that blanks comments are both fine for
@@ -62,6 +62,13 @@ rather than on `closure_audit.py`.  For the same reason this is **not** wired in
   declared in another file entirely.  **Excluding touched files loses it**, and the in-file sweep
   that was supposed to cover it is exactly the windowed scan that missed it.  `--exclude-touched`
   is available and is not the default.
+* **`A...B` takes its base from `merge-base(A, B)`, not from `A`.**  The `-`-side line numbers
+  of a three-dot diff index the file at the fork point, so resolving them at `A` reads the right
+  lines out of the wrong tree -- silently, and in both directions, since a line number is valid
+  almost everywhere.  The first usage line above is a three-dot range and a pull request's base
+  moves, so this is the normal case rather than a corner; `range_ends` is where it is decided and
+  `--selftest` pins all four spellings.  A two-dot `A..B` really is based at `A` and is left
+  alone.
 * **A `git diff` names two paths, not one, and either may be `/dev/null`.**  `changed_lines` keeps
   the `-` side and the `+` side in separate variables and keys each at its own path.  One variable
   attributes a deleted file's hunks to whatever file preceded it in the diff: on `ba2e4ce` (issue
@@ -346,21 +353,57 @@ def touched_declarations(text: str, lines: set[int]) -> set[str]:
     return names
 
 
-def names_from_diff(diff_range: str, root: str = ".") -> tuple[set[str], set[str]]:
-    """`(declaration names changed in the range, `.lean` files the range touches)`.
+def range_ends(diff_range: str) -> tuple[str, str | None, bool]:
+    """How `git` reads a diff range's two ends: `(base, head, base is a merge-base)`.
+
+    Pure, so the four spellings are pinned by `--selftest` rather than by a repository:
+
+    * `A...B` -> the `-` side lines index the file at **`merge-base(A, B)`**, not at `A`;
+    * `A...`  -> `A...HEAD`, likewise a merge-base;
+    * `A..B`  -> `git diff A..B` *is* `git diff A B`, so the base is `A` itself;
+    * `A`     -> `A` against the working tree; there is no revision on the `+` side, so `head` is
+      `None` and that side is not read.
+
+    An empty end means `HEAD` on either side, which is what git does with `A...` and `...B`.
+    """
+    for separator, by_merge_base in (("...", True), ("..", False)):
+        if separator in diff_range:
+            base, _, head = diff_range.partition(separator)
+            return base or "HEAD", head or "HEAD", by_merge_base
+    return diff_range, None, False
+
+
+def names_from_diff(diff_range: str, root: str = ".") -> tuple[set[str], set[str], int]:
+    """`(names changed in the range, `.lean` files it touches, sides that would not resolve)`.
 
     Both ends are walked, so a *deleted* declaration is still a name to scan for -- prose that
     describes how a deleted proof worked is exactly the class this instrument is about.  That is
     why `changed_lines` keys each side at its own path: a deleted module's names live at
     `<base>:<old path>` and nowhere else, and a renamed one's `-` side does too.
+
+    **A three-dot range's base is resolved through `git merge-base`**, because `git diff A...B` is
+    *"what happened on `B` since it forked from `A`"*: its `-`-side line numbers index the file at
+    the fork point, and reading them out of the file at `A` is reading the right lines out of the
+    wrong tree.  On a linear range the two coincide, which is why the hand-written ancestors of
+    this scan never saw it; on a branch whose base has moved -- the usual state of a pull request
+    here, and the state of the first usage line above -- they do not, and the name set is then
+    wrong in both directions with nothing said.  Measured on this repository: a branch forked ten
+    commits behind master that deletes one private lemma loses that lemma's name and invents a
+    neighbour's, 1-for-1, under the three-dot spelling and not under the merge-base one.
+
+    The third return value counts sides whose `git show <rev>:<path>` failed.  It used to be
+    swallowed, and that silence is part of what hid the paragraph above: a non-zero count means
+    the name list is **incomplete**, not merely short.
     """
-    base, _, head = diff_range.partition("...")
-    if not head:
-        base, _, head = diff_range.partition("..")
+    base, head, by_merge_base = range_ends(diff_range)
+    if by_merge_base:
+        base = subprocess.run(["git", "-C", root, "merge-base", base, head],
+                              capture_output=True, text=True, check=True).stdout.strip()
     diff = subprocess.run(["git", "-C", root, "diff", "--unified=0", diff_range, "--", "*.lean"],
                           capture_output=True, text=True, check=True).stdout
     names: set[str] = set()
     files = set()
+    unresolved = 0
     for path, (old_lines, new_lines) in changed_lines(diff).items():
         files.add(path)
         for rev, lines in ((base, old_lines), (head, new_lines)):
@@ -370,7 +413,9 @@ def names_from_diff(diff_range: str, root: str = ".") -> tuple[set[str], set[str
                                    capture_output=True, text=True)
             if shown.returncode == 0:
                 names |= touched_declarations(shown.stdout, lines)
-    return names, files
+            else:
+                unresolved += 1
+    return names, files, unresolved
 
 
 def lean_files(root: str = ".") -> list[str]:
@@ -391,6 +436,24 @@ def flatten(text: str) -> str:
     return " ".join(text.split())
 
 
+def ident_continuation(char: str) -> bool:
+    """Can a Lean identifier carry on through `char`?
+
+    An ASCII class cannot answer this on a tree whose identifiers are `congrIdealₐ`,
+    `completionTwoPatchι₀` and `tateChain₀`: with `[A-Za-z0-9_']` as the boundary, a name that
+    is a **prefix** of a longer one matches inside it whenever the next character is a subscript or
+    a Greek letter.  Measured when this was written: 68 such stem pairs on this tree, 188 comment
+    occurrences of a longer name that a shorter one matched, 13 of them beside a cue and therefore
+    printed.  `str.isalnum` covers every continuation this tree uses -- subscript digits are `No`,
+    `ₐ`/`ₗ` are `Lm`, `ι`/`π` are `Ll`, and all three answer `True`.
+
+    `!` and `?` are Lean identifier characters and are deliberately **left out**, since including
+    them would make `foo` in *"is `foo`?"* invisible.  The error direction is the one this scan
+    declares everywhere else: a spurious question, never a missed hit.
+    """
+    return char.isalnum() or char in "_'"
+
+
 def scan_file(text: str, names: list[str], cues: re.Pattern, window: int = WINDOW):
     """Every comment occurrence of a name in `text` whose prose block window matches `cues`."""
     hits = []
@@ -399,8 +462,12 @@ def scan_file(text: str, names: list[str], cues: re.Pattern, window: int = WINDO
         return hits
     for name in names:
         stem = name.rsplit(".", 1)[-1]
-        for match in re.finditer(r"(?<![A-Za-z0-9_'])%s(?![A-Za-z0-9_'])" % re.escape(stem), text):
-            at = match.start()
+        for match in re.finditer(re.escape(stem), text):
+            at, past = match.start(), match.end()
+            if at and ident_continuation(text[at - 1]):
+                continue
+            if past < len(text) and ident_continuation(text[past]):
+                continue
             block = next(((a, b) for a, b in blocks if a <= at < b), None)
             if block is None:
                 continue
@@ -428,9 +495,12 @@ def scan(root: str, names: set[str], exclude: set[str], cues: re.Pattern):
 
 
 def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, pattern: str,
-           touched: set[str]) -> int:
+           touched: set[str], unresolved: int | None = None) -> int:
     hits = scan(root, names, exclude, cues)
     print("declaration names scanned for    : %4d" % len(names))
+    if unresolved:
+        print("sides not resolvable at their revision : %4d   <-- the name list is INCOMPLETE"
+              % unresolved)
     print("modules under FormalSchemes/     : %4d   (%d excluded, listed below)"
           % (len(lean_files(root)), len(exclude)))
     if touched:
@@ -536,6 +606,39 @@ def selftest() -> int:
           names_of("-- `foo_bar` unfolds the `dite`.\n"), [])
     check("a primed sibling is not a hit, because `'` is an identifier character here",
           names_of("-- `foo'` unfolds the `dite`.\n"), [])
+    # The boundary is `str.isalnum`, not `[A-Za-z0-9_']`: on this tree a name is routinely the
+    # prefix of a longer one whose next character is a subscript or a Greek letter, and an ASCII
+    # boundary reports the longer one as an occurrence of the shorter.
+    check("a subscripted-letter sibling is not a hit (`congrIdealₐ` is not `congrIdeal`)",
+          names_of("-- `congrIdealₐ` unfolds the `dite`.\n", names=("congrIdeal",)), [])
+    check("a subscripted-digit sibling is not a hit (`tateChain₀` is not `tateChain`)",
+          names_of("-- `tateChain₀` unfolds the `dite`.\n", names=("tateChain",)), [])
+    check("a Greek-letter sibling is not a hit (`completionTwoPatchι₀` is not the stem)",
+          names_of("-- `completionTwoPatchι₀` unfolds the `dite`.\n",
+                   names=("completionTwoPatch",)), [])
+    check("the stem itself still hits when the sibling does not",
+          names_of("-- `congrIdeal` unfolds the `dite`.\n", names=("congrIdeal",)),
+          [("congrIdeal", 1)])
+    check("a name that *is* subscripted is found by its own spelling",
+          names_of("-- `congrIdealₐ` unfolds the `dite`.\n", names=("congrIdealₐ",)),
+          [("congrIdealₐ", 1)])
+
+    # --- the two ends of a diff range, which git spells four ways -------------------------------
+    # `git diff A...B` is "what happened on B since it forked from A", so its `-`-side line
+    # numbers index the file at the merge-base.  Reading them at `A` is the wrong tree.
+    check("a three-dot range is based at the merge-base, not at the named ref",
+          range_ends("upstream/master...HEAD"), ("upstream/master", "HEAD", True))
+    check("a two-dot range really is based at the named ref",
+          range_ends("badd407..987e195"), ("badd407", "987e195", False))
+    check("`A...` means `A...HEAD` and is still a merge-base",
+          range_ends("upstream/master..."), ("upstream/master", "HEAD", True))
+    check("`...B` fills in HEAD on the left", range_ends("...topic"), ("HEAD", "topic", True))
+    check("a bare revision has no revision on the `+` side, so that side is not read",
+          range_ends("badd407"), ("badd407", None, False))
+    check("a revision spelled with `^` is not mistaken for a range",
+          range_ends("ba2e4ce^"), ("ba2e4ce^", None, False))
+    check("`A^...A` is a merge-base range whose merge-base is `A^`",
+          range_ends("ba2e4ce^...ba2e4ce"), ("ba2e4ce^", "ba2e4ce", True))
 
     # --- the scope walk and the diff plumbing ---------------------------------------------------
     src = ("namespace AlgebraicGeometry\n"
@@ -626,15 +729,16 @@ def main() -> int:
 
     names: set[str] = set()
     touched: set[str] = set()
+    unresolved: int | None = None
     if args.diff:
-        names, touched = names_from_diff(args.diff, args.diff_root or args.root)
+        names, touched, unresolved = names_from_diff(args.diff, args.diff_root or args.root)
     if args.names:
         names |= {n.strip() for n in args.names.split(",") if n.strip()}
     exclude = {p.strip() for p in (args.exclude or "").split(",") if p.strip()}
     if args.exclude_touched:
         exclude |= touched
     pattern = args.cues if not args.extra_cues else "%s|%s" % (args.cues, args.extra_cues)
-    return report(args.root, names, exclude, re.compile(pattern), pattern, touched)
+    return report(args.root, names, exclude, re.compile(pattern), pattern, touched, unresolved)
 
 
 if __name__ == "__main__":
