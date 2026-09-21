@@ -99,9 +99,10 @@ open of the base is a **basic** open. Getting from an arbitrary open subscheme o
 formal scheme to that shape is the residue, and it is not done here.
 
 `FormalSchemes.GeneralSeparatedHom`'s not-proved list is therefore left exactly as it stands.
-`FormalSchemes.GeneralSeparatedHomLocal`'s said that the required statement *is nowhere on the
-tree*; that clause is the one sentence this module falsifies, and it is repaired there to name
-this module and to say in the same breath that the arbitrary open it needs is still missing.
+`FormalSchemes.GeneralSeparatedHomLocal`'s bullet is the one this module falsifies, and it has
+been repaired there **twice** — for *is nowhere on the tree* (issue 1998) and for the existentially
+quantified structural morphism (issue 2111) — and it names this module and says in the same breath
+that the arbitrary open it needs is still missing.
 **No list is weakened and no direction is claimed.**
 
 **No datum is constructed and no presentation is produced.** The `(R, I)`-presentation is an input
