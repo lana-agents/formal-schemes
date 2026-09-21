@@ -28,6 +28,28 @@ can be seen not to grow, and it prints no verdict: a flag here is a **question**
 `docstring_signature_scan.py`, and this script is deliberately **not** in
 `.orchestra/validation.sh`.
 
+## What `--diff` reads, and the two git shapes that got it wrong
+
+`--diff` scans both ends of a range and reports a stranded line the head has and the base does
+not, keyed by the line's *text* rather than by its number.  Two facts about `git diff` decide
+which bytes each end is read from, and both were wrong here first:
+
+* **A range's `-` side is not always the ref on its left.**  `git diff A...B` reports the changes
+  on `B` since `merge-base(A, B)`, so a three-dot base has to go through `git merge-base` before
+  anything is read out of it.  Read at `A` instead, a branch whose base has moved is told about
+  every widow that landed on *master* since it forked: at `4873811` plus one trivial commit, with
+  master ten commits ahead, `--diff upstream/master...HEAD` blamed that commit for
+  `four imports`, the widow issue 2139 introduced and issue 2154 repaired.  `A..B` is
+  `git diff A B` and its base really is `A`; `range_ends` pins all four spellings.
+* **A diff names two paths and either may be absent.**  A rename names the old path on the `-`
+  side and the new one on the `+` side, and `git show <base>:<new path>` finds nothing there, so
+  a renamed module's whole standing population reads as introduced.  On `befe0fd`, ten modules
+  renamed in one commit, that was **six** reported of which **five** were pre-existing and
+  unmoved at the old path.  With both paths kept the same range reports **one**, and that one is
+  real: the rename lengthened a backticked name, the paragraph around it re-filled, and `it.` is
+  stranded at `BasicOpenCoverSeparatedScheme.lean:32`.  A name-lengthening refactor stranding a
+  word is exactly this scan's subject, and five false positives were hiding it.
+
 ## The predicate, and the four rejected alternatives that are the argument for it
 
 Issue 2154 proposed *"non-indented lines of at most two words inside a doc span"*.  Run it and
@@ -109,6 +131,14 @@ indented lines excluded -- they are not filled prose and must never be rewrapped
 docstrings are in scope because two of the three standing instances issue 2159 names are in one
 (`StructureSheaf.lean`'s `one.` and `StructureSheafStalkPowerSeriesCounterexample.lean`'s `it.`);
 a module-docstring-only population reads 103 paragraphs here and **contains neither**.
+
+**The closing `-/` counts as one of the two words.**  A line *beginning* `-/` is structural and
+is never rewrapped; a line *ending* ` -/` is ordinary filled prose whose last word happens to be
+the delimiter.  Of the 212 lines reported at `90be36d`, **67** are of that shape -- `rest. -/`,
+`injective. -/` -- so for a third of the population the predicate reads *one* prose word plus the
+delimiter.  They are widows all the same, and a refill leaves the `-/` at the end where it was;
+the figure is here so that anyone loosening `is_short_plain` knows how much of the population
+turns on it.
 
 **The gap to issue 2159's 136 / 139 is unexplained, and this file does not claim to explain it.**
 The conjuncts are that row's and reproduce; the segmentation is what differs, and sweeping it at
@@ -328,32 +358,88 @@ def report_tree(root: str, width: int, max_token: int) -> int:
     return 0
 
 
+def range_ends(diff_range: str) -> tuple[str, str, bool]:
+    """`(base spelling, head spelling, is the base a merge-base?)` for a `git diff` range.
+
+    `git diff A...B` reports the changes on `B` **since `merge-base(A, B)`**, so the `-` side of
+    that diff describes the file at the merge-base and not at `A`; reading it at `A` is what made
+    a widow that master had already repaired look freshly introduced.  `A..B` is `git diff A B`
+    and its base really is `A`.  A bare `A` is `git diff A`, whose other end is the worktree, and
+    the empty head spelling reads it out of the index.
+    """
+    base, sep, head = diff_range.partition("...")
+    if sep:
+        return base, head or "HEAD", True
+    base, sep, head = diff_range.partition("..")
+    return base, head if sep else "", False
+
+
+def changed_paths(records: str) -> list[tuple[str | None, str | None]]:
+    """`(old path, new path)` pairs from `git diff --name-status -M -z` output.
+
+    **A diff names two paths, not one, and either may be absent.**  A rename names the old path on
+    the `-` side and the new one on the `+` side, and `git show <base>:<new path>` cannot find a
+    file that did not exist there yet: read at the new path, a renamed module's whole standing
+    widow population reads as introduced by the range.  On `befe0fd`, which renames ten modules in
+    one commit, that is five pre-existing lines reported out of six.
+
+    `-z` rather than newlines because it is unambiguous: a rename record is three NUL-separated
+    fields and every other record is two.
+    """
+    fields = [f for f in records.split("\0") if f]
+    out: list[tuple[str | None, str | None]] = []
+    i = 0
+    while i < len(fields):
+        status = fields[i][:1]
+        if status in ("R", "C") and i + 2 < len(fields):
+            out.append((fields[i + 1], fields[i + 2]))
+            i += 3
+        elif status == "A" and i + 1 < len(fields):
+            out.append((None, fields[i + 1]))
+            i += 2
+        elif status == "D" and i + 1 < len(fields):
+            out.append((fields[i + 1], None))
+            i += 2
+        elif i + 1 < len(fields):
+            out.append((fields[i + 1], fields[i + 1]))
+            i += 2
+        else:
+            break
+    return out
+
+
 def report_diff(diff_range: str, root: str, width: int, max_token: int) -> int:
-    base, _, head = diff_range.partition("...")
-    if not head:
-        base, _, head = diff_range.partition("..")
-    changed = subprocess.run(["git", "-C", root, "diff", "--name-only", diff_range,
-                              "--", "*.lean"],
-                             capture_output=True, text=True, check=True).stdout.split()
+    base, head, from_merge_base = range_ends(diff_range)
+    if from_merge_base:
+        base = subprocess.run(["git", "-C", root, "merge-base", base, head],
+                              capture_output=True, text=True, check=True).stdout.strip()
+    records = subprocess.run(["git", "-C", root, "diff", "--name-status", "-M", "-z",
+                              diff_range, "--", "*.lean"],
+                             capture_output=True, text=True, check=True).stdout
+    pairs = changed_paths(records)
     print("range                             : %s" % diff_range)
-    print("`.lean` files it touches          : %5d" % len(changed))
+    print("its `-` side is read at           : %s" % (base or "(the index)"))
+    print("`.lean` files it touches          : %5d" % len(pairs))
     print("fill width / max plain word       : %5d / %d" % (width, max_token))
     introduced = []
-    for path in changed:
-        before = subprocess.run(["git", "-C", root, "show", "%s:%s" % (base, path)],
-                                capture_output=True, text=True)
-        after = subprocess.run(["git", "-C", root, "show", "%s:%s" % (head, path)],
+    for old_path, new_path in pairs:
+        if new_path is None:
+            continue
+        after = subprocess.run(["git", "-C", root, "show", "%s:%s" % (head, new_path)],
                                capture_output=True, text=True)
         if after.returncode:
             continue
         was = set()
-        if before.returncode == 0:
-            for _, stranded in scan_text(before.stdout, width, max_token):
-                was |= {line.strip() for _, line in stranded}
+        if old_path is not None:
+            before = subprocess.run(["git", "-C", root, "show", "%s:%s" % (base, old_path)],
+                                    capture_output=True, text=True)
+            if before.returncode == 0:
+                for _, stranded in scan_text(before.stdout, width, max_token):
+                    was |= {line.strip() for _, line in stranded}
         for paragraph, stranded in scan_text(after.stdout, width, max_token):
             fresh = [(n, l) for n, l in stranded if l.strip() not in was]
             if fresh:
-                introduced.append((path, paragraph, fresh))
+                introduced.append((new_path, paragraph, fresh))
     print("FLAGGED: stranded lines this range introduces : %5d"
           % sum(len(s) for _, _, s in introduced))
     for path, paragraph, s in introduced:
@@ -361,7 +447,8 @@ def report_diff(diff_range: str, root: str, width: int, max_token: int) -> int:
     print()
     print("A flag is a question, not a finding: re-fill the paragraph by the smallest window that")
     print("absorbs the line, or decline it by name.  Comparison is by the stranded line's *text*,")
-    print("not its number, so a paragraph that merely moved down the file is not reported.")
+    print("not its number, so a paragraph that merely moved down the file is not reported, and a")
+    print("renamed one is compared against its own old path.")
     return 0
 
 
@@ -467,6 +554,34 @@ def selftest() -> int:
     check("`/--` and `/-!` are found separately",
           (doc_spans("/-- a -/\n/-!\nb\n-/\n", "/--"), doc_spans("/-- a -/\n/-!\nb\n-/\n", "/-!")),
           ([(1, 1)], [(2, 4)]))
+
+    # --- what `--diff` reads: the two git shapes that broke it --------------------------------
+    # A three-dot range's `-` side is the merge-base, not the left-hand spelling.  Reading it at
+    # the spelling is what made a widow master had already repaired read as freshly introduced.
+    check("`A...B` takes its base from the merge-base", range_ends("A...B"), ("A", "B", True))
+    check("`A..B` takes its base from `A`", range_ends("A..B"), ("A", "B", False))
+    check("`A...` is `A...HEAD` to git, so it is still a merge-base",
+          range_ends("A..."), ("A", "HEAD", True))
+    check("a bare `A` is `git diff A`, whose other end is read out of the index",
+          range_ends("A"), ("A", "", False))
+
+    # A diff names two paths and either may be absent; a rename's `-` side lives at the OLD one.
+    check("a modification names the same path on both sides",
+          changed_paths("M\0FormalSchemes/A.lean\0"),
+          [("FormalSchemes/A.lean", "FormalSchemes/A.lean")])
+    check("an addition has no old side", changed_paths("A\0FormalSchemes/A.lean\0"),
+          [(None, "FormalSchemes/A.lean")])
+    check("a deletion has no new side", changed_paths("D\0FormalSchemes/A.lean\0"),
+          [("FormalSchemes/A.lean", None)])
+    check("a rename keeps both paths, and the old one is where `git show <base>:` can find it",
+          changed_paths("R100\0FormalSchemes/Old.lean\0FormalSchemes/New.lean\0"),
+          [("FormalSchemes/Old.lean", "FormalSchemes/New.lean")])
+    check("a rename whose similarity score is not 100 parses the same way",
+          changed_paths("R087\0FormalSchemes/Old.lean\0FormalSchemes/New.lean\0"),
+          [("FormalSchemes/Old.lean", "FormalSchemes/New.lean")])
+    check("a rename in the middle of a diff does not swallow the record after it",
+          changed_paths("M\0A.lean\0R100\0Old.lean\0New.lean\0M\0B.lean\0"),
+          [("A.lean", "A.lean"), ("Old.lean", "New.lean"), ("B.lean", "B.lean")])
 
     # --- dogfooding: this script's own docstring ------------------------------------------------
     own = [n for p, s in
