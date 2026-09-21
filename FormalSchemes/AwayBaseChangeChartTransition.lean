@@ -103,7 +103,8 @@ would carry:
 * adding it to `FormalSchemes.AwayBaseChangeGluedX` puts the whole completed-tensor base change of
   a *fibre product* inside the closure of a file about gluing a single factor, and everything that
   file ever acquires as a consumer would carry it. `FormalSchemes.AwayBaseChangeGluedX`'s reverse
-  closure is **2** — this file and `FormalSchemes.AwayBaseChangeSeparated`, and nothing else —
+  closure is **3** — this file, `FormalSchemes.AwayBaseChangeSeparated` and
+  `FormalSchemes.AwayBaseFactorisationRange`, and nothing else —
   which is an argument for not making the one-sided theory expensive while it is still cheap.
 
 A leaf leaves both subjects alone and both forward closures unmoved, at the price of the reverse

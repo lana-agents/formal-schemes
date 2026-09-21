@@ -43,15 +43,22 @@ and none of the bookkeeping.
 * It does **not** give the **refinement** direction — from a witness at one cover to a witness at a
   finer one. That is the half `FormalSchemes.GeneralSeparatedHom`'s not-proved list actually needs
   for a composition law, since refining the target cover against two morphisms is exactly what that
-  list names as the obstruction. It would require `FormalScheme.IsSeparatedOverSpf` to restrict to
-  an open subscheme over an open of the affine base, which is a statement about the
-  presentation-level predicate `BothChartedFibreDatumXY.IsSeparated`.
-  `FormalSchemes.AwayBaseChangeSeparated` supplies that statement at a **basic** open of the base,
-  for a source that is separated over the affine base and whose structural morphism factors
-  through that basic open — no presentation is asked of the caller, and the localising element is
-  inverted on every chart as a consequence rather than as a hypothesis (issues 1998, 2098), and
-  its conclusion is at the factorisation the caller supplied (issue 2111) — but the arbitrary open
-  of an arbitrary formal scheme this bullet needs is still nowhere on the tree.
+  list names as the obstruction. It asks **two** separate things of
+  `FormalScheme.IsSeparatedOverSpf`, and only one of them is missing.
+  * **Replacing the base** by an open of the affine base has landed.
+    `FormalSchemes.AwayBaseChangeSeparated` supplies it at a **basic** open, for a source that is
+    separated over the affine base and whose structural morphism factors through that basic open —
+    no presentation is asked of the caller, the localising element is inverted on every chart as a
+    consequence rather than as a hypothesis (issues 1998, 2098), and its conclusion is at the
+    factorisation the caller supplied (issue 2111).
+  * **Restricting the source** to an open formal subscheme over a *fixed* affine base has not, at
+    any source other than an affine `FormalScheme.Spf`
+    (`FormalScheme.isSeparatedOverSpf_restrictOpen_Spf`, `FormalSchemes.SpfOpenSeparated`), and it
+    is the half that has to come first: `FormalScheme.not_exists_factorsThrough_awayBase`
+    (`FormalSchemes.AwayBaseFactorisationRange`) says the base change has no factorisation to
+    consume until the source has been shrunk, because a factorisation puts the whole source over
+    the basic open.
+
   **Nothing here should be read as bringing the composition law close.**
 * It does **not** touch conservativity's hard direction, which needs a basic-open refinement of the
   target cover and is recorded in the same list.

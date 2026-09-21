@@ -95,11 +95,26 @@ supplied.
 **The first two bullets above, and one direction named elsewhere, are one problem with three
 faces.** Those two and the **refinement direction** of `FormalScheme.IsSeparatedHom` — recorded in
 `FormalSchemes.GeneralSeparatedHomLocal` as the half this list *needs* rather than as an entry on
-it — all reduce to the same missing statement: that `FormalScheme.IsSeparatedOverSpf` survives
-replacing the affine base by an open subscheme the morphism factors through. Conservativity's hard
-direction needs it to return a witness from an arbitrary cover to `(R, I)`; the composition law
-needs it to compare two witnesses over a common affine; refinement needs it to carry a witness to a
-finer cover. None of the three is closer than the others, and none is reachable without it.
+it — all reduce to the same missing statement. **That statement is source restriction: that
+`FormalScheme.IsSeparatedOverSpf` survives restricting `X` to an open formal subscheme over a
+fixed affine base.** Conservativity's hard direction needs it to shrink the source to
+`X|_{g⁻¹D(d)}` before the base can be changed; the composition law needs it to compare two
+witnesses over a common affine; refinement needs it to carry a witness to a finer cover. None of
+the three is closer than the others, and none is reachable without it.
+
+**Replacing the affine base by an open subscheme the morphism factors through is no longer what is
+missing**, and it is no longer what these three wait on.
+`FormalScheme.isSeparatedOverSpf_awayBase_of_factorsThrough`
+(`FormalSchemes.AwayBaseChangeSeparated`) has that statement at a basic open of the base,
+presentation-free and concluding at the caller's own factorisation. What it cannot do is reach a
+source that is not already over the basic open:
+`FormalScheme.range_base_subset_basicOpen_of_factorsThrough`
+(`FormalSchemes.AwayBaseFactorisationRange`) shows a factorisation puts the **whole** source over
+`D(d)`, so a single point of `X|_{g⁻¹(V j)}` lying over `V j` outside `D(d)` refutes every
+factorisation at the unshrunk source
+(`FormalScheme.not_exists_factorsThrough_awayBase`). Source restriction first, base change second;
+`FormalScheme.isSeparatedOverSpf_restrictOpen_awayBase_of_restrictOpen` is the composite with the
+first half as a hypothesis.
 
 **A value at a target that is not a `FormalScheme.Spf`, and a morphism that is not an identity, is
 no longer missing.** `FormalScheme.isSeparatedHom_restrictOpenHom`

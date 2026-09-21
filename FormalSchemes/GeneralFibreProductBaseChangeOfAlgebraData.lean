@@ -133,20 +133,21 @@ not, so the edges are **not** priced the same and the cheap one points the wrong
 
 * adding this to `FormalSchemes.GeneralFibreProductBaseChange` costs eleven modules and puts the
   two-sided smart constructor inside the closure of the file that was written to *avoid* it.
-  `FormalSchemes.GeneralFibreProductBaseChange`'s reverse closure is **4**, so the eleven would be
+  `FormalSchemes.GeneralFibreProductBaseChange`'s reverse closure is **5**, so the eleven would be
   cheap in modules and expensive in subject — the edge would falsify the design argument that
   file's own *What is assembled* paragraph makes;
 * adding it to `FormalSchemes.GeneralFibreProductBothAlgebraDataCocycle` costs twenty modules, and
-  `FormalSchemes.GeneralFibreProductBothAlgebraDataCocycle`'s reverse closure is **41**, so
+  `FormalSchemes.GeneralFibreProductBothAlgebraDataCocycle`'s reverse closure is **42**, so
   forty-one modules would pay for the whole base-change cluster to reach a file about the cocycle
   law.
 
 There is a third home that costs **no** import at all:
-`FormalSchemes.GeneralSeparatedBaseChange` already reached both parents — it and
-`FormalSchemes.AwayBaseChangeSeparated`, which arrived later, are the only two modules that do — so
+`FormalSchemes.GeneralSeparatedBaseChange` already reached both parents — it,
+`FormalSchemes.AwayBaseChangeSeparated` and `FormalSchemes.AwayBaseFactorisationRange`, the last
+two of which arrived later, are the only three modules that do — so
 putting these declarations there would add no import edge and move no closure figure anywhere; it
 is no longer free of rebuild cost, since
-`FormalSchemes.GeneralSeparatedBaseChange`'s reverse closure is **1** rather than the **0** it was
+`FormalSchemes.GeneralSeparatedBaseChange`'s reverse closure is **2** rather than the **0** it was
 when this paragraph was written. It is declined on subject and on reach:
 `FormalSchemes.GeneralSeparatedBaseChange`'s subject is §10.15 separatedness,
 `FormalSchemes.GeneralSeparatedBaseChange`'s forward closure is **185**, and a consumer of the
