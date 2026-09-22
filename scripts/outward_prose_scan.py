@@ -608,10 +608,18 @@ def stranger_lines(strangers: list[str]) -> list[str]:
     """The header's second line, and under it the paths that line is about.
 
     `not_modules` returns them sorted, so this only renders.  The count alone was the defect: it
-    told a reader that `N` paths in the diff could not be scanned and gave no way to see which,
-    and on the default path there is nowhere else to look -- the foot list that marks a stranger
-    `(not a module of this tree)` prints only when `exclude` is non-empty, i.e. only under
-    `--exclude-touched`, which is exactly the mode this line does *not* fire in.
+    told a reader that `N` paths in the diff could not be scanned and gave no way to see which.
+
+    **The two places a stranger can be named fire on different conditions.**  This line fires
+    whenever the diff holds a path that is not a module -- `exclude` is not a parameter of this
+    function and is in neither guard around the call, so it fires in every mode,
+    `--exclude-touched` included.  The foot list that marks a stranger `(not a module of this
+    tree)` prints whenever `exclude` is non-empty, which is `--exclude-touched` or an explicit
+    `--exclude`.  `--exclude-touched` is what makes `exclude` absorb `touched`, and so it is the
+    mode in which every stranger named here is marked in the foot list as well; an explicit
+    `--exclude` marks the strangers of *its* set, which are in general other paths; and on the
+    default path `exclude` is empty, the foot list does not print at all, and this line is the
+    only place a stranger is named.
 
     **Nothing here truncates**, and `--selftest` pins that against a thirty-path set.  A cap would
     reintroduce the same defect one level down: a reader would again be told a number and shown
