@@ -123,16 +123,15 @@ count.  `tateChainInv` supplies **15** of the 102 it removes and **none** of the
 one is a cross-reference to the chain rather than a claim about how a proof runs -- and
 `tateCurveModel` supplies **39**, of which one does.
 
-**The instructive name is the one the filter does not bite.**  `tateSelfProductDiagonal` has
-**3** occurrences under this boundary at that head -- **23** with the boundary dropped, which is
-what a census without `ident_continuation` reads -- and **all three survive**, because `diagonal`
-is itself in `DEFAULT_CUES`.  All three are about the morphism Δ rather than about a case split,
-so on that name the filter buys nothing at all.  A name carrying a cue word is where this goes
-wrong, and that is why the cues are a flag rather than a constant -- `--cues <regex>` replaces the
-default, `--extra-cues <regex>` adds to it.  Issue 2144 widened the
-previous run's list and got the **same** real-hit set, which is the only evidence available that
-the default is not over-fitted to the run that produced it; re-widen it when you use this, and say
-whether the set moved.
+**The instructive name is the one the filter does not bite.**  `tateSelfProductDiagonal` has **3**
+occurrences under this boundary at that head -- **23** with the boundary dropped, which is what a
+census without `ident_continuation` reads -- and **all three survive**, because `diagonal` is
+itself in `DEFAULT_CUES`.  All three are about the morphism Δ rather than about a case split, so on
+that name the filter buys nothing at all.  A name carrying a cue word is where this goes wrong, and
+that is why the cues are a flag rather than a constant -- `--cues <regex>` replaces the default,
+`--extra-cues <regex>` adds to it.  Issue 2144 widened the previous run's list and got the **same**
+real-hit set, which is the only evidence available that the default is not over-fitted to the run
+that produced it; re-widen it when you use this, and say whether the set moved.
 """
 
 from __future__ import annotations
