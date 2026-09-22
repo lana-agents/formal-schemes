@@ -78,13 +78,12 @@ rather than on `closure_audit.py`.  For the same reason this is **not** wired in
   strangers (`not_modules`), rather than one number standing for two populations.  The rule this
   file is now written to: **a count printed beside a label that names a population is a claim about
   that population, not about the set it was taken from.**
-* **`A...B` takes its base from `merge-base(A, B)`, not from `A`.**  The `-`-side line numbers
-  of a three-dot diff index the file at the fork point, so resolving them at `A` reads the right
-  lines out of the wrong tree -- silently, and in both directions, since a line number is valid
-  almost everywhere.  The first usage line above is a three-dot range and a pull request's base
-  moves, so this is the normal case rather than a corner; `range_ends` is where it is decided and
-  `--selftest` pins all four spellings.  A two-dot `A..B` really is based at `A` and is left
-  alone.
+* **`A...B` takes its base from `merge-base(A, B)`, not from `A`.**  The `-`-side line numbers of a
+  three-dot diff index the file at the fork point, so resolving them at `A` reads the right lines
+  out of the wrong tree -- silently, and in both directions, since a line number is valid almost
+  everywhere.  The first usage line above is a three-dot range and a pull request's base moves, so
+  this is the normal case rather than a corner; `range_ends` is where it is decided and
+  `--selftest` pins all four spellings.  A two-dot `A..B` really is based at `A` and is left alone.
 * **A `git diff` names two paths, not one, and either may be `/dev/null`.**  `changed_lines` keeps
   the `-` side and the `+` side in separate variables and keys each at its own path.  One variable
   attributes a deleted file's hunks to whatever file preceded it in the diff: on `ba2e4ce` (issue
