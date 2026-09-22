@@ -87,17 +87,27 @@ re-measure rather than quoting them.
     2989 paras  a greedy refill of the paragraph at 99 differs from what is there --
                 **this tree is not greedily filled**, and that is deliberate: authors break
                 before long backticked names
-     555 paras  ... and the refill **saves at least one line** -- still mostly sense-breaks
-                that happen to be compressible, with nothing short stranded in them
-     162 paras  ... and the paragraph holds a <=2-*plain*-word line -- close
-    **160/164** ... and that line is not forced short by an unbreakable neighbour, and is
+     561 paras  ... and **some suffix of it refills into fewer lines** -- still mostly
+                sense-breaks that happen to be compressible, with nothing short stranded
+     163 paras  ... and the paragraph holds a <=2-*plain*-word line -- close
+    **161/165** ... and that line is not forced short by an unbreakable neighbour, and is
                 not the paragraph's first -- **the predicate**
 
-The two conjuncts do different jobs and neither works alone.  *Saves a line* rules out the
-thousands of paragraphs this tree breaks for sense at no cost in lines.  *Holds a short plain line*
-rules out the several hundred whose only compressible line is a long backticked name the author put
-on a line of its own on purpose -- **plain** means every word on it is backtick-free and at most
-`--max-token` characters.
+The two conjuncts do different jobs and neither works alone.  *Some suffix refills shorter* rules
+out the thousands of paragraphs this tree breaks for sense at no cost in lines.  *Holds a short
+plain line* rules out the several hundred whose only compressible line is a long backticked name
+the author put on a line of its own on purpose -- **plain** means every word on it is
+backtick-free and at most `--max-token` characters.
+
+**The first conjunct is a suffix window and not the whole paragraph.**  Whole-paragraph was the
+first spelling and it is blind in exactly one place: a paragraph holding a line *wider* than the
+fill width fails it even when the tail is compressible, because the greedy fill has to re-break
+the long line and spends the line the repair would save.  `start = 0` is the whole paragraph, so
+the window is a strict generalisation and nothing that was reported stopped being.  What it buys,
+on these 7863 paragraphs: **555 -> 561** past the first conjunct, **six** of them new, and **one**
+flag -- `AwayBaseChangeChartTransition.lean`'s `would carry:`.  The other five hold no short plain
+line at all, so the *second* conjunct rejects them unaided.  **+1 true positive, +0 false
+positives**, and that tally is exact rather than sampled for the reason `## The fill width` gives.
 
 ## The fill width, and why it is 99
 
@@ -109,10 +119,10 @@ definition rather than by calling `refill`:
 
     w     exact-fill paragraphs (of 7863)   flagged paragraphs
     ---   -------------------------------   ------------------
-     96                              2386                   78
-     97                              3393                   93
-     98                              4465                  119
-    **99**                       **4874**              **160**
+     96                              2386                   88
+     97                              3393                  102
+     98                              4465                  121
+    **99**                       **4874**              **161**
     100                               4022                  226
     101                               2734                  309
     102                               1906                  383
@@ -130,27 +140,30 @@ the 100-fill**, 1100 neither.  **3.3 : 1**, with every undecidable paragraph exc
 construction.  Against the neighbours, 99 beats 98 by **1090 : 681** and 101 by **2406 : 266**.
 
 **What the old default bought, on the instrument's own census.**  The two flag sets are nested:
-**66** paragraphs are flagged at 100 and not at 99, and **0** the other way round.  So the width
+**65** paragraphs are flagged at 100 and not at 99, and **0** the other way round.  So the width
 never traded one population for another -- widening it only ever added, and it added 29 % of its
-own headline figure.  Of the 66:
+own headline figure.  Of the 65:
 
 * **38 are byte-identical to a greedy fill at 99** and **0** to a fill at 100 -- correctly filled
   prose by this tree's own practice, flagged for not being packed tighter.
-* **65 of the 66 have no repair at 99 at all.**  Take the smallest window ending at the paragraph's
-  end whose refill is shorter: at 99 there is none, and at 100 there is one whose longest line is
-  **exactly 100 columns**, in every one of the 65.  **The old default's extra flags were requests
-  to emit a 100-column line**, which is inside `CONTRIBUTING.md`'s limit and outside this tree's
-  fill.  An instrument whose repair violates the convention it measures is asking a question with
-  no admissible answer.
+* **not one of the 65 has a repair at 99 at all.**  Take the smallest window ending at the
+  paragraph's end whose refill is shorter: at 99 there is none, and at 100 there is one whose
+  longest line is **exactly 100 columns**, in every one of the 65.  **The old default's extra
+  flags were requests to emit a 100-column line**, which is inside `CONTRIBUTING.md`'s limit and
+  outside this tree's fill.  An instrument whose repair violates the convention it measures is
+  asking a question with no admissible answer.
 
-**The one flag a 99 default really does lose, and it is not free.**  The sixty-sixth is
+**The one flag a 99 default did lose, and how the window bought it back.**  The sixty-sixth was
 `AwayBaseChangeChartTransition.lean:92`, which strands `would carry:` and *has* a 99-safe repair --
-a four-line window refilling to three at 98 columns -- yet `widows` misses it at 99, because the
-paragraph holds a line of exactly **100** columns and a greedy 99-fill must re-break it, spending
-the line the repair would save.  **That is the class: a paragraph holding a line wider than the
-fill width.**  549 paragraphs here hold one; exactly **1** of them becomes a missed widow, and
-`--width 100` still finds it.  The class is named rather than repaired because repairing it means
-changing the first conjunct, and the conjuncts are issue 2159's.
+a four-line window refilling to three at 98 columns -- yet the *whole-paragraph* first conjunct
+missed it at 99, because the paragraph holds a line of exactly **100** columns and a greedy 99-fill
+must re-break it, spending the line the repair would save.  **That is the class: a paragraph
+holding a line wider than the fill width.**  549 paragraphs here hold one and exactly **1** of them
+became a missed widow.  That is why the list above reads 65 and not 66: the sixty-sixth is now
+flagged at 99 as well as at 100, by the suffix window of the first conjunct.  **The class does not
+go away; what changed is that the instrument can see into it** -- an over-width paragraph in which
+no window saves a line is still not reported, and `--selftest` pins that negative beside the
+positive, because otherwise *over-width* and *flagged* would be indistinguishable in the fixtures.
 
 ## The two exclusions, and the case an instrument must not flag
 
@@ -160,16 +173,19 @@ line is not reported in either case.
 
 **Start with the tree's famous negative, and with the conjunct that actually excludes it.**  Issue
 2154 named `GeneralSeparatedBaseChange.lean`'s bare `and` as a widow and it is not one -- and the
-reason is the **first conjunct**, not either exclusion.  Its paragraph is thirteen lines and
-refills into thirteen, saving nothing, so `widows` returns at its opening
-`len(lines) - len(refill(...)) < 1` and no exclusion is ever consulted.  That is exactly the reason
-issue 2159 gave.  An earlier version of this paragraph credited the successor exclusion instead,
-understandably: the `and` *is* wedged between long backticked names, `3 + 1 + 97` columns, so that
-test would fire too **if it were reached**.  **A line can meet two rules and be excluded by only
-one of them, and the prose has to name the one that runs first.**
+reason is the **first conjunct**, not either exclusion.  Its paragraph is thirteen lines and **not
+one of its twelve suffix windows refills into fewer lines**, at 99 or at 100, so `widows` returns
+at its opening conjunct and no exclusion is ever consulted.  That is exactly the reason issue 2159
+gave, and the window spelling of that conjunct is the stronger form of it: *no* part of the
+paragraph is compressible, not merely the whole of it.  An earlier version of this paragraph
+credited the successor exclusion instead, understandably: the `and` *is* wedged between long
+backticked names, `3 + 1 + 97` columns, so that test would fire too **if it were reached**.  **A
+line can meet two rules and be excluded by only one of them, and the prose has to name the one
+that runs first.**
 
 **So the exclusions are justified on their own instances, and there are three of those.**
-Measured at `90be36d`, over the 165 short-plain lines living in paragraphs that refill shorter:
+Measured at `90be36d`, over the 166 short-plain lines living in paragraphs some suffix of which
+refills shorter:
 
     excluded by                                  lines  which
     -------------------------------------------  -----  -------------------------------------
@@ -179,7 +195,7 @@ Measured at `90be36d`, over the 165 short-plain lines living in paragraphs that 
                                                         `This is`
     both                                             1  `TateInvNodeChartDescent.lean:257`,
                                                         `This is`
-    reported                                       162
+    reported                                       163
 
 **The second exclusion is not the first in disguise, and the two `This is` lines are the proof.**
 Both read `This is` at 7 columns, both are their paragraph's first line, and they differ only in
@@ -210,11 +226,11 @@ Every `/-! ... -/` **and** `/-- ... -/` block, with fenced blocks, lists, tables
 indented lines excluded -- they are not filled prose and must never be rewrapped.  Declaration
 docstrings are in scope because two of the three standing instances issue 2159 names are in one
 (`StructureSheaf.lean`'s `one.` and `StructureSheafStalkPowerSeriesCounterexample.lean`'s `it.`);
-a module-docstring-only population reads 85 paragraphs here and **contains neither**.
+a module-docstring-only population reads 86 paragraphs here and **contains neither**.
 
 **The closing `-/` counts as one of the two words.**  A line *beginning* `-/` is structural and
 is never rewrapped; a line *ending* ` -/` is ordinary filled prose whose last word happens to be
-the delimiter.  Of the 162 lines reported at `90be36d`, **46** are of that shape -- `rest. -/`,
+the delimiter.  Of the 163 lines reported at `90be36d`, **46** are of that shape -- `rest. -/`,
 `injective. -/` -- so for 28 % of the population the predicate reads *one* prose word plus the
 delimiter.  They are widows all the same, and a refill leaves the `-/` at the end where it was;
 the figure is here so that anyone loosening `is_short_plain` knows how much of the population
@@ -224,15 +240,15 @@ turns on it.
 The conjuncts are that row's and reproduce; the segmentation is what differs, and sweeping it at
 `4873811` lands nowhere near that row's intermediate figures of 3193 and 493 either:
 
-    segmentation                      refill differs   saves a line   reported
+    segmentation                      refill differs   window saves   reported
     --------------------------------  --------------  -------------  ----------
-    this file (`/-!` and `/--`)                 2989            555   160 / 164
-    `/-!` only                                  1549            282    85 /  87
-    `/--` only                                  1440            273    75 /  77
-    structural-line rule dropped                6006           2537  1122 / 1189
-    fenced-block rule dropped                   3001            559   160 / 164
+    this file (`/-!` and `/--`)                 2989            561   161 / 165
+    `/-!` only                                  1549            287    86 /  88
+    `/--` only                                  1440            274    75 /  77
+    structural-line rule dropped                6006           2549  1125 / 1192
+    fenced-block rule dropped                   3001            565   161 / 165
 
-The three ratios against 3193 / 493 / 136 are 0.94, 1.13 and 1.18 -- not constant, so it is not
+The three ratios against 3193 / 493 / 136 are 0.94, 1.14 and 1.18 -- not constant, so it is not
 one uniform scope difference either.  The fourth row is the only one the structural-line repair
 below could not move, and that is by construction: it drops the rule the repair changed.  A sweep
 whose every row moves is not measuring the rule it names.  What **is** established is narrower
@@ -252,7 +268,7 @@ at `b3c6e7d`: **937** `**`-led lines, **149** `*`-led ones and **18** opening `<
 a space were read as structure, while everything the rule is *for* keeps the space -- 4001 `* `
 items, one `+ ` item, 78 numbered items, and every one of the 799 `-`-leading lines is a `-/`
 already covered by its own alternative.  **1104 classifications corrected, 0 lost**, and the
-population went 148 / 152 to 160 / 164 at `4873811` -- 12 stranded lines the scan could not see,
+population went 149 / 153 to 161 / 165 at `4873811` -- 12 stranded lines the scan could not see,
 and not one spurious.  *A structural-line rule must require the space that makes a list marker*;
 the shape that hid this is that no fixture and none of the pinned `--diff` ranges contained an
 emphasis-led line, so twelve green runs said nothing.
@@ -261,6 +277,42 @@ emphasis-led line, so twelve green runs said nothing.
 rewrites a file.  Repairing a widow is a judgement about the smallest window that removes it --
 issue 2154's two repairs are two lines into one and four into three -- and a full greedy refill
 of a paragraph routinely destroys breaks the author chose.
+
+**And the window it prints is the smallest one that absorbs the stranded line, which it did not
+used to be.**  `show` printed the *whole-paragraph* refill while both footers told the reader to
+re-fill by the smallest window that absorbs the line -- so for any paragraph whose compressible
+part was a proper suffix, the report named a repair its own footer forbids.  At `f8a2b41`, of the
+**159** flags on `--tree` at 99, **110** -- 69 % -- get a window shorter than the whole paragraph,
+and at `--width 100` it is **171** of 226.
+
+**The report's window is not the first conjunct's window, and that distinction is the whole of
+`repair_window`'s `covering` argument.**  The conjunct asks *is any suffix compressible*, and
+takes the smallest such suffix wherever it is; the report asks *what is the smallest window that
+absorbs this line*, and must start its search at the line.  The two differ whenever the smallest
+compressible suffix begins **below** the flagged line, and on this tree that is **3** of the 159
+at 99 and **3** of the 226 at 100 -- `GlueHomToSpf.lean:519`, `LocallyRingedSpaceRange.lean:43`
+and `SpfGammaBase.lean:39`, the worst of them a two-line window thirteen lines under its widow.
+Printing the conjunct's answer there names a repair that provably cannot remove the line it is
+printed under: apply it and the flag comes back.  *A repair is named by the line it has to
+absorb, not by where the saving happens to be.*
+
+**What the printed window does not promise.**  It removes the line it is printed against -- all
+159 of them at 99 and all 226 at 100, checked by applying each one and re-running the predicate --
+but a greedy refill can strand a *different* word, and in **1** of the 159 at 99
+(`SpfGammaBase.lean:39`) and **1** of the 226 at 100 (`GeneralFibreProductBaseChange.lean:297`) it
+does.  The whole-paragraph refill leaves none, which is not an argument for printing it: it is the
+repair both footers forbid, because it destroys breaks the author chose.  A flag is a question and
+so is its successor -- widen the window, or decline it by name.  **Naming the smallest window that
+strands nothing is a second predicate and a different row**; this one names the smallest window
+that absorbs the line.
+
+**The `no window` branch is real and unexercised.**  Nothing makes a covering window necessary --
+a flag needs only *some* suffix to compress, and the lines above the widow may spend the saving
+the way an over-width line does -- so `show` says so rather than falling back to a window that
+misses.  On this tree it never fires: **0** of the 159 at 99 and **0** of the 226 at 100, and a
+search over synthetic four- and five-line paragraphs did not produce one either.  `--selftest`
+pins the branch at `repair_window`, where it is one line to reach, rather than through a fixture
+that would have to be found first.
 """
 
 from __future__ import annotations
@@ -389,15 +441,45 @@ def is_short_plain(line: str, max_token: int = MAX_TOKEN) -> bool:
     return 1 <= len(words) <= 2 and all("`" not in w and len(w) <= max_token for w in words)
 
 
+def repair_window(lines: list[str], width: int,
+                  covering: int | None = None) -> tuple[int, list[str]] | None:
+    """The **smallest** suffix of `lines` that refills shorter, as `(first index, its refill)`.
+
+    `covering` is the highest index the window must hold, and it is the difference between the two
+    questions this function answers.  `None` asks the **first conjunct's** question -- *is any
+    suffix compressible at all* -- and `start = 0` is the whole paragraph, which is what that
+    conjunct used to require.  An index asks **`show`'s** question -- *what is the smallest window
+    that absorbs this line* -- and starts the search at that line, so every window it tries holds
+    it.  `None` when no window qualifies.
+
+    **The two are not the same window**, and conflating them was a defect: the smallest suffix
+    that *saves a line* need not hold the line that was flagged, and on this tree there are three
+    paragraphs where it does not.  The module docstring names them.  *A repair is named by the
+    line it has to absorb, not by where the saving happens to be.*
+    """
+    top = len(lines) - 2 if covering is None else min(covering, len(lines) - 2)
+    for start in range(top, -1, -1):
+        filled = refill(lines[start:], width)
+        if len(lines[start:]) - len(filled) >= 1:
+            return start, filled
+    return None
+
+
 def widows(paragraph: list[tuple[int, str]], width: int = WIDTH,
            max_token: int = MAX_TOKEN) -> list[tuple[int, str]]:
     """The stranded lines of `paragraph`, or `[]` if there are none.
 
     Both conjuncts, then the two exclusions.  See the module docstring for what each rules out and
     what breaks if it is dropped.
+
+    **The first conjunct asks whether some suffix refills shorter, not whether the whole paragraph
+    does.**  A paragraph holding a line wider than `width` fails the whole-paragraph test even when
+    its tail is compressible, because the greedy fill has to re-break that line and spends the line
+    the repair would save.  `start = 0` is the whole-paragraph test, so this is a strict
+    generalisation of it: nothing that was reported stops being reported.
     """
     lines = [line for _, line in paragraph]
-    if len(lines) - len(refill(lines, width)) < 1:
+    if repair_window(lines, width) is None:
         return []
     out = []
     for index, (number, line) in enumerate(paragraph):
@@ -448,8 +530,16 @@ def scan_tree(root: str, width: int, max_token: int):
 
 def show(path: str, paragraph, stranded, width: int) -> None:
     lines = [line for _, line in paragraph]
-    print("  %s:%d  paragraph of %d lines, refills to %d"
-          % (path, paragraph[0][0], len(lines), len(refill(lines, width))))
+    flagged = {number for number, _ in stranded}
+    first = min(index for index, (number, _) in enumerate(paragraph) if number in flagged)
+    window = repair_window(lines, width, first)
+    if window is None:
+        print("  %s:%d  paragraph of %d lines; no window holding the stranded line refills shorter"
+              % (path, paragraph[0][0], len(lines)))
+    else:
+        start, filled = window
+        print("  %s:%d  paragraph of %d lines; %d of them refill to %d"
+              % (path, paragraph[0][0], len(lines), len(lines) - start, len(filled)))
     for number, line in stranded:
         print("      :%d  %r" % (number, line.strip()))
 
@@ -699,7 +789,7 @@ def selftest() -> int:
     # would notice it moving back, so it is pinned by its value *and* by the behaviour it buys.
     check("the default fill width is this tree's, and it is 99", WIDTH, 99)
 
-    # The 38-of-66 shape: prose that is a byte-exact greedy fill at 99, which the old default
+    # The 38-of-65 shape: prose that is a byte-exact greedy fill at 99, which the old default
     # flagged and this one does not.  Sighted from both sides -- `[]` alone would also be what a
     # broken predicate returns.
     filled_at_99 = doc("x" * 97, "ab")
@@ -710,16 +800,77 @@ def selftest() -> int:
     check("... and the repair it asked for is a line of exactly 100 columns",
           cols("x" * 97 + " ab"), 100)
 
-    # The one class the default loses, named in the docstring: a paragraph holding a line WIDER
-    # than the fill width.  A greedy refill must re-break that line, spending the line the repair
-    # would save, so `widows` cannot see the widow even though a window repair at 99 exists.
+    # --- the first conjunct is a window, not the whole paragraph -------------------------------
+    # A paragraph holding a line WIDER than the fill width: a greedy refill of the whole must
+    # re-break that line, spending the line the repair would save, so the whole-paragraph test
+    # cannot see the widow even though a window repair at 99 exists.  This fixture shipped
+    # *inverted*, pinning the miss; `AwayBaseChangeChartTransition.lean`'s `would carry:` is the
+    # one instance on this tree and it is this shape.
     over_width = doc("a" * 50 + " " + "b" * 49, "c" * 90, "no")
-    check("a widow under a line wider than the fill width is missed at the default",
-          numbers(over_width), [])
-    check("... and it is a real miss, not an absent widow: `--width 100` reports it",
-          [n for p, s in scan_text(over_width, 100, MAX_TOKEN) for n, _ in s], [4])
+    check("a widow under a line wider than the fill width IS reported, by the window",
+          numbers(over_width), [4])
+    check("... and the WHOLE paragraph saves nothing, so only the window finds it",
+          len(paragraphs(over_width)[0])
+          - len(refill([l for _, l in paragraphs(over_width)[0]], WIDTH)), 0)
+    check("... and the smallest window is the last two lines",
+          repair_window([l for _, l in paragraphs(over_width)[0]], WIDTH)[0], 1)
+    check("... and `repair_window` is `None` exactly when the first conjunct fails",
+          repair_window([l for _, l in paragraphs(sense_break)[0]], WIDTH), None)
     check("... and the window that repairs it stays inside 99",
           [cols(l) for l in refill(["c" * 90, "no"], WIDTH)], [93])
+    check("... and `--width 100` reported it before the window did, which is how the class"
+          " was found", [n for p, s in scan_text(over_width, 100, MAX_TOKEN) for n, _ in s], [4])
+
+    # The window does not flag a paragraph merely for holding an over-width line.  Same first
+    # line, same short plain last line, but nothing below the over-width line compresses -- so no
+    # window saves a line and the first conjunct still returns.  Without this, "over-width" and
+    # "flagged" would be indistinguishable in the fixtures.
+    over_width_tight = doc("a" * 50 + " " + "b" * 49, "c" * 97, "no")
+    check("an over-width paragraph in which NO window saves a line is NOT reported",
+          numbers(over_width_tight), [])
+    check("... and it is sighted: it really does hold a line wider than the fill width",
+          max(cols(l) for _, l in paragraphs(over_width_tight)[0]) > WIDTH, True)
+    check("... and it really does hold a short plain line, so only the first conjunct keeps"
+          " it out", [l for _, l in paragraphs(over_width_tight)[0] if is_short_plain(l)], ["no"])
+
+    # `start = 0` is the whole-paragraph test, so the change is a strict generalisation: the
+    # `and`'s shape above still has no window at all, at either width.
+    sense_lines = [l for _, l in paragraphs(sense_break)[0]]
+    check("the `and`'s shape has no window that saves a line, at 99 or at 100",
+          [any(len(sense_lines[k:]) - len(refill(sense_lines[k:], w)) >= 1
+               for k in range(len(sense_lines) - 1)) for w in (99, 100)], [False, False])
+
+    # `show` prints the window, not the whole-paragraph refill, because the whole-paragraph refill
+    # is the repair the footer of both report paths tells the reader NOT to make.
+    check("the reported repair is the smallest window and not the whole paragraph",
+          repair_window([l for _, l in paragraphs(
+              doc("x" * 97, "no", "stated figure anywhere on the tree, and more besides."))[0]],
+              WIDTH)[0], 1)
+
+    # ... but the smallest window that SAVES a line need not be one that HOLDS the flagged line,
+    # and the report has to name the second.  Here the last two lines refill into one on their
+    # own, so the conjunct's answer is `start = 2` -- which is below the widow at index 1 and
+    # cannot remove it.  This is `LocallyRingedSpaceRange.lean:43`'s shape, where the conjunct's
+    # window was thirteen lines under the line it was printed against.
+    window_below = doc("x" * 97, "no", "c" * 60, "more words here")
+    below_lines = [l for _, l in paragraphs(window_below)[0]]
+    check("a widow whose paragraph's smallest saving suffix is BELOW it is still reported",
+          numbers(window_below), [3])
+    check("... and that saving suffix really does miss the widow, so the fixture is sighted",
+          repair_window(below_lines, WIDTH)[0], 2)
+    check("... while the window the report prints starts at the widow and absorbs it",
+          repair_window(below_lines, WIDTH, 1)[0], 1)
+    check("... and it is still a proper suffix, not a retreat to the whole paragraph",
+          (len(below_lines), len(repair_window(below_lines, WIDTH, 1)[1])), (4, 1))
+
+    # `covering` can rule out every window while the conjunct's question still has an answer --
+    # which is the `no window` branch of `show`.  `over_width` above is the cheapest witness: no
+    # window holding its FIRST line saves anything, because that line is the over-width one.
+    over_lines = [l for _, l in paragraphs(over_width)[0]]
+    check("`repair_window` is `None` when no window holding the given line refills shorter",
+          repair_window(over_lines, WIDTH, 0), None)
+    check("... while the unconstrained question on the same paragraph still answers",
+          repair_window(over_lines, WIDTH)[0], 1)
 
     # Goal 4 of issue 2167: `--width` stays a flag and the width stays on the summary line of both
     # report paths, so a figure cannot be quoted without it.  One constant, used by both.
