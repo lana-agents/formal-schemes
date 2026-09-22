@@ -60,10 +60,16 @@ It is also only the **affine** case of the source-restriction principle that iss
 as statement (A): the presentation here is *constructed*, from basic opens of `Spf A`, rather than
 obtained by restricting an arbitrary presentation. (A) at an **arbitrary open** of a general
 presented `X` needs a basic-open refinement of an arbitrary chart family and is not attempted,
-here or anywhere on this tree. At an open lying inside **one** chart it does not:
-`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι`
-(`FormalSchemes.GeneralSeparatedHomRestrictOpen`, issue 2148) is that case, and its proof reaches
-the theorem below through `FormalScheme.isSeparatedOverSpf_of_isOpenImmersion_chart`.
+here or anywhere on this tree. **Two** classes of open need no such refinement and are settled, in
+`FormalSchemes.GeneralSeparatedHomRestrictOpen` and by issue 2148: an open lying inside **one**
+chart, which is `FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι` and whose proof
+reaches the theorem below through
+`FormalScheme.isSeparatedOverSpf_of_isOpenImmersion_chart`; and an open that is a **union of whole
+chart ranges** of a presentation, which is
+`BothChartedFibreDatumXY.isSeparatedOverSpf_restrictOpen_of_iUnion_range_ι` and does not reach
+this theorem at all — it drops charts from the presentation it was handed. Neither class contains
+the other, and an open that meets a chart partially without lying inside one is in neither; that
+is what the refinement is for.
 
 ## Main definitions and results
 

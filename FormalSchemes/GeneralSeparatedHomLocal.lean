@@ -52,14 +52,17 @@ and none of the bookkeeping.
     consequence rather than as a hypothesis (issues 1998, 2098), and its conclusion is at the
     factorisation the caller supplied (issue 2111).
   * **Restricting the source** to an open formal subscheme over a *fixed* affine base has landed
-    in two places, and what separates them is the quantifier on the **open**: at an affine
+    in three places, and what separates them is the quantifier on the **open**: at an affine
     `FormalScheme.Spf` source for an arbitrary open
     (`FormalScheme.isSeparatedOverSpf_restrictOpen_Spf`, `FormalSchemes.SpfOpenSeparated`), and —
-    since issue 2148 — at an **arbitrary** source for an open lying inside the range of one
-    affine chart (`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range` and
-    `FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι`,
-    `FormalSchemes.GeneralSeparatedHomRestrictOpen`). What is missing is an arbitrary open of an
-    arbitrary presented `X`, which needs the basic-open refinement of the chart family, and it
+    since issue 2148, both in `FormalSchemes.GeneralSeparatedHomRestrictOpen` — at an
+    **arbitrary** source for an open lying inside the range of one affine chart
+    (`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range` and
+    `FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι`) and at an **arbitrary**
+    source for an open that is a union of whole chart ranges of a presentation
+    (`BothChartedFibreDatumXY.isSeparatedOverSpf_restrictOpen_of_iUnion_range_ι`). What is missing
+    is an arbitrary open of an arbitrary presented `X` — an open meeting a chart partially is of
+    neither settled shape — which needs the basic-open refinement of the chart family, and it
     is the half that has to come first: `FormalScheme.not_exists_factorsThrough_awayBase`
     (`FormalSchemes.AwayBaseFactorisationRange`) says the base change has no factorisation to
     consume until the source has been shrunk, because a factorisation puts the whole source over

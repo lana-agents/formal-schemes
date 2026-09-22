@@ -69,6 +69,13 @@ object has a module of its own the value lives in it; the entries below that qua
   a presentation (`FormalSchemes.GeneralSeparatedHomRestrictOpen`). Neither asks the source to be
   separated: this is issue 1987's statement (A) at a chart-local open, and the arbitrary open is
   what is still missing.
+* A subfamily of a separated chart family, at its own glued object —
+  `BothChartedFibreDatumXY.isSeparatedOverSpf_reindex_xGlued`, and
+  `BothChartedFibreDatumXY.isSeparatedOverSpf_restrictOpen_of_iUnion_range_ι` at the open of the
+  presented `X` that subfamily cuts out (`FormalSchemes.GeneralSeparatedHomRestrictOpen`). These
+  two **do** ask something of the source, but at the presentation level — the hypothesis is
+  `BothChartedFibreDatumXY.IsSeparated` of the ambient datum, not `FormalScheme.IsSeparatedOverSpf`
+  of the ambient scheme — so the rule below keeps them.
 
 **The list carries no count, deliberately.** It is a claim about the whole tree, so a new value
 anywhere falsifies it, and no script here reads one. The *three* that stood here was falsified

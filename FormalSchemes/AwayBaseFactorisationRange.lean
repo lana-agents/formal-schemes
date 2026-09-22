@@ -69,13 +69,15 @@ composite says (A) suffices, the obstruction says nothing weaker than (A) will d
 `FormalScheme.isSeparatedOverSpf_restrictOpen_Spf` (`FormalSchemes.SpfOpenSeparated`) has it at
 `X = FormalScheme.Spf A`, where the presentation is *built* out of basic opens rather than
 restricted from a given one, and that module says in terms that the general case is not attempted.
-Since issue 2148 the tree also has it at an **arbitrary** source, for an open lying inside the
-range of one affine chart over the base —
-`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range` and
-`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι`
-(`FormalSchemes.GeneralSeparatedHomRestrictOpen`). That is the closest thing to (A) on this tree
-and it is still not (A), because (A) quantifies over an arbitrary open and an open meeting two
-charts needs the chart family refined.
+Since issue 2148 the tree also has it at an **arbitrary** source, for two classes of open, both
+in `FormalSchemes.GeneralSeparatedHomRestrictOpen`: an open lying inside the range of one affine
+chart over the base — `FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range` and
+`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι` — and an open that is a union of
+whole chart ranges of a presentation,
+`BothChartedFibreDatumXY.isSeparatedOverSpf_restrictOpen_of_iUnion_range_ι`. Those are the closest
+things to (A) on this tree and neither is (A), because (A) quantifies over an arbitrary open and
+an open meeting a chart partially, without lying inside one, is of neither shape and needs the
+chart family refined.
 
 ## Placement
 

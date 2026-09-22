@@ -28,6 +28,14 @@ of issue 1987 — separatedness surviving a restriction of the *source* — when
 inside one affine chart over `Spf R`. That section's own header docstring says what it settles and
 why the general case cannot be assembled out of it.
 
+A **third** section, added by the same issue, settles (A) at the opposite class of opens: a union
+of whole chart ranges of a presentation. Dropping charts from a chart family is not a construction
+— every field of `AlgebraicGeometry.AffineChartedFibreDatumX` is a `∀` over its index type — and
+separatedness survives it because the criterion of
+`FormalSchemes.GeneralSeparatedChartCodiagonal` is a condition on one *pair* of charts at a time.
+That section's header docstring states the equivalence this turns on, and records that what is
+left of issue 2148's goal 2 no longer mentions the open at all.
+
 ## The route
 
 The cover of the target is the one `FormalScheme.isSeparatedHom_id` uses, and for the same reason:
@@ -129,6 +137,17 @@ and moves nothing.
   chart of a presentation of `X`, which is the form issue 1987 states (A) in.
 * `AlgebraicGeometry.FormalScheme.isSeparatedHom_restrictOpen_of_subset_range`: the same in the
   `AlgebraicGeometry.FormalScheme.IsSeparatedHom` vocabulary.
+* `AlgebraicGeometry.AffineChartedFibreDatumX.reindex`: a subfamily of a chart family, as a datum.
+* `AlgebraicGeometry.AffineChartedFibreDatumX.reindexHom`,
+  `AlgebraicGeometry.AffineChartedFibreDatumX.isOpenImmersion_reindexHom` and
+  `AlgebraicGeometry.AffineChartedFibreDatumX.range_reindexHom`: a subfamily's glued object is the
+  open formal subscheme cut out by the union of the selected chart ranges.
+* `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap`:
+  **separatedness is a condition on one ordered pair of charts at a time.**
+* `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_reindex`: **separatedness passes to every
+  subfamily of a chart family.**
+* `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparatedOverSpf_restrictOpen_of_iUnion_range_ι`:
+  **statement (A) at an open that is a union of chart ranges of a presentation.**
 
 ## References
 
@@ -449,3 +468,438 @@ theorem isSeparatedHom_restrictOpen_of_subset_range {A : Type u} [CommRing A] [A
     (isSeparatedOverSpf_restrictOpen_of_subset_range hI hX W j hjs hW)
 
 end AlgebraicGeometry.FormalScheme
+
+namespace AlgebraicGeometry
+
+open _root_.CompletedTensorProduct _root_.CompletedTensorAwayInterchange
+
+/-! ### Statement (A) at an open that is a union of chart ranges
+
+The section above settles statement (A) whenever the open lies inside **one** chart. This one
+settles it at the opposite extreme — an open that is a **union of whole chart ranges** of a
+presentation — and the two together are exactly the cases reachable without refining the chart
+family, which is the residue issue 2148's goal 2 names.
+
+## The two halves, and why the second one is free
+
+Dropping charts from a presentation is not a construction. Every field of
+`AlgebraicGeometry.AffineChartedFibreDatumX` is a `∀` over its index type, so an injection
+`e : J' → DX.J` pulls each of them back and `AffineChartedFibreDatumX.reindex` below is a structure
+literal with no proof obligation of its own: the `≠` hypotheses it has to produce come from `e`
+being injective and nothing else. What is not free is that the result still presents an open of
+`X` and is still separated, and those are the two halves here.
+
+**Separatedness is the surprising half, and it is free too — once the criterion is put in the right
+form.** `BothChartedFibreDatumXY.isSeparated_iff_isClosed_preimage_ι`
+(`FormalSchemes.GeneralSeparatedChartPreimage`) is stated over the product charts of
+`X ×_{Spf R} X`, whose index is a *pair* of chart indices, and
+`BothChartedFibreDatumXY.preimage_range_diagonal'_eq_range_chartCodiagonalMap`
+(`FormalSchemes.GeneralSeparatedChartCodiagonal`) identifies what each product chart sees of the
+diagonal as the range of `AffineChartedFibreDatumX.chartCodiagonalMap i j`, which is built from
+`A i`, `A j`, `g i j` and `τ i j` and from nothing else in the datum.
+`BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap` below packages the two
+into a single equivalence
+
+```
+IsSeparated DX σX hστX hσcX ↔
+  ∀ i j, i ≠ j → IsClosed (Set.range (DX.chartCodiagonalMap i j _).base)
+```
+
+whose right-hand side quantifies over **one ordered pair of charts at a time**. A subfamily's pairs
+are a subset of the whole family's, and its chart codiagonal at a pair is the original's — by
+`rfl`, since `AffineChartedFibreDatumX.reindex` changes no chart algebra and no overlap element —
+so `BothChartedFibreDatumXY.isSeparated_reindex` is the restriction of a `∀` and costs three lines.
+The diagonal pairs `i = j` never enter: they are discharged inside the equivalence by
+`CompletedTensorProduct.codiagonal_surjective`, which is a fact about `A i` alone.
+
+That the equivalence is what makes this work is worth stating as a **negative**: the
+`FormalScheme`-level predicate `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf` is an
+existential over a presentation of the whole of `X`, and the categorical definition
+`BothChartedFibreDatumXY.IsSeparated` is a closed-immersion condition on a morphism into
+`X ×_{Spf R} X`; neither has any visible restriction map to a subfamily. The pair-local form does,
+and this is the first consumer of `FormalSchemes.GeneralSeparatedChartCodiagonal` that needs the
+`←` direction of the criterion as well as the `→` one.
+
+**The geometric half** is `AffineChartedFibreDatumX.glueChartMorphisms`
+(`FormalSchemes.ChartedDatumGlueMorphisms`) at the ambient datum's own chart inclusions. Their
+overlap condition is `CategoryTheory.GlueData.ofGlueData'_ι_comp`, which holds outright; they are
+open immersions because a glue inclusion always is; and they meet only along the double overlaps by
+`LocallyRingedSpace.GlueData.range_ι_inter_subset`. So
+`AffineChartedFibreDatumX.isOpenImmersion_reindexHom` and
+`AffineChartedFibreDatumX.range_reindexHom` are the criterion of
+`FormalSchemes.ChartedDatumGlueOpenImmersion` applied to a family that was already on the tree, and
+the subfamily's glued object is the open `⋃ i, range (ι (e i))` of `X`.
+
+## What this closes, and the shape of what is left
+
+**What is left of goal 2 no longer mentions the open.** Statement (A) at a general open of a
+general presented `X` now follows from a single `W`-independent statement: *every presentation of
+`X` can be refined to one all of whose chart ranges are basic opens of the original charts.* Given
+that, an arbitrary open `W` is a union of refined chart ranges — the basic opens of an affine chart
+are a basis (`FormalSpectrum.exists_basicOpen_le`, used in `FormalSchemes.SpfOpenSeparated` for the
+one-chart case) and the chart ranges cover `X` — and the theorem below finishes. The cross-chart
+overlap element such a refinement needs is `FormalSpectrum.exists_refined_overlap_element`
+(`FormalSchemes.BasicOpenChartImage`) and the identification of two presentations of one basic open
+is `FormalSpectrum.awayCompletionCongrBasicOpenAlg` (`FormalSchemes.AwayCompletionRestrictUnique`);
+the refinement's own `σ` and its two laws are what remains unbuilt.
+
+**Which standing sentences this moves.** `FormalSchemes.SpfOpenSeparated` and
+`FormalSchemes.AwayBaseFactorisationRange` each carry a clause naming the chart-local case as the
+closest the tree has to (A); both gain the union-of-charts case beside it. The claims that (A) at
+an **arbitrary** open of a general presented `X` is unproved survive untouched, in all four files —
+a union of chart ranges is not an arbitrary open, and no open meeting a chart partially is of this
+shape. `FormalSchemes.GeneralSeparatedScheme`'s inventory of every value of
+`AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf` gains
+`BothChartedFibreDatumXY.isSeparatedOverSpf_reindex_xGlued` and
+`BothChartedFibreDatumXY.isSeparatedOverSpf_restrictOpen_of_iUnion_range_ι` by its own rebuild
+rule, and not `BothChartedFibreDatumXY.isSeparated_reindex`, which concludes in the datum-level
+predicate.
+
+## Placement, measured rather than argued
+
+These declarations sit here rather than in a leaf of their own, and rather than beside the objects
+they are about. The datum constructions belong by the tree's own rule with
+`AlgebraicGeometry.AffineChartedFibreDatumX`, and the criterion with
+`FormalSchemes.GeneralSeparatedChartCodiagonal`; neither of those imports the other, and a leaf
+over both plus `FormalSchemes.GeneralSeparatedScheme` and `FormalSchemes.OpenFormalSubscheme` was
+built and audited before this disposition was taken, and the next two figures are that one-off
+measurement of a tree that was then discarded rather than a standing claim about this one. It cost
+**25** `scripts/closure_audit.py` MISMATCHes across **20** files: every module in the leaf's import
+closure whose docstring quotes how many dependents it has gains one of them. The reverse closure of
+`FormalSchemes.StructureSheaf` is **526**, and
+that file is one of the twenty, so what prices the disposition is the repair and not the leaf. In
+this file the audit is unmoved at **0**, no import edge is added, and nothing outside this file
+re-elaborates. The move of
+`AffineChartedFibreDatumX.reindex` and `AffineChartedFibreDatumX.reindexHom` out to a home of their
+own is **declined on that ratio and not on principle**, exactly as this file declines
+`FormalScheme.isOpenImmersion_restrictOpenMap`'s move above, and is worth re-costing the moment a
+second consumer appears — the refinement of goal 2 will be one.
+-/
+
+namespace AffineChartedFibreDatumX
+
+variable {R : Type u} [CommRing R] {I : Ideal R} {hI : I.FG}
+variable [TopologicalSpace R] [IsAdicRing I]
+variable {BX : Type u} [CommRing BX] [Algebra R BX]
+variable (DX : AffineChartedFibreDatumX R I hI BX)
+
+/-- **A subfamily of a chart family, as a datum in its own right.** Every field of
+`AlgebraicGeometry.AffineChartedFibreDatumX` is a `∀` over the index type, so an injection
+`e : J' → DX.J` pulls all of them back and the only thing that has to be produced is a proof of
+`e i ≠ e j` from `i ≠ j`, which is what injectivity is. No chart algebra, no overlap element and no
+transition is changed, and that is what makes every statement below hold by `rfl` or by
+restricting a `∀`.
+
+Injectivity is needed and not decoration: the `τ`, `σ` and triple-overlap fields are indexed by
+*distinct* indices, and a non-injective `e` would be asked for a transition between a chart and
+itself. -/
+def reindex {J' : Type u} (e : J' → DX.J) (he : Function.Injective e) :
+    AffineChartedFibreDatumX R I hI BX :=
+  letI := DX.commRing
+  letI := DX.algebra
+  letI := DX.topology
+  letI := DX.isAdic
+  { J := J'
+    A := fun i => DX.A (e i)
+    commRing := fun i => DX.commRing (e i)
+    algebra := fun i => DX.algebra (e i)
+    g := fun i j => DX.g (e i) (e j)
+    τ := fun i j h => DX.τ (e i) (e j) fun hh => h (he hh)
+    τ_symm := fun i j _ => DX.τ_symm (e i) (e j) _
+    t' := fun i j k hij hik hjk =>
+      DX.t' (e i) (e j) (e k) (fun hh => hij (he hh)) (fun hh => hik (he hh))
+        (fun hh => hjk (he hh))
+    t_fac := fun i j k hij hik hjk =>
+      DX.t_fac (e i) (e j) (e k) (fun hh => hij (he hh)) (fun hh => hik (he hh))
+        (fun hh => hjk (he hh))
+    cocycle := fun i j k hij hik hjk =>
+      DX.cocycle (e i) (e j) (e k) (fun hh => hij (he hh)) (fun hh => hik (he hh))
+        (fun hh => hjk (he hh))
+    topology := fun i => DX.topology (e i)
+    isAdic := fun i => DX.isAdic (e i)
+    xt' := fun i j k hij hik hjk =>
+      DX.xt' (e i) (e j) (e k) (fun hh => hij (he hh)) (fun hh => hik (he hh))
+        (fun hh => hjk (he hh))
+    xt_fac := fun i j k hij hik hjk =>
+      DX.xt_fac (e i) (e j) (e k) (fun hh => hij (he hh)) (fun hh => hik (he hh))
+        (fun hh => hjk (he hh))
+    xcocycle := fun i j k hij hik hjk =>
+      DX.xcocycle (e i) (e j) (e k) (fun hh => hij (he hh)) (fun hh => hik (he hh))
+        (fun hh => hjk (he hh)) }
+
+variable {J' : Type u} (e : J' → DX.J) (he : Function.Injective e)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The chart codiagonal of a subfamily is the original's**, by `rfl`: it is assembled from
+`A i`, `A j`, `g i j` and `τ i j`, and `AffineChartedFibreDatumX.reindex` carries all four across
+unchanged. This is the
+whole reason separatedness restricts. -/
+theorem reindex_chartCodiagonalMap (i j : J') (hij : i ≠ j) :
+    (DX.reindex e he).chartCodiagonalMap i j hij =
+      DX.chartCodiagonalMap (e i) (e j) (fun hh => hij (he hh)) := rfl
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The structural morphism of a subfamily chart is the original's**, by `rfl`. -/
+theorem reindex_xStructMapChart (i : J') :
+    (DX.reindex e he).xStructMapChart i = DX.xStructMapChart (e i) := rfl
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The ambient datum's chart inclusions satisfy the subfamily's own overlap condition.** This is
+`CategoryTheory.GlueData.ofGlueData'_ι_comp` at `AffineChartedFibreDatumX.xGlueData'`, where the
+overlap immersion is `FormalSpectrum.basicOpenChart` and the transition is
+`awayCompletionTransition` — the two spellings
+`AffineChartedFibreDatumX.glueChartMorphisms` asks for. Nothing about the subfamily is used beyond
+`e i ≠ e j`. -/
+theorem reindex_ι_naturality (i j : J') (h : i ≠ j) :
+    letI := (DX.reindex e he).commRing; letI := (DX.reindex e he).algebra;
+    letI := (DX.reindex e he).topology; letI := (DX.reindex e he).isAdic;
+    basicOpenChart (I.map (algebraMap R ((DX.reindex e he).A i))) ((DX.reindex e he).g i j) ≫
+        DX.xFormalGlueData.ι (e i) =
+      awayCompletionTransition ((DX.reindex e he).g i j) ((DX.reindex e he).g j i)
+          ((DX.reindex e he).τ i j h) ≫
+        basicOpenChart (I.map (algebraMap R ((DX.reindex e he).A j))) ((DX.reindex e he).g j i) ≫
+          DX.xFormalGlueData.ι (e j) :=
+  CategoryTheory.GlueData.ofGlueData'_ι_comp DX.xGlueData' (e i) (e j) fun hh => h (he hh)
+
+/-- **The comparison morphism of a subfamily**, `X_{J'} ⟶ X`: the ambient datum's own chart
+inclusions, glued over the subfamily. -/
+def reindexHom :
+    (DX.reindex e he).xGlued.toLocallyRingedSpace ⟶ DX.xGlued.toLocallyRingedSpace :=
+  (DX.reindex e he).glueChartMorphisms (fun i => DX.xFormalGlueData.ι (e i))
+    (DX.reindex_ι_naturality e he)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The comparison restricts to the ambient chart inclusion on each subfamily chart.** -/
+@[reassoc (attr := simp)]
+theorem ι_reindexHom (i : J') :
+    (DX.reindex e he).xFormalGlueData.ι i ≫ DX.reindexHom e he = DX.xFormalGlueData.ι (e i) :=
+  (DX.reindex e he).ι_glueChartMorphisms _ _ i
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The comparison's range is the union of the selected chart ranges.** -/
+theorem range_reindexHom :
+    Set.range (DX.reindexHom e he).base = ⋃ i, Set.range (DX.xFormalGlueData.ι (e i)).base :=
+  (DX.reindex e he).range_glueChartMorphisms _ _
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **Two selected charts meet only along their double overlap.** The containment is
+`LocallyRingedSpace.GlueData.range_ι_inter_subset` at the ambient datum, read through
+`AffineChartedFibreDatumX.range_xGlueData_f_comp_of_ne`, which is what rewrites the glue datum's
+overlap immersion into the `FormalSpectrum.basicOpenChart` spelling the criterion asks for.
+
+The rewrite is applied with `▸` rather than by `rw`: the subfamily's index type agrees with `J'`
+only up to unfolding `AffineChartedFibreDatumX.reindex`, and `rw` reports the goal as not
+type-correct at `instances` transparency, the same obstruction
+`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι` records above. -/
+theorem reindex_range_ι_inter_subset (i j : J') (hij : i ≠ j) :
+    letI := (DX.reindex e he).commRing; letI := (DX.reindex e he).algebra;
+    Set.range (DX.xFormalGlueData.ι (e i)).base ∩
+        Set.range (DX.xFormalGlueData.ι (e j)).base ⊆
+      Set.range (basicOpenChart (I.map (algebraMap R ((DX.reindex e he).A i)))
+        ((DX.reindex e he).g i j) ≫ DX.xFormalGlueData.ι (e i)).base := by
+  have hsub := DX.xLrsGlueData.range_ι_inter_subset (e i) (e j)
+  have hrange := DX.range_xGlueData_f_comp_of_ne (e i) (e j) (fun hh => hij (he hh))
+    (DX.xFormalGlueData.ι (e i))
+  exact hrange ▸ hsub
+
+/-- **The comparison morphism of a subfamily is an open immersion**, so the subfamily's glued
+object is the open formal subscheme of `X` cut out by
+`AffineChartedFibreDatumX.range_reindexHom`. -/
+instance isOpenImmersion_reindexHom :
+    LocallyRingedSpace.IsOpenImmersion (DX.reindexHom e he) :=
+  (DX.reindex e he).isOpenImmersion_glueChartMorphisms _ _
+    (fun i => FormalScheme.GlueData.ι_isOpenImmersion DX.xFormalGlueData (e i))
+    (fun i j hij => DX.reindex_range_ι_inter_subset e he i j hij)
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+/-- **The comparison is a morphism over `Spf R`.** Both sides are morphisms out of a glued object,
+so `FormalScheme.GlueData.hom_ext` reduces this to the charts, where both are the same
+`AffineChartedFibreDatumX.xStructMapChart`.
+
+Written in term mode for the reason `AffineChartedFibreDatumX.reindex_range_ι_inter_subset`
+records: `AffineChartedFibreDatumX.xGlued` is `FormalScheme.GlueData.gluedFormalScheme` of the
+datum's glue data only up to unfolding, so the composite is not type-correct at `instances`
+transparency and `rw` refuses the goal that `FormalScheme.GlueData.hom_ext` produces. -/
+@[reassoc (attr := simp)]
+theorem reindexHom_comp_xStructMap :
+    DX.reindexHom e he ≫ DX.xStructMap = (DX.reindex e he).xStructMap :=
+  (DX.reindex e he).xFormalGlueData.hom_ext fun i =>
+    ((Category.assoc ((DX.reindex e he).xFormalGlueData.ι i) (DX.reindexHom e he)
+          DX.xStructMap).symm.trans
+        ((congrArg (fun m => m ≫ DX.xStructMap) (DX.ι_reindexHom e he i)).trans
+          (DX.ι_xStructMap (e i)))).trans ((DX.reindex e he).ι_xStructMap i).symm
+
+end AffineChartedFibreDatumX
+
+namespace BothChartedFibreDatumXY
+
+variable {R : Type u} [CommRing R] {I : Ideal R} {hI : I.FG}
+variable [TopologicalSpace R] [IsAdicRing I]
+variable {BX : Type u} [CommRing BX] [Algebra R BX]
+variable (DX : AffineChartedFibreDatumX R I hI BX)
+variable
+  (σX : letI := DX.commRing; letI := DX.algebra;
+    ∀ (i i' i'' : DX.J), i ≠ i' → i ≠ i'' → i' ≠ i'' →
+    (awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i i' * DX.g i i'') ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R (DX.A i'))) (DX.g i' i'' * DX.g i' i)))
+  (hστX : letI := DX.commRing; letI := DX.algebra;
+    ∀ (i i' i'' : DX.J) (h1 : i ≠ i') (h2 : i ≠ i'') (h3 : i' ≠ i''),
+    (σX i i' i'' h1 h2 h3).symm.toAlgHom.comp (furtherLocSnd I (DX.g i' i'') (DX.g i' i) hI) =
+      (furtherLocFst I (DX.g i i') (DX.g i i'') hI).comp (DX.τ i i' h1).symm.toAlgHom)
+  (hσcX : letI := DX.commRing; letI := DX.algebra;
+    ∀ (i i' i'' : DX.J) (h1 : i ≠ i') (h2 : i ≠ i'') (h3 : i' ≠ i''),
+    (σX i i' i'' h1 h2 h3).trans ((σX i' i'' i h3 h1.symm h2.symm).trans
+      (σX i'' i i' h2.symm h3.symm h1)) =
+      AlgEquiv.refl (R := R)
+        (A₁ := awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i i' * DX.g i i'')))
+
+/-- **Separatedness is a condition on one ordered pair of charts at a time**: `X` is separated over
+`Spf R` exactly when, for every pair of distinct charts, the image of the chart codiagonal
+`∇_{ij} : A i ⊗̂_R A j ⟶ A i{1/g i j}^` is closed in `Spf(A i ⊗̂_R A j)`.
+
+Both directions are `BothChartedFibreDatumXY.isSeparated_iff_isClosed_preimage_ι` read through
+`BothChartedFibreDatumXY.preimage_range_diagonal'_eq_range_chartCodiagonalMap`, which says that is
+what the product chart `(i, j)` sees of the diagonal. The diagonal pairs `i = j` are not a
+hypothesis: there the product chart sees `CompletedTensorProduct.diagonal`, whose range is closed
+because `CompletedTensorProduct.codiagonal` is surjective, and that is a fact about `A i` alone.
+
+`BothChartedFibreDatumXY.isSeparated_of_chartCodiagonal_surjective` is the sufficient condition an
+instance uses and takes the surjectivity of `∇_{ij}` as its hypothesis; this is the *equivalence*,
+with closedness of the range rather than surjectivity, which is what a consumer transporting
+separatedness between two data needs. -/
+theorem isSeparated_iff_isClosed_range_chartCodiagonalMap :
+    IsSeparated DX σX hστX hσcX ↔
+      ∀ (i j : DX.J) (hij : i ≠ j),
+        letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
+        haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
+          isAdicRing_awayCompletionIdeal _ _ (hI.map _)
+        haveI : IsAdicRing (idealOfDefinition R I (DX.A i) (DX.A j)) :=
+          isAdicRing R I (DX.A i) (DX.A j) hI
+        IsClosed (Set.range ⇑(DX.chartCodiagonalMap i j hij).base) := by
+  letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
+  constructor
+  · intro hsep i j hij
+    have hcl := (isSeparated_iff_isClosed_preimage_ι DX σX hστX hσcX).mp hsep (i, j)
+    rwa [preimage_range_diagonal'_eq_range_chartCodiagonalMap DX σX hστX hσcX i j hij] at hcl
+  · intro hcl
+    refine isSeparated_of_isClosed_preimage_ι DX σX hστX hσcX fun p => ?_
+    obtain ⟨i, j⟩ := p
+    by_cases hij : i = j
+    · subst hij
+      haveI : IsAdicRing (idealOfDefinition R I (DX.A i) (DX.A i)) :=
+        isAdicRing R I (DX.A i) (DX.A i) hI
+      rw [preimage_range_diagonal'_eq_range_diagonal DX σX hστX hσcX i]
+      exact (FormalSpectrum.isClosedEmbedding_map_of_surjective
+        (idealOfDefinition R I (DX.A i) (DX.A i))
+        (I.map (algebraMap R (DX.A i))) (codiagonal R I (DX.A i))
+        (lift_le_comap (le_refl _) (AlgHom.id R (DX.A i)) (AlgHom.id R (DX.A i)) hI)
+        codiagonal_surjective).isClosed_range
+    · rw [preimage_range_diagonal'_eq_range_chartCodiagonalMap DX σX hστX hσcX i j hij]
+      exact hcl i j hij
+
+variable {J' : Type u} (e : J' → DX.J) (he : Function.Injective e)
+
+/-- **The triple-overlap datum of a subfamily**: the ambient one at the selected indices. Its two
+laws are `BothChartedFibreDatumXY.reindexSigma_furtherLoc` and
+`BothChartedFibreDatumXY.reindexSigma_cocycle`, which are the ambient laws at those indices and
+nothing else. -/
+def reindexSigma :
+    letI := (DX.reindex e he).commRing; letI := (DX.reindex e he).algebra;
+    ∀ (i i' i'' : (DX.reindex e he).J), i ≠ i' → i ≠ i'' → i' ≠ i'' →
+    (awayCompletion (I.map (algebraMap R ((DX.reindex e he).A i)))
+        ((DX.reindex e he).g i i' * (DX.reindex e he).g i i'') ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R ((DX.reindex e he).A i')))
+        ((DX.reindex e he).g i' i'' * (DX.reindex e he).g i' i)) :=
+  fun i i' i'' h1 h2 h3 =>
+    σX (e i) (e i') (e i'') (fun hh => h1 (he hh)) (fun hh => h2 (he hh)) (fun hh => h3 (he hh))
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+include hστX he in
+/-- **The subfamily's `σ`/`τ` restriction law**, the ambient *hστX* at the selected indices. -/
+theorem reindexSigma_furtherLoc (i i' i'' : J') (h1 : i ≠ i') (h2 : i ≠ i'') (h3 : i' ≠ i'') :
+    letI := (DX.reindex e he).commRing; letI := (DX.reindex e he).algebra
+    (reindexSigma DX σX e he i i' i'' h1 h2 h3).symm.toAlgHom.comp
+        (furtherLocSnd I ((DX.reindex e he).g i' i'') ((DX.reindex e he).g i' i) hI) =
+      (furtherLocFst I ((DX.reindex e he).g i i') ((DX.reindex e he).g i i'') hI).comp
+        ((DX.reindex e he).τ i i' h1).symm.toAlgHom :=
+  hστX (e i) (e i') (e i'') (fun hh => h1 (he hh)) (fun hh => h2 (he hh)) (fun hh => h3 (he hh))
+
+omit [TopologicalSpace R] [IsAdicRing I] in
+include hσcX he in
+/-- **The subfamily's algebra triple cocycle**, the ambient *hσcX* at the selected indices. -/
+theorem reindexSigma_cocycle (i i' i'' : J') (h1 : i ≠ i') (h2 : i ≠ i'') (h3 : i' ≠ i'') :
+    letI := (DX.reindex e he).commRing; letI := (DX.reindex e he).algebra
+    (reindexSigma DX σX e he i i' i'' h1 h2 h3).trans
+        ((reindexSigma DX σX e he i' i'' i h3 h1.symm h2.symm).trans
+          (reindexSigma DX σX e he i'' i i' h2.symm h3.symm h1)) =
+      AlgEquiv.refl (R := R)
+        (A₁ := awayCompletion (I.map (algebraMap R ((DX.reindex e he).A i)))
+          ((DX.reindex e he).g i i' * (DX.reindex e he).g i i'')) :=
+  hσcX (e i) (e i') (e i'') (fun hh => h1 (he hh)) (fun hh => h2 (he hh)) (fun hh => h3 (he hh))
+
+include he in
+/-- **Separatedness passes to every subfamily of a chart family.** The pairs of a subfamily are a
+subset of the whole family's, and the subfamily's chart codiagonal at a pair is the original's by
+`AffineChartedFibreDatumX.reindex_chartCodiagonalMap`, so this is
+`BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap` used in both
+directions and nothing else.
+
+There is no comparable statement for `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf` proved
+directly: that predicate is an existential over a presentation of the *whole* of `X`, with no
+restriction map to a subfamily, which is why the pair-local criterion is what this goes through. -/
+theorem isSeparated_reindex (hsep : IsSeparated DX σX hστX hσcX) :
+    IsSeparated (DX.reindex e he) (reindexSigma DX σX e he)
+      (reindexSigma_furtherLoc DX σX hστX e he) (reindexSigma_cocycle DX σX hσcX e he) := by
+  rw [isSeparated_iff_isClosed_range_chartCodiagonalMap]
+  intro i j hij
+  exact (isSeparated_iff_isClosed_range_chartCodiagonalMap DX σX hστX hσcX).mp hsep
+    (e i) (e j) fun hh => hij (he hh)
+
+include he in
+/-- **A subfamily of a separated chart family glues to a formal scheme separated over `Spf R`**, at
+the presentation the subfamily itself is. The comparison isomorphism is the identity: the object is
+the subfamily's own glued object, not something it is compared to. -/
+theorem isSeparatedOverSpf_reindex_xGlued (hsep : IsSeparated DX σX hστX hσcX) :
+    FormalScheme.IsSeparatedOverSpf hI (DX.reindex e he).xGlued (DX.reindex e he).xStructMap :=
+  ⟨BX, inferInstance, inferInstance, DX.reindex e he, reindexSigma DX σX e he,
+    reindexSigma_furtherLoc DX σX hστX e he, reindexSigma_cocycle DX σX hσcX e he,
+    Iso.refl _, Category.id_comp _, isSeparated_reindex DX σX hστX hσcX e he hsep⟩
+
+include he in
+/-- **Statement (A) at an open that is a union of chart ranges of a presentation** (EGA I §10.15):
+if `X` is presented by `DX` over `s`, the presentation is separated, and `W` is the union of the
+ranges of the charts selected by an injection `e`, then `X` restricted to `W` is separated over
+`Spf R`.
+
+This is the form issue 1987 states (A) in — a presented `X`, its own charts — at the class of opens
+that needs no refinement of the chart family, and it is the complement of
+`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι`, which covers the opens inside a
+single chart. Neither subsumes the other and together they do not exhaust the opens of `X`: an open
+meeting a chart partially and not contained in one is of neither shape, and is what goal 2's
+refinement is for.
+
+The hypothesis is spent twice and the two are independent: `AffineChartedFibreDatumX.reindexHom`
+composed with the comparison is an open immersion whose range is `W`, which is what
+`FormalScheme.restrictOpenIso` needs, and
+`AffineChartedFibreDatumX.reindexHom_comp_xStructMap` is what makes the comparison a morphism over
+the base. -/
+theorem isSeparatedOverSpf_restrictOpen_of_iUnion_range_ι {X : FormalScheme.{u}}
+    (hX : X.LocallyFG) {s : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I}
+    (ε : DX.xGlued.toLocallyRingedSpace ≅ X.toLocallyRingedSpace) (hε : ε.hom ≫ s = DX.xStructMap)
+    (hsep : IsSeparated DX σX hστX hσcX) (W : Opens X)
+    (hW : (W : Set X) = ⋃ i, Set.range (DX.xFormalGlueData.ι (e i) ≫ ε.hom).base) :
+    FormalScheme.IsSeparatedOverSpf hI (X.restrictOpen hX W) (X.restrictOpenι hX W ≫ s) := by
+  have hr : Set.range (DX.reindexHom e he ≫ ε.hom).base = (W : Set X) := by
+    rw [hW]
+    simp only [LocallyRingedSpace.comp_base, TopCat.coe_comp, Set.range_comp,
+      DX.range_reindexHom e he]
+    exact Set.image_iUnion
+  refine FormalScheme.isSeparatedOverSpf_of_iso hI
+    (X.restrictOpenIso hX W (DX.reindexHom e he ≫ ε.hom) hr) ?_
+    (isSeparatedOverSpf_reindex_xGlued DX σX hστX hσcX e he hsep)
+  rw [← Category.assoc, FormalScheme.restrictOpenIso_hom_comp, Category.assoc, hε]
+  exact DX.reindexHom_comp_xStructMap e he
+
+end BothChartedFibreDatumXY
+
+end AlgebraicGeometry
