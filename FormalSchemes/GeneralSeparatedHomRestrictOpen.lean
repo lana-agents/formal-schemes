@@ -270,12 +270,26 @@ and it is what turns the transport above into a statement about a *source* restr
 arbitrary presented `X`. The three theorems below settle it whenever the open lies inside **one**
 chart, with no refinement of the chart family and no new datum: the restriction is then an open
 subscheme of a single `Spf (I·A)`, which issue 1990 already covers. **(A) at a general open is
-untouched**, and the sentences saying so in `FormalSchemes.SpfOpenSeparated`,
-`FormalSchemes.GeneralSeparatedHom`, `FormalSchemes.GeneralSeparatedHomLocal` and
-`FormalSchemes.AwayBaseFactorisationRange` all stay true as written — an open meeting two charts
-needs the basic-open refinement of the chart family that issue 2148's goal 2 is about, and the
-cross-chart overlap element for it is `FormalSpectrum.exists_refined_overlap_element`
-(`FormalSchemes.BasicOpenChartImage`).
+untouched** — an open meeting two charts needs the basic-open refinement of the chart family that
+issue 2148's goal 2 is about, and the cross-chart overlap element for it is
+`FormalSpectrum.exists_refined_overlap_element` (`FormalSchemes.BasicOpenChartImage`).
+
+**Which standing sentences these theorems move, named rather than certified.** Of the four files
+that describe the missing statement, three quantify over the **open** and their claims survive:
+`FormalSchemes.SpfOpenSeparated`, `FormalSchemes.GeneralSeparatedHom` and
+`FormalSchemes.AwayBaseFactorisationRange`. The first and the third also offer a reader the
+closest thing the tree has, which is no longer `FormalScheme.isSeparatedOverSpf_restrictOpen_Spf`,
+so each gains a clause naming the chart-local case. The fourth quantifies over the **source** and
+is false after this issue: `FormalSchemes.GeneralSeparatedHomLocal`'s refinement bullet said
+source restriction had landed at no source other than an affine `FormalScheme.Spf`, and the
+theorems below land it at an arbitrary one; it is repaired there.
+`FormalSchemes.GeneralSeparatedScheme`'s inventory of every value of
+`FormalScheme.IsSeparatedOverSpf` on this tree gains the three below, which that file's own
+rebuild rule admits — they conclude in the predicate, they are not its criteria or transports,
+they are not conjunctions with `FormalScheme.IsRelativelyTopFiniteType`, and none of them takes a
+`FormalScheme.IsSeparatedOverSpf` as a hypothesis. **Naming the sentence that moved is checkable;
+certifying that none did is not**, which is why the first version of this paragraph said the
+latter and was wrong about one of its four.
 
 **And the missing half cannot be assembled out of this one.** `FormalScheme.IsSeparatedHom` is
 local on the **target**: its cover is a cover of `Y` and its per-piece clause is
@@ -307,10 +321,12 @@ are kept.
 The open immersion is spent once, on `FormalScheme.restrictOpenIso` at the open cut out by the
 range of `χ`; `FormalScheme.isSeparatedOverSpf_restrictOpen_Spf` supplies the statement there and
 `FormalScheme.isSeparatedOverSpf_of_iso` moves it across. The `show` ascription on the
-open-immersion instance is the same one `FormalScheme.isSeparatedHom_restrictOpenHom` needs and for
-the same reason: instance search matches at reducible transparency and `FormalScheme.Spf` is not
-reducible, so the instance for `χ` is not found at the `FormalScheme.Spf` spelling of its target
-unless it is put there by hand. -/
+open-immersion instance is here for the same reason `FormalScheme.isSeparatedHom_restrictOpenHom`
+ascribes its chart isomorphism by hand: instance search matches at reducible transparency and
+`FormalScheme.Spf` is not reducible, so the instance for `χ` is not found at the
+`FormalScheme.Spf` spelling of its target unless it is put there by hand. The **reason** is shared
+and the **device** is not — that proof delays the `FormalScheme.Spf` spelling until after the
+isomorphism is elaborated, and this one puts the instance at that spelling. -/
 theorem isSeparatedOverSpf_of_isOpenImmersion_chart (hI : I.FG) {Z : FormalScheme.{u}}
     (χ : Z.toLocallyRingedSpace ⟶ locallyRingedSpaceObj (I.map (algebraMap R A)))
     [himm : LocallyRingedSpace.IsOpenImmersion χ] :
@@ -431,6 +447,5 @@ theorem isSeparatedHom_restrictOpen_of_subset_range {A : Type u} [CommRing A] [A
       (FormalScheme.Hom.mk (X.restrictOpenι hX W ≫ s)) :=
   isSeparatedHom_of_isSeparatedOverSpf hI _ _
     (isSeparatedOverSpf_restrictOpen_of_subset_range hI hX W j hjs hW)
-
 
 end AlgebraicGeometry.FormalScheme
