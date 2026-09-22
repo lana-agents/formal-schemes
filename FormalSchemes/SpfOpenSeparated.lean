@@ -58,8 +58,12 @@ is its own issue.
 
 It is also only the **affine** case of the source-restriction principle that issue 1987 inventories
 as statement (A): the presentation here is *constructed*, from basic opens of `Spf A`, rather than
-obtained by restricting an arbitrary presentation. (A) at a general presented `X` needs a
-basic-open refinement of an arbitrary chart family and is not attempted.
+obtained by restricting an arbitrary presentation. (A) at an **arbitrary open** of a general
+presented `X` needs a basic-open refinement of an arbitrary chart family and is not attempted,
+here or anywhere on this tree. At an open lying inside **one** chart it does not:
+`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι`
+(`FormalSchemes.GeneralSeparatedHomRestrictOpen`, issue 2148) is that case, and its proof reaches
+the theorem below through `FormalScheme.isSeparatedOverSpf_of_isOpenImmersion_chart`.
 
 ## Main definitions and results
 
