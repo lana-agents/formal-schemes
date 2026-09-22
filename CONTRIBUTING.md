@@ -685,10 +685,32 @@ returns 0. Those are measurements with commits attached rather than a figure abo
 
 ## Line width
 
-Every line is at most **100 characters and 100 display columns** — two separate limits, since a
-line of subscripts and arrows can satisfy one and fail the other. Measure with Python (`len` for
-the first, `unicodedata.east_asian_width` with combining marks at zero for the second). `awk`'s
-`length()` counts bytes and over-reports on any line with a non-ASCII character.
+Every line of every tracked file is at most **100 characters and 100 display columns** — two
+separate limits, since a line of subscripts and arrows can satisfy one and fail the other. Measure
+with Python (`len` for the first, `unicodedata.east_asian_width` with combining marks at zero for
+the second). `awk`'s `length()` counts bytes and over-reports on any line with a non-ASCII
+character.
+
+**Markdown is inside the rule**, and a wide table row is not a defence: keep the cells short, and
+put a description that will not fit in a cell into a list instead. Every tracked `.md` file meets
+both limits, tables included.
+
+**Two tracked files are exempt and they are the whole of the exemption**, because neither can be
+wrapped without changing what it means to whatever reads it:
+
+* `.orchestra/config.json` — a JSON string value written on one line; JSON has no continuation
+  inside a string literal.
+* `.github/workflows/update.yml` — a commented-out `cron:` stanza whose trailing comment carries a
+  documentation URL that is by itself longer than the limit.
+
+Neither is prose this project writes, and both are named here so that a re-measurement finds them
+already accounted for rather than as new defects.
+
+**Nothing on this tree measures a width outside `.lean`.** `linter.style.longLine`, reached
+through the lakefile's `mathlibStandardSet`, is the only width instrument here and it sees the
+library only; no script in `scripts/` and no step of `.orchestra/validation.sh` measures one at
+all. So re-measure over `git ls-files` rather than trusting this section — an unenforced rule
+rots, and this one did: it was written without a scope, against a tree that already broke it.
 
 `lake env lean <file>` does **not** apply the lakefile's `leanOptions`, so it runs neither
 `linter.style.longLine` nor the `show`-vs-`change` linter. Iterate with it if you like, but finish
