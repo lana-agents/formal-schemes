@@ -38,9 +38,11 @@ which bytes each end is read from, and both were wrong here first:
   on `B` since `merge-base(A, B)`, so a three-dot base has to go through `git merge-base` before
   anything is read out of it.  Read at `A` instead, a branch whose base has moved is told about
   every widow that landed on *master* since it forked: at `4873811` plus one trivial commit, with
-  master ten commits ahead, `--diff upstream/master...HEAD` blamed that commit for
-  `four imports`, the widow issue 2139 introduced and issue 2154 repaired.  `A..B` is
-  `git diff A B` and its base really is `A`; `range_ends` pins all four spellings.
+  `upstream/master` at `b3c6e7d`, three commits further on, `--diff upstream/master...HEAD` blamed
+  that commit for `four imports`, the widow issue 2139 introduced and issue 2154 repaired.  The
+  distance is quoted against a named commit rather than on its own, because `4873811` to master's
+  tip was two commits when this control was first run and is three now.  `A..B` is `git diff A B`
+  and its base really is `A`; `range_ends` pins all four spellings.
 * **A diff names two paths and either may be absent.**  A rename names the old path on the `-`
   side and the new one on the `+` side, and `git show <base>:<new path>` finds nothing there, so
   a renamed module's whole standing population reads as introduced.  On `befe0fd`, ten modules
