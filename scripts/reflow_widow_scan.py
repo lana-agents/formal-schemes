@@ -306,19 +306,35 @@ so is its successor -- widen the window, or decline it by name.  **Naming the sm
 strands nothing is a second predicate and a different row**; this one names the smallest window
 that absorbs the line.
 
-**The `no window` branch is real and unexercised.**  Nothing makes a covering window necessary --
-a flag needs only *some* suffix to compress, and the lines above the widow may spend the saving
-the way an over-width line does -- so `show` says so rather than falling back to a window that
-misses.  On this tree it never fires: **0** of the 159 at 99 and **0** of the 226 at 100, and a
-search over synthetic four- and five-line paragraphs did not produce one either.  `--selftest`
-pins the branch at `repair_window`, where it is one line to reach, rather than through a fixture
-that would have to be found first.
+**The `no window` branch is real, and a fixture drives it.**  Nothing makes a covering window
+necessary -- a flag needs only *some* suffix to compress, and the lines above the widow may spend
+the saving the way an over-width line does -- so `show` says so rather than falling back to a
+window that misses.  **What blocks every covering window is the first word of the line below the
+widow.**  A widow is short, so it normally absorbs forward and any window holding it saves a
+line; when `cols(widow) + 1 + cols(first word below) > width` it cannot join that line, and if
+the line is over-width it then has to split and spends the line the tail's repair would have
+saved, so every suffix reaching up to the widow breaks even.  A search whose shapes all begin
+with short words cannot produce that, however many paragraphs it enumerates, which is why both
+synthetic searches run for issue 2173 came back empty and the witness had to be built by hand.
+`--selftest` now pins the branch **through the report** (issue 2176), on a five-line witness of
+that shape, beside a companion that shortens only the first word below the widow and so gets a
+window; the two `repair_window`-level checks stay.
+
+**On this tree the branch never fires.**  At `d3a75ae`, over 583 modules and 7918 in-scope
+paragraphs at **every** width from 60 to 140 -- **26 328** flag-instances in all -- the count
+with no covering window is **0**; the **0** of the 159 at 99 and **0** of the 226 at 100 are that
+sweep read at two widths.  It is a near miss rather than a fantasy: the longest single word in an
+in-scope paragraph line here is **98** columns (`TateInvQuotientNodeLocusChart.lean:239`, a
+backticked declaration name plus `'s`), which is already long enough to block a one-column widow
+at 99.  The arrangement is missing, not the vocabulary, and that is why the branch is a branch
+rather than an assertion.
 """
 
 from __future__ import annotations
 
 import argparse
 import glob
+import io
 import os
 import re
 import subprocess
@@ -674,6 +690,18 @@ def selftest() -> int:
     def numbers(text):
         return [n for p, s in scan_text(text, WIDTH, MAX_TOKEN) for n, _ in s]
 
+    def summary(text, path):
+        """`show`'s own first line for `text`, so a fixture can pin the **report** and not only
+        the function behind it.  Captures rather than refactors `show`, because what is being
+        pinned is the line a reader sees."""
+        held, sys.stdout = sys.stdout, io.StringIO()
+        try:
+            for paragraph, stranded in scan_text(text, WIDTH, MAX_TOKEN):
+                show(path, paragraph, stranded, WIDTH)
+            return sys.stdout.getvalue().splitlines()[0]
+        finally:
+            sys.stdout = held
+
     long_word = "a" * 96
 
     # --- the two real shapes, from issue 2139's diff ------------------------------------------
@@ -871,6 +899,31 @@ def selftest() -> int:
           repair_window(over_lines, WIDTH, 0), None)
     check("... while the unconstrained question on the same paragraph still answers",
           repair_window(over_lines, WIDTH)[0], 1)
+
+    # ... and the branch is reached by a real flag, so the report line itself is pinned and not
+    # just the condition behind it (issue 2176).  The widow here is `no` at index 1; the line
+    # below it opens with a 98-column word, so `cols("no") + 1 + 98 > 99` and the widow cannot
+    # join it.  That line is over-width, so it splits and spends the line the tail's repair would
+    # have saved: every suffix from index 0, 1 or 2 breaks even, and the only saving suffix
+    # (index 3) is below the widow.
+    no_window = doc("x" * 99, "no", "y" * 98 + " " + "z" * 98, "c" * 60, "dd ee")
+    check("the report says so when no window holding the stranded line refills shorter",
+          summary(no_window, "FormalSchemes/NoWindow.lean"),
+          "  FormalSchemes/NoWindow.lean:2  paragraph of 5 lines;"
+          " no window holding the stranded line refills shorter")
+    check("... and it is a real flag: the paragraph is reported, so `show` is reached",
+          numbers(no_window), [3, 6])
+
+    # Its sightedness companion.  Shorten **only** the first word below the widow -- the line
+    # stays over-width -- and a covering window appears, so the fixture above cannot be passing
+    # because of the over-width line or because the paragraph is unflagged.
+    covered = doc("x" * 99, "no", "y" * 40 + " " + "z" * 98, "c" * 60, "dd ee")
+    check("... and shortening only the first word below the widow gives it a window",
+          summary(covered, "FormalSchemes/Covered.lean"),
+          "  FormalSchemes/Covered.lean:2  paragraph of 5 lines; 4 of them refill to 3")
+    check("... on the same flags, and with the line below the widow still over-width",
+          (numbers(covered), max(cols(l) for _, l in paragraphs(covered)[0]) > WIDTH),
+          ([3, 6], True))
 
     # Goal 4 of issue 2167: `--width` stays a flag and the width stays on the summary line of both
     # report paths, so a figure cannot be quoted without it.  One constant, used by both.
