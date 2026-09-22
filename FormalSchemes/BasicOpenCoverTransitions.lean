@@ -34,6 +34,23 @@ kernel reduce one of them costs minutes and gigabytes (see the cost note in
 `FormalSchemes.BasicOpenCoverCharts`). Proving the laws with `A₁ A₂ A₃` abstract keeps every such
 step inside a small, cheap proof; the concrete instances below are then pure substitution.
 
+**The ambients the three lemmas conjugate over are independent too, and that is not decoration.**
+A basic-open cover of *one* formal affine has a single ambient `A` downstairs, which is the case
+the instances below use and the case the lemmas were first stated in. Refining an *arbitrary*
+chart family by basic opens — the construction issue 2148 needs — does not: a refined overlap is
+presented from the *i* side over the chart algebra *A_i* and from the *j* side over *A_j*, and
+those two are related only through the coarse transition between the charts, so `τ₀` and `σ₀` are
+cross-ambient before any conjugation happens. The three lemmas are therefore stated over
+independent `A`, `B`, `C`.
+
+`BasicOpenCover.tau_symm_conj` and `BasicOpenCover.sigma_cocycle_conj` never look at what their
+arguments' types are built from — they are `AlgEquiv` bookkeeping — so the ambients cost them
+nothing. `BasicOpenCover.sigma_tau_conj` does look: its
+`CompletedTensorAwayInterchange.furtherLocFst` leg is over the first ambient and its
+`CompletedTensorAwayInterchange.furtherLocSnd` leg over the second. Its proof is unchanged all the
+same, because those two legs never meet — the only thing joining them is the hypothesis *hlaw*, and
+each is rewritten into `CompletedTensorAwayInterchange.awayCongrHom` over its own ambient.
+
 ## References
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
@@ -59,37 +76,38 @@ section Conjugation
 
 variable {A₁ A₂ A₃ : Type u} [CommRing A₁] [CommRing A₂] [CommRing A₃]
 variable [Algebra R A₁] [Algebra R A₂] [Algebra R A₃]
+variable {B C : Type u} [CommRing B] [CommRing C] [Algebra R B] [Algebra R C]
 
 /-- **Conjugation preserves `τ_symm`.** -/
-theorem tau_symm_conj {u v : A} {a₁ : A₁} {b₂ : A₂}
+theorem tau_symm_conj {u : A} {v : B} {a₁ : A₁} {b₂ : A₂}
     (τ₀ : awayCompletion (I.map (algebraMap R A)) u ≃ₐ[R]
-      awayCompletion (I.map (algebraMap R A)) v)
+      awayCompletion (I.map (algebraMap R B)) v)
     (N₁ : awayCompletion (I.map (algebraMap R A)) u ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₁)) a₁)
-    (N₁' : awayCompletion (I.map (algebraMap R A)) v ≃ₐ[R]
+    (N₁' : awayCompletion (I.map (algebraMap R B)) v ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₂)) b₂) :
     N₁'.symm.trans (τ₀.symm.trans N₁) = (N₁.symm.trans (τ₀.trans N₁')).symm :=
   AlgEquiv.ext fun _ => rfl
 
 /-- **Conjugation preserves the σ/τ restriction compatibility `hστ`**, provided the conjugating
 isomorphisms intertwine the two further-localization legs (`hfst`, `hsnd`). -/
-theorem sigma_tau_conj (hI : I.FG) {u u' v w : A} {a₁ b₁ : A₁} {a₂ b₂ : A₂}
+theorem sigma_tau_conj (hI : I.FG) {u u' : A} {v w : B} {a₁ b₁ : A₁} {a₂ b₂ : A₂}
     (τ₀ : awayCompletion (I.map (algebraMap R A)) u ≃ₐ[R]
-      awayCompletion (I.map (algebraMap R A)) v)
+      awayCompletion (I.map (algebraMap R B)) v)
     (σ₀ : awayCompletion (I.map (algebraMap R A)) (u * u') ≃ₐ[R]
-      awayCompletion (I.map (algebraMap R A)) (w * v))
+      awayCompletion (I.map (algebraMap R B)) (w * v))
     (N₁ : awayCompletion (I.map (algebraMap R A)) u ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₁)) a₁)
-    (N₁' : awayCompletion (I.map (algebraMap R A)) v ≃ₐ[R]
+    (N₁' : awayCompletion (I.map (algebraMap R B)) v ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₂)) b₂)
     (N₂ : awayCompletion (I.map (algebraMap R A)) (u * u') ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₁)) (a₁ * b₁))
-    (N₂' : awayCompletion (I.map (algebraMap R A)) (w * v) ≃ₐ[R]
+    (N₂' : awayCompletion (I.map (algebraMap R B)) (w * v) ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₂)) (a₂ * b₂))
     (h₁ : IsUnit (algebraMap A₁ (Localization.Away (a₁ * b₁)) a₁))
     (h₂ : IsUnit (algebraMap A₂ (Localization.Away (a₂ * b₂)) b₂))
     (h₃ : IsUnit (algebraMap A (Localization.Away (u * u')) u))
-    (h₄ : IsUnit (algebraMap A (Localization.Away (w * v)) v))
+    (h₄ : IsUnit (algebraMap B (Localization.Away (w * v)) v))
     (hfst : ∀ x, awayCongrHom I a₁ (a₁ * b₁) hI h₁ (N₁ x) =
       N₂ (awayCongrHom I u (u * u') hI h₃ x))
     (hsnd : ∀ y, awayCongrHom I b₂ (a₂ * b₂) hI h₂ (N₁' y) =
@@ -115,18 +133,18 @@ theorem sigma_tau_conj (hI : I.FG) {u u' v w : A} {a₁ b₁ : A₁} {a₂ b₂ 
 
 /-- **Conjugation preserves the algebra triple cocycle `hσc`**: the conjugating isomorphisms
 telescope. -/
-theorem sigma_cocycle_conj {s₁ s₂ s₃ : A} {c₁ : A₁} {c₂ : A₂} {c₃ : A₃}
+theorem sigma_cocycle_conj {s₁ : A} {s₂ : B} {s₃ : C} {c₁ : A₁} {c₂ : A₂} {c₃ : A₃}
     (σ₁ : awayCompletion (I.map (algebraMap R A)) s₁ ≃ₐ[R]
-      awayCompletion (I.map (algebraMap R A)) s₂)
-    (σ₂ : awayCompletion (I.map (algebraMap R A)) s₂ ≃ₐ[R]
-      awayCompletion (I.map (algebraMap R A)) s₃)
-    (σ₃ : awayCompletion (I.map (algebraMap R A)) s₃ ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R B)) s₂)
+    (σ₂ : awayCompletion (I.map (algebraMap R B)) s₂ ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R C)) s₃)
+    (σ₃ : awayCompletion (I.map (algebraMap R C)) s₃ ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A)) s₁)
     (M₁ : awayCompletion (I.map (algebraMap R A)) s₁ ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₁)) c₁)
-    (M₂ : awayCompletion (I.map (algebraMap R A)) s₂ ≃ₐ[R]
+    (M₂ : awayCompletion (I.map (algebraMap R B)) s₂ ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₂)) c₂)
-    (M₃ : awayCompletion (I.map (algebraMap R A)) s₃ ≃ₐ[R]
+    (M₃ : awayCompletion (I.map (algebraMap R C)) s₃ ≃ₐ[R]
       awayCompletion (I.map (algebraMap R A₃)) c₃)
     (hc : σ₁.trans (σ₂.trans σ₃) = AlgEquiv.refl) :
     (M₁.symm.trans (σ₁.trans M₂)).trans
