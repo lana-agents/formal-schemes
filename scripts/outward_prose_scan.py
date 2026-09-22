@@ -421,9 +421,11 @@ def names_from_diff(diff_range: str, root: str = ".") -> tuple[set[str], set[str
     wrong tree.  On a linear range the two coincide, which is why the hand-written ancestors of
     this scan never saw it; on a branch whose base has moved -- the usual state of a pull request
     here, and the state of the first usage line above -- they do not, and the name set is then
-    wrong in both directions with nothing said.  Measured on this repository: a branch forked ten
-    commits behind master that deletes one private lemma loses that lemma's name and invents a
-    neighbour's, 1-for-1, under the three-dot spelling and not under the merge-base one.
+    wrong in both directions with nothing said.  Measured on this repository: a branch forked at
+    `badd407` -- ten commits behind master at `90be36d`, eleven at `b3c6e7d`, which is why the
+    distance is quoted against commits and not on its own -- that deletes one private lemma loses
+    that lemma's name and invents a neighbour's, 1-for-1, under the three-dot spelling and not
+    under the merge-base one.
 
     The third return value counts sides whose `git show <rev>:<path>` failed.  It used to be
     swallowed, and that silence is part of what hid the paragraph above: a non-zero count means
