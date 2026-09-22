@@ -706,12 +706,16 @@ wrapped without changing what it means to whatever reads it:
 Neither is prose this project writes, and both are named here so that a re-measurement finds them
 already accounted for rather than as new defects.
 
-**Nothing on this tree measures a width outside `.lean`.** `linter.style.longLine`, reached
-through the lakefile's `mathlibStandardSet`, is the only instrument that *enforces* a width here,
-and it sees the library only; no script in `scripts/` measures a width outside a `.lean` file, and
-no step of `.orchestra/validation.sh` measures one at all. So re-measure over `git ls-files` rather
-than trusting this section — an unenforced rule rots, and this one did: it was written without a
-scope, against a tree that already broke it.
+**`linter.style.longLine` enforces the character half of this rule**, reached through the
+lakefile's `weak.linter.mathlibStandardSet`: on the `.lean` sources the library elaborates, a line
+of 101 characters is a warning, and `lake build --wfail` — the last step of
+`.orchestra/validation.sh` — makes it a failure. It counts characters and not display columns, so
+a line of 67 characters and 127 columns builds clean, and it exempts a line containing `http` and
+an `import` line. Its scope is the library, so re-measure over `git ls-files` rather than trusting
+this section — an unenforced rule rots, and this one did: it was written without a scope, against
+a tree that already broke it. `scripts/reflow_widow_scan.py` does measure a width elsewhere, and
+it is not this limit: a *fill* width of **99**, in `.lean` files through its two modes and in its
+own `.py` module docstring through `--selftest`, which exits 1 when that docstring strands a word.
 
 `lake env lean <file>` does **not** apply the lakefile's `leanOptions`, so it runs neither
 `linter.style.longLine` nor the `show`-vs-`change` linter. Iterate with it if you like, but finish
