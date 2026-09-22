@@ -11,7 +11,10 @@ statement (A) of EGA I §10.15 waits on, issue 2148 — indexes the refined char
 with `h : A_i`, and needs, at a cross-chart refined pair *⟨i, h⟩*, *⟨j, h'⟩*, an `R`-algebra
 transition between the two presentations of the refined overlap. This file supplies the **legs** of
 that transition: the maps out of the *coarse* overlap algebras `A_i{1/g_ij}` and `A_j{1/g_ji}` into
-the refined ones.
+the refined ones. Only one leg is declared below and that is not an omission:
+`FormalSpectrum.exists_refined_overlap_element` is symmetric in its two charts, so the *j*-side
+leg is `FormalSpectrum.refinedOverlapLeg` itself, at the swapped data
+*(gji, gij, τ.symm, h', h)*.
 
 ## What was thought to be missing, and is not
 
@@ -89,12 +92,22 @@ hypothesis is the **uncompleted** unit statement, which is strictly stronger tha
 `D(h · e) ≤ D(g_ij)` the leg is built from, and is the same thing
 `CompletedTensorAwayInterchange.awayCongrHom` asks for above; so closing the gap means either a
 `basicOpen`-keyed form of that equivalence or a route that does not pass through one. Nothing
-below attempts either; the legs are what turn the gap into a single named statement instead of
-two.
+below attempts either; the legs are what turn the gap into a single named statement instead of two.
 
 **Nothing about `σ`, the triple overlap, or the refined datum's laws.** The three conjugation
 lemmas of `FormalSchemes.BasicOpenCoverTransitions` are stated over independent ambients and are
 waiting for that isomorphism; they are not consumed here.
+
+## Placement
+
+Over `FormalSchemes.AwayCompletionRestrictUnique` and `FormalSchemes.BasicOpenChartImage`. The
+refined-overlap declarations below have no home but this one.
+`FormalSpectrum.basicOpen_mul_le_of_basicOpen_le` is the exception, and its
+ratio is recorded here rather than left to be re-derived: it is a general statement about
+`FormalSpectrum.basicOpen`, its subject-matter home is beside `FormalSpectrum.basicOpen_mul` in
+`FormalSchemes.FormalSpectrum`, whose reverse closure is **535** against this file's **0**, and
+it is declined on that ratio — this tree's standing disposition for a general statement with a
+single call site. Re-cost the move when a second consumer appears.
 
 ## References
 
