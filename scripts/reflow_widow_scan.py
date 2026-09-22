@@ -197,7 +197,13 @@ MAX_TOKEN = 14
 # A line that is not filled prose.  Indented text, a list item, a table row, a heading, a block
 # quote, a fence, and the `/-` and `-/` delimiters themselves: rewrapping any of them is wrong, so
 # none of them may be inside a paragraph this script considers.
-STRUCTURAL = re.compile(r"^\s|^[*\-|#>+]|^\d+\.|^```|^/-|^-/")
+#
+# **A list marker is `*`, `-` or `+` followed by a space**, and a numbered item is digits, a dot
+# and a space.  Requiring that space is the whole difference between this rule and the one that
+# shipped first, which required none and so read `**a bold lead-in**`, `*an italic one*` and a
+# continuation line opening `10.12's` as structure.  All three are filled prose and this tree
+# re-fills them; see the segmentation section of the docstring for what the omission cost.
+STRUCTURAL = re.compile(r"^\s|^[*\-+]\s|^[|#>]|^\d+\.\s|^```|^/-|^-/")
 
 
 def cols(text: str) -> int:
@@ -550,6 +556,39 @@ def selftest() -> int:
           [])
     check("a fenced block is not filled prose",
           numbers(doc("```", "x" * 97, "no", "```")), [])
+
+    # --- emphasis at the start of a line IS filled prose ---------------------------------------
+    # A list marker is a bullet *followed by a space*.  Requiring none also matched
+    # `**a bold lead-in**`, `*an italic one*` and a continuation line opening `10.12's`, which
+    # split the paragraph at them and ran the fill test on a fragment: 1104 misclassified lines on
+    # this tree and 16 stranded lines the scan could not see.  No fixture had the shape, which is
+    # why twelve green runs said nothing.  The first three below are the shape and each returns
+    # `[]` under the rule that shipped first; the `1. `, `- ` and `>` cases return `[]` under both
+    # and are regression guards on the tightening, not sightedness checks -- said here rather than
+    # implied, because a fixture that cannot fail is worth only what its label claims.
+    check("a `**bold**` lead-in is filled prose, so the paragraph is not broken at it",
+          numbers(doc("**Bold lead-in.**  " + "x" * 78, "no",
+                      "stated figure anywhere on the tree, and more besides.")), [3])
+    check("an `*italic*` lead-in is filled prose too",
+          numbers(doc("*italic* " + "x" * 88, "no",
+                      "stated figure anywhere on the tree, and more besides.")), [3])
+    check("a continuation line opening `10.12's` is prose, not a numbered item",
+          numbers(doc("x" * 97, "10.12's",
+                      "statement outright, and a tail that shortens the refill.")), [3])
+    # Sightedness, as a pair that differs by exactly the space: the rule must reject one spelling
+    # and accept the other, and these are the four leaders it decides between.
+    check("... and `STRUCTURAL` does not match an emphasis-led line",
+          [bool(STRUCTURAL.match(l)) for l in ("**Bold lead-in.**", "*italic* text", "10.12's")],
+          [False, False, False])
+    check("... while the same leaders followed by a space are still structure",
+          [bool(STRUCTURAL.match(l)) for l in ("* item", "- item", "+ item", "1. item")],
+          [True, True, True, True])
+    check("a `1. ` numbered item is not filled prose",
+          numbers(doc("x" * 97, "1. no", "stated figure anywhere on the tree, and more.")), [])
+    check("a `- ` list item is not filled prose",
+          numbers(doc("x" * 97, "- no", "stated figure anywhere on the tree, and more.")), [])
+    check("a `> ` block quote is not filled prose, with or without the space",
+          numbers(doc("x" * 97, ">no", "stated figure anywhere on the tree, and more.")), [])
 
     # --- the population -----------------------------------------------------------------------
     declaration = "/--\n" + "x" * 95 + "\none\nand a tail to make the refill shorter.\n-/\n"
