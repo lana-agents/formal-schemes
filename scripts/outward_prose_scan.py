@@ -74,10 +74,14 @@ rather than on `closure_audit.py`.  For the same reason this is **not** wired in
   subtraction is owed by the diff's own paths, which the header used to print under a label naming
   files.  `git diff --name-only` answers **28** on `befe0fd^...befe0fd` where the set has **38**
   paths in it, because rename detection is on by default there and is not a thing a path set can
-  do.  So `the diff's own modules` counts `touched & lean_files` and a second line names the
-  strangers (`not_modules`), rather than one number standing for two populations.  The rule this
-  file is now written to: **a count printed beside a label that names a population is a claim about
-  that population, not about the set it was taken from.**
+  do.  So `the diff's own modules` counts `touched & lean_files` and a second line counts the
+  strangers (`not_modules`) **and then names every one of them, one per line**
+  (`stranger_lines`), rather than one number standing for two populations.  Naming them is not
+  decoration: on the default path `exclude` is empty, so the foot list that marks the exclusion
+  set's strangers does not print at all, and a reader told that `11` paths were not scanned has
+  nowhere to look for which.  The rule this file is now written to: **a count printed beside a
+  label that names a population is a claim about that population, not about the set it was taken
+  from** -- and a count of things a reader cannot enumerate is a claim they cannot check.
 * **`A...B` takes its base from `merge-base(A, B)`, not from `A`.**  The `-`-side line numbers of a
   three-dot diff index the file at the fork point, so resolving them at `A` reads the right lines
   out of the wrong tree -- silently, and in both directions, since a line number is valid almost
@@ -600,6 +604,35 @@ def not_modules(modules: list[str], paths: set[str]) -> list[str]:
     return sorted(set(paths) - set(modules))
 
 
+def stranger_lines(strangers: list[str]) -> list[str]:
+    """The header's second line, and under it the paths that line is about.
+
+    `not_modules` returns them sorted, so this only renders.  The count alone was the defect: it
+    told a reader that `N` paths in the diff could not be scanned and gave no way to see which.
+
+    **The two places a stranger can be named fire on different conditions.**  This line fires
+    whenever the diff holds a path that is not a module -- `exclude` is not a parameter of this
+    function and is in neither guard around the call, so it fires in every mode,
+    `--exclude-touched` included.  The foot list that marks a stranger `(not a module of this
+    tree)` prints whenever `exclude` is non-empty, which is `--exclude-touched` or an explicit
+    `--exclude`.  `--exclude-touched` is what makes `exclude` absorb `touched`, and so it is the
+    mode in which every stranger named here is marked in the foot list as well; an explicit
+    `--exclude` marks the strangers of *its* set, which are in general other paths; and on the
+    default path `exclude` is empty, the foot list does not print at all, and this line is the
+    only place a stranger is named.
+
+    **Nothing here truncates**, and `--selftest` pins that against a thirty-path set.  A cap would
+    reintroduce the same defect one level down: a reader would again be told a number and shown
+    less than it.
+    """
+    if not strangers:
+        return []
+    head = ("1 further path in the diff is not a module of this tree"
+            if len(strangers) == 1 else
+            "%d further paths in the diff are not modules of this tree" % len(strangers))
+    return ["  %s and cannot be scanned" % head] + ["    %s" % path for path in strangers]
+
+
 def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, pattern: str,
            touched: set[str], unresolved: int | None = None) -> int:
     hits = scan(root, names, exclude, cues)
@@ -616,12 +649,8 @@ def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, patt
         strangers = not_modules(modules, touched)
         print("the diff's own modules           : %4d   (%d of them scanned, not excluded)"
               % (len(inside), len(set(inside) - exclude)))
-        if strangers:
-            print("  %s and cannot be scanned"
-                  % ("1 further path in the diff is not a module of this tree"
-                     if len(strangers) == 1 else
-                     "%d further paths in the diff are not modules of this tree"
-                     % len(strangers)))
+        for line in stranger_lines(strangers):
+            print(line)
     print("cue pattern                      : %s" % pattern)
     print("FLAGGED: prose naming a changed declaration beside a proof-method cue : %4d"
           % len(hits))
@@ -656,6 +685,10 @@ def selftest() -> int:
         else:
             fail += 1
             print("FAIL  %s: got %r, wanted %r" % (label, got, want))
+
+    def _many_paths(n: int) -> list[str]:
+        """`n` sorted stranger paths, for the fixtures that pin the list against truncation."""
+        return ["FormalSchemes/Old%02d.lean" % i for i in range(n)]
 
     cues = re.compile(DEFAULT_CUES)
 
@@ -857,6 +890,24 @@ def selftest() -> int:
           sorted(excluded_modules(mods, {"FormalSchemes/A.lean", "FormalSchemes.lean"})
                  + not_modules(mods, {"FormalSchemes/A.lean", "FormalSchemes.lean"})),
           ["FormalSchemes.lean", "FormalSchemes/A.lean"])
+
+    # --- and the strangers are named, not only counted ------------------------------------------
+    check("no stranger prints no line at all", stranger_lines([]), [])
+    check("one stranger is named, under a singular count",
+          stranger_lines(["FormalSchemes.lean"]),
+          ["  1 further path in the diff is not a module of this tree and cannot be scanned",
+           "    FormalSchemes.lean"])
+    check("every stranger is named, in the order `not_modules` sorted them",
+          stranger_lines(["FormalSchemes.lean", "FormalSchemes/Old.lean"]),
+          ["  2 further paths in the diff are not modules of this tree and cannot be scanned",
+           "    FormalSchemes.lean",
+           "    FormalSchemes/Old.lean"])
+    check("the count on the head line is the number of paths under it",
+          [(len(stranger_lines(p)) - 1, len(p))
+           for p in ([["FormalSchemes.lean"]] + [_many_paths(n) for n in (2, 9, 30)])],
+          [(1, 1), (2, 2), (9, 9), (30, 30)])
+    check("nothing truncates the stranger list", stranger_lines(_many_paths(30))[1:],
+          ["    %s" % path for path in _many_paths(30)])
 
     print("\n%d ok / %d FAIL" % (ok, fail))
     return 1 if fail else 0
