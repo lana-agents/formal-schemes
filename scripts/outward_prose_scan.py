@@ -58,10 +58,12 @@ rather than on `closure_audit.py`.  For the same reason this is **not** wired in
   design.**  That row proposed excluding them, *"since those are covered by the in-file sweep a
   refactor already owes"*.  Measured: issue 2048's finding -- the first of the three this scan
   exists to reproduce -- is in `ChartedDatumGlueOpenImmersion.lean:28-29`, a file the diff touches,
-  about seventy lines above the nearest declaration and describing a `glueChartMorphisms` that is
-  declared in another file entirely.  **Excluding touched files loses it**, and the in-file sweep
-  that was supposed to cover it is exactly the windowed scan that missed it.  `--exclude-touched`
-  is available and is not the default.
+  **thirty-eight** lines above that file's first declaration -- the name sits at `:29` and
+  `range_xGlueData_f_comp_of_ne` opens at `:67` at the tree that run reads, `e65f334`; the gap is
+  43 at `b3c6e7d`, where the declaration has moved down and the sentence has not -- and describing
+  a `glueChartMorphisms` that is declared in another file entirely.  **Excluding touched files
+  loses it**, and the in-file sweep that was supposed to cover it is exactly the windowed scan that
+  missed it.  `--exclude-touched` is available and is not the default.
 * **`A...B` takes its base from `merge-base(A, B)`, not from `A`.**  The `-`-side line numbers
   of a three-dot diff index the file at the fork point, so resolving them at `A` reads the right
   lines out of the wrong tree -- silently, and in both directions, since a line number is valid
@@ -796,8 +798,8 @@ def main() -> int:
     parser.add_argument("--exclude", help="comma-separated paths to skip; nothing by default")
     parser.add_argument("--exclude-touched", action="store_true",
                         help="skip the `.lean` files `--diff` touches.  NOT the default: issue "
-                             "2048's finding is in one of them, seventy lines from the nearest "
-                             "declaration -- see the module docstring.")
+                             "2048's finding is in one of them, thirty-eight lines above that "
+                             "file's first declaration -- see the module docstring.")
     parser.add_argument("--cues", default=DEFAULT_CUES, help="replace the cue pattern")
     parser.add_argument("--extra-cues", help="add alternatives to the cue pattern")
     parser.add_argument("--root", default=".", help="tree to scan; may be an extraction")
