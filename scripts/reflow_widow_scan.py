@@ -309,16 +309,22 @@ that absorbs the line.
 **The `no window` branch is real, and a fixture drives it.**  Nothing makes a covering window
 necessary -- a flag needs only *some* suffix to compress, and the lines above the widow may spend
 the saving the way an over-width line does -- so `show` says so rather than falling back to a
-window that misses.  **What blocks every covering window is the first word of the line below the
-widow.**  A widow is short, so it normally absorbs forward and any window holding it saves a
-line; when `cols(widow) + 1 + cols(first word below) > width` it cannot join that line, and if
-the line is over-width it then has to split and spends the line the tail's repair would have
-saved, so every suffix reaching up to the widow breaks even.  A search whose shapes all begin
-with short words cannot produce that, however many paragraphs it enumerates, which is why both
-synthetic searches run for issue 2173 came back empty and the witness had to be built by hand.
-`--selftest` now pins the branch **through the report** (issue 2176), on a five-line witness of
-that shape, beside a companion that shortens only the first word below the widow and so gets a
-window; the two `repair_window`-level checks stay.
+window that misses.  **In the five-line witness `--selftest` uses**, the line below the widow
+opens with a 98-column word, so `cols("no") + 1 + 98 > 99` and the widow cannot join it; that line
+is over-width, and what is left of it after the split is itself 98 columns, so the split spends
+exactly the line the tail's repair would have saved and every suffix reaching up to the widow
+breaks even.  **That is an account of one paragraph, not a test.**  The branch fires exactly when
+no suffix containing the stranded line refills shorter, and there is no more local reading of it:
+a long first word below the widow is neither sufficient nor necessary.  Shortening only the
+**second** word below, in that same witness, leaves that condition holding and produces a covering
+window, because what decides the tail is the remainder *after* the split; and a paragraph whose
+every line opens with a word of at most 14 columns reaches the branch when the long word sits in
+the **middle** of the line below.  Both synthetic searches run for issue 2173 came back empty and
+the witness was built by hand.  `--selftest` pins the branch **through the report** (issue 2176)
+on the witness, and pins three neighbours beside it: a companion that shortens the first word
+below and so gets a window, one that shortens the second word instead and gets one too, and one
+whose every line opens with a short word and that reaches the branch anyway.  The two
+`repair_window`-level checks stay.
 
 **On this tree the branch never fires.**  At `d3a75ae`, over 583 modules and 7918 in-scope
 paragraphs at **every** width from 60 to 140 -- **26 328** flag-instances in all -- the count
@@ -903,9 +909,11 @@ def selftest() -> int:
     # ... and the branch is reached by a real flag, so the report line itself is pinned and not
     # just the condition behind it (issue 2176).  The widow here is `no` at index 1; the line
     # below it opens with a 98-column word, so `cols("no") + 1 + 98 > 99` and the widow cannot
-    # join it.  That line is over-width, so it splits and spends the line the tail's repair would
-    # have saved: every suffix from index 0, 1 or 2 breaks even, and the only saving suffix
-    # (index 3) is below the widow.
+    # join it.  That line is over-width, so it splits -- and what the split leaves is another 98
+    # columns, which cannot take `c * 60` either, so the split spends exactly the line the tail's
+    # repair would have saved: every suffix from index 0, 1 or 2 breaks even, and the only saving
+    # suffix (index 3) is below the widow.  **That is a reading of this paragraph and not a rule**;
+    # the two checks after the companion are the ones that say why it is not one.
     no_window = doc("x" * 99, "no", "y" * 98 + " " + "z" * 98, "c" * 60, "dd ee")
     check("the report says so when no window holding the stranded line refills shorter",
           summary(no_window, "FormalSchemes/NoWindow.lean"),
@@ -924,6 +932,33 @@ def selftest() -> int:
     check("... on the same flags, and with the line below the widow still over-width",
           (numbers(covered), max(cols(l) for _, l in paragraphs(covered)[0]) > WIDTH),
           ([3, 6], True))
+
+    # A long first word below the widow is **not sufficient** for the branch, and this is the
+    # check that says so: shorten only the SECOND word below.  `cols("no") + 1 + 98` still
+    # exceeds the width and the line below is still over-width, and a covering window appears all
+    # the same -- because what refuses the tail is the remainder *after* the split, `z * 98` in
+    # the witness and `z * 10` here.  This is the neighbour that would have caught a docstring
+    # claiming the first word decides it (issue 2176's first review).
+    second_word = doc("x" * 99, "no", "y" * 98 + " " + "z" * 10, "c" * 60, "dd ee")
+    check("... and shortening only the SECOND word below the widow gives it a window too",
+          summary(second_word, "FormalSchemes/SecondWord.lean"),
+          "  FormalSchemes/SecondWord.lean:2  paragraph of 5 lines; 4 of them refill to 3")
+    check("... with the first word below unchanged, so the condition that is not sufficient holds",
+          (cols("no") + 1 + cols("y" * 98) > WIDTH, numbers(second_word)), (True, [3, 6]))
+
+    # ... and it is **not necessary** either.  Every line here opens with a word of at most
+    # `MAX_TOKEN` columns, so the widow joins the line below freely -- which is what a covering
+    # window is supposed to need -- and the branch is reached anyway, because a 90-column word in
+    # the MIDDLE of the line below forces a break inside it wherever a window starts.
+    middle_word = doc("mmm aa " + "k" * 75, "oo", "p" * 14 + " " + "t" * 90 + " " + "o" * 12,
+                      "aaaaa jjj", "b " + "u" * 75)
+    check("... while a paragraph whose every line opens with a short word reaches it regardless",
+          summary(middle_word, "FormalSchemes/MiddleWord.lean"),
+          "  FormalSchemes/MiddleWord.lean:2  paragraph of 5 lines;"
+          " no window holding the stranded line refills shorter")
+    check("... and it is sighted: no line of it opens with a word wider than `MAX_TOKEN`",
+          (max(cols(l.split()[0]) for _, l in paragraphs(middle_word)[0]) <= MAX_TOKEN,
+           numbers(middle_word)), (True, [3, 5]))
 
     # Goal 4 of issue 2167: `--width` stays a flag and the width stays on the summary line of both
     # report paths, so a figure cannot be quoted without it.  One constant, used by both.
