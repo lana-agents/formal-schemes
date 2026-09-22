@@ -1,9 +1,9 @@
 # formal-schemes
 
-A [Lean 4](https://leanprover.github.io/) / [Mathlib](https://github.com/leanprover-community/mathlib4)
-formalization of **formal schemes**, following Grothendieck's *Éléments de géométrie algébrique*
-(EGA I, Ch. 0 §7, §10 and Ch. I §10) and the corresponding
-[Stacks project](https://stacks.math.columbia.edu/) chapters.
+A [Lean 4](https://leanprover.github.io/) /
+[Mathlib](https://github.com/leanprover-community/mathlib4) formalization of **formal schemes**,
+following Grothendieck's *Éléments de géométrie algébrique* (EGA I, Ch. 0 §7, §10 and Ch. I §10)
+and the corresponding [Stacks project](https://stacks.math.columbia.edu/) chapters.
 
 The development builds the affine theory from the ground up: adic rings and their ideals of
 definition, the formal spectrum `Spf R` as a topological space, its structure sheaf `O_{Spf R}`
