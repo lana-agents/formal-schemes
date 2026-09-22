@@ -47,18 +47,22 @@ second fix is switched on at all:
 * **A diff names two paths and either may be absent.**  A rename names the old path on the `-`
   side and the new one on the `+` side, and `git show <base>:<new path>` finds nothing there, so
   a renamed module's whole standing population reads as introduced.  On `befe0fd`, ten modules
-  renamed in one commit, that was **six** reported of which **five** were pre-existing and
-  unmoved at the old path.  With both paths kept the same range reports **one**, and that one is
+  renamed in one commit, that was **six** reported of which **five** were pre-existing at the old
+  path -- four of them at the very same line number and `rest. -/` at `:328` there against `:332`
+  here, which is why the comparison is keyed to the line's **text** and never to its number.  With
+  both paths kept the same range reports **one**, and that one is
   real: the rename lengthened a backticked name, the paragraph around it re-filled, and `it.` is
   stranded at `BasicOpenCoverSeparatedScheme.lean:32`.  A name-lengthening refactor stranding a
   word is exactly this scan's subject, and five false positives were hiding it.
 * **The rename half rests on `-M`'s own detection, which is switchable from outside.**  Every
   `.lean` rename in this tree's history is *inexact* -- ten records, scoring `R068` to `R096`, none
   `R100` -- so each is found by the exhaustive pass, which git **skips, with a warning on stderr
-  that this script discards**, once `diff.renameLimit` is exceeded.  Set `diff.renameLimit=1` in
-  any configuration and the rejected behaviour comes back in full and in silence: `befe0fd` reads
-  as **38** files touched rather than 28 and **six** reported rather than one.  The call therefore
-  carries `-c diff.renameLimit=0`, which no repository, user or system configuration can override.
+  that this script discards**, once `diff.renameLimit` is exceeded.  With the pin removed and
+  `diff.renameLimit=1` injected, the rejected behaviour **would** come back in full and in
+  silence: `befe0fd` then reads as **38** files touched rather than 28 and **six** reported rather
+  than one.  It does not come back through the call as it stands, which carries
+  `-c diff.renameLimit=0` -- run under that same injected configuration it still reads 28 and one,
+  because `-c` outranks every repository, user and system setting.
   A rename whose similarity falls *under* `-M`'s 50% default is a different shape: git reports it
   as a delete plus an add, an add has no old path, and that module's whole standing population then
   reads as introduced.  The worst real case on this tree is `R068`, eighteen points of margin, so
@@ -139,9 +143,11 @@ length -- is pinned separately, by the fixture that has no exclusion in it at al
 **And the `and`'s line number is the best advertisement in this file for `--diff` over `--tree`.**
 Issue 2154 quoted it as `:1030`, which was right at issue 2154's tree.  Issue 2159 quoted `:1030`
 at a base it defines as *"`4873811` plus row 2154's own two reflows"*, where it is `:1029` -- moved
-by one because the second of those reflows refilled the `four imports` widow four lines above it
-into three.  A figure about a line number goes stale when the line above it is repaired, which is
-this scan's own subject landing on the prose about this scan.
+by one because the second of those reflows refilled the `four imports` widow **above** it from four
+lines into three.  *Above*, at no particular distance: that widow is at `:181` and the `and` at
+`:1030`, eight hundred and forty-nine lines apart at `4873811`.  A figure about a line number
+goes stale when the line above it is repaired, which is this scan's own subject landing on the
+prose about this scan.
 
 ## Where the population comes from, and why it is wider than issue 2159 measured
 
