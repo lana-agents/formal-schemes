@@ -51,9 +51,15 @@ and none of the bookkeeping.
     no presentation is asked of the caller, the localising element is inverted on every chart as a
     consequence rather than as a hypothesis (issues 1998, 2098), and its conclusion is at the
     factorisation the caller supplied (issue 2111).
-  * **Restricting the source** to an open formal subscheme over a *fixed* affine base has not, at
-    any source other than an affine `FormalScheme.Spf`
-    (`FormalScheme.isSeparatedOverSpf_restrictOpen_Spf`, `FormalSchemes.SpfOpenSeparated`), and it
+  * **Restricting the source** to an open formal subscheme over a *fixed* affine base has landed
+    in two places, and what separates them is the quantifier on the **open**: at an affine
+    `FormalScheme.Spf` source for an arbitrary open
+    (`FormalScheme.isSeparatedOverSpf_restrictOpen_Spf`, `FormalSchemes.SpfOpenSeparated`), and —
+    since issue 2148 — at an **arbitrary** source for an open lying inside the range of one
+    affine chart (`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range` and
+    `FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι`,
+    `FormalSchemes.GeneralSeparatedHomRestrictOpen`). What is missing is an arbitrary open of an
+    arbitrary presented `X`, which needs the basic-open refinement of the chart family, and it
     is the half that has to come first: `FormalScheme.not_exists_factorsThrough_awayBase`
     (`FormalSchemes.AwayBaseFactorisationRange`) says the base change has no factorisation to
     consume until the source has been shrunk, because a factorisation puts the whole source over
