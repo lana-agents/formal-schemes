@@ -36,7 +36,7 @@ human**, exactly as in `docstring_signature_scan.py`, and the output is modelled
 rather than on `closure_audit.py`.  For the same reason this is **not** wired into
 `.orchestra/validation.sh`.
 
-## The six things that are easy to get wrong
+## The seven things that are easy to get wrong
 
 * **Comment spans are found directly, by a lexer, not by diffing a stripped copy against the
   original.**  A stripper that blanks code and a stripper that blanks comments are both fine for
@@ -69,6 +69,15 @@ rather than on `closure_audit.py`.  For the same reason this is **not** wired in
   read.  The header counts only the excluded paths that *are* modules of that tree
   (`excluded_modules`) and the list at the foot marks the rest, because subtracting the whole set
   understates coverage: on `befe0fd^...befe0fd` it is 27 of 38.
+* **A path set that came out of a diff is not a file population of any one tree, and the header
+  says so at both places it prints one.**  The point above is about the *exclusion* set; the same
+  subtraction is owed by the diff's own paths, which the header used to print under a label naming
+  files.  `git diff --name-only` answers **28** on `befe0fd^...befe0fd` where the set has **38**
+  paths in it, because rename detection is on by default there and is not a thing a path set can
+  do.  So `the diff's own modules` counts `touched & lean_files` and a second line names the
+  strangers (`not_modules`), rather than one number standing for two populations.  The rule this
+  file is now written to: **a count printed beside a label that names a population is a claim about
+  that population, not about the set it was taken from.**
 * **`A...B` takes its base from `merge-base(A, B)`, not from `A`.**  The `-`-side line numbers
   of a three-dot diff index the file at the fork point, so resolving them at `A` reads the right
   lines out of the wrong tree -- silently, and in both directions, since a line number is valid
@@ -580,6 +589,18 @@ def excluded_modules(modules: list[str], exclude: set[str]) -> list[str]:
     return sorted(set(exclude) & set(modules))
 
 
+def not_modules(modules: list[str], paths: set[str]) -> list[str]:
+    """The paths that are *not* modules of the tree being scanned, and so cannot be scanned.
+
+    The complement of `excluded_modules`, and it has two callers because a path set that came out
+    of a diff is never a file population of one tree: it holds the root aggregator and, at a
+    rename, both spellings.  Printing `len` of such a set beside a label that names a population is
+    the defect issue 2147's fifth review found in the excluded count; this is the same subtraction
+    done once, for the exclusion set and for the diff's own paths alike.
+    """
+    return sorted(set(paths) - set(modules))
+
+
 def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, pattern: str,
            touched: set[str], unresolved: int | None = None) -> int:
     hits = scan(root, names, exclude, cues)
@@ -593,8 +614,15 @@ def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, patt
           % (len(modules), len(skipped)))
     if touched:
         inside = sorted(touched & set(modules))
-        print("the diff's own files             : %4d   (%d of them scanned, not excluded)"
-              % (len(touched), len(set(inside) - exclude)))
+        strangers = not_modules(modules, touched)
+        print("the diff's own modules           : %4d   (%d of them scanned, not excluded)"
+              % (len(inside), len(set(inside) - exclude)))
+        if strangers:
+            print("  %s and cannot be scanned"
+                  % ("1 further path in the diff is not a module of this tree"
+                     if len(strangers) == 1 else
+                     "%d further paths in the diff are not modules of this tree"
+                     % len(strangers)))
     print("cue pattern                      : %s" % pattern)
     print("FLAGGED: prose naming a changed declaration beside a proof-method cue : %4d"
           % len(hits))
@@ -604,7 +632,7 @@ def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, patt
     if exclude:
         print()
         print("excluded, and therefore not a claim about them:")
-        outside = set(exclude) - set(skipped)
+        outside = set(not_modules(modules, exclude))
         for path in sorted(exclude):
             print("    %s%s" % (path, "   (not a module of this tree)" if path in outside else ""))
     if names:
@@ -813,6 +841,23 @@ def selftest() -> int:
           excluded_modules(mods, {"FormalSchemes/Old.lean"}), [])
     check("an empty exclusion set excludes nothing", excluded_modules(mods, set()), [])
     check("the whole module set can be excluded", excluded_modules(mods, set(mods)), sorted(mods))
+
+    # --- the diff's own paths, which are not a file population of the tree ----------------------
+    check("the root aggregator is a path the diff touches and not a module of the tree",
+          not_modules(mods, {"FormalSchemes/A.lean", "FormalSchemes.lean"}),
+          ["FormalSchemes.lean"])
+    check("a rename contributes a pre-rename path that is not a module of the tree read",
+          not_modules(mods, {"FormalSchemes/A.lean", "FormalSchemes/Old.lean"}),
+          ["FormalSchemes/Old.lean"])
+    check("a diff confined to modules of this tree leaves no stranger",
+          not_modules(mods, {"FormalSchemes/A.lean", "FormalSchemes/B.lean"}), [])
+    check("an empty path set has no strangers in it", not_modules(mods, set()), [])
+    check("every path of a diff can be a stranger", not_modules([], {"FormalSchemes.lean"}),
+          ["FormalSchemes.lean"])
+    check("the two halves of a path set partition it",
+          sorted(excluded_modules(mods, {"FormalSchemes/A.lean", "FormalSchemes.lean"})
+                 + not_modules(mods, {"FormalSchemes/A.lean", "FormalSchemes.lean"})),
+          ["FormalSchemes.lean", "FormalSchemes/A.lean"])
 
     print("\n%d ok / %d FAIL" % (ok, fail))
     return 1 if fail else 0
