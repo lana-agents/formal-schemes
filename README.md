@@ -1,9 +1,9 @@
 # formal-schemes
 
-A [Lean 4](https://leanprover.github.io/) / [Mathlib](https://github.com/leanprover-community/mathlib4)
-formalization of **formal schemes**, following Grothendieck's *Éléments de géométrie algébrique*
-(EGA I, Ch. 0 §7, §10 and Ch. I §10) and the corresponding
-[Stacks project](https://stacks.math.columbia.edu/) chapters.
+A [Lean 4](https://leanprover.github.io/) /
+[Mathlib](https://github.com/leanprover-community/mathlib4) formalization of **formal schemes**,
+following Grothendieck's *Éléments de géométrie algébrique* (EGA I, Ch. 0 §7, §10 and Ch. I §10)
+and the corresponding [Stacks project](https://stacks.math.columbia.edu/) chapters.
 
 The development builds the affine theory from the ground up: adic rings and their ideals of
 definition, the formal spectrum `Spf R` as a topological space, its structure sheaf `O_{Spf R}`
@@ -98,41 +98,64 @@ is representative, and `FormalSchemes.lean` is the only exhaustive index of the 
 
 ## Module map: the affine core
 
-`FormalSchemes.lean` imports the whole library — **500 modules** at commit `0bfe6b5`. The table
+`FormalSchemes.lean` imports the whole library — **500 modules** at commit `0bfe6b5`. The list
 below is the twelve the library consisted of when this map was first written, and they are still
 where the construction above lives and still the place to start reading; it is a sample of the
 library, not an index of it.
 
-| File | Contents |
-| --- | --- |
-| `FormalSchemes/AdicRing.lean` | Adic rings and ideals of definition (`IsAdicRing`); characterization via completeness and Hausdorffness (EGA I, Ch. 0 §7 / Stacks Tag 07E7). |
-| `FormalSchemes/FormalSpectrum.lean` | The topological space `Spf R = Spec (R ⧸ I)`, its closed embedding into `Spec R`, functoriality (`FormalSpectrum.map`), and the fact that it is a spectral space. |
-| `FormalSchemes/StructureSheaf.lean` | The thickening sheaves `thickeningSheaf I n` and the structure sheaf `O_{Spf R}` as the limit of their inverse system (Stacks Tag 0AI5). |
-| `FormalSchemes/StructureSheafSections.lean` | Level-`n` identification of the sections of the thickening sheaves over basic opens. |
-| `FormalSchemes/LocalizationQuotient.lean` | Crux lemma: localization commutes with quotient, `Localization.Away (mk K f) ≃+* (Localization.Away f) ⧸ K·A`. |
-| `FormalSchemes/AdicCompletionLimit.lean` | The adic completion as the limit of its quotient tower `n ↦ R ⧸ Iⁿ` (`AdicCompletion.limitRingEquiv`). |
-| `FormalSchemes/Sections.lean` | Sections of `O_{Spf R}`: `Γ(D(f), -) ≃+* AdicCompletion (I·R_f) R_f` and `Γ(⊤, -) ≃+* R` (EGA I, 10.1.3–10.1.4). |
-| `FormalSchemes/GermValue.lean` | Germs of structure-sheaf sections versus their values at points, used for the stalk analysis. |
-| `FormalSchemes/LimitUnits.lean` | In a limit of commutative rings, an element all of whose projections are units is itself a unit — the mechanism by which invertibility propagates through `O_{Spf R}`. |
-| `FormalSchemes/Spf.lean` | Stalks of `O_{Spf R}` are local rings (EGA I, 10.1.6); `(Spf R, O_{Spf R})` as a `SheafedSpace` / `LocallyRingedSpace`. |
-| `FormalSchemes/SpfMap.lean` | Functoriality of `Spf`: the continuous map `mapTop`, the induced morphism of structure sheaves `mapSheafHom`, and the morphism of locally ringed spaces `locallyRingedSpaceMap` they assemble into (EGA I, 10.2.2). |
-| `FormalSchemes/FormalScheme.lean` | Formal schemes as locally ringed spaces locally isomorphic to some `Spf R`; the affine formal scheme `FormalScheme.Spf` (EGA I, 10.4.2 / Stacks Tag 0AIL). |
+* `FormalSchemes/AdicRing.lean` — Adic rings and ideals of definition (`IsAdicRing`);
+  characterization via completeness and Hausdorffness (EGA I, Ch. 0 §7 / Stacks Tag 07E7).
+* `FormalSchemes/FormalSpectrum.lean` — The topological space `Spf R = Spec (R ⧸ I)`, its closed
+  embedding into `Spec R`, functoriality (`FormalSpectrum.map`), and the fact that it is a spectral
+  space.
+* `FormalSchemes/StructureSheaf.lean` — The thickening sheaves `thickeningSheaf I n` and the
+  structure sheaf `O_{Spf R}` as the limit of their inverse system (Stacks Tag 0AI5).
+* `FormalSchemes/StructureSheafSections.lean` — Level-`n` identification of the sections of the
+  thickening sheaves over basic opens.
+* `FormalSchemes/LocalizationQuotient.lean` — Crux lemma: localization commutes with quotient,
+  `Localization.Away (mk K f) ≃+* (Localization.Away f) ⧸ K·A`.
+* `FormalSchemes/AdicCompletionLimit.lean` — The adic completion as the limit of its quotient tower
+  `n ↦ R ⧸ Iⁿ` (`AdicCompletion.limitRingEquiv`).
+* `FormalSchemes/Sections.lean` — Sections of `O_{Spf R}`:
+  `Γ(D(f), -) ≃+* AdicCompletion (I·R_f) R_f` and `Γ(⊤, -) ≃+* R` (EGA I, 10.1.3–10.1.4).
+* `FormalSchemes/GermValue.lean` — Germs of structure-sheaf sections versus their values at points,
+  used for the stalk analysis.
+* `FormalSchemes/LimitUnits.lean` — In a limit of commutative rings, an element all of whose
+  projections are units is itself a unit — the mechanism by which invertibility propagates through
+  `O_{Spf R}`.
+* `FormalSchemes/Spf.lean` — Stalks of `O_{Spf R}` are local rings (EGA I, 10.1.6);
+  `(Spf R, O_{Spf R})` as a `SheafedSpace` / `LocallyRingedSpace`.
+* `FormalSchemes/SpfMap.lean` — Functoriality of `Spf`: the continuous map `mapTop`, the induced
+  morphism of structure sheaves `mapSheafHom`, and the morphism of locally ringed spaces
+  `locallyRingedSpaceMap` they assemble into (EGA I, 10.2.2).
+* `FormalSchemes/FormalScheme.lean` — Formal schemes as locally ringed spaces locally isomorphic to
+  some `Spf R`; the affine formal scheme `FormalScheme.Spf` (EGA I, 10.4.2 / Stacks Tag 0AIL).
 
 ### The rest of the library, by theme
 
 Representative modules only — each theme spans many more. Import `FormalSchemes` and use the
 declaration names above to find the rest.
 
-| Theme | Where to start |
-| --- | --- |
-| Adic algebra: morphisms, cofinal ideals, restricted power series | `FormalSchemes/AdicMorphism.lean`, `FormalSchemes/CofinalAdicRing.lean`, `FormalSchemes/RestrictedPowerSeries.lean` |
-| Mapping into a formal scheme; the colimit property | `FormalSchemes/SpfHomOfFamily.lean`, `FormalSchemes/SpfHomFormalScheme.lean` |
-| Gluing, charted presentations of schemes and formal schemes | `FormalSchemes/Gluing.lean`, `FormalSchemes/ChartedSchemeDatum.lean` |
-| Formal completion of a scheme along a closed subset (EGA I, 10.8) | `FormalSchemes/Completion.lean`, `FormalSchemes/ChartedCompletionDatum.lean`, `FormalSchemes/ChartedCompletionToScheme.lean`, `FormalSchemes/ProjectiveLineCompletion.lean` |
-| Finite type, closed immersions, separatedness (EGA I, 10.13–10.15) | `FormalSchemes/TopFiniteType.lean`, `FormalSchemes/TopFiniteTypeHomTrans.lean`, `FormalSchemes/ClosedImmersion.lean`, `FormalSchemes/GeneralSeparatedScheme.lean` |
-| Completed tensor products and fibre products | `FormalSchemes/CompletedTensor.lean`, `FormalSchemes/GeneralFibreProductBothObject.lean` |
-| Group actions and their quotients | `FormalSchemes/ActionQuotient.lean`, `FormalSchemes/FreeActionQuotientFormalScheme.lean` |
-| The Tate annulus, the Tate chain and the Tate curve model | `FormalSchemes/TateAnnulus.lean`, `FormalSchemes/TateChainGlue.lean`, `FormalSchemes/TateCurveModel.lean`, `FormalSchemes/TateSeparatedScheme.lean` |
+* Adic algebra: morphisms, cofinal ideals, restricted power series —
+  `FormalSchemes/AdicMorphism.lean`, `FormalSchemes/CofinalAdicRing.lean`,
+  `FormalSchemes/RestrictedPowerSeries.lean`
+* Mapping into a formal scheme; the colimit property — `FormalSchemes/SpfHomOfFamily.lean`,
+  `FormalSchemes/SpfHomFormalScheme.lean`
+* Gluing, charted presentations of schemes and formal schemes — `FormalSchemes/Gluing.lean`,
+  `FormalSchemes/ChartedSchemeDatum.lean`
+* Formal completion of a scheme along a closed subset (EGA I, 10.8) —
+  `FormalSchemes/Completion.lean`, `FormalSchemes/ChartedCompletionDatum.lean`,
+  `FormalSchemes/ChartedCompletionToScheme.lean`, `FormalSchemes/ProjectiveLineCompletion.lean`
+* Finite type, closed immersions, separatedness (EGA I, 10.13–10.15) —
+  `FormalSchemes/TopFiniteType.lean`, `FormalSchemes/TopFiniteTypeHomTrans.lean`,
+  `FormalSchemes/ClosedImmersion.lean`, `FormalSchemes/GeneralSeparatedScheme.lean`
+* Completed tensor products and fibre products — `FormalSchemes/CompletedTensor.lean`,
+  `FormalSchemes/GeneralFibreProductBothObject.lean`
+* Group actions and their quotients — `FormalSchemes/ActionQuotient.lean`,
+  `FormalSchemes/FreeActionQuotientFormalScheme.lean`
+* The Tate annulus, the Tate chain and the Tate curve model — `FormalSchemes/TateAnnulus.lean`,
+  `FormalSchemes/TateChainGlue.lean`, `FormalSchemes/TateCurveModel.lean`,
+  `FormalSchemes/TateSeparatedScheme.lean`
 
 ## Conventions and further documents
 
