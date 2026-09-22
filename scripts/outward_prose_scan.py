@@ -54,16 +54,21 @@ rather than on `closure_audit.py`.  For the same reason this is **not** wired in
   lines are one paragraph and a window clipped to a single line cannot see the sentence the cue is
   in; a window taken from the raw file would let *code* supply the cue.  Adjacent comment spans
   separated by nothing but whitespace are merged, and the window is clipped to the merged block.
-* **The diff's own files are scanned by default, and that is a correction to issue 2147's
-  design.**  That row proposed excluding them, *"since those are covered by the in-file sweep a
-  refactor already owes"*.  Measured: issue 2048's finding -- the first of the three this scan
-  exists to reproduce -- is in `ChartedDatumGlueOpenImmersion.lean:28-29`, a file the diff touches,
+* **The diff's own files are scanned by default, and that is a correction to issue 2147's design.**
+  That row proposed excluding them, *"since those are covered by the in-file sweep a refactor
+  already owes"*.  Measured: issue 2048's finding -- the first of the three this scan exists to
+  reproduce -- is in `ChartedDatumGlueOpenImmersion.lean:28-29`, a file the diff touches,
   **thirty-eight** lines above that file's first declaration -- the name sits at `:29` and
   `range_xGlueData_f_comp_of_ne` opens at `:67` at the tree that run reads, `e65f334`; the gap is
   43 at `b3c6e7d`, where the declaration has moved down and the sentence has not -- and describing
   a `glueChartMorphisms` that is declared in another file entirely.  **Excluding touched files
   loses it**, and the in-file sweep that was supposed to cover it is exactly the windowed scan that
-  missed it.  `--exclude-touched` is available and is not the default.
+  missed it.  `--exclude-touched` is available and is not the default.  Its exclusion set is built
+  out of a diff, so it holds **both** sides' paths -- the root aggregator, which is never in the
+  module walk, and the pre-rename spelling of every renamed file, which is not in the tree being
+  read.  The header counts only the excluded paths that *are* modules of that tree
+  (`excluded_modules`) and the list at the foot marks the rest, because subtracting the whole set
+  understates coverage: on `befe0fd^...befe0fd` it is 27 of 38.
 * **`A...B` takes its base from `merge-base(A, B)`, not from `A`.**  The `-`-side line numbers
   of a three-dot diff index the file at the fork point, so resolving them at `A` reads the right
   lines out of the wrong tree -- silently, and in both directions, since a line number is valid
@@ -565,17 +570,30 @@ def scan(root: str, names: set[str], exclude: set[str], cues: re.Pattern):
     return sorted(results, key=lambda h: (h["path"], h["line"], h["name"]))
 
 
+def excluded_modules(modules: list[str], exclude: set[str]) -> list[str]:
+    """The excluded paths that are modules of the tree being scanned.
+
+    `--exclude-touched` builds its set out of a diff, so it holds **both** sides' paths: the root
+    aggregator, which `lean_files` never offers, and the pre-rename spelling of every renamed file,
+    which does not exist at the tree being read.  Subtracting the whole set from the module count
+    therefore understates coverage.  This is the half that can actually be skipped.
+    """
+    return sorted(set(exclude) & set(modules))
+
+
 def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, pattern: str,
            touched: set[str], unresolved: int | None = None) -> int:
     hits = scan(root, names, exclude, cues)
+    modules = lean_files(root)
+    skipped = excluded_modules(modules, exclude)
     print("declaration names scanned for    : %4d" % len(names))
     if unresolved:
         print("sides not resolvable at their revision : %4d   <-- the name list is INCOMPLETE"
               % unresolved)
-    print("modules under FormalSchemes/     : %4d   (%d excluded, listed below)"
-          % (len(lean_files(root)), len(exclude)))
+    print("modules under FormalSchemes/     : %4d   (%d of them excluded, listed below)"
+          % (len(modules), len(skipped)))
     if touched:
-        inside = sorted(touched & set(lean_files(root)))
+        inside = sorted(touched & set(modules))
         print("the diff's own files             : %4d   (%d of them scanned, not excluded)"
               % (len(touched), len(set(inside) - exclude)))
     print("cue pattern                      : %s" % pattern)
@@ -587,8 +605,9 @@ def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, patt
     if exclude:
         print()
         print("excluded, and therefore not a claim about them:")
+        outside = set(exclude) - set(skipped)
         for path in sorted(exclude):
-            print("    %s" % path)
+            print("    %s%s" % (path, "   (not a module of this tree)" if path in outside else ""))
     if names:
         print()
         print("names scanned: %s" % ", ".join(sorted(names)))
@@ -785,6 +804,16 @@ def selftest() -> int:
           changed_lines("diff --git a/C.lean b/C.lean\nnew file mode 100644\n"
                         "--- /dev/null\n+++ b/C.lean\n@@ -0,0 +1,2 @@\n+x\n+y\n"),
           {"C.lean": (set(), {1, 2})})
+
+    # --- the excluded count ---------------------------------------------------------------------
+    mods = ["FormalSchemes/A.lean", "FormalSchemes/B.lean", "FormalSchemes/C.lean"]
+    check("only the excluded paths that are modules of the tree are counted as excluded",
+          excluded_modules(mods, {"FormalSchemes/A.lean", "FormalSchemes.lean"}),
+          ["FormalSchemes/A.lean"])
+    check("a rename's pre-rename path is not a module of the tree it is excluded from",
+          excluded_modules(mods, {"FormalSchemes/Old.lean"}), [])
+    check("an empty exclusion set excludes nothing", excluded_modules(mods, set()), [])
+    check("the whole module set can be excluded", excluded_modules(mods, set(mods)), sorted(mods))
 
     print("\n%d ok / %d FAIL" % (ok, fail))
     return 1 if fail else 0
