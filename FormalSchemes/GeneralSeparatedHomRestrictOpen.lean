@@ -278,11 +278,14 @@ cross-chart overlap element for it is `FormalSpectrum.exists_refined_overlap_ele
 (`FormalSchemes.BasicOpenChartImage`).
 
 **And the missing half cannot be assembled out of this one.** `FormalScheme.IsSeparatedHom` is
-local on the **target** and on nothing else: its cover is a cover of `Y`, and at `Y = Spf R` the
-only clause is the whole of `FormalScheme.IsSeparatedOverSpf` at `X` itself. So a family of opens
-each inside a chart, covering `W`, gives a family of separatedness statements with **no rule on
-this tree that glues them**, and that is the measured reason the general case is a datum
-construction rather than a covering argument.
+local on the **target**: its cover is a cover of `Y` and its per-piece clause is
+`FormalScheme.IsSeparatedOverSpf` of a *preimage*. A family of opens of the **source**, each inside
+a chart and together covering `W`, is not of that shape, and there is **no rule on this tree that
+glues `FormalScheme.IsSeparatedOverSpf` along a cover of the source** — the predicate is an
+existential over a presentation of the whole of `X` restricted to `W`. Conservativity's hard
+direction, which is what would let a target-local statement be read back as one, is one of the
+directions `FormalSchemes.GeneralSeparatedHom` records as open. That is the reason the general case
+is a datum construction and not a covering argument.
 -/
 
 section ChartLocal
@@ -337,10 +340,9 @@ the map of formal spectra induced by `algebraMap R A`, then `X` restricted to `W
 No presentation of `X` appears and none is built. The only thing the hypothesis is used for is to
 factor the inclusion of `W` through `j`: `LocallyRingedSpace.IsOpenImmersion.lift` does that on the
 range containment, `LocallyRingedSpace.IsOpenImmersion.lift_fac` makes the triangle commute, and
-the lift is again an open immersion by the same two `delta`s as
-`FormalScheme.isOpenImmersion_restrictOpenMap` above — `LocallyRingedSpace.IsOpenImmersion.lift` is
-`inv (pullback.snd _ _) ≫ pullback.fst _ _`, whose second factor is an open immersion when the
-morphism being lifted is one.
+the lift is again an open immersion by the same `delta` of
+`LocallyRingedSpace.IsOpenImmersion.lift` that `FormalScheme.isOpenImmersion_restrictOpenMap` above
+performs, followed by instance search.
 
 `W` is an arbitrary open of `X` inside the chart, not a basic open of it: the basic opens are what
 `FormalScheme.isSeparatedOverSpf_restrictOpen_Spf` builds its presentation from, one chart per
@@ -379,7 +381,7 @@ the containment hypothesis that issue 2148's goal 2 exists to remove. At a `W` m
 the datum has to be refined, and the two halves of that refinement are
 `FormalSpectrum.exists_refined_overlap_element` and
 `FormalSpectrum.awayCompletionCongrBasicOpenAlg` (`FormalSchemes.BasicOpenChartImage`,
-`FormalSchemes.AwayCompletionCongrEquiv`).
+`FormalSchemes.AwayCompletionRestrictUnique`).
 
 The two ascriptions are the price of the datum's instance-implicit fields, and they are in opposite
 directions. The compatibility square is proved **before** the `letI` block, in term mode rather
