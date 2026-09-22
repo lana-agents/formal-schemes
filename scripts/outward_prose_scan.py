@@ -77,9 +77,12 @@ rather than on `closure_audit.py`.  For the same reason this is **not** wired in
   rename's `-` side, because it looks the old lines up at the *new* path and `git show` then exits
   non-zero; `befe0fd` renames ten `.lean` files -- twenty paths -- in one commit, and fixing this
   recovers **13** of the 37 names in its range.  And the headers cannot be recognised by shape:
-  under `--unified=0` a deleted `-- comment` renders in the diff **body** as `--- comment`, **171**
-  times across this tree's last two hundred commits (in 70 of them) when this was written, so a
-  header is read only while one is pending after a `diff --git` line.
+  under `--unified=0` a deleted `-- comment` renders in the diff **body** as `--- comment`, **92**
+  times across this tree's last two hundred commits -- in **8** of them, over 14 files -- when this
+  was written, so a header is read only while one is pending after a `diff --git` line.  That
+  figure is keyed to the last two hundred commits and therefore moves with every merge: re-measure
+  it rather than quoting it.  What does not move is that it is **not zero**, which is the whole
+  reason shape alone cannot decide a header.
 
 ## What this scan cannot reach, and it is not a window width
 
@@ -336,7 +339,8 @@ def changed_lines(diff: str) -> dict[str, tuple[set[int], set[int]]]:
     **The file headers are recognised only while one is pending**, i.e. between a `diff --git` line
     and the `+++ ` that closes the pair.  Shape alone is not enough: under `--unified=0` a deleted
     `-- comment` renders in the diff *body* as `--- comment`, and this tree's last two hundred
-    commits contain 171 such lines, in 70 of them.
+    commits contained **92** such lines, in **8** of them, when this was written -- a figure keyed
+    to the last N commits moves with every merge, so re-measure it rather than quoting it.
     """
     out: dict[str, tuple[set[int], set[int]]] = {}
     old_path = new_path = None
