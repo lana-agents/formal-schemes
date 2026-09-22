@@ -155,7 +155,7 @@ deltas are measured in the pull request that added the edge (issue 2019).
 
 The one edit to a declaration outside this file is the generalisation of
 `FormalSpectrum.awayCompletion_hom_ext` to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in
-place** in `FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **32**. Besides
+place** in `FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **33**. Besides
 this module's own line in the root module list `FormalSchemes.lean`, which `lake exe mk_all`
 maintains and which adding any module forces, the rest of the diff that created this module is
 prose: the figures a new leaf moves in the modules above it, and the sentence in
@@ -455,7 +455,7 @@ it is what the universal property below is applied at.
 
 It is stated here, where the theorem below needs the unit as a *term* in its own statement, rather
 than beside the rest of the `awayCompletion` API in `FormalSchemes.BasicOpenChart`, whose reverse
-closure is **432**: the move down rebuilds all of those, which is the price to pay once a second
+closure is **433**: the move down rebuilds all of those, which is the price to pay once a second
 module asks for the lemma and not before — this tree's standing disposition for a general statement
 with one call site. -/
 theorem isUnit_algebraMap_awayCompletionBase :

@@ -19,7 +19,8 @@ the refined ones.
 element `e : A_i` cutting the refined overlap out of chart *i*, and issue 2148's thread then asked
 for a **divisibility or an `IsUnit`** so that `CompletedTensorAwayInterchange.awayCongrHom`
 (`FormalSchemes.AwayCompletionCongrEquiv`) could be applied to it, and recorded the cost of that
-step as unpriced. It is unpriced because it is not the step: `awayCongrHom` wants
+step as unpriced. It is unpriced because it is not the step:
+`CompletedTensorAwayInterchange.awayCongrHom` wants
 `IsUnit (algebraMap A (Localization.Away y) x)`, a statement in the **uncompleted** localization,
 and that is exactly what an inclusion of basic opens of `Spf A` does *not* give —
 `FormalSchemes.AwayCompletionRestrict` opens by saying so. The separation is strict and it is
@@ -32,8 +33,8 @@ The map keyed on the containment itself already exists, in that same module:
 `FormalSpectrum.awayCompletionRestrict` takes `D(g) ≤ D(f)` and nothing else, and the containment
 is free from the element's own construction —
 `FormalSpectrum.basicOpen_le_of_image_basicOpenChartBase_eq`, now the second conjunct of
-`exists_refined_overlap_element`: `D(e)` is an image under the chart at `g_ij`, whose range is
-`D(g_ij)`. So the leg costs one `le_trans` through `FormalSpectrum.basicOpen_mul`, and the price
+`exists_refined_overlap_element`: *D(e)* is an image under the chart at *g_ij*, whose range is
+*D(g_ij)*. So the leg costs one `le_trans` through `FormalSpectrum.basicOpen_mul`, and the price
 of the whole step is this file.
 
 ## Main results
@@ -83,12 +84,13 @@ A{1/g} ≃ₐ[R] (A{1/f}){1/ĝ}     at     IsUnit (algebraMap A (Localization.Aw
 ```
 
 which is precisely the leg's target read from inside the source — and were it available at
-`g := h · e`, `f := g_ij`, transporting `τ_ij` along it would be `AlgEquiv` bookkeeping. Its
+`g := h · e`, `f := g_ij`, transporting *τ_ij* along it would be `AlgEquiv` bookkeeping. Its
 hypothesis is the **uncompleted** unit statement, which is strictly stronger than the containment
-`D(h · e) ≤ D(g_ij)` the leg is built from and is the same thing `awayCongrHom` asks for above; so
-closing the gap means either a `basicOpen`-keyed form of that equivalence or a route that does not
-pass through one. Nothing below attempts either; the legs are what turn the gap into a single
-named statement instead of two.
+`D(h · e) ≤ D(g_ij)` the leg is built from, and is the same thing
+`CompletedTensorAwayInterchange.awayCongrHom` asks for above; so closing the gap means either a
+`basicOpen`-keyed form of that equivalence or a route that does not pass through one. Nothing
+below attempts either; the legs are what turn the gap into a single named statement instead of
+two.
 
 **Nothing about `σ`, the triple overlap, or the refined datum's laws.** The three conjugation
 lemmas of `FormalSchemes.BasicOpenCoverTransitions` are stated over independent ambients and are
@@ -136,7 +138,7 @@ map from the containment alone; `FormalSpectrum.awayCompletionRestrictAlg` upgra
 datum's transitions live over.
 
 `e` is meant to be the element of `FormalSpectrum.exists_refined_overlap_element`, whose second
-conjunct is the hypothesis `hle`, and `h` the basic open refining the chart; but neither is assumed
+conjunct is the hypothesis *hle*, and `h` the basic open refining the chart; but neither is assumed
 here and the statement is about two elements of `A` and an inclusion between their basic opens. -/
 def refinedOverlapRestrict (hI : I.FG) (g e : A) (h : A)
     (hle : basicOpen (I.map (algebraMap R A)) e ≤ basicOpen (I.map (algebraMap R A)) g) :

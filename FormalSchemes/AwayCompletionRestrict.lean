@@ -269,8 +269,8 @@ theorem awayCompletionRestrict_awayCompletionHom (hI : I.FG)
 /-- **The `R`-algebra form.** The restriction is a map under `R`
 (`FormalSpectrum.awayCompletionRestrict_awayCompletionHom` just above) and
 `FormalSpectrum.awayCompletionHom_eq_algebraMap` (`FormalSchemes.BasicOpenChart`) identifies that
-structural map with the algebra map, so the upgrade costs one `commutes'` field and no hypothesis
-beyond the ones the ring map already carries.
+structural map with the algebra map, so the upgrade costs one field and no hypothesis beyond the
+ones the ring map already carries.
 
 The *equality* case is shipped downstream as an `≃ₐ[R]`,
 `FormalSpectrum.awayCompletionCongrBasicOpenAlg` (`FormalSchemes.AwayCompletionRestrictUnique`).
