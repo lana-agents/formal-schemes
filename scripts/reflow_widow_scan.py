@@ -303,8 +303,36 @@ but a greedy refill can strand a *different* word, and in **1** of the 159 at 99
 does.  The whole-paragraph refill leaves none, which is not an argument for printing it: it is the
 repair both footers forbid, because it destroys breaks the author chose.  A flag is a question and
 so is its successor -- widen the window, or decline it by name.  **Naming the smallest window that
-strands nothing is a second predicate and a different row**; this one names the smallest window
-that absorbs the line.
+strands nothing is a second predicate**; this one names the smallest window that absorbs the line,
+and the two paragraphs below are that second predicate measured (issue 2185) rather than the row
+they used to promise.
+
+**So the scan is not a fixed point, and this is the whole of how far from one it is.**  Follow the
+printed window on `SpfGammaBase.lean:39` at 99 -- `--tree` prints `paragraph of 11 lines; 9 of them
+refill to 7` under `:41 'This'` and `:44 'weaker.'` -- and it flags the paragraph again, at
+`:47 'general fact.'`, a refilled last line of 13 columns.  At 100 on
+`GeneralFibreProductBaseChange.lean:297` the same: `:309 '(issue 1998).'` before,
+`:312 'imported again.'` after, 15 columns.  Each of those is one width of a sweep at `746718d`
+over 583 modules and 7920 in-scope paragraphs at every width from 60 to 140 -- **26 328**
+flag-instances, the total the `no window` census below reads at `d3a75ae` over 7918 paragraphs --
+in which the printed repair strands a word **88** times, in **13** distinct paragraphs.  Rare, and
+not absent; and what it leaves is a flag like any other, to be widened or declined by name.
+
+**And the count is 88 and not 97, because a refill that pushes a bare `-/` onto a line of its own
+has stranded the delimiter and not a word.**  Run the sweep on `lines[:start] + filled` as a list,
+which is the obvious way to do it and the wrong one, and it reads **97** in **14** paragraphs.  The
+nine extra instances are three paragraphs at the top of their bands -- `GeneralDiagonal.lean:74` at
+130..132, `GeneralFibreProductBaseChange.lean:1548` at 117..119 and `TateInvOverlapBand.lean:373`
+at 127..129 -- and in every one the new short line is `-/` alone.  Write the refill back into the
+file and re-segment it, which is what this scan reads, and `STRUCTURAL`'s `^-/` alternative takes
+that line out of the paragraph before `widows` is reached: the rule this section states above,
+applied to the repair rather than to the original.  A line *ending* ` -/` is filled prose whose
+last word is the delimiter -- 28 % of the standing population is that shape -- so `branch. -/`,
+`docstring. -/` and `statement. -/` stay, their bands merely shortened, and only
+`GeneralDiagonal.lean:74` leaves the thirteen outright.  Measured end to end rather than argued:
+applying its window at 130 takes `--tree` from 656 flagged paragraphs to 655 and takes the
+paragraph out of the report, while applying `SpfGammaBase.lean:39`'s at 99 leaves 159 and puts that
+paragraph back into it.  The 88 are a subset of the 97, with no instance the other way about.
 
 **The `no window` branch is real, and a fixture drives it.**  Nothing makes a covering window
 necessary -- a flag needs only *some* suffix to compress, and the lines above the widow may spend
@@ -959,6 +987,65 @@ def selftest() -> int:
     check("... and it is sighted: no line of it opens with a word wider than `MAX_TOKEN`",
           (max(cols(l.split()[0]) for _, l in paragraphs(middle_word)[0]) <= MAX_TOKEN,
            numbers(middle_word)), (True, [3, 5]))
+
+    # --- the printed window is not a fixed point (issue 2185) ----------------------------------
+    # The window `show` prints absorbs the line it is printed against, and a greedy refill of it
+    # can strand a *different* word: 88 of the 26 328 flag-instances over widths 60..140 do, and
+    # `SpfGammaBase.lean:39` at 99 and `GeneralFibreProductBaseChange.lean:297` at 100 are the two
+    # at this tree's own widths.  These fixtures drive the **report** and then re-scan what
+    # following its advice produces, rather than comparing `repair_window` return values.
+    def repaired(text, width=WIDTH):
+        """`text` with `show`'s printed window applied to its one flagged paragraph.
+
+        Written back into the file and re-segmented, because that is what the scan reads next --
+        not kept as `lines[:start] + filled`, which is a list the segmentation never sees.  The
+        difference between the two is exactly the bare `-/` cases below, and it is why the
+        docstring's figure is 88 and not 97.
+        """
+        lines = text.split("\n")
+        (paragraph, stranded), = scan_text(text, width, MAX_TOKEN)
+        body = [line for _, line in paragraph]
+        flagged = {number for number, _ in stranded}
+        first = min(i for i, (number, _) in enumerate(paragraph) if number in flagged)
+        start, filled = repair_window(body, width, first)
+        base = paragraph[0][0]
+        return "\n".join(lines[:base - 1] + body[:start] + filled + lines[base - 1 + len(body):])
+
+    h50, g40, a90 = "h" * 50, "g" * 40, "a" * 90
+    strands = doc(h50, g40, "no", a90, "aa bb cc dd")
+    check("the window the report prints can strand a word the paragraph did not have",
+          (summary(strands, "FormalSchemes/Strands.lean"), numbers(strands)),
+          ("  FormalSchemes/Strands.lean:2  paragraph of 5 lines; 3 of them refill to 2", [4]))
+    check("... and following it flags the paragraph again, at the line the refill left",
+          (numbers(repaired(strands)), summary(repaired(strands), "FormalSchemes/Strands.lean")),
+          ([5], "  FormalSchemes/Strands.lean:2  paragraph of 4 lines; 4 of them refill to 3"))
+
+    # Its sightedness companion: one word longer in the tail, so the refill's last line carries
+    # three words rather than two and is not short plain.  **Its report line is byte-identical to
+    # the one above** -- same path, same figures -- which is the whole point: what a window does
+    # once it is applied is not visible in what the report prints about it.
+    settles = doc(h50, g40, "no", a90, "aa bb cc dd ee")
+    check("... while a paragraph whose report line is identical can strand nothing",
+          (summary(settles, "FormalSchemes/Strands.lean"), numbers(settles),
+           numbers(repaired(settles))),
+          ("  FormalSchemes/Strands.lean:2  paragraph of 5 lines; 3 of them refill to 2", [4], []))
+
+    # The ruling the docstring makes: a refill that pushes a bare `-/` onto a line of its own has
+    # stranded the delimiter and not a word, and the scan does not see it, because `STRUCTURAL`
+    # takes a line *beginning* `-/` out of every paragraph.  `GeneralDiagonal.lean:74` at 130..132
+    # is this tree's instance and this is its shape; a line *ending* ` -/` is prose and stays.
+    terminator = "/-!\n" + "\n".join([h50, g40, "no", a90, "bb cc -/"]) + "\n"
+    check("a printed window that pushes a bare `-/` onto its own line strands nothing",
+          (summary(terminator, "FormalSchemes/Terminator.lean"), numbers(terminator),
+           numbers(repaired(terminator))),
+          ("  FormalSchemes/Terminator.lean:2  paragraph of 5 lines; 3 of them refill to 2",
+           [4], []))
+    check("... and the difference is the segmentation and not the arithmetic: as a bare list"
+          " that same refill does hold a stranded `-/`",
+          ([line for _, line in
+            widows(list(enumerate([h50, g40, "no " + a90 + " bb cc", "-/"], 2)), WIDTH)],
+           bool(STRUCTURAL.match("-/"))),
+          (["-/"], True))
 
     # Goal 4 of issue 2167: `--width` stays a flag and the width stays on the summary line of both
     # report paths, so a figure cannot be quoted without it.  One constant, used by both.
