@@ -22,7 +22,11 @@ for a **divisibility or an `IsUnit`** so that `CompletedTensorAwayInterchange.aw
 step as unpriced. It is unpriced because it is not the step: `awayCongrHom` wants
 `IsUnit (algebraMap A (Localization.Away y) x)`, a statement in the **uncompleted** localization,
 and that is exactly what an inclusion of basic opens of `Spf A` does *not* give —
-`FormalSchemes.AwayCompletionRestrict` opens by saying so.
+`FormalSchemes.AwayCompletionRestrict` opens by saying so. The separation is strict and it is
+cheap to see: at `A = ℤ`, `I = (2)`, `x = 3`, `y = 5` the formal spectrum is the single point
+`Spec 𝔽₂`, so `D(5) ≤ D(3)` holds (both residues are the unit of `ℤ ⧸ (2)`), while `3` is not a
+unit of `ℤ[1/5]` — `ℤ[1/5] → ZMod 3` exists and kills it. That witness is elaborated on issue
+2148's thread and is not committed here.
 
 The map keyed on the containment itself already exists, in that same module:
 `FormalSpectrum.awayCompletionRestrict` takes `D(g) ≤ D(f)` and nothing else, and the containment
