@@ -278,6 +278,10 @@ def unquote_path(value: str) -> str:
     unresolved-sides counter below existed the run then reported zero names and looked green.
     There is no such path under `FormalSchemes/` today; this is what the counter found the first
     time it was pointed at a synthetic one, and the fix is cheaper than the next silent run.
+
+    An octal escape is read as **exactly three digits**, so a shorter run would raise rather than
+    fall back.  `git` writes `\\%03o` and always emits three, and a diff header is the only
+    producer this function has, so the short run is unreachable and is left uncoded.
     """
     if len(value) < 2 or not (value.startswith('"') and value.endswith('"')):
         return value
