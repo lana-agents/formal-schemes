@@ -74,17 +74,17 @@ re-measure rather than quoting them.
 
     population  predicate, each row adding a conjunct to the one above
     ----------  --------------------------------------------------------------------------
-    2064 lines  a <=2-word line inside a doc span -- the last line of every filled
+    2089 lines  a <=2-word line inside a doc span -- the last line of every filled
                 paragraph, so this is every paragraph
-     206 lines  ... and its first word fits on the line above at **99** -- the wrong width:
+     209 lines  ... and its first word fits on the line above at **99** -- the wrong width:
                 this tree fills at **100**, so almost nothing qualifies
-    3765 paras  a greedy refill of the paragraph at 100 differs from what is there --
+    3841 paras  a greedy refill of the paragraph at 100 differs from what is there --
                 **this tree is not greedily filled**, and that is deliberate: authors break
                 before long backticked names
-     684 paras  ... and the refill **saves at least one line** -- still mostly sense-breaks
+     732 paras  ... and the refill **saves at least one line** -- still mostly sense-breaks
                 that happen to be compressible, with nothing short stranded in them
-     212 paras  ... and the paragraph holds a <=2-*plain*-word line -- close
-    **210/214** ... and that line is not forced short by an unbreakable neighbour, and is
+     228 paras  ... and the paragraph holds a <=2-*plain*-word line -- close
+    **226/230** ... and that line is not forced short by an unbreakable neighbour, and is
                 not the paragraph's first -- **the predicate**
 
 The two conjuncts do different jobs and neither works alone.  *Saves a line* rules out the
@@ -109,8 +109,8 @@ understandably: the `and` *is* wedged between long backticked names, `3 + 1 + 97
 test would fire too **if it were reached**.  **A line can meet two rules and be excluded by only
 one of them, and the prose has to name the one that runs first.**
 
-**So the exclusions are justified on their own instances, and there is exactly one of each.**
-Measured at `90be36d`, over the 214 short-plain lines living in paragraphs that refill shorter:
+**So the exclusions are justified on their own instances, and there are three of those.**
+Measured at `90be36d`, over the 231 short-plain lines living in paragraphs that refill shorter:
 
     excluded by                                  lines  which
     -------------------------------------------  -----  -------------------------------------
@@ -118,15 +118,20 @@ Measured at `90be36d`, over the 214 short-plain lines living in paragraphs that 
                                                         `discharged here:`
     the line is its paragraph's first                1  `TateInvNodeChartQuotientSpf.lean:216`,
                                                         `This is`
-    both                                             0
-    reported                                       212
+    both                                             1  `TateInvNodeChartDescent.lean:257`,
+                                                        `This is`
+    reported                                       228
 
-The second is **not** the first in disguise: `This is` is 7 columns and the backticked name below
-it is 89, which fits at 100.  **Two exclusions, one line each** is the figure to weigh before
-loosening either, and it is the honest one -- each rests on a single line of this tree, and neither
-rests on the `and`.
+**The second exclusion is not the first in disguise, and the two `This is` lines are the proof.**
+Both read `This is` at 7 columns, both are their paragraph's first line, and they differ only in
+the width of the backticked name below.  At `TateInvNodeChartQuotientSpf.lean:217` that name is 89
+columns, so `7 + 1 + 89` fits at 100 and the successor rule genuinely does not reach the line --
+only the first-line rule excludes it.  At `TateInvNodeChartDescent.lean:258` it is 94, so
+`7 + 1 + 94` does not fit and both rules fire.  So each rule has **one line it excludes alone and
+one it shares**, which is the figure to weigh before loosening either, and none of the three is the
+`and`.
 
-`--selftest` pins both on **synthetic** paragraphs rather than on those two lines.  The successor
+`--selftest` pins both on **synthetic** paragraphs rather than on those three lines.  The successor
 fixture's paragraph deliberately *does* refill shorter, so that it tests the exclusion and not the
 first conjunct; the `and`'s own shape -- a short line in a paragraph that refills to the same
 length -- is pinned separately, by the fixture that has no exclusion in it at all.
@@ -144,11 +149,11 @@ Every `/-! ... -/` **and** `/-- ... -/` block, with fenced blocks, lists, tables
 indented lines excluded -- they are not filled prose and must never be rewrapped.  Declaration
 docstrings are in scope because two of the three standing instances issue 2159 names are in one
 (`StructureSheaf.lean`'s `one.` and `StructureSheafStalkPowerSeriesCounterexample.lean`'s `it.`);
-a module-docstring-only population reads 103 paragraphs here and **contains neither**.
+a module-docstring-only population reads 113 paragraphs here and **contains neither**.
 
 **The closing `-/` counts as one of the two words.**  A line *beginning* `-/` is structural and
 is never rewrapped; a line *ending* ` -/` is ordinary filled prose whose last word happens to be
-the delimiter.  Of the 212 lines reported at `90be36d`, **67** are of that shape -- `rest. -/`,
+the delimiter.  Of the 228 lines reported at `90be36d`, **70** are of that shape -- `rest. -/`,
 `injective. -/` -- so for a third of the population the predicate reads *one* prose word plus the
 delimiter.  They are widows all the same, and a refill leaves the `-/` at the end where it was;
 the figure is here so that anyone loosening `is_short_plain` knows how much of the population
@@ -160,19 +165,36 @@ The conjuncts are that row's and reproduce; the segmentation is what differs, an
 
     segmentation                      refill differs   saves a line   reported
     --------------------------------  --------------  -------------  ----------
-    this file (`/-!` and `/--`)                 3765            684   210 / 214
-    `/-!` only                                  1845            331   103 / 105
-    `/--` only                                  1920            353   107 / 109
+    this file (`/-!` and `/--`)                 3841            732   226 / 230
+    `/-!` only                                  1892            367   113 / 115
+    `/--` only                                  1949            365   113 / 115
     structural-line rule dropped                6991           2772  1207 / 1274
-    fenced-block rule dropped                   3777            688   210 / 214
+    fenced-block rule dropped                   3853            736   226 / 230
 
-The three ratios against 3193 / 493 / 136 are not constant, so it is not one uniform scope
-difference either.  What **is** established is narrower and is enough to fix the population: any
-module-docstring-only reading is wrong, because two of that row's own ground-truth widows are in
-`/--` blocks.  The lesson is the general one -- *a prose specification can pin a predicate and
-cannot pin a population.*  Both of 2159's conjuncts transferred without ambiguity and its
-segmentation did not.  **Publish the segmentation rule, or a ground-truth list the next reader can
-check theirs against**; 2159 named five specific lines, and those five are what settled this.
+The three ratios against 3193 / 493 / 136 are 1.20, 1.48 and 1.66 -- not constant, so it is not
+one uniform scope difference either.  The fourth row is the only one the structural-line repair
+below could not move, and that is by construction: it drops the rule the repair changed.  A sweep
+whose every row moves is not measuring the rule it names.  What **is** established is narrower
+and is enough to fix the population: any module-docstring-only reading is wrong, because two of
+that row's own ground-truth widows are in `/--` blocks.  The lesson is the general one -- *a
+prose specification can pin a predicate and cannot pin a population.*  Both of 2159's conjuncts
+transferred without ambiguity and its segmentation did not.  **Publish the segmentation rule, or
+a ground-truth list the next reader can check theirs against**; 2159 named five specific lines,
+and those five are what settled this.
+
+**And the rule this file publishes is the second one it had.**  The first required a bullet with
+no space after it -- `^[*\-|#>+]` -- which also matches `**a bold lead-in**` and `*an italic
+one*`, and `^\d+\.` with no space, which also matches a continuation line opening `10.12's`.  All
+three are filled prose that this tree's own authors re-fill, so a paragraph holding one was split
+at it and its fill test ran on a fragment.  Censused over the unindented lines inside doc spans
+at `b3c6e7d`: **937** `**`-led lines, **149** `*`-led ones and **18** opening `<digits>.` without
+a space were read as structure, while everything the rule is *for* keeps the space -- 4001 `* `
+items, one `+ ` item, 78 numbered items, and every one of the 799 `-`-leading lines is a `-/`
+already covered by its own alternative.  **1104 classifications corrected, 0 lost**, and the
+population went 210 / 214 to 226 / 230 at `4873811` -- 16 stranded lines the scan could not see,
+and not one spurious.  *A structural-line rule must require the space that makes a list marker*;
+the shape that hid this is that no fixture and none of the pinned `--diff` ranges contained an
+emphasis-led line, so twelve green runs said nothing.
 
 **This is not an autoformatter.**  It reports a line and the refill that would absorb it; it never
 rewrites a file.  Repairing a widow is a judgement about the smallest window that removes it --
