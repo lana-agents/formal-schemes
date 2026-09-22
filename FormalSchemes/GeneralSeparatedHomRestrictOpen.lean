@@ -383,11 +383,11 @@ the datum has to be refined, and the two halves of that refinement are
 
 The two ascriptions are the price of the datum's instance-implicit fields, and they are in opposite
 directions. The compatibility square is proved **before** the `letI` block, in term mode rather
-than by `rw`: `AffineChartedFibreDatumX.xFormalGlueData`'s index type is `D.J` only up to
-unfolding, so `rw` reports the goal as not type-correct at `instances` transparency where
-`Category.assoc` and `congrArg` do not care. The open-immersion instance is re-ascribed **after**
-it, since the target's spelling changes when `AffineChartedFibreDatumX.commRing` and
-`AffineChartedFibreDatumX.algebra` are let-bound. -/
+than by `rw`: the index type of `AffineChartedFibreDatumX.xFormalGlueData` agrees with the datum's
+own only up to unfolding, so `rw` reports the goal as not type-correct at `instances` transparency
+where `Category.assoc` and `congrArg` do not care. The open-immersion instance is re-ascribed
+**after** it, since the target's spelling changes once the datum's ring and algebra fields are
+let-bound. -/
 theorem isSeparatedOverSpf_restrictOpen_of_subset_range_ι {hI : I.FG} (hX : X.LocallyFG)
     {s : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I}
     {BX : Type u} [CommRing BX] [Algebra R BX] {DX : AffineChartedFibreDatumX R I hI BX}
