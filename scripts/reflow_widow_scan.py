@@ -28,11 +28,12 @@ can be seen not to grow, and it prints no verdict: a flag here is a **question**
 `docstring_signature_scan.py`, and this script is deliberately **not** in
 `.orchestra/validation.sh`.
 
-## What `--diff` reads, and the two git shapes that got it wrong
+## What `--diff` reads: the two git shapes that got it wrong, and what the second fix rests on
 
 `--diff` scans both ends of a range and reports a stranded line the head has and the base does
 not, keyed by the line's *text* rather than by its number.  Two facts about `git diff` decide
-which bytes each end is read from, and both were wrong here first:
+which bytes each end is read from, and both were wrong here first; a third decides whether the
+second fix is switched on at all:
 
 * **A range's `-` side is not always the ref on its left.**  `git diff A...B` reports the changes
   on `B` since `merge-base(A, B)`, so a three-dot base has to go through `git merge-base` before
@@ -51,6 +52,17 @@ which bytes each end is read from, and both were wrong here first:
   real: the rename lengthened a backticked name, the paragraph around it re-filled, and `it.` is
   stranded at `BasicOpenCoverSeparatedScheme.lean:32`.  A name-lengthening refactor stranding a
   word is exactly this scan's subject, and five false positives were hiding it.
+* **The rename half rests on `-M`'s own detection, which is switchable from outside.**  Every
+  `.lean` rename in this tree's history is *inexact* -- ten records, scoring `R068` to `R096`, none
+  `R100` -- so each is found by the exhaustive pass, which git **skips, with a warning on stderr
+  that this script discards**, once `diff.renameLimit` is exceeded.  Set `diff.renameLimit=1` in
+  any configuration and the rejected behaviour comes back in full and in silence: `befe0fd` reads
+  as **38** files touched rather than 28 and **six** reported rather than one.  The call therefore
+  carries `-c diff.renameLimit=0`, which no repository, user or system configuration can override.
+  A rename whose similarity falls *under* `-M`'s 50% default is a different shape: git reports it
+  as a delete plus an add, an add has no old path, and that module's whole standing population then
+  reads as introduced.  The worst real case on this tree is `R068`, eighteen points of margin, so
+  the threshold is left at its default -- this bullet is the record of what that rests on.
 
 ## The predicate, and the four rejected alternatives that are the argument for it
 
@@ -415,8 +427,8 @@ def report_diff(diff_range: str, root: str, width: int, max_token: int) -> int:
     if from_merge_base:
         base = subprocess.run(["git", "-C", root, "merge-base", base, head],
                               capture_output=True, text=True, check=True).stdout.strip()
-    records = subprocess.run(["git", "-C", root, "diff", "--name-status", "-M", "-z",
-                              diff_range, "--", "*.lean"],
+    records = subprocess.run(["git", "-C", root, "-c", "diff.renameLimit=0", "diff",
+                              "--name-status", "-M", "-z", diff_range, "--", "*.lean"],
                              capture_output=True, text=True, check=True).stdout
     pairs = changed_paths(records)
     print("range                             : %s" % diff_range)
