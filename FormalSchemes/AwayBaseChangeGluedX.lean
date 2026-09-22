@@ -124,7 +124,7 @@ no stated figure anywhere on the tree. The general transports the construction i
 `AdicCompletion.mapCompletion_heq` — are each consumed by exactly one module, this one, and each
 has a natural home earlier in the tree. Both sides of that ratio, since a ratio with one side is
 not a measurement: `FormalSchemes.Completion`, where `AdicCompletion.mapCompletion` is defined,
-has reverse closure **469**; `FormalSchemes.AdicCompletionCongrIdealAlg`, the alternative home for
+has reverse closure **470**; `FormalSchemes.AdicCompletionCongrIdealAlg`, the alternative home for
 the `AdicCompletion`-level transport, has reverse closure **195**; and
 `FormalSchemes.AwayCompletionUniversal`, where the two `awayTransport` statements would go, has
 reverse closure **4**. `FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **3**, and
