@@ -120,7 +120,11 @@ this tree rather than by argument, and none of them fixed by widening `WINDOW`:
   clause out of what is printed.  That is what happened to issue 2158: the LIVE run of PR #761
   emitted `CompletionGlueTwoPatchCondition.lean:54  completionTwoPatchDesc`, four lines below the
   false clause, and the printed context began after it.  **The `file:line` is the finding; the
-  excerpt is a hint.**
+  excerpt is a hint.**  `WINDOW` is the *whole* of that clip, and now really is: `report` also cut
+  the excerpt at 400 characters, silently, and a window is up to `2 * WINDOW + len(stem)` long, so
+  a cue sitting late in it was dropped from the very paragraph it had flagged -- 3 of the 18 flags
+  on `c888dfe...badd407`, the range that produced issue 2144, read at `87cd226`.  `hit_lines`
+  carries the measurement and `--selftest` pins the shape.
 
 Issue 2156 item 1 was catchable only because that sentence happens to *name* a declaration the diff
 changed.  Read a green run as "no sentence naming a changed declaration sits beside a cue", which
@@ -633,6 +637,32 @@ def stranger_lines(strangers: list[str]) -> list[str]:
     return ["  %s and cannot be scanned" % head] + ["    %s" % path for path in strangers]
 
 
+def hit_lines(hit: dict) -> list[str]:
+    """A flag's two printed lines: `path:line  name`, and the window that produced it.
+
+    **The excerpt is the whole window, and nothing here cuts it.**  `report` used to print
+    `hit["context"][:400]`, a second clip on top of `WINDOW` that no line of output and no
+    paragraph of this docstring mentioned.  It is not a rounding: the window runs from 230
+    characters *before* the occurrence to 230 after it, so a cue sitting late in the window lands
+    past the four-hundredth character of the excerpt and was dropped -- and a flag whose excerpt
+    holds no cue reads to its reader as a false positive of the scan rather than as a paragraph
+    they have been shown three quarters of.  Measured at `87cd226` over the range that produced
+    issue 2144 (`c888dfe...badd407`, the run this instrument exists to reproduce): **15 of its 18
+    excerpts** were longer than 400 characters and in **3** of them the cue itself was on the far
+    side of the cut -- `TateChainInvGlue.lean:54` (cue at 470 of 487),
+    `TateSeparated.lean:17` (438 of 471), `TateShift.lean:37` (464 of 482).  Over all four
+    historical ranges the cap withheld **4584** characters and the longest excerpt any of them
+    produces is **496**, against the `2 * WINDOW + len(stem)` ceiling of 500.
+
+    So the excerpt now *is* the window, which is the only clip this file documents, and
+    `stranger_lines`'s rule -- a reader shown less than they were told about cannot check it --
+    holds here too.  `WINDOW` remains the honest limit, and the section above on what this scan
+    cannot reach remains true of it: the `file:line` is the finding.
+    """
+    return ["  %s:%d  %s" % (hit["path"], hit["line"], hit["name"]),
+            "      %s" % hit["context"]]
+
+
 def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, pattern: str,
            touched: set[str], unresolved: int | None = None) -> int:
     hits = scan(root, names, exclude, cues)
@@ -655,8 +685,8 @@ def report(root: str, names: set[str], exclude: set[str], cues: re.Pattern, patt
     print("FLAGGED: prose naming a changed declaration beside a proof-method cue : %4d"
           % len(hits))
     for hit in hits:
-        print("  %s:%d  %s" % (hit["path"], hit["line"], hit["name"]))
-        print("      %s" % hit["context"][:400])
+        for line in hit_lines(hit):
+            print(line)
     if exclude:
         print()
         print("excluded, and therefore not a claim about them:")
@@ -689,6 +719,10 @@ def selftest() -> int:
     def _many_paths(n: int) -> list[str]:
         """`n` sorted stranger paths, for the fixtures that pin the list against truncation."""
         return ["FormalSchemes/Old%02d.lean" % i for i in range(n)]
+
+    def _fill(n: int) -> str:
+        """`n` characters of cue-free, single-spaced filler, for the excerpt fixtures."""
+        return ("lorem ipsum dolor sit amet " * (n // 27 + 1))[:n].strip()
 
     cues = re.compile(DEFAULT_CUES)
 
@@ -908,6 +942,27 @@ def selftest() -> int:
           [(1, 1), (2, 2), (9, 9), (30, 30)])
     check("nothing truncates the stranger list", stranger_lines(_many_paths(30))[1:],
           ["    %s" % path for path in _many_paths(30)])
+
+    # --- and neither does the excerpt, which is the window a flag was decided on -----------------
+    check("a flag prints its path, line and name above its excerpt",
+          hit_lines({"path": "FormalSchemes/A.lean", "line": 7, "name": "foo", "context": "c"}),
+          ["  FormalSchemes/A.lean:7  foo", "      c"])
+    check("the excerpt is the context verbatim, at a length no window can reach",
+          hit_lines({"path": "FormalSchemes/A.lean", "line": 7, "name": "foo",
+                     "context": "x" * 600})[1],
+          "      " + "x" * 600)
+
+    # The shape the cap actually bit: the window runs 230 characters *before* the occurrence as
+    # well as after it, so a cue late in the window sits past the four-hundredth character of the
+    # excerpt.  Three of `c888dfe...badd407`'s eighteen flags were of this shape at `87cd226`.
+    late = "/-- %s foo %s by_cases -/\ntheorem bar : True := trivial\n" % (_fill(312), _fill(200))
+    late_hit = dict(scan_file(late, ["foo"], cues)[0], path="FormalSchemes/A.lean")
+    check("the fixture below really does carry its cue past character 400 of the window",
+          cues.search(late_hit["context"]).start() > 400, True)
+    check("a cue past the four-hundredth character of the window still reaches the reader",
+          cues.search(hit_lines(late_hit)[1]) is not None, True)
+    check("and the excerpt printed for it is the whole window",
+          hit_lines(late_hit)[1], "      %s" % late_hit["context"])
 
     print("\n%d ok / %d FAIL" % (ok, fail))
     return 1 if fail else 0
