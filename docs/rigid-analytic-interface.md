@@ -29,16 +29,22 @@ generic-fibre functor is in scope; the generic-fibre functor and everything it l
 
 ### In scope (built in this project — issues 65–69)
 
-| Object | Lean name | File |
-| --- | --- | --- |
-| Restricted power series `R{X₁,…,Xₙ}` (the `I`-adic completion of `R[X₁,…,Xₙ]`) | `RestrictedPowerSeries` | `RestrictedPowerSeries.lean` |
-| tf-type `R`-algebras / affine formal schemes over `Spf R` | `IsTopologicallyFiniteType`, `IsAffineTopFiniteType` | `TopFiniteType.lean`, `GlobalTopFiniteType.lean` |
-| Locally / relatively tf-type formal schemes | `IsLocallyTopFiniteType`, `IsRelativelyTopFiniteType` | `GlobalTopFiniteType.lean`, `RelativeTopFiniteType.lean` |
-| Formal multiplicative group `Ĝm = Spf R{X, X⁻¹}` | `formalGm` | `FormalGm.lean` |
-| Formal Tate annulus `A = R{x,y}/(x·y−q)` and `Spf A` | `annulusAlgebra`, `annulusIdealOfDefinition`, `annulusStructMap` | `TateAnnulus.lean` |
-| The Tate chain `T → Spf R` (the `ℤ`-indexed chain of annuli) | `tateChain`, `tateChainStructMap` | `TateChainGlue.lean`, `TateChainStructMap.lean` |
-| The free, properly discontinuous `q^ℤ`-action on `T` | `tatePeriodAction`, `tateShift_properlyDiscontinuous`, `tateShiftAut_zpow_eq_one_iff` | `TateAction.lean`, `TateFreenessAdjacent.lean` |
-| **The Tate-curve formal model `𝔈_q = T/q^ℤ`** and its structural morphism | `tateCurveModel`, `tateCurveModelStructMap` | `TateCurveModel.lean` |
+- Restricted power series `R{X₁,…,Xₙ}` (the `I`-adic completion of `R[X₁,…,Xₙ]`) —
+  `RestrictedPowerSeries` in `RestrictedPowerSeries.lean`.
+- tf-type `R`-algebras / affine formal schemes over `Spf R` — `IsTopologicallyFiniteType`,
+  `IsAffineTopFiniteType` in `TopFiniteType.lean`, `GlobalTopFiniteType.lean`.
+- Locally / relatively tf-type formal schemes — `IsLocallyTopFiniteType`,
+  `IsRelativelyTopFiniteType` in `GlobalTopFiniteType.lean`, `RelativeTopFiniteType.lean`.
+- Formal multiplicative group `Ĝm = Spf R{X, X⁻¹}` — `formalGm` in `FormalGm.lean`.
+- Formal Tate annulus `A = R{x,y}/(x·y−q)` and `Spf A` — `annulusAlgebra`,
+  `annulusIdealOfDefinition`, `annulusStructMap` in `TateAnnulus.lean`.
+- The Tate chain `T → Spf R` (the `ℤ`-indexed chain of annuli) — `tateChain`, `tateChainStructMap`
+  in `TateChainGlue.lean`, `TateChainStructMap.lean`.
+- The free, properly discontinuous `q^ℤ`-action on `T` — `tatePeriodAction`,
+  `tateShift_properlyDiscontinuous`, `tateShiftAut_zpow_eq_one_iff` in `TateAction.lean`,
+  `TateFreenessAdjacent.lean`.
+- **The Tate-curve formal model `𝔈_q = T/q^ℤ`** and its structural morphism — `tateCurveModel`,
+  `tateCurveModelStructMap` in `TateCurveModel.lean`.
 
 ### Out of scope here (a separate rigid-geometry project)
 
