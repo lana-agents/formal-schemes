@@ -63,15 +63,32 @@ the image of the overlap in `X` is exactly `X_i ∩ X_j` (`range_overlapChart_co
 
 ## The criterion
 
+The two identifications above assemble into an **equivalence**, and it is the equivalence rather
+than either implication that this file exports first:
+
+```lean
+theorem isSeparated_iff_isClosed_range_chartCodiagonalMap :
+    IsSeparated DX σX hστX hσcX ↔
+      ∀ i j (hij : i ≠ j), IsClosed (Set.range ⇑(DX.chartCodiagonalMap i j hij).base)
+```
+
+Its right-hand side quantifies over **one ordered pair of distinct charts at a time**, which is
+what gives separatedness a restriction map to a subfamily of a chart family — neither
+`AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`, an existential over a presentation of the
+whole of `X`, nor `BothChartedFibreDatumXY.IsSeparated`, a condition on one morphism into
+`X ×_{Spf R} X`, has one. The diagonal pairs `i = j` are not a hypothesis of it: they are
+discharged inside, by `CompletedTensorProduct.codiagonal_surjective`.
+
 ```lean
 theorem isSeparated_of_chartCodiagonal_surjective
     (hsurj : ∀ i j (hij : i ≠ j), Function.Surjective (DX.chartCodiagonal i j hij)) :
     IsSeparated DX σX hστX hσcX
 ```
 
-**`X` is separated over `Spf R` as soon as every chart codiagonal is surjective.** The diagonal
-pairs are free: there the chart-restricted diagonal is `Spf` of the ordinary codiagonal, which is
-always surjective. Closedness comes from `FormalSpectrum.isClosedEmbedding_map_of_surjective`.
+**`X` is separated over `Spf R` as soon as every chart codiagonal is surjective.** This is the
+`Iff.mpr` of the equivalence and `FormalSpectrum.isClosedEmbedding_map_of_surjective` at the
+off-diagonal pairs, and nothing else: the diagonal branch is inside the equivalence, where it is
+written once.
 
 Surjectivity is not automatic, and that is the point: for the line with a doubled origin the
 overlap is `𝔾ₘ` and the chart codiagonal `k[x] ⊗ k[y] → k[t, t⁻¹]` misses `t⁻¹`, exactly matching
@@ -89,8 +106,11 @@ the failure of separatedness.
   identification.
 * `AlgebraicGeometry.BothChartedFibreDatumXY.preimage_range_diagonal'_eq_range_chartCodiagonalMap`
   and `preimage_range_diagonal'_eq_range_diagonal`: what each product chart sees of the diagonal.
+* `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap`:
+  **separatedness is a condition on one ordered pair of charts at a time.**
 * `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_of_chartCodiagonal_surjective`: the
-  ring-theoretic separatedness criterion.
+  ring-theoretic separatedness criterion, the `Iff.mpr` of that equivalence at a surjective
+  codiagonal.
 
 ## Implementation notes
 
@@ -586,6 +606,55 @@ theorem preimage_range_diagonal'_eq_range_diagonal (i : DX.J) :
 
 /-! ### The criterion -/
 
+/-- **Separatedness is a condition on one ordered pair of charts at a time**: `X` is separated over
+`Spf R` exactly when, for every pair of distinct charts, the image of the chart codiagonal
+`∇_{ij} : A i ⊗̂_R A j ⟶ A i{1/g i j}^` is closed in `Spf(A i ⊗̂_R A j)`.
+
+Both directions are `BothChartedFibreDatumXY.isSeparated_iff_isClosed_preimage_ι` read through
+`BothChartedFibreDatumXY.preimage_range_diagonal'_eq_range_chartCodiagonalMap`, which says that is
+what the product chart `(i, j)` sees of the diagonal. The diagonal pairs `i = j` are not a
+hypothesis: there the product chart sees `CompletedTensorProduct.diagonal`, whose range is closed
+because `CompletedTensorProduct.codiagonal` is surjective, and that is a fact about `A i` alone.
+
+`BothChartedFibreDatumXY.isSeparated_of_chartCodiagonal_surjective` below is the sufficient
+condition an instance uses and takes the surjectivity of `∇_{ij}` as its hypothesis; it is the
+`Iff.mpr` of this equivalence composed with `FormalSpectrum.isClosedEmbedding_map_of_surjective`,
+and the diagonal branch it used to carry inline is now discharged here, once. What the equivalence
+adds over it is closedness of the range rather than surjectivity, and the `←` direction — which is
+what a consumer transporting separatedness between two data needs, and what
+`BothChartedFibreDatumXY.isSeparated_reindex` (`FormalSchemes.GeneralSeparatedHomRestrictOpen`) is.
+-/
+theorem isSeparated_iff_isClosed_range_chartCodiagonalMap :
+    IsSeparated DX σX hστX hσcX ↔
+      ∀ (i j : DX.J) (hij : i ≠ j),
+        letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
+        haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
+          isAdicRing_awayCompletionIdeal _ _ (hI.map _)
+        haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
+          CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
+        IsClosed (Set.range ⇑(DX.chartCodiagonalMap i j hij).base) := by
+  letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
+  constructor
+  · intro hsep i j hij
+    have hcl := (isSeparated_iff_isClosed_preimage_ι DX σX hστX hσcX).mp hsep (i, j)
+    rwa [preimage_range_diagonal'_eq_range_chartCodiagonalMap DX σX hστX hσcX i j hij] at hcl
+  · intro hcl
+    refine isSeparated_of_isClosed_preimage_ι DX σX hστX hσcX fun p => ?_
+    obtain ⟨i, j⟩ := p
+    by_cases hij : i = j
+    · subst hij
+      haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A i)) :=
+        CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A i) hI
+      rw [preimage_range_diagonal'_eq_range_diagonal DX σX hστX hσcX i]
+      exact (FormalSpectrum.isClosedEmbedding_map_of_surjective
+        (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A i))
+        (I.map (algebraMap R (DX.A i))) (CompletedTensorProduct.codiagonal R I (DX.A i))
+        (CompletedTensorProduct.lift_le_comap (le_refl _) (AlgHom.id R (DX.A i))
+          (AlgHom.id R (DX.A i)) hI)
+        CompletedTensorProduct.codiagonal_surjective).isClosed_range
+    · rw [preimage_range_diagonal'_eq_range_chartCodiagonalMap DX σX hστX hσcX i j hij]
+      exact hcl i j hij
+
 /-- **`X` is separated over `Spf R` as soon as every chart codiagonal is surjective.**
 
 This is the §10.15 obligation reduced to pure ring theory: the datum's own data
@@ -603,29 +672,19 @@ theorem isSeparated_of_chartCodiagonal_surjective
       Function.Surjective (DX.chartCodiagonal i j hij)) :
     IsSeparated DX σX hστX hσcX := by
   letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
-  refine isSeparated_of_isClosed_preimage_ι DX σX hστX hσcX fun p => ?_
-  obtain ⟨i, j⟩ := p
+  rw [isSeparated_iff_isClosed_range_chartCodiagonalMap]
+  intro i j hij
+  haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
+    isAdicRing_awayCompletionIdeal _ _ (hI.map _)
   haveI : IsAdicRing (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j)) :=
     CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
-  by_cases hij : i = j
-  · subst hij
-    rw [preimage_range_diagonal'_eq_range_diagonal DX σX hστX hσcX i]
-    exact (FormalSpectrum.isClosedEmbedding_map_of_surjective
-      (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A i))
-      (I.map (algebraMap R (DX.A i))) (CompletedTensorProduct.codiagonal R I (DX.A i))
-      (CompletedTensorProduct.lift_le_comap (le_refl _) (AlgHom.id R (DX.A i))
-        (AlgHom.id R (DX.A i)) hI)
-      (CompletedTensorProduct.codiagonal_surjective)).isClosed_range
-  · haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-      isAdicRing_awayCompletionIdeal _ _ (hI.map _)
-    rw [preimage_range_diagonal'_eq_range_chartCodiagonalMap DX σX hστX hσcX i j hij]
-    exact (FormalSpectrum.isClosedEmbedding_map_of_surjective
-      (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j))
-      (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
-      (DX.chartCodiagonal i j hij)
-      (CompletedTensorProduct.lift_le_comap
-        (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ hI)
-      (hsurj i j hij)).isClosed_range
+  exact (FormalSpectrum.isClosedEmbedding_map_of_surjective
+    (CompletedTensorProduct.idealOfDefinition R I (DX.A i) (DX.A j))
+    (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j))
+    (DX.chartCodiagonal i j hij)
+    (CompletedTensorProduct.lift_le_comap
+      (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ hI)
+    (hsurj i j hij)).isClosed_range
 
 
 end BothChartedFibreDatumXY

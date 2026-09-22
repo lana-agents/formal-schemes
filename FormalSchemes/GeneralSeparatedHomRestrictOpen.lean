@@ -142,8 +142,6 @@ and moves nothing.
   `AlgebraicGeometry.AffineChartedFibreDatumX.isOpenImmersion_reindexHom` and
   `AlgebraicGeometry.AffineChartedFibreDatumX.range_reindexHom`: a subfamily's glued object is the
   open formal subscheme cut out by the union of the selected chart ranges.
-* `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap`:
-  **separatedness is a condition on one ordered pair of charts at a time.**
 * `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparated_reindex`: **separatedness passes to every
   subfamily of a chart family.**
 * `AlgebraicGeometry.BothChartedFibreDatumXY.isSeparatedOverSpf_restrictOpen_of_iUnion_range_ι`:
@@ -497,8 +495,9 @@ form.** `BothChartedFibreDatumXY.isSeparated_iff_isClosed_preimage_ι`
 (`FormalSchemes.GeneralSeparatedChartCodiagonal`) identifies what each product chart sees of the
 diagonal as the range of `AffineChartedFibreDatumX.chartCodiagonalMap i j`, which is built from
 `A i`, `A j`, `g i j` and `τ i j` and from nothing else in the datum.
-`BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap` below packages the two
-into a single equivalence
+`BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap`
+(`FormalSchemes.GeneralSeparatedChartCodiagonal`, put there by issue 2148) packages the two into a
+single equivalence
 
 ```
 IsSeparated DX σX hστX hσcX ↔
@@ -517,8 +516,10 @@ That the equivalence is what makes this work is worth stating as a **negative**:
 existential over a presentation of the whole of `X`, and the categorical definition
 `BothChartedFibreDatumXY.IsSeparated` is a closed-immersion condition on a morphism into
 `X ×_{Spf R} X`; neither has any visible restriction map to a subfamily. The pair-local form does,
-and this is the first consumer of `FormalSchemes.GeneralSeparatedChartCodiagonal` that needs the
-`←` direction of the criterion as well as the `→` one.
+and this is the first consumer **outside** `FormalSchemes.GeneralSeparatedChartCodiagonal` that
+needs the `←` direction of the criterion as well as the `→` one — inside that file
+`BothChartedFibreDatumXY.isSeparated_of_chartCodiagonal_surjective` is that direction and nothing
+else.
 
 **The geometric half** is `AffineChartedFibreDatumX.glueChartMorphisms`
 (`FormalSchemes.ChartedDatumGlueMorphisms`) at the ambient datum's own chart inclusions. Their
@@ -557,21 +558,33 @@ predicate.
 
 ## Placement, measured rather than argued
 
-These declarations sit here rather than in a leaf of their own, and rather than beside the objects
-they are about. The datum constructions belong by the tree's own rule with
-`AlgebraicGeometry.AffineChartedFibreDatumX`, and the criterion with
-`FormalSchemes.GeneralSeparatedChartCodiagonal`; neither of those imports the other, and a leaf
-over both plus `FormalSchemes.GeneralSeparatedScheme` and `FormalSchemes.OpenFormalSubscheme` was
-built and audited before this disposition was taken, and the next two figures are that one-off
-measurement of a tree that was then discarded rather than a standing claim about this one. It cost
-**25** `scripts/closure_audit.py` MISMATCHes across **20** files: every module in the leaf's import
+The two moves this section could make are **independent, and only one of them is declined**.
+
+**The criterion is not here.**
+`BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap` is in
+`FormalSchemes.GeneralSeparatedChartCodiagonal`, beside the two identifications it is assembled
+from and beside `BothChartedFibreDatumXY.isSeparated_of_chartCodiagonal_surjective`, whose diagonal
+branch was a verbatim copy of the equivalence's and is now that equivalence's `Iff.mpr`. That is a
+move into an **existing** module, so it adds no import edge, moves `scripts/closure_audit.py` by
+**0**, and costs only re-elaboration: the reverse closure of
+`FormalSchemes.GeneralSeparatedChartCodiagonal` is **16**, so seventeen modules including itself.
+The dedup is why it is worth that and not merely tidier — a criterion whose sufficient-condition
+form already lives in another file cannot be deduplicated from here.
+
+**The datum constructions are here, and that is declined on a ratio.**
+`AffineChartedFibreDatumX.reindex` and `AffineChartedFibreDatumX.reindexHom` belong by the tree's
+own rule with `AlgebraicGeometry.AffineChartedFibreDatumX`, which does not import
+`FormalSchemes.GeneralSeparatedChartCodiagonal`; a leaf over both plus
+`FormalSchemes.GeneralSeparatedScheme` and `FormalSchemes.OpenFormalSubscheme` was built and
+audited before this disposition was taken, and the next two figures are that one-off measurement of
+a tree that was then discarded rather than a standing claim about this one. It cost **25**
+`scripts/closure_audit.py` MISMATCHes across **20** files: every module in the leaf's import
 closure whose docstring quotes how many dependents it has gains one of them. The reverse closure of
-`FormalSchemes.StructureSheaf` is **526**, and
-that file is one of the twenty, so what prices the disposition is the repair and not the leaf. In
-this file the audit is unmoved at **0**, no import edge is added, and nothing outside this file
-re-elaborates. The move of
-`AffineChartedFibreDatumX.reindex` and `AffineChartedFibreDatumX.reindexHom` out to a home of their
-own is **declined on that ratio and not on principle**, exactly as this file declines
+`FormalSchemes.StructureSheaf` is **526**, and that file is one of the twenty, so what prices the
+disposition is the repair and not the leaf. In this file the audit is unmoved at **0**, no import
+edge is added, and nothing outside this file re-elaborates: the reverse closure of
+`FormalSchemes.GeneralSeparatedHomRestrictOpen` is **0**. So the move is **declined on that ratio
+and not on principle**, exactly as this file declines
 `FormalScheme.isOpenImmersion_restrictOpenMap`'s move above, and is worth re-costing the moment a
 second consumer appears — the refinement of goal 2 will be one.
 -/
@@ -753,50 +766,6 @@ variable
       AlgEquiv.refl (R := R)
         (A₁ := awayCompletion (I.map (algebraMap R (DX.A i))) (DX.g i i' * DX.g i i'')))
 
-/-- **Separatedness is a condition on one ordered pair of charts at a time**: `X` is separated over
-`Spf R` exactly when, for every pair of distinct charts, the image of the chart codiagonal
-`∇_{ij} : A i ⊗̂_R A j ⟶ A i{1/g i j}^` is closed in `Spf(A i ⊗̂_R A j)`.
-
-Both directions are `BothChartedFibreDatumXY.isSeparated_iff_isClosed_preimage_ι` read through
-`BothChartedFibreDatumXY.preimage_range_diagonal'_eq_range_chartCodiagonalMap`, which says that is
-what the product chart `(i, j)` sees of the diagonal. The diagonal pairs `i = j` are not a
-hypothesis: there the product chart sees `CompletedTensorProduct.diagonal`, whose range is closed
-because `CompletedTensorProduct.codiagonal` is surjective, and that is a fact about `A i` alone.
-
-`BothChartedFibreDatumXY.isSeparated_of_chartCodiagonal_surjective` is the sufficient condition an
-instance uses and takes the surjectivity of `∇_{ij}` as its hypothesis; this is the *equivalence*,
-with closedness of the range rather than surjectivity, which is what a consumer transporting
-separatedness between two data needs. -/
-theorem isSeparated_iff_isClosed_range_chartCodiagonalMap :
-    IsSeparated DX σX hστX hσcX ↔
-      ∀ (i j : DX.J) (hij : i ≠ j),
-        letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
-        haveI : IsAdicRing (awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j)) :=
-          isAdicRing_awayCompletionIdeal _ _ (hI.map _)
-        haveI : IsAdicRing (idealOfDefinition R I (DX.A i) (DX.A j)) :=
-          isAdicRing R I (DX.A i) (DX.A j) hI
-        IsClosed (Set.range ⇑(DX.chartCodiagonalMap i j hij).base) := by
-  letI := DX.commRing; letI := DX.algebra; letI := DX.topology; letI := DX.isAdic
-  constructor
-  · intro hsep i j hij
-    have hcl := (isSeparated_iff_isClosed_preimage_ι DX σX hστX hσcX).mp hsep (i, j)
-    rwa [preimage_range_diagonal'_eq_range_chartCodiagonalMap DX σX hστX hσcX i j hij] at hcl
-  · intro hcl
-    refine isSeparated_of_isClosed_preimage_ι DX σX hστX hσcX fun p => ?_
-    obtain ⟨i, j⟩ := p
-    by_cases hij : i = j
-    · subst hij
-      haveI : IsAdicRing (idealOfDefinition R I (DX.A i) (DX.A i)) :=
-        isAdicRing R I (DX.A i) (DX.A i) hI
-      rw [preimage_range_diagonal'_eq_range_diagonal DX σX hστX hσcX i]
-      exact (FormalSpectrum.isClosedEmbedding_map_of_surjective
-        (idealOfDefinition R I (DX.A i) (DX.A i))
-        (I.map (algebraMap R (DX.A i))) (codiagonal R I (DX.A i))
-        (lift_le_comap (le_refl _) (AlgHom.id R (DX.A i)) (AlgHom.id R (DX.A i)) hI)
-        codiagonal_surjective).isClosed_range
-    · rw [preimage_range_diagonal'_eq_range_chartCodiagonalMap DX σX hστX hσcX i j hij]
-      exact hcl i j hij
-
 variable {J' : Type u} (e : J' → DX.J) (he : Function.Injective e)
 
 /-- **The triple-overlap datum of a subfamily**: the ambient one at the selected indices. Its two
@@ -841,8 +810,8 @@ include he in
 /-- **Separatedness passes to every subfamily of a chart family.** The pairs of a subfamily are a
 subset of the whole family's, and the subfamily's chart codiagonal at a pair is the original's by
 `AffineChartedFibreDatumX.reindex_chartCodiagonalMap`, so this is
-`BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap` used in both
-directions and nothing else.
+`BothChartedFibreDatumXY.isSeparated_iff_isClosed_range_chartCodiagonalMap`
+(`FormalSchemes.GeneralSeparatedChartCodiagonal`) used in both directions and nothing else.
 
 There is no comparable statement for `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf` proved
 directly: that predicate is an existential over a presentation of the *whole* of `X`, with no
