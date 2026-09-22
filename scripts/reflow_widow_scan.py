@@ -47,20 +47,20 @@ second fix is switched on at all:
 * **A diff names two paths and either may be absent.**  A rename names the old path on the `-`
   side and the new one on the `+` side, and `git show <base>:<new path>` finds nothing there, so
   a renamed module's whole standing population reads as introduced.  On `befe0fd`, ten modules
-  renamed in one commit, that was **six** reported of which **five** were pre-existing at the old
-  path -- four of them at the very same line number and `rest. -/` at `:328` there against `:332`
+  renamed in one commit, that was **five** reported of which **four** were pre-existing at the old
+  path -- three of them at the very same line number and `rest. -/` at `:328` there against `:332`
   here, which is why the comparison is keyed to the line's **text** and never to its number.  With
   both paths kept the same range reports **one**, and that one is
   real: the rename lengthened a backticked name, the paragraph around it re-filled, and `it.` is
   stranded at `BasicOpenCoverSeparatedScheme.lean:32`.  A name-lengthening refactor stranding a
-  word is exactly this scan's subject, and five false positives were hiding it.
+  word is exactly this scan's subject, and four false positives were hiding it.
 * **The rename half rests on `-M`'s own detection, which is switchable from outside.**  Every
   `.lean` rename in this tree's history is *inexact* -- ten records, scoring `R068` to `R096`, none
   `R100` -- so each is found by the exhaustive pass, which git **skips, with a warning on stderr
   that this script discards**, once `diff.renameLimit` is exceeded.  With the pin removed and
   `diff.renameLimit=1` injected, the rejected behaviour **would** come back in full and in
-  silence: `befe0fd` then reads as **38** files touched rather than 28 and **six** reported rather
-  than one.  It does not come back through the call as it stands, which carries
+  silence: `befe0fd` then reads as **38** files touched rather than 28 and **five** reported
+  rather than one.  It does not come back through the call as it stands, which carries
   `-c diff.renameLimit=0` -- run under that same injected configuration it still reads 28 and one,
   because `-c` outranks every repository, user and system setting.
   A rename whose similarity falls *under* `-M`'s 50% default is a different shape: git reports it
@@ -80,15 +80,17 @@ re-measure rather than quoting them.
     ----------  --------------------------------------------------------------------------
     2089 lines  a <=2-word line inside a doc span -- the last line of every filled
                 paragraph, so this is every paragraph
-     209 lines  ... and its first word fits on the line above at **99** -- the wrong width:
-                this tree fills at **100**, so almost nothing qualifies
-    3841 paras  a greedy refill of the paragraph at 100 differs from what is there --
+     209 lines  ... and its first word fits on the line above -- **rejected, and not
+                because 209 is small**: the count is monotone in the width (132 / 209 /
+                322 / 434 at 98 / 99 / 100 / 101), so it cannot discriminate one width
+                from another and is no evidence about either
+    2989 paras  a greedy refill of the paragraph at 99 differs from what is there --
                 **this tree is not greedily filled**, and that is deliberate: authors break
                 before long backticked names
-     732 paras  ... and the refill **saves at least one line** -- still mostly sense-breaks
+     555 paras  ... and the refill **saves at least one line** -- still mostly sense-breaks
                 that happen to be compressible, with nothing short stranded in them
-     228 paras  ... and the paragraph holds a <=2-*plain*-word line -- close
-    **226/230** ... and that line is not forced short by an unbreakable neighbour, and is
+     162 paras  ... and the paragraph holds a <=2-*plain*-word line -- close
+    **160/164** ... and that line is not forced short by an unbreakable neighbour, and is
                 not the paragraph's first -- **the predicate**
 
 The two conjuncts do different jobs and neither works alone.  *Saves a line* rules out the
@@ -96,6 +98,59 @@ thousands of paragraphs this tree breaks for sense at no cost in lines.  *Holds 
 rules out the several hundred whose only compressible line is a long backticked name the author put
 on a line of its own on purpose -- **plain** means every word on it is backtick-free and at most
 `--max-token` characters.
+
+## The fill width, and why it is 99
+
+**A width is a claim about the convention of the text the scan reads, so it is checkable** -- and
+the first default here was 100, argued for by the rejected row above and never checked against the
+tree.  It is checked now, twice, over the 7863 paragraphs at `4873811`.  *Exact-fill* below counts
+paragraphs that are **byte-identical** to a greedy fill at `w`, by a fill written from the
+definition rather than by calling `refill`:
+
+    w     exact-fill paragraphs (of 7863)   flagged paragraphs
+    ---   -------------------------------   ------------------
+     96                              2386                   78
+     97                              3393                   93
+     98                              4465                  119
+    **99**                       **4874**              **160**
+    100                               4022                  226
+    101                               2734                  309
+    102                               1906                  383
+
+**The curve is single-peaked and the peak is at 99**, by 409 paragraphs over 98 and by 852 over
+100.  That is the signature of a fill width: at the true width the fill reproduces the file and one
+column either side it does not.  (The peak is 62 % and not 100 % because of the deliberate breaks
+the row above measures; the *location* is the signal, not the height.)  Note the second column:
+**the flagged count rises monotonically in `w`**, so a wider default is strictly more sensitive and
+"when in doubt take the larger number" is the wrong instinct here.
+
+**The cleaner test is head-to-head.**  Restrict to the paragraphs where a 99-fill and a 100-fill
+actually disagree -- 2690 of them -- and ask which one the file matches: **1221 the 99-fill, 369
+the 100-fill**, 1100 neither.  **3.3 : 1**, with every undecidable paragraph excluded by
+construction.  Against the neighbours, 99 beats 98 by **1090 : 681** and 101 by **2406 : 266**.
+
+**What the old default bought, on the instrument's own census.**  The two flag sets are nested:
+**66** paragraphs are flagged at 100 and not at 99, and **0** the other way round.  So the width
+never traded one population for another -- widening it only ever added, and it added 29 % of its
+own headline figure.  Of the 66:
+
+* **38 are byte-identical to a greedy fill at 99** and **0** to a fill at 100 -- correctly filled
+  prose by this tree's own practice, flagged for not being packed tighter.
+* **65 of the 66 have no repair at 99 at all.**  Take the smallest window ending at the paragraph's
+  end whose refill is shorter: at 99 there is none, and at 100 there is one whose longest line is
+  **exactly 100 columns**, in every one of the 65.  **The old default's extra flags were requests
+  to emit a 100-column line**, which is inside `CONTRIBUTING.md`'s limit and outside this tree's
+  fill.  An instrument whose repair violates the convention it measures is asking a question with
+  no admissible answer.
+
+**The one flag a 99 default really does lose, and it is not free.**  The sixty-sixth is
+`AwayBaseChangeChartTransition.lean:92`, which strands `would carry:` and *has* a 99-safe repair --
+a four-line window refilling to three at 98 columns -- yet `widows` misses it at 99, because the
+paragraph holds a line of exactly **100** columns and a greedy 99-fill must re-break it, spending
+the line the repair would save.  **That is the class: a paragraph holding a line wider than the
+fill width.**  549 paragraphs here hold one; exactly **1** of them becomes a missed widow, and
+`--width 100` still finds it.  The class is named rather than repaired because repairing it means
+changing the first conjunct, and the conjuncts are issue 2159's.
 
 ## The two exclusions, and the case an instrument must not flag
 
@@ -114,7 +169,7 @@ test would fire too **if it were reached**.  **A line can meet two rules and be 
 one of them, and the prose has to name the one that runs first.**
 
 **So the exclusions are justified on their own instances, and there are three of those.**
-Measured at `90be36d`, over the 231 short-plain lines living in paragraphs that refill shorter:
+Measured at `90be36d`, over the 165 short-plain lines living in paragraphs that refill shorter:
 
     excluded by                                  lines  which
     -------------------------------------------  -----  -------------------------------------
@@ -124,12 +179,12 @@ Measured at `90be36d`, over the 231 short-plain lines living in paragraphs that 
                                                         `This is`
     both                                             1  `TateInvNodeChartDescent.lean:257`,
                                                         `This is`
-    reported                                       228
+    reported                                       162
 
 **The second exclusion is not the first in disguise, and the two `This is` lines are the proof.**
 Both read `This is` at 7 columns, both are their paragraph's first line, and they differ only in
 the width of the backticked name below.  At `TateInvNodeChartQuotientSpf.lean:217` that name is 89
-columns, so `7 + 1 + 89` fits at 100 and the successor rule genuinely does not reach the line --
+columns, so `7 + 1 + 89` fits at 99 and the successor rule genuinely does not reach the line --
 only the first-line rule excludes it.  At `TateInvNodeChartDescent.lean:258` it is 94, so
 `7 + 1 + 94` does not fit and both rules fire.  So each rule has **one line it excludes alone and
 one it shares**, which is the figure to weigh before loosening either, and none of the three is the
@@ -155,12 +210,12 @@ Every `/-! ... -/` **and** `/-- ... -/` block, with fenced blocks, lists, tables
 indented lines excluded -- they are not filled prose and must never be rewrapped.  Declaration
 docstrings are in scope because two of the three standing instances issue 2159 names are in one
 (`StructureSheaf.lean`'s `one.` and `StructureSheafStalkPowerSeriesCounterexample.lean`'s `it.`);
-a module-docstring-only population reads 113 paragraphs here and **contains neither**.
+a module-docstring-only population reads 85 paragraphs here and **contains neither**.
 
 **The closing `-/` counts as one of the two words.**  A line *beginning* `-/` is structural and
 is never rewrapped; a line *ending* ` -/` is ordinary filled prose whose last word happens to be
-the delimiter.  Of the 228 lines reported at `90be36d`, **70** are of that shape -- `rest. -/`,
-`injective. -/` -- so for a third of the population the predicate reads *one* prose word plus the
+the delimiter.  Of the 162 lines reported at `90be36d`, **46** are of that shape -- `rest. -/`,
+`injective. -/` -- so for 28 % of the population the predicate reads *one* prose word plus the
 delimiter.  They are widows all the same, and a refill leaves the `-/` at the end where it was;
 the figure is here so that anyone loosening `is_short_plain` knows how much of the population
 turns on it.
@@ -171,13 +226,13 @@ The conjuncts are that row's and reproduce; the segmentation is what differs, an
 
     segmentation                      refill differs   saves a line   reported
     --------------------------------  --------------  -------------  ----------
-    this file (`/-!` and `/--`)                 3841            732   226 / 230
-    `/-!` only                                  1892            367   113 / 115
-    `/--` only                                  1949            365   113 / 115
-    structural-line rule dropped                6991           2772  1207 / 1274
-    fenced-block rule dropped                   3853            736   226 / 230
+    this file (`/-!` and `/--`)                 2989            555   160 / 164
+    `/-!` only                                  1549            282    85 /  87
+    `/--` only                                  1440            273    75 /  77
+    structural-line rule dropped                6006           2537  1122 / 1189
+    fenced-block rule dropped                   3001            559   160 / 164
 
-The three ratios against 3193 / 493 / 136 are 1.20, 1.48 and 1.66 -- not constant, so it is not
+The three ratios against 3193 / 493 / 136 are 0.94, 1.13 and 1.18 -- not constant, so it is not
 one uniform scope difference either.  The fourth row is the only one the structural-line repair
 below could not move, and that is by construction: it drops the rule the repair changed.  A sweep
 whose every row moves is not measuring the rule it names.  What **is** established is narrower
@@ -197,7 +252,7 @@ at `b3c6e7d`: **937** `**`-led lines, **149** `*`-led ones and **18** opening `<
 a space were read as structure, while everything the rule is *for* keeps the space -- 4001 `* `
 items, one `+ ` item, 78 numbered items, and every one of the 799 `-`-leading lines is a `-/`
 already covered by its own alternative.  **1104 classifications corrected, 0 lost**, and the
-population went 210 / 214 to 226 / 230 at `4873811` -- 16 stranded lines the scan could not see,
+population went 148 / 152 to 160 / 164 at `4873811` -- 12 stranded lines the scan could not see,
 and not one spurious.  *A structural-line rule must require the space that makes a list marker*;
 the shape that hid this is that no fixture and none of the pinned `--diff` ranges contained an
 emphasis-led line, so twelve green runs said nothing.
@@ -219,8 +274,18 @@ import sys
 import unicodedata
 
 
-WIDTH = 100
+# The fill width this tree is written at, which is **not** the 100-column limit `CONTRIBUTING.md`
+# sets: the limit is *at most 100* and the practice is *fill at 99*, and both hold at once.  99 is
+# measured rather than chosen -- see the `## The fill width` section of the docstring -- and it is
+# the number every figure above and below is taken at.  `--width` overrides it and both report
+# paths print it, so no figure from this instrument can be quoted without the width beside it.
+WIDTH = 99
 MAX_TOKEN = 14
+
+# Both report paths print the width on their summary line, so no figure taken from this instrument
+# can be quoted without it being visible in the same output.  One constant, pinned by `--selftest`,
+# because the default moved once (issue 2167) and the figures it moved were quoted without it.
+WIDTH_LINE = "fill width / max plain word       : %5d / %d"
 
 # A line that is not filled prose.  Indented text, a list item, a table row, a heading, a block
 # quote, a fence, and the `/-` and `-/` delimiters themselves: rewrapping any of them is wrong, so
@@ -394,7 +459,7 @@ def report_tree(root: str, width: int, max_token: int) -> int:
     modules = len(lean_files(root))
     stranded = sum(len(s) for _, _, s in hits)
     print("modules under FormalSchemes/      : %5d" % modules)
-    print("fill width / max plain word       : %5d / %d" % (width, max_token))
+    print(WIDTH_LINE % (width, max_token))
     print("FLAGGED: paragraphs with a stranded line : %5d   (%d lines)" % (len(hits), stranded))
     for path, paragraph, s in hits:
         show(path, paragraph, s, width)
@@ -468,7 +533,7 @@ def report_diff(diff_range: str, root: str, width: int, max_token: int) -> int:
     print("range                             : %s" % diff_range)
     print("its `-` side is read at           : %s" % (base or "(the index)"))
     print("`.lean` files it touches          : %5d" % len(pairs))
-    print("fill width / max plain word       : %5d / %d" % (width, max_token))
+    print(WIDTH_LINE % (width, max_token))
     introduced = []
     for old_path, new_path in pairs:
         if new_path is None:
@@ -628,6 +693,39 @@ def selftest() -> int:
           is_short_plain("`no`"), False)
     check("a long unbacked word is not plain either",
           is_short_plain("a" * 15), False)
+
+    # --- the fill width ------------------------------------------------------------------------
+    # The default is measured (see `## The fill width` in the docstring) and nothing else in here
+    # would notice it moving back, so it is pinned by its value *and* by the behaviour it buys.
+    check("the default fill width is this tree's, and it is 99", WIDTH, 99)
+
+    # The 38-of-66 shape: prose that is a byte-exact greedy fill at 99, which the old default
+    # flagged and this one does not.  Sighted from both sides -- `[]` alone would also be what a
+    # broken predicate returns.
+    filled_at_99 = doc("x" * 97, "ab")
+    check("a paragraph correctly filled at 99 is NOT reported at the default",
+          numbers(filled_at_99), [])
+    check("... and it is sighted: the old default did report it", [n for p, s in
+          scan_text(filled_at_99, 100, MAX_TOKEN) for n, _ in s], [3])
+    check("... and the repair it asked for is a line of exactly 100 columns",
+          cols("x" * 97 + " ab"), 100)
+
+    # The one class the default loses, named in the docstring: a paragraph holding a line WIDER
+    # than the fill width.  A greedy refill must re-break that line, spending the line the repair
+    # would save, so `widows` cannot see the widow even though a window repair at 99 exists.
+    over_width = doc("a" * 50 + " " + "b" * 49, "c" * 90, "no")
+    check("a widow under a line wider than the fill width is missed at the default",
+          numbers(over_width), [])
+    check("... and it is a real miss, not an absent widow: `--width 100` reports it",
+          [n for p, s in scan_text(over_width, 100, MAX_TOKEN) for n, _ in s], [4])
+    check("... and the window that repairs it stays inside 99",
+          [cols(l) for l in refill(["c" * 90, "no"], WIDTH)], [93])
+
+    # Goal 4 of issue 2167: `--width` stays a flag and the width stays on the summary line of both
+    # report paths, so a figure cannot be quoted without it.  One constant, used by both.
+    check("the width is on the summary line, at the width actually used",
+          WIDTH_LINE % (99, MAX_TOKEN),
+          "fill width / max plain word       :    99 / 14")
 
     # --- the lexer ----------------------------------------------------------------------------
     check("a nested `/- ... -/` does not close the docstring early",
