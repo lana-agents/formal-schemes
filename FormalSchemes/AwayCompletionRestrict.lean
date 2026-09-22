@@ -38,6 +38,8 @@ is an ordinary localization lift.
   `I` finitely generated, `FormalSpectrum.awayCompletionHom I g f` is a unit of `R{1/g}`. This is
   the geometric statement, and the one a reader wants to cite.
 * `FormalSpectrum.awayCompletionRestrict`: the ring map `R{1/f} →+* R{1/g}` itself.
+* `FormalSpectrum.awayCompletionRestrictAlg`: its `R`-algebra form, which is the same underlying
+  map (`FormalSpectrum.coe_awayCompletionRestrictAlg`). Issue 2148 is what asks for it.
 * `FormalSpectrum.awayCompletionRestrict_comp_awayCompletionHom` and its applied form: it commutes
   with the structure maps from `R`.
 * `FormalSpectrum.map_awayCompletionRestrict`: it carries the ideal of definition of `R{1/f}`
@@ -263,6 +265,34 @@ theorem awayCompletionRestrict_awayCompletionHom (hI : I.FG)
     (hle : basicOpen I g ≤ basicOpen I f) (r : R) :
     awayCompletionRestrict I f g hI hle (awayCompletionHom I f r) = awayCompletionHom I g r :=
   RingHom.congr_fun (awayCompletionRestrict_comp_awayCompletionHom I f g hI hle) r
+
+/-- **The `R`-algebra form.** The restriction is a map under `R`
+(`FormalSpectrum.awayCompletionRestrict_awayCompletionHom` just above) and
+`FormalSpectrum.awayCompletionHom_eq_algebraMap` (`FormalSchemes.BasicOpenChart`) identifies that
+structural map with the algebra map, so the upgrade costs one `commutes'` field and no hypothesis
+beyond the ones the ring map already carries.
+
+The *equality* case is shipped downstream as an `≃ₐ[R]`,
+`FormalSpectrum.awayCompletionCongrBasicOpenAlg` (`FormalSchemes.AwayCompletionRestrictUnique`).
+This is the same upgrade at a **strict** inclusion, where there is no inverse to be had. It is
+issue 2148 that asks for it: a chart family refined by basic opens carries `R`-algebra data at
+every index, so the leg `R{1/f} ⟶ R{1/g}` into a smaller basic open has to be an `AlgHom` and not
+only a `RingHom`, and the refinement's inclusions are strict. -/
+def awayCompletionRestrictAlg (hI : I.FG) (hle : basicOpen I g ≤ basicOpen I f) :
+    awayCompletion I f →ₐ[R] awayCompletion I g :=
+  { awayCompletionRestrict I f g hI hle with
+    commutes' := fun r => by
+      simp only [← awayCompletionHom_eq_algebraMap]
+      exact awayCompletionRestrict_awayCompletionHom I f g hI hle r }
+
+/-- `FormalSpectrum.awayCompletionRestrictAlg` has `FormalSpectrum.awayCompletionRestrict` as its
+underlying ring map, so every lemma below applies to it unchanged -- in particular
+`FormalSpectrum.awayCompletionRestrict_unique` (`FormalSchemes.AwayCompletionRestrictUnique`)
+pins the algebra map too. -/
+theorem coe_awayCompletionRestrictAlg (hI : I.FG) (hle : basicOpen I g ≤ basicOpen I f) :
+    (awayCompletionRestrictAlg I f g hI hle : awayCompletion I f →+* awayCompletion I g) =
+      awayCompletionRestrict I f g hI hle :=
+  rfl
 
 /-- **The map is a map of adic rings, on the nose**: it carries the ideal of definition of `R{1/f}`
 *onto* that of `R{1/g}`, not merely into it. Each is the extension of `I` along the structural map

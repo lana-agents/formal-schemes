@@ -39,9 +39,12 @@ presentation is needed: the away-of-away algebra isomorphisms of
   `Spec S → Spec A` is `D(r * b)` for some `b : A`. This is the ring-theoretic content, and it is
   Mathlib's `basicOpen_basicOpen_is_basicOpen` argument with the scheme-theoretic wrapping removed.
 * `FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen`: the statement for `Spf`.
+* `FormalSpectrum.basicOpen_le_of_image_basicOpenChartBase_eq`: whatever element the statement
+  above produces, its basic open lies inside `D(f)` — the containment
+  `FormalSpectrum.awayCompletionRestrict` is keyed on.
 * `FormalSpectrum.exists_refined_overlap_element`: its consumer — the overlap of a basic open
   of one chart with a basic open of another is a basic open, with its element in the ambient
-  chart algebra. Issue 2148 goal 1.
+  chart algebra and its basic open inside the coarse overlap. Issue 2148 goal 1.
 
 ## References
 
@@ -167,6 +170,32 @@ theorem basicOpen_basicOpenChart_is_basicOpen (hI : I.FG) (h : awayCompletion I 
   rw [himg2, hb, hf']
   rfl
 
+/-- **A basic open of a basic-open chart lands inside that basic open.** Whatever element
+`FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen` produces, the open it cuts out is contained
+in `D(f)`: the image of anything under the chart lies in the chart's range, and the range is `D(f)`
+(`FormalSpectrum.range_basicOpenChartBase`, `FormalSchemes.BasicOpenChart`).
+
+Geometrically this says nothing at all — `D(f')` *is* an open of the chart. It is recorded because
+of what consumes it: `FormalSpectrum.awayCompletionRestrict`
+(`FormalSchemes.AwayCompletionRestrict`) is keyed on exactly this containment of basic opens and on
+nothing else, so this one line is what turns the topological statement above into the
+`R{1/f} →+* R{1/f'}` a refined chart family's transition needs. **No divisibility of `f'` by `f`,
+and no unit hypothesis in `Localization.Away f'`, is asked for anywhere** — which is the point,
+since neither is available: an inclusion of basic opens of `Spf R` is a congruence modulo `I` and
+not a divisibility, as that module's own docstring says in as many words. -/
+theorem basicOpen_le_of_image_basicOpenChartBase_eq (hI : I.FG) {h : awayCompletion I f} {f' : R}
+    (hf' : basicOpenChartBase I f ''
+        (basicOpen (awayCompletionIdeal I f) h :
+          Set (FormalSpectrum (awayCompletionIdeal I f)))
+      = (basicOpen I f' : Set (FormalSpectrum I))) :
+    basicOpen I f' ≤ basicOpen I f := by
+  have hsub : (basicOpen I f' : Set (FormalSpectrum I)) ⊆
+      Set.range (basicOpenChartBase I f) := by
+    rw [← hf']
+    exact Set.image_subset_range _ _
+  rw [range_basicOpenChartBase I f hI] at hsub
+  exact hsub
+
 /-- **The overlap of a basic open of one chart with a basic open of another is a basic open**, and
 its element can be taken in the ambient chart algebra.
 
@@ -180,7 +209,14 @@ out the overlap of *D(h) ⊆ Spf A_i* with *D(h') ⊆ Spf A_j*. Issue 2139 sketc
 The element is the one `FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen` above produces from
 the *τ*-transport of *D(h')*, pushed into *A_i{1/h}*; the right-hand side is that overlap read
 inside *Spf (A_i{1/h})*. Nothing here mentions a chart family — the two overlap elements and the
-transition are the data of two charts, and *h*, *h'* refine them. -/
+transition are the data of two charts, and *h*, *h'* refine them.
+
+**The second conjunct is what makes the element usable algebraically**, and it is free: *D(e)* is
+an image under the chart at *g_ij*, whose range is *D(g_ij)*. It is stated here rather than left to
+the caller because `FormalSpectrum.awayCompletionRestrict` is keyed on precisely this containment,
+so the same *e* that answers the topological question also produces the comparison map of completed
+localizations — and it has to be the **same** *e*, which two separate existential statements would
+not give. `FormalSchemes.RefinedOverlapRestrict` is where that map is drawn. -/
 theorem exists_refined_overlap_element (hI : I.FG)
     {Ai Aj : Type u} [CommRing Ai] [CommRing Aj] [Algebra R Ai] [Algebra R Aj]
     (gij : Ai) (gji : Aj)
@@ -195,10 +231,12 @@ theorem exists_refined_overlap_element (hI : I.FG)
             (basicOpenChartBase (I.map (algebraMap R Ai)) gij ''
               (basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)
                   (τ.symm (awayCompletionHom (I.map (algebraMap R Aj)) gji h')) :
-                Set (FormalSpectrum (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)))) := by
+                Set (FormalSpectrum (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)))) ∧
+      basicOpen (I.map (algebraMap R Ai)) e ≤ basicOpen (I.map (algebraMap R Ai)) gij := by
   obtain ⟨e, he⟩ := basicOpen_basicOpenChart_is_basicOpen (I.map (algebraMap R Ai)) gij (hI.map _)
     (τ.symm (awayCompletionHom (I.map (algebraMap R Aj)) gji h'))
-  refine ⟨e, ?_⟩
+  refine ⟨e, ?_, basicOpen_le_of_image_basicOpenChartBase_eq (I.map (algebraMap R Ai)) gij
+    (hI.map _) he⟩
   rw [he]
   ext v
   simp only [Set.mem_preimage, SetLike.mem_coe, mem_basicOpen]
