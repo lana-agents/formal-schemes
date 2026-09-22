@@ -21,6 +21,13 @@ a separated morphism. Neither end is required to be a `FormalScheme.Spf`, and th
 an identity — its range is `U` (`FormalScheme.range_restrictOpenι_base`), so it is an isomorphism
 only when `U = ⊤`.
 
+A second section, added by issue 2148, runs the transport this file is built on the **other** way:
+`FormalScheme.isSeparatedOverSpf_of_isOpenImmersion` below trivialises the base change at `A := R`
+because its consumer puts the chart's own ring on both sides, and restoring it gives statement (A)
+of issue 1987 — separatedness surviving a restriction of the *source* — whenever the open lies
+inside one affine chart over `Spf R`. That section's own header docstring says what it settles and
+why the general case cannot be assembled out of it.
+
 ## The route
 
 The cover of the target is the one `FormalScheme.isSeparatedHom_id` uses, and for the same reason:
@@ -113,6 +120,15 @@ and moves nothing.
   open-immerses into `Spf I` is separated over `Spf I`**, at an arbitrary presentation.
 * `AlgebraicGeometry.FormalScheme.isSeparatedHom_restrictOpenHom`: **the inclusion of an open
   formal subscheme is separated**, at an arbitrary target and an arbitrary open.
+* `AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_of_isOpenImmersion_chart`: a formal scheme
+  that open-immerses into `Spf (I·A)` is separated over `Spf R`.
+* `AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range`: **statement (A)
+  at an open contained in one affine chart** — `X` restricted to `W` is separated over `Spf R` as
+  soon as `W` lies inside the range of an affine chart of `X` over the base.
+* `AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι`: the same at a
+  chart of a presentation of `X`, which is the form issue 1987 states (A) in.
+* `AlgebraicGeometry.FormalScheme.isSeparatedHom_restrictOpen_of_subset_range`: the same in the
+  `AlgebraicGeometry.FormalScheme.IsSeparatedHom` vocabulary.
 
 ## References
 
@@ -238,5 +254,198 @@ theorem isSeparatedHom_restrictOpenHom (hX : X.LocallyFG) (U : Opens X) :
           ⟨Set.range (f x).base, (hopen x).base_open.isOpen_range⟩).toLocallyRingedSpace := e₁
     exact ⟨R x, hcr x, hts x, I x, hadic x, hIfg x, e₀.symm,
       isSeparatedOverSpf_of_isOpenImmersion (hIfg x) _⟩
+
+/-! ### Statement (A) at an open inside one affine chart
+
+`FormalScheme.isSeparatedOverSpf_of_isOpenImmersion` above is stated over the base the source
+already lies over, which is the shape the per-chart clause of `FormalScheme.IsSeparatedHom` asks
+for and the reason the base change was trivialised at `A := R`. Issue 2148 wants the other shape:
+an open of a formal scheme **over `Spf R`**, where the affine it sits inside is `Spf (I·A)` for an
+`R`-algebra `A` and the structural morphism factors through it. Restoring the base change costs
+nothing — `FormalScheme.isSeparatedOverSpf_restrictOpen_Spf` is already stated at a general `A` —
+and it is what turns the transport above into a statement about a *source* restriction.
+
+**What this settles, and what it does not.** Issue 1987's statement (A) asks that
+`FormalScheme.IsSeparatedOverSpf` survive restricting the source to an arbitrary open of an
+arbitrary presented `X`. The three theorems below settle it whenever the open lies inside **one**
+chart, with no refinement of the chart family and no new datum: the restriction is then an open
+subscheme of a single `Spf (I·A)`, which issue 1990 already covers. **(A) at a general open is
+untouched** — an open meeting two charts needs the basic-open refinement of the chart family that
+issue 2148's goal 2 is about, and the cross-chart overlap element for it is
+`FormalSpectrum.exists_refined_overlap_element` (`FormalSchemes.BasicOpenChartImage`).
+
+**Which standing sentences these theorems move, named rather than certified.** Of the four files
+that describe the missing statement, three quantify over the **open** and their claims survive:
+`FormalSchemes.SpfOpenSeparated`, `FormalSchemes.GeneralSeparatedHom` and
+`FormalSchemes.AwayBaseFactorisationRange`. The first and the third also offer a reader the
+closest thing the tree has, which is no longer `FormalScheme.isSeparatedOverSpf_restrictOpen_Spf`,
+so each gains a clause naming the chart-local case. The fourth quantifies over the **source** and
+is false after this issue: `FormalSchemes.GeneralSeparatedHomLocal`'s refinement bullet said
+source restriction had landed at no source other than an affine `FormalScheme.Spf`, and the
+theorems below land it at an arbitrary one; it is repaired there.
+`FormalSchemes.GeneralSeparatedScheme`'s inventory of every value of
+`FormalScheme.IsSeparatedOverSpf` on this tree gains the three below, which that file's own
+rebuild rule admits — they conclude in the predicate, they are not its criteria or transports,
+they are not conjunctions with `FormalScheme.IsRelativelyTopFiniteType`, and none of them takes a
+`FormalScheme.IsSeparatedOverSpf` as a hypothesis. **Naming the sentence that moved is checkable;
+certifying that none did is not**, which is why the first version of this paragraph said the
+latter and was wrong about one of its four.
+
+**And the missing half cannot be assembled out of this one.** `FormalScheme.IsSeparatedHom` is
+local on the **target**: its cover is a cover of `Y` and its per-piece clause is
+`FormalScheme.IsSeparatedOverSpf` of a *preimage*. A family of opens of the **source**, each inside
+a chart and together covering `W`, is not of that shape, and there is **no rule on this tree that
+glues `FormalScheme.IsSeparatedOverSpf` along a cover of the source** — the predicate is an
+existential over a presentation of the whole of `X` restricted to `W`. Conservativity's hard
+direction, which is what would let a target-local statement be read back as one, is one of the
+directions `FormalSchemes.GeneralSeparatedHom` records as open. That is the reason the general case
+is a datum construction and not a covering argument.
+-/
+
+section ChartLocal
+
+variable {A : Type u} [CommRing A] [Algebra R A]
+variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
+
+/-- **A formal scheme that open-immerses into an affine chart over the base is separated over the
+base.** The `A`-general form of `FormalScheme.isSeparatedOverSpf_of_isOpenImmersion`: the target of
+the open immersion is `Spf (I·A)` for an `R`-algebra `A`, and the structural morphism is the
+immersion followed by the map of formal spectra induced by `algebraMap R A`.
+
+The two are **not** in a specialisation relation on the nose in either direction, for the reason
+this file's docstring records: at `A := R` the ideal `Ideal.map (algebraMap R R) I` is equal to `I`
+by `Ideal.map_id` and not by `rfl`, so recovering the earlier statement from this one costs exactly
+the `FormalSpectrum.locallyRingedSpaceObjCongr` transport that its own proof already spends. Both
+are kept.
+
+The open immersion is spent once, on `FormalScheme.restrictOpenIso` at the open cut out by the
+range of `χ`; `FormalScheme.isSeparatedOverSpf_restrictOpen_Spf` supplies the statement there and
+`FormalScheme.isSeparatedOverSpf_of_iso` moves it across. The `show` ascription on the
+open-immersion instance is here for the same reason `FormalScheme.isSeparatedHom_restrictOpenHom`
+ascribes its chart isomorphism by hand: instance search matches at reducible transparency and
+`FormalScheme.Spf` is not reducible, so the instance for `χ` is not found at the
+`FormalScheme.Spf` spelling of its target unless it is put there by hand. The **reason** is shared
+and the **device** is not — that proof delays the `FormalScheme.Spf` spelling until after the
+isomorphism is elaborated, and this one puts the instance at that spelling. -/
+theorem isSeparatedOverSpf_of_isOpenImmersion_chart (hI : I.FG) {Z : FormalScheme.{u}}
+    (χ : Z.toLocallyRingedSpace ⟶ locallyRingedSpaceObj (I.map (algebraMap R A)))
+    [himm : LocallyRingedSpace.IsOpenImmersion χ] :
+    IsSeparatedOverSpf hI Z
+      (χ ≫ locallyRingedSpaceMap I (I.map (algebraMap R A)) (algebraMap R A)
+        Ideal.le_comap_map) := by
+  haveI : LocallyRingedSpace.IsOpenImmersion
+      (show Z.toLocallyRingedSpace ⟶
+        (FormalScheme.Spf (I.map (algebraMap R A))).toLocallyRingedSpace from χ) := himm
+  obtain ⟨T, hT⟩ : ∃ T : Opens (FormalScheme.Spf (I.map (algebraMap R A))),
+      Set.range χ.base = (T : Set (FormalScheme.Spf (I.map (algebraMap R A)))) :=
+    ⟨⟨Set.range χ.base, himm.base_open.isOpen_range⟩, rfl⟩
+  have hfac := (FormalScheme.Spf (I.map (algebraMap R A))).restrictOpenIso_hom_comp
+    (locallyFG_Spf (hI.map (algebraMap R A))) T χ hT
+  refine isSeparatedOverSpf_of_iso hI
+    ((FormalScheme.Spf (I.map (algebraMap R A))).restrictOpenIso
+      (locallyFG_Spf (hI.map (algebraMap R A))) T χ hT).symm ?_
+    (isSeparatedOverSpf_restrictOpen_Spf I hI T)
+  rw [Iso.symm_hom, Iso.inv_comp_eq, ← Category.assoc, hfac]
+  rfl
+
+/-- **Statement (A) at an open contained in one affine chart** (EGA I §10.15): if `W` lies inside
+the range of an open immersion `j : Spf (I·A) ⟶ X` whose composite with the structural morphism is
+the map of formal spectra induced by `algebraMap R A`, then `X` restricted to `W` is separated over
+`Spf R`.
+
+No presentation of `X` appears and none is built. The only thing the hypothesis is used for is to
+factor the inclusion of `W` through `j`: `LocallyRingedSpace.IsOpenImmersion.lift` does that on the
+range containment, `LocallyRingedSpace.IsOpenImmersion.lift_fac` makes the triangle commute, and
+the lift is again an open immersion by the same `delta` of
+`LocallyRingedSpace.IsOpenImmersion.lift` that `FormalScheme.isOpenImmersion_restrictOpenMap` above
+performs, followed by instance search.
+
+`W` is an arbitrary open of `X` inside the chart, not a basic open of it: the basic opens are what
+`FormalScheme.isSeparatedOverSpf_restrictOpen_Spf` builds its presentation from, one chart per
+basic open inside the image, and that happens inside the theorem this one calls. -/
+theorem isSeparatedOverSpf_restrictOpen_of_subset_range (hI : I.FG) (hX : X.LocallyFG)
+    {s : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I} (W : Opens X)
+    (j : locallyRingedSpaceObj (I.map (algebraMap R A)) ⟶ X.toLocallyRingedSpace)
+    [LocallyRingedSpace.IsOpenImmersion j]
+    (hjs : j ≫ s =
+      locallyRingedSpaceMap I (I.map (algebraMap R A)) (algebraMap R A) Ideal.le_comap_map)
+    (hW : (W : Set X) ⊆ Set.range j.base) :
+    IsSeparatedOverSpf hI (X.restrictOpen hX W) (X.restrictOpenι hX W ≫ s) := by
+  have hrange : Set.range (X.restrictOpenι hX W).base ⊆ Set.range j.base := by
+    rw [range_restrictOpenι_base]; exact hW
+  haveI : LocallyRingedSpace.IsOpenImmersion
+      (LocallyRingedSpace.IsOpenImmersion.lift j (X.restrictOpenι hX W) hrange) := by
+    delta LocallyRingedSpace.IsOpenImmersion.lift
+    infer_instance
+  have hfac := LocallyRingedSpace.IsOpenImmersion.lift_fac j (X.restrictOpenι hX W) hrange
+  have key := isSeparatedOverSpf_of_isOpenImmersion_chart (A := A) hI
+    (Z := X.restrictOpen hX W) (LocallyRingedSpace.IsOpenImmersion.lift j
+      (X.restrictOpenι hX W) hrange)
+  rwa [← hjs, ← Category.assoc, hfac] at key
+
+end ChartLocal
+
+/-- **Statement (A) at an open contained in one chart of a presentation.** The hypothesis of
+`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range` is exactly what a presentation hands
+over at each index: `AffineChartedFibreDatumX.ι_xStructMap` says the `i`-th glue inclusion followed
+by the glued structural morphism is `AffineChartedFibreDatumX.xStructMapChart i`, which **is** the
+map of formal spectra induced by `algebraMap R (A i)`, and the comparison `e` carries that from
+`AffineChartedFibreDatumX.xGlued` to `X`.
+
+This is the form issue 1987's statement (A) is quoted in — a presented `X`, its own charts — with
+the containment hypothesis that issue 2148's goal 2 exists to remove. At a `W` meeting two charts
+the datum has to be refined, and the two halves of that refinement are
+`FormalSpectrum.exists_refined_overlap_element` and
+`FormalSpectrum.awayCompletionCongrBasicOpenAlg` (`FormalSchemes.BasicOpenChartImage`,
+`FormalSchemes.AwayCompletionRestrictUnique`).
+
+The two ascriptions are the price of the datum's instance-implicit fields, and they are in opposite
+directions. The compatibility square is proved **before** the `letI` block, in term mode rather
+than by `rw`: the index type of `AffineChartedFibreDatumX.xFormalGlueData` agrees with the datum's
+own only up to unfolding, so `rw` reports the goal as not type-correct at `instances` transparency
+where `Category.assoc` and `congrArg` do not care. The open-immersion instance is re-ascribed
+**after** it, since the target's spelling changes once the datum's ring and algebra fields are
+let-bound. -/
+theorem isSeparatedOverSpf_restrictOpen_of_subset_range_ι {hI : I.FG} (hX : X.LocallyFG)
+    {s : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I}
+    {BX : Type u} [CommRing BX] [Algebra R BX] {DX : AffineChartedFibreDatumX R I hI BX}
+    (e : DX.xGlued.toLocallyRingedSpace ≅ X.toLocallyRingedSpace)
+    (he : e.hom ≫ s = DX.xStructMap) (i : DX.J) (W : Opens X)
+    (hW : (W : Set X) ⊆ Set.range (DX.xFormalGlueData.ι i ≫ e.hom).base) :
+    IsSeparatedOverSpf hI (X.restrictOpen hX W) (X.restrictOpenι hX W ≫ s) := by
+  have hjs : (DX.xFormalGlueData.ι i ≫ e.hom) ≫ s = DX.xStructMapChart i :=
+    (Category.assoc _ _ _).trans
+      ((congrArg (fun m => DX.xFormalGlueData.ι i ≫ m) he).trans (DX.ι_xStructMap i))
+  haveI himm : LocallyRingedSpace.IsOpenImmersion (DX.xFormalGlueData.ι i ≫ e.hom) := by
+    haveI := DX.xFormalGlueData.ι_isOpenImmersion i
+    haveI : LocallyRingedSpace.IsOpenImmersion e.hom := inferInstance
+    infer_instance
+  letI := DX.commRing
+  letI := DX.algebra
+  letI := DX.topology i
+  letI := DX.isAdic i
+  haveI : LocallyRingedSpace.IsOpenImmersion
+      (show locallyRingedSpaceObj (I.map (algebraMap R (DX.A i))) ⟶ X.toLocallyRingedSpace
+        from DX.xFormalGlueData.ι i ≫ e.hom) := himm
+  exact isSeparatedOverSpf_restrictOpen_of_subset_range (A := DX.A i) hI hX W
+    (DX.xFormalGlueData.ι i ≫ e.hom) hjs hW
+
+/-- **The same in the `FormalScheme.IsSeparatedHom` vocabulary**, which is the form the open
+directions of §10.15 consume. Free from
+`FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range` through
+`FormalScheme.isSeparatedHom_of_isSeparatedOverSpf`, exactly as
+`FormalScheme.isSeparatedHom_restrictOpen_Spf` is free from its own base-affine form. -/
+theorem isSeparatedHom_restrictOpen_of_subset_range {A : Type u} [CommRing A] [Algebra R A]
+    [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))] (hI : I.FG) (hX : X.LocallyFG)
+    {s : X.toLocallyRingedSpace ⟶ locallyRingedSpaceObj I} (W : Opens X)
+    (j : locallyRingedSpaceObj (I.map (algebraMap R A)) ⟶ X.toLocallyRingedSpace)
+    [LocallyRingedSpace.IsOpenImmersion j]
+    (hjs : j ≫ s =
+      locallyRingedSpaceMap I (I.map (algebraMap R A)) (algebraMap R A) Ideal.le_comap_map)
+    (hW : (W : Set X) ⊆ Set.range j.base) :
+    IsSeparatedHom (X.restrictOpen_locallyFG hX W) (locallyFG_Spf hI)
+      (FormalScheme.Hom.mk (X.restrictOpenι hX W ≫ s)) :=
+  isSeparatedHom_of_isSeparatedOverSpf hI _ _
+    (isSeparatedOverSpf_restrictOpen_of_subset_range hI hX W j hjs hW)
 
 end AlgebraicGeometry.FormalScheme

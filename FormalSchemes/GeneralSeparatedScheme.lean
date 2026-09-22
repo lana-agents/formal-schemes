@@ -59,14 +59,26 @@ object has a module of its own the value lives in it; the entries below that qua
 * Any formal scheme that open-immerses into `Spf I`, at an arbitrary presentation —
   `FormalScheme.isSeparatedOverSpf_of_isOpenImmersion`
   (`FormalSchemes.GeneralSeparatedHomRestrictOpen`).
+* Any formal scheme that open-immerses into an affine chart `Spf (I·A)` **over** the base, for an
+  `R`-algebra `A` — `FormalScheme.isSeparatedOverSpf_of_isOpenImmersion_chart`
+  (`FormalSchemes.GeneralSeparatedHomRestrictOpen`), the `A`-general form of the entry above and
+  not a specialisation of it in either direction.
+* An **arbitrary** formal scheme restricted to an open that lies inside the range of one affine
+  chart over the base — `FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range`, and
+  `FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range_ι` where that chart is a chart of
+  a presentation (`FormalSchemes.GeneralSeparatedHomRestrictOpen`). Neither asks the source to be
+  separated: this is issue 1987's statement (A) at a chart-local open, and the arbitrary open is
+  what is still missing.
 
 **The list carries no count, deliberately.** It is a claim about the whole tree, so a new value
 anywhere falsifies it, and no script here reads one. The *three* that stood here was falsified
 three times over — by the identity value, by the arbitrary-open value and by the open-immersion
-value — and nothing noticed any of them. To rebuild the list, take the declarations whose
-conclusion is `FormalScheme.IsSeparatedOverSpf`, then drop this file's own criteria and transports,
-the conjunctions with `FormalScheme.IsRelativelyTopFiniteType` — which repackage a value rather
-than add one — and the lemmas that take a `FormalScheme.IsSeparatedOverSpf` as a hypothesis.
+value — and nothing noticed any of them. Issue 2148's three chart-local values are the **fourth**
+such addition, and the first made by applying the rule below rather than after the fact. To rebuild
+the list, take the declarations whose conclusion is `FormalScheme.IsSeparatedOverSpf`, then drop
+this file's own criteria and transports, the conjunctions with
+`FormalScheme.IsRelativelyTopFiniteType` — which repackage a value rather than add one — and the
+lemmas that take a `FormalScheme.IsSeparatedOverSpf` as a hypothesis.
 
 ## Main results
 
