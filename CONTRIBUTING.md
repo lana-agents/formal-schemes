@@ -707,10 +707,11 @@ Neither is prose this project writes, and both are named here so that a re-measu
 already accounted for rather than as new defects.
 
 **Nothing on this tree measures a width outside `.lean`.** `linter.style.longLine`, reached
-through the lakefile's `mathlibStandardSet`, is the only width instrument here and it sees the
-library only; no script in `scripts/` and no step of `.orchestra/validation.sh` measures one at
-all. So re-measure over `git ls-files` rather than trusting this section — an unenforced rule
-rots, and this one did: it was written without a scope, against a tree that already broke it.
+through the lakefile's `mathlibStandardSet`, is the only instrument that *enforces* a width here,
+and it sees the library only; no script in `scripts/` measures a width outside a `.lean` file, and
+no step of `.orchestra/validation.sh` measures one at all. So re-measure over `git ls-files` rather
+than trusting this section — an unenforced rule rots, and this one did: it was written without a
+scope, against a tree that already broke it.
 
 `lake env lean <file>` does **not** apply the lakefile's `leanOptions`, so it runs neither
 `linter.style.longLine` nor the `show`-vs-`change` linter. Iterate with it if you like, but finish
