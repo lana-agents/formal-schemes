@@ -476,9 +476,14 @@ def ident_continuation(char: str) -> bool:
     An ASCII class cannot answer this on a tree whose identifiers are `congrIdealₐ`,
     `completionTwoPatchι₀` and `tateChain₀`: with `[A-Za-z0-9_']` as the boundary, a name that
     is a **prefix** of a longer one matches inside it whenever the next character is a subscript or
-    a Greek letter.  Measured when this was written: 68 such stem pairs on this tree, 188 comment
-    occurrences of a longer name that a shorter one matched, 13 of them beside a cue and therefore
-    printed.  `str.isalnum` covers every continuation this tree uses -- subscript digits are `No`,
+    a Greek letter.  Measured at `b3c6e7d`, over the **6459** declaration stems this tree
+    declares: **68** such stem pairs, carried by **19** distinct short stems.  Scanning with those
+    19 under the default cues, `[A-Za-z0-9_']` prints **53** flags and this boundary prints
+    **44** -- **9 removed and 0 added**, at 8 distinct path-line-name positions, the nine being
+    `congrIdealₐ`, `completionTwoPatchι₀` and `restrictπ` matched as their prefixes.
+    **Nothing can be added, whatever the names**: this predicate accepts a superset of
+    `[A-Za-z0-9_']`, so the hit set can only ever shrink.
+    `str.isalnum` covers every continuation this tree uses -- subscript digits are `No`,
     `ₐ`/`ₗ` are `Lm`, `ι`/`π` are `Ll`, and all three answer `True`.
 
     `!` and `?` are Lean identifier characters and are deliberately **left out**, since including
