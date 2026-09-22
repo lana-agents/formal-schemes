@@ -85,6 +85,10 @@ here* below; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
 * `FormalSpectrum.awayCompletionLift`: the universal property of `R{1/f}`.
 * `FormalSpectrum.awayCompletionAlgEquiv`, `FormalSpectrum.awayCompletionChartAlgEquivBase`: an
   `R`-algebra equivalence read over the base `R{1/f}`.
+* `FormalSpectrum.awayCompletionChartEquivOfLe` and its `R`-algebra forms
+  `FormalSpectrum.awayCompletionChartAlgEquivOfLe`,
+  `FormalSpectrum.awayCompletionNestedAlgEquivOfLe`: the nested chart identification
+  `A{1/g} ≃ A{1/f}{1/ĝ}` at a containment `D(g) ≤ D(f)` of basic opens of `Spf (A, J)`.
 
 ## Main results
 
@@ -99,6 +103,31 @@ here* below; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
   `R{1/f}`-algebras is `R{1/f}`-linear.
 * `FormalSpectrum.awayBaseHom_eq_awayCompletionLift`: the structural map of the away base change is
   the lift, so the transported and the universal `R{1/f} → A{1/(f·A)}^` are one map.
+* `FormalSpectrum.awayCompletionChartInvOfLe_comp_homOfLe` and
+  `FormalSpectrum.awayCompletionChartHomOfLe_comp_invOfLe`: both composites of that identification
+  are identities, by rigidity and nothing else.
+
+## The identification at a containment, and what it replaces
+
+`FormalSpectrum.awayCompletionChartEquiv` (`FormalSchemes.AwayCompletionInterchange`) identifies
+`A{1/g}` with `A{1/f}{1/ĝ}` under `IsUnit (algebraMap A (Localization.Away g) f)`. That is an
+inclusion of basic opens of `Spec A`, and it is **strictly stronger** than the corresponding
+inclusion in `Spf (A, J)`, which is a congruence modulo `J`:
+`FormalSchemes.AwayCompletionRestrict`'s own docstring opens by saying so, and the separation is
+witnessed at `A = ℤ`, `J = (2)`, `f = 3`, `g = 5`, where `D(5) ≤ D(3)` holds and `3` is not a unit
+of `ℤ[1/5]`.
+
+The last section supplies the same identification keyed on the containment alone, and it does so
+without reproving anything: the localization transitivity
+`FormalSpectrum.awayAwayLocEquiv` (`FormalSchemes.AwayCompletionAway`) is what genuinely needs the
+stronger hypothesis, and it is not used. Both maps are `FormalSpectrum.awayCompletionLift` — once
+at `A{1/g}` over `A`, once at `A{1/f}{1/ĝ}` over `A{1/f}` — and both composites are identities by
+`FormalSpectrum.awayCompletion_hom_ext'`. All the containment contributes is the `A{1/f}`-algebra
+structure on `A{1/g}`, which is `FormalSpectrum.awayCompletionRestrict` together with
+`FormalSpectrum.isUnit_awayCompletionHom_of_basicOpen_le`: `f` is invertible in the **completion**
+`A{1/g}` even where it is not in `Localization.Away g`. That is why the weaker hypothesis suffices,
+and it is the reason this construction is a universal-property argument rather than a transitivity
+one.
 
 ## What is *not* proved here
 
@@ -152,6 +181,21 @@ edge runs this way because the other one, `FormalSchemes.AwayCompletionUniversal
 `FormalSchemes.AwayBaseChangeTopFiniteType`, brings a much larger subtree into a file that has
 consumers, and a new leaf over both would pay the leaf tax on every module in its own closure. The
 deltas are measured in the pull request that added the edge (issue 2019).
+
+**The identification at a containment is placed here on a rebuild ratio, and the alternatives are
+measured.** Its subject matter is `FormalSchemes.AwayCompletionNested`, which carries the same
+identification at the stronger hypothesis; but that module does not import this one, and taking
+the edge would add **35** modules to what it transitively imports, against
+`FormalSchemes.AwayCompletionNested`'s reverse closure of **16**. A new leaf over this file costs
+no edge and re-elaborates the leaf and the root aggregator, and then pays the leaf tax: every
+import-count figure quoted in the modules it transitively imports moves by one. On the head that
+added `FormalSchemes.RefinedOverlapRestrict` that was **18** figures in **14** files. Stating it
+here adds no module, no edge and no figure repair, and re-elaborates this file's reverse closure
+of **4**. The
+proof is two applications of `FormalSpectrum.awayCompletionLift` and two of
+`FormalSpectrum.awayCompletion_hom_ext'`, both of which are this file's own subject, so the ratio
+and the subject matter pull apart less than the module name suggests. Re-cost the move if a second
+module asks for the identification.
 
 The one edit to a declaration outside this file is the generalisation of
 `FormalSpectrum.awayCompletion_hom_ext` to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in
@@ -496,6 +540,291 @@ theorem awayBaseHom_eq_awayCompletionLift (hI : I.FG) (hL : I.map (algebraMap R 
   exact awayBaseHom_comp_algebraMap f hI hL
 
 end BaseChange
+
+/-!
+### The nested chart identification at a containment of basic opens
+-/
+
+section NestedOfLe
+
+variable {A : Type u} [CommRing A] (J : Ideal A) (f g : A)
+
+/-- **The ideal-convention bridge, twice.** The extension of `J` to the chart-local presentation
+`A{1/f}{1/ĝ}` is that ring's own ideal of definition: extend along `A → A{1/f}` and then along
+`A{1/f} → A{1/f}{1/ĝ}`, and `FormalSpectrum.awayCompletionIdeal_eq_map_algebraMap`
+(`FormalSchemes.BasicOpenChart`) identifies each step. -/
+theorem map_algebraMap_awayCompletionChart :
+    J.map (algebraMap A (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g))) =
+      awayCompletionIdeal (awayCompletionIdeal J f) (awayCompletionHom J f g) := by
+  rw [IsScalarTower.algebraMap_eq A (awayCompletion J f)
+      (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)), ← Ideal.map_map,
+    awayCompletionIdeal_eq_map_algebraMap, awayCompletionIdeal_eq_map_algebraMap]
+
+/-- `A{1/g}` is `J·A{1/g}`-adically complete. -/
+theorem isAdicComplete_awayCompletion_self (hJ : J.FG) :
+    IsAdicComplete (J.map (algebraMap A (awayCompletion J g))) (awayCompletion J g) := by
+  rw [awayCompletionIdeal_eq_map_algebraMap]
+  exact (isAdicRing_awayCompletionIdeal J g hJ).toIsAdicComplete
+
+/-- `A{1/f}{1/ĝ}` is `J·A{1/f}{1/ĝ}`-adically complete. -/
+theorem isAdicComplete_awayCompletionChart (hJ : J.FG) :
+    IsAdicComplete (J.map (algebraMap A (awayCompletion (awayCompletionIdeal J f)
+        (awayCompletionHom J f g))))
+      (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) := by
+  rw [map_algebraMap_awayCompletionChart]
+  exact (isAdicRing_awayCompletionIdeal (awayCompletionIdeal J f) (awayCompletionHom J f g)
+    (awayCompletionIdeal_fg J f hJ)).toIsAdicComplete
+
+/-- **`g` is inverted in the chart-local presentation**, which is what lets the universal property
+of `A{1/g}` produce the forward map. It is inverted there by construction: its image is the away
+element of the second localization. -/
+theorem isUnit_algebraMap_awayCompletionChart (hJ : J.FG) :
+    IsUnit (algebraMap A (awayCompletion (awayCompletionIdeal J f)
+      (awayCompletionHom J f g)) g) := by
+  have hu : IsUnit (awayCompletionHom (awayCompletionIdeal J f) (awayCompletionHom J f g)
+      (awayCompletionHom J f g)) :=
+    isUnit_awayCompletionHom_of_basicOpen_le (awayCompletionIdeal J f)
+      (awayCompletionHom J f g) (awayCompletionHom J f g) (awayCompletionIdeal_fg J f hJ) le_rfl
+  rw [awayCompletionHom_eq_algebraMap] at hu
+  rw [IsScalarTower.algebraMap_apply A (awayCompletion J f)
+    (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)),
+    ← awayCompletionHom_eq_algebraMap]
+  exact hu
+
+/-- The structure map of the chart-local presentation, factored through the chart. -/
+theorem algebraMap_awayCompletionChart_eq :
+    algebraMap A (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) =
+      (awayCompletionHom (awayCompletionIdeal J f) (awayCompletionHom J f g)).comp
+        (awayCompletionHom J f) :=
+  (IsScalarTower.algebraMap_eq A (awayCompletion J f)
+      (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g))).trans
+    (congrArg₂ RingHom.comp
+      (awayCompletionHom_eq_algebraMap (awayCompletionIdeal J f) (awayCompletionHom J f g)).symm
+      (awayCompletionHom_eq_algebraMap J f).symm)
+
+/-- **The forward map `A{1/g} ⟶ A{1/f}{1/ĝ}`**, by the universal property of `A{1/g}`: the target
+is complete and `g` is inverted in it. **No relation between `f` and `g` is used.** -/
+def awayCompletionChartHomOfLe (hJ : J.FG) :
+    awayCompletion J g →+*
+      awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g) :=
+  haveI := isAdicComplete_awayCompletionChart J f g hJ
+  awayCompletionLift J g (isUnit_algebraMap_awayCompletionChart J f g hJ)
+
+/-- The forward map is a map under `A`. -/
+theorem awayCompletionChartHomOfLe_comp_awayCompletionHom (hJ : J.FG) :
+    (awayCompletionChartHomOfLe J f g hJ).comp (awayCompletionHom J g) =
+      algebraMap A (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) :=
+  haveI := isAdicComplete_awayCompletionChart J f g hJ
+  awayCompletionLift_comp_awayCompletionHom J g (isUnit_algebraMap_awayCompletionChart J f g hJ)
+
+/-- **The `A{1/f}`-algebra structure the containment supplies on `A{1/g}`.** This is the only place
+`D(g) ≤ D(f)` is used, and it is used only through `FormalSpectrum.awayCompletionRestrict`
+(`FormalSchemes.AwayCompletionRestrict`), whose whole point is that it is keyed on the containment
+and not on a unit in the uncompleted localization. -/
+abbrev awayCompletionRestrictAlgebra (hJ : J.FG) (hle : basicOpen J g ≤ basicOpen J f) :
+    Algebra (awayCompletion J f) (awayCompletion J g) :=
+  (awayCompletionRestrict J f g hJ hle).toAlgebra
+
+/-- **The backward map `A{1/f}{1/ĝ} ⟶ A{1/g}`**, by the universal property of the *chart-local*
+presentation over its own base `A{1/f}`: `A{1/g}` is an `A{1/f}`-algebra by the restriction, it is
+complete for the ideal that restriction carries across
+(`FormalSpectrum.map_awayCompletionRestrict`), and `ĝ` goes to `g`, a unit there. -/
+def awayCompletionChartInvOfLe (hJ : J.FG) (hle : basicOpen J g ≤ basicOpen J f) :
+    awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g) →+* awayCompletion J g :=
+  letI := awayCompletionRestrictAlgebra J f g hJ hle
+  haveI : IsAdicComplete ((awayCompletionIdeal J f).map
+      (algebraMap (awayCompletion J f) (awayCompletion J g))) (awayCompletion J g) := by
+    rw [RingHom.algebraMap_toAlgebra, map_awayCompletionRestrict]
+    exact (AdicCompletion.isAdicRing_map _ (hJ.map _)).toIsAdicComplete
+  haveI hu : IsUnit (algebraMap (awayCompletion J f) (awayCompletion J g)
+      (awayCompletionHom J f g)) := by
+    rw [RingHom.algebraMap_toAlgebra, awayCompletionRestrict_awayCompletionHom]
+    exact isUnit_awayCompletionHom_of_basicOpen_le J g g hJ le_rfl
+  awayCompletionLift (awayCompletionIdeal J f) (awayCompletionHom J f g) hu
+
+/-- The backward map is a map under `A{1/f}`: precomposed with the structural map of the
+chart-local presentation it is the restriction itself. -/
+theorem awayCompletionChartInvOfLe_comp_awayCompletionHom (hJ : J.FG)
+    (hle : basicOpen J g ≤ basicOpen J f) :
+    (awayCompletionChartInvOfLe J f g hJ hle).comp
+        (awayCompletionHom (awayCompletionIdeal J f) (awayCompletionHom J f g)) =
+      awayCompletionRestrict J f g hJ hle := by
+  letI := awayCompletionRestrictAlgebra J f g hJ hle
+  haveI : IsAdicComplete ((awayCompletionIdeal J f).map
+      (algebraMap (awayCompletion J f) (awayCompletion J g))) (awayCompletion J g) := by
+    rw [RingHom.algebraMap_toAlgebra, map_awayCompletionRestrict]
+    exact (AdicCompletion.isAdicRing_map _ (hJ.map _)).toIsAdicComplete
+  haveI hu : IsUnit (algebraMap (awayCompletion J f) (awayCompletion J g)
+      (awayCompletionHom J f g)) := by
+    rw [RingHom.algebraMap_toAlgebra, awayCompletionRestrict_awayCompletionHom]
+    exact isUnit_awayCompletionHom_of_basicOpen_le J g g hJ le_rfl
+  have h := awayCompletionLift_comp_awayCompletionHom
+    (awayCompletionIdeal J f) (awayCompletionHom J f g) hu
+  rw [RingHom.algebraMap_toAlgebra] at h
+  exact h
+
+/-- **The forward map is a map under `A{1/f}` as well**, not merely under `A`: both sides are maps
+out of `A{1/f}` under `A` into a complete target, so
+`FormalSpectrum.awayCompletion_hom_ext'` identifies them. This is what makes the second composite
+below an identity. -/
+theorem awayCompletionChartHomOfLe_comp_awayCompletionRestrict (hJ : J.FG)
+    (hle : basicOpen J g ≤ basicOpen J f) :
+    (awayCompletionChartHomOfLe J f g hJ).comp (awayCompletionRestrict J f g hJ hle) =
+      algebraMap (awayCompletion J f)
+        (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) := by
+  haveI := isAdicComplete_awayCompletionChart J f g hJ
+  have hsqF : ((awayCompletionChartHomOfLe J f g hJ).comp
+      (awayCompletionRestrict J f g hJ hle)).comp (awayCompletionHom J f) =
+      algebraMap A (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) := by
+    rw [RingHom.comp_assoc, awayCompletionRestrict_comp_awayCompletionHom,
+      awayCompletionChartHomOfLe_comp_awayCompletionHom]
+  have hsqG : (algebraMap (awayCompletion J f)
+        (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g))).comp
+      (awayCompletionHom J f) =
+      algebraMap A (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) :=
+    (congrArg (algebraMap (awayCompletion J f)
+          (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g))).comp
+        (awayCompletionHom_eq_algebraMap J f)).trans
+      (IsScalarTower.algebraMap_eq A (awayCompletion J f)
+        (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g))).symm
+  exact awayCompletion_hom_ext'
+    (L := J.map (algebraMap A (awayCompletion (awayCompletionIdeal J f)
+      (awayCompletionHom J f g)))) J f hJ
+    (le_comap_of_comp_awayCompletionHom_eq_algebraMap J f hsqF)
+    (le_comap_of_comp_awayCompletionHom_eq_algebraMap J f hsqG)
+    (hsqF.trans hsqG.symm)
+
+/-- **First composite**: the backward map undoes the forward one, by rigidity at `A{1/g}`. -/
+theorem awayCompletionChartInvOfLe_comp_homOfLe (hJ : J.FG)
+    (hle : basicOpen J g ≤ basicOpen J f) :
+    (awayCompletionChartInvOfLe J f g hJ hle).comp (awayCompletionChartHomOfLe J f g hJ) =
+      RingHom.id (awayCompletion J g) := by
+  haveI := isAdicComplete_awayCompletion_self J g hJ
+  have hsqF : ((awayCompletionChartInvOfLe J f g hJ hle).comp
+      (awayCompletionChartHomOfLe J f g hJ)).comp (awayCompletionHom J g) =
+      algebraMap A (awayCompletion J g) := by
+    rw [RingHom.comp_assoc, awayCompletionChartHomOfLe_comp_awayCompletionHom,
+      algebraMap_awayCompletionChart_eq, ← RingHom.comp_assoc,
+      awayCompletionChartInvOfLe_comp_awayCompletionHom,
+      awayCompletionRestrict_comp_awayCompletionHom, awayCompletionHom_eq_algebraMap]
+  have hsqG : (RingHom.id (awayCompletion J g)).comp (awayCompletionHom J g) =
+      algebraMap A (awayCompletion J g) := by
+    rw [RingHom.id_comp, awayCompletionHom_eq_algebraMap]
+  exact awayCompletion_hom_ext' (L := J.map (algebraMap A (awayCompletion J g))) J g hJ
+    (le_comap_of_comp_awayCompletionHom_eq_algebraMap J g hsqF)
+    (le_comap_of_comp_awayCompletionHom_eq_algebraMap J g hsqG)
+    (hsqF.trans hsqG.symm)
+
+/-- **Second composite**: the forward map undoes the backward one, by rigidity at the chart-local
+presentation over `A{1/f}`. -/
+theorem awayCompletionChartHomOfLe_comp_invOfLe (hJ : J.FG)
+    (hle : basicOpen J g ≤ basicOpen J f) :
+    (awayCompletionChartHomOfLe J f g hJ).comp (awayCompletionChartInvOfLe J f g hJ hle) =
+      RingHom.id (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) := by
+  haveI : IsAdicComplete ((awayCompletionIdeal J f).map (algebraMap (awayCompletion J f)
+      (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g))))
+      (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) := by
+    rw [← awayCompletionHom_eq_algebraMap, map_awayCompletionHom]
+    exact (AdicCompletion.isAdicRing_map _
+      ((awayCompletionIdeal_fg J f hJ).map _)).toIsAdicComplete
+  have hsqF : ((awayCompletionChartHomOfLe J f g hJ).comp
+      (awayCompletionChartInvOfLe J f g hJ hle)).comp
+      (awayCompletionHom (awayCompletionIdeal J f) (awayCompletionHom J f g)) =
+      algebraMap (awayCompletion J f)
+        (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) := by
+    rw [RingHom.comp_assoc, awayCompletionChartInvOfLe_comp_awayCompletionHom,
+      awayCompletionChartHomOfLe_comp_awayCompletionRestrict]
+  have hsqG : (RingHom.id (awayCompletion (awayCompletionIdeal J f)
+        (awayCompletionHom J f g))).comp
+      (awayCompletionHom (awayCompletionIdeal J f) (awayCompletionHom J f g)) =
+      algebraMap (awayCompletion J f)
+        (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) :=
+    (RingHom.id_comp _).trans (awayCompletionHom_eq_algebraMap _ _)
+  exact awayCompletion_hom_ext'
+    (L := (awayCompletionIdeal J f).map (algebraMap (awayCompletion J f)
+      (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g))))
+    (awayCompletionIdeal J f) (awayCompletionHom J f g) (awayCompletionIdeal_fg J f hJ)
+    (le_comap_of_comp_awayCompletionHom_eq_algebraMap _ _ hsqF)
+    (le_comap_of_comp_awayCompletionHom_eq_algebraMap _ _ hsqG)
+    (hsqF.trans hsqG.symm)
+
+/-- **The nested chart identification, keyed on the containment.** `A{1/g} ≃+* A{1/f}{1/ĝ}` for
+`D(g) ≤ D(f)` in `Spf (A, J)`.
+
+`FormalSpectrum.awayCompletionChartEquiv` (`FormalSchemes.AwayCompletionInterchange`) is the same
+isomorphism under `IsUnit (algebraMap A (Localization.Away g) f)` — a statement in the
+**uncompleted** localization, which is the `Spec A` containment and is strictly stronger than this
+one. `FormalSchemes.AwayCompletionRestrict` opens by saying so, and the separation is witnessed at
+`A = ℤ`, `J = (2)`, `f = 3`, `g = 5`.
+
+Nothing here reproves that route. Both maps come from
+`FormalSpectrum.awayCompletionLift` — the universal property of a completed localization, applied
+once at `A{1/g}` over `A` and once at `A{1/f}{1/ĝ}` over `A{1/f}` — and both composites are
+identities by `FormalSpectrum.awayCompletion_hom_ext'`. What the containment supplies, and all it
+supplies, is the `A{1/f}`-algebra structure on `A{1/g}`: the ring map
+`FormalSpectrum.awayCompletionRestrict`, together with
+`FormalSpectrum.isUnit_awayCompletionHom_of_basicOpen_le`, which is exactly the statement that `f`
+is invertible in the **completion** `A{1/g}` even though it need not be in
+`Localization.Away g`. -/
+def awayCompletionChartEquivOfLe (hJ : J.FG) (hle : basicOpen J g ≤ basicOpen J f) :
+    awayCompletion J g ≃+*
+      awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g) :=
+  RingEquiv.ofRingHom (awayCompletionChartHomOfLe J f g hJ)
+    (awayCompletionChartInvOfLe J f g hJ hle)
+    (awayCompletionChartHomOfLe_comp_invOfLe J f g hJ hle)
+    (awayCompletionChartInvOfLe_comp_homOfLe J f g hJ hle)
+
+/-- **The identification fixes `A`**, which is what the `R`-algebra upgrade below needs. -/
+theorem awayCompletionChartEquivOfLe_algebraMap (hJ : J.FG)
+    (hle : basicOpen J g ≤ basicOpen J f) (a : A) :
+    awayCompletionChartEquivOfLe J f g hJ hle (algebraMap A (awayCompletion J g) a) =
+      algebraMap A (awayCompletion (awayCompletionIdeal J f) (awayCompletionHom J f g)) a := by
+  have h := RingHom.congr_fun (awayCompletionChartHomOfLe_comp_awayCompletionHom J f g hJ) a
+  rw [RingHom.comp_apply, awayCompletionHom_eq_algebraMap J g] at h
+  exact h
+
+end NestedOfLe
+
+section NestedOfLeBase
+
+variable {B : Type u} [CommRing B] [Algebra R B]
+
+/-- **The `R`-algebra form** of `FormalSpectrum.awayCompletionChartEquivOfLe`: it fixes `B`, hence
+a fortiori the image of `R`. The upgrade is the one
+`FormalSpectrum.awayCompletionChartAlgEquiv` (`FormalSchemes.AwayCompletionNested`) performs at
+the stronger hypothesis. -/
+def awayCompletionChartAlgEquivOfLe (hI : I.FG) (x y : B)
+    (hle : basicOpen (I.map (algebraMap R B)) y ≤ basicOpen (I.map (algebraMap R B)) x) :
+    awayCompletion (I.map (algebraMap R B)) y ≃ₐ[R]
+      awayCompletion (awayCompletionIdeal (I.map (algebraMap R B)) x)
+        (awayCompletionHom (I.map (algebraMap R B)) x y) :=
+  AlgEquiv.ofRingEquiv
+    (f := awayCompletionChartEquivOfLe (I.map (algebraMap R B)) x y (hI.map _) hle)
+    fun r => by
+      rw [IsScalarTower.algebraMap_apply R B (awayCompletion (I.map (algebraMap R B)) y),
+        awayCompletionChartEquivOfLe_algebraMap, ← IsScalarTower.algebraMap_apply]
+
+/-- **`FormalSpectrum.awayCompletionNestedAlgEquiv` at a containment of basic opens**, in the ideal
+convention an affine-charted datum spells its charts with. Same type, same conclusion; the
+hypothesis `IsUnit (algebraMap B (Localization.Away y) x)` is replaced by
+`D(y) ≤ D(x)` in `Spf (B, I·B)`, which is strictly weaker.
+
+This is the statement issue 2148's refined overlap waits on: the refined presentation of a
+cross-chart overlap is `B{1/(h·e)}` with `D(h·e) ≤ D(g_ij)` given by
+`FormalSpectrum.basicOpen_refinedOverlapElt_le` (`FormalSchemes.RefinedOverlapRestrict`), and no
+divisibility or uncompleted unit is available there. -/
+def awayCompletionNestedAlgEquivOfLe (hI : I.FG) (x y : B)
+    (hle : basicOpen (I.map (algebraMap R B)) y ≤ basicOpen (I.map (algebraMap R B)) x) :
+    awayCompletion (I.map (algebraMap R B)) y ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R (awayCompletion (I.map (algebraMap R B)) x)))
+        (awayCompletionHom (I.map (algebraMap R B)) x y) :=
+  (awayCompletionChartAlgEquivOfLe I hI x y hle).trans
+    (AdicCompletion.congrIdealₐ R
+      (congrArg (Ideal.map (algebraMap (awayCompletion (I.map (algebraMap R B)) x)
+          (Localization.Away (awayCompletionHom (I.map (algebraMap R B)) x y))))
+        (map_algebraMap_awayCompletion_eq I x).symm))
+
+end NestedOfLeBase
 
 end FormalSpectrum
 
