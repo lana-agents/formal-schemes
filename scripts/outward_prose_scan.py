@@ -500,13 +500,23 @@ def ident_continuation(char: str) -> bool:
 
 
 def scan_file(text: str, names: list[str], cues: re.Pattern, window: int = WINDOW):
-    """Every comment occurrence of a name in `text` whose prose block window matches `cues`."""
+    """Every comment occurrence of a name in `text` whose prose block window matches `cues`.
+
+    **Distinct stems, not distinct names.**  Prose writes a name's last component, so two
+    qualified names sharing one stem are one question; iterating the qualified names instead
+    appends every occurrence once per name, and the printed lines are byte-identical -- same
+    path, same line, same name, same excerpt -- with `FLAGGED:` counting each of them.  A
+    **namespace rename** is the shape that produces it, and keeping both sides of a diff is what
+    makes that shape reachable: on `befe0fd`, which renames ten modules, 13 of the 37 names
+    recovered collide with their new-namespace twins and the run reads **26** where there are
+    **17** questions.  `rsplit` is idempotent on a bare stem, so `--names` is unaffected, and
+    `report` still counts *qualified* names, which is the number a reader of a diff wants.
+    """
     hits = []
     blocks = prose_blocks(text)
     if not blocks:
         return hits
-    for name in names:
-        stem = name.rsplit(".", 1)[-1]
+    for stem in sorted({name.rsplit(".", 1)[-1] for name in names}):
         for match in re.finditer(re.escape(stem), text):
             at, past = match.start(), match.end()
             if at and ident_continuation(text[at - 1]):
@@ -647,6 +657,11 @@ def selftest() -> int:
     # --- names: suffix matching and word boundaries ---------------------------------------------
     check("a qualified name is matched by its last component, as prose writes it",
           names_of("-- `A.B.foo` unfolds the `dite`.\n", names=("Ns.foo",)), [("foo", 1)])
+    # Two namespaces, one stem -- what a namespace rename puts in the name set.  Iterating the
+    # qualified names would print this hit twice, identically, and count both.
+    check("two qualified names sharing a stem are one question, not two",
+          names_of("-- `foo` is proved by a four-case split.\n", names=("A.foo", "B.foo")),
+          [("foo", 1)])
     check("a longer identifier containing the name is not a hit",
           names_of("-- `foo_bar` unfolds the `dite`.\n"), [])
     check("a primed sibling is not a hit, because `'` is an identifier character here",
