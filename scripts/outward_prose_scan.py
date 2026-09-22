@@ -109,10 +109,20 @@ is what it says, and not as coverage of the population class.
 
 ## The cue list, and why it is a flag rather than a constant
 
-A bare name census is unusable: `tateSelfProductDiagonal` had 13 comment occurrences at #753's head
-and every one of them was about the morphism Δ, not about a case split.  The cues are what make
-the output readable.  They are also the part most likely to be wrong, so they are a flag --
-`--cues <regex>` replaces the default, `--extra-cues <regex>` adds to it.  Issue 2144 widened the
+A bare name census is unusable, and the run over `c888dfe...badd407` read at #753's head measures
+by how much.  Its **18** changed names have **120** occurrences inside comment blocks there under
+this scan's identifier boundary; the cue filter leaves **18**, which is that run's entire flag
+count.  `tateChainInv` supplies **15** of the 102 it removes and **none** of them survives -- every
+one is a cross-reference to the chain rather than a claim about how a proof runs -- and
+`tateCurveModel` supplies **39**, of which one does.
+
+**The instructive name is the one the filter does not bite.**  `tateSelfProductDiagonal` has
+**3** occurrences under this boundary at that head -- **23** with the boundary dropped, which is
+what a census without `ident_continuation` reads -- and **all three survive**, because `diagonal`
+is itself in `DEFAULT_CUES`.  All three are about the morphism Δ rather than about a case split,
+so on that name the filter buys nothing at all.  A name carrying a cue word is where this goes
+wrong, and that is why the cues are a flag rather than a constant -- `--cues <regex>` replaces the
+default, `--extra-cues <regex>` adds to it.  Issue 2144 widened the
 previous run's list and got the **same** real-hit set, which is the only evidence available that
 the default is not over-fitted to the run that produced it; re-widen it when you use this, and say
 whether the set moved.
@@ -648,7 +658,7 @@ def selftest() -> int:
           [blocked[a:b] for a, b in prose_blocks(blocked)], ["-- one\n-- two", "-- three"])
 
     # --- the cue filter, which is what makes the output readable --------------------------------
-    check("a cue-free hit is not reported (the 13 `tateSelfProductDiagonal` occurrences)",
+    check("a cue-free hit is not reported (102 of the 120 in the module docstring's census)",
           names_of("-- `foo` is the object this file is about.\n"), [])
     check("the cue may sit on a neighbouring `--` line of the same paragraph",
           names_of("-- `foo` is restated here,\n-- and its proof is four-case.\n"), [("foo", 1)])
