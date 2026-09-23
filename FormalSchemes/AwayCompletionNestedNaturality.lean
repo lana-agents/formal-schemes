@@ -10,7 +10,7 @@ set_option synthInstance.maxHeartbeats 1000000
 # Naturality of the nested basic-open chart identification
 
 Fix an adic base `(R, I)` and an `R`-algebra `A`. For `D(g) ⊆ D(f)` **in `Spec A`** — that is, for
-`f` a unit in `Localization.Away g`, written *A_g* below, which is *stronger* than the containment
+`f` a unit in `Localization.Away g` (written *A_g* below), which is *stronger* than the containment
 `FormalSpectrum.basicOpen (I·A) g ≤ FormalSpectrum.basicOpen (I·A) f` of the basic opens of
 `Spf A` — the sections over `D(g)` can be read either directly on `Spf A` or through the affine
 chart `Spf A{1/f}`, and the two readings agree: that is
