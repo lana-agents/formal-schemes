@@ -9,9 +9,12 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # Naturality of the nested basic-open chart identification
 
-Fix an adic base `(R, I)` and an `R`-algebra `A`. For `D(g) ⊆ D(f)` in `Spf A` the sections over
-`D(g)` can be read either directly on `Spf A` or through the affine chart `Spf A{1/f}`, and the two
-readings agree: that is `FormalSpectrum.awayCompletionNestedAlgEquiv` (issue 607),
+Fix an adic base `(R, I)` and an `R`-algebra `A`. For `D(g) ⊆ D(f)` **in `Spec A`** — that is, for
+`f` a unit in `A_g`, which is what every declaration below takes, and which is *stronger* than the
+containment `FormalSpectrum.basicOpen (I·A) g ≤ FormalSpectrum.basicOpen (I·A) f` of the basic
+opens of `Spf A` — the sections over `D(g)` can be read either directly on `Spf A` or through the
+affine chart `Spf A{1/f}`, and the two readings agree: that is
+`FormalSpectrum.awayCompletionNestedAlgEquiv` (issue 607),
 
 ```
 N_{f,g} :  A{1/g}  ≃ₐ[R]  A{1/f}{1/ḡ} ,        ḡ = awayCompletionHom (I·A) f g .

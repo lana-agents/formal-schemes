@@ -21,8 +21,12 @@ completion-gluing consumes: the affine charts of the completion of a scheme alon
 glue along common basic opens `D(g) ⊆ D(f)`, where the overlaps are again affine, sidestepping the
 non-affine-overlap obstruction to the general gluing.
 
-The hypothesis `D(g) ⊆ D(f)` is encoded (as in `FormalSchemes/AwayCompletionAway.lean`) as
-`hfg : IsUnit (algebraMap R (Localization.Away g) f)`: `f` becomes a unit on `D(g)`.
+The hypothesis is `hfg : IsUnit (algebraMap R (Localization.Away g) f)` — `f` becomes a unit on
+`D(g)` — which is the containment `D(g) ⊆ D(f)` **of basic opens of `Spec R`**, as in
+`FormalSchemes/AwayCompletionAway.lean`. It is *strictly stronger* than the containment
+`FormalSpectrum.basicOpen I g ≤ FormalSpectrum.basicOpen I f` of the basic opens of `Spf (R, I)`,
+which wears the same notation and supplies no unit; see `FormalSchemes.AwayCompletionRestrict`'s
+opening paragraph. Every `D(g) ⊆ D(f)` above is the `Spec R` one.
 
 The construction reuses two merged pieces of infrastructure:
 * the completed-localization transitivity `FormalSpectrum.awayCompletionAwayEquiv` — the ring

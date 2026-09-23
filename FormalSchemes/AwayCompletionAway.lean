@@ -6,11 +6,15 @@ set_option linter.style.header false
 /-!
 # Transitivity of the completed localization along `D(g) ⊆ D(f)`
 
-Let `R` be a commutative ring, `I : Ideal R`, and `f g : R` with `D(g) ⊆ D(f)` — encoded as the
-hypothesis that `f` becomes a unit in `R_g = Localization.Away g`. Geometrically `D(g)` is then a
-basic open contained in `D(f)`, so on the affine basic-open chart `Spf R{1/f} ↪ Spf R`
-(`FormalSchemes/BasicOpenChart.lean`) the smaller chart `Spf R{1/g}` factors through it. At the
-level of the completed localizations this is the ring isomorphism
+Let `R` be a commutative ring, `I : Ideal R`, and `f g : R` with `f` a unit in
+`R_g = Localization.Away g` — the containment `D(g) ⊆ D(f)` **of basic opens of `Spec R`**. That is
+*strictly stronger* than `FormalSpectrum.basicOpen I g ≤ FormalSpectrum.basicOpen I f`, the
+containment of basic opens of `Spf (R, I)` which wears the same `D(g) ⊆ D(f)` notation;
+`FormalSchemes.AwayCompletionRestrict`'s opening paragraph is the exposition of the difference and
+`FormalSpectrum.awayCompletionRestrict` is the map keyed on the weaker one. Geometrically `D(g)` is
+then a basic open of `Spec R` contained in `D(f)`, so on the affine basic-open chart
+`Spf R{1/f} ↪ Spf R` (`FormalSchemes/BasicOpenChart.lean`) the smaller chart `Spf R{1/g}` factors
+through it. At the level of the completed localizations this is the ring isomorphism
 
 ```
 R{1/g}  ≃+*  R_f{1/ḡ}
@@ -53,10 +57,11 @@ namespace FormalSpectrum
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (f g : R)
 
-/-- **Localization transitivity on `D(g) ⊆ D(f)`.** When `f` is a unit in `R_g = Localization.Away
-g` (i.e. `D(g) ⊆ D(f)`), the localization `R_g` is the localization of `R_f = Localization.Away f`
-away from the image `ḡ = algebraMap R R_f g`: both are localizations of `R` at the powers of
-`f·g`. -/
+/-- **Localization transitivity on `D(g) ⊆ D(f)` in `Spec R`.** When `f` is a unit in
+`R_g = Localization.Away g` — equivalently `D(g) ⊆ D(f)` in `Spec R`, which is *not* the
+containment of the basic opens of `Spf (R, I)` and is stronger than it — the localization `R_g` is
+the localization of `R_f = Localization.Away f` away from the image `ḡ = algebraMap R R_f g`: both
+are localizations of `R` at the powers of `f·g`. -/
 def awayAwayLocEquiv (hfg : IsUnit (algebraMap R (Localization.Away g) f)) :
     Localization.Away g ≃ₐ[R]
       Localization.Away (algebraMap R (Localization.Away f) g) :=
