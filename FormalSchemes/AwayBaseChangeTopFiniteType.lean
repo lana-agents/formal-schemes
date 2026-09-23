@@ -88,6 +88,16 @@ composite, which is a surjective `R{1/c}^`-algebra map.
   is not new: `annulusOverlapTransitionHom` (`FormalSchemes.TateTransition`) is exactly it, for the
   coordinate swap of the annulus algebra, but spelled throughout in Tate-specific abbreviations
   rather than in `awayCompletion`.
+* `FormalSpectrum.awayCompletionAlgEquivOfBase` and `Ideal.map_algEquiv_map_algebraMap`: the same
+  transport read over a **common base ring** — `σ : S ≃ₐ[R] T` carrying `u` to `v` gives
+  `S{1/u}^ ≃ₐ[R] T{1/v}^`, both charts at the extension of one ideal `I` of `R` (issue 2192). It is
+  the equivalence above at `σ.toRingEquiv` together with the `R`-linearity `σ` already carries; the
+  ring form is where the construction is, and this one adds none. It is the shape a transition
+  between two charts of a formal spectrum consumes, since such a transition is an equivalence of
+  `R`-algebras and both its ends are read at the extension of the base's own ideal of definition.
+  The `Ideal` half is the `AlgEquiv` case of `Ideal.map_algebraMap_algHom`
+  (`FormalSchemes.CofinalCompletionAlg`), restated because this file does not reach that module;
+  see `## Placement`.
 * `CompletedTensorProduct.map_unitEquiv`: the left unitor `R ⊗̂_R A ≃+* A` carries the ideal of
   definition of `R ⊗̂_R A` onto `I·A`. The tree had `CompletedTensorProduct.unitEquiv_inl` and
   `CompletedTensorProduct.unitEquiv_inr`, the unitor on elements, but nothing on the ideal.
@@ -108,9 +118,48 @@ composite, which is a surjective `R{1/c}^`-algebra map.
   the assembly of the refined cover it needs, and conservativity of
   `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom` are all elsewhere; this file is the ring
   lemma they consume.
-* The transport `FormalSpectrum.awayCompletionEquivOfRingEquiv` is stated for a ring equivalence
-  only. The one-sided statement — a surjection `C ↠ A` inducing `C{1/k}^ ↠ A{1/σ k}^` — is not
-  proved and is not needed here.
+* The transport is stated for an **equivalence**, in both of its forms. The one-sided statement — a
+  surjection `C ↠ A` inducing `C{1/k}^ ↠ A{1/σ k}^` — is not proved and is not needed here.
+  `FormalSpectrum.awayCompletionAlgEquivOfBase` asks `σ` to be invertible in exactly the one place
+  `FormalSpectrum.awayCompletionEquivOfRingEquiv` does, and adds no use of its own: the two
+  round-trip legs come out of `RingEquiv.ofRingHom` inside the ring form.
+
+## Placement
+
+**The `R`-algebra form is stated here, beside the ring form it is built from, rather than in
+`FormalSchemes.AwayCompletionUniversal`, where the row that asked for it expected it.** Both homes
+are declarations-only diffs — no module, no import edge, no figure repaired anywhere,
+`scripts/closure_audit.py --tree` at MISMATCH 0 either way — so the whole cost is the rebuild, and
+on that figure this file loses: this module's reverse closure is **9** against
+`FormalSchemes.AwayCompletionUniversal`'s reverse closure of **4**, and that module imports this
+one, so it is re-elaborated under either disposition.
+
+**The ratio loses to the subject matter, and the margin is five modules.** What
+`FormalSpectrum.awayCompletionAlgEquivOfBase` is *about* is
+`FormalSpectrum.awayCompletionEquivOfRingEquiv`, defined in the section above it: it uses no
+universal property, neither `FormalSpectrum.awayCompletionLift` nor
+`FormalSpectrum.awayCompletion_hom_ext`, which are what `FormalSchemes.AwayCompletionUniversal` is
+for. Holding the two forms in one place is also what keeps the ring form findable: the first
+attempt at issue 2192 put the base transport in `FormalSchemes.AwayCompletionUniversal`, which
+imports this module on its first line, and re-derived nine declarations of the section above
+without reaching them.
+
+`Ideal.map_algEquiv_map_algebraMap` raises **no** placement question, and the ratio is not what
+answers it. It is the `AlgEquiv` case of `Ideal.map_algebraMap_algHom`, which is stated for an
+`AlgHom`, is proved by the same three tactics, and is already written inline at exactly this
+specialisation — `σ.toAlgHom` — inside `IsTopologicallyFiniteType.ofAlgEquiv`
+(`FormalSchemes.CofinalTopFiniteType`). Nothing general is introduced here, so there is nothing to
+move; it is restated locally because this file cannot reach the module holding it, and both ways of
+fixing that lose. `FormalSchemes.CofinalCompletionAlg`, whose reverse closure is **23**, is outside
+this file's forward closure of **36** modules. The import that would bring it adds **5** modules to
+what this file transitively imports and costs **9** figure repairs in **6** files, measured by
+`git archive` plus one import line and a `--tree` run from that worktree. Moving the general form
+down to a module both files already reach is worse: of the thirteen such modules,
+`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **495**. So the local
+copy stands, and it is at root namespace for the reason `Ideal.map_algebraMap_of_tower`
+(`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. Re-cost the import
+if a third module inside this file's own imports wants the fact;
+`FormalSchemes.CofinalTopFiniteType` is already the second consumer, and it did not need the edge.
 
 ## References
 
@@ -241,6 +290,81 @@ theorem awayCompletionEquivOfRingEquiv_algebraMap (σ : C ≃+* A) {K : Ideal C}
     ← IsScalarTower.algebraMap_apply A (Localization.Away (σ k)) (awayCompletion M (σ k))]
 
 end Congr
+
+/-! ### The same transport over a common base ring -/
+
+section CongrAlg
+
+variable {R : Type u} [CommRing R] {S T : Type u} [CommRing S] [CommRing T]
+variable [Algebra R S] [Algebra R T]
+
+/-- **An `R`-algebra equivalence carries one extension of `I` onto the other.** For `σ : S ≃ₐ[R] T`
+the extension `I·S` maps onto `I·T` along `σ`, because `σ` is a map under `R`. This is the
+hypothesis `FormalSpectrum.awayCompletionEquivOfRingEquiv` asks for, in the case its two ideals are
+extensions of one ideal of a common base.
+
+**No content is added here and none is proved here.** `Ideal.map_algebraMap_algHom`
+(`FormalSchemes.CofinalCompletionAlg`) is the general statement, for an `AlgHom` rather than an
+`AlgEquiv`, and this is that lemma at `σ.toAlgHom` — which
+`IsTopologicallyFiniteType.ofAlgEquiv` (`FormalSchemes.CofinalTopFiniteType`) writes inline rather
+than naming, and which is this tree's idiom for it. It is restated here only because this file does
+not reach that module and the import is not worth its price; the figures are in this file's
+`## Placement` section. Root namespace for the reason `Ideal.map_algebraMap_of_tower`
+(`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. -/
+theorem _root_.Ideal.map_algEquiv_map_algebraMap (I : Ideal R) (σ : S ≃ₐ[R] T) :
+    (I.map (algebraMap R S)).map (σ.toRingEquiv : S →+* T) = I.map (algebraMap R T) := by
+  rw [Ideal.map_map]
+  congr 1
+  exact RingHom.ext fun r => σ.commutes r
+
+/-- **A completed localization transports along an `R`-algebra equivalence of its base**:
+`σ : S ≃ₐ[R] T` carrying `u` to `v` gives `S{1/u}^ ≃ₐ[R] T{1/v}^`, both charts read at the
+extension of one ideal `I` of a common base `R`.
+
+This is `FormalSpectrum.awayCompletionEquivOfRingEquiv` above at `σ.toRingEquiv`, upgraded to an
+`R`-algebra equivalence. **The ring form is the content and it is already proved**; what this adds
+is the two ideals being extensions of one `I`, which `Ideal.map_algEquiv_map_algebraMap` supplies,
+and the `R`-linearity, which is `AlgEquiv.ofRingEquiv` at `σ.commutes` read through the tower
+`R → S → S{1/u}^`. No universal property and no rigidity argument enters: everything the round
+trips need is already in `RingEquiv.ofRingHom` inside the ring form.
+
+It is this shape rather than the ring form that a transition between two charts of a formal
+spectrum consumes, since such a transition is an equivalence of `R`-algebras and its target is read
+at the extension of the base's own ideal of definition.
+
+**The target element is a binder** here as it is in the ring form: `v` with `σ u = v` beside it,
+rather than the literal `σ u` in the type. The headline is the case `v = σ u`, `huv = rfl`. -/
+def awayCompletionAlgEquivOfBase (I : Ideal R) (hI : I.FG) (σ : S ≃ₐ[R] T) {u : S} {v : T}
+    (huv : σ u = v) :
+    awayCompletion (I.map (algebraMap R S)) u ≃ₐ[R] awayCompletion (I.map (algebraMap R T)) v :=
+  AlgEquiv.ofRingEquiv (f := awayCompletionEquivOfRingEquiv σ.toRingEquiv
+      (Ideal.map_algEquiv_map_algebraMap I σ) (hI.map _) (hI.map _) huv) fun r => by
+    rw [IsScalarTower.algebraMap_apply R S (awayCompletion (I.map (algebraMap R S)) u),
+      awayCompletionEquivOfRingEquiv_algebraMap, AlgEquiv.coe_ringEquiv, AlgEquiv.commutes,
+      ← IsScalarTower.algebraMap_apply]
+
+/-- **Where `σ` acts**: on the structural image of `S` the transport is `σ`. It is
+`FormalSpectrum.awayCompletionEquivOfRingEquiv_algebraMap` read at this equivalence. -/
+@[simp]
+theorem awayCompletionAlgEquivOfBase_algebraMap (I : Ideal R) (hI : I.FG) (σ : S ≃ₐ[R] T) {u : S}
+    {v : T} (huv : σ u = v) (s : S) :
+    awayCompletionAlgEquivOfBase I hI σ huv (algebraMap S (awayCompletion
+        (I.map (algebraMap R S)) u) s) =
+      algebraMap T (awayCompletion (I.map (algebraMap R T)) v) (σ s) :=
+  awayCompletionEquivOfRingEquiv_algebraMap σ.toRingEquiv
+    (Ideal.map_algEquiv_map_algebraMap I σ) (hI.map _) (hI.map _) huv s
+
+/-- **The inverse acts by `σ.symm`**, which is the previous lemma at the inverse and needs nothing
+further: an `AlgEquiv` supplies its own round trip. -/
+@[simp]
+theorem awayCompletionAlgEquivOfBase_symm_algebraMap (I : Ideal R) (hI : I.FG) (σ : S ≃ₐ[R] T)
+    {u : S} {v : T} (huv : σ u = v) (t : T) :
+    (awayCompletionAlgEquivOfBase I hI σ huv).symm
+        (algebraMap T (awayCompletion (I.map (algebraMap R T)) v) t) =
+      algebraMap S (awayCompletion (I.map (algebraMap R S)) u) (σ.symm t) := by
+  rw [AlgEquiv.symm_apply_eq, awayCompletionAlgEquivOfBase_algebraMap, σ.apply_symm_apply]
+
+end CongrAlg
 
 end FormalSpectrum
 
