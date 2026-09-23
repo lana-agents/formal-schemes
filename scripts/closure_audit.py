@@ -167,14 +167,18 @@ that edge would cost instead of trying to read the sentence that states it:
 * that population partitioned by the three species an import edge can falsify -- `A`'s own forward
   closure, a consumer's forward closure, a brought-in module's reverse closure -- with an
   `unclassified` bucket.  The three are exhaustive as a matter of the graph, so `unclassified` is
-  never a level: it is a claim shape nobody has thought about, or a bug here.
+  never a level: it is a claim shape nobody has thought about, or a bug here.  It has already been
+  the second once -- a `## Placement` opener that calls its file a leaf states a forward closure
+  and a reverse closure in one sentence, and the leaf finding read off the wrong one of the two.
 
 If `A` already imports `B` the deletion is priced instead, which is the direction
 `FormalSchemes/AwayCompletionAlgHomBasicOpen.lean`'s `## Placement` quotes.
 
 **This mode does not read the counterfactual sentence and must not pretend to.**  It prints what
 the tree would say; comparing that against what a paragraph does say is the author's job, exactly
-as with `--sweep`.  It always exits **0** -- there is no tree here for a gate to be about.
+as with `--sweep`.  Every run that produces a report exits **0** -- there is no tree here for a
+gate to be about; an invocation this mode cannot make sense of, a name that is not a module of
+this tree or a module asked to import itself, still fails as any other bad argument does.
 
 ## Size figures, and the history figure beside one that is out of reach
 
@@ -681,6 +685,12 @@ def audit(root: str = ".", deps: dict[str, set] | None = None) -> tuple[list, li
             called_leaf.add((c["path"], c["sentence"]))
             mismatches.append(dict(
                 c, stated=0, actual=len(reverse[c["module"]]), subject=c["module"],
+                # This finding is about a **reverse** closure whatever the claim carrying it was
+                # about, and the sentence that triggers it usually states both: an opener reading
+                # *"A leaf over `X`: forward closure N, reverse closure 0"* parses as two claims
+                # and this fires from whichever comes first.  Inheriting `c["kind"]` therefore made
+                # the species `--edge` reports depend on that parse order.
+                kind="reverse",
                 what="the reverse closure of `%s`, which this sentence calls a leaf" % c["module"]))
         if c["about"] is None:
             declined.append(c)
@@ -723,7 +733,12 @@ def audit(root: str = ".", deps: dict[str, set] | None = None) -> tuple[list, li
 def _fingerprint(c: dict) -> tuple:
     """A mismatch, identified well enough to subtract one population from another.  The `actual`
     is deliberately **out**: the same wrong sentence is the same defect whatever the edge moves
-    the right answer to, and leaving it in would report every pre-existing MISMATCH as new."""
+    the right answer to, and leaving it in would report every pre-existing MISMATCH as new.
+
+    The cost of that, said plainly: a figure that is wrong now and would be **right** under the
+    edge is in neither population and is not reported.  `--edge` prices what the edge would
+    break, not what it would happen to repair, and on a red tree `--tree` is what finds the
+    second."""
     return (c["path"], c["line"], c["stated"],
             c.get("what") or "the %s closure of `%s`" % (c["kind"], c["about"]))
 
@@ -805,7 +820,10 @@ def report_edge(r: dict) -> None:
           % (r["importer"], "gains" if r["adding"] else "drops", r["imported"]))
     print("  priced by                  : the import graph one entry different from this tree's;"
           " nothing written")
-    print("modules the edge brings in   : %5d" % len(r["brought"]))
+    # `brings in` / `takes out` are the same width, because every label in this report is
+    # one column and a reader diffs two runs of it.
+    print("modules the edge %s   : %5d"
+          % ("brings in" if r["adding"] else "takes out", len(r["brought"])))
     for m in r["brought"]:
         print("    %s" % m)
     print("forward closures that move   : %5d   of %d walked: this module and its %d consumers"
@@ -1241,9 +1259,48 @@ def selftest() -> int:
                                      for c in r["population"])),
               (1, [("Cons.lean", 3, 2), ("Extra.lean", 3, 1), ("Mid.lean", 2, 1)]))
 
-    # `unclassified` cannot be reached from any tree -- that is the point of it -- so the bucket
-    # is exercised on the classifier rather than asserted empty by a run that could not produce
-    # one.  A project total is the shape that comes closest: it has no subject at all.
+    # `unclassified` is reachable, and the shape that reaches it is the one this case is built
+    # from: a `## Placement` opener that calls its file a leaf states a **forward** closure and a
+    # **reverse** closure in one sentence, so the leaf finding fires from whichever of the two
+    # parses first -- while the finding itself is about the reverse closure either way.  Reading
+    # its species off the carrying claim therefore made the answer depend on parse order, and six
+    # of the seven leaf sentences on this tree parse forward-first.  This case fails without the
+    # `kind="reverse"` in `audit`.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        write("Root", "/-! Over nothing: forward closure **0**, reverse closure **1**. -/\n")
+        write("Leaf", "import FormalSchemes.Root\n"
+                      "/-! ## Placement\n\n"
+                      "A leaf over `FormalSchemes.Root`: this file's forward closure is **1**\n"
+                      "project module besides itself, and its reverse closure is **0**. -/\n")
+        write("Other", "/-! Over nothing: forward closure **0**. -/\n")
+        check("the leaf tree is green before the edge", audit(d)[0], [])
+
+        r = edge_cost(d, "FormalSchemes.Other", "FormalSchemes.Leaf")
+        check("an edge into a leaf brings in the leaf and everything under it",
+              (r["adding"], r["brought"]),
+              (True, ["FormalSchemes.Leaf", "FormalSchemes.Root"]))
+        check("a sentence calling its file a leaf is reported twice and **both** are species 3, "
+              "the plain reverse claim and the leaf finding",
+              sorted((c["path"].split(os.sep)[-1], c.get("what", ""))
+                     for c in r["species"][3]),
+              [("Leaf.lean", ""),
+               ("Leaf.lean", "the reverse closure of `FormalSchemes.Leaf`, which this sentence"
+                             " calls a leaf"),
+               ("Root.lean", "")])
+        check("and nothing the edge falsifies is left unclassified",
+              ({k: len(v) for k, v in r["species"].items()},
+               [c["path"].split(os.sep)[-1] for c in r["species"][1]]),
+              ({1: 1, 2: 0, 3: 3, 0: 0}, ["Other.lean"]))
+
+    # The bucket is exercised on the classifier too, over shapes no tree has to produce.  A
+    # project total is the one that comes closest to reaching it: it has no subject at all.
     check("a figure with no subject is unclassified rather than forced into a species",
           [edge_species(c, "FormalSchemes.Mid", {"FormalSchemes.Cons"}, {"FormalSchemes.Extra"})
            for c in ({"subject": None, "kind": "forward"},
