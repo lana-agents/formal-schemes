@@ -174,6 +174,13 @@ that edge would cost instead of trying to read the sentence that states it:
 If `A` already imports `B` the deletion is priced instead, which is the direction
 `FormalSchemes/AwayCompletionAlgHomBasicOpen.lean`'s `## Placement` quotes.
 
+If `B` already *reaches* `A` the edge would close a cycle and Lean would refuse the tree, so the
+report says so on a `NOTE` line and prices it anyway.  It is a **label and not a refusal**: the
+figures are a well-defined walk of that digraph, an author weighing *"should `A` import `B`, or
+`B` import `A`?"* is asking how far apart the two ends are, and on this tree every one of the
+existing import edges is such a pair when flipped -- so refusing would decline the commonest
+second half of the question the mode exists to answer.
+
 **This mode does not read the counterfactual sentence and must not pretend to.**  It prints what
 the tree would say; comparing that against what a paragraph does say is the author's job, exactly
 as with `--sweep`.  Every run that produces a report exits **0** -- there is no tree here for a
@@ -802,6 +809,14 @@ def edge_cost(root: str = ".", importer: str = "", imported: str = "") -> dict:
         return edge_species(c, importer, consumers, brought)
 
     return dict(importer=importer, imported=imported, adding=adding, brought=sorted(brought),
+                # `imported` already reaching `importer` makes the hypothetical graph cyclic, so
+                # Lean would refuse the tree this report prices.  A label and never a filter:
+                # nothing below is computed differently, because reachability in a cyclic digraph
+                # is well defined and every figure here is that digraph's.  A deletion cannot
+                # create a cycle, which is why this is read off the addition direction only -- a
+                # guard no acyclic tree can observe, pinned by `--selftest` on one that is already
+                # cyclic, where *would close a cycle* would be the wrong sentence to print.
+                cycle=adding and importer in fwd_real[imported],
                 moved=moved, unmoved=unmoved, rev_moved=rev_moved, baseline=len(base),
                 population=sorted(population, key=lambda c: (c["path"], c["line"])),
                 species={k: [c for c in population if species(c) == k] for k in (1, 2, 3, 0)},
@@ -820,6 +835,18 @@ def report_edge(r: dict) -> None:
           % (r["importer"], "gains" if r["adding"] else "drops", r["imported"]))
     print("  priced by                  : the import graph one entry different from this tree's;"
           " nothing written")
+    if r["cycle"]:
+        # At a fixed position, right under `priced by`, because a reader of this report diffs two
+        # runs of it and a line that moves is a line that is missed.  The two modules are named
+        # on the line above and are deliberately not repeated here: interpolating them makes this
+        # the one paragraph of the report whose width is unbounded.
+        print("  NOTE                       : the imported module already reaches the importing"
+              " one, so this")
+        print("                               edge would close an import cycle.  Lean would"
+              " refuse the tree")
+        print("                               priced below; the figures are that graph's, not a"
+              " buildable")
+        print("                               project's.")
     # `brings in` / `takes out` are the same width, because every label in this report is
     # one column and a reader diffs two runs of it.
     print("modules the edge %s   : %5d"
@@ -1299,6 +1326,150 @@ def selftest() -> int:
                [c["path"].split(os.sep)[-1] for c in r["species"][1]]),
               ({1: 1, 2: 0, 3: 3, 0: 0}, ["Other.lean"]))
 
+    # An edge whose imported end already reaches its importer would close a cycle.  The report
+    # labels it; nothing else about the report changes, and that is what these cases pin --
+    # a filter here would quietly drop the figures an author pricing a reversal came for.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        write("Bot", "/-! Over nothing: forward closure **0**, reverse closure **2**. -/\n")
+        write("Top", "import FormalSchemes.Bot\n"
+                     "/-! Over `FormalSchemes.Bot`: forward closure **1**, reverse\n"
+                     "closure **0**. -/\n")
+        write("Side", "import FormalSchemes.Bot\n"
+                      "/-! Over `FormalSchemes.Bot`: forward closure **1**, reverse\n"
+                      "closure **0**. -/\n")
+        check("the cycle tree is green before any edge", audit(d)[0], [])
+
+        straight = edge_cost(d, "FormalSchemes.Top", "FormalSchemes.Side")
+        check("an edge whose imported end does not reach its importer is not a cycle",
+              straight["cycle"], False)
+
+        # `Top` already reaches `Bot`, so `Bot` importing `Top` closes one.
+        looped = edge_cost(d, "FormalSchemes.Bot", "FormalSchemes.Top")
+        check("an edge whose imported end already reaches its importer is one",
+              (looped["cycle"], looped["adding"]), (True, True))
+        check("and the label does not filter: the cycle edge still prices what it brings in, "
+              "what moves and one figure of each species",
+              (looped["brought"], looped["moved"], looped["unmoved"], looped["rev_moved"],
+               sorted((c["path"].split(os.sep)[-1], c["stated"], c["actual"])
+                      for c in looped["population"]),
+               {k: len(v) for k, v in looped["species"].items()}, looped["baseline"]),
+              (["FormalSchemes.Top"], ["FormalSchemes.Bot", "FormalSchemes.Side"],
+               ["FormalSchemes.Top"], ["FormalSchemes.Top"],
+               [("Bot.lean", 0, 1), ("Side.lean", 1, 2), ("Top.lean", 0, 2)],
+               {1: 1, 2: 1, 3: 1, 0: 0}, 0))
+
+        # A deletion removes an edge, so it can never close a cycle.  Which conjunct excludes
+        # this one is worth reading off rather than assuming: `Bot` reaches nothing, so the
+        # reachability test is already `False` here and `adding and ...` is not what fires.  The
+        # tree that does exercise the direction guard is the cyclic one below, and it is the only
+        # shape that can -- which is why that case exists and this one does not stand in for it.
+        deleting = edge_cost(d, "FormalSchemes.Top", "FormalSchemes.Bot")
+        bot_reaches_top = "FormalSchemes.Top" in deleting["forward"][0]["FormalSchemes.Bot"]
+        check("a deletion whose imported end reaches nothing is not a cycle, and it is the "
+              "reachability test rather than the direction that says so",
+              (deleting["adding"], bot_reaches_top, deleting["cycle"]), (False, False, False))
+
+        # The renderer, which nothing else here reads.  Both of the labels below have been
+        # wrong on this tree -- `brings in` was printed in the deletion direction until issue
+        # 2195's review -- and neither is visible from `edge_cost`'s return value.
+        import contextlib
+        import io
+
+        def rendered(r):
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                report_edge(r)
+            return buf.getvalue().splitlines()
+
+        check("the NOTE is printed for a cycle edge, directly under `priced by`, and the two "
+              "modules are not interpolated into it, so its width is bounded",
+              [ln[31:] for ln in rendered(looped)[2:6]],
+              ["the imported module already reaches the importing one, so this",
+               "edge would close an import cycle.  Lean would refuse the tree",
+               "priced below; the figures are that graph's, not a buildable",
+               "project's."])
+        check("no NOTE on an edge that is not one, and the direction word and the label agree "
+              "with `adding` in both directions",
+              [[ln for ln in rendered(r)
+                if "NOTE" in ln or " gains " in ln or " drops " in ln
+                or "brings in" in ln or "takes out" in ln]
+               for r in (straight, deleting)],
+              [["edge                         : `FormalSchemes.Top` gains `FormalSchemes.Side`",
+                "modules the edge brings in   :     1"],
+               ["edge                         : `FormalSchemes.Top` drops `FormalSchemes.Bot`",
+                "modules the edge takes out   :     1"]])
+
+    # `adding and ...` is the one conjunct of the flag that none of the cases above can observe.
+    # On any tree Lean would load, a deletion's imported end does not reach its importer, so the
+    # reachability test alone is already `False` there -- and by acyclicity, not by luck: at
+    # `2875bd3` it was `False` for all 1247 of this tree's import edges.  The one world where the
+    # guard is load-bearing is a real tree that is **already** cyclic, and there the NOTE would be
+    # the wrong sentence: the edge does not *close* a cycle, the cycle is there, and deleting the
+    # edge may be what breaks it.  So that is the tree this case is built on.  Backing the
+    # `adding and` out turns it red and leaves every other case in this file green.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+        for name, other in (("Ping", "Pong"), ("Pong", "Ping")):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write("import FormalSchemes.%s\n"
+                        "/-! A tree Lean would refuse: these two import each other. -/\n" % other)
+        check("the cyclic tree quotes no figure, so the case below asserts the flag and nothing "
+              "else", audit(d)[0], [])
+        cyclic = edge_cost(d, "FormalSchemes.Ping", "FormalSchemes.Pong")
+        pong_reaches_ping = "FormalSchemes.Ping" in cyclic["forward"][0]["FormalSchemes.Pong"]
+        check("a deletion is not labelled a cycle even where the imported end does reach the "
+              "importing one, which is the only shape that guard is visible on",
+              (cyclic["adding"], pong_reaches_ping, cyclic["cycle"]), (False, True, False))
+
+    # `--edge`'s argument, which is the other thing a report can be silently wrong about.  The
+    # empty string used to be **falsy** at `main`'s branch and fall through to the tree audit:
+    # output byte-identical to `--tree`'s, and `--tree`'s exit code, from a flag asking for
+    # something else entirely.  `main` tests `is not None` now and this is the gate it reaches.
+    def edge_arg(a):
+        try:
+            return parse_edge(a)
+        except SystemExit as e:
+            return str(e)
+    usage = "--edge takes `FormalSchemes.A:FormalSchemes.B`"
+    check("a well-formed edge argument splits, and every malformed one is refused by name -- "
+          "the empty string included, which is the one that used to run a different mode",
+          [edge_arg(a) for a in ("FormalSchemes.A:FormalSchemes.B", "", "FormalSchemes.A",
+                                 "A:B:C", ":")],
+          [("FormalSchemes.A", "FormalSchemes.B"), usage, usage, usage, ("", "")])
+
+    # ...and the same through `main`, because `parse_edge` alone does not pin the branch that
+    # used to skip it.  A synthetic tree as the working directory is what makes this cheap: on
+    # the falsy-test this ran a full audit of whatever `.` happened to be, and the check is that
+    # it no longer looks at `.` at all.  No build and no repository state, as above.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+        with open(os.path.join(d, "FormalSchemes", "Only.lean"), "w", encoding="utf-8") as f:
+            f.write("/-! Over nothing: forward closure **0**. -/\n")
+        argv, cwd = sys.argv, os.getcwd()
+        try:
+            os.chdir(d)
+            got = []
+            for a in ("", "FormalSchemes.Only"):
+                sys.argv = ["closure_audit.py", "--edge", a]
+                try:
+                    got.append(main())
+                except SystemExit as e:
+                    got.append(str(e))
+        finally:
+            sys.argv = argv
+            os.chdir(cwd)
+        check("`--edge ''` is refused by `main` rather than falling through to the tree audit, "
+              "which it used to run and report under a flag asking for something else",
+              got, [usage, usage])
+
     # The bucket is exercised on the classifier too, over shapes no tree has to produce.  A
     # project total is the one that comes closest to reaching it: it has no subject at all.
     check("a figure with no subject is unclassified rather than forced into a species",
@@ -1315,6 +1486,19 @@ def selftest() -> int:
     return 1 if bad else 0
 
 
+def parse_edge(arg: str) -> tuple[str, str]:
+    """`A:B` split in two, or the usage message.
+
+    Its own function so that `--selftest` can pin it: the empty string used to reach `main`'s
+    `if args.edge:` as **falsy** and fall through to the tree audit, which neither reports nor
+    fails but silently answers a different question.  `main` now tests `is not None` and this
+    arity check is what the empty string meets."""
+    if arg.count(":") != 1:
+        raise SystemExit("--edge takes `FormalSchemes.A:FormalSchemes.B`")
+    a, b = arg.split(":")
+    return a, b
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -1329,10 +1513,10 @@ def main() -> int:
     args = ap.parse_args()
     if args.selftest:
         return selftest()
-    if args.edge:
-        if args.edge.count(":") != 1:
-            raise SystemExit("--edge takes `FormalSchemes.A:FormalSchemes.B`")
-        report_edge(edge_cost(".", *args.edge.split(":")))
+    # `is not None`, not truthiness: `--edge ''` is a malformed argument and has to reach
+    # `parse_edge`, not fall past this branch into the tree audit.
+    if args.edge is not None:
+        report_edge(edge_cost(".", *parse_edge(args.edge)))
         return 0
 
     mods = project_modules()
