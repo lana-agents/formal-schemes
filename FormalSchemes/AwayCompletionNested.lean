@@ -12,9 +12,11 @@ set_option synthInstance.maxHeartbeats 1000000
 Let `(R, I)` be an adic base, `A` an `R`-algebra and `f g : A` with `f` a unit in `A_g` — the
 containment `D(g) ⊆ D(f)` **in `Spec A`**, which is stronger than the containment
 `FormalSpectrum.basicOpen (I·A) g ≤ FormalSpectrum.basicOpen (I·A) f` of the basic opens of `Spf A`
-wearing the same notation; every declaration below takes the unit. The two ways of reading the
-sections over `D(g)` — directly on `Spf A`, or through the affine basic-open chart
-`Spf (A{1/f}) ↪ Spf A` — give the completed localizations
+wearing the same notation. **No declaration below is keyed on the weaker containment**: every one
+that takes a containment hypothesis takes the unit, and the one that takes none,
+`FormalSpectrum.awayCompletionNestedMulAlgEquiv`, says in its own docstring which containment does
+the work there. The two ways of reading the sections over `D(g)` — directly on `Spf A`, or through
+the affine basic-open chart `Spf (A{1/f}) ↪ Spf A` — give the completed localizations
 
 ```
 A{1/g}          and          A{1/f}{1/ḡ}
@@ -175,8 +177,12 @@ def awayCompletionNestedAlgEquiv (hI : I.FG) (f g : A)
 
 /-- **The overlap case.** For the overlap `D(f · g) ⊆ D(f)` of two basic opens of `Spf A`, the
 chart-level completed localization `A{1/f}{1/(f·g)}` is identified with `A{1/(f·g)}` as an
-`R`-algebra. This is the instance an open-cover datum uses, with `f = f_i` and `g = f_j`: it turns
-the two chart-local presentations of the overlap into one common `A{1/(f_i·f_j)}`. -/
+`R`-algebra. That containment holds in both spaces, and it is the `Spec A` one that does the work:
+`f ∣ f · g`, so `f` is a unit in `Localization.Away (f * g)` by
+`IsLocalization.Away.isUnit_of_dvd`, and this is `awayCompletionNestedAlgEquiv` at that witness —
+which is why this declaration, alone in the file, takes no containment hypothesis of its own. This
+is the instance an open-cover datum uses, with `f = f_i` and `g = f_j`: it turns the two
+chart-local presentations of the overlap into one common `A{1/(f_i·f_j)}`. -/
 def awayCompletionNestedMulAlgEquiv (hI : I.FG) (f g : A) :
     awayCompletion (I.map (algebraMap R A)) (f * g) ≃ₐ[R]
       awayCompletion (I.map (algebraMap R (awayCompletion (I.map (algebraMap R A)) f)))

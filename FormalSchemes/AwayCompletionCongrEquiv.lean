@@ -22,7 +22,13 @@ localizations:
 of `Spf A`. `D(y) ⊆ D(x)` in the two clauses is a containment in `Spec A`, equivalent to the unit
 hypothesis and *strictly stronger* than
 `FormalSpectrum.basicOpen (I·A) y ≤ FormalSpectrum.basicOpen (I·A) x`, the containment of the
-corresponding opens of `Spf A`. Every declaration in this file takes the unit;
+corresponding opens of `Spf A`. **No declaration in this file is keyed on the weaker containment**:
+every one that takes a containment hypothesis takes the unit, and the four that take none —
+`CompletedTensorAwayInterchange.furtherLocAlgHom_congr`,
+`CompletedTensorAwayInterchange.furtherLocAlgHom_comp`,
+`CompletedTensorAwayInterchange.furtherLocAlgHom_self` and
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq` — take instead a localization map compatible
+with `A`, whose existence is that same `Spec A` containment, or an equality of the two elements.
 `FormalSchemes.AwayCompletionRestrict`'s opening paragraph is the exposition of the difference.
 
 ## Rigidity, and why it matters
