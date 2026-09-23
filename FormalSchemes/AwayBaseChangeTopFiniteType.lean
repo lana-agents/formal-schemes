@@ -180,12 +180,16 @@ elsewhere is **10** in **7**. Both numbers answer real questions and the recipe 
 first. **They are a measurement of the tree this paragraph was last re-run against, and not a
 standing claim about any later one.** The edge enlarges what this file transitively imports, so it
 falsifies three species of figure at once: any quoting this file's own forward closure, any quoting
-the forward closure of a module that reaches this file, and any quoting the reverse closure of one
-of the five modules the edge brings in. A diff writing any of those — anywhere on the tree, in
-prose alone, without opening this file — moves the count, and `scripts/closure_audit.py --tree`
-cannot report that it has, because `--tree` checks the tree as it is and this sentence prices one
-that does not exist. Re-run the recipe rather than trusting the numeral. Moving the general form
-down to a module both files already reach is worse: of the thirteen such modules,
+the forward closure of one of the six modules that reach this file and do not already reach the
+five the edge brings in, and any quoting the reverse closure of one of those five. *Reaching this
+file* is necessary for the second species and not sufficient:
+`FormalSchemes.ConservativityTopFiniteType`, `FormalSchemes.TargetBasicRefinement` and
+`FormalSchemes.TopFiniteTypeHomTrans` reach it and reach all five already, so the edge moves their
+forward closures by nothing. A diff writing any of those — anywhere on the tree, in prose alone,
+without opening this file — moves the count, and `scripts/closure_audit.py --tree` cannot report
+that it has, because `--tree` checks the tree as it is and this sentence prices one that does not
+exist. Re-run the recipe rather than trusting the numeral. Moving the general form down to a module
+both files already reach is worse: of the thirteen such modules,
 `FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **496**. So the local
 copy stands, and it is at root namespace for the reason `Ideal.map_algebraMap_of_tower`
 (`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. Re-cost the import
