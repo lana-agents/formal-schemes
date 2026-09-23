@@ -500,6 +500,14 @@ sentences** in **23 files**, of exactly two shapes and no third:
 **A leaf leaves every forward closure alone** — a module added downstream changes nobody's imports
 — and a pull request that adds only declarations changes nothing at all, measured at 0 MISMATCH.
 
+**`closure_audit.py --edge A:B` prices a hypothetical import mechanically**, and is what to run
+before writing any of the figures this subsection is about. It reports the modules the edge brings
+in, which forward closures move and **which do not**, which reverse closures move, and the
+`MISMATCH` population the edge would create, partitioned by the three species an import can
+falsify. It reads a tree that does not exist, so it never fails and is not a gate. It does not read
+the counterfactual sentence — comparing the report against what a paragraph says is yours to do,
+exactly as with `--sweep`.
+
 **An added *import* is the other case, and its cost is not the importing file's reverse closure.**
 What an import `A → B` moves is the forward closure of `A` and of everything downstream of `A`, and
 the reverse closure of every module that `B` newly brings into `A`'s closure — so what it costs is
