@@ -11,7 +11,10 @@ statement (A) of EGA I §10.15 waits on, issue 2148 — indexes the refined char
 with `h : A_i`, and needs, at a cross-chart refined pair *⟨i, h⟩*, *⟨j, h'⟩*, an `R`-algebra
 transition between the two presentations of the refined overlap. This file supplies the **legs** of
 that transition: the maps out of the *coarse* overlap algebras `A_i{1/g_ij}` and `A_j{1/g_ji}` into
-the refined ones.
+the refined ones. Only one leg is declared below and that is not an omission:
+`FormalSpectrum.exists_refined_overlap_element` is symmetric in its two charts, so the *j*-side
+leg is `FormalSpectrum.refinedOverlapLeg` itself, at the swapped data
+*(gji, gij, τ.symm, h', h)*.
 
 ## What was thought to be missing, and is not
 
@@ -74,27 +77,39 @@ and what is below is only the pair of legs `A_i{1/g_ij} ⟶ A_i{1/(h · e)}` and
 transition `τ_ij : A_i{1/g_ij} ≃ₐ[R] A_j{1/g_ji}` joins at the *top*. Producing the bottom
 isomorphism from that span is a **descent** statement, and it is open.
 
-What it would take is worth naming exactly, because the statement of the right shape is already on
-the tree and it is its *hypothesis* that is missing, not the statement.
+**What it was waiting on is no longer missing.**
 `FormalSpectrum.awayCompletionNestedAlgEquiv` (`FormalSchemes.AwayCompletionNested`) recognises
 `A{1/g}` as a completed localization of the chart algebra `A{1/f}`,
 
 ```
-A{1/g} ≃ₐ[R] (A{1/f}){1/ĝ}     at     IsUnit (algebraMap A (Localization.Away g) f),
+A{1/g} ≃ₐ[R] (A{1/f}){1/ĝ},
 ```
 
-which is precisely the leg's target read from inside the source — and were it available at
-`g := h · e`, `f := g_ij`, transporting *τ_ij* along it would be `AlgEquiv` bookkeeping. Its
-hypothesis is the **uncompleted** unit statement, which is strictly stronger than the containment
-`D(h · e) ≤ D(g_ij)` the leg is built from, and is the same thing
-`CompletedTensorAwayInterchange.awayCongrHom` asks for above; so closing the gap means either a
-`basicOpen`-keyed form of that equivalence or a route that does not pass through one. Nothing
-below attempts either; the legs are what turn the gap into a single named statement instead of
-two.
+which is precisely the leg's target read from inside the source; its hypothesis, however, is
+`IsUnit (algebraMap A (Localization.Away g) f)` — the **uncompleted** unit statement, strictly
+stronger than the containment `D(h · e) ≤ D(g_ij)` the leg is built from, and the same thing
+`CompletedTensorAwayInterchange.awayCongrHom` asks for above. The `basicOpen`-keyed form of it is
+now `FormalSpectrum.awayCompletionNestedAlgEquivOfLe` (`FormalSchemes.AwayCompletionUniversal`),
+proved from the universal property of a completed localization instead of from the localization
+transitivity that the stronger hypothesis exists to feed. So what stands between these legs and
+the transition is the transport of *τ_ij* along it and its *j*-side twin, together with the check
+that the two presentations it lands on are the ones the refined datum indexes — `AlgEquiv`
+bookkeeping over a statement that is now available, rather than a missing statement.
 
 **Nothing about `σ`, the triple overlap, or the refined datum's laws.** The three conjugation
 lemmas of `FormalSchemes.BasicOpenCoverTransitions` are stated over independent ambients and are
 waiting for that isomorphism; they are not consumed here.
+
+## Placement
+
+Over `FormalSchemes.AwayCompletionRestrictUnique` and `FormalSchemes.BasicOpenChartImage`. The
+refined-overlap declarations below have no home but this one.
+`FormalSpectrum.basicOpen_mul_le_of_basicOpen_le` is the exception, and its
+ratio is recorded here rather than left to be re-derived: it is a general statement about
+`FormalSpectrum.basicOpen`, its subject-matter home is beside `FormalSpectrum.basicOpen_mul` in
+`FormalSchemes.FormalSpectrum`, whose reverse closure is **535** against this file's **0**, and
+it is declined on that ratio — this tree's standing disposition for a general statement with a
+single call site. Re-cost the move when a second consumer appears.
 
 ## References
 
