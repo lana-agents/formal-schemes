@@ -9,8 +9,11 @@ set_option synthInstance.maxHeartbeats 1000000
 /-!
 # The nested basic-open chart, as an `R`-algebra isomorphism
 
-Let `(R, I)` be an adic base, `A` an `R`-algebra and `f g : A` with `D(g) ⊆ D(f)`. The two ways of
-reading the sections over `D(g)` — directly on `Spf A`, or through the affine basic-open chart
+Let `(R, I)` be an adic base, `A` an `R`-algebra and `f g : A` with `f` a unit in `A_g` — the
+containment `D(g) ⊆ D(f)` **in `Spec A`**, which is stronger than the containment
+`FormalSpectrum.basicOpen (I·A) g ≤ FormalSpectrum.basicOpen (I·A) f` of the basic opens of `Spf A`
+wearing the same notation; every declaration below takes the unit. The two ways of reading the
+sections over `D(g)` — directly on `Spf A`, or through the affine basic-open chart
 `Spf (A{1/f}) ↪ Spf A` — give the completed localizations
 
 ```
@@ -119,8 +122,9 @@ theorem awayCompletionChartEquiv_algebraMap (J : Ideal A) (f g : A) (hJ : J.FG)
 /-! ### The `R`-algebra upgrade -/
 
 /-- **The nested basic-open chart identification as an `R`-algebra isomorphism**
-`A{1/g} ≃ₐ[R] A{1/f}{1/ḡ}`, for `D(g) ⊆ D(f)` (encoded as `f` being a unit in `A_g`). The upgrade
-of `awayCompletionChartEquiv`: it fixes `A`, hence a fortiori the image of `R`. -/
+`A{1/g} ≃ₐ[R] A{1/f}{1/ḡ}`, for `f` a unit in `A_g` — the containment `D(g) ⊆ D(f)` in `Spec A`,
+not the weaker one in `Spf A`. The upgrade of `awayCompletionChartEquiv`: it fixes `A`, hence a
+fortiori the image of `R`. -/
 def awayCompletionChartAlgEquiv (hI : I.FG) (f g : A)
     (hfg : IsUnit (algebraMap A (Localization.Away g) f)) :
     awayCompletion (I.map (algebraMap R A)) g ≃ₐ[R]

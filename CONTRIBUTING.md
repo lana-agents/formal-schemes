@@ -683,6 +683,48 @@ directory the script is in. It had a standing backlog of **2** at `0c91a57`, bot
 returns 0. Those are measurements with commits attached rather than a figure about the tree today
 (issue 2128); the number moving is the signal, as with the citation audit.
 
+## The two spaces `D(g) ⊆ D(f)` names
+
+`D(g) ⊆ D(f)` is written on this tree for two containments that are **not** equivalent, and a
+sentence that does not say which one it means is ambiguous however true it is.
+
+* **In `Spec R`.** `D(g) ⊆ D(f)` ⟺ `g ∈ √(f)` ⟺ `IsUnit (algebraMap R (Localization.Away g) f)`.
+  This is the hypothesis almost every declaration here actually takes; grep it as
+  `IsUnit (algebraMap … (Localization.Away …) …)`.
+* **In `Spf (R, I)`.** `FormalSpectrum.basicOpen I f` is the basic open of the residue `f mod I` in
+  `Spec (R ⧸ I)`, so `FormalSpectrum.basicOpen I g ≤ FormalSpectrum.basicOpen I f` says only
+  `ḡ ∈ √(f̄)` in `R ⧸ I`. It gives `g ^ n - f * a ∈ I`
+  (`FormalSpectrum.exists_pow_sub_mul_mem_of_basicOpen_le`) and **no unit in `Localization.Away g`
+  at all**. `FormalSchemes.AwayCompletionRestrict`'s opening paragraph is the exposition, and
+  `FormalSpectrum.awayCompletionRestrict` is the map keyed on this weaker hypothesis — it exists
+  because the unit is unavailable.
+
+The second is strictly weaker, and the separation is witnessed rather than argued: at `R = ℤ`,
+`I = (2)`, `f = 3`, `g = 5`, `Spf` is the single point `Spec 𝔽₂`, so `D(5) ≤ D(3)` holds there
+while `3` is not a unit in `ℤ[1/5]` (map to `ZMod 3`). Both halves elaborate; issue 2188 carries
+the two `example`s.
+
+**The rule.** Whenever a sentence *identifies* the containment with the unit — *"encoded as"*,
+*"encoded by"*, *"i.e."*, *"↔"*, *"is exactly"* — name the space in the same sentence. Write
+`D(g) ⊆ D(f)` **in `Spec R`** for the unit and spell the other one out as
+`FormalSpectrum.basicOpen I g ≤ FormalSpectrum.basicOpen I f`, or say *"the basic opens of
+`Spf (R, I)`"*. A sentence that only asserts the implication — *"the unit makes `D(g)` a basic open
+contained in `D(f)`"* — is sound without the gloss and needs no repair; it is the biconditional
+that has to carry its space. `FormalSchemes.AdicCompletionAwayTrans`'s opening two paragraphs are
+the model: they write both containments, both with their space, and say which is stronger.
+
+**This is not a style preference.** PR #779 §4 handed its successor an unpriced step built on the
+gloss — getting a unit out of a containment of basic opens of `Spf` — and PR #781 §1 spent a whole
+pull request establishing that there is no such step, because the map keyed on the containment
+alone already existed. Issue 2188 is the census and the site-by-site ruling; it found **135**
+occurrences in **32** files and condemned **10** files, and it records that a line-oriented
+`git grep "encoded as\|encoded by"` misses two of the seven `encoded` sites because the phrase
+wraps.
+
+**No instrument checks this.** `closure_audit.py` reads closure figures, `citation_audit.py` reads
+backticked tokens, and neither reads a space. `scripts/` has no scanner for it and issue 2188
+declined to add one: the ruling is per site and needs a reader.
+
 ## Line width
 
 Every line of every tracked file is at most **100 characters and 100 display columns** — two

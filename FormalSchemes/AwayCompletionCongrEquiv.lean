@@ -13,10 +13,17 @@ Fix an adic base `(R, I)` and an `R`-algebra `A`. For `s : A` the completed loca
 `D(s)`. Two such charts are compared by completing the unique `A`-algebra map between the
 localizations:
 
-* if `x` becomes a **unit** in `A_y` — geometrically `D(y) ⊆ D(x)` — there is a comparison map
-  `A{1/x} →ₐ[R] A{1/y}`;
-* if moreover `y` becomes a unit in `A_x` — so `D(x) = D(y)` — the two comparison maps are mutually
-  inverse and give a comparison **isomorphism** `A{1/x} ≃ₐ[R] A{1/y}`.
+* if `x` becomes a **unit** in `A_y` — geometrically `D(y) ⊆ D(x)` **in `Spec A`** — there is a
+  comparison map `A{1/x} →ₐ[R] A{1/y}`;
+* if moreover `y` becomes a unit in `A_x` — so `D(x) = D(y)` in `Spec A` — the two comparison maps
+  are mutually inverse and give a comparison **isomorphism** `A{1/x} ≃ₐ[R] A{1/y}`.
+
+**The two spaces, since this file writes `D` for both.** `D(s)` in the paragraph above is an open
+of `Spf A`. `D(y) ⊆ D(x)` in the two clauses is a containment in `Spec A`, equivalent to the unit
+hypothesis and *strictly stronger* than
+`FormalSpectrum.basicOpen (I·A) y ≤ FormalSpectrum.basicOpen (I·A) x`, the containment of the
+corresponding opens of `Spf A`. Every declaration in this file takes the unit;
+`FormalSchemes.AwayCompletionRestrict`'s opening paragraph is the exposition of the difference.
 
 ## Rigidity, and why it matters
 
@@ -120,8 +127,8 @@ theorem furtherLocAlgHom_self (s : A) (hI : I.FG)
 /-! ### The comparison map of two completed localizations with the same basic open -/
 
 /-- **The comparison map `A{1/x} →ₐ[R] A{1/y}`** available whenever `x` becomes a unit in `A_y`
-(geometrically: `D(y) ⊆ D(x)`). It is the completion of `IsLocalization.Away.lift`, i.e. of the
-unique `A`-algebra map `A_x → A_y`. -/
+(geometrically: `D(y) ⊆ D(x)` in `Spec A`, not the weaker containment in `Spf A`). It is the
+completion of `IsLocalization.Away.lift`, i.e. of the unique `A`-algebra map `A_x → A_y`. -/
 def awayCongrHom (x y : A) (hI : I.FG) (hxy : IsUnit (algebraMap A (Localization.Away y) x)) :
     FormalSpectrum.awayCompletion (I.map (algebraMap R A)) x →ₐ[R]
       FormalSpectrum.awayCompletion (I.map (algebraMap R A)) y :=
@@ -199,8 +206,8 @@ theorem awayCongrEquiv_symm_toAlgHom (x y : A) (hI : I.FG)
 /-! ### Units, and the two further localizations as comparison maps -/
 
 /-- An element dividing a power of the away element becomes a unit in the localization. This is the
-practical form of "`D(y) ⊆ D(x)`" for the comparison maps above: `x` need only divide *some power*
-of `y`, not `y` itself. -/
+practical form of "`D(y) ⊆ D(x)` in `Spec A`" for the comparison maps above: `x` need only divide
+*some power* of `y`, not `y` itself. -/
 theorem isUnit_algebraMap_away_of_dvd_pow {x y : A} (n : ℕ) (h : x ∣ y ^ n) :
     IsUnit (algebraMap A (Localization.Away y) x) :=
   isUnit_of_dvd_unit (map_dvd _ h)

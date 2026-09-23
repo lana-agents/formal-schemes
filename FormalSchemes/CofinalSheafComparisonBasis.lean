@@ -67,10 +67,11 @@ namespace FormalSpectrum
 variable {R : Type u} [CommRing R] (I J : Ideal R) (f g : R)
 
 /-- **Basis-restriction naturality of the ideal-independence comparison (composition form).** For
-two finitely generated ideals of definition `I`, `J` and a basic inclusion `D(g) ⊆ D(f)` (encoded
-by `hfg : IsUnit (algebraMap R R_g f)`), the completed-localization transition isomorphism
-`awayCompletionAwayEquiv` intertwines the cofinal comparison maps `cofinalHom` for the two ideals of
-definition on `R{1/g}` and on `R_f{1/ḡ}`:
+two finitely generated ideals of definition `I`, `J` and `hfg : IsUnit (algebraMap R R_g f)` — the
+basic inclusion `D(g) ⊆ D(f)` in `Spec R`, stronger than the containment of the basic opens of
+`Spf (R, I)` or of `Spf (R, J)` — the completed-localization transition isomorphism
+`awayCompletionAwayEquiv` intertwines the cofinal comparison maps `AdicCompletion.cofinalHom` for
+the two ideals of definition on `R{1/g}` and on `R_f{1/ḡ}`:
 ```
 awayCompletionAwayEquiv J ∘ cofinalHom hb = cofinalHom hb' ∘ awayCompletionAwayEquiv I.
 ```

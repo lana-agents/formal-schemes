@@ -58,8 +58,9 @@ set_option maxHeartbeats 4000000 in
 -- The section rings of the thickening/structure sheaves unfold slowly through the defining
 -- `ℕᵒᵖ`-limit, so this level-matching proof needs a generous heartbeat budget.
 /-- **The sheaf `c`-component of the chart on `D(g) ⊆ D(f)` is the algebraic chart iso.** For
-`D(g) ⊆ D(f)` (encoded by `hfg : IsUnit (algebraMap R R_g f)`), the conjugated sheaf component
-`chartComponent I f g` agrees with the completed-localization isomorphism
+`hfg : IsUnit (algebraMap R R_g f)` — the containment `D(g) ⊆ D(f)` in `Spec R`, which is stronger
+than the containment of the basic opens of `Spf (R, I)` written the same way — the conjugated sheaf
+component `chartComponent I f g` agrees with the completed-localization isomorphism
 `awayCompletionChartEquiv I f g` (`R{1/g} ≃+* R{1/f}{1/ḡ}`). Proved by matching at every level `n`
 through the defining `ℕᵒᵖ`-limit, via `AdicCompletion.ext_evalₐ`. A generous heartbeat budget is
 required: these limit-sheaf files unfold the section rings of the thickening/structure sheaves. -/

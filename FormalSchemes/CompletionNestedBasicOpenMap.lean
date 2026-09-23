@@ -93,10 +93,11 @@ namespace FormalSpectrum
 variable {R : Type u} [CommRing R] (f g : R)
 
 /-- **The localization transitivity inverse is the `Away.lift` localization map.** For
-`D(g) ⊆ D(f)`, encoded as `hfg : IsUnit (algebraMap R (Localization.Away g) f)`, the transitivity
-isomorphism `awayAwayLocEquiv f g hfg : R_g ≃+* (R_f)_ĝ` has an inverse which, precomposed with the
-structural map `R_f → (R_f)_ĝ`, is the localization map `R_f → R_g` induced by `f` being a unit on
-`D(g)`.
+`D(g) ⊆ D(f)` **in `Spec R`** — no ideal of definition enters this statement, so the containment
+here is the one equivalent to `hfg : IsUnit (algebraMap R (Localization.Away g) f)` and not the
+weaker one of basic opens of a formal spectrum — the transitivity isomorphism
+`awayAwayLocEquiv f g hfg : R_g ≃+* (R_f)_ĝ` has an inverse which, precomposed with the structural
+map `R_f → (R_f)_ĝ`, is the localization map `R_f → R_g` induced by `f` being a unit on `D(g)`.
 
 This is the statement of `FormalSpectrum.awayAwayLocEquiv_symm_comp_algebraMap` over the base
 `R_f` rather than over `R`; the bridge is the universal property of `R_f` as a localization of `R`

@@ -33,9 +33,12 @@ computes `evalₐ n (awayCompletionChartEquiv …)` as a composite of two `Ideal
   `AdicCompletion` development.
 * `FormalSpectrum.basicOpenChart`: the affine basic-open chart `Spf R{1/f} ⟶ Spf R`, packaged as a
   morphism of locally ringed spaces.
-* `FormalSpectrum.isUnit_algebraMap_away_left`: the containment↔unit bridge — `f` is a unit in
-  `Localization.Away (f * g)`, so each basic open `D(f * g) = D(f) ⊓ D(g) ≤ D(f)` (these form a
-  basis of `D(f)`) carries the interchange hypothesis of `awayCompletionChartEquiv`.
+* `FormalSpectrum.isUnit_algebraMap_away_left`: the containment↔unit bridge **in `Spec R`** — `f`
+  is a unit in `Localization.Away (f * g)`, so each basic open `D(f * g) = D(f) ⊓ D(g) ≤ D(f)` of
+  `Spec R` (these form a basis of `D(f)`) carries the interchange hypothesis of
+  `awayCompletionChartEquiv`. The bridge is a biconditional only in `Spec R`; the containment of
+  the corresponding basic opens of `Spf (R, I)` is weaker and supplies no unit, which is what
+  `FormalSchemes.AwayCompletionRestrict` exists for.
 * `AdicCompletion.evalₐ_interchangeForward`, `FormalSpectrum.evalₐ_awayCompletionAwayEquiv`,
   `FormalSpectrum.evalₐ_awayCompletionChartEquiv`: the level-`n` components of the interchange
   forward map, the localization-transitivity isomorphism, and their composite the chart's
@@ -151,10 +154,12 @@ def basicOpenChart : locallyRingedSpaceObj (awayCompletionIdeal I f) ⟶ locally
     (le_comap_awayCompletionHom I f)
 
 /-- For any `f g : R`, the element `f` becomes a unit in `Localization.Away (f * g)`: the product
-`f * g` is a unit there, and a divisor of a unit is a unit. This is the containment↔unit bridge for
-the basic opens `D(f * g) = D(f) ⊓ D(g) ≤ D(f)` (which form a basis of `D(f)`), each of which then
-carries the `IsUnit (algebraMap R (Localization.Away (f * g)) f)` hypothesis of
-`awayCompletionChartEquiv`. -/
+`f * g` is a unit there, and a divisor of a unit is a unit. This is the containment↔unit bridge
+**in `Spec R`**, for the basic opens `D(f * g) = D(f) ⊓ D(g) ≤ D(f)` of `Spec R` (which form a
+basis of `D(f)`), each of which then carries the
+`IsUnit (algebraMap R (Localization.Away (f * g)) f)` hypothesis of `awayCompletionChartEquiv`. The
+biconditional holds only in `Spec R`: the containment of the corresponding basic opens of
+`Spf (R, I)` is weaker and supplies no unit. -/
 theorem isUnit_algebraMap_away_left :
     IsUnit (algebraMap R (Localization.Away (f * g)) f) := by
   have h : IsUnit (algebraMap R (Localization.Away (f * g)) (f * g)) :=

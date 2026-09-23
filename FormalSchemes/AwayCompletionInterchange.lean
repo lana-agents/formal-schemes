@@ -314,13 +314,15 @@ namespace FormalSpectrum
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (f g : R)
 
-/-- **Sections of the basic-open chart agree on `D(g) ⊆ D(f)`.** For `D(g) ⊆ D(f)` (encoded by
-`f` being a unit in `R_g`), the completed localization `R{1/g}` — the sections of `O_{Spf R}` on
-`D(g)` — is isomorphic to the completed localization `R{1/f}{1/ḡ}` — the sections of the affine
-basic-open chart `Spf R{1/f}` on the corresponding basic open. This composes the localization
-transitivity `awayCompletionAwayEquiv` (`R{1/g} ≃ R_f{1/ḡ}`) with the completion–localization
-interchange (`R_f{1/ḡ} ≃ R{1/f}{1/ḡ}`), and is the ring-level `c`-component of the chart on basic
-opens (the algebraic heart of the `c_iso` open-immersion route, issue 163). -/
+/-- **Sections of the basic-open chart agree on `D(g) ⊆ D(f)` in `Spec R`.** For `f` a unit in
+`R_g` — the containment `D(g) ⊆ D(f)` in `Spec R`, stronger than the containment of the basic opens
+of `Spf (R, I)` that wears the same notation — the completed localization `R{1/g}`, the sections of
+`O_{Spf R}` on the basic open `D(g)` of `Spf R`, is isomorphic to the completed localization
+`R{1/f}{1/ḡ}`, the sections of the affine basic-open chart `Spf R{1/f}` on the corresponding basic
+open. This composes the localization transitivity `awayCompletionAwayEquiv` (`R{1/g} ≃ R_f{1/ḡ}`)
+with the completion–localization interchange (`R_f{1/ḡ} ≃ R{1/f}{1/ḡ}`), and is the ring-level
+`c`-component of the chart on basic opens (the algebraic heart of the `c_iso` open-immersion route,
+issue 163). -/
 def awayCompletionChartEquiv (hI : I.FG)
     (hfg : IsUnit (algebraMap R (Localization.Away g) f)) :
     awayCompletion I g ≃+*
