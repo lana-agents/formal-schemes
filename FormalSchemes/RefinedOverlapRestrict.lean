@@ -55,6 +55,13 @@ of the whole step is this file.
 * `FormalSpectrum.refinedOverlapLeg`: the leg at a cross-chart refined pair, the two put together.
   The element and the map travel in one definition on purpose — `e` is pinned only up to an
   equality of basic opens, so a map chosen independently of it is a map into a different ring.
+* `FormalSpectrum.preimage_basicOpen_basicOpenChartBase`: the preimage of `D(b)` under the affine
+  basic-open chart is `D(b̂)` — `FormalSpectrum.map_preimage_basicOpen` (`FormalSchemes.SpfMap`) at
+  this chart, read through `SetLike.coe`. No content; a spelling.
+* `FormalSpectrum.coe_basicOpen_mul_refinedOverlapElt` and
+  `FormalSpectrum.basicOpen_awayCompletionHom_mul_refinedOverlapElt`: **the refined overlap read
+  in the coarse chart** rather than in the refined one — the statement the transition waits on,
+  see below.
 
 `A_i{1/(h · e)}` is the right ambient presentation of the refined overlap rather than
 `A_i{1/h}{1/ê}`: the two are identified by `FormalSpectrum.awayCompletionCongrBasicOpenAlg` at
@@ -75,7 +82,28 @@ A_i{1/(h · e)}  ≃ₐ[R]  A_j{1/(h' · e')}
 and what is below is only the pair of legs `A_i{1/g_ij} ⟶ A_i{1/(h · e)}` and
 `A_j{1/g_ji} ⟶ A_j{1/(h' · e')}` out of the two coarse overlap algebras, which the coarse
 transition `τ_ij : A_i{1/g_ij} ≃ₐ[R] A_j{1/g_ji}` joins at the *top*. Producing the bottom
-isomorphism from that span is a **descent** statement, and it is open.
+isomorphism from that span is open, and what is open is the **composite** and not a statement: the
+route is `FormalSpectrum.awayCompletionNestedAlgEquivOfLe`
+(`FormalSchemes.AwayCompletionUniversal`) into the coarse chart, then the transport of *τ_ij* named
+at the end of this section, then `FormalSpectrum.awayCompletionCongrBasicOpenAlg`
+(`FormalSchemes.AwayCompletionRestrictUnique`, which this file already imports) at the
+identification the two statements below supply, then the first step again on the *j* side. Four
+declarations, all on the tree, none of them here.
+
+**The composite is not expensive, and that is what the next row should be scoped from.**
+The four above join to the bottom isomorphism directly: measured with `lake env lean` outside the
+tree, at the default heartbeats, a fifteen-line term whose `#print axioms` is
+`[propext, Classical.choice, Quot.sound]`. Two bookkeeping steps are wanted that the route above
+does not name, and a paste that omits them fails with a type error in seconds rather than with a
+timeout — `FormalSpectrum.awayCompletionCongrBasicOpenAlg` is an equivalence over the base of
+*its own* ideal rather than over `R`, so it wants `AlgEquiv.restrictScalars`, and the hypothesis it
+asks for is stated at `I.map (algebraMap R _)` where the two statements below are at
+`FormalSpectrum.awayCompletionIdeal`, which is the same ideal-convention bridge named at the end of
+this section, one step later. **So what is left is placement, not search and not elaboration**:
+this file reaches neither `FormalSchemes.AwayBaseChangeTopFiniteType` nor
+`FormalSchemes.AwayCompletionAlgHomBasicOpen`, and no module of this tree reaches everything the
+composite names, so the transition wants a module of its own — issue 2196, which carries the term
+and prices that module. Re-measure all of this rather than quoting it.
 
 **What it was waiting on is no longer missing.**
 `FormalSpectrum.awayCompletionNestedAlgEquiv` (`FormalSchemes.AwayCompletionNested`) recognises
@@ -91,10 +119,49 @@ stronger than the containment `D(h · e) ≤ D(g_ij)` the leg is built from, and
 `CompletedTensorAwayInterchange.awayCongrHom` asks for above. The `basicOpen`-keyed form of it is
 now `FormalSpectrum.awayCompletionNestedAlgEquivOfLe` (`FormalSchemes.AwayCompletionUniversal`),
 proved from the universal property of a completed localization instead of from the localization
-transitivity that the stronger hypothesis exists to feed. So what stands between these legs and
-the transition is the transport of *τ_ij* along it and its *j*-side twin, together with the check
-that the two presentations it lands on are the ones the refined datum indexes — `AlgEquiv`
-bookkeeping over a statement that is now available, rather than a missing statement.
+transitivity that the stronger hypothesis exists to feed. Two steps then stand between these legs
+and the transition — matching the transported presentation against the one the refined datum
+indexes, and the transport of *τ_ij* itself. **This file carries the first; the second is on the
+tree.** Neither is a missing statement, so what is left between these legs and the transition is
+the assembly of named statements — this section's first item, and still open.
+
+**The chart-matching step is below.** Transporting *τ_ij* along that identification lands on *some*
+presentation of the refined overlap inside `Spf (A_i{1/g_ij})`, and what has to be checked is that
+it is the one the refined datum indexes — the coarse overlap cut down by the refining element `h`
+of chart *i* and by the *τ*-transport of the refining element `h'` of chart *j*. That is
+`FormalSpectrum.basicOpen_awayCompletionHom_mul_refinedOverlapElt`, and it is where the topological
+content of `FormalSpectrum.exists_refined_overlap_element` is spent: its defining property is an
+equality inside the **refined** chart `Spf (A_i{1/h})`, and the transition needs it inside the
+**coarse** one. What it produces is a *meet*, and carrying a meet across *τ_ij* is
+`FormalSpectrum.basicOpen_awayCompletionAlgEquiv_eq_iff`
+(`FormalSchemes.AwayCompletionAlgHomBasicOpen`, issue 2193), whose own module docstring gives the
+three-line rewrite for exactly this shape.
+
+**The transport of *τ_ij* itself is not here, and it is not missing.**
+`FormalSpectrum.awayCompletionAlgEquivOfBase` (`FormalSchemes.AwayBaseChangeTopFiniteType`, issue
+2192) is that statement: an `R`-algebra equivalence `σ : S ≃ₐ[R] T` with `σ u = v` gives
+`S{1/u} ≃ₐ[R] T{1/v}`, both completions read at the extension of one ideal of the common base. That
+is the convention `FormalSpectrum.awayCompletionNestedAlgEquivOfLe` leaves its target in, so at
+*τ_ij* the two compose directly; written instead with `FormalSpectrum.awayCompletionIdeal` on both
+sides, as the statements below are, the step costs three tactic lines through
+`FormalSpectrum.map_algebraMap_awayCompletion` (`FormalSchemes.BasicOpenChart`), and
+`FormalSpectrum.awayTransport` (`FormalSchemes.AwayBaseChangeGluedX`) is the general form of that
+rewriting step. `FormalSchemes.AwayBaseChangeTopFiniteType`'s own
+`## Hypotheses, and what is not proved` prices that reading at those three lines and records why no
+declaration is added for it. The step is not drawn *here* because this file reaches neither module:
+both lie outside `FormalSchemes.RefinedOverlapRestrict`'s forward closure of **41**, and the edges
+cost **+15** and **+54** modules. A citation costs no edge.
+
+The three declarations this paragraph used to weigh are each correctly described and are kept:
+`FormalSpectrum.awayTransport` moves an *ideal*, `CompletedTensorAwayInterchange.awayCongrEquiv`
+(`FormalSchemes.AwayCompletionCongrEquiv`) moves the *element* at a fixed base, and
+`FormalSpectrum.awayCompletionAlgEquiv` (`FormalSchemes.AwayCompletionUniversal`) enlarges the
+scalars of an equivalence that already exists. None of *those three* is it — which is not what this
+paragraph said twice. It said none on this tree was, and that had been false since
+`FormalSpectrum.awayCompletionAlgEquivOfBase` landed, which was already so at the base this
+paragraph last sat on. **Before writing *is not on this tree*, grep the tree and not this file's
+imports**: the fourth declaration sits outside the 41 above, and that is how a merged statement was
+recorded as absent by two separate readings of the same paragraph.
 
 **Nothing about `σ`, the triple overlap, or the refined datum's laws.** The three conjugation
 lemmas of `FormalSchemes.BasicOpenCoverTransitions` are stated over independent ambients and are
@@ -110,6 +177,39 @@ ratio is recorded here rather than left to be re-derived: it is a general statem
 `FormalSchemes.FormalSpectrum`, whose reverse closure is **536** against this file's **0**, and
 it is declined on that ratio — this tree's standing disposition for a general statement with a
 single call site. Re-cost the move when a second consumer appears.
+
+`FormalSpectrum.preimage_basicOpen_basicOpenChartBase` raises **no** placement question, and saying
+why is worth a paragraph because the obvious reading of it is wrong. It looks like a general
+statement about `FormalSpectrum.basicOpenChartBase` wanting a home beside that definition; it is
+not. The general statement is `FormalSpectrum.map_preimage_basicOpen` (`FormalSchemes.SpfMap`) —
+the preimage of a basic open along *any* map of formal spectra — which already has a home and a
+name, and whose reverse closure is **505**. This file already reaches it: `FormalSchemes.SpfMap`
+lies inside this file's forward closure of **41** modules. What is added below is that lemma at one
+chart, read through `SetLike.coe` so that a `rw` can use it, with
+`AlgebraicGeometry.BasicOpenCover.preimage_basicOpen_chartToBase`
+(`FormalSchemes.BasicOpenCoverOpenImmersion`) as the precedent for the spelling. Nothing general is
+being introduced, so there is nothing to move and no ratio to weigh.
+
+`FormalSpectrum.functor_obj_preimage_basicOpen` (`FormalSchemes.BasicOpenImmersionLRS`, also inside
+those 41) names the *image*-of-a-preimage step that
+`FormalSpectrum.coe_basicOpen_mul_refinedOverlapElt` takes below, and using it there is
+**declined**. The obstruction is a spelling, and naming it correctly is the point of this
+paragraph, because it is not the one the wrapper's statement suggests. `IsOpenMap.coe_functor_obj`
+**does** read that left-hand side at set level, and `TopologicalSpace.Opens.map_coe` reads the
+preimage — both fire. What they leave behind is the chart's base map written through
+`FormalSpectrum.mapTop` and `CategoryTheory.ConcreteCategory.hom`, and nothing on this tree
+identifies that spelling with `FormalSpectrum.basicOpenChartBase`, so the next `rw` reports a
+pattern it cannot find and a `have … := rfl` between the two spellings has to be written by hand.
+
+**Measured**, `lake env lean` on a copy of this file with only the proof body below swapped: the
+wrapper route with that bridge, in its own best arrangement rather than patched into the route
+taken, is **10** tactic lines against the **8** below, and without the bridge it is EXIT 1. So the
+line count does not favour it, and it is not what decides this either. What decides it is that the
+bridge is a bare defeq between two spellings of one map with no lemma to name it, and that the
+wrapper covers only this proof's left leg in any case: the right leg's argument is an arbitrary
+set, so `Set.image_preimage_eq_inter_range` and `FormalSpectrum.range_basicOpenChartBase` are paid
+either way. Re-cost it if the wrapper gains a set-level form, or if the chart's base map gains the
+coercion lemma this bridge stands in for.
 
 ## References
 
@@ -136,6 +236,33 @@ theorem basicOpen_mul_le_of_basicOpen_le {e g : R} (h : R)
     basicOpen I (h * e) ≤ basicOpen I g := by
   rw [basicOpen_mul]
   exact le_trans inf_le_right hle
+
+/-- **The preimage of a basic open under the affine basic-open chart is a basic open**, cut out by
+the structural image of the same element: `Spf R{1/f} → Spf R` pulls `D(b)` back to `D(b̂)`.
+
+**No content is added here and none is proved here.** `FormalSpectrum.map_preimage_basicOpen`
+(`FormalSchemes.SpfMap`) is the general statement — the preimage of a basic open along *any* map of
+formal spectra is the basic open at the image element — and `FormalSpectrum.basicOpenChartBase` is
+by definition that map at `J := awayCompletionIdeal I f`, `φ := awayCompletionHom I f`, so this is
+that lemma read through `SetLike.coe` and nothing else. The `Set`-level reading is what the two
+statements below rewrite with, and
+`AlgebraicGeometry.BasicOpenCover.preimage_basicOpen_chartToBase`
+(`FormalSchemes.BasicOpenCoverOpenImmersion`) is the same specialisation at a different chart,
+spelled the same way — this file follows it rather than inventing a second idiom.
+
+`FormalSpectrum.exists_refined_overlap_element` (`FormalSchemes.BasicOpenChartImage`) takes the
+same step inline, in one `simp only` and one `not_congr`, going through neither name.
+
+This is the *preimage*, so it needs no hypothesis at all — not `Ideal.FG`, and nothing relating
+`b` to `f`. The companion statement about *images* is the one that costs something, and it is
+`FormalSpectrum.basicOpen_basicOpenChart_is_basicOpen`. -/
+theorem preimage_basicOpen_basicOpenChartBase (f b : R) :
+    basicOpenChartBase I f ⁻¹' (basicOpen I b : Set (FormalSpectrum I))
+      = (basicOpen (awayCompletionIdeal I f) (awayCompletionHom I f b) :
+          Set (FormalSpectrum (awayCompletionIdeal I f))) :=
+  congrArg SetLike.coe
+    (map_preimage_basicOpen I (awayCompletionIdeal I f) (awayCompletionHom I f)
+      (le_comap_awayCompletionHom I f) b)
 
 variable {A : Type u} [CommRing A] [Algebra R A]
 
@@ -233,6 +360,81 @@ def refinedOverlapLeg (hI : I.FG) (gij : Ai) (gji : Aj)
       awayCompletion (I.map (algebraMap R Ai)) (h * refinedOverlapElt I hI gij gji τ h h') :=
   refinedOverlapRestrict I hI gij (refinedOverlapElt I hI gij gji τ h h') h
     (basicOpen_refinedOverlapElt_le I hI gij gji τ h h')
+
+/-! ### The refined overlap read in the coarse chart -/
+
+/-- **The refined overlap, read downstairs in `Spf A_i`.** The basic open of the refined
+presentation `A_i{1/(h · e)}` is `D(h)` met with the image of the *j*-side refining element under
+the coarse chart.
+
+`FormalSpectrum.basicOpen_awayCompletionHom_refinedOverlapElt` states the defining property inside
+the **refined** chart `Spf (A_i{1/h})`, as a preimage along that chart. Pushing it forward is what
+this says: `FormalSpectrum.preimage_basicOpen_basicOpenChartBase` reads the left-hand side as a
+preimage too, `Set.image_preimage_eq_inter_range` turns both into intersections with the chart's
+range, and `FormalSpectrum.range_basicOpenChartBase` (`FormalSchemes.BasicOpenChart`) identifies
+that range with `D(h)`. **The meet with `D(h)` is not a loss**: the left-hand side already carries
+the factor `h`, so nothing outside `D(h)` was ever being described.
+
+Stated on the coercions to `Set` rather than on `Opens`, because the right-hand side is a set-level
+image and `TopologicalSpace.Opens` has no image. -/
+theorem coe_basicOpen_mul_refinedOverlapElt (hI : I.FG) (gij : Ai) (gji : Aj)
+    (τ : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (h : Ai) (h' : Aj) :
+    (basicOpen (I.map (algebraMap R Ai))
+        (h * refinedOverlapElt I hI gij gji τ h h') :
+          Set (FormalSpectrum (I.map (algebraMap R Ai))))
+      = (basicOpen (I.map (algebraMap R Ai)) h :
+            Set (FormalSpectrum (I.map (algebraMap R Ai)))) ∩
+        basicOpenChartBase (I.map (algebraMap R Ai)) gij ''
+          (basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)
+              (τ.symm (awayCompletionHom (I.map (algebraMap R Aj)) gji h')) :
+            Set (FormalSpectrum (awayCompletionIdeal (I.map (algebraMap R Ai)) gij))) := by
+  have hpre := (preimage_basicOpen_basicOpenChartBase (I.map (algebraMap R Ai)) h
+      (refinedOverlapElt I hI gij gji τ h h')).trans
+    (basicOpen_awayCompletionHom_refinedOverlapElt I hI gij gji τ h h')
+  have himg := congrArg (fun T => basicOpenChartBase (I.map (algebraMap R Ai)) h '' T) hpre
+  simp only [Set.image_preimage_eq_inter_range,
+    range_basicOpenChartBase (I.map (algebraMap R Ai)) h (hI.map _)] at himg
+  rw [basicOpen_mul]
+  simpa only [TopologicalSpace.Opens.coe_inf, Set.inter_comm] using himg
+
+/-- **The refined overlap read inside the coarse overlap chart** — the statement the transition
+waits on. Inside `Spf (A_i{1/g_ij})`, the refined presentation `A_i{1/(h · e)}` is cut out by the
+two refining elements: `h` from chart *i*, and the *τ*-transport of `h'` from chart *j*.
+
+This is the form the transition needs, and it is not the form
+`FormalSpectrum.exists_refined_overlap_element` produces. That one pins `e` by an equality inside
+the **refined** chart `Spf (A_i{1/h})`; the leg `FormalSpectrum.refinedOverlapLeg` and the
+identification `FormalSpectrum.awayCompletionNestedAlgEquivOfLe`
+(`FormalSchemes.AwayCompletionUniversal`) both work inside the **coarse** chart
+`Spf (A_i{1/g_ij})`, and the two are different charts of `Spf A_i`. Getting from one to the other
+is exactly where the topological content of the refined overlap element is spent, and it is spent
+here: the proof goes down to `Spf A_i` by `FormalSpectrum.coe_basicOpen_mul_refinedOverlapElt` and
+comes back up along the coarse chart, which is injective by
+`FormalSpectrum.isOpenEmbedding_basicOpenChartBase` (`FormalSchemes.BasicOpenChart`).
+
+**Why `e` alone would not do.** `e` is determined only up to an equality of basic opens, so a
+statement naming `D(e)` in one chart says nothing about any other presentation of the same open.
+What makes this usable is that both sides are written with the elements the refined datum indexes
+by — `h`, `h'` and `τ` — and `e` appears only inside `h · e`. -/
+theorem basicOpen_awayCompletionHom_mul_refinedOverlapElt (hI : I.FG) (gij : Ai) (gji : Aj)
+    (τ : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (h : Ai) (h' : Aj) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)
+        (awayCompletionHom (I.map (algebraMap R Ai)) gij
+          (h * refinedOverlapElt I hI gij gji τ h h'))
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)
+          (awayCompletionHom (I.map (algebraMap R Ai)) gij h)
+        ⊓ basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) gij)
+          (τ.symm (awayCompletionHom (I.map (algebraMap R Aj)) gji h')) := by
+  have hinj : Function.Injective (basicOpenChartBase (I.map (algebraMap R Ai)) gij) :=
+    (isOpenEmbedding_basicOpenChartBase (I.map (algebraMap R Ai)) gij (hI.map _)).injective
+  refine SetLike.coe_injective ?_
+  rw [TopologicalSpace.Opens.coe_inf, ← preimage_basicOpen_basicOpenChartBase,
+    ← preimage_basicOpen_basicOpenChartBase, coe_basicOpen_mul_refinedOverlapElt,
+    Set.preimage_inter, hinj.preimage_image]
 
 end Refined
 
