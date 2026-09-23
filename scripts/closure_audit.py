@@ -20,6 +20,7 @@ Usage, from the repository root -- no build needed, this reads `import` lines:
     python3 scripts/closure_audit.py --tree
     python3 scripts/closure_audit.py --selftest
     python3 scripts/closure_audit.py --sweep
+    python3 scripts/closure_audit.py --edge FormalSchemes.A:FormalSchemes.B
 
 There is deliberately **no `--diff` mode**.  A closure figure is falsified by an edit somewhere
 else in the tree, so the population that matters is every claim in every file, not the claims in
@@ -147,6 +148,33 @@ reading list, not a failure list.  **A figure in it that is a plain measurement 
 be rewritten in the checked spelling rather than left for the next sweep**, and one endpoint of
 every delta is such a measurement: *"importing it would take this file's closure from 48 to 93"*
 says the closure is 48 **now**.
+
+## `--edge`, which prices a tree that does not exist
+
+The other endpoint of such a delta -- the counterfactual one -- is out of reach *as a parsing
+problem*, for the reason above, and is not out of reach as a **computation**.  A hypothetical
+import is one edge added to the graph this script already walks, so `--edge A:B` re-derives what
+that edge would cost instead of trying to read the sentence that states it:
+
+* the modules the edge brings into `A`'s closure;
+* which forward closures actually move, over `A` and its consumers -- **and which do not**, because
+  a consumer that already reaches everything the edge brings in is unmoved, and *reaches `A`* is
+  necessary for a forward closure to move and **not sufficient**.  The tree has shipped that
+  mistake in a docstring (issue 2195), and it is the reading this mode exists to make cheap;
+* which of the brought-in modules' reverse closures move;
+* the `MISMATCH` population the edge would create, against the population the tree has now, so the
+  report is about the edge even on a red tree;
+* that population partitioned by the three species an import edge can falsify -- `A`'s own forward
+  closure, a consumer's forward closure, a brought-in module's reverse closure -- with an
+  `unclassified` bucket.  The three are exhaustive as a matter of the graph, so `unclassified` is
+  never a level: it is a claim shape nobody has thought about, or a bug here.
+
+If `A` already imports `B` the deletion is priced instead, which is the direction
+`FormalSchemes/AwayCompletionAlgHomBasicOpen.lean`'s `## Placement` quotes.
+
+**This mode does not read the counterfactual sentence and must not pretend to.**  It prints what
+the tree would say; comparing that against what a paragraph does say is the author's job, exactly
+as with `--sweep`.  It always exits **0** -- there is no tree here for a gate to be about.
 
 ## Size figures, and the history figure beside one that is out of reach
 
@@ -375,12 +403,23 @@ def project_modules(root: str = ".") -> dict[str, str]:
     return out
 
 
-def closures(mods: dict[str, str]) -> tuple[dict[str, set], dict[str, set]]:
-    """Forward and reverse closures, neither counting the module itself."""
+def direct_imports(mods: dict[str, str]) -> dict[str, set]:
+    """Each module's own project `import` lines.  Split out of `closures` so that `--edge` can
+    hand back a graph with one edge that the files do not have."""
     deps = {}
     for m, path in mods.items():
         text = code_only(open(path, encoding="utf-8").read())
         deps[m] = {d for d in IMPORT.findall(text) if d in mods}
+    return deps
+
+
+def closures(mods: dict[str, str], deps: dict[str, set] | None = None
+             ) -> tuple[dict[str, set], dict[str, set]]:
+    """Forward and reverse closures, neither counting the module itself.
+
+    `deps` overrides the graph read off the files, which is the whole of how `--edge` prices a
+    tree that does not exist: no worktree, no copy, one entry changed."""
+    deps = direct_imports(mods) if deps is None else deps
     forward = {}
     for m in mods:
         seen, stack = set(), [m]
@@ -616,15 +655,23 @@ def invisible(mods: dict[str, str]):
                        text=" ".join(s.split()))
 
 
-def audit(root: str = ".") -> tuple[list, list, list]:
+def audit(root: str = ".", deps: dict[str, set] | None = None) -> tuple[list, list, list]:
     """Every claim in the tree, as `(mismatches, declined, size_declined)`.
 
     Mismatches are one list because `--tree` fails on any of them; the two declined populations are
     kept apart because they are different coverage figures and a reader watching one of them move
     should not have the other mixed into it.
+
+    `deps` overrides the import graph, for `--edge`.  The claims are still the tree's own -- a
+    counterfactual edge changes what the figures should be, never what the prose says.
+
+    Every mismatch carries `subject`, the module the figure is about: the claim's own `about` for
+    a plain figure, the *claim's* module for a `self` companion, and `None` for a project total.
+    Nothing prints it; `--edge` partitions on it, and reading it off `about` would be wrong for
+    exactly the companions.
     """
     mods = project_modules(root)
-    forward, reverse = closures(mods)
+    forward, reverse = closures(mods, deps)
     mismatches, declined, called_leaf = [], [], set()
     size_declined = []
     for c in claims(mods):
@@ -633,7 +680,7 @@ def audit(root: str = ".") -> tuple[list, list, list]:
         if c["self_leaf"] and reverse[c["module"]] and not seen_here:
             called_leaf.add((c["path"], c["sentence"]))
             mismatches.append(dict(
-                c, stated=0, actual=len(reverse[c["module"]]),
+                c, stated=0, actual=len(reverse[c["module"]]), subject=c["module"],
                 what="the reverse closure of `%s`, which this sentence calls a leaf" % c["module"]))
         if c["about"] is None:
             declined.append(c)
@@ -644,7 +691,7 @@ def audit(root: str = ".") -> tuple[list, list, list]:
         size = lambda m: len(forward[m] if c["kind"] == "forward" else reverse[m])
         actual = size(c["about"])
         if c["stated"] != actual + c["offset"]:
-            mismatches.append(dict(c, actual=actual + c["offset"]))
+            mismatches.append(dict(c, actual=actual + c["offset"], subject=c["about"]))
         for kind, delta, stated, quoted in c["companions"]:
             # A companion is read under the claim's own convention, so `against this leaf's N`
             # beside `forward closure 36 with itself` means 36's convention, not the other one.
@@ -653,6 +700,8 @@ def audit(root: str = ".") -> tuple[list, list, list]:
             if stated != want:
                 mismatches.append(dict(
                     c, stated=stated, actual=want, text="%s -- in `%s`" % (quoted, c["text"][:60]),
+                    subject=(None if kind == "total" else
+                             c["module"] if kind == "self" else c["about"]),
                     what=("the number of modules under `FormalSchemes/`" if kind == "total" else
                           "the %s closure of `%s`" % (c["kind"], c["module"]) if kind == "self"
                           else "the %s closure of `%s`" % (c["kind"], c["about"]))))
@@ -666,9 +715,130 @@ def audit(root: str = ".") -> tuple[list, list, list]:
         lines, declarations, _examples, _prose = file_size(mods[c["about"]])
         actual = lines if c["noun"] == "lines" else declarations
         if c["stated"] != actual:
-            mismatches.append(dict(c, actual=actual, what="the number of %s in `%s`"
-                                   % (c["noun"], c["about"])))
+            mismatches.append(dict(c, actual=actual, subject=c["about"],
+                                   what="the number of %s in `%s`" % (c["noun"], c["about"])))
     return mismatches, declined, size_declined
+
+
+def _fingerprint(c: dict) -> tuple:
+    """A mismatch, identified well enough to subtract one population from another.  The `actual`
+    is deliberately **out**: the same wrong sentence is the same defect whatever the edge moves
+    the right answer to, and leaving it in would report every pre-existing MISMATCH as new."""
+    return (c["path"], c["line"], c["stated"],
+            c.get("what") or "the %s closure of `%s`" % (c["kind"], c["about"]))
+
+
+def edge_species(c: dict, importer: str, consumers: set, brought: set) -> int:
+    """Which of the three species a mismatch belongs to, or **0**.
+
+    An import edge moves a forward closure only for the importing module and the modules that
+    reach it, and a reverse closure only for the modules it newly brings in -- so the three are
+    exhaustive as a matter of the graph and **0 is never a level**.  A claim that lands there is
+    a shape nobody has thought about, or a bug in this function, and either way it is the line
+    the report exists to surface.  Keyed on `subject` rather than on `about`, because a `self`
+    companion's `about` is the module the sentence is *comparing* against.
+    """
+    subject, kind = c.get("subject"), c.get("kind")
+    if kind == "forward" and subject == importer:
+        return 1
+    if kind == "forward" and subject in consumers:
+        return 2
+    if kind == "reverse" and subject in brought:
+        return 3
+    return 0
+
+
+def edge_cost(root: str = ".", importer: str = "", imported: str = "") -> dict:
+    """Price `import imported` in `importer` -- adding it, or deleting it if it is already there.
+
+    Nothing is written and no worktree is made: the graph is one entry different from the one the
+    files give, and every figure below is that graph walked.
+    """
+    mods = project_modules(root)
+    for name in (importer, imported):
+        if name not in mods:
+            raise SystemExit("`%s` is not a module under FormalSchemes/" % name)
+    if importer == imported:
+        raise SystemExit("`%s` cannot import itself" % importer)
+    real = direct_imports(mods)
+    adding = imported not in real[importer]
+    hypo = {m: set(d) for m, d in real.items()}
+    (hypo[importer].add if adding else hypo[importer].discard)(imported)
+
+    fwd_real, rev_real = closures(mods, real)
+    fwd_hypo, rev_hypo = closures(mods, hypo)
+    # Uniform names for the two ends, so that nothing below has to branch on the direction.
+    with_edge, without = ((fwd_hypo, fwd_real) if adding else (fwd_real, fwd_hypo))
+    # Not `| {imported}`: an import of a module the tree already reaches from here brings in
+    # nothing, moves nothing and costs nothing, and that case is the whole of why this mode
+    # exists.  `CONTRIBUTING.md` names it -- *"reverse closure 0, so an import is free"* is not
+    # the rule, and neither is *"one import, one figure"*.
+    brought = with_edge[importer] - without[importer]
+    consumers = rev_real[importer] | rev_hypo[importer]
+    group = sorted(consumers | {importer})
+    moved = [m for m in group if fwd_real[m] != fwd_hypo[m]]
+    unmoved = [m for m in group if fwd_real[m] == fwd_hypo[m]]
+    rev_moved = sorted(y for y in brought if rev_real[y] != rev_hypo[y])
+
+    base = {_fingerprint(c) for c in audit(root, real)[0]}
+    population = [c for c in audit(root, hypo)[0] if _fingerprint(c) not in base]
+
+    def species(c: dict) -> int:
+        return edge_species(c, importer, consumers, brought)
+
+    return dict(importer=importer, imported=imported, adding=adding, brought=sorted(brought),
+                moved=moved, unmoved=unmoved, rev_moved=rev_moved, baseline=len(base),
+                population=sorted(population, key=lambda c: (c["path"], c["line"])),
+                species={k: [c for c in population if species(c) == k] for k in (1, 2, 3, 0)},
+                forward=(fwd_real, fwd_hypo), reverse=(rev_real, rev_hypo))
+
+
+def report_edge(r: dict) -> None:
+    """`--edge`'s report.  It prints what the tree would say; comparing that against what a
+    paragraph does say is the reader's job, which is `--sweep`'s contract and for the same
+    reason."""
+    fwd_real, fwd_hypo = r["forward"]
+    rev_real, rev_hypo = r["reverse"]
+    own = [c for c in r["population"] if c["module"] == r["importer"]]
+    files = {c["path"] for c in r["population"]}
+    print("edge                         : `%s` %s `%s`"
+          % (r["importer"], "gains" if r["adding"] else "drops", r["imported"]))
+    print("  priced by                  : the import graph one entry different from this tree's;"
+          " nothing written")
+    print("modules the edge brings in   : %5d" % len(r["brought"]))
+    for m in r["brought"]:
+        print("    %s" % m)
+    print("forward closures that move   : %5d   of %d walked: this module and its %d consumers"
+          % (len(r["moved"]), len(r["moved"]) + len(r["unmoved"]),
+             len(r["moved"]) + len(r["unmoved"]) - 1))
+    for m in r["moved"]:
+        print("    %-58s %4d -> %4d" % (m, len(fwd_real[m]), len(fwd_hypo[m])))
+    if r["unmoved"]:
+        print("  unmoved, because each already reaches everything the edge brings in -- *reaches"
+              " this module* is")
+        print("  necessary for a forward closure to move and not sufficient:")
+        for m in r["unmoved"]:
+            print("    %-58s %4d" % (m, len(fwd_real[m])))
+    print("reverse closures that move   : %5d" % len(r["rev_moved"]))
+    for m in r["rev_moved"]:
+        print("    %-58s %4d -> %4d" % (m, len(rev_real[m]), len(rev_hypo[m])))
+    print("figure repairs the edge costs: %5d   in %d files (%d in `%s`, %d in %d others)"
+          % (len(r["population"]), len(files), len(own), r["importer"],
+             len(r["population"]) - len(own), len(files - {c["path"] for c in own})))
+    print("  by species                 : %d / %d / %d, unclassified %d   (this module's own"
+          " forward closure /"
+          % tuple(len(r["species"][k]) for k in (1, 2, 3, 0)))
+    print("                                a consumer's forward closure / a brought-in module's"
+          " reverse closure)")
+    print("  MISMATCHes already on this tree, excluded above : %d" % r["baseline"])
+    for k, what in ((1, "species 1"), (2, "species 2"), (3, "species 3"),
+                    (0, "UNCLASSIFIED -- the three are exhaustive, so this is a claim shape "
+                        "nobody has thought about, or a bug here")):
+        for c in r["species"][k]:
+            print("  %s  %s:%d  %s: states %d, the edge would give %d"
+                  % (what, c["path"], c["line"],
+                     c.get("what") or "the %s closure of `%s`" % (c["kind"], c["about"]),
+                     c["stated"], c["actual"]))
 
 
 def selftest() -> int:
@@ -987,6 +1157,104 @@ def selftest() -> int:
               ([], [("declarations", "anaphor with no module named before it"),
                     ("lines", "anaphor with no module named before it")]))
 
+    # `--edge`, on a tree small enough to read.  `Fat` is the case the mode exists for: it reaches
+    # `Mid`, so a leaf-property argument says its forward closure moves, and it already reaches
+    # `Extra`, so the edge moves it by nothing.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **4**. -/\n")
+        write("Extra", "import FormalSchemes.Base\n"
+                       "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse\n"
+                       "closure **1**. -/\n")
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse\n"
+                     "closure **2**. -/\n")
+        write("Cons", "import FormalSchemes.Mid\n"
+                      "/-! A leaf over `FormalSchemes.Mid`: forward closure **2**, reverse\n"
+                      "closure **0**. -/\n")
+        write("Fat", "import FormalSchemes.Mid\npublic import FormalSchemes.Extra\n"
+                     "/-! Over `FormalSchemes.Mid` and `FormalSchemes.Extra`: this file's\n"
+                     "forward closure is **3**, its reverse closure is **0**. -/\n")
+        check("the tree the --edge cases are read against is itself green", audit(d)[0], [])
+
+        r = edge_cost(d, "FormalSchemes.Mid", "FormalSchemes.Extra")
+        check("an added edge brings in what the tree did not already reach from there",
+              (r["adding"], r["brought"]), (True, ["FormalSchemes.Extra"]))
+        check("a consumer that already reaches everything the edge brings in is unmoved, and a "
+              "consumer that does not is moved",
+              (r["moved"], r["unmoved"]),
+              (["FormalSchemes.Cons", "FormalSchemes.Mid"], ["FormalSchemes.Fat"]))
+        check("the reverse closure of a brought-in module moves",
+              r["rev_moved"], ["FormalSchemes.Extra"])
+        check("the population is the figures the edge falsifies, and `Fat`'s is not one of them",
+              sorted((c["path"].split(os.sep)[-1], c["stated"], c["actual"])
+                     for c in r["population"]),
+              [("Cons.lean", 2, 3), ("Extra.lean", 1, 3), ("Mid.lean", 1, 2)])
+        check("and they partition into the three species with nothing over",
+              ({k: len(v) for k, v in r["species"].items()}, r["baseline"]),
+              ({1: 1, 2: 1, 3: 1, 0: 0}, 0))
+
+        # The same edge in reverse is the same edge: `--edge` prices the deletion when the import
+        # is already there, and the figures are the mirror image.
+        write("Mid", "import FormalSchemes.Base\nimport FormalSchemes.Extra\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **2**, reverse\n"
+                     "closure **2**. -/\n")
+        write("Extra", "import FormalSchemes.Base\n"
+                       "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse\n"
+                       "closure **3**. -/\n")
+        write("Cons", "import FormalSchemes.Mid\n"
+                      "/-! A leaf over `FormalSchemes.Mid`: forward closure **3**, reverse\n"
+                      "closure **0**. -/\n")
+        check("the mirrored tree is green too", audit(d)[0], [])
+        r = edge_cost(d, "FormalSchemes.Mid", "FormalSchemes.Extra")
+        check("an import already present is priced as a deletion, and by the same graph",
+              (r["adding"], r["brought"], r["moved"], r["unmoved"], r["rev_moved"]),
+              (False, ["FormalSchemes.Extra"],
+               ["FormalSchemes.Cons", "FormalSchemes.Mid"], ["FormalSchemes.Fat"],
+               ["FormalSchemes.Extra"]))
+        check("and the deletion falsifies the same three figures, downwards",
+              sorted((c["path"].split(os.sep)[-1], c["stated"], c["actual"])
+                     for c in r["population"]),
+              [("Cons.lean", 3, 2), ("Extra.lean", 3, 1), ("Mid.lean", 2, 1)])
+
+        # An import of something the tree already reaches from there is free, and this is the
+        # claim `CONTRIBUTING.md` says is not *"one import, one figure"*.
+        r = edge_cost(d, "FormalSchemes.Fat", "FormalSchemes.Base")
+        check("an edge to an already-reachable module brings in nothing and costs nothing",
+              (r["brought"], r["moved"], r["rev_moved"], r["population"]), ([], [], [], []))
+
+        # A red tree is the normal case for a reader who is mid-repair, and the report has to be
+        # about the edge and not about the mess.  `Base`'s figure is wrong whatever `Mid` imports.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **9**. -/\n")
+        check("the baseline is a real MISMATCH now",
+              [(c["module"], c["stated"], c["actual"]) for c in audit(d)[0]],
+              [("FormalSchemes.Base", 9, 4)])
+        r = edge_cost(d, "FormalSchemes.Mid", "FormalSchemes.Extra")
+        check("a MISMATCH the tree already has is counted as the baseline, not as the edge's",
+              (r["baseline"], sorted((c["path"].split(os.sep)[-1], c["stated"], c["actual"])
+                                     for c in r["population"])),
+              (1, [("Cons.lean", 3, 2), ("Extra.lean", 3, 1), ("Mid.lean", 2, 1)]))
+
+    # `unclassified` cannot be reached from any tree -- that is the point of it -- so the bucket
+    # is exercised on the classifier rather than asserted empty by a run that could not produce
+    # one.  A project total is the shape that comes closest: it has no subject at all.
+    check("a figure with no subject is unclassified rather than forced into a species",
+          [edge_species(c, "FormalSchemes.Mid", {"FormalSchemes.Cons"}, {"FormalSchemes.Extra"})
+           for c in ({"subject": None, "kind": "forward"},
+                     {"subject": "FormalSchemes.Quiet", "kind": "forward"},
+                     {"subject": "FormalSchemes.Quiet", "kind": "reverse"},
+                     {"subject": "FormalSchemes.Extra", "kind": "forward"},
+                     {"subject": "FormalSchemes.Mid", "kind": "forward"},
+                     {"subject": "FormalSchemes.Cons", "kind": "forward"},
+                     {"subject": "FormalSchemes.Extra", "kind": "reverse"})],
+          [0, 0, 0, 0, 1, 2, 3])
+
     return 1 if bad else 0
 
 
@@ -998,9 +1266,17 @@ def main() -> int:
     g.add_argument("--selftest", action="store_true", help="check the attribution rule and walk")
     g.add_argument("--sweep", action="store_true",
                    help="list the closure sentences this script cannot read (never fails)")
+    g.add_argument("--edge", metavar="A:B",
+                   help="price adding `import B` to module A -- or deleting it, if A already has"
+                        " it.  Reports a tree that does not exist, so it never fails")
     args = ap.parse_args()
     if args.selftest:
         return selftest()
+    if args.edge:
+        if args.edge.count(":") != 1:
+            raise SystemExit("--edge takes `FormalSchemes.A:FormalSchemes.B`")
+        report_edge(edge_cost(".", *args.edge.split(":")))
+        return 0
 
     mods = project_modules()
     if args.sweep:
