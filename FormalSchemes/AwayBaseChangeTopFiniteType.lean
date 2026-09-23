@@ -95,6 +95,9 @@ composite, which is a surjective `R{1/c}^`-algebra map.
   ring form is where the construction is, and this one adds none. It is the shape a transition
   between two charts of a formal spectrum consumes, since such a transition is an equivalence of
   `R`-algebras and both its ends are read at the extension of the base's own ideal of definition.
+  The `Ideal` half is the `AlgEquiv` case of `Ideal.map_algebraMap_algHom`
+  (`FormalSchemes.CofinalCompletionAlg`), restated because this file does not reach that module;
+  see `## Placement`.
 * `CompletedTensorProduct.map_unitEquiv`: the left unitor `R ⊗̂_R A ≃+* A` carries the ideal of
   definition of `R ⊗̂_R A` onto `I·A`. The tree had `CompletedTensorProduct.unitEquiv_inl` and
   `CompletedTensorProduct.unitEquiv_inr`, the unitor on elements, but nothing on the ideal.
@@ -141,13 +144,22 @@ attempt at issue 2192 put the base transport in `FormalSchemes.AwayCompletionUni
 imports this module on its first line, and re-derived nine declarations of the section above
 without reaching them.
 
-`Ideal.map_algEquiv_map_algebraMap` is a general `Ideal` fact and carries no name of this file's
-subject, so it is at root namespace, for the reason `Ideal.map_algebraMap_of_tower`
-(`FormalSchemes.AwayTopFiniteType`) is. It is kept beside its only consumer rather than moved up:
-`FormalSchemes.AwayTopFiniteType` has a reverse closure of **48**, this module imports it, and a
-new leaf for one two-line lemma would cost an import edge and the figure repairs that
-CONTRIBUTING.md prices under *What adding a module costs*. Re-cost the move if a second module asks
-for it.
+`Ideal.map_algEquiv_map_algebraMap` raises **no** placement question, and the ratio is not what
+answers it. It is the `AlgEquiv` case of `Ideal.map_algebraMap_algHom`, which is stated for an
+`AlgHom`, is proved by the same three tactics, and is already written inline at exactly this
+specialisation — `σ.toAlgHom` — inside `IsTopologicallyFiniteType.ofAlgEquiv`
+(`FormalSchemes.CofinalTopFiniteType`). Nothing general is introduced here, so there is nothing to
+move; it is restated locally because this file cannot reach the module holding it, and both ways of
+fixing that lose. `FormalSchemes.CofinalCompletionAlg`, whose reverse closure is **23**, is outside
+this file's forward closure of **36** modules. The import that would bring it adds **5** modules to
+what this file transitively imports and costs **9** figure repairs in **6** files, measured by
+`git archive` plus one import line and a `--tree` run from that worktree. Moving the general form
+down to a module both files already reach is worse: of the thirteen such modules,
+`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **495**. So the local
+copy stands, and it is at root namespace for the reason `Ideal.map_algebraMap_of_tower`
+(`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. Re-cost the import
+if a third module inside this file's own imports wants the fact;
+`FormalSchemes.CofinalTopFiniteType` is already the second consumer, and it did not need the edge.
 
 ## References
 
@@ -291,10 +303,14 @@ the extension `I·S` maps onto `I·T` along `σ`, because `σ` is a map under `R
 hypothesis `FormalSpectrum.awayCompletionEquivOfRingEquiv` asks for, in the case its two ideals are
 extensions of one ideal of a common base.
 
-It is a general `Ideal` fact and is stated at root namespace for the reason
-`Ideal.map_algebraMap_of_tower` (`FormalSchemes.AwayTopFiniteType`) is: it mentions nothing of this
-file's subject. Why it sits beside its only consumer rather than further up is priced in this
-file's `## Placement` section. -/
+**No content is added here and none is proved here.** `Ideal.map_algebraMap_algHom`
+(`FormalSchemes.CofinalCompletionAlg`) is the general statement, for an `AlgHom` rather than an
+`AlgEquiv`, and this is that lemma at `σ.toAlgHom` — which
+`IsTopologicallyFiniteType.ofAlgEquiv` (`FormalSchemes.CofinalTopFiniteType`) writes inline rather
+than naming, and which is this tree's idiom for it. It is restated here only because this file does
+not reach that module and the import is not worth its price; the figures are in this file's
+`## Placement` section. Root namespace for the reason `Ideal.map_algebraMap_of_tower`
+(`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. -/
 theorem _root_.Ideal.map_algEquiv_map_algebraMap (I : Ideal R) (σ : S ≃ₐ[R] T) :
     (I.map (algebraMap R S)).map (σ.toRingEquiv : S →+* T) = I.map (algebraMap R T) := by
   rw [Ideal.map_map]
