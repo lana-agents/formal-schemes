@@ -107,7 +107,7 @@ refined-overlap declarations below have no home but this one.
 `FormalSpectrum.basicOpen_mul_le_of_basicOpen_le` is the exception, and its
 ratio is recorded here rather than left to be re-derived: it is a general statement about
 `FormalSpectrum.basicOpen`, its subject-matter home is beside `FormalSpectrum.basicOpen_mul` in
-`FormalSchemes.FormalSpectrum`, whose reverse closure is **535** against this file's **0**, and
+`FormalSchemes.FormalSpectrum`, whose reverse closure is **536** against this file's **0**, and
 it is declined on that ratio — this tree's standing disposition for a general statement with a
 single call site. Re-cost the move when a second consumer appears.
 

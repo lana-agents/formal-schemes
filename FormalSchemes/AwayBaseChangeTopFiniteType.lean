@@ -150,15 +150,17 @@ answers it. It is the `AlgEquiv` case of `Ideal.map_algebraMap_algHom`, which is
 specialisation — `σ.toAlgHom` — inside `IsTopologicallyFiniteType.ofAlgEquiv`
 (`FormalSchemes.CofinalTopFiniteType`). Nothing general is introduced here, so there is nothing to
 move; it is restated locally because this file cannot reach the module holding it, and both ways of
-fixing that lose. `FormalSchemes.CofinalCompletionAlg`, whose reverse closure is **23**, is outside
+fixing that lose. `FormalSchemes.CofinalCompletionAlg`, whose reverse closure is **24**, is outside
 this file's forward closure of **36** modules. The import that would bring it adds **5** modules to
-what this file transitively imports and costs **9** figure repairs in **6** files, measured by
-`git archive` plus one import line and a `--tree` run from that worktree. Moving the general form
-down to a module both files already reach is worse: of the thirteen such modules,
-`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **495**. So the local
-copy stands, and it is at root namespace for the reason `Ideal.map_algebraMap_of_tower`
-(`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. Re-cost the import
-if a third module inside this file's own imports wants the fact;
+what this file transitively imports and costs **12** figure repairs in **8** files, measured by
+`git archive` plus one import line and a `--tree` run from that worktree. **Two** of the twelve are
+this paragraph's own **24** and **36**, which the edge falsifies as it is added, so the cost
+elsewhere is **10** in **7** — both numbers answer real questions and the recipe above produces the
+first. Moving the general form down to a module both files already reach is worse: of the thirteen
+such modules, `FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **496**.
+So the local copy stands, and it is at root namespace for the reason
+`Ideal.map_algebraMap_of_tower` (`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this
+file's subject. Re-cost the import if a third module inside this file's own imports wants the fact;
 `FormalSchemes.CofinalTopFiniteType` is already the second consumer, and it did not need the edge.
 
 ## References
@@ -303,7 +305,7 @@ the extension `I·S` maps onto `I·T` along `σ`, because `σ` is a map under `R
 hypothesis `FormalSpectrum.awayCompletionEquivOfRingEquiv` asks for, in the case its two ideals are
 extensions of one ideal of a common base.
 
-**No content is added here and none is proved here.** `Ideal.map_algebraMap_algHom`
+**Nothing new is proved here.** `Ideal.map_algebraMap_algHom`
 (`FormalSchemes.CofinalCompletionAlg`) is the general statement, for an `AlgHom` rather than an
 `AlgEquiv`, and this is that lemma at `σ.toAlgHom` — which
 `IsTopologicallyFiniteType.ofAlgEquiv` (`FormalSchemes.CofinalTopFiniteType`) writes inline rather
