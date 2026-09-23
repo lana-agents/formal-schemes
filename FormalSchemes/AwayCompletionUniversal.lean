@@ -87,8 +87,12 @@ here* below; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
   `R`-algebra equivalence read over the base `R{1/f}`.
 * `FormalSpectrum.awayCompletionChartEquivOfLe` and its `R`-algebra forms
   `FormalSpectrum.awayCompletionChartAlgEquivOfLe`,
-  `FormalSpectrum.awayCompletionNestedAlgEquivOfLe`: the nested chart identification
-  `A{1/g} ≃ A{1/f}{1/ĝ}` at a containment `D(g) ≤ D(f)` of basic opens of `Spf (A, J)`.
+  `FormalSpectrum.awayCompletionNestedAlgEquivOfLe`: the nested chart identification `A{1/g} ≃
+  A{1/f}{1/ĝ}` at a containment `D(g) ≤ D(f)` of basic opens of `Spf (A, J)`.
+* `FormalSpectrum.awayLocAlgEquivOfBase`, `FormalSpectrum.awayCompletionHomOfBase` and its
+  isomorphism forms `FormalSpectrum.awayCompletionEquivOfBase`,
+  `FormalSpectrum.awayCompletionAlgEquivOfBase`: the transport of a completed localization along an
+  equivalence `σ : S ≃ₐ[R] T` of the ring it is taken over, `S{1/u} ≃ₐ[R] T{1/σ u}`.
 
 ## Main results
 
@@ -106,6 +110,10 @@ here* below; for `(R', I') = (R{1/f}, I·R{1/f})` it is empty.
 * `FormalSpectrum.awayCompletionChartInvOfLe_comp_homOfLe` and
   `FormalSpectrum.awayCompletionChartHomOfLe_comp_invOfLe`: both composites of that identification
   are identities, by rigidity and nothing else.
+* `FormalSpectrum.awayCompletionHomOfBase_awayCompletionHom`: the base transport is `σ` on the
+  image of `S`. Every statement about that transport is proved from this one.
+* `FormalSpectrum.awayCompletionHomOfBase_comp`: both of its composites are identities, by the same
+  rigidity principle, in one call each.
 
 ## The identification at a containment, and what it replaces
 
@@ -128,6 +136,34 @@ structure on `A{1/g}`, which is `FormalSpectrum.awayCompletionRestrict` together
 `A{1/g}` even where it is not in `Localization.Away g`. That is why the weaker hypothesis suffices,
 and it is the reason this construction is a universal-property argument rather than a transitivity
 one.
+
+## The transport along an equivalence of the base, and why it is not a lift
+
+The last section moves a completed localization along an equivalence of the ring it is taken over:
+`σ : S ≃ₐ[R] T` with `σ u = v` gives `S{1/u} ≃ₐ[R] T{1/v}`, both charts read at the extension of
+one ideal `I` of a common base `R`. That is the base-moving direction, and three declarations that
+look like it are not it. `FormalSpectrum.awayCompletionAlgEquiv` above *consumes* an `R`-algebra
+equivalence and enlarges its scalars; `CompletedTensorAwayInterchange.awayCongrEquiv`
+(`FormalSchemes.AwayCompletionCongrEquiv`) moves the away *element* at a fixed base; and
+`FormalSpectrum.awayTransport` (`FormalSchemes.AwayBaseChangeGluedX`) moves the *ideal* along an
+equality.
+
+**It is built by completion functoriality, not by the universal property above**, which is worth
+recording in the file the universal property lives in. A lift would first have to install an
+`Algebra S` structure on the target along `σ` — the type of `FormalSpectrum.awayCompletionLift`
+names one, and `σ` is the only thing that supplies it — and every lemma about the resulting map
+would have to reinstall the same one. `AdicCompletion.mapCompletion` asks instead for a ring map
+and a containment of ideals, and `FormalSpectrum.awayLocAlgEquivOfBase` supplies both, with no
+instance to carry. What the universal property does supply is the *composites*:
+`FormalSpectrum.awayCompletion_hom_ext` identifies each round trip with the identity in one call,
+out of `FormalSpectrum.awayCompletionHomOfBase_awayCompletionHom` and nothing else.
+
+**The target element is a binder.** `v` with `σ u = v` beside it, rather than the literal `σ u` in
+the type, is what lets one construction serve both legs: the backward leg is the same declaration
+at `(σ.symm, v, u)`. Written with `σ u` in the type it would land over `σ.symm (σ u)` instead of
+over `u`, and recovering the latter is a transport of **types**, not of elements. Every declaration
+in that section carries the binder for that reason, and the headline statement is the case `v = σ
+u` with `huv` the reflexivity proof.
 
 ## What is *not* proved here
 
@@ -184,18 +220,32 @@ deltas are measured in the pull request that added the edge (issue 2019).
 
 **The identification at a containment is placed here on a rebuild ratio, and the alternatives are
 measured.** Its subject matter is `FormalSchemes.AwayCompletionNested`, which carries the same
-identification at the stronger hypothesis; but that module does not import this one, and taking
-the edge would add **35** modules to what it transitively imports, against
+identification at the stronger hypothesis; but that module does not import this one, and taking the
+edge would add **35** modules to what it transitively imports, against
 `FormalSchemes.AwayCompletionNested`'s reverse closure of **16**. A new leaf over this file costs
 no edge and re-elaborates the leaf and the root aggregator, and then pays the leaf tax: every
 import-count figure quoted in the modules it transitively imports moves by one. On the head that
 added `FormalSchemes.RefinedOverlapRestrict` that was **18** figures in **14** files. Stating it
-here adds no module, no edge and no figure repair, and re-elaborates this file's reverse closure
-of **4**. The
-proof is two applications of `FormalSpectrum.awayCompletionLift` and two of
+here adds no module, no edge and no figure repair, and re-elaborates this file's reverse closure of
+**4**. The proof is two applications of `FormalSpectrum.awayCompletionLift` and two of
 `FormalSpectrum.awayCompletion_hom_ext'`, both of which are this file's own subject, so the ratio
 and the subject matter pull apart less than the module name suggests. Re-cost the move if a second
 module asks for the identification.
+
+**The base transport is placed here on the same ratio, and it adds nothing to this file's
+imports.** It is declarations only, so `closure_audit.py --tree` reports MISMATCH **0**, no figure
+in any file moves, and the re-elaboration is again this file's reverse closure of **4**. Its
+ingredients are `AdicCompletion.mapCompletion` and `FormalSpectrum.awayCompletion_hom_ext`, both
+already inside this file's forward closure of **55**, together with
+`IsLocalization.ringEquivOfRingEquiv`, which is Mathlib's. The one declaration it would otherwise
+have used and cannot reach is `AdicCompletion.mapCompletion_congr`
+(`FormalSchemes.CompletionNestedBasicOpenMap`), which collapses a round trip of two
+`AdicCompletion.mapCompletion`s by functoriality alone. The edge that would bring it adds **10**
+modules to what this file transitively imports and costs **9** figure repairs in **5** files —
+measured by adding the import line to an extraction of this tree and re-running `--tree` — against
+a rigidity call that costs none. Restating that lemma here instead was declined on the ground the
+paragraph above records for `FormalSpectrum.awayCompletion_hom_ext'`: a second copy of a statement
+the tree already has is what the duplicate statement scan under `scripts/` exists to catch.
 
 The one edit to a declaration outside this file is the generalisation of
 `FormalSpectrum.awayCompletion_hom_ext` to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in
@@ -825,6 +875,178 @@ def awayCompletionNestedAlgEquivOfLe (hI : I.FG) (x y : B)
         (map_algebraMap_awayCompletion_eq I x).symm))
 
 end NestedOfLeBase
+
+/-!
+### Transport along an equivalence of the base ring
+-/
+
+section OfBase
+
+variable {S T : Type u} [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
+
+/-- **The localization half of the base transport.** An `R`-algebra equivalence `σ : S ≃ₐ[R] T`
+carrying `u` to `v` identifies `Localization.Away u` with `Localization.Away v`, because it carries
+`Submonoid.powers u` onto `Submonoid.powers v`. It is `IsLocalization.ringEquivOfRingEquiv` at
+`Submonoid.map_powers`, and it is **the only declaration below that consumes `σ`**: every other one
+passes `σ` down to this one, and only `FormalSpectrum.awayCompletionHomOfBase_comp` uses it to be
+invertible, through a hypothesis rather than through `σ.symm`.
+
+**The target element `v` is a binder of its own**, tied to `σ u` by `huv`, rather than being
+spelled `σ u` in the type. That is what makes the construction self-dual: the backward leg is this
+same declaration at `(σ.symm, v, u)`, and its type is then `Localization.Away v ≃+*
+Localization.Away u` on the nose. Written with `σ u` in the type the backward leg would land in
+`Localization.Away (σ.symm (σ u))`, and recovering `Localization.Away u` from that is a transport
+of **types**, not of elements — which is the cost this binder buys out. -/
+def awayLocAlgEquivOfBase (σ : S ≃ₐ[R] T) (u : S) (v : T) (huv : σ u = v) :
+    Localization.Away u ≃+* Localization.Away v :=
+  IsLocalization.ringEquivOfRingEquiv (M := Submonoid.powers u) (T := Submonoid.powers v)
+    (Localization.Away u) (Localization.Away v) σ.toRingEquiv
+    ((Submonoid.map_powers (σ.toRingEquiv : S ≃+* T).toMonoidHom u).trans
+      (congrArg Submonoid.powers huv))
+
+/-- **On the image of `S` the localization half is `σ`.** -/
+@[simp]
+theorem awayLocAlgEquivOfBase_algebraMap (σ : S ≃ₐ[R] T) (u : S) (v : T) (huv : σ u = v) (s : S) :
+    awayLocAlgEquivOfBase σ u v huv (algebraMap S (Localization.Away u) s) =
+      algebraMap T (Localization.Away v) (σ s) :=
+  IsLocalization.ringEquivOfRingEquiv_eq (M := Submonoid.powers u) (T := Submonoid.powers v)
+    (S := Localization.Away u) (Q := Localization.Away v) _ s
+
+/-- **The localization half is a map under `R`**, since `σ` is one. -/
+theorem awayLocAlgEquivOfBase_comp_algebraMap (σ : S ≃ₐ[R] T) (u : S) (v : T) (huv : σ u = v) :
+    (awayLocAlgEquivOfBase σ u v huv).toRingHom.comp (algebraMap R (Localization.Away u)) =
+      algebraMap R (Localization.Away v) := by
+  refine RingHom.ext fun r => ?_
+  rw [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
+    IsScalarTower.algebraMap_apply R S (Localization.Away u),
+    awayLocAlgEquivOfBase_algebraMap, AlgEquiv.commutes, ← IsScalarTower.algebraMap_apply]
+
+/-- **The two extensions of `I` correspond**, as an *equality* of ideals rather than a containment.
+Invertibility of `σ` contributes nothing here: both sides are `I` extended to a localization along
+a map under `R`, so `Ideal.map_map` and `FormalSpectrum.awayLocAlgEquivOfBase_comp_algebraMap`
+close it. The containment `AdicCompletion.mapCompletion` asks for is the `≤` direction of this
+equality. -/
+theorem map_awayLocAlgEquivOfBase (σ : S ≃ₐ[R] T) (u : S) (v : T) (huv : σ u = v) :
+    ((I.map (algebraMap R S)).map (algebraMap S (Localization.Away u))).map
+        (awayLocAlgEquivOfBase σ u v huv).toRingHom =
+      (I.map (algebraMap R T)).map (algebraMap T (Localization.Away v)) := by
+  rw [← Ideal.map_algebraMap_of_tower I _ rfl, ← Ideal.map_algebraMap_of_tower I _ rfl,
+    Ideal.map_map, awayLocAlgEquivOfBase_comp_algebraMap]
+
+/-- **The transport of a completed localization along an equivalence of its base**: `S{1/u} →+*
+T{1/v}` for `σ : S ≃ₐ[R] T` with `σ u = v`, both completions taken at the extension of one ideal
+`I` of a common base `R`.
+
+It is `AdicCompletion.mapCompletion` of the localization half and nothing else — **no universal
+property is used to build it**. That matters for what the two legs then cost: a lift would need an
+`Algebra S (T{1/v})` structure installed by hand along `σ` before
+`FormalSpectrum.awayCompletionLift` could be stated, and every lemma about the lift would have to
+reinstall the same one. Completion functoriality asks for a ring map and a containment of ideals,
+both of which are already here. -/
+def awayCompletionHomOfBase (hI : I.FG) (σ : S ≃ₐ[R] T) (u : S) (v : T) (huv : σ u = v) :
+    awayCompletion (I.map (algebraMap R S)) u →+* awayCompletion (I.map (algebraMap R T)) v :=
+  AdicCompletion.mapCompletion (awayLocAlgEquivOfBase σ u v huv).toRingHom
+    (map_awayLocAlgEquivOfBase I σ u v huv).le ((hI.map _).map _)
+
+/-- **Where `σ` acts**: on the image of `S` the transport is `σ` followed by the structural map of
+the target chart. Every statement below is proved from this one and from nothing else about the
+transport. -/
+@[simp]
+theorem awayCompletionHomOfBase_awayCompletionHom (hI : I.FG) (σ : S ≃ₐ[R] T) (u : S) (v : T)
+    (huv : σ u = v) (s : S) :
+    awayCompletionHomOfBase I hI σ u v huv (awayCompletionHom (I.map (algebraMap R S)) u s) =
+      awayCompletionHom (I.map (algebraMap R T)) v (σ s) := by
+  rw [awayCompletionHom, RingHom.comp_apply, awayCompletionHomOfBase,
+    AdicCompletion.mapCompletion_algebraMap, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
+    awayLocAlgEquivOfBase_algebraMap, awayCompletionHom, RingHom.comp_apply]
+
+/-- **The transport fixes `R`**, which is what the `R`-algebra upgrade below needs: `σ` does, and
+the structural maps of both charts are the tower maps under `R`. -/
+theorem awayCompletionHomOfBase_algebraMap (hI : I.FG) (σ : S ≃ₐ[R] T) (u : S) (v : T)
+    (huv : σ u = v) (r : R) :
+    awayCompletionHomOfBase I hI σ u v huv
+        (algebraMap R (awayCompletion (I.map (algebraMap R S)) u) r) =
+      algebraMap R (awayCompletion (I.map (algebraMap R T)) v) r := by
+  rw [IsScalarTower.algebraMap_apply R S (awayCompletion (I.map (algebraMap R S)) u),
+    IsScalarTower.algebraMap_apply R T (awayCompletion (I.map (algebraMap R T)) v),
+    ← awayCompletionHom_eq_algebraMap, ← awayCompletionHom_eq_algebraMap,
+    awayCompletionHomOfBase_awayCompletionHom, AlgEquiv.commutes]
+
+/-- **Both composites are the identity**, by rigidity at the source chart: the round trip is a map
+under `S` into a complete target, and so is the identity, so
+`FormalSpectrum.awayCompletion_hom_ext` identifies them.
+
+**One statement serves both composites**, which is what the second equivalence `τ` and the
+hypothesis `hτσ` are for: instantiate at `(σ, σ.symm)` for one and at `(σ.symm, σ)` for the other.
+Phrased with `σ.symm` in place of `τ` it would serve only one, and the other would need
+`(σ.symm).symm = σ` rewritten inside a type.
+
+This is the **one** place below that uses `σ` to be invertible, and it uses it only through `hτσ`.
+`AdicCompletion.mapCompletion_congr` (`FormalSchemes.CompletionNestedBasicOpenMap`) would close
+this by functoriality instead — `AdicCompletion.mapCompletion_comp` collapses the round trip to a
+single `AdicCompletion.mapCompletion`, of a ring map that is the identity — but that module is not
+in this file's import closure, and restating it here would put a second copy of a statement the
+tree already has. Rigidity is this file's own subject and costs one call. -/
+theorem awayCompletionHomOfBase_comp (hI : I.FG) (σ : S ≃ₐ[R] T) (τ : T ≃ₐ[R] S)
+    (hτσ : ∀ s, τ (σ s) = s) (u : S) (v : T) (huv : σ u = v) (hvu : τ v = u) :
+    (awayCompletionHomOfBase I hI τ v u hvu).comp (awayCompletionHomOfBase I hI σ u v huv) =
+      RingHom.id (awayCompletion (I.map (algebraMap R S)) u) := by
+  have hsq : ((awayCompletionHomOfBase I hI τ v u hvu).comp
+        (awayCompletionHomOfBase I hI σ u v huv)).comp
+        (awayCompletionHom (I.map (algebraMap R S)) u) =
+      awayCompletionHom (I.map (algebraMap R S)) u := by
+    refine RingHom.ext fun s => ?_
+    rw [RingHom.comp_apply, RingHom.comp_apply, awayCompletionHomOfBase_awayCompletionHom,
+      awayCompletionHomOfBase_awayCompletionHom, hτσ]
+  exact awayCompletion_hom_ext (I.map (algebraMap R S)) u u (hI.map _)
+    (le_comap_of_comp_awayCompletionHom _ hsq)
+    (le_comap_of_comp_awayCompletionHom _ (RingHom.id_comp _))
+    (hsq.trans (RingHom.id_comp _).symm)
+
+/-- **A completed localization transports along an equivalence of its base**, as an isomorphism of
+rings: `S{1/u} ≃+* T{1/v}` for `σ : S ≃ₐ[R] T` with `σ u = v`. -/
+def awayCompletionEquivOfBase (hI : I.FG) (σ : S ≃ₐ[R] T) (u : S) (v : T) (huv : σ u = v) :
+    awayCompletion (I.map (algebraMap R S)) u ≃+* awayCompletion (I.map (algebraMap R T)) v :=
+  RingEquiv.ofRingHom (awayCompletionHomOfBase I hI σ u v huv)
+    (awayCompletionHomOfBase I hI σ.symm v u (σ.symm_apply_eq.mpr huv.symm))
+    (awayCompletionHomOfBase_comp I hI σ.symm σ σ.apply_symm_apply v u
+      (σ.symm_apply_eq.mpr huv.symm) huv)
+    (awayCompletionHomOfBase_comp I hI σ σ.symm σ.symm_apply_apply u v huv
+      (σ.symm_apply_eq.mpr huv.symm))
+
+/-- **The `R`-algebra form**, which is the shape a chart transition has: `S{1/u} ≃ₐ[R] T{1/v}` for
+`σ : S ≃ₐ[R] T` with `σ u = v`. The headline of the row this was written for is the case `v = σ u`,
+`huv = rfl`.
+
+The upgrade is `AlgEquiv.ofRingEquiv` at `FormalSpectrum.awayCompletionHomOfBase_algebraMap`, the
+same two-step shape `FormalSpectrum.awayCompletionChartAlgEquivOfLe` uses above: an underlying ring
+equivalence, and a separate lemma saying it fixes the base.
+
+**This is not `FormalSpectrum.awayCompletionAlgEquiv`**, which enlarges the scalars of an
+equivalence that already exists, from `R` to `R{1/f}`; that one consumes a `σ`-shaped input and
+this one produces it. Nor is it `CompletedTensorAwayInterchange.awayCongrEquiv`
+(`FormalSchemes.AwayCompletionCongrEquiv`), which moves the away *element* at a fixed base, nor
+`FormalSpectrum.awayTransport` (`FormalSchemes.AwayBaseChangeGluedX`), which moves the *ideal*
+along an equality. Here the base ring itself moves. -/
+def awayCompletionAlgEquivOfBase (hI : I.FG) (σ : S ≃ₐ[R] T) (u : S) (v : T) (huv : σ u = v) :
+    awayCompletion (I.map (algebraMap R S)) u ≃ₐ[R] awayCompletion (I.map (algebraMap R T)) v :=
+  AlgEquiv.ofRingEquiv (f := awayCompletionEquivOfBase I hI σ u v huv)
+    (awayCompletionHomOfBase_algebraMap I hI σ u v huv)
+
+@[simp]
+theorem awayCompletionAlgEquivOfBase_apply (hI : I.FG) (σ : S ≃ₐ[R] T) (u : S) (v : T)
+    (huv : σ u = v) (x : awayCompletion (I.map (algebraMap R S)) u) :
+    awayCompletionAlgEquivOfBase I hI σ u v huv x = awayCompletionHomOfBase I hI σ u v huv x :=
+  rfl
+
+@[simp]
+theorem awayCompletionAlgEquivOfBase_symm_apply (hI : I.FG) (σ : S ≃ₐ[R] T) (u : S) (v : T)
+    (huv : σ u = v) (y : awayCompletion (I.map (algebraMap R T)) v) :
+    (awayCompletionAlgEquivOfBase I hI σ u v huv).symm y =
+      awayCompletionHomOfBase I hI σ.symm v u (σ.symm_apply_eq.mpr huv.symm) y :=
+  rfl
+
+end OfBase
 
 end FormalSpectrum
 
