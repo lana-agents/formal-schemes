@@ -27,9 +27,10 @@ every one that takes a containment hypothesis takes the unit, and the four that 
 `CompletedTensorAwayInterchange.furtherLocAlgHom_congr`,
 `CompletedTensorAwayInterchange.furtherLocAlgHom_comp`,
 `CompletedTensorAwayInterchange.furtherLocAlgHom_self` and
-`CompletedTensorAwayInterchange.awayCongrEquivOfEq` — take instead a localization map compatible
-with `A`, whose existence is that same `Spec A` containment, or an equality of the two elements.
-`FormalSchemes.AwayCompletionRestrict`'s opening paragraph is the exposition of the difference.
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq` — take instead `A`-compatible localization
+maps, whose existence is that same `Spec A` containment (the composition law takes two of them), or
+an equality of the two elements. `FormalSchemes.AwayCompletionRestrict`'s opening paragraph is the
+exposition of the difference.
 
 ## Rigidity, and why it matters
 
