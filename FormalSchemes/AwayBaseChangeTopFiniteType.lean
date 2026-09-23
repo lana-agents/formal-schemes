@@ -130,12 +130,16 @@ composite, which is a surjective `R{1/c}^`-algebra map.
   `FormalSpectrum.map_algebraMap_awayCompletion` (`FormalSchemes.BasicOpenChart`). So for a chart
   transition `τ : A{1/f}^ ≃ₐ[R] B{1/g}^` the transport `A{1/f}^{1/u}^ ≃ₐ[R] B{1/g}^{1/τ u}^` is
   that lemma rewritten on each side and then `FormalSpectrum.awayCompletionAlgEquivOfBase` —
-  measured, **three** tactic lines, and nothing else enters. **Saying so is the point of this
-  bullet**: the statement has twice been recorded as missing from this tree in a module that could
-  not reach this one, and what was missing was the spelling, not the mathematics (issue 2194).
-  `FormalSpectrum.awayTransport` (`FormalSchemes.AwayBaseChangeGluedX`) is the general form of the
-  rewriting step, substituting either ideal under an equality by two `subst`s. Which of the two
-  spellings a consumer should be handed is a question about *its* imports and not about this file:
+  measured, **three** tactic lines, and nothing enters beyond the `I.FG` that declaration asks for.
+  That hypothesis is free at the consumer rather than absent:
+  `FormalSchemes.RefinedOverlapRestrict` already threads an `hI : I.FG` through
+  `FormalSpectrum.refinedOverlapRestrict`, `FormalSpectrum.refinedOverlapElt` and
+  `FormalSpectrum.refinedOverlapLeg`. **Saying so is the point of this bullet**: the statement has
+  twice been recorded as missing from this tree in a module that could not reach this one, and what
+  was missing was the spelling, not the mathematics (issue 2194). `FormalSpectrum.awayTransport`
+  (`FormalSchemes.AwayBaseChangeGluedX`) is the general form of the rewriting step, substituting
+  either ideal under an equality by two `subst`s. Which of the two spellings a consumer should be
+  handed is a question about *its* imports and not about this file:
   `FormalSchemes.AwayBaseChangeGluedX` has a forward closure of **93** modules against this file's
   forward closure of **36**, and the module that builds a refined chart transition is what settles
   it.
@@ -166,12 +170,17 @@ answers it. It is the `AlgEquiv` case of `Ideal.map_algebraMap_algHom`, which is
 specialisation — `σ.toAlgHom` — inside `IsTopologicallyFiniteType.ofAlgEquiv`
 (`FormalSchemes.CofinalTopFiniteType`). Nothing general is introduced here, so there is nothing to
 move; it is restated locally because this file cannot reach the module holding it, and both ways of
-fixing that lose. `FormalSchemes.CofinalCompletionAlg`, whose reverse closure is **23**, is outside
+fixing that lose. `FormalSchemes.CofinalCompletionAlg`, whose reverse closure is **24**, is outside
 this file's forward closure of **36** modules. The import that would bring it adds **5** modules to
-what this file transitively imports and costs **9** figure repairs in **6** files, measured by
-`git archive` plus one import line and a `--tree` run from that worktree. Moving the general form
-down to a module both files already reach is worse: of the thirteen such modules,
-`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **495**. So the local
+what this file transitively imports and costs **14** figure repairs in **8** files, measured by
+`git archive` plus one import line and a `--tree` run from that worktree. **Four** of the fourteen
+are this file's own — this paragraph's **24** and **36**, and the two quoted by the last bullet of
+`## Hypotheses, and what is not proved` — which the edge falsifies as it is added, so the cost
+elsewhere is **10** in **7**. Both numbers answer real questions and the recipe above produces the
+first, and the first moves again whenever anything adds a closure figure to this file: it was 9
+before issue 2193's module existed and 12 before issue 2194's bullet was written. Moving the
+general form down to a module both files already reach is worse: of the thirteen such modules,
+`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **496**. So the local
 copy stands, and it is at root namespace for the reason `Ideal.map_algebraMap_of_tower`
 (`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. Re-cost the import
 if a third module inside this file's own imports wants the fact;

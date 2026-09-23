@@ -499,7 +499,7 @@ it is what the universal property below is applied at.
 
 It is stated here, where the theorem below needs the unit as a *term* in its own statement, rather
 than beside the rest of the `awayCompletion` API in `FormalSchemes.BasicOpenChart`, whose reverse
-closure is **433**: the move down rebuilds all of those, which is the price to pay once a second
+closure is **434**: the move down rebuilds all of those, which is the price to pay once a second
 module asks for the lemma and not before — this tree's standing disposition for a general statement
 with one call site. -/
 theorem isUnit_algebraMap_awayCompletionBase :
