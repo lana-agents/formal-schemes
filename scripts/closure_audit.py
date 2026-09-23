@@ -813,7 +813,9 @@ def edge_cost(root: str = ".", importer: str = "", imported: str = "") -> dict:
                 # Lean would refuse the tree this report prices.  A label and never a filter:
                 # nothing below is computed differently, because reachability in a cyclic digraph
                 # is well defined and every figure here is that digraph's.  A deletion cannot
-                # create a cycle, which is why this is read off the addition direction only.
+                # create a cycle, which is why this is read off the addition direction only -- a
+                # guard no acyclic tree can observe, pinned by `--selftest` on one that is already
+                # cyclic, where *would close a cycle* would be the wrong sentence to print.
                 cycle=adding and importer in fwd_real[imported],
                 moved=moved, unmoved=unmoved, rev_moved=rev_moved, baseline=len(base),
                 population=sorted(population, key=lambda c: (c["path"], c["line"])),
@@ -1363,11 +1365,16 @@ def selftest() -> int:
                [("Bot.lean", 0, 1), ("Side.lean", 1, 2), ("Top.lean", 0, 2)],
                {1: 1, 2: 1, 3: 1, 0: 0}, 0))
 
-        # A deletion removes an edge, so it can never close a cycle -- read off the addition
-        # direction only, which is why `adding and ...` and not the reachability test alone.
+        # A deletion removes an edge, so it can never close a cycle.  Which conjunct excludes
+        # this one is worth reading off rather than assuming: `Bot` reaches nothing, so the
+        # reachability test is already `False` here and `adding and ...` is not what fires.  The
+        # tree that does exercise the direction guard is the cyclic one below, and it is the only
+        # shape that can -- which is why that case exists and this one does not stand in for it.
         deleting = edge_cost(d, "FormalSchemes.Top", "FormalSchemes.Bot")
-        check("a deletion is never a cycle, even though its two ends do reach each other",
-              (deleting["adding"], deleting["cycle"]), (False, False))
+        bot_reaches_top = "FormalSchemes.Top" in deleting["forward"][0]["FormalSchemes.Bot"]
+        check("a deletion whose imported end reaches nothing is not a cycle, and it is the "
+              "reachability test rather than the direction that says so",
+              (deleting["adding"], bot_reaches_top, deleting["cycle"]), (False, False, False))
 
         # The renderer, which nothing else here reads.  Both of the labels below have been
         # wrong on this tree -- `brings in` was printed in the deletion direction until issue
@@ -1398,6 +1405,29 @@ def selftest() -> int:
                 "modules the edge brings in   :     1"],
                ["edge                         : `FormalSchemes.Top` drops `FormalSchemes.Bot`",
                 "modules the edge takes out   :     1"]])
+
+    # `adding and ...` is the one conjunct of the flag that none of the cases above can observe.
+    # On any tree Lean would load, a deletion's imported end does not reach its importer, so the
+    # reachability test alone is already `False` there -- and by acyclicity, not by luck: at
+    # `2875bd3` it was `False` for all 1247 of this tree's import edges.  The one world where the
+    # guard is load-bearing is a real tree that is **already** cyclic, and there the NOTE would be
+    # the wrong sentence: the edge does not *close* a cycle, the cycle is there, and deleting the
+    # edge may be what breaks it.  So that is the tree this case is built on.  Backing the
+    # `adding and` out turns it red and leaves every other case in this file green.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+        for name, other in (("Ping", "Pong"), ("Pong", "Ping")):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write("import FormalSchemes.%s\n"
+                        "/-! A tree Lean would refuse: these two import each other. -/\n" % other)
+        check("the cyclic tree quotes no figure, so the case below asserts the flag and nothing "
+              "else", audit(d)[0], [])
+        cyclic = edge_cost(d, "FormalSchemes.Ping", "FormalSchemes.Pong")
+        pong_reaches_ping = "FormalSchemes.Ping" in cyclic["forward"][0]["FormalSchemes.Pong"]
+        check("a deletion is not labelled a cycle even where the imported end does reach the "
+              "importing one, which is the only shape that guard is visible on",
+              (cyclic["adding"], pong_reaches_ping, cyclic["cycle"]), (False, True, False))
 
     # `--edge`'s argument, which is the other thing a report can be silently wrong about.  The
     # empty string used to be **falsy** at `main`'s branch and fall through to the tree audit:
@@ -1434,7 +1464,8 @@ def selftest() -> int:
                 except SystemExit as e:
                     got.append(str(e))
         finally:
-            sys.argv, _ = argv, os.chdir(cwd)
+            sys.argv = argv
+            os.chdir(cwd)
         check("`--edge ''` is refused by `main` rather than falling through to the tree audit, "
               "which it used to run and report under a flag asking for something else",
               got, [usage, usage])
