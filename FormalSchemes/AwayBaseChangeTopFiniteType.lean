@@ -123,6 +123,22 @@ composite, which is a surjective `R{1/c}^`-algebra map.
   `FormalSpectrum.awayCompletionAlgEquivOfBase` asks `σ` to be invertible in exactly the one place
   `FormalSpectrum.awayCompletionEquivOfRingEquiv` does, and adds no use of its own: the two
   round-trip legs come out of `RingEquiv.ofRingHom` inside the ring form.
+* **The chart-convention reading of the transport is not a separate statement, and no declaration
+  is added for it here.** A chart of a formal spectrum has a completed localization for its algebra
+  and the tree spells that algebra's ideal of definition `awayCompletionIdeal (I·A) f`, not
+  `I.map (algebraMap R (A{1/f}^))`; the two are one ideal, by
+  `FormalSpectrum.map_algebraMap_awayCompletion` (`FormalSchemes.BasicOpenChart`). So for a chart
+  transition `τ : A{1/f}^ ≃ₐ[R] B{1/g}^` the transport `A{1/f}^{1/u}^ ≃ₐ[R] B{1/g}^{1/τ u}^` is
+  that lemma rewritten on each side and then `FormalSpectrum.awayCompletionAlgEquivOfBase` —
+  measured, **three** tactic lines, and nothing else enters. **Saying so is the point of this
+  bullet**: the statement has twice been recorded as missing from this tree in a module that could
+  not reach this one, and what was missing was the spelling, not the mathematics (issue 2194).
+  `FormalSpectrum.awayTransport` (`FormalSchemes.AwayBaseChangeGluedX`) is the general form of the
+  rewriting step, substituting either ideal under an equality by two `subst`s. Which of the two
+  spellings a consumer should be handed is a question about *its* imports and not about this file:
+  `FormalSchemes.AwayBaseChangeGluedX` has a forward closure of **93** modules against this file's
+  forward closure of **36**, and the module that builds a refined chart transition is what settles
+  it.
 
 ## Placement
 
@@ -303,7 +319,7 @@ the extension `I·S` maps onto `I·T` along `σ`, because `σ` is a map under `R
 hypothesis `FormalSpectrum.awayCompletionEquivOfRingEquiv` asks for, in the case its two ideals are
 extensions of one ideal of a common base.
 
-**No content is added here and none is proved here.** `Ideal.map_algebraMap_algHom`
+**Nothing new is proved here**, though a proof is written out below. `Ideal.map_algebraMap_algHom`
 (`FormalSchemes.CofinalCompletionAlg`) is the general statement, for an `AlgHom` rather than an
 `AlgEquiv`, and this is that lemma at `σ.toAlgHom` — which
 `IsTopologicallyFiniteType.ofAlgEquiv` (`FormalSchemes.CofinalTopFiniteType`) writes inline rather
