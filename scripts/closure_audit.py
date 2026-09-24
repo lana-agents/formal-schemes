@@ -140,7 +140,10 @@ of N*, and that `--tree` neither attributes nor declines.  The word alone is not
 the `Gluing` sentence quoted above does not contain it.
 `--tree` prints the count in its header and never fails on it, so the invisible population stops
 being invisible without the script pretending it can parse it.  Sentences naming Mathlib are left
-out: they measure Mathlib's import graph, which this script does not walk.
+out: they measure Mathlib's import graph, which this script does not walk.  **The marker has to be
+in a comment**, which the checked spelling does not have to be: `closure` case-insensitively is
+`AlgebraicClosure` too, so without that gate a proof body joins a reading list of sentences and a
+lemma about algebraic closures moves a coverage figure.
 
 Most of what `--sweep` reports is legitimately out of reach -- deltas whose second figure is
 counterfactual, intersections of several closures, peak-RSS numbers, issue numbers.  It is a
@@ -559,10 +562,15 @@ def claims(mods: dict[str, str]):
     """Yield every closure claim in the tree, as a dict.
 
     The scan is over the whole file rather than over its comment regions: the phrase *forward
-    closure* / *reverse closure* occurs 62 times on this tree and every one of them is in a
+    closure* / *reverse closure* occurs in 62 of this tree's files and 228 times in all -- the
+    `204` attributed and `24` declined of `--tree`'s header -- and every one of those is in a
     comment, since it is not Lean syntax.  A hit inside code would be reported as a declined claim,
     not silently mis-measured.  Newlines are replaced by spaces rather than removed, so every
     position still maps to a line of the file.
+
+    **This reasoning is `CLOSURE`'s and does not carry to `SWEEPABLE`**, whose trigger is a bare
+    `closure` that Lean code really does contain -- see `invisible`, which gates on the comment
+    spans this one does not need to.
     """
     for module, path in sorted(mods.items()):
         raw = open(path, encoding="utf-8").read()
@@ -654,11 +662,31 @@ def sentences(raw: str):
 
 def invisible(mods: dict[str, str]):
     """Every sentence that carries a numeral together with a `SWEEPABLE` marker and that
-    `claims()` cannot see at all -- neither attributed nor declined.  Counted, never failed on."""
+    `claims()` cannot see at all -- neither attributed nor declined.  Counted, never failed on.
+
+    **The marker has to be in a comment**, and unlike `claims()` this cannot be taken on trust.
+    `claims()` scans the whole file and says why that is safe: `CLOSURE` is *forward closure* /
+    *reverse closure*, which is not Lean syntax, so a hit is prose wherever it lands.  `SWEEPABLE`
+    leads with a bare case-insensitive `closure` instead, and **that is** Lean syntax --
+    `AlgebraicClosure`, `integralClosure`.  Without this gate a proof body enters the reading list
+    under advice meant for a sentence, and because `BREAK` is `[.;]\\s` and Lean code carries
+    almost no sentence terminators, what is printed is a run of tactic script.  Worse, `--tree`'s
+    header publishes the count as a coverage figure that reviewers hold fixed across a diff, so
+    adding an unrelated algebraic-closure lemma anywhere would move it.
+
+    The gate is on the **match**, not the sentence: a sentence legitimately runs out of a docstring
+    into code, since `BREAK` cannot see `-/`.  The numeral is deliberately not gated as well --
+    the population *marker in prose, every numeral in code* is empty on this tree, so a second
+    clause would be a branch no fixture could reach.
+    """
     for module, path in sorted(mods.items()):
         raw = open(path, encoding="utf-8").read()
+        masked = code_only(raw)
         for off, s in sentences(raw):
-            if not SWEEPABLE.search(s) or not FIGURE.search(s):
+            m = SWEEPABLE.search(s)
+            if not m or not FIGURE.search(s):
+                continue
+            if masked[off + m.start():off + m.end()].strip():
                 continue
             if CLOSURE.search(s) or MATHLIB.search(s):
                 continue
@@ -1122,6 +1150,23 @@ def selftest() -> int:
                "FormalSchemes.Upstream"])
         check("--sweep reports the blind sentence of a file whose other sentence is checked",
               [t for m, t in blind if m == "FormalSchemes.Both"], ["Its import closure is 3."])
+
+        # A `closure` token in **code**, which no fixture above has: `SWEEPABLE` leads with a bare
+        # case-insensitive substring, and `AlgebraicClosure` matches it.  The numeral is what makes
+        # this case sighted -- `FIGURE` is the other conjunct, so a code line without one is
+        # rejected for a reason that has nothing to do with the gate, and a fixture built that way
+        # passes with the gate backed out.  `StructureSheafStalkPowerSeriesUltrapower.lean` is
+        # where this really happens and `(2 : AlgInt)` is really how, so that is the shape here.
+        # The docstring carries a checked figure too, so the file is visible to `--tree` as well.
+        before = [m for m, _ in blind]
+        write("Code", "/-! Over nothing: forward closure **0**. -/\n"
+                      "theorem two_ne : (2 : AlgebraicClosure Rat) = 2 := rfl\n")
+        after = sorted((c["module"], c["text"][:24]) for c in invisible(project_modules(d)))
+        check("a `closure` token inside Lean code is not a sentence of the reading list, even "
+              "carrying a numeral, and adding a file that has one moves nothing else on it",
+              [m for m, _ in after], before)
+        check("and the file it is in is still audited: its own checked figure is not a mismatch",
+              [(c["module"], c["stated"], c["actual"]) for c in audit(d)[0]], [])
 
     with tempfile.TemporaryDirectory() as d:
         os.makedirs(os.path.join(d, "FormalSchemes"))
