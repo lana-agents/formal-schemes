@@ -92,14 +92,19 @@ declarations, all on the tree, none of them here.
 
 **The composite is not expensive, and that is what the next row should be scoped from.**
 The four above join to the bottom isomorphism directly: measured with `lake env lean` outside the
-tree, at the default heartbeats, a fifteen-line term whose `#print axioms` is
-`[propext, Classical.choice, Quot.sound]`. Two bookkeeping steps are wanted that the route above
-does not name, and a paste that omits them fails with a type error in seconds rather than with a
-timeout — `FormalSpectrum.awayCompletionCongrBasicOpenAlg` is an equivalence over the base of
-*its own* ideal rather than over `R`, so it wants `AlgEquiv.restrictScalars`, and the hypothesis it
-asks for is stated at `I.map (algebraMap R _)` where the two statements below are at
-`FormalSpectrum.awayCompletionIdeal`, which is the same ideal-convention bridge named at the end of
-this section, one step later. **So what is left is placement, not search and not elaboration**:
+tree, at the default heartbeats, a sixteen-line declaration — ten lines of term after the `:=` —
+whose `#print axioms` is `[propext, Classical.choice, Quot.sound]`. Two bookkeeping steps are
+wanted that the route above does not name, and **they fail differently, which is the part worth
+knowing**. `FormalSpectrum.awayCompletionCongrBasicOpenAlg` is an equivalence over the base of its
+*own* ideal rather than over `R`, so it wants `AlgEquiv.restrictScalars`; a paste that omits it
+does **not** report a scalar mismatch but exhausts the default heartbeats at `isDefEq`, the
+elaborator having been asked whether `R` and that completion are the same scalar ring and walking
+the completion tower to answer. **A timeout there is that omission and not an obstruction** —
+raising the budget to a million heartbeats only buys a longer one. The second step is the
+hypothesis's ideal convention: it is asked for at `I.map (algebraMap R _)` where the two statements
+below are at `FormalSpectrum.awayCompletionIdeal`, the same ideal-convention bridge named at the
+end of this section one step later, and omitting *that* one does fail with a type error in seconds,
+naming both spellings. **So what is left is placement, not search and not elaboration**:
 this file reaches neither `FormalSchemes.AwayBaseChangeTopFiniteType` nor
 `FormalSchemes.AwayCompletionAlgHomBasicOpen`, and no module of this tree reaches everything the
 composite names, so the transition wants a module of its own — issue 2196, which carries the term
