@@ -23,7 +23,10 @@ is the same element with the two charts and the two refining elements swapped, a
 has to sit over the coarse transition `τ_ij : A_i{1/g_ij} ≃ₐ[R] A_j{1/g_ji}` the unrefined datum
 already carries. `FormalSchemes.RefinedOverlapRestrict`'s `## What is **not** proved here` named
 this as the one thing that file's legs stop short of. It is
-`FormalSpectrum.refinedOverlapTransition` below.
+`FormalSpectrum.refinedOverlapTransition` below, and its symmetry law — the transition at the
+swapped refined pair being this one's inverse, which is `τ_symm` in the language of
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` — is
+`FormalSpectrum.refinedOverlapTransition_symm` beside it.
 
 **It is a composite of statements this tree already has, and it is not a descent statement.** That
 distinction is the whole reason this module is short: the span
@@ -47,6 +50,15 @@ out.
   content.
 * `FormalSpectrum.refinedOverlapTransition`: the equivalence itself, as the composite of four
   declarations and two bookkeeping steps.
+* `FormalSpectrum.refinedOverlapTransition_symm`: the transition at the swapped refined pair is
+  this one's inverse, and `FormalSpectrum.refinedOverlapTransition_trans_symm` is the same fact
+  read as a round trip. The section after next says why the pointwise route to this is the wrong
+  one and what replaces it.
+* `FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans_eq_refl`: the one statement with content
+  in that proof — base change along an `R`-algebra equivalence of chart algebras, a basic-open
+  re-presentation, base change back, and a second re-presentation, compose to the identity.
+* `AlgEquiv.trans_symm_of_middle_eq_refl` and `AlgEquiv.trans_trans_eq_refl_of_middle_eq_refl`: the
+  bookkeeping that carries that statement out to the transition, stated for `AlgEquiv` alone.
 
 ## The route, in the order the term takes it
 
@@ -83,6 +95,53 @@ and it is one `rw`, and omitting *that* one does fail with a type error in secon
 spellings of the ideal. The same pair of conventions is what
 `FormalSchemes.RefinedOverlapRestrict`'s transport paragraph prices one step earlier.
 
+## The symmetry law, and why the pointwise route to it is the wrong one
+
+`FormalSpectrum.refinedOverlapTransition_symm` says the transition at the swapped refined pair is
+this one's inverse. **It is well-typed, which is the first thing to know and is not obvious**: the
+swapped pair presents its *i*-side element at `τ.symm.symm` rather than at `τ`, and those agree by
+`rfl` — checked at the completions the statement lives at, not assumed from `AlgEquiv.symm_symm`.
+
+**Every pointwise route to it is a heartbeat timeout and none of them is taken here.** Measured
+with `lake env lean` outside the tree at the default budget: `rfl` times out at `isDefEq`,
+`AlgEquiv.ext fun _ => rfl` at `isDefEq`, and `AlgEquiv.symm_bijective.injective (by rfl)` at
+`whnf`. That is the species this cluster has recorded repeatedly at the completed-localization
+layer, and more heartbeats are not the answer to it: both sides are composites of four equivalences
+through different completions, so asking whether they agree at a point asks the elaborator to walk
+all eight.
+
+**What works is rigidity applied to the middle two steps alone, and the outer two cancelling
+formally.** Of the four steps of the route above, the first and the last are the nested
+identifications at the *i* and the *j* chart, and the swapped composite takes them in the opposite
+order — its first step *is* this composite's last, on the nose, and its last is this one's first,
+by proof irrelevance and `τ.symm.symm = τ`. So they cancel with **no naturality statement about
+`FormalSpectrum.awayCompletionNestedAlgEquivOfLe` anywhere**, which is what keeps this cheap: a
+naturality statement at a doubly nested completion is the expensive thing
+`FormalSchemes.BasicOpenCoverCharts` prices at about 160 s a lemma unless it is discharged once at
+the top level.
+
+What is left is the middle, and that is
+`FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans_eq_refl`. It is an automorphism of one
+completed localization which fixes the image of its own base ring, because each of its four steps
+is a map under that base —
+`FormalSpectrum.awayCompletionAlgEquivOfBase_algebraMap`
+(`FormalSchemes.AwayBaseChangeTopFiniteType`) for the two base changes and `AlgEquiv.commutes` for
+the two re-presentations, which is free because
+`FormalSpectrum.awayCompletionCongrBasicOpenAlg` is an equivalence over the base of its own ideal.
+`FormalSpectrum.awayCompletion_hom_ext` (`FormalSchemes.AwayCompletionRestrictUnique`) then says a
+map out of a completed localization carrying the ideal of definition across is determined by that
+square, and the containment it asks for is
+`FormalSpectrum.le_comap_awayCompletionIdeal_algHom` for any `R`-algebra map at all. **That is the
+whole proof.** It runs in 6 s at the default budget with no `set_option`.
+
+**`AlgEquiv.trans_symm_of_middle_eq_refl` is stated at this composite's own bracketing, and that is
+not a stylistic choice.** It takes its six steps separately rather than the middle as one
+equivalence. Re-associating `(N_i ≫ B) ≫ (C ≫ N_j⁻¹)` into `(N_i ≫ (B ≫ C)) ≫ N_j⁻¹` — which
+`AlgEquiv.trans` justifies and which reads better — makes the elaborator compare two differently
+bracketed composites of these completions, and the four-argument form of the lemma is then a
+`whnf` timeout at the instantiation below where the six-argument form is 6 s. **A general lemma
+about composites at this layer has to be shaped like the definition it will be applied to.**
+
 ## Placement
 
 A leaf over `FormalSchemes.RefinedOverlapRestrict`, `FormalSchemes.AwayCompletionAlgHomBasicOpen`,
@@ -118,8 +177,8 @@ more than one of them.
 numerals in **17** files, every one of them a `+1`. Editing those 17 re-elaborates **538** of the
 586 modules, and the concentration is the same one CONTRIBUTING.md records: the reverse closure of
 `FormalSchemes.StructureSheaf` is **529**, and dropping that one file from the 17 takes the sweep's
-rebuild to **80**. Two of
-the 37 are not renumberings: `FormalSchemes/RefinedOverlapRestrict.lean` and
+rebuild to **80**. Two of the 37 are not renumberings:
+`FormalSchemes/RefinedOverlapRestrict.lean` and
 `FormalSchemes/AwayCompletionAlgHomBasicOpen.lean` each state that they are **leaves**, and this
 module is their first consumer, so both `## Placement` paragraphs are rewritten rather than
 renumbered — in the first case because the ratio it declines a move on was argued from a *single
@@ -130,29 +189,44 @@ at; they are not standing claims about any later tree and nothing re-runs them. 
 `scripts/closure_audit.py --tree`, and price any fifth import with `--edge` before writing a word
 about it.
 
+**Three of the statements below are general and all three are kept here, and the decisive one is
+decided by a walk rather than by taste.**
+`FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans_eq_refl` is general in both its chart
+algebras and names nothing of the refined overlap, so its subject-matter home is beside the base
+change it is about. It cannot go there: it needs
+`FormalSchemes.AwayBaseChangeTopFiniteType`, `FormalSchemes.AwayCompletionRestrictUnique` and
+`FormalSchemes.AwayCompletionAlgHomBasicOpen` at once, and **this module is the only one of the 586
+that reaches all three** — 545 reach none of them, 35 reach exactly one, 5 reach two and this file
+is the one that reaches three. So its only homes besides this file are a new module over this one
+or an import into an existing one, and this section prices the second.
+`AlgEquiv.trans_symm_of_middle_eq_refl` and `AlgEquiv.trans_trans_eq_refl_of_middle_eq_refl` name
+nothing of this tree at all — they are statements about `AlgEquiv.trans` and `AlgEquiv.symm`, and
+Mathlib is where they belong. The nearest thing to a subject-matter home here is an early module
+about algebra equivalences, and of those `FormalSchemes.AdicCompletionCongrIdealAlg` is the
+cheapest, at a reverse closure of **196** against this file's **0**, with one call site each.
+Declined on that ratio, which is this tree's standing disposition for a general statement with a
+single call site. **Re-cost all three when a consumer appears that does not reach this file**; a
+consumer inside this file's own subtree buys nothing, for the reason
+`FormalSchemes/RefinedOverlapRestrict.lean`'s `## Placement` gives at
+`FormalSpectrum.basicOpen_mul_le_of_basicOpen_le`.
+
 ## What is *not* proved here
 
-**The transition's symmetry law.** `FormalSpectrum.refinedOverlapTransition` at the swapped pair is
-expected to be the inverse of this one, and that is not stated here. **It is well-typed**, which is
-the first thing to know and not obvious: the swapped pair presents its *i*-side element at
-`τ.symm.symm` rather than at `τ`, and those agree by `rfl` — checked, at the completions this
-statement lives at, not assumed from `AlgEquiv.symm_symm`.
-
-**What it is not is a bookkeeping step.** Both sides are composites of four equivalences through
-different completions, and every pointwise route to the identity is a heartbeat timeout at the
-default budget: measured with `lake env lean` outside the tree, `rfl` times out at `isDefEq`,
-`AlgEquiv.ext fun _ => rfl` at `isDefEq`, and `AlgEquiv.symm_bijective.injective (by rfl)` at
-`whnf`. That is the species this cluster has recorded repeatedly at the completed-localization
-layer, and more heartbeats are not the answer to it. The statement wants a uniqueness argument
-instead, and the general one this file reaches is
-`FormalSpectrum.awayCompletion_hom_ext'` (`FormalSchemes.AwayCompletionRestrictUnique`) — two ring
-maps out of a completed localization into any adically complete ring that agree after
-`FormalSpectrum.awayCompletionHom` are equal — which is the shape to start from rather than a route
-that is known to work, since nothing here has run it.
+**The refined datum's `τ_symm` field, as opposed to the symmetry law itself.** What
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` asks for at the refined index is
+`FormalSpectrum.refinedOverlapTransition_symm` **conjugated** by the nested identification that
+presents each refined chart as a completed localization of the chart algebra above it, and that
+conjugation is not here. Issue 2198 records the obstacle by name:
+`AlgebraicGeometry.BasicOpenCover.tau_symm_conj`
+(`FormalSchemes.BasicOpenCoverTransitions`) is stated for a *three*-fold composite, and the refined
+transition field is four-fold, because a bridge fixing the spelling of the swapped overlap element
+sits inside it. **That lemma's own hypothesis is what this file now supplies**, and nothing here
+prices the conjugation.
 
 **The cocycle condition on a triple of charts**, and **nothing about `σ`, the triple overlap or the
-refined datum's laws**. Those are issue 2148's goal 2 and are scoped elsewhere; this module is the
-cross-chart transition and nothing else.
+refined datum's remaining laws**. Those are issue 2148's goal 2, scoped on issue 2198, where the
+`σ` field is already built at an abstract total coarse family; this module is the cross-chart
+transition and its symmetry, and nothing else.
 
 ## References
 
@@ -162,6 +236,68 @@ cross-chart transition and nothing else.
 noncomputable section
 
 universe u
+
+namespace AlgEquiv
+
+variable {R : Type u} [CommRing R]
+variable {X P Q Q' Y P' : Type u} [CommRing X] [CommRing P] [CommRing Q] [CommRing Q']
+  [CommRing Y] [CommRing P'] [Algebra R X] [Algebra R P] [Algebra R Q] [Algebra R Q']
+  [Algebra R Y] [Algebra R P']
+
+/-- **Two four-step composites sharing their outer identifications are mutually inverse as soon as
+their middles are.** For
+
+```
+Ni ≫ B ≫ C ≫ Nj⁻¹  :  X ≃ Y        Nj ≫ B' ≫ C' ≫ Ni⁻¹  :  Y ≃ X
+```
+
+the second is the first's inverse once `B ≫ C ≫ B' ≫ C'` is the identity of `P`. The outer
+identifications are taken in opposite orders by the two composites, so they cancel formally and
+nothing is assumed about them.
+
+**The six steps are separate arguments deliberately, and the middle is not packaged as one
+equivalence.** Stating this with `E := B ≫ C` and `F := B' ≫ C'` needs the conclusion re-associated
+to `(Ni ≫ E) ≫ Nj⁻¹`, and at the completed localizations
+`FormalSpectrum.refinedOverlapTransition_symm` applies it to, that re-association is a
+`(deterministic) timeout at whnf` at the default budget where this shape is seconds. The module
+docstring's `## The symmetry law` section carries the measurement. A general lemma about composites
+has to be shaped like the definition it is applied to, and this is that shape.
+
+Nothing of this project's subject matter appears here; see this module's `## Placement` for why the
+statement is nevertheless local. -/
+theorem trans_symm_of_middle_eq_refl
+    (Ni : X ≃ₐ[R] P) (B : P ≃ₐ[R] Q) (C : Q ≃ₐ[R] Q') (Nj : Y ≃ₐ[R] Q')
+    (B' : Q' ≃ₐ[R] P') (C' : P' ≃ₐ[R] P)
+    (hmid : (B.trans C).trans (B'.trans C') = AlgEquiv.refl) :
+    (Nj.trans B').trans (C'.trans Ni.symm)
+      = (((Ni.trans B).trans (C.trans Nj.symm)) : X ≃ₐ[R] Y).symm := by
+  have hback : ∀ q, C (B (C' (B' q))) = q := fun q => by
+    have hp := DFunLike.congr_fun hmid (C' (B' q))
+    simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hp
+    exact B'.injective (C'.injective hp)
+  refine AlgEquiv.ext fun y => ?_
+  refine (AlgEquiv.eq_symm_apply _).mpr ?_
+  simp only [AlgEquiv.trans_apply, AlgEquiv.apply_symm_apply, hback, AlgEquiv.symm_apply_apply]
+
+/-- **The round-trip form of `AlgEquiv.trans_symm_of_middle_eq_refl`**, at the same six steps and
+the same hypothesis. Not a corollary of that lemma in practice: deriving it by rewriting with the
+`symm` form puts the swapped composite's target type back in the goal in a spelling the rewrite has
+already moved, which is a recursion-depth failure at the instantiation
+`FormalSpectrum.refinedOverlapTransition_trans_symm` makes. Proved from `hmid` directly instead,
+which is three lines. -/
+theorem trans_trans_eq_refl_of_middle_eq_refl
+    (Ni : X ≃ₐ[R] P) (B : P ≃ₐ[R] Q) (C : Q ≃ₐ[R] Q') (Nj : Y ≃ₐ[R] Q')
+    (B' : Q' ≃ₐ[R] P') (C' : P' ≃ₐ[R] P)
+    (hmid : (B.trans C).trans (B'.trans C') = AlgEquiv.refl) :
+    (((Ni.trans B).trans (C.trans Nj.symm)).trans
+        ((Nj.trans B').trans (C'.trans Ni.symm)) : X ≃ₐ[R] X) = AlgEquiv.refl := by
+  refine AlgEquiv.ext fun x => ?_
+  have hx := DFunLike.congr_fun hmid (Ni x)
+  simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hx
+  simp only [AlgEquiv.trans_apply, AlgEquiv.apply_symm_apply, AlgEquiv.coe_refl, id_eq, hx,
+    AlgEquiv.symm_apply_apply]
+
+end AlgEquiv
 
 namespace FormalSpectrum
 
@@ -251,6 +387,134 @@ def refinedOverlapTransition (hI : I.FG) (gij : Ai) (gji : Aj)
       (awayCompletionNestedAlgEquivOfLe I hI gji _
         (basicOpen_mul_le_of_basicOpen_le _ h'
           (basicOpen_refinedOverlapElt_le I hI gji gij τ.symm h' h))).symm)
+
+/-! ### The base-change round trip, and the symmetry law it gives -/
+
+section BaseChangeRoundTrip
+
+variable {S T : Type u} [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
+
+/-- **Base change along `σ` and back is the identity, through any re-presentation of the presenting
+element on the way.** For an `R`-algebra equivalence `σ : S ≃ₐ[R] T` of chart algebras and `u : S`,
+`w : T` cutting out corresponding opens at each end, the composite
+
+```
+S{1/u}  ⟶  T{1/σu}  ⟶  T{1/w}  ⟶  S{1/σ⁻¹w}  ⟶  S{1/u}
+```
+
+of `FormalSpectrum.awayCompletionAlgEquivOfBase` twice and
+`FormalSpectrum.awayCompletionCongrBasicOpenAlg` twice is `AlgEquiv.refl`.
+
+**This is the only statement with content in the proof of
+`FormalSpectrum.refinedOverlapTransition_symm`**, and it is rigidity and not computation. The
+composite is an automorphism of `S{1/u}` fixing the image of `S`: the two base changes are maps
+under `S` and `T` by `FormalSpectrum.awayCompletionAlgEquivOfBase_algebraMap`, and the two
+re-presentations are maps under the base of their own ideal by `AlgEquiv.commutes`, which is what
+`AlgEquiv.restrictScalars` leaves intact. `FormalSpectrum.awayCompletion_hom_ext`
+(`FormalSchemes.AwayCompletionRestrictUnique`) then forces it to be the identity, its continuity
+hypothesis being `FormalSpectrum.le_comap_awayCompletionIdeal_algHom`
+(`FormalSchemes.AwayCompletionAlgHomBasicOpen`) at an arbitrary `R`-algebra map.
+
+**Both `huv` arguments are `rfl`**, which is what makes the two hypotheses `m` and `m'` the only
+data: the target of each base change is left to unification rather than named.
+
+Nothing about the refined overlap is used, and the two hypotheses are exactly what a cross-chart
+refined pair supplies twice over. -/
+theorem awayCompletionAlgEquivOfBase_congr_trans_eq_refl (hI : I.FG) (σ : S ≃ₐ[R] T)
+    (u : S) (w : T)
+    (m : basicOpen (I.map (algebraMap R T)) (σ u) = basicOpen (I.map (algebraMap R T)) w)
+    (m' : basicOpen (I.map (algebraMap R S)) (σ.symm w) = basicOpen (I.map (algebraMap R S)) u) :
+    ((awayCompletionAlgEquivOfBase I hI σ (rfl : σ u = σ u)).trans
+          ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m).restrictScalars R)).trans
+        ((awayCompletionAlgEquivOfBase I hI σ.symm (rfl : σ.symm w = σ.symm w)).trans
+          ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m').restrictScalars R))
+      = AlgEquiv.refl := by
+  set E := ((awayCompletionAlgEquivOfBase I hI σ (rfl : σ u = σ u)).trans
+        ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m).restrictScalars R)).trans
+      ((awayCompletionAlgEquivOfBase I hI σ.symm (rfl : σ.symm w = σ.symm w)).trans
+        ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m').restrictScalars R)) with hE
+  have key : (E : awayCompletion (I.map (algebraMap R S)) u →ₐ[R] _).toRingHom = RingHom.id _ := by
+    refine awayCompletion_hom_ext (I.map (algebraMap R S)) u u (hI.map _)
+      (le_comap_awayCompletionIdeal_algHom I u u E.toAlgHom)
+      (le_comap_awayCompletionIdeal_algHom I u u (AlgHom.id R _)) ?_
+    refine RingHom.ext fun s => ?_
+    change E (awayCompletionHom (I.map (algebraMap R S)) u s)
+      = awayCompletionHom (I.map (algebraMap R S)) u s
+    rw [awayCompletionHom_eq_algebraMap, hE]
+    simp only [AlgEquiv.trans_apply, AlgEquiv.restrictScalars_apply,
+      awayCompletionAlgEquivOfBase_algebraMap, AlgEquiv.commutes, AlgEquiv.symm_apply_apply]
+  exact AlgEquiv.ext fun x => RingHom.congr_fun key x
+
+end BaseChangeRoundTrip
+
+/-- **The transition at the swapped refined pair is this one's inverse.** This is `τ_symm` in the
+language of `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData`, which spells it
+`τ j i h.symm = (τ i j h).symm`, read at `FormalSpectrum.refinedOverlapTransition` rather than at a
+datum's field — the conjugation that turns one into the other is issue 2198's and is named in this
+module's `## What is *not* proved here`.
+
+**The statement is well-typed for a reason worth stating**: the swapped pair presents its *i*-side
+refined element at `τ.symm.symm`, and that is `τ` by `rfl` at these completions.
+
+The proof is `AlgEquiv.trans_symm_of_middle_eq_refl` at the six steps of
+`FormalSpectrum.refinedOverlapTransition` and its swap, with
+`FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans_eq_refl` as the middle. The two nested
+identifications never appear in it: the swapped composite opens with the one this composite closes
+with, so no naturality statement about `FormalSpectrum.awayCompletionNestedAlgEquivOfLe` is needed,
+and that is the whole reason this is cheap rather than the 160 s-per-lemma shape
+`FormalSchemes.BasicOpenCoverCharts` prices. **No pointwise route works** — see the module
+docstring. -/
+theorem refinedOverlapTransition_symm (hI : I.FG) (gij : Ai) (gji : Aj)
+    (τ : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji) (h : Ai) (h' : Aj) :
+    refinedOverlapTransition I hI gji gij τ.symm h' h
+      = (refinedOverlapTransition I hI gij gji τ h h').symm :=
+  AlgEquiv.trans_symm_of_middle_eq_refl
+    (awayCompletionNestedAlgEquivOfLe I hI gij _
+      (basicOpen_mul_le_of_basicOpen_le _ h
+        (basicOpen_refinedOverlapElt_le I hI gij gji τ h h')))
+    (awayCompletionAlgEquivOfBase I hI τ rfl)
+    ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) (by
+        rw [map_algebraMap_awayCompletion_eq]
+        exact basicOpen_awayCompletionAlgEquiv_mul_refinedOverlapElt I hI gij gji τ h h'
+        )).restrictScalars R)
+    (awayCompletionNestedAlgEquivOfLe I hI gji _
+      (basicOpen_mul_le_of_basicOpen_le _ h'
+        (basicOpen_refinedOverlapElt_le I hI gji gij τ.symm h' h)))
+    (awayCompletionAlgEquivOfBase I hI τ.symm rfl)
+    ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) (by
+        rw [map_algebraMap_awayCompletion_eq]
+        exact basicOpen_awayCompletionAlgEquiv_mul_refinedOverlapElt I hI gji gij τ.symm h' h
+        )).restrictScalars R)
+    (awayCompletionAlgEquivOfBase_congr_trans_eq_refl I hI τ _ _ _ _)
+
+/-- **The round-trip reading of `FormalSpectrum.refinedOverlapTransition_symm`**: going to the *j*
+presentation and back is the identity. Stated because a consumer composing refined transitions
+wants it in this form and should not have to turn the `symm` form into it — which is not free, for
+the reason `AlgEquiv.trans_trans_eq_refl_of_middle_eq_refl`'s docstring records. -/
+theorem refinedOverlapTransition_trans_symm (hI : I.FG) (gij : Ai) (gji : Aj)
+    (τ : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji) (h : Ai) (h' : Aj) :
+    (refinedOverlapTransition I hI gij gji τ h h').trans
+        (refinedOverlapTransition I hI gji gij τ.symm h' h) = AlgEquiv.refl :=
+  AlgEquiv.trans_trans_eq_refl_of_middle_eq_refl
+    (awayCompletionNestedAlgEquivOfLe I hI gij _
+      (basicOpen_mul_le_of_basicOpen_le _ h
+        (basicOpen_refinedOverlapElt_le I hI gij gji τ h h')))
+    (awayCompletionAlgEquivOfBase I hI τ rfl)
+    ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) (by
+        rw [map_algebraMap_awayCompletion_eq]
+        exact basicOpen_awayCompletionAlgEquiv_mul_refinedOverlapElt I hI gij gji τ h h'
+        )).restrictScalars R)
+    (awayCompletionNestedAlgEquivOfLe I hI gji _
+      (basicOpen_mul_le_of_basicOpen_le _ h'
+        (basicOpen_refinedOverlapElt_le I hI gji gij τ.symm h' h)))
+    (awayCompletionAlgEquivOfBase I hI τ.symm rfl)
+    ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) (by
+        rw [map_algebraMap_awayCompletion_eq]
+        exact basicOpen_awayCompletionAlgEquiv_mul_refinedOverlapElt I hI gji gij τ.symm h' h
+        )).restrictScalars R)
+    (awayCompletionAlgEquivOfBase_congr_trans_eq_refl I hI τ _ _ _ _)
 
 end FormalSpectrum
 
