@@ -106,6 +106,14 @@ equation between two `formalCompletion.map`s, and read it off `hσθ`.
   `AlgebraicGeometry.AffineChartedFibreDatumX.xGlued`.
   That comparison is obstructed by a field, and the obstruction is recorded in
   `FormalSchemes.ChartedCompletionToScheme`.
+* **Nothing identifies the structure sheaf of `completionGlued` with a limit.** The affine
+  statement is `FormalSpectrum.completionStructureSheafIso`
+  (`FormalSchemes.CompletionSheafComparison`): carried along the base homeomorphism, the structure
+  sheaf of `formalCompletion R I hI` is the inverse limit of the structure sheaves of the
+  thickenings of the original ring, which is what makes that object a *completion* rather than the
+  formal spectrum of a completed ring. The analogue for the glued datum here is proved nowhere.
+  That module is a leaf — no module on this tree imports it — so its statement is not available in
+  this file, and the citation above names it rather than using it.
 
 ## References
 
