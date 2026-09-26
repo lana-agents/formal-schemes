@@ -184,7 +184,7 @@ refined-overlap declarations below have no home but this one.
 `FormalSpectrum.basicOpen_mul_le_of_basicOpen_le` is the exception, and its ratio is recorded here
 rather than left to be re-derived: it is a general statement about `FormalSpectrum.basicOpen`, and
 its subject-matter home is beside `FormalSpectrum.basicOpen_mul` in `FormalSchemes.FormalSpectrum`,
-whose reverse closure is **537**.
+whose reverse closure is **538**.
 
 **That move has been re-costed once, and what declines it is no longer the argument first written
 here.** The first was the single call site, with the invitation to re-cost when a second appeared.
@@ -203,7 +203,7 @@ why is worth a paragraph because the obvious reading of it is wrong. It looks li
 statement about `FormalSpectrum.basicOpenChartBase` wanting a home beside that definition; it is
 not. The general statement is `FormalSpectrum.map_preimage_basicOpen` (`FormalSchemes.SpfMap`) —
 the preimage of a basic open along *any* map of formal spectra — which already has a home and a
-name, and whose reverse closure is **506**. This file already reaches it: `FormalSchemes.SpfMap`
+name, and whose reverse closure is **507**. This file already reaches it: `FormalSchemes.SpfMap`
 lies inside this file's forward closure of **41** modules. What is added below is that lemma at one
 chart, read through `SetLike.coe` so that a `rw` can use it, with
 `AlgebraicGeometry.BasicOpenCover.preimage_basicOpen_chartToBase`

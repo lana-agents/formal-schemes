@@ -191,7 +191,7 @@ without opening this file — moves the count, and `scripts/closure_audit.py --t
 that it has, because `--tree` checks the tree as it is and this sentence prices one that does not
 exist. Re-run the recipe rather than trusting the numeral. Moving the general form down to a module
 both files already reach is worse: of the thirteen such modules,
-`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **497**. So the local
+`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **498**. So the local
 copy stands, and it is at root namespace for the reason `Ideal.map_algebraMap_of_tower`
 (`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. Re-cost the import
 if a third module inside this file's own imports wants the fact;

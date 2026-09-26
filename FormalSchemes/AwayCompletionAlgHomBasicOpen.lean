@@ -130,7 +130,7 @@ its own `## Placement`. The restatement that was forced there is **not** forced 
 general forms listed above are imported rather than copied.
 
 Declined: putting the first two results beside `FormalSpectrum.map_algebraMap_awayCompletion_eq`
-in `FormalSchemes.BasicOpenChart`, whose reverse closure is **435**. That is the subject-matter
+in `FormalSchemes.BasicOpenChart`, whose reverse closure is **436**. That is the subject-matter
 home, and it would push the `FormalSchemes.CofinalCompletionAlg` edge and its five modules onto all
 435. Re-cost it if `FormalSchemes.BasicOpenChart` ever comes to import that module anyway.
 

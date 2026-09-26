@@ -354,7 +354,7 @@ this file has seen, and it is not close.
 — CONTRIBUTING.md's *What adding a module costs* is the standing account — and here that is **37**
 numerals in **17** files, every one of them a `+1`. Editing those 17 re-elaborates **538** of the
 586 modules, and the concentration is the same one CONTRIBUTING.md records: the reverse closure of
-`FormalSchemes.StructureSheaf` is **529**, and dropping that one file from the 17 takes the sweep's
+`FormalSchemes.StructureSheaf` is **530**, and dropping that one file from the 17 takes the sweep's
 rebuild to **80**. Two of the 37 are not renumberings:
 `FormalSchemes/RefinedOverlapRestrict.lean` and
 `FormalSchemes/AwayCompletionAlgHomBasicOpen.lean` each state that they are **leaves**, and this
