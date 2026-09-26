@@ -2,12 +2,13 @@ import FormalSchemes.AwayBaseChangeTopFiniteType
 import FormalSchemes.AwayCompletionAlgHomBasicOpen
 import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.AwayCompletionUniversal
+import FormalSchemes.CompletedTensorAwayInterchangePullbackLegs
 import FormalSchemes.RefinedOverlapRestrict
 
 set_option linter.style.header false
 
 /-!
-# The refined overlap's cross-chart transition
+# The refined overlap's cross-chart transition and its triple-overlap equivalence
 
 Refining an arbitrary affine chart family of a formal scheme by basic opens — the construction
 statement (A) of EGA I §10.15 waits on, issue 2148 — indexes the refined charts by pairs *⟨i, h⟩*
@@ -29,8 +30,22 @@ swapped refined pair being this one's inverse, which is `τ_symm` in the languag
 `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` — is
 `FormalSpectrum.refinedOverlapTransition_symm` beside it.
 
+**At an ordered *triple* of refined charts the same refinement needs one more piece of algebra
+data**, the `σ` field of `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData`: an `R`-algebra
+equivalence
+
+```
+A_i{1/((h · e_ij) · (h · e_ik))}  ≃ₐ[R]  A_j{1/((h' · e_jk) · (h' · e_ji))}
+```
+
+between the two readings of one refined triple overlap, sitting over the coarse
+`σ_ijk : A_i{1/(g_ij · g_ik)} ≃ₐ[R] A_j{1/(g_jk · g_ji)}`. That is
+`FormalSpectrum.refinedOverlapSigma`, in the second half of this module, by the same four-step
+route with `FormalSpectrum.basicOpen_sigma_refinedTripleOverlap` — the **triple chart-match** — in
+place of the double chart-match at the third step.
+
 **It is a composite of statements this tree already has, and it is not a descent statement.** That
-distinction is the whole reason this module is short: the span
+distinction is the whole reason the transition half of this module is short: the span
 
 ```
 A_i{1/g_ij} ⟶ A_i{1/(h · e_ij)}        A_j{1/g_ji} ⟶ A_j{1/(h' · e_ji)}
@@ -68,6 +83,24 @@ out.
   `AlgEquiv.symm_trans_symm_of_middle_eq_refl` and `AlgEquiv.trans_trans_eq_refl_of_bridges`: the
   bookkeeping that carries those two statements out to the transition and to the datum's field,
   stated for `AlgEquiv` alone.
+* `FormalSpectrum.basicOpen_sigma_refinedTripleOverlap`: the **triple chart-match** — inside
+  `Spf (A_j{1/(g_jk · g_ji)})` the *σ_ijk*-image of the *i*-side refined triple overlap is the
+  *j*-side one. This is the third step's hypothesis at the triple, it is the only statement in the
+  second half with content, and the section on it says what its crux actually is.
+* `FormalSpectrum.sigma_furtherLocSnd_transition_symm`: that crux, isolated — the *k*-chart section
+  transported into the triple overlap through chart *i* and through chart *j* is the **same
+  section**. It consumes `hστ` at the two *permuted* triples and the cocycle, and not `hστ` at the
+  unpermuted one.
+* `FormalSpectrum.refinedOverlapSigma`: the equivalence itself, and the refined datum's `σ` field
+  once a caller conjugates it by the presentation of each refined chart.
+* `FormalSpectrum.SigmaIntertwinesLegs`: `hστ` at one ordered triple, so that the statements above
+  quantify over a triple of coarse transitions and a triple of coarse `σ`s rather than over a
+  datum.
+* `FormalSpectrum.basicOpen_eq_top_of_factorwise_match`: the **refutation** of the factorwise
+  reading of the triple chart-match, which is why that statement is an identity of meets.
+* `FormalSpectrum.basicOpen_awayCompletionAlgHom_congr` and
+  `FormalSpectrum.basicOpen_awayCompletionAlgHom_inf`: the preimage statement of
+  `FormalSchemes.AwayCompletionAlgHomBasicOpen` read forwards, at an equality and at a meet.
 
 ## The route, in the order the term takes it
 
@@ -196,38 +229,100 @@ no elaboration error and the kernel rejected them afterwards. The species is the
 be shaped like the definition it is applied to — read now as *which of its arguments are already
 evaluated*, and the remedy is the same: move the step to the abstract layer.
 
+## The triple chart-match, and the two things about it that are not the obvious ones
+
+`FormalSpectrum.basicOpen_sigma_refinedTripleOverlap` is the three-chart analogue of
+`FormalSpectrum.basicOpen_awayCompletionAlgEquiv_mul_refinedOverlapElt`, and it is what the third
+step of the route asks for at a triple. Both sides of it are a product of two factors — the
+*i*-side one is `(h · e_ij) · (h · e_ik)` and the *j*-side one is `(h' · e_jk) · (h' · e_ji)` — and
+two readings of that suggest themselves. **Both are wrong, and each is wrong in its own way.**
+
+**The factorwise reading is not merely unproved, it is refutable.** Matching the *(i, j)* factor
+against the *(j, i)* factor is a theorem — `FormalSpectrum.basicOpen_sigma_refinedOverlapElt_ij`,
+and `hστ` at the unpermuted triple `(i, j, k)` is exactly what answers it. Matching the two
+remaining factors is **false**: `FormalSpectrum.basicOpen_sigma_refinedOverlapElt_ik` cuts the
+*(i, k)* factor down to `D(ĥ) ⊓ D(ĥ'')` and `FormalSpectrum.basicOpen_refinedOverlapElt_jk` cuts
+the *(j, k)* factor down to `D(ĥ') ⊓ D(ĥ'')`, and asserting those equal forces, at `h' = 1` and
+`h'' = 1`, that `D(τ_ij(ĥ))` is the whole space for **every** refining element `h`. That is
+`FormalSpectrum.basicOpen_eq_top_of_factorwise_match`, and it is stated rather than described
+because the factorwise reading is the one a reader reconstructs. So the chart match is an identity
+of **meets** — the last step of its proof is the lattice identity
+`(a ⊓ b) ⊓ (b ⊓ c) = (a ⊓ c) ⊓ (a ⊓ b)`, both sides `a ⊓ b ⊓ c`.
+
+**The content is an equality of *elements*, not of opens.** Once the two sides are resolved into
+the three refining elements, everything cancels except one thing: the *k*-chart section read into
+the triple overlap through chart *i* and read into it through chart *j* has to be the **same
+section**. That is `FormalSpectrum.sigma_furtherLocSnd_transition_symm`, it is three rewrites long,
+and what it consumes is the surprise — `hστ` at `(k, i, j)` and at `(j, k, i)`, and the **cocycle**
+`hσc` at `(i, j, k)`. `hστ` at `(i, j, k)` is not among them and cannot be: that hypothesis is
+spent, in full, on the *(i, j)* factor. A triple-overlap statement at this layer therefore needs
+the coarse datum's laws at all three rotations of the triple, and a scout that budgets only the
+unpermuted one has under-counted.
+
+**Neither half needs a naturality statement and neither carries a `set_option`.** Everything above
+is `rw` and `simp only` at the *coarse* charts, below all four nested identifications, which is
+what keeps the ~160 s-a-lemma cost `FormalSchemes.BasicOpenCoverCharts` records off this file for
+a second time. The two general transport steps that do the work,
+`FormalSpectrum.basicOpen_awayCompletionAlgHom_congr` and
+`FormalSpectrum.basicOpen_awayCompletionAlgHom_inf`, are
+`FormalSpectrum.preimage_basicOpen_awayCompletionAlgHom` read forwards, at an equality and at a
+meet.
+
+## The hypotheses are taken at a triple, and that is what leaves the totalising question open
+
+`FormalSpectrum.SigmaIntertwinesLegs` is `hστ` at one ordered triple, written with its transition
+in the direction that occurs in the statement — *out of* the target chart's overlap rather than
+into it. That spelling is chosen so that a datum's own field is this predicate **on the nose** at
+the unpermuted triple, and one `AlgEquiv.symm_symm` away from it at the two permuted ones, after
+the datum's `τ_symm`; taking the transition the other way round moves the same `AlgEquiv.symm_symm`
+into the proofs here instead, where it would be paid three times rather than twice.
+
+**So nothing in the second half knows about a datum**, exactly as in the first: the six overlap
+elements, the three coarse transitions and the three coarse `σ`s are independent arguments, and
+the three instances of `hστ` and the cocycle are hypotheses. Producing them from a family defined
+at every ordered pair and triple — the diagonal included, where a coarse datum supplies no overlap
+element — is issue 2198 §6.3, and this module does not touch it.
+
 ## Placement
 
 A leaf over `FormalSchemes.RefinedOverlapRestrict`, `FormalSchemes.AwayCompletionAlgHomBasicOpen`,
-`FormalSchemes.AwayCompletionCongrEquiv`, `FormalSchemes.AwayBaseChangeTopFiniteType` and
-`FormalSchemes.AwayCompletionUniversal`: the forward closure of
+`FormalSchemes.AwayCompletionCongrEquiv`, `FormalSchemes.AwayBaseChangeTopFiniteType`,
+`FormalSchemes.AwayCompletionUniversal` and
+`FormalSchemes.CompletedTensorAwayInterchangePullbackLegs`: the forward closure of
 `FormalSchemes.RefinedOverlapTransition` is **71** project modules besides itself (72 counted with
 itself), and the reverse closure of `FormalSchemes.RefinedOverlapTransition` is **0**.
 
-**A new module is forced, and that was measured rather than argued.** No module of this tree
-reaches all five of the above — none reaches even three of the five: of the other 585, **554**
-reach none, **26** reach exactly one and **5** reach two. So the *put it in a file that already
-imports enough* option does not exist, and the alternative is an import into an existing file,
-which is the expensive direction. `FormalSchemes.RefinedOverlapRestrict` is the closest candidate
-and reaches **41**, and it is missing four of the five: the edges to
-`FormalSchemes.AwayCompletionAlgHomBasicOpen`, `FormalSchemes.AwayCompletionCongrEquiv`,
-`FormalSchemes.AwayBaseChangeTopFiniteType` and `FormalSchemes.AwayCompletionUniversal` cost
-**+6**, **+12**, **+15** and **+16** modules there, and every consumer that file ever gains would
-inherit them.
+**A new module was forced for the transition, and that was measured rather than argued.** No
+module of this tree reaches all six of the above — the best any of the other 585 does is **three**,
+and only 4 of them manage that: **415** reach none, **146** reach exactly one and **20** reach two.
+(*Reaches* here counts a module as reaching itself, since a declaration placed in a file has that
+file's own contents; the closure convention of this section, which does not, gives 419 / 144 / 18 /
+4.) So the *put it in a file that already imports enough* option does not exist, and the
+alternative is an import into an existing file, which is the expensive direction.
+`FormalSchemes.RefinedOverlapRestrict` is the closest candidate and reaches **41**, and it is
+missing five of the six: the edges to `FormalSchemes.AwayCompletionAlgHomBasicOpen`,
+`FormalSchemes.AwayCompletionCongrEquiv`, `FormalSchemes.AwayBaseChangeTopFiniteType` and
+`FormalSchemes.AwayCompletionUniversal` cost **+6**, **+12**, **+15** and **+16** modules there,
+and every consumer that file ever gains would inherit them.
 
-**One of the five imports is free in closure terms and is kept anyway.**
+**Two of the six imports are free in closure terms and both are kept anyway.**
 `FormalSchemes.AwayBaseChangeTopFiniteType` lies inside `FormalSchemes.AwayCompletionUniversal`'s
-forward closure of **55** — that module imports it on its first line — so dropping the import line
-would leave the 71 above unchanged. It is kept because
-`FormalSpectrum.awayCompletionAlgEquivOfBase` is used here directly, which is this tree's practice
-and not a departure from it: **140** of the **586** modules under `FormalSchemes/` carry an import
-some other import of the same file already reaches, this one included. Counting only what each
-import brings that no other of the five reaches, the split is **7** for
-`FormalSchemes.AwayCompletionCongrEquiv`, **6** for
+forward closure of **55** — that module imports it on its first line — and
+`FormalSchemes.CompletedTensorAwayInterchangePullbackLegs` lies inside
+`FormalSchemes.AwayCompletionCongrEquiv`'s of **38**, so dropping either import line would leave
+the 71 above unchanged. Both are kept because `FormalSpectrum.awayCompletionAlgEquivOfBase` and
+`CompletedTensorAwayInterchange.furtherLocFst` are used here directly, which is this tree's
+practice and not a departure from it: **140** of the **586** modules under `FormalSchemes/` carry
+an import some other import of the same file already reaches, this one included. Counting only
+what each import brings that no other of the six reaches, the split is **6** for
 `FormalSchemes.AwayCompletionAlgHomBasicOpen`, **2** for
-`FormalSchemes.RefinedOverlapRestrict`, **1** for `FormalSchemes.AwayCompletionUniversal` and
-**0** for `FormalSchemes.AwayBaseChangeTopFiniteType`; the remaining 55 of the 71 are reached by
-more than one of them.
+`FormalSchemes.RefinedOverlapRestrict`, **1** each for
+`FormalSchemes.AwayCompletionCongrEquiv` and `FormalSchemes.AwayCompletionUniversal`, and **0**
+for the two free ones; the remaining 61 of the 71 are reached by more than one of them. **The
+sixth import is what moved that split**, and it is worth naming as the general fact: it took
+`FormalSchemes.AwayCompletionCongrEquiv`'s unique contribution from **7** to **1**, because six of
+that module's seven are inside the sixth import's own closure. *A free import can still change
+what every other import of the same file is buying.*
 
 **The fifth import is the conjugated symmetry law's, and it was priced before it was written.**
 `CompletedTensorAwayInterchange.awayCongrEquivOfEq` is the only transport along an equality of away
@@ -237,6 +332,21 @@ were this edge or a new module over this one. `scripts/closure_audit.py --edge` 
 **7** modules and **3** figure repairs in **2** files, against the **37** in **17** that adding
 this module cost; this file's reverse closure of **0** is what makes that comparison lopsided, and
 the same edge at a file with consumers would not be.
+
+**The sixth import is the triple overlap's, and it is the reason the second half is in this file
+rather than in a module over it.** `CompletedTensorAwayInterchange.furtherLocFst` and
+`CompletedTensorAwayInterchange.furtherLocSnd` are the two legs
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` states `hστ` with, so nothing about a
+refined `σ` can be said without reaching
+`FormalSchemes.CompletedTensorAwayInterchangePullbackLegs`, and the choice was that edge or a
+module over this one. `scripts/closure_audit.py --edge` prices the edge at **0** modules brought
+in, and reports that it moves no forward closure, no reverse closure and no quoted figure anywhere
+on the tree — that module is already inside this file's 71, through
+`FormalSchemes.AwayCompletionCongrEquiv`. The module was priced the way CONTRIBUTING.md's *What
+adding a module costs* says to, by writing the file and running `--tree` against it: **38** figure
+repairs in **18** files, whose union re-elaborates **539** of the 586 modules, **81** of them
+without `FormalSchemes/StructureSheaf.lean`. So the comparison here is **0 against 38**, the widest
+this file has seen, and it is not close.
 
 **What the module costs is the figure sweep, not the build.** Adding any module under
 `FormalSchemes/` falsifies every absolute *reverse*-closure figure quoted about anything it imports
@@ -256,7 +366,7 @@ at; they are not standing claims about any later tree and nothing re-runs them. 
 `scripts/closure_audit.py --tree`, and price any sixth import with `--edge` before writing a word
 about it.
 
-**Five of the statements below are general and all five are kept here, and the decisive one is
+**Seven of the statements below are general and all seven are kept here, and the decisive one is
 decided by a walk rather than by taste.**
 `FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans_eq_refl` is general in both its chart
 algebras and names nothing of the refined overlap, so its subject-matter home is beside the base
@@ -274,31 +384,46 @@ offered to Mathlib on that argument should carry Mathlib's hypotheses. The neare
 subject-matter home here is an early module about algebra equivalences, and of those
 `FormalSchemes.AdicCompletionCongrIdealAlg` is the cheapest, at a reverse closure of **196**
 against this file's **0**, with one call site each. Declined on that ratio, which is this tree's
-standing disposition for a general statement with a single call site. **Re-cost all five when a
-consumer appears that does not reach this file**; a
+standing disposition for a general statement with a single call site.
+`FormalSpectrum.basicOpen_awayCompletionAlgHom_congr` and
+`FormalSpectrum.basicOpen_awayCompletionAlgHom_inf` are the two where that argument is **weakest
+and is stated as such**: their subject-matter home is exact —
+`FormalSchemes.AwayCompletionAlgHomBasicOpen`, whose own preimage statement they are — and they
+elaborate there, measured, in **2.9 s** against that module alone, so the move is available and
+not merely conjectured. The reverse closure of `FormalSchemes.AwayCompletionAlgHomBasicOpen` is
+**1**, this file, so the move would cost a one-module re-elaboration rather than the 196 above.
+They are kept here on the single-call-site half of the disposition alone, and **that is the one to
+revisit first** when anything else on this tree wants a basic open transported along a map of
+completed localizations. **Re-cost all seven when a consumer appears that does not reach this
+file**; a
 consumer inside this file's own subtree buys nothing, for the reason
 `FormalSchemes/RefinedOverlapRestrict.lean`'s `## Placement` gives at
 `FormalSpectrum.basicOpen_mul_le_of_basicOpen_le`.
 
 ## What is *not* proved here
 
-**The refined datum itself, and every field of it except `τ_symm`.**
-`FormalSpectrum.refinedOverlapTransition_conj_symm` is one field of
-`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` at the refined index and nothing takes
-the smart constructor's remaining arguments; no `AlgebraicGeometry.AffineChartedFibreDatumX` is
-built anywhere on this tree from a refined chart family. Fed slot 0's scouting instantiation on
-issue 2198, the conjugated law closes the `τ_symm` argument and leaves `σ`, `hστ` and `hσc`.
+**The refined datum itself, and the two laws `hστ` and `hσc` at the refined index.**
+`FormalSpectrum.refinedOverlapTransition_conj_symm` and `FormalSpectrum.refinedOverlapSigma` are
+two of the fields `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` asks for at that
+index, and nothing here takes the smart constructor's remaining arguments; no
+`AlgebraicGeometry.AffineChartedFibreDatumX` is built anywhere on this tree from a refined chart
+family. Fed slot 0's scouting instantiation on issue 2198 — with the refined `σ` conjugated by the
+nested identification at the triple, which is a caller's three lines and not a statement here —
+the two of them close the `τ_symm` and `σ` arguments and leave `hστ` and `hσc`.
 
-**The cocycle condition on a triple of charts**, and **nothing about `σ`, the triple overlap or the
-refined datum's remaining laws**. Those are issue 2148's goal 2, scoped on issue 2198, where the
-`σ` field is already built at an abstract total coarse family; this module is the cross-chart
-transition, its symmetry and that symmetry's conjugate, and nothing else.
+**Nothing about the refined `σ`'s own laws.** `FormalSpectrum.refinedOverlapSigma` is a
+four-step composite exactly as `FormalSpectrum.refinedOverlapTransition` is, and this module
+proves for it no analogue of `FormalSpectrum.refinedOverlapTransition_symm`: neither the
+compatibility of the refined `σ` with the refined transition nor the refined cocycle is stated,
+and neither was priced. The outer-steps-cancel argument that made the symmetry law cheap twice
+does **not** obviously transfer, because a triple's three nested identifications are at three
+different charts and do not pair off.
 
-**The refining elements are arbitrary here, and a datum's are not.** Both statements of the
-conjugated law quantify over `h`, `h'` and over the two coarse transitions independently, with the
-datum's symmetry law supplied as a hypothesis `hs`. Producing that hypothesis from a family defined
-at every ordered pair — including the diagonal, where a coarse datum supplies no overlap element —
-is issue 2198 §6.3 and is not priced here.
+**The refining elements are arbitrary here, and a datum's are not.** Every statement in both
+halves quantifies over `h`, `h'`, `h''` and over the coarse transitions and the coarse `σ`s
+independently, with the datum's symmetry law and its two triple laws supplied as hypotheses.
+Producing those from families defined at every ordered pair and triple — including the diagonal,
+where a coarse datum supplies no overlap element — is issue 2198 §6.3 and is not priced here.
 
 ## References
 
@@ -731,6 +856,436 @@ theorem refinedOverlapTransition_conj_symm (hI : I.FG) (gij : Ai) (gji : Aj)
           ((awayCongrEquivOfEq I hj).trans Mj)) : Xi ≃ₐ[R] Xj).symm :=
   AlgEquiv.symm_trans_symm_of_middle_eq_refl _ _ _ _ _ _
     (refinedOverlapTransition_bridge_trans_eq_refl I hI gij gji τij τji hs h h' hj hi)
+
+section TripleOverlap
+
+variable {Ak : Type u} [CommRing Ak] [Algebra R Ak]
+
+/-! ### Two transport steps for a basic open along a map of completed localizations -/
+
+/-- **An algebra map of completed localizations carries equal basic opens to equal basic opens.**
+The preimage statement `FormalSpectrum.preimage_basicOpen_awayCompletionAlgHom` read forwards. -/
+theorem basicOpen_awayCompletionAlgHom_congr (f : Ai) (g : Aj)
+    (φ : awayCompletion (I.map (algebraMap R Ai)) f →ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) g)
+    {x y : awayCompletion (I.map (algebraMap R Ai)) f}
+    (hxy : basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) f) x
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) f) y) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) g) (φ x)
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) g) (φ y) := by
+  rw [← preimage_basicOpen_awayCompletionAlgHom I f g φ x,
+    ← preimage_basicOpen_awayCompletionAlgHom I f g φ y, hxy]
+
+/-- **An algebra map of completed localizations carries a basic open written as a meet to the meet
+of the images.** The meet is spelled as a product on the way in and back out, which is what
+`FormalSpectrum.basicOpen_mul` does at both ends. -/
+theorem basicOpen_awayCompletionAlgHom_inf (f : Ai) (g : Aj)
+    (φ : awayCompletion (I.map (algebraMap R Ai)) f →ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) g)
+    {x a b : awayCompletion (I.map (algebraMap R Ai)) f}
+    (hx : basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) f) x
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) f) a
+        ⊓ basicOpen (awayCompletionIdeal (I.map (algebraMap R Ai)) f) b) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) g) (φ x)
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) g) (φ a)
+        ⊓ basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) g) (φ b) := by
+  rw [← basicOpen_mul] at hx
+  rw [basicOpen_awayCompletionAlgHom_congr I f g φ hx, map_mul, basicOpen_mul]
+
+/-- **The first further-localization leg is the structure map on the nose.** -/
+theorem furtherLocFst_awayCompletionHom (hI : I.FG) (d₁ d₂ d : Ai) :
+    furtherLocFst I d₁ d₂ hI (awayCompletionHom (I.map (algebraMap R Ai)) d₁ d)
+      = awayCompletionHom (I.map (algebraMap R Ai)) (d₁ * d₂) d := by
+  rw [awayCompletionHom_eq_algebraMap, awayCompletionHom_eq_algebraMap, furtherLocFst_algebraMap]
+
+/-- **The second further-localization leg is the structure map on the nose.** -/
+theorem furtherLocSnd_awayCompletionHom (hI : I.FG) (d₁ d₂ d : Ai) :
+    furtherLocSnd I d₁ d₂ hI (awayCompletionHom (I.map (algebraMap R Ai)) d₂ d)
+      = awayCompletionHom (I.map (algebraMap R Ai)) (d₁ * d₂) d := by
+  rw [awayCompletionHom_eq_algebraMap, awayCompletionHom_eq_algebraMap, furtherLocSnd_algebraMap]
+
+/-! ### The hypothesis, once, at an arbitrary ordered triple -/
+
+/-- **`hστ` at one ordered triple of charts**, in the spelling
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` states it: the inverse of the
+triple-overlap equivalence `s` intertwines the two further-localization legs with `θ`.
+
+`θ` is taken in the direction it occurs in — *out of* the target chart's double overlap — so that
+a datum's field is this predicate on the nose at the unpermuted triple, and one
+`AlgEquiv.symm_symm` away from it at the two permuted ones. -/
+abbrev SigmaIntertwinesLegs (hI : I.FG) (u₁ u₂ : Ai) (v₁ v₂ : Aj)
+    (θ : awayCompletion (I.map (algebraMap R Aj)) v₂ ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) u₁)
+    (s : awayCompletion (I.map (algebraMap R Ai)) (u₁ * u₂) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (v₁ * v₂)) : Prop :=
+  s.symm.toAlgHom.comp (furtherLocSnd I v₁ v₂ hI)
+    = (furtherLocFst I u₁ u₂ hI).comp θ.toAlgHom
+
+variable (hI : I.FG) (gij gik : Ai) (gji gjk : Aj) (gki gkj : Ak)
+
+/-! ### The two factors of the chart match -/
+
+/-- **`hστ` read forwards**: the triple-overlap equivalence carries the first leg's image of a
+section of the *i*-chart overlap to the second leg's image of its transition. -/
+theorem sigma_furtherLocFst
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (hijk : SigmaIntertwinesLegs I hI gij gik gjk gji τij.symm σijk)
+    (x : awayCompletion (I.map (algebraMap R Ai)) gij) :
+    σijk (furtherLocFst I gij gik hI x) = furtherLocSnd I gjk gji hI (τij x) := by
+  have h := AlgHom.congr_fun hijk (τij x)
+  simp only [AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgEquiv.symm_apply_apply] at h
+  rw [← h, σijk.apply_symm_apply]
+
+/-- **The *(i, j)* factor of the chart match, and `hστ` at the unpermuted triple answers it.**
+Inside `Spf (A_j{1/(g_jk · g_ji)})` the triple-overlap equivalence carries the *i*-side refined
+overlap at the pair *⟨i, h⟩*, *⟨j, h'⟩* to the *j*-side one. -/
+theorem basicOpen_sigma_refinedOverlapElt_ij
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (hijk : SigmaIntertwinesLegs I hI gij gik gjk gji τij.symm σijk) (h : Ai) (h' : Aj) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+        (σijk (awayCompletionHom (I.map (algebraMap R Ai)) (gij * gik)
+          (h * refinedOverlapElt I hI gij gji τij h h')))
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+          (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji)
+            (h' * refinedOverlapElt I hI gji gij τij.symm h' h)) := by
+  rw [← furtherLocFst_awayCompletionHom I hI gij gik,
+    sigma_furtherLocFst I hI gij gik gji gjk τij σijk hijk,
+    ← furtherLocSnd_awayCompletionHom I hI gjk gji]
+  refine basicOpen_awayCompletionAlgHom_congr I gji (gjk * gji) (furtherLocSnd I gjk gji hI) ?_
+  rw [basicOpen_awayCompletionHom_mul_refinedOverlapElt I hI gji gij τij.symm h' h,
+    AlgEquiv.symm_symm, ← τij.apply_symm_apply (awayCompletionHom
+      (I.map (algebraMap R Aj)) gji h'), ← basicOpen_mul, ← map_mul,
+    basicOpen_awayCompletionAlgEquiv_eq_iff I gij gji τij, basicOpen_mul,
+    basicOpen_awayCompletionHom_mul_refinedOverlapElt I hI gij gji τij h h']
+  exact inf_comm _ _
+
+/-! ### The crux: the *k*-chart section read through *i* and through *j* -/
+
+/-- The *k*-chart section pushed into the *i*-side triple overlap, through `hστ` at `(k, i, j)`. -/
+theorem furtherLocSnd_transition_symm_awayCompletionHom
+    (τik : awayCompletion (I.map (algebraMap R Ai)) gik ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gki)
+    (σkij : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) (gij * gik))
+    (hkij : SigmaIntertwinesLegs I hI gki gkj gij gik τik σkij) (c : Ak) :
+    furtherLocSnd I gij gik hI (τik.symm (awayCompletionHom (I.map (algebraMap R Ak)) gki c))
+      = σkij (awayCompletionHom (I.map (algebraMap R Ak)) (gki * gkj) c) := by
+  have h := AlgHom.congr_fun hkij
+    (τik.symm (awayCompletionHom (I.map (algebraMap R Ak)) gki c))
+  simp only [AlgHom.comp_apply, AlgEquiv.coe_toAlgHom, AlgEquiv.apply_symm_apply] at h
+  rw [furtherLocFst_awayCompletionHom I hI gki gkj c] at h
+  rw [← h, σkij.apply_symm_apply]
+
+/-- The *k*-chart section pushed into the *j*-side triple overlap, through `hστ` at `(j, k, i)`. -/
+theorem furtherLocFst_transition_symm_awayCompletionHom
+    (τjk : awayCompletion (I.map (algebraMap R Aj)) gjk ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gkj)
+    (σjki : awayCompletion (I.map (algebraMap R Aj)) (gjk * gji) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) (gki * gkj))
+    (hjki : SigmaIntertwinesLegs I hI gjk gji gki gkj τjk.symm σjki) (c : Ak) :
+    furtherLocFst I gjk gji hI (τjk.symm (awayCompletionHom (I.map (algebraMap R Ak)) gkj c))
+      = σjki.symm (awayCompletionHom (I.map (algebraMap R Ak)) (gki * gkj) c) := by
+  have h := AlgHom.congr_fun hjki (awayCompletionHom (I.map (algebraMap R Ak)) gkj c)
+  simp only [AlgHom.comp_apply, AlgEquiv.coe_toAlgHom] at h
+  rw [furtherLocSnd_awayCompletionHom I hI gki gkj c] at h
+  exact h.symm
+
+/-- The cocycle, read as a two-step identity out of the *k*-side triple overlap. -/
+theorem sigma_sigma_eq_sigma_symm
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (σjki : awayCompletion (I.map (algebraMap R Aj)) (gjk * gji) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) (gki * gkj))
+    (σkij : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) (gij * gik))
+    (hc : σijk.trans (σjki.trans σkij) = AlgEquiv.refl)
+    (u : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj)) :
+    σijk (σkij u) = σjki.symm u := by
+  have hx := AlgEquiv.ext_iff.mp hc (σijk.symm (σjki.symm u))
+  simp only [AlgEquiv.trans_apply, AlgEquiv.apply_symm_apply, AlgEquiv.coe_refl, id_eq] at hx
+  rw [hx, σijk.apply_symm_apply]
+
+/-- **The crux, and it is an equality of *elements*.** The *k*-chart section transported into the
+triple overlap through chart *i* and through chart *j* is the same section. It needs `hστ` at the
+two **permuted** triples and the cocycle; `hστ` at `(i, j, k)` is not used. -/
+theorem sigma_furtherLocSnd_transition_symm
+    (τik : awayCompletion (I.map (algebraMap R Ai)) gik ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gki)
+    (τjk : awayCompletion (I.map (algebraMap R Aj)) gjk ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gkj)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (σjki : awayCompletion (I.map (algebraMap R Aj)) (gjk * gji) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) (gki * gkj))
+    (σkij : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) (gij * gik))
+    (hkij : SigmaIntertwinesLegs I hI gki gkj gij gik τik σkij)
+    (hjki : SigmaIntertwinesLegs I hI gjk gji gki gkj τjk.symm σjki)
+    (hc : σijk.trans (σjki.trans σkij) = AlgEquiv.refl) (c : Ak) :
+    σijk (furtherLocSnd I gij gik hI
+        (τik.symm (awayCompletionHom (I.map (algebraMap R Ak)) gki c)))
+      = furtherLocFst I gjk gji hI
+          (τjk.symm (awayCompletionHom (I.map (algebraMap R Ak)) gkj c)) := by
+  rw [furtherLocSnd_transition_symm_awayCompletionHom I hI gij gik gki gkj τik σkij hkij c,
+    sigma_sigma_eq_sigma_symm I gij gik gji gjk gki gkj σijk σjki σkij hc,
+    furtherLocFst_transition_symm_awayCompletionHom I hI gji gjk gki gkj τjk σjki hjki c]
+
+/-! ### The triple chart-match -/
+
+/-- The triple-overlap equivalence carries the *i*-side reading of a refining element to its
+*j*-side reading. -/
+theorem sigma_awayCompletionHom
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (hijk : SigmaIntertwinesLegs I hI gij gik gjk gji τij.symm σijk) (h : Ai) :
+    σijk (awayCompletionHom (I.map (algebraMap R Ai)) (gij * gik) h)
+      = furtherLocSnd I gjk gji hI (τij (awayCompletionHom (I.map (algebraMap R Ai)) gij h)) := by
+  rw [← furtherLocFst_awayCompletionHom I hI gij gik,
+    sigma_furtherLocFst I hI gij gik gji gjk τij σijk hijk]
+
+/-- **The *(i, k)* factor of the chart match, resolved into the two refining elements.** -/
+theorem basicOpen_sigma_refinedOverlapElt_ik
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (τik : awayCompletion (I.map (algebraMap R Ai)) gik ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gki)
+    (τjk : awayCompletion (I.map (algebraMap R Aj)) gjk ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gkj)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (σjki : awayCompletion (I.map (algebraMap R Aj)) (gjk * gji) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) (gki * gkj))
+    (σkij : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) (gij * gik))
+    (hijk : SigmaIntertwinesLegs I hI gij gik gjk gji τij.symm σijk)
+    (hkij : SigmaIntertwinesLegs I hI gki gkj gij gik τik σkij)
+    (hjki : SigmaIntertwinesLegs I hI gjk gji gki gkj τjk.symm σjki)
+    (hc : σijk.trans (σjki.trans σkij) = AlgEquiv.refl) (h : Ai) (h'' : Ak) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+        (σijk (awayCompletionHom (I.map (algebraMap R Ai)) (gij * gik)
+          (h * refinedOverlapElt I hI gik gki τik h h'')))
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+            (furtherLocSnd I gjk gji hI (τij (awayCompletionHom
+              (I.map (algebraMap R Ai)) gij h)))
+        ⊓ basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+            (furtherLocFst I gjk gji hI (τjk.symm (awayCompletionHom
+              (I.map (algebraMap R Ak)) gkj h''))) := by
+  rw [← furtherLocSnd_awayCompletionHom I hI gij gik]
+  have key := basicOpen_awayCompletionAlgHom_inf I (gij * gik) (gjk * gji) σijk.toAlgHom
+    (basicOpen_awayCompletionAlgHom_inf I gik (gij * gik) (furtherLocSnd I gij gik hI)
+      (basicOpen_awayCompletionHom_mul_refinedOverlapElt I hI gik gki τik h h''))
+  simp only [AlgEquiv.coe_toAlgHom] at key
+  rw [key, furtherLocSnd_awayCompletionHom I hI gij gik,
+    sigma_awayCompletionHom I hI gij gik gji gjk τij σijk hijk,
+    sigma_furtherLocSnd_transition_symm I hI gij gik gji gjk gki gkj τik τjk σijk σjki σkij
+      hkij hjki hc]
+
+/-- **The *j*-side *(j, k)* factor, resolved into the two refining elements.** -/
+theorem basicOpen_refinedOverlapElt_jk
+    (τjk : awayCompletion (I.map (algebraMap R Aj)) gjk ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gkj) (h' : Aj) (h'' : Ak) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+        (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji)
+          (h' * refinedOverlapElt I hI gjk gkj τjk h' h''))
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+            (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji) h')
+        ⊓ basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+            (furtherLocFst I gjk gji hI (τjk.symm (awayCompletionHom
+              (I.map (algebraMap R Ak)) gkj h''))) := by
+  have key := basicOpen_awayCompletionAlgHom_inf I gjk (gjk * gji) (furtherLocFst I gjk gji hI)
+    (basicOpen_awayCompletionHom_mul_refinedOverlapElt I hI gjk gkj τjk h' h'')
+  rwa [furtherLocFst_awayCompletionHom I hI gjk gji
+      (h' * refinedOverlapElt I hI gjk gkj τjk h' h''),
+    furtherLocFst_awayCompletionHom I hI gjk gji h'] at key
+
+/-- **The *j*-side *(j, i)* factor, resolved into the two refining elements.** -/
+theorem basicOpen_refinedOverlapElt_ji
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji) (h : Ai) (h' : Aj) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+        (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji)
+          (h' * refinedOverlapElt I hI gji gij τij.symm h' h))
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+            (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji) h')
+        ⊓ basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+            (furtherLocSnd I gjk gji hI (τij (awayCompletionHom
+              (I.map (algebraMap R Ai)) gij h))) := by
+  have key := basicOpen_awayCompletionAlgHom_inf I gji (gjk * gji) (furtherLocSnd I gjk gji hI)
+    (basicOpen_awayCompletionHom_mul_refinedOverlapElt I hI gji gij τij.symm h' h)
+  rw [AlgEquiv.symm_symm] at key
+  rwa [furtherLocSnd_awayCompletionHom I hI gjk gji
+      (h' * refinedOverlapElt I hI gji gij τij.symm h' h),
+    furtherLocSnd_awayCompletionHom I hI gjk gji h'] at key
+
+/-- **The triple chart-match.** Inside `Spf (A_j{1/(g_jk · g_ji)})` the image under the coarse
+triple-overlap equivalence of the *i*-side refined triple overlap is the *j*-side refined triple
+overlap.
+
+The two sides do **not** match factor by factor: the *i*-side *(i, k)* factor cuts out
+`D(h) ⊓ D(h'')` and the *j*-side *(j, k)* factor cuts out `D(h') ⊓ D(h'')`. Only the two *meets*
+agree, and the last step is the lattice identity `(a ⊓ b) ⊓ (b ⊓ c) = (a ⊓ c) ⊓ (a ⊓ b)`.
+`FormalSpectrum.basicOpen_eq_top_of_factorwise_match` is the refutation of the factorwise
+reading. -/
+theorem basicOpen_sigma_refinedTripleOverlap
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (τik : awayCompletion (I.map (algebraMap R Ai)) gik ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gki)
+    (τjk : awayCompletion (I.map (algebraMap R Aj)) gjk ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gkj)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (σjki : awayCompletion (I.map (algebraMap R Aj)) (gjk * gji) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) (gki * gkj))
+    (σkij : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) (gij * gik))
+    (hijk : SigmaIntertwinesLegs I hI gij gik gjk gji τij.symm σijk)
+    (hkij : SigmaIntertwinesLegs I hI gki gkj gij gik τik σkij)
+    (hjki : SigmaIntertwinesLegs I hI gjk gji gki gkj τjk.symm σjki)
+    (hc : σijk.trans (σjki.trans σkij) = AlgEquiv.refl) (h : Ai) (h' : Aj) (h'' : Ak) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+        (σijk (awayCompletionHom (I.map (algebraMap R Ai)) (gij * gik)
+          ((h * refinedOverlapElt I hI gij gji τij h h') *
+            (h * refinedOverlapElt I hI gik gki τik h h''))))
+      = basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+          (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji)
+            ((h' * refinedOverlapElt I hI gjk gkj τjk h' h'') *
+              (h' * refinedOverlapElt I hI gji gij τij.symm h' h))) := by
+  rw [map_mul (awayCompletionHom (I.map (algebraMap R Ai)) (gij * gik)), map_mul σijk,
+    map_mul (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji)),
+    basicOpen_mul, basicOpen_mul,
+    basicOpen_sigma_refinedOverlapElt_ij I hI gij gik gji gjk τij σijk hijk h h',
+    basicOpen_sigma_refinedOverlapElt_ik I hI gij gik gji gjk gki gkj τij τik τjk σijk σjki σkij
+      hijk hkij hjki hc h h'',
+    basicOpen_refinedOverlapElt_jk I hI gji gjk gkj τjk h' h'',
+    basicOpen_refinedOverlapElt_ji I hI gij gji gjk τij h h']
+  generalize basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+    (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji) h') = a
+  generalize basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+    (furtherLocSnd I gjk gji hI (τij (awayCompletionHom (I.map (algebraMap R Ai)) gij h))) = b
+  generalize basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+    (furtherLocFst I gjk gji hI (τjk.symm (awayCompletionHom
+      (I.map (algebraMap R Ak)) gkj h''))) = c
+  -- `(a ⊓ b) ⊓ (b ⊓ c) = (a ⊓ c) ⊓ (a ⊓ b)`, both sides `a ⊓ b ⊓ c`
+  rw [inf_assoc, inf_assoc, ← inf_assoc b b c, inf_idem, ← inf_assoc c a b, inf_comm c a,
+    inf_assoc a c b, ← inf_assoc a a (c ⊓ b), inf_idem, inf_comm c b]
+
+/-! ### The refined triple overlap, and the equivalence between its two readings -/
+
+/-- The refined triple overlap sits inside the coarse one. -/
+theorem basicOpen_refinedTripleOverlap_le
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (τik : awayCompletion (I.map (algebraMap R Ai)) gik ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gki) (h : Ai) (h' : Aj) (h'' : Ak) :
+    basicOpen (I.map (algebraMap R Ai))
+        ((h * refinedOverlapElt I hI gij gji τij h h') *
+          (h * refinedOverlapElt I hI gik gki τik h h''))
+      ≤ basicOpen (I.map (algebraMap R Ai)) (gij * gik) := by
+  rw [basicOpen_mul (I.map (algebraMap R Ai)) (h * refinedOverlapElt I hI gij gji τij h h')
+      (h * refinedOverlapElt I hI gik gki τik h h''),
+    basicOpen_mul (I.map (algebraMap R Ai)) gij gik]
+  exact inf_le_inf
+    (basicOpen_mul_le_of_basicOpen_le _ h (basicOpen_refinedOverlapElt_le I hI gij gji τij h h'))
+    (basicOpen_mul_le_of_basicOpen_le _ h (basicOpen_refinedOverlapElt_le I hI gik gki τik h h''))
+
+/-- **The refined triple-overlap equivalence.** The same four-step composite
+`FormalSpectrum.refinedOverlapTransition` takes, with
+`FormalSpectrum.basicOpen_sigma_refinedTripleOverlap` in place of the double chart-match at the
+third step. -/
+def refinedOverlapSigma
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (τik : awayCompletion (I.map (algebraMap R Ai)) gik ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gki)
+    (τjk : awayCompletion (I.map (algebraMap R Aj)) gjk ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gkj)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (σjki : awayCompletion (I.map (algebraMap R Aj)) (gjk * gji) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) (gki * gkj))
+    (σkij : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) (gij * gik))
+    (hijk : SigmaIntertwinesLegs I hI gij gik gjk gji τij.symm σijk)
+    (hkij : SigmaIntertwinesLegs I hI gki gkj gij gik τik σkij)
+    (hjki : SigmaIntertwinesLegs I hI gjk gji gki gkj τjk.symm σjki)
+    (hc : σijk.trans (σjki.trans σkij) = AlgEquiv.refl) (h : Ai) (h' : Aj) (h'' : Ak) :
+    awayCompletion (I.map (algebraMap R Ai))
+        ((h * refinedOverlapElt I hI gij gji τij h h') *
+          (h * refinedOverlapElt I hI gik gki τik h h'')) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj))
+        ((h' * refinedOverlapElt I hI gjk gkj τjk h' h'') *
+          (h' * refinedOverlapElt I hI gji gij τij.symm h' h)) :=
+  ((awayCompletionNestedAlgEquivOfLe I hI (gij * gik) _
+          (basicOpen_refinedTripleOverlap_le I hI gij gik gji gki τij τik h h' h'')).trans
+        (awayCompletionAlgEquivOfBase I hI σijk rfl)).trans
+    (((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) (by
+          rw [map_algebraMap_awayCompletion_eq]
+          exact basicOpen_sigma_refinedTripleOverlap I hI gij gik gji gjk gki gkj τij τik τjk
+            σijk σjki σkij hijk hkij hjki hc h h' h'')).restrictScalars R).trans
+      (awayCompletionNestedAlgEquivOfLe I hI (gjk * gji) _
+        (basicOpen_refinedTripleOverlap_le I hI gjk gji gkj gij τjk τij.symm h' h'' h)).symm)
+
+/-! ### Why the factorwise reading of the chart match is not a theorem -/
+
+/-- **The factorwise reading of the triple chart-match is refutable.**
+`FormalSpectrum.basicOpen_sigma_refinedOverlapElt_ik` and
+`FormalSpectrum.basicOpen_refinedOverlapElt_jk` describe the two *(·, k)* factors, and they are
+**different** opens: `D(h) ⊓ D(h'')` against `D(h') ⊓ D(h'')`. Asserting them equal — which is
+what a factor-by-factor reading asks for — forces, at `h' = 1` and `h'' = 1`, that `D(τ_ij(ĥ))` is
+the whole space for **every** refining element `h`. So the chart match is an identity of *meets*
+and not of factors. -/
+theorem basicOpen_eq_top_of_factorwise_match
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (τik : awayCompletion (I.map (algebraMap R Ai)) gik ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gki)
+    (τjk : awayCompletion (I.map (algebraMap R Aj)) gjk ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gkj)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (σjki : awayCompletion (I.map (algebraMap R Aj)) (gjk * gji) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) (gki * gkj))
+    (σkij : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) (gij * gik))
+    (hijk : SigmaIntertwinesLegs I hI gij gik gjk gji τij.symm σijk)
+    (hkij : SigmaIntertwinesLegs I hI gki gkj gij gik τik σkij)
+    (hjki : SigmaIntertwinesLegs I hI gjk gji gki gkj τjk.symm σjki)
+    (hc : σijk.trans (σjki.trans σkij) = AlgEquiv.refl)
+    (hfac : ∀ (h : Ai) (h' : Aj) (h'' : Ak),
+      basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+          (σijk (awayCompletionHom (I.map (algebraMap R Ai)) (gij * gik)
+            (h * refinedOverlapElt I hI gik gki τik h h'')))
+        = basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+            (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji)
+              (h' * refinedOverlapElt I hI gjk gkj τjk h' h'')))
+    (h : Ai) :
+    basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+      (furtherLocSnd I gjk gji hI (τij (awayCompletionHom
+        (I.map (algebraMap R Ai)) gij h))) = ⊤ := by
+  have key := hfac h 1 1
+  rw [basicOpen_sigma_refinedOverlapElt_ik I hI gij gik gji gjk gki gkj τij τik τjk σijk σjki σkij
+      hijk hkij hjki hc h 1,
+    basicOpen_refinedOverlapElt_jk I hI gji gjk gkj τjk 1 1] at key
+  -- both `D(1)`s are the whole space
+  rw [show basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+        (furtherLocFst I gjk gji hI (τjk.symm (awayCompletionHom
+          (I.map (algebraMap R Ak)) gkj 1))) = ⊤ by
+      rw [map_one, map_one, map_one, basicOpen_one],
+    show basicOpen (awayCompletionIdeal (I.map (algebraMap R Aj)) (gjk * gji))
+        (awayCompletionHom (I.map (algebraMap R Aj)) (gjk * gji) (1 : Aj)) = ⊤ by
+      rw [map_one, basicOpen_one]] at key
+  simpa using key
+
+end TripleOverlap
 
 end FormalSpectrum
 
