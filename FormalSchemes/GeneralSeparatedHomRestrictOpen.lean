@@ -117,7 +117,7 @@ Two of those three helpers now **have** that second consumer, which is the event
 asks to be recorded: `FormalSpectrum.locallyRingedSpaceObjCongr` and
 `FormalSpectrum.locallyRingedSpaceObjCongr_hom_eq_map` are used here as well as by
 `AlgebraicGeometry.spf_isSeparatedOverSpf_self`. The ratio that declined their move has not changed
-— `FormalSchemes.FormalSpectrum`'s reverse closure is **536** — so this records the second consumer
+— `FormalSchemes.FormalSpectrum`'s reverse closure is **537** — so this records the second consumer
 and moves nothing.
 
 ## Main definitions and results
@@ -580,7 +580,7 @@ audited before this disposition was taken, and the next two figures are that one
 a tree that was then discarded rather than a standing claim about this one. It cost **25**
 `scripts/closure_audit.py` MISMATCHes across **20** files: every module in the leaf's import
 closure whose docstring quotes how many dependents it has gains one of them. The reverse closure of
-`FormalSchemes.StructureSheaf` is **528**, and that file is one of the twenty, so what prices the
+`FormalSchemes.StructureSheaf` is **529**, and that file is one of the twenty, so what prices the
 disposition is the repair and not the leaf. In this file the audit is unmoved at **0**, no import
 edge is added, and nothing outside this file re-elaborates: the reverse closure of
 `FormalSchemes.GeneralSeparatedHomRestrictOpen` is **0**. So the move is **declined on that ratio
