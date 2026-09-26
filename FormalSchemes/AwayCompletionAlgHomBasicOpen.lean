@@ -101,7 +101,7 @@ same edge at its own file and quotes `FormalSchemes.CofinalCompletionAlg` to do 
 reasoned from the leaf property: `scripts/closure_audit.py --edge` in the deletion direction prices
 that edge at **8** figure repairs in **4** files, **4** of them outside this file. Two of the four
 are those two sentences. The other two are in `FormalSchemes/RefinedOverlapTransition.lean`, the
-consumer above, whose own forward closure of **64** the deletion would move to **59**: that module
+consumer above, whose own forward closure of **71** the deletion would move to **66**: that module
 reaches the five modules of the previous sentence through this file and through nothing else, so
 the edge this paragraph is about is the only reason it reaches them at all. **That pair is the
 whole of what gaining a consumer cost this paragraph**, and it is why the count here is not the two
