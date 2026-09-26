@@ -56,12 +56,12 @@ restated at the next shape. There is nothing to state about the meet itself eith
 `FormalSpectrum.map_awayCompletionIdeal_algHom` is the `awayCompletionIdeal` *spelling* of a fact
 this tree already states three times, and it adds nothing to any of them:
 
-* `Ideal.map_algebraMap_algHom` (`FormalSchemes.CofinalCompletionAlg`, reverse closure **24**),
+* `Ideal.map_algebraMap_algHom` (`FormalSchemes.CofinalCompletionAlg`, reverse closure **25**),
   stated for an `AlgHom`. This is the one this file imports and uses.
 * `CompletedTensorProduct.algHom_mapIdeal_isAdicHom`, in `FormalSchemes.CompletedTensorMapSpfPr`,
   whose reverse closure is **163**: the same statement for an `AlgHom`, wrapped in `IsAdicHom`.
 * `Ideal.map_algEquiv_map_algebraMap` (`FormalSchemes.AwayBaseChangeTopFiniteType`, reverse
-  closure **9**), stated for an `AlgEquiv` only.
+  closure **10**), stated for an `AlgEquiv` only.
 
 All three say `(J·A).map φ = J·B`. What is left over is the bookkeeping that
 `FormalSpectrum.awayCompletionIdeal (I·A) f` *is* `I.map (algebraMap R (A{1/f}^))`, which is
@@ -77,23 +77,35 @@ first.
 
 ## Placement
 
-A leaf over `FormalSchemes.BasicOpenChart` and `FormalSchemes.CofinalCompletionAlg`: this file's
-forward closure is **23** project modules besides itself (24 counted with itself), and its reverse
-closure is **0**.
+Over `FormalSchemes.BasicOpenChart` and `FormalSchemes.CofinalCompletionAlg`: this file's forward
+closure is **23** project modules besides itself (24 counted with itself), and its reverse closure
+is **1** — `FormalSchemes.RefinedOverlapTransition`, which consumes
+`FormalSpectrum.basicOpen_awayCompletionAlgEquiv_eq_iff`. **It was a leaf when the paragraphs below
+were written and the arithmetic they quote is unaffected by ceasing to be one**: the consumer is
+downstream of everything this file imports, so it adds nothing to either closure above, and the two
+counts below were taken at the base that added this file and are not re-run. What the consumer does
+change is the counterfactual in the next paragraph, which has been re-measured here.
 
-**The `FormalSchemes.CofinalCompletionAlg` edge is the placement decision, and it costs two figure
-repairs.** The forward closure of `FormalSchemes.BasicOpenChart` is **17**, and that of
-`FormalSchemes.CofinalCompletionAlg` is **17** as well; the union is the 23 above, so the second
-parent contributes five modules the first does not reach: `FormalSchemes.CofinalCompletion`,
-`FormalSchemes.CofinalCompletionAlg`, `FormalSchemes.CofinalIdeal`,
-`FormalSchemes.IdealsOfDefinition` and `FormalSchemes.LargestIdealOfDefinition`. Four of those five
-state no reverse closure of their own, and `FormalSchemes.IdealsOfDefinition` quotes its own in the
-placement paragraph of `Ideal.pow_map_le_map`. **But the five are not the whole account**: any
-sentence anywhere quoting the reverse closure of one of them also moves, and
+**The `FormalSchemes.CofinalCompletionAlg` edge is the placement decision, and it costs eight
+figure repairs, four of them outside this file.** The forward closure of
+`FormalSchemes.BasicOpenChart` is **17**, and that of `FormalSchemes.CofinalCompletionAlg` is
+**17** as well; the union is the 23 above, so the second parent contributes five modules the first
+does not reach: `FormalSchemes.CofinalCompletion`, `FormalSchemes.CofinalCompletionAlg`,
+`FormalSchemes.CofinalIdeal`, `FormalSchemes.IdealsOfDefinition` and
+`FormalSchemes.LargestIdealOfDefinition`. Four of those five state no reverse closure of their own,
+and `FormalSchemes.IdealsOfDefinition` quotes its own in the placement paragraph of
+`Ideal.pow_map_le_map`. **But the five are not the whole account**: any sentence anywhere quoting
+the reverse closure of one of them also moves, and
 `FormalSchemes/AwayBaseChangeTopFiniteType.lean`'s `## Placement` is one, because it prices this
 same edge at its own file and quotes `FormalSchemes.CofinalCompletionAlg` to do it. Measured, not
-reasoned from the leaf property: the same tree with this module's second import line deleted
-reports two MISMATCHes outside this file, and they are those two sentences.
+reasoned from the leaf property: `scripts/closure_audit.py --edge` in the deletion direction prices
+that edge at **8** figure repairs in **4** files, **4** of them outside this file. Two of the four
+are those two sentences. The other two are in `FormalSchemes/RefinedOverlapTransition.lean`, the
+consumer above, whose own forward closure of **64** the deletion would move to **59**: that module
+reaches the five modules of the previous sentence through this file and through nothing else, so
+the edge this paragraph is about is the only reason it reaches them at all. **That pair is the
+whole of what gaining a consumer cost this paragraph**, and it is why the count here is not the two
+it once was.
 
 **The module itself costs more than its edge does, and the two must not be confused.** Adding any
 module downstream of most of the tree falsifies every *reverse*-closure figure quoted about
@@ -108,19 +120,19 @@ them. The first moves whenever a module is added above anything this file import
 whenever a sentence quoting one of the five parents' reverse closures is written or removed.
 
 Compare `FormalSchemes.AwayBaseChangeTopFiniteType`, which met the same edge and declined it. The
-reverse closure of `FormalSchemes.AwayBaseChangeTopFiniteType` is **9**, so all nine of its
-consumers would inherit those same five modules, and there the edge costs **14** figure repairs in
-**8** files against the two it costs here — measured the same way, from a `git archive` of the tree
-with one import line added, and that file's own `## Placement` states the same count and splits off
-the four of the fourteen that are its own. That is why that file restates
+reverse closure of `FormalSchemes.AwayBaseChangeTopFiniteType` is **10**, so all ten of its
+consumers would inherit those same five modules, and there the edge costs **15** figure repairs in
+**9** files against the four outside this file that it costs here — measured the same way, with
+`--edge`, and that file's own `## Placement` states the same count and splits off the four of the
+fifteen that are its own. That is why that file restates
 `Ideal.map_algEquiv_map_algebraMap` locally rather than importing it, and prices the decision in
 its own `## Placement`. The restatement that was forced there is **not** forced here, and the three
 general forms listed above are imported rather than copied.
 
 Declined: putting the first two results beside `FormalSpectrum.map_algebraMap_awayCompletion_eq`
-in `FormalSchemes.BasicOpenChart`, whose reverse closure is **434**. That is the subject-matter
+in `FormalSchemes.BasicOpenChart`, whose reverse closure is **435**. That is the subject-matter
 home, and it would push the `FormalSchemes.CofinalCompletionAlg` edge and its five modules onto all
-434. Re-cost it if `FormalSchemes.BasicOpenChart` ever comes to import that module anyway.
+435. Re-cost it if `FormalSchemes.BasicOpenChart` ever comes to import that module anyway.
 
 ## What is *not* proved here
 

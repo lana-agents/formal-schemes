@@ -82,33 +82,37 @@ A_i{1/(h · e)}  ≃ₐ[R]  A_j{1/(h' · e')}
 and what is below is only the pair of legs `A_i{1/g_ij} ⟶ A_i{1/(h · e)}` and
 `A_j{1/g_ji} ⟶ A_j{1/(h' · e')}` out of the two coarse overlap algebras, which the coarse
 transition `τ_ij : A_i{1/g_ij} ≃ₐ[R] A_j{1/g_ji}` joins at the *top*. Producing the bottom
-isomorphism from that span is open, and what is open is the **composite** and not a statement: the
-route is `FormalSpectrum.awayCompletionNestedAlgEquivOfLe`
-(`FormalSchemes.AwayCompletionUniversal`) into the coarse chart, then the transport of *τ_ij* named
-at the end of this section, then `FormalSpectrum.awayCompletionCongrBasicOpenAlg`
-(`FormalSchemes.AwayCompletionRestrictUnique`, which this file already imports) at the
-identification the two statements below supply, then the first step again on the *j* side. Four
-declarations, all on the tree, none of them here.
+isomorphism from that span is **not open any more, and it is not here**: it is
+`FormalSpectrum.refinedOverlapTransition`
+(`FormalSchemes.RefinedOverlapTransition`, issue 2196), one module downstream. What it wanted was
+never a statement but the **composite**, and the route below is the one that module takes:
+`FormalSpectrum.awayCompletionNestedAlgEquivOfLe` (`FormalSchemes.AwayCompletionUniversal`) into
+the coarse chart, then the transport of *τ_ij* named at the end of this section, then
+`FormalSpectrum.awayCompletionCongrBasicOpenAlg` (`FormalSchemes.AwayCompletionRestrictUnique`,
+which this file already imports) at the identification the two statements below supply, then the
+first step again on the *j* side. Four declarations, all on the tree, none of them here.
 
-**The composite is not expensive, and that is what the next row should be scoped from.**
-The four above join to the bottom isomorphism directly: measured with `lake env lean` outside the
-tree, at the default heartbeats, a sixteen-line declaration — ten lines of term after the `:=` —
-whose `#print axioms` is `[propext, Classical.choice, Quot.sound]`. Two bookkeeping steps are
-wanted that the route above does not name, and **they fail differently, which is the part worth
-knowing**. `FormalSpectrum.awayCompletionCongrBasicOpenAlg` is an equivalence over the base of its
-*own* ideal rather than over `R`, so it wants `AlgEquiv.restrictScalars`; a paste that omits it
-does **not** report a scalar mismatch but exhausts the default heartbeats at `isDefEq`, the
-elaborator having been asked whether `R` and that completion are the same scalar ring and walking
-the completion tower to answer. **A timeout there is that omission and not an obstruction** —
-raising the budget to a million heartbeats only buys a longer one. The second step is the
-hypothesis's ideal convention: it is asked for at `I.map (algebraMap R _)` where the two statements
-below are at `FormalSpectrum.awayCompletionIdeal`, the same ideal-convention bridge named at the
-end of this section one step later, and omitting *that* one does fail with a type error in seconds,
-naming both spellings. **So what is left is placement, not search and not elaboration**:
-this file reaches neither `FormalSchemes.AwayBaseChangeTopFiniteType` nor
-`FormalSchemes.AwayCompletionAlgHomBasicOpen`, and no module of this tree reaches everything the
-composite names, so the transition wants a module of its own — issue 2196, which carries the term
-and prices that module. Re-measure all of this rather than quoting it.
+**The composite is not expensive, and that is what row 2196 was scoped from.** The four above join
+to the bottom isomorphism directly: measured with `lake env lean` outside the tree, at the default
+heartbeats, a sixteen-line declaration — ten lines of term after the `:=` — whose `#print axioms`
+is `[propext, Classical.choice, Quot.sound]`. Two bookkeeping steps are wanted that the route above
+does not name, and **they fail differently, which is the part worth knowing**.
+`FormalSpectrum.awayCompletionCongrBasicOpenAlg` is an equivalence over the base of its *own* ideal
+rather than over `R`, so it wants `AlgEquiv.restrictScalars`; a paste that omits it does **not**
+report a scalar mismatch but exhausts the default heartbeats at `isDefEq`, the elaborator having
+been asked whether `R` and that completion are the same scalar ring and walking the completion
+tower to answer. **A timeout there is that omission and not an obstruction** — raising the budget
+to a million heartbeats only buys a longer one. The second step is the hypothesis's ideal
+convention: it is asked for at `I.map (algebraMap R _)` where the two statements below are at
+`FormalSpectrum.awayCompletionIdeal`, the same ideal-convention bridge named at the end of this
+section one step later, and omitting *that* one does fail with a type error in seconds, naming both
+spellings. **So what was left was placement, not search and not elaboration**: this file reaches
+neither `FormalSchemes.AwayBaseChangeTopFiniteType` nor
+`FormalSchemes.AwayCompletionAlgHomBasicOpen`, and no module of this tree reached everything the
+composite names, so the transition took a module of its own. Both bookkeeping steps are restated at
+the point of use in `FormalSchemes.RefinedOverlapTransition`'s own docstring, and the diagnosis is
+kept here because a reader who meets the four-declaration list above meets the timeout before that
+module is in view. Re-measure all of this rather than quoting it.
 
 **What it was waiting on is no longer missing.**
 `FormalSpectrum.awayCompletionNestedAlgEquiv` (`FormalSchemes.AwayCompletionNested`) recognises
@@ -127,8 +131,9 @@ proved from the universal property of a completed localization instead of from t
 transitivity that the stronger hypothesis exists to feed. Two steps then stand between these legs
 and the transition — matching the transported presentation against the one the refined datum
 indexes, and the transport of *τ_ij* itself. **This file carries the first; the second is on the
-tree.** Neither is a missing statement, so what is left between these legs and the transition is
-the assembly of named statements — this section's first item, and still open.
+tree.** Neither is a missing statement, so what stood between these legs and the transition was
+the assembly of named statements — this section's first item, now
+`FormalSpectrum.refinedOverlapTransition`.
 
 **The chart-matching step is below.** Transporting *τ_ij* along that identification lands on *some*
 presentation of the refined overlap inside `Spf (A_i{1/g_ij})`, and what has to be checked is that
@@ -176,19 +181,29 @@ waiting for that isomorphism; they are not consumed here.
 
 Over `FormalSchemes.AwayCompletionRestrictUnique` and `FormalSchemes.BasicOpenChartImage`. The
 refined-overlap declarations below have no home but this one.
-`FormalSpectrum.basicOpen_mul_le_of_basicOpen_le` is the exception, and its
-ratio is recorded here rather than left to be re-derived: it is a general statement about
-`FormalSpectrum.basicOpen`, its subject-matter home is beside `FormalSpectrum.basicOpen_mul` in
-`FormalSchemes.FormalSpectrum`, whose reverse closure is **536** against this file's **0**, and
-it is declined on that ratio — this tree's standing disposition for a general statement with a
-single call site. Re-cost the move when a second consumer appears.
+`FormalSpectrum.basicOpen_mul_le_of_basicOpen_le` is the exception, and its ratio is recorded here
+rather than left to be re-derived: it is a general statement about `FormalSpectrum.basicOpen`, and
+its subject-matter home is beside `FormalSpectrum.basicOpen_mul` in `FormalSchemes.FormalSpectrum`,
+whose reverse closure is **537**.
+
+**That move has been re-costed once, and what declines it is no longer the argument first written
+here.** The first was the single call site, with the invitation to re-cost when a second appeared.
+A second has appeared and the disposition did not change. The two call sites are
+`FormalSpectrum.refinedOverlapRestrict` below and `FormalSpectrum.refinedOverlapTransition`
+(`FormalSchemes.RefinedOverlapTransition`), and neither of them needs the move: that module imports
+this one, so it reaches the lemma where it already stands. What decides it now is the rebuild on
+each side. This file's reverse closure is **1** — that module and nothing else — so editing the
+statement here re-elaborates two modules, against the 537 that editing it in
+`FormalSchemes.FormalSpectrum` would. **Re-cost it again when a consumer appears that does not
+reach this file**, which is the only shape that makes the move buy anything; a third consumer
+inside this file's own subtree does not.
 
 `FormalSpectrum.preimage_basicOpen_basicOpenChartBase` raises **no** placement question, and saying
 why is worth a paragraph because the obvious reading of it is wrong. It looks like a general
 statement about `FormalSpectrum.basicOpenChartBase` wanting a home beside that definition; it is
 not. The general statement is `FormalSpectrum.map_preimage_basicOpen` (`FormalSchemes.SpfMap`) —
 the preimage of a basic open along *any* map of formal spectra — which already has a home and a
-name, and whose reverse closure is **505**. This file already reaches it: `FormalSchemes.SpfMap`
+name, and whose reverse closure is **506**. This file already reaches it: `FormalSchemes.SpfMap`
 lies inside this file's forward closure of **41** modules. What is added below is that lemma at one
 chart, read through `SetLike.coe` so that a `rw` can use it, with
 `AlgebraicGeometry.BasicOpenCover.preimage_basicOpen_chartToBase`

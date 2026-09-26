@@ -163,7 +163,7 @@ identities live, not here.
 ## Placement
 
 Over `FormalSchemes.AwayCompletionRestrictUnique`, `FormalSchemes.AwayTopFiniteType` and
-`FormalSchemes.AwayBaseChangeTopFiniteType`: forward closure **55**, reverse closure **4**. Nothing
+`FormalSchemes.AwayBaseChangeTopFiniteType`: forward closure **55**, reverse closure **5**. Nothing
 below mentions formal geometry, so an earlier home would be available on its own for each
 declaration of the universal property; what keeps them in one file is that they are one argument —
 the universal property, its uniqueness, and the two consequences that follow from it. The consumer
@@ -191,7 +191,7 @@ no edge and re-elaborates the leaf and the root aggregator, and then pays the le
 import-count figure quoted in the modules it transitively imports moves by one. On the head that
 added `FormalSchemes.RefinedOverlapRestrict` that was **18** figures in **14** files. Stating it
 here adds no module, no edge and no figure repair, and re-elaborates this file's reverse closure
-of **4**. The
+of **5**. The
 proof is two applications of `FormalSpectrum.awayCompletionLift` and two of
 `FormalSpectrum.awayCompletion_hom_ext'`, both of which are this file's own subject, so the ratio
 and the subject matter pull apart less than the module name suggests. Re-cost the move if a second
@@ -199,7 +199,7 @@ module asks for the identification.
 
 The one edit to a declaration outside this file is the generalisation of
 `FormalSpectrum.awayCompletion_hom_ext` to `FormalSpectrum.awayCompletion_hom_ext'`, taken **in
-place** in `FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **33**. Besides
+place** in `FormalSchemes.AwayCompletionRestrictUnique`, whose reverse closure is **34**. Besides
 this module's own line in the root module list `FormalSchemes.lean`, which `lake exe mk_all`
 maintains and which adding any module forces, the rest of the diff that created this module is
 prose: the figures a new leaf moves in the modules above it, and the sentence in
@@ -499,7 +499,7 @@ it is what the universal property below is applied at.
 
 It is stated here, where the theorem below needs the unit as a *term* in its own statement, rather
 than beside the rest of the `awayCompletion` API in `FormalSchemes.BasicOpenChart`, whose reverse
-closure is **434**: the move down rebuilds all of those, which is the price to pay once a second
+closure is **435**: the move down rebuilds all of those, which is the price to pay once a second
 module asks for the lemma and not before — this tree's standing disposition for a general statement
 with one call site. -/
 theorem isUnit_algebraMap_awayCompletionBase :

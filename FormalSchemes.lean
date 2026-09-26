@@ -330,6 +330,7 @@ import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
 import FormalSchemes.RefinedOverlapRestrict
+import FormalSchemes.RefinedOverlapTransition
 import FormalSchemes.RegularMulEquiv
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.RelativeTopFiniteTypeBasis
