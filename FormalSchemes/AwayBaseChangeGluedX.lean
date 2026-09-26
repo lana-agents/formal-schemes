@@ -111,7 +111,7 @@ way puts one of them inside the other's subtree and makes every later consumer o
 for the other. A module of its own keeps both parents at the cost they were landed at, and
 `FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **3**, so three modules pay for it.
 
-`FormalSchemes.AwayCompletionUniversal`'s reverse closure is **4**, and
+`FormalSchemes.AwayCompletionUniversal`'s reverse closure is **5**, and
 `FormalSchemes.GeneralFibreProductExposeXIdealCongr`'s reverse closure is **5**; the figures
 recorded in the modules this one reaches moved by one each when it landed, and every delta is
 measured in the pull request that added this module (issue 2028).
@@ -124,10 +124,10 @@ no stated figure anywhere on the tree. The general transports the construction i
 `AdicCompletion.mapCompletion_heq` — are each consumed by exactly one module, this one, and each
 has a natural home earlier in the tree. Both sides of that ratio, since a ratio with one side is
 not a measurement: `FormalSchemes.Completion`, where `AdicCompletion.mapCompletion` is defined,
-has reverse closure **471**; `FormalSchemes.AdicCompletionCongrIdealAlg`, the alternative home for
-the `AdicCompletion`-level transport, has reverse closure **195**; and
+has reverse closure **472**; `FormalSchemes.AdicCompletionCongrIdealAlg`, the alternative home for
+the `AdicCompletion`-level transport, has reverse closure **196**; and
 `FormalSchemes.AwayCompletionUniversal`, where the two `awayTransport` statements would go, has
-reverse closure **4**. `FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **3**, and
+reverse closure **5**. `FormalSchemes.AwayBaseChangeGluedX`'s own reverse closure is **3**, and
 every one of the three homes above carries a larger one, so moving a transport would put a
 statement this file alone reads into the environment of modules that do not read it. They are
 kept here on that ratio, which is the disposition

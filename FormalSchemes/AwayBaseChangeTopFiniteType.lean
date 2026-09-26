@@ -150,8 +150,8 @@ composite, which is a surjective `R{1/c}^`-algebra map.
 `FormalSchemes.AwayCompletionUniversal`, where the row that asked for it expected it.** Both homes
 are declarations-only diffs — no module, no import edge, no figure repaired anywhere,
 `scripts/closure_audit.py --tree` at MISMATCH 0 either way — so the whole cost is the rebuild, and
-on that figure this file loses: this module's reverse closure is **9** against
-`FormalSchemes.AwayCompletionUniversal`'s reverse closure of **4**, and that module imports this
+on that figure this file loses: this module's reverse closure is **10** against
+`FormalSchemes.AwayCompletionUniversal`'s reverse closure of **5**, and that module imports this
 one, so it is re-elaborated under either disposition.
 
 **The ratio loses to the subject matter, and the margin is five modules.** What
@@ -170,27 +170,28 @@ answers it. It is the `AlgEquiv` case of `Ideal.map_algebraMap_algHom`, which is
 specialisation — `σ.toAlgHom` — inside `IsTopologicallyFiniteType.ofAlgEquiv`
 (`FormalSchemes.CofinalTopFiniteType`). Nothing general is introduced here, so there is nothing to
 move; it is restated locally because this file cannot reach the module holding it, and both ways of
-fixing that lose. `FormalSchemes.CofinalCompletionAlg`, whose reverse closure is **24**, is outside
+fixing that lose. `FormalSchemes.CofinalCompletionAlg`, whose reverse closure is **25**, is outside
 this file's forward closure of **36** modules. The import that would bring it adds **5** modules to
-what this file transitively imports and costs **14** figure repairs in **8** files, measured by
-`git archive` plus one import line and a `--tree` run from that worktree. **Four** of the fourteen
-are this file's own — this paragraph's **24** and **36**, and the two quoted by the last bullet of
-`## Hypotheses, and what is not proved` — which the edge falsifies as it is added, so the cost
-elsewhere is **10** in **7**. Both numbers answer real questions and the recipe above produces the
-first. **They are a measurement of the tree this paragraph was last re-run against, and not a
-standing claim about any later one.** The edge enlarges what this file transitively imports, so it
-falsifies three species of figure at once: any quoting this file's own forward closure, any quoting
-the forward closure of one of the six modules that reach this file and do not already reach the
-five the edge brings in, and any quoting the reverse closure of one of those five. *Reaching this
-file* is necessary for the second species and not sufficient:
-`FormalSchemes.ConservativityTopFiniteType`, `FormalSchemes.TargetBasicRefinement` and
+what this file transitively imports and costs **15** figure repairs in **9** files, measured by
+`scripts/closure_audit.py --edge` and re-runnable that way rather than only by `git archive` plus
+one import line. **Four** of the fifteen are this file's own — this paragraph's **25** and **36**,
+and the two quoted by the last bullet of `## Hypotheses, and what is not proved` — which the edge
+falsifies as it is added, so the cost elsewhere is **11** in **8**. Both numbers answer real
+questions and the recipe above produces the first. **They are a measurement of the tree this
+paragraph was last re-run against, and not a standing claim about any later one.** The edge
+enlarges what this file transitively imports, so it falsifies three species of figure at once: any
+quoting this file's own forward closure, any quoting the forward closure of one of the six modules
+that reach this file and do not already reach the five the edge brings in, and any quoting the
+reverse closure of one of those five. *Reaching this file* is necessary for the second species and
+not sufficient: `FormalSchemes.ConservativityTopFiniteType`,
+`FormalSchemes.RefinedOverlapTransition`, `FormalSchemes.TargetBasicRefinement` and
 `FormalSchemes.TopFiniteTypeHomTrans` reach it and reach all five already, so the edge moves their
 forward closures by nothing. A diff writing any of those — anywhere on the tree, in prose alone,
 without opening this file — moves the count, and `scripts/closure_audit.py --tree` cannot report
 that it has, because `--tree` checks the tree as it is and this sentence prices one that does not
 exist. Re-run the recipe rather than trusting the numeral. Moving the general form down to a module
 both files already reach is worse: of the thirteen such modules,
-`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **496**. So the local
+`FormalSchemes.RestrictedPowerSeries` has the smallest reverse closure, at **497**. So the local
 copy stands, and it is at root namespace for the reason `Ideal.map_algebraMap_of_tower`
 (`FormalSchemes.AwayTopFiniteType`) is: it names nothing of this file's subject. Re-cost the import
 if a third module inside this file's own imports wants the fact;
