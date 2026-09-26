@@ -75,6 +75,10 @@ is representative, and `FormalSchemes.lean` is the only exhaustive index of the 
   `formalCompletion R I` is the completion of `Spec R` along `V(I)`. For a scheme presented by
   affine charts it is `AlgebraicGeometry.ChartedCompletionDatum.completionGlued`, with
   `AlgebraicGeometry.ChartedCompletionDatum.toScheme` the canonical morphism `X_{/Y} ⟶ X`.
+  What makes the affine object a *completion* rather than `Spf` of a completed ring is
+  `FormalSpectrum.completionStructureSheafIso`: its structure sheaf, carried along the base
+  homeomorphism, is the inverse limit of the structure sheaves of the thickenings of the
+  **original** ring. The glued analogue of that comparison is not proved.
 * **Topologically finite type** (EGA I, 10.13): the property `IsTopologicallyFiniteType`, its
   affine-local character, and the composition law
   `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`.
@@ -144,7 +148,8 @@ declaration names above to find the rest.
 * Gluing, charted presentations of schemes and formal schemes — `FormalSchemes/Gluing.lean`,
   `FormalSchemes/ChartedSchemeDatum.lean`
 * Formal completion of a scheme along a closed subset (EGA I, 10.8) —
-  `FormalSchemes/Completion.lean`, `FormalSchemes/ChartedCompletionDatum.lean`,
+  `FormalSchemes/Completion.lean`, `FormalSchemes/CompletionSheafComparison.lean`,
+  `FormalSchemes/ChartedCompletionDatum.lean`,
   `FormalSchemes/ChartedCompletionToScheme.lean`, `FormalSchemes/ProjectiveLineCompletion.lean`
 * Finite type, closed immersions, separatedness (EGA I, 10.13–10.15) —
   `FormalSchemes/TopFiniteType.lean`, `FormalSchemes/TopFiniteTypeHomTrans.lean`,
