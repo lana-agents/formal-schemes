@@ -492,17 +492,22 @@ docstring says it exists for a datum's `hστ`. It does not reach
 `FormalSchemes.AwayCompletionUniversal`, where the *OfLe* identification lives, and
 `scripts/closure_audit.py --edge` prices that import at **13** figure repairs in **8** files,
 against **0** here — this file needs no new import for any of the six, both modules being already
-among its own. A later edge from this file to that one, which is what moving them would also cost,
-prices at **4** repairs in **3** files. So the disposition is *keep, and move them together with
-the cross-chart square when it exists*, since that square will want the same imports and the two
-edges should be paid once. `CompletedTensorAwayInterchange.awayCongrEquivOfEq_algebraMap` is the
-one with a closer home than that: its two siblings
+among its own. `closure_audit --edge` prices a later edge from this file to that one — which is
+what moving them would also cost — at **5** figure repairs in **3** files. So the disposition is
+*keep, and move them together with the cross-chart square when it exists*, since that square will
+want the same imports and the two edges should be paid once.
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq_algebraMap` is the one with a closer home than
+that: its two siblings
 `CompletedTensorAwayInterchange.awayCongrHom_algebraMap` and
 `CompletedTensorAwayInterchange.awayCongrEquiv_algebraMap` are `FormalSchemes.AwayCongrAlgebraMap`,
 a file whose whole subject is that these maps fix the base and whose own docstring says it exists
-so that leaves can import it; `--edge` prices that import at **3** figure repairs in **2** files,
-all three of them this file's forward closure of **71** going to **72**. It is declined here only
-because this diff adds no import at all, and it is the first one to revisit. **That module is also
+so that leaves can import it; `--edge` prices that import at **4** figure repairs in **2** files,
+all four of them this file's forward closure of **71** going to **72** or its *counted with itself*
+companion. **One of the four is the figure in this very sentence**, which is why a price for an
+edge out of the file you are editing has to be measured at your own head and after the docstring
+line that quotes it: at the base it comes out one short, and that is how the **3** this sentence
+used to say got here. It is declined here only because this diff adds no import at all, and it is
+the first one to revisit. **That module is also
 why the third of these lemmas is the transport and not the comparison map**: the first draft proved
 the squares through `CompletedTensorAwayInterchange.awayCongrHom` and restated
 `CompletedTensorAwayInterchange.awayCongrHom_algebraMap` locally, which is a **duplicate** of an
