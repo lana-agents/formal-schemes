@@ -87,19 +87,36 @@ also needs the away-to-away maps of `IsLocalization.Away` identified with restri
 ## Placement
 
 The file is a leaf: the reverse closure of `FormalSchemes.PrincipalCoverCompletionDatum` is **0**
-and its forward closure is **52** modules. It has to be a new module rather than an addition to an
-existing one, because it is the first thing under `FormalSchemes/` to use `Scheme.IdealSheafData`
-outside `FormalSchemes.ThickeningTowerKernel` — which uses it for the quasi-coherence of a kernel
-and is not about completions — and the first to use `Scheme.affineOpens` at all.
+and the forward closure of `FormalSchemes.PrincipalCoverCompletionDatum` is **52** modules. It has
+to be a new module rather than an addition to an existing one, because it is the first thing under
+`FormalSchemes/` to use `Scheme.IdealSheafData` outside `FormalSchemes.ThickeningTowerKernel` —
+which uses it for the quasi-coherence of a kernel and is not about completions — and the first to
+use `Scheme.affineOpens` at all.
 
-Two of the declarations here are general and are kept local deliberately.
-`CategoryTheory.Functor.map_eq_of_isThin` says that a functor out of a thin category cannot
-separate two parallel morphisms, which is what the three places in this file that compare two
-restrictions of sections over one pair of opens ask for; `inf_inf_inf_swap` is the lattice identity
-behind `..PrincipalAffineCover.tripleEq`. Both are stated at the hypotheses their proofs actually
-use, `[Quiver.IsThin C]` and `[SemilatticeInf α]`, so each is a Mathlib-shaped statement in
-Mathlib's own generality; neither has a module on this tree whose subject it is, and this tree has
-no mirror directory for such statements. They are offered upward rather than defended here.
+Four of the declarations here are general and are kept local deliberately, and *general* here means
+the two things together: the statement names nothing this file defines, and it is offered upward
+rather than defended. `CategoryTheory.Functor.map_eq_of_isThin` says that a functor out of a thin
+category cannot separate two parallel morphisms, which is what the three places in this file that
+compare two restrictions of sections over one pair of opens ask for; `inf_inf_inf_swap` is the
+lattice identity behind `..PrincipalAffineCover.tripleEq`; and `Scheme.basicOpen_mul_le_left` with
+`Scheme.basicOpen_mul_le_right` fill the one gap in a family Mathlib already has twice, as
+`PrimeSpectrum.basicOpen_mul_le_left` and again for a projective spectrum, and not at all for a
+scheme. All four are stated at the hypotheses their proofs actually use — `[Quiver.IsThin C]`,
+`[SemilatticeInf α]`, and an arbitrary `Scheme.Opens` for the last two, since
+`Scheme.basicOpen_mul` needs no affineness and neither do they — so each is a Mathlib-shaped
+statement in Mathlib's own generality; none has a module on this tree whose subject it is, and this
+tree has no mirror directory for such statements. That is also why the two `basicOpen` ones carry
+`Scheme`'s namespace and not this file's, exactly as `CategoryTheory.Functor.map_eq_of_isThin`
+carries `CategoryTheory.Functor`'s.
+
+`Scheme.sectionsCongr` and its two lemmas are the boundary case and are deliberately **not** in that
+four. They are stated at an arbitrary pair of equal opens and name nothing this file defines either,
+so they meet the first half; they fail the second, because Mathlib writes that ring equivalence as
+`X.presheaf.mapIso (eqToIso h).op` and what is here is this file's shorthand for the `awayCongr`
+tower below rather than a statement anybody upstream is missing. The count is worth stating
+precisely because the declarations an author lists as general are the ones the author already
+thought about, so an omission from this list is where an over-restricted hypothesis hides — which is
+how the last two got here (issue 2211).
 
 -/
 
@@ -232,19 +249,23 @@ theorem awayRestrict_comp {U V W : X.affineOpens} (f : Γ(X, U.1)) (f' : Γ(X, V
   rw [← CommRingCat.comp_apply, ← X.presheaf.map_comp,
     X.presheaf.map_eq_of_isThin ((homOfLE h).op ≫ (homOfLE h').op) (homOfLE (h'.trans h)).op]
 
-theorem basicOpen_mul_le_left (U : X.affineOpens) (a b : Γ(X, U.1)) :
-    X.basicOpen (a * b) ≤ X.basicOpen a := by
+/-- **`D(f · g) ≤ D(f)`**, at an arbitrary open of a scheme. The `Scheme`-level member of
+`PrimeSpectrum.basicOpen_mul_le_left`'s family. -/
+theorem Scheme.basicOpen_mul_le_left {U : X.Opens} (f g : Γ(X, U)) :
+    X.basicOpen (f * g) ≤ X.basicOpen f := by
   rw [Scheme.basicOpen_mul]
   exact inf_le_left
 
-theorem basicOpen_mul_le_right (U : X.affineOpens) (a b : Γ(X, U.1)) :
-    X.basicOpen (a * b) ≤ X.basicOpen b := by
+/-- **`D(f · g) ≤ D(g)`**, at an arbitrary open of a scheme. The `Scheme`-level member of
+`PrimeSpectrum.basicOpen_mul_le_right`'s family. -/
+theorem Scheme.basicOpen_mul_le_right {U : X.Opens} (f g : Γ(X, U)) :
+    X.basicOpen (f * g) ≤ X.basicOpen g := by
   rw [Scheme.basicOpen_mul]
   exact inf_le_right
 
 theorem awayToAwayRight_eq_awayRestrict (U : X.affineOpens) (a b : Γ(X, U.1)) :
     IsLocalization.Away.awayToAwayRight a b (P := Localization.Away (a * b)) =
-      awayRestrict a (a * b) (basicOpen_mul_le_left U a b) := by
+      awayRestrict a (a * b) (Scheme.basicOpen_mul_le_left a b) := by
   refine IsLocalization.ringHom_ext (Submonoid.powers a) (RingHom.ext fun r => ?_)
   simp only [RingHom.comp_apply, IsLocalization.Away.awayToAwayRight_eq, awayRestrict,
     RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, awaySectionsEquiv_algebraMap,
@@ -254,7 +275,7 @@ theorem awayToAwayRight_eq_awayRestrict (U : X.affineOpens) (a b : Γ(X, U.1)) :
 
 theorem awayToAwayLeft_eq_awayRestrict (U : X.affineOpens) (a b : Γ(X, U.1)) :
     IsLocalization.Away.awayToAwayLeft a b (P := Localization.Away (b * a)) =
-      awayRestrict a (b * a) (basicOpen_mul_le_right U b a) := by
+      awayRestrict a (b * a) (Scheme.basicOpen_mul_le_right b a) := by
   refine IsLocalization.ringHom_ext (Submonoid.powers a) (RingHom.ext fun r => ?_)
   simp only [RingHom.comp_apply, IsLocalization.Away.awayToAwayLeft_eq, awayRestrict,
     RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, awaySectionsEquiv_algebraMap,
