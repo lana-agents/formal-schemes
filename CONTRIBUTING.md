@@ -508,6 +508,27 @@ falsify. It reads a tree that does not exist, so it never fails and is not a gat
 the counterfactual sentence — comparing the report against what a paragraph says is yours to do,
 exactly as with `--sweep`.
 
+**`closure_audit.py --stub NAME:A,B` prices a hypothetical *module*, which is the experiment of the
+paragraph above run rather than described.** It copies the tree, writes the stub into the copy as
+its import lines and nothing else, audits both trees, and reports the difference — so the price
+excludes whatever the tree was already red about, and nothing is written under the repository on any
+exit path. It names the imports explicitly, because *a module over this one* and *a module repeating
+this one's imports* are different questions with different answers, over file lists that can be
+identical. Two species and no third, which is this subsection's own table: a project total or tree
+census, and a reverse closure of a module the stub reaches. A stub is a leaf, so no forward closure
+can move and no file's size changes; a claim landing outside those two is reported as
+`unclassified`, which is never a level.
+
+**The rebuild beside that price has four readings, and the report prints all four rather than
+picking one silently.** Whether a repaired file counts as re-elaborating *itself*, and whether the
+stub — which is on the tree the repairs are made in, but which no repair edits — is inside the
+answer, are independent choices; one sentence of this tree has been published with three different
+union figures by three different sessions, none of whom had miswalked anything. The largest single
+contributor is named with the union that drops it, which is the arithmetic the paragraph above does
+by hand. The report also prints the count of **figures** beside the count of distinct **positions**,
+which differ whenever one sentence carries two. **Quote the convention with the figure, or quote the
+report.**
+
 **An added *import* is the other case, and its cost is not the importing file's reverse closure.**
 What an import `A → B` moves is the forward closure of `A` and of everything downstream of `A`, and
 the reverse closure of every module that `B` newly brings into `A`'s closure — so what it costs is
@@ -735,6 +756,15 @@ six were stale in that figure as well. `--sweep` does not compute it, and nor do
 a ten-line walk, and row 1841 ran it over every delta the sweep still reports and found all of them
 right, near endpoint and far.) If a figure `--sweep` reports is a plain measurement of this tree,
 rewrite it in the checked spelling rather than leaving it for the next sweep.
+
+**A counterfactual price — *"N figure repairs in M files"* — is on that list too, and it is the one
+shape there whose remedy is not a rewrite.** Its subject is a tree that does not exist, so no
+species can check it and none will; what it wants is a human re-running `--edge` or `--stub` and
+dating what they write. It is swept by its own marker rather than by accident, which is the
+difference this entry records: before that, such a sentence was listed only when something else in
+it happened to carry a closure word or a project total, and one of them was hidden outright by the
+closure claim standing beside it — the figure invisible because of the claim, which is the mechanism
+the paragraph about row 2209 above is written over.
 
 ## The `set_option` cross-reference convention
 
