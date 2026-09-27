@@ -93,6 +93,17 @@ out.
   unpermuted one.
 * `FormalSpectrum.refinedOverlapSigma`: the equivalence itself, and the refined datum's `σ` field
   once a caller conjugates it by the presentation of each refined chart.
+* `FormalSpectrum.refinedOverlapSigma_trans₃_eq_refl`: the **refined datum's `hσc` field** — the
+  three rotations of one ordered triple compose to the identity. It asks a caller for nothing the
+  `σ` field did not already ask for, and the section on it says why the argument that made the
+  symmetry law cheap transfers to a cycle of three after all.
+* `FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans₃_eq_refl`: the one statement with
+  content in the proof of the cocycle, and the three-fold form of the symmetry law's own — base
+  change and a basic-open re-presentation, three times round a cycle, compose to the identity as
+  soon as the coarse `σ`s do.
+* `AlgEquiv.trans₃_eq_refl_of_middle_eq_refl` and `AlgEquiv.trans₃_eq_refl_rotate`: the
+  bookkeeping that carries that statement out to the datum's field, and the rotation of a coarse
+  cocycle that its three instances need.
 * `FormalSpectrum.SigmaIntertwinesLegs`: `hστ` at one ordered triple, so that the statements above
   quantify over a triple of coarse transitions and a triple of coarse `σ`s rather than over a
   datum.
@@ -402,22 +413,35 @@ file**; a consumer inside this file's own subtree buys nothing, for the reason
 
 ## What is *not* proved here
 
-**The refined datum itself, and the two laws `hστ` and `hσc` at the refined index.**
-`FormalSpectrum.refinedOverlapTransition_conj_symm` and `FormalSpectrum.refinedOverlapSigma` are
-two of the fields `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` asks for at that
-index, and nothing here takes the smart constructor's remaining arguments; no
+**The refined datum itself, and the law `hστ` at the refined index.**
+`FormalSpectrum.refinedOverlapTransition_conj_symm`, `FormalSpectrum.refinedOverlapSigma` and
+`FormalSpectrum.refinedOverlapSigma_trans₃_eq_refl` are three of the fields
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` asks for at that index, and nothing here
+takes the smart constructor's remaining arguments; no
 `AlgebraicGeometry.AffineChartedFibreDatumX` is built anywhere on this tree from a refined chart
 family. Fed slot 0's scouting instantiation on issue 2198 — with the refined `σ` conjugated by the
 nested identification at the triple, which is a caller's three lines and not a statement here —
-the two of them close the `τ_symm` and `σ` arguments and leave `hστ` and `hσc`.
+the three of them close the `τ_symm`, `σ` and `hσc` arguments and leave **`hστ` alone**.
 
-**Nothing about the refined `σ`'s own laws.** `FormalSpectrum.refinedOverlapSigma` is a
-four-step composite exactly as `FormalSpectrum.refinedOverlapTransition` is, and this module
-proves for it no analogue of `FormalSpectrum.refinedOverlapTransition_symm`: neither the
-compatibility of the refined `σ` with the refined transition nor the refined cocycle is stated,
-and neither was priced. The outer-steps-cancel argument that made the symmetry law cheap twice
-does **not** obviously transfer, because a triple's three nested identifications are at three
-different charts and do not pair off.
+**The refined `σ`'s compatibility with the refined transition.**
+`FormalSpectrum.refinedOverlapSigma` is a four-step composite exactly as
+`FormalSpectrum.refinedOverlapTransition` is, and its **cocycle** is now stated —
+`FormalSpectrum.refinedOverlapSigma_trans₃_eq_refl` — but its compatibility with the refined
+transition, the `hστ` of the refined index, is not, and is not priced here. That one is the field
+whose two legs are over *different* ambients, so the outer identifications do not cancel and a
+naturality statement about `FormalSpectrum.awayCompletionNestedAlgEquivOfLe` really is wanted; issue
+2198 §6.2 is where its cost is argued and `FormalSchemes.BasicOpenCoverCharts`'s cost note is what
+it has to be read against.
+
+**A prediction this module made about the cocycle was wrong, and it is corrected rather than
+deleted.** An earlier reading of this section said the outer-steps-cancel argument *"does not
+obviously transfer, because a triple's three nested identifications are at three different charts
+and do not pair off"*. They pair off. Each rotation closes with the inverse of the identification
+the next one opens with, so a cycle of three cancels two pairs internally and leaves the third as
+the outside — the same shape as the two-fold law, not a new one. The measurement is in
+`AlgEquiv.trans₃_eq_refl_of_middle_eq_refl`'s docstring and the field's proof is one term. **Three
+charts is three pairs, one of which is the outside**, and that is the sentence the earlier reading
+was missing.
 
 **The refining elements are arbitrary here, and a datum's are not.** Every statement in both
 halves quantifies over `h`, `h'`, `h''` and over the coarse transitions and the coarse `σ`s
@@ -440,6 +464,8 @@ variable {R : Type u} [CommSemiring R]
 variable {X P Q Q' Y P' : Type*} [Semiring X] [Semiring P] [Semiring Q] [Semiring Q']
   [Semiring Y] [Semiring P'] [Algebra R X] [Algebra R P] [Algebra R Q] [Algebra R Q']
   [Algebra R Y] [Algebra R P']
+variable {Z P'' W : Type*} [Semiring Z] [Semiring P''] [Semiring W]
+  [Algebra R Z] [Algebra R P''] [Algebra R W]
 
 /-- **Two four-step composites sharing their outer identifications are mutually inverse as soon as
 their middles are.** For
@@ -556,6 +582,54 @@ theorem trans_trans_eq_refl_of_bridges (B : P ≃ₐ[R] Q) (Cj : Q ≃ₐ[R] Q) 
   simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hx ⊢
   exact hx
 
+/-- **A three-fold composite that is the identity stays the identity when its cycle is rotated.**
+`a ≫ b ≫ c = id` gives `b ≫ c ≫ a = id`, at three carriers with no relation between them.
+
+Stated because the refined cocycle is a statement about *one* ordered triple, while
+`FormalSpectrum.refinedOverlapSigma` asks for the coarse cocycle at the triple it is instantiated
+at: the rotated instances of that definition need the rotated coarse cocycle, and nothing else in
+their argument lists has to move. Two applications reach the third rotation. -/
+theorem trans₃_eq_refl_rotate (a : X ≃ₐ[R] P) (b : P ≃ₐ[R] Q) (c : Q ≃ₐ[R] X)
+    (h : a.trans (b.trans c) = AlgEquiv.refl) :
+    (b.trans (c.trans a) : P ≃ₐ[R] P) = AlgEquiv.refl := by
+  refine AlgEquiv.ext fun q => ?_
+  have hx := DFunLike.congr_fun h (a.symm q)
+  simp only [AlgEquiv.trans_apply, AlgEquiv.apply_symm_apply, AlgEquiv.coe_refl, id_eq] at hx
+  simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq]
+  rw [hx]
+  exact a.apply_symm_apply q
+
+/-- **Three four-step composites arranged in a cycle compose to the identity as soon as their
+middles do.** The three-fold analogue of `AlgEquiv.trans_trans_eq_refl_of_middle_eq_refl`, at the
+same shape and with the same three-line proof.
+
+**The outer identifications pair off, and that is the finding rather than the statement.** This
+module's `## What is *not* proved here` said of the refined cocycle that *"the
+outer-steps-cancel argument that made the symmetry law cheap twice does not obviously transfer,
+because a triple's three nested identifications are at three different charts and do not pair
+off"*. They do. Each composite *closes* with the inverse of the identification the next one
+*opens* with — `Nj⁻¹` then `Nj`, `Nk⁻¹` then `Nk` — so the cycle cancels them in adjacent pairs
+exactly as the two-fold case cancels its one pair, and only `Ni` and `Ni⁻¹` survive, at the ends.
+Three charts is not three unpaired identifications; it is three pairs, one of which is the outside.
+
+As with the two-fold lemma the six steps of each composite are separate arguments and the middles
+are not packaged: at the doubly nested completions
+`FormalSpectrum.refinedOverlapSigma_trans₃_eq_refl` applies this to, re-associating a packaged
+middle is the `(deterministic) timeout at whnf` that section records. -/
+theorem trans₃_eq_refl_of_middle_eq_refl
+    (Ni : X ≃ₐ[R] P) (B : P ≃ₐ[R] Q) (C : Q ≃ₐ[R] Q') (Nj : Y ≃ₐ[R] Q')
+    (B' : Q' ≃ₐ[R] P') (C' : P' ≃ₐ[R] P'') (Nk : Z ≃ₐ[R] P'')
+    (B'' : P'' ≃ₐ[R] W) (C'' : W ≃ₐ[R] P)
+    (hmid : (B.trans C).trans ((B'.trans C').trans (B''.trans C'')) = AlgEquiv.refl) :
+    (((Ni.trans B).trans (C.trans Nj.symm)).trans
+        (((Nj.trans B').trans (C'.trans Nk.symm)).trans
+          ((Nk.trans B'').trans (C''.trans Ni.symm))) : X ≃ₐ[R] X) = AlgEquiv.refl := by
+  refine AlgEquiv.ext fun x => ?_
+  have hx := DFunLike.congr_fun hmid (Ni x)
+  simp only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] at hx
+  simp only [AlgEquiv.trans_apply, AlgEquiv.apply_symm_apply, AlgEquiv.coe_refl, id_eq, hx,
+    AlgEquiv.symm_apply_apply]
+
 end AlgEquiv
 
 open CompletedTensorAwayInterchange
@@ -654,6 +728,7 @@ def refinedOverlapTransition (hI : I.FG) (gij : Ai) (gji : Aj)
 section BaseChangeRoundTrip
 
 variable {S T : Type u} [CommRing S] [CommRing T] [Algebra R S] [Algebra R T]
+variable {U : Type u} [CommRing U] [Algebra R U]
 
 /-- **Base change along `σ` and back is the identity, through any re-presentation of the presenting
 element on the way.** For an `R`-algebra equivalence `σ : S ≃ₐ[R] T` of chart algebras and `u : S`,
@@ -704,6 +779,61 @@ theorem awayCompletionAlgEquivOfBase_congr_trans_eq_refl (hI : I.FG) (σ : S ≃
     rw [awayCompletionHom_eq_algebraMap, hE]
     simp only [AlgEquiv.trans_apply, AlgEquiv.restrictScalars_apply,
       awayCompletionAlgEquivOfBase_algebraMap, AlgEquiv.commutes, AlgEquiv.symm_apply_apply]
+  exact AlgEquiv.ext fun x => RingHom.congr_fun key x
+
+/-- **Base change round the whole cycle is the identity, through a re-presentation of the presenting
+element at each corner.** For `σ₁ : S ≃ₐ[R] T`, `σ₂ : T ≃ₐ[R] U`, `σ₃ : U ≃ₐ[R] S` composing to the
+identity, and elements `u : S`, `v : T`, `w : U` each cutting out the open the previous one's
+transport does, the composite
+
+```
+Sᵘ → Tᶴ⁽ᵘ⁾ → Tᵛ → Uᶴ⁽ᵛ⁾ → Uᵂ → Sᶴ⁽ᵂ⁾ → Sᵘ
+```
+
+of three base changes and three basic-open re-presentations is `AlgEquiv.refl`.
+
+**This is the statement with content in the refined cocycle**, and it is the three-fold analogue of
+`FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans_eq_refl` in every respect but one: there
+the cycle is `σ` and `σ.symm`, so it closes for free, and here the coarse cocycle `hc` has to be
+supplied. That is the only place the refined cocycle consumes anything about the coarse datum.
+
+The proof is that lemma's: `FormalSpectrum.awayCompletion_hom_ext` reduces the claim to the
+structural image of `S`, where every base change acts as its own `σ` and every re-presentation acts
+as the identity, so the composite acts as `σ₃ ∘ σ₂ ∘ σ₁` and `hc` finishes it. Nothing about the
+refined overlap is used; as there, the target of each base change is left to unification rather
+than named. -/
+theorem awayCompletionAlgEquivOfBase_congr_trans₃_eq_refl (hI : I.FG)
+    (σ₁ : S ≃ₐ[R] T) (σ₂ : T ≃ₐ[R] U) (σ₃ : U ≃ₐ[R] S) (u : S) (v : T) (w : U)
+    (m₁ : basicOpen (I.map (algebraMap R T)) (σ₁ u) = basicOpen (I.map (algebraMap R T)) v)
+    (m₂ : basicOpen (I.map (algebraMap R U)) (σ₂ v) = basicOpen (I.map (algebraMap R U)) w)
+    (m₃ : basicOpen (I.map (algebraMap R S)) (σ₃ w) = basicOpen (I.map (algebraMap R S)) u)
+    (hc : σ₁.trans (σ₂.trans σ₃) = AlgEquiv.refl) :
+    ((awayCompletionAlgEquivOfBase I hI σ₁ (rfl : σ₁ u = σ₁ u)).trans
+          ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m₁).restrictScalars R)).trans
+        (((awayCompletionAlgEquivOfBase I hI σ₂ (rfl : σ₂ v = σ₂ v)).trans
+            ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m₂).restrictScalars R)).trans
+          ((awayCompletionAlgEquivOfBase I hI σ₃ (rfl : σ₃ w = σ₃ w)).trans
+            ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m₃).restrictScalars R)))
+      = AlgEquiv.refl := by
+  set E := ((awayCompletionAlgEquivOfBase I hI σ₁ (rfl : σ₁ u = σ₁ u)).trans
+        ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m₁).restrictScalars R)).trans
+      (((awayCompletionAlgEquivOfBase I hI σ₂ (rfl : σ₂ v = σ₂ v)).trans
+          ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m₂).restrictScalars R)).trans
+        ((awayCompletionAlgEquivOfBase I hI σ₃ (rfl : σ₃ w = σ₃ w)).trans
+          ((awayCompletionCongrBasicOpenAlg _ _ _ (hI.map _) m₃).restrictScalars R))) with hE
+  have key : (E : awayCompletion (I.map (algebraMap R S)) u →ₐ[R] _).toRingHom = RingHom.id _ := by
+    refine awayCompletion_hom_ext (I.map (algebraMap R S)) u u (hI.map _)
+      (le_comap_awayCompletionIdeal_algHom I u u E.toAlgHom)
+      (le_comap_awayCompletionIdeal_algHom I u u (AlgHom.id R _)) ?_
+    refine RingHom.ext fun s => ?_
+    change E (awayCompletionHom (I.map (algebraMap R S)) u s)
+      = awayCompletionHom (I.map (algebraMap R S)) u s
+    rw [awayCompletionHom_eq_algebraMap, hE]
+    simp only [AlgEquiv.trans_apply, AlgEquiv.restrictScalars_apply,
+      awayCompletionAlgEquivOfBase_algebraMap, AlgEquiv.commutes]
+    congr 1
+    have hs := DFunLike.congr_fun hc s
+    simpa only [AlgEquiv.trans_apply, AlgEquiv.coe_refl, id_eq] using hs
   exact AlgEquiv.ext fun x => RingHom.congr_fun key x
 
 end BaseChangeRoundTrip
@@ -1233,6 +1363,58 @@ def refinedOverlapSigma
             σijk σjki σkij hijk hkij hjki hc h h' h'')).restrictScalars R).trans
       (awayCompletionNestedAlgEquivOfLe I hI (gjk * gji) _
         (basicOpen_refinedTripleOverlap_le I hI gjk gji gkj gij τjk τij.symm h' h'' h)).symm)
+
+/-- **The refined cocycle** — `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData`'s `hσc`
+field at the refined index, read at `FormalSpectrum.refinedOverlapSigma` rather than at a datum.
+The three rotations of one ordered triple compose to the identity.
+
+**The three rotated instances are the same data, permuted, and nothing new is supplied.** The
+coarse cocycle is rotated by `AlgEquiv.trans₃_eq_refl_rotate`; the three
+`FormalSpectrum.SigmaIntertwinesLegs` hypotheses are *closed* under the rotation as a set, which is
+why they are named for their triples and not for their positions — the *(j,k,i)* instance wants
+`hjki`, `hijk`, `hkij` in that order, and the *(k,i,j)* one wants `hkij`, `hjki`, `hijk`. The only
+place a `AlgEquiv.symm_symm` is needed is the third rotation's *τ_ik*, and it is `rfl` at these
+completions.
+
+**The whole proof is `AlgEquiv.trans₃_eq_refl_of_middle_eq_refl` at
+`FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans₃_eq_refl`, in one term**, and that is a
+measurement worth recording against this module's `## What is *not* proved here`, which predicted
+the opposite: the nested identifications *do* pair off across a cycle of three, so the refined
+cocycle costs exactly what the refined symmetry law cost and no naturality statement about
+`FormalSpectrum.awayCompletionNestedAlgEquivOfLe` is needed for it either.
+
+**It consumes the coarse laws only through the coarse cocycle.** `hστ` at the three rotations is
+already inside `FormalSpectrum.refinedOverlapSigma`'s hypotheses, spent on the triple chart-match;
+the cocycle asks for nothing beyond the coarse `hc` that the definition already takes, so this
+statement adds no obligation to a caller that has the `σ` field. -/
+theorem refinedOverlapSigma_trans₃_eq_refl
+    (τij : awayCompletion (I.map (algebraMap R Ai)) gij ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) gji)
+    (τik : awayCompletion (I.map (algebraMap R Ai)) gik ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gki)
+    (τjk : awayCompletion (I.map (algebraMap R Aj)) gjk ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) gkj)
+    (σijk : awayCompletion (I.map (algebraMap R Ai)) (gij * gik) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Aj)) (gjk * gji))
+    (σjki : awayCompletion (I.map (algebraMap R Aj)) (gjk * gji) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ak)) (gki * gkj))
+    (σkij : awayCompletion (I.map (algebraMap R Ak)) (gki * gkj) ≃ₐ[R]
+      awayCompletion (I.map (algebraMap R Ai)) (gij * gik))
+    (hijk : SigmaIntertwinesLegs I hI gij gik gjk gji τij.symm σijk)
+    (hkij : SigmaIntertwinesLegs I hI gki gkj gij gik τik σkij)
+    (hjki : SigmaIntertwinesLegs I hI gjk gji gki gkj τjk.symm σjki)
+    (hc : σijk.trans (σjki.trans σkij) = AlgEquiv.refl) (h : Ai) (h' : Aj) (h'' : Ak) :
+    (refinedOverlapSigma I hI gij gik gji gjk gki gkj τij τik τjk σijk σjki σkij
+          hijk hkij hjki hc h h' h'').trans
+        ((refinedOverlapSigma I hI gjk gji gkj gki gij gik τjk τij.symm τik.symm σjki σkij σijk
+            hjki hijk hkij (AlgEquiv.trans₃_eq_refl_rotate _ _ _ hc) h' h'' h).trans
+          (refinedOverlapSigma I hI gki gkj gik gij gjk gji τik.symm τjk.symm τij σkij σijk σjki
+            hkij hjki hijk
+            (AlgEquiv.trans₃_eq_refl_rotate _ _ _ (AlgEquiv.trans₃_eq_refl_rotate _ _ _ hc))
+            h'' h h'))
+      = AlgEquiv.refl :=
+  AlgEquiv.trans₃_eq_refl_of_middle_eq_refl _ _ _ _ _ _ _ _ _
+    (awayCompletionAlgEquivOfBase_congr_trans₃_eq_refl I hI σijk σjki σkij _ _ _ _ _ _ hc)
 
 /-! ### Why the factorwise reading of the chart match is not a theorem -/
 
