@@ -355,10 +355,16 @@ module over this one. `scripts/closure_audit.py --edge` prices the edge at **0**
 in, and reports that it moves no forward closure, no reverse closure and no quoted figure anywhere
 on the tree — that module is already inside this file's 71, through
 `FormalSchemes.AwayCompletionCongrEquiv`. The module was priced the way CONTRIBUTING.md's *What
-adding a module costs* says to, by writing the file and running `--tree` against it: **38** figure
-repairs in **18** files, whose union re-elaborates **540** of the 587 modules, **81** of them
-without `FormalSchemes/StructureSheaf.lean`. So the comparison here is **0 against 38**, the widest
-this file has seen, and it is not close.
+adding a module costs* says to, by writing the file and running `--tree` against it, and the stub
+is `import FormalSchemes.RefinedOverlapTransition` and nothing else — a module *over* this one,
+not a sibling repeating this file's six imports, which is a different and cheaper experiment at
+**40**. Over this one it is **44** figure repairs in **18** files, whose union re-elaborates
+**540** of the **588** modules that tree would have, **81** of them without
+`FormalSchemes/StructureSheaf.lean`. The **44** is `--tree`'s own header count and it counts
+*figures*, so it is one more than the **43** distinct positions the report prints, one of which
+carries two; the **540** and the **81** are counted with the stub on the tree, because the new
+module has to be elaborated too, and without it the same two are **539** and **80**. So the
+comparison here is **0 against 44**, the widest this file has seen, and it is not close.
 
 **What the module costs is the figure sweep, not the build.** Adding any module under
 `FormalSchemes/` falsifies every absolute *reverse*-closure figure quoted about anything it imports
@@ -374,9 +380,11 @@ renumbered — in the first case because the ratio it declines a move on was arg
 call site*, and this module is the second.
 
 This paragraph's counts are measurements of the diff that added this file, at the base it was taken
-at; they are not standing claims about any later tree and nothing re-runs them. Re-measure with
-`scripts/closure_audit.py --tree`, and price any sixth import with `--edge` before writing a word
-about it.
+at; they are not standing claims about any later tree and nothing re-runs them — except the **530**,
+which `--tree` attributes and checks as a claim in its own right, so that one numeral is renumbered
+with the tree while the **37**, the **17** and the two union figures beside it are not. Re-measure
+with `scripts/closure_audit.py --tree`, and price any sixth import with `--edge` before writing a
+word about it.
 
 **Seven of the statements below are general and all seven are kept here, and the decisive one is
 decided by a walk rather than by taste.**
