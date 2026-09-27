@@ -517,7 +517,19 @@ this one's imports* are different questions with different answers, over file li
 identical. Two species and no third, which is this subsection's own table: a project total or tree
 census, and a reverse closure of a module the stub reaches. A stub is a leaf, so no forward closure
 can move and no file's size changes; a claim landing outside those two is reported as
-`unclassified`, which is never a level.
+`unclassified`, which is never a level. **A tree census is in that first species and `--edge`'s
+population deliberately has no census in it, and the asymmetry is about which species can name the
+figure rather than about which hypothetical moves it.** Both move it — an import changes what
+reaches what, which is what a census partitions by, and `--edge
+FormalSchemes.AdicRing:FormalSchemes.AwayCompletionUniversal` moves nine census figures, a count
+`edge_cost`'s own comment carries so the cap is not silent. What differs is where the figure would
+go: `--edge`'s three species are exhaustive for *closures* and a bucket is not one, so pricing it
+would print it as `unclassified`, which is false advice about a figure `--tree` already checks,
+while `--stub`'s first species fits a census exactly — a stub grows `len(mods)` and a census's
+universe is a count of modules, so it moves for the same reason the project total does. So a
+module's price includes every census figure it falsifies, and since issue 2227 it does; an
+import's names none. A hypothetical-module price you find quoted in a docstring and cannot
+reproduce is worth checking against that date before assuming the walk moved.
 
 **The rebuild beside that price has four readings, and the report prints all four rather than
 picking one silently.** Whether a repaired file counts as re-elaborating *itself*, and whether the
@@ -749,6 +761,20 @@ numeral*. So write a census like this and every numeral in it is checked:
   the claim is **made of** and not merely present earlier in the sentence: *"this file is a leaf,
   and `FormalSchemes.X` is the only one of the **N**"* is a claim about `X`, and the species reads
   it as one, because whether a **named** module is the only one is a question no walk here answers.
+
+**Which of the first bullet's two ways you name the set decides what happens when you repair an
+identity, and one of them silently stops the census being checked.** A stale *"this module is the
+only one of the **N**"* prints two remedies and the first is *say it of the module the walk gives* —
+so you write the rival's name into the sentence, which adds a module token to it. If the set was
+named **one sentence back**, before the opener's colon, the census's own sentence now names one
+module against a spelled count of six, the hop still names six, the checksum still resolves and the
+buckets, the universe and the remainder stay checked. If the set was named **in the census's own
+sentence**, that sentence now names seven against a spelled six, nothing resolves, and the **whole
+census declines** — green, with the reason printed, and no longer read. Both are safe and neither
+can go red on correct prose; the difference is only whether you still have the check afterwards. So
+prefer the opener for a census you also make an identity claim in, and if you take the decline,
+re-spell the cardinality to match rather than leaving it. `--selftest` pins both halves on a tree
+that is genuinely red before the repair.
 
 A census stating the strict convention for its own buckets — not counting a module as reaching
 itself — declines, because accepting both readings silently would give a stale figure two ways to
