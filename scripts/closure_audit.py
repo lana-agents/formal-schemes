@@ -1696,6 +1696,14 @@ def edge_cost(root: str = ".", importer: str = "", imported: str = "") -> dict:
     # rather than only in a pull request is the point: the cap is not silent.  If a later row wants
     # these priced, the honest shape is a species of its own with a label of its own, not a fourth
     # meaning for `UNCLASSIFIED`.
+    #
+    # **`--stub` does price them, and the difference is not a disagreement.** Adding a *module* is
+    # the operation a census is a statement about -- its universe is a count of modules and the new
+    # one lands in a bucket -- so there a census figure is part of the price and `stub_species` puts
+    # it beside the project total, whose universe moves for the same reason.  Adding an *import*
+    # moves closures, and a bucket is not one.  So the rule is about what the hypothetical changes,
+    # not about which mode is more thorough, and a reader finding one filter and not the other
+    # should read this paragraph and `stub_cost`'s together.
     base = {_fingerprint(c) for c in audit(root, real)[0]}
     population = [c for c in audit(root, hypo)[0]
                   if c.get("kind") != "census" and _fingerprint(c) not in base]
@@ -1786,12 +1794,21 @@ def stub_species(c: dict, reached: set) -> int:
 
     A stub is a **leaf**: nothing imports it, so no forward closure anywhere can move, and it is a
     new file rather than a longer one, so no size figure can move either.  What is left is a project
-    total or tree census -- `len(mods)` went up, and that figure has no subject, so its position on
-    the tree is irrelevant -- and a reverse closure of a module the stub reaches.  The two are
+    total or tree census -- `len(mods)` went up, so the tree's own count moved, and so did every
+    census figure counted against a universe of *all the others*; neither has a subject whose
+    position on the tree matters -- and a reverse closure of a module the stub reaches.  The two are
     exhaustive for that reason and **0 is never a level**: a claim landing there is a shape nobody
-    has thought about, or a bug in this function.  A census **bucket** figure would be a third, and
-    it never arrives -- `stub_cost` filters it out before this runs, for the reason argued there,
-    and species 1's label already names a census because `CENSUS[0]`'s total shares `kind="total"`.
+    has thought about, or a bug in this function.
+
+    A census **bucket** figure is species **1**, beside the project total, and the `kind` test is
+    what says so.  It reads `in ("total", "census")` rather than `== "total"` alone because
+    `CENSUS[0]`'s total shares `kind="total"` while a bucket, a universe size and an identity carry
+    `kind="census"` -- which is why the label has read *a project total or tree census* since before
+    the buckets were priced.  A census is **not** a third species: what a stub moves about one is
+    the same thing it moves about the tree's own count, namely a figure read off a walk of the whole
+    tree rather than off any one module's closure, and giving it a level of its own would say the
+    two need different repairs when they do not.  `--edge` is the other way round and
+    `edge_species` says why.
 
     `reached` is checked rather than assumed, which is the whole value of returning 0: a reverse
     closure the stub does not reach cannot have moved, so a mismatch about one is either already on
@@ -1799,7 +1816,7 @@ def stub_species(c: dict, reached: set) -> int:
     above here is wrong.  Keyed on `subject` and not on `about`, for `edge_species`' reason: a
     `self` companion's `about` is the module the sentence is comparing against.
     """
-    if c.get("kind") == "total":
+    if c.get("kind") in ("total", "census"):
         return 1
     if c.get("kind") == "reverse" and c.get("subject") in reached:
         return 2
@@ -1858,26 +1875,17 @@ def stub_cost(root: str = ".", name: str = "", imports: tuple[str, ...] = ()) ->
         reached = _forward[name]
         population = rooted(audit(tmp)[0], tmp)
 
-    # A census **bucket** figure is filtered here for the reason `edge_cost` gives, and the reason
-    # is weaker here than there, so it is worth saying which way it cuts.  Adding a module is what
-    # falsifies a census -- its universe grows and a module can land in a bucket the sentence
-    # names nowhere -- so unlike `--edge` these figures belong in a module's price, and excluding
-    # them **understates** it.  Measured at `ab0a3b4` on
-    # `--stub FormalSchemes.ZStub:FormalSchemes.RefinedOverlapTransition`: the filter drops **3** --
-    # `RefinedOverlapTransition.lean:305`'s *the other 586*, `:393`'s *the only one of the 587*,
-    # and `:393`'s claim that this module alone reaches all three -- so the honest price of a module
-    # over this one is **47 repairs at 45 positions**, not the **44 / 43** this mode reports.
-    #
-    # It is filtered anyway, and only for now.  `## Placement` quotes the **44** (row 2212, #819),
-    # nothing reds on it because a hypothetical-module price is unattributable by construction, and
-    # making this mode disagree with live prose that no instrument can fail on is the species rows
-    # 2209 and 2212 exist to remove rather than create.  Repairing it is two edits in one paragraph
-    # of a file that has a pull request in review on it, and `stub_species`' existing species 1 is
-    # already labelled *a project total or tree census*, so the whole change is one `kind` there
-    # plus those numerals.  **That is a row of its own and this comment is its specification.**
+    # A census **bucket** figure is priced here, unlike in `--edge`, and the asymmetry is the point
+    # rather than an oversight: adding a module is exactly the operation that falsifies a census.
+    # The universe grows, the new module lands in some bucket, and it can land in one the sentence
+    # names nowhere -- so these figures are part of what a module costs, and leaving them out
+    # understated the price.  `edge_species` argues the other half, where an import moves closures
+    # and the three closure species really are exhaustive.  Row 2227 lifted the filter this comment
+    # used to argue for; the filter's own measurement of what it dropped -- three figures on
+    # `--stub FormalSchemes.ZStub:FormalSchemes.RefinedOverlapTransition`, taking it from 44 at 43
+    # positions to 47 at 45 -- is now what the mode reports rather than a note beside it.
     base = {_fingerprint(c) for c in rooted(audit(root)[0], root)}
-    population = sorted((c for c in population
-                         if c.get("kind") != "census" and _fingerprint(c) not in base),
+    population = sorted((c for c in population if _fingerprint(c) not in base),
                         key=lambda c: (c["path"], c["line"]))
     files = sorted({c["path"] for c in population})
     edited = [f[:-len(".lean")].replace("/", ".") for f in files]
@@ -1974,7 +1982,7 @@ def report_stub(r: dict) -> None:
         # 65 is the longest path under `FormalSchemes/` at `2857956`; `--edge`'s 58 overflows on
         # four of this tree's files and the columns stop lining up where it does.
         print("    %-65s %3d repairs %5d" % (path, repairs, consumers))
-    for k, what in ((1, "total       "), (2, "reverse     "),
+    for k, what in ((1, "total/census"), (2, "reverse     "),
                     (0, "UNCLASSIFIED -- the two species are exhaustive for a leaf, so this is a "
                         "claim shape nobody has thought about, or a bug here")):
         for c in r["species"][k]:
@@ -3850,6 +3858,74 @@ def selftest() -> int:
                               " exactly one, 1 reaches two and 1 reaches four"),
           ([], [], []))
 
+    # **The checksum's *ambiguous* case, which row 2224 decision 1 calls out by name --
+    # *"do not try both and accept either"* -- and which nothing pinned until row 2227's mutation
+    # battery asked.** Every case above resolves through exactly one of `own` and `hop` because only
+    # one of them numbers the spelled cardinality, so they measure that the checksum is **there**;
+    # they say nothing about what it does when **both** number it and the two sets differ.  Here the
+    # opener names `A1`..`A5` and the census's own sentence names `A1`..`A4` and `Rival` -- five
+    # each, different sets -- and every numeral is correct for the opener's reading.  The species
+    # must **decline**: a resolver preferring one source outright answers this silently and
+    # correctly by luck, which is the failure mode the checksum exists to make impossible rather
+    # than unlikely.
+    check("two candidate subject sets both numbering the spelled cardinality is a decline, not a "
+          "preference for one of them",
+          census_run(sentence="Over `FormalSchemes.A1`, `FormalSchemes.A2`, `FormalSchemes.A3`,"
+                              " `FormalSchemes.A4` and `FormalSchemes.A5`: nothing else is measured"
+                              " here.  It needs `FormalSchemes.A1`, `FormalSchemes.A2`,"
+                              " `FormalSchemes.A3`, `FormalSchemes.A4` and `FormalSchemes.Rival` at"
+                              " once, and this module is the only one of the 10 that reaches all"
+                              " five -- 1 reaches none, 6 reach exactly one, 1 reaches two and"
+                              " 1 reaches four"),
+          ([], ["the set this census is of does not resolve to the 5 it spells"
+                " (5 named here, 5 in the opener one sentence back)"], []))
+
+    # **`IDENTITY_DISPOSITION`'s first remedy, followed on a live tree in both census idioms, which
+    # is where the two come apart.**  The remedy reads *say it of the module the walk gives*, and a
+    # `--selftest` case asserting which remedy a mismatch carries does not say whether following it
+    # helps -- #815 was rejected for advice that did nothing, so the rule on this file is to run
+    # every branch.  Both trees below start genuinely red (`Rival` reaches all five, the sentence
+    # says this module does) and both go green under the repair.  What differs is whether the census
+    # is still **read** afterwards, and it turns on where the subject set is written:
+    #
+    # * **the subject set one sentence back, before the opener's colon** -- naming the rival adds a
+    #   token to the census's own sentence, `own` becomes 1 against a spelled 5, the hop still
+    #   numbers 5, so the checksum still resolves to exactly one candidate and the four buckets, the
+    #   universe and the remainder stay checked.  The identity itself is gone, correctly: the claim
+    #   is now about a named module and `_identity_is_self` says so;
+    # * **the subject set in the census's own sentence** -- the same repair takes `own` from 5 to 6
+    #   against a spelled 5, the hop numbers 0, no candidate matches, and the **whole census
+    #   declines**.  Green, with the reason spelled out, and no longer checked.
+    #
+    # Both are safe and the disposition keeps its promise, which is to dispose of the red.  But an
+    # author repairing a live census of the second shape loses the check without being told, so
+    # `CONTRIBUTING.md`'s census bullets say which idiom survives the repair and this pins both
+    # halves of that sentence.
+    HOP = ("Over `FormalSchemes.A1`, `FormalSchemes.A2`, `FormalSchemes.A3`, `FormalSchemes.A4`"
+           " and `FormalSchemes.A5`: nothing else is measured here.  And %s is the only one of the"
+           " 10 that reaches all five -- 1 reaches none, 6 reach exactly one, 1 reaches two and"
+           " 1 reaches four")
+    OWN = ("Nothing else is measured here.  It needs `FormalSchemes.A1`, `FormalSchemes.A2`,"
+           " `FormalSchemes.A3`, `FormalSchemes.A4` and `FormalSchemes.A5` at once, and %s is the"
+           " only one of the 10 that reaches all five -- 1 reaches none, 6 reach exactly one,"
+           " 1 reaches two and 1 reaches four")
+    swapped = dict(cen_imports="A1 A2 A3 A4", rival_imports="A1 A2 A3 A4 A5")
+    check("both census idioms red on the identity, so the repair below is a repair and not a "
+          "no-op",
+          (census_run(sentence=HOP % "this module", **swapped)[0],
+           census_run(sentence=OWN % "this module", **swapped)[0]),
+          ([(1, 0, "this file among the modules reaching all 5, which this sentence says it is"
+                   " the only one of"),
+            (0, 1, "the modules besides this one reaching all 5, which this sentence says is"
+                   " none -- the walk gives `FormalSchemes.Rival`")],) * 2)
+    check("following the identity's own remedy keeps the census checked when the subject set is "
+          "one sentence back, and declines it when the subject set is in the census's own sentence",
+          (census_run(sentence=HOP % "`FormalSchemes.Rival`", **swapped),
+           census_run(sentence=OWN % "`FormalSchemes.Rival`", **swapped)),
+          (([], [], []),
+           ([], ["the set this census is of does not resolve to the 5 it spells"
+                 " (6 named here, 0 in the opener one sentence back)"], [])))
+
     # And the same shape the other way round, so the pair is not one-sided: a *named* module
     # standing earlier in the sentence does not stop the claim being about this file when the
     # self-phrase is what the claim is made of.  This is `:393`'s own word order -- *"it needs `A`,
@@ -3912,16 +3988,39 @@ def selftest() -> int:
                len(r["brought"]), r["population"], r["species"][0]),
               ([(1, 0), (6, 7)], 1, [], []))
 
-        # And `--stub`, where the same filter runs for a weaker reason and `stub_cost`'s comment
-        # says so: a stub over `Cen` reaches all five, so it lands in the top bucket and moves both
-        # the universe and the only-one claim -- which is a module's price and not an import's.  The
-        # case pins that the filter is in force and that nothing reaches `UNCLASSIFIED`, because the
-        # day somebody lifts the filter this is the case that has to be rewritten rather than a
-        # report that silently grows three rows.
+        # And `--stub`, where the answer is the **opposite** and `stub_cost`'s comment says why: a
+        # stub over `Cen` reaches all five, so it lands in the top bucket and moves both the
+        # universe and the only-one claim -- which is a module's price and not an import's.  This
+        # case is the rewrite of row 2224's *"--stub prices no census figure either"*, which existed
+        # to make the day the filter was lifted loud rather than silent; row 2227 lifted it, and the
+        # assertion is now that the figures arrive, that they arrive in **species 1** beside the
+        # project total rather than under `UNCLASSIFIED`, and that nothing at all reaches species 0.
+        # Asserted by value and not by count: a count would pass on three figures about the wrong
+        # thing, and the `what` strings are what say which assertion each one is.
+        # And the same population **rendered**, because species 1's body label is the only place a
+        # reader learns which species a figure landed in and `stub_cost`'s return value cannot be
+        # wrong about a word.  It read `total` while a census could not reach it; a report calling
+        # a census bucket *total* would satisfy every structural case here.
+        check("the report files a census figure under a label that names a census, not under the "
+              "project total's",
+              tree_report(d, "--stub", "FormalSchemes.ZStub:FormalSchemes.Cen")[1][-2:],
+              ["  total/census  FormalSchemes/Cen.lean:1  the size of the set this census"
+               " partitions: states 10, the stub would give 11",
+               "  total/census  FormalSchemes/Cen.lean:1  the modules besides this one reaching"
+               " all 5, which this sentence says is none -- the walk gives"
+               " `FormalSchemes.ZStub`: states 0, the stub would give 1"])
+
         s = stub_cost(d, "FormalSchemes.ZStub", ("FormalSchemes.Cen",))
-        check("a stub lands in the top bucket, and --stub prices no census figure either",
-              (s["size"], s["hypo_size"], s["population"], s["species"][0]),
-              (10, 11, [], []))
+        check("a stub lands in the top bucket, and --stub prices every census figure it moves",
+              (s["size"], s["hypo_size"], len(s["population"]), s["species"][0], s["species"][2],
+               [(c["stated"], c["actual"], c["what"]) for c in s["species"][1]]),
+              (10, 11, 2, [], [],
+               # Two and not three: the stub joins the top bucket, so *this file is in it* stays
+               # true and only the exclusivity half of the identity fires.  That asymmetry is the
+               # two-figure split working, and a count alone would not show it.
+               [(10, 11, "the size of the set this census partitions"),
+                (0, 1, "the modules besides this one reaching all 5, which this sentence says is"
+                       " none -- the walk gives `FormalSchemes.ZStub`")]))
 
     # **The identity, rendered.**  Every other census case above reads `audit`'s return value, and
     # on this population that is not enough: the defect the two-figure split repairs was a

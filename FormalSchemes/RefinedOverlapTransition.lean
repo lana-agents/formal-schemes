@@ -414,13 +414,24 @@ on the tree — that module is already inside this file's 71, through
 adding a module costs* says to, by writing the file and running `--tree` against it, and the stub
 is `import FormalSchemes.RefinedOverlapTransition` and nothing else — a module *over* this one,
 not a sibling repeating this file's six imports, which is a different and cheaper experiment at
-**40**. Over this one it is **44** figure repairs in **18** files, whose union re-elaborates
+**43**. Over this one it is **47** figure repairs in **18** files, whose union re-elaborates
 **540** of the **588** modules that tree would have, **81** of them without
-`FormalSchemes/StructureSheaf.lean`. The **44** is `--tree`'s own header count and it counts
-*figures*, so it is one more than the **43** distinct positions the report prints, one of which
-carries two; the **540** and the **81** are counted with the stub on the tree, because the new
-module has to be elaborated too, and without it the same two are **539** and **80**. So the
-comparison here is **0 against 44**, the widest this file has seen, and it is not close.
+`FormalSchemes/StructureSheaf.lean`. The **47** is `--tree`'s own header count and it counts
+*figures*, so it is **two** more than the **45** distinct positions the report prints, because two
+positions carry two figures each, both of them in this paragraph's own section: the *nearest thing
+to a subject-matter home* sentence below, which states two of them in one breath, and the census
+sentence above that one, whose universe size and top-bucket member both move because the stub grows
+the set *and* joins the bucket. The **540** and the **81**
+are counted with the stub on the tree, because the new module has to be elaborated too, and without
+it the same two are **539** and **80**. So the comparison here is **0 against 47**, the widest this
+file has seen, and it is not close.
+**Four of the 47 are figures about the whole tree rather than about one module's place in it** — the
+module count, both censuses' universes and that top-bucket member — and three of the four went
+unpriced until issue 2227 lifted `--stub`'s census filter, so a price for either experiment quoted
+from before that row is three figures and two positions short of what the mode says now. No numeral
+of the older reading is kept here, because a stale figure nothing reads is what rows 2209 and 2212
+exist to remove. An import cannot move a census and `--edge` still prices none; adding a *module* is
+the operation a census is a statement about.
 
 **What the module costs is the figure sweep, not the build.** Adding any module under
 `FormalSchemes/` falsifies every absolute *reverse*-closure figure quoted about anything it imports
