@@ -313,7 +313,7 @@ forward closure of **55** — that module imports it on its first line — and
 `FormalSchemes.AwayCompletionCongrEquiv`'s of **38**, so dropping either import line would leave
 the 71 above unchanged. Both are kept because `FormalSpectrum.awayCompletionAlgEquivOfBase` and
 `CompletedTensorAwayInterchange.furtherLocFst` are used here directly, which is this tree's
-practice and not a departure from it: **140** of the **586** modules under `FormalSchemes/` carry
+practice and not a departure from it: **140** of the **587** modules under `FormalSchemes/` carry
 an import some other import of the same file already reaches, this one included. Counting only
 what each import brings that no other of the six reaches, the split is **6** for
 `FormalSchemes.AwayCompletionAlgHomBasicOpen`, **2** for
@@ -352,8 +352,8 @@ this file has seen, and it is not close.
 **What the module costs is the figure sweep, not the build.** Adding any module under
 `FormalSchemes/` falsifies every absolute *reverse*-closure figure quoted about anything it imports
 — CONTRIBUTING.md's *What adding a module costs* is the standing account — and here that is **37**
-numerals in **17** files, every one of them a `+1`. Editing those 17 re-elaborates **538** of the
-586 modules, and the concentration is the same one CONTRIBUTING.md records: the reverse closure of
+numerals in **17** files, every one of them a `+1`. Editing those 17 re-elaborates **539** of the
+587 modules, and the concentration is the same one CONTRIBUTING.md records: the reverse closure of
 `FormalSchemes.StructureSheaf` is **530**, and dropping that one file from the 17 takes the sweep's
 rebuild to **80**. Two of the 37 are not renumberings:
 `FormalSchemes/RefinedOverlapRestrict.lean` and
