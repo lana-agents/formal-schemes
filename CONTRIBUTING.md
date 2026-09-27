@@ -648,7 +648,11 @@ stands. A phrase with nothing pinning it to the whole tree is **not** checked an
 instead — *"N of the **T** modules"* on its own, *"over the **T** modules under it"*, *"the **T**
 modules under `FormalSchemes/Tate`"* — because *"**2** of the **5** modules that import it"* is the
 same words about a subset, and a checker that read its **5** as the project total would report a
-MISMATCH against correct prose, which is worse than the gap. **The pinned spelling is the fourth one
+MISMATCH against correct prose, which is worse than the gap. **Do not hang a restricting clause on
+the pinned spelling either**: *"the **T** modules under `FormalSchemes/` that import `Foo`"* and its
+participial twin *"…`FormalSchemes/` importing `Foo`"* are subsets in the same words, they are
+refused for the same reason, and they go to the sweep too — so if what you mean **is** the total,
+let the path end the noun phrase. **The pinned spelling is the fourth one
 this section owes to a real defect, and it was found the expensive way**: it was invisible to
 `--tree` *and* to `--sweep` until row 2209, and `FormalSchemes/RefinedOverlapTransition.lean` had
 three numerals go stale behind it inside one paragraph while `--tree` reported MISMATCH 0 — one of

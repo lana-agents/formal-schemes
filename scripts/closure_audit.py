@@ -397,9 +397,35 @@ COMPANIONS = [
 # narrowing gives up is **0 sentences at `267efe3`** -- both incumbent spellings matched nothing
 # anywhere under `FormalSchemes/` -- and what it gives up in the future lands on the reading list
 # instead, which is what `TOTAL_UNCHECKED` is for.
+#
+# **The same shape sits on the other side of the path and is refused there too.**  *"the **2**
+# modules under `FormalSchemes/` that import `Foo`"* is a subset in the same words as the total,
+# and a sentence saying it is usually **correct**: the numeral is the size of somebody's reverse
+# closure.  So a relative pronoun or a participle immediately after the path cancels the match,
+# exactly as a deeper path segment does.  This half was open in the first cut of row 2209 and is
+# what its review rejected: the narrowing above and this one are one decision, not two, and
+# applying it before the path and not after would be the asymmetry.
+#
+# **Read the two lookaheads together with the path alternation, which is why the alternation is
+# spelled out rather than written `` `?FormalSchemes/`? ``.**  With an optional closing backtick
+# the engine can leave that backtick unconsumed, and then *every* lookahead appended after it is
+# inspecting a backtick rather than the next word -- so the guards silently do nothing in the
+# backticked spelling, which is the one this tree writes.  The incumbent `(?![A-Za-z])` survived
+# only because a deeper path fails for a second reason (the *opening* `` `? `` cannot then match
+# the literal).  Measured: with `` `? `` the `that` clause above is read as a total.
+#
+# What is left, said rather than hidden: a restriction introduced by a bare preposition -- *"the
+# **2** modules under `FormalSchemes/` with a redundant import"* -- still matches, and no regex
+# settles that one, because the same words with no restriction are the live spelling this tree uses
+# (*"**140** of the **586** modules under `FormalSchemes/` carry an import"*).  A total cannot be
+# *declined*, so a false positive here is not dispositionable by whoever trips it; that asymmetry,
+# and whether this species should grow a decline path at all, is the open question row 2209's review
+# left to its own row.  The population of every shape named in this paragraph is **0** at `267efe3`.
 TOTAL = [
     re.compile(r"of the project's \*{0,2}(\d+)\*{0,2} modules", re.I),
-    re.compile(r"the \*{0,2}(\d+)\*{0,2} modules under `?FormalSchemes/`?(?![A-Za-z])", re.I),
+    re.compile(r"the \*{0,2}(\d+)\*{0,2} modules under "
+               r"(?:`FormalSchemes/`|FormalSchemes/(?![A-Za-z]))"
+               r"(?!\s+(?:that|which|who|whose)\b)(?!\s+\w+ing\b)", re.I),
 ]
 
 # The total spellings `TOTAL` declines to check, which are therefore the ones `--sweep` has to
@@ -407,10 +433,13 @@ TOTAL = [
 # `RefinedOverlapTransition.lean:118`'s *"re-elaborates **538** of the 586 modules"* is the live
 # instance, and it sits in a sentence that also carries a closure claim -- so the per-sentence
 # `CLOSURE` exclusion in `invisible` hid it as well, which is why that one exclusion is read per
-# **figure** for this species.  The preposition is the trigger, `of` or `over`, matching the two the
-# tree writes; this pattern also matches the *checked* spellings, being a prefix of them, and
-# `invisible` tries `TOTAL` first for exactly that reason.
-TOTAL_UNCHECKED = re.compile(r"\b(?:of|over) the \*{0,2}\d+\*{0,2} modules?\b", re.I)
+# **figure** for this species.  There are two triggers: the preposition, `of` or `over`, matching
+# the two the tree writes; and the *"N modules under"* noun phrase itself, which carries the shapes
+# `TOTAL` refuses after the path -- without that second alternation a restricted total is invisible
+# to both instruments, which is the state row 2209 exists to end.  Both spellings `TOTAL` *does*
+# read are matched here too, being prefixes, and `invisible` tries `TOTAL` first for that reason.
+TOTAL_UNCHECKED = re.compile(r"\b(?:of|over) the \*{0,2}\d+\*{0,2} modules?\b"
+                             r"|\bthe \*{0,2}\d+\*{0,2} modules under\b", re.I)
 
 # `forward closure 36 with itself` -- the other convention, inline.
 WITH_ITSELF = re.compile(r"^\s*(?:project |modules? )*(?:counted )?(?:with itself|including it)")
@@ -1749,6 +1778,42 @@ def selftest() -> int:
                      "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
                      "**1**, counted over the **2** modules under it. -/\n")
         check("`under` with no path is not a project total, and it is on the reading list",
+              (audit(d)[0], list(total_claims(project_modules(d))),
+               [c["module"] for c in invisible(project_modules(d))]),
+              ([], [], ["FormalSchemes.Mid"]))
+
+        # The bare spelling of a deeper path, which the backticked alternative cannot reach and so
+        # needs its own case: without `(?![A-Za-z])` on that branch, *FormalSchemes/Tate* reads as
+        # the tree.  The backticked fixture above does not pin this clause -- it is refused there
+        # because the *opening* backtick is not what the bare branch starts with.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  It is 1 of the **2** modules under FormalSchemes/Tate. -/\n")
+        check("a subtree count with the path unbackticked is not a project total either",
+              (audit(d)[0], list(total_claims(project_modules(d))),
+               [c["module"] for c in invisible(project_modules(d))]),
+              ([], [], ["FormalSchemes.Mid"]))
+
+        # The other half of the boundary, and the one the first cut of this row left open: a
+        # restricting clause **after** the path is the same subset-in-the-same-words shape as
+        # *under it* before it, and the prose here is **true** -- the reverse closure of
+        # `FormalSchemes.Base` really is the two other modules -- so a grammar that read its
+        # numeral as the total would report a MISMATCH against a correct sentence.  Both the
+        # relative-pronoun and the participial spelling are refused, and both land on the reading
+        # list, which is where a total this grammar declines to read belongs.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  Exactly the **2** modules under `FormalSchemes/` that import\n"
+                     "`FormalSchemes.Base` pay for an edit there. -/\n")
+        check("a clause restricting the path is not a project total, and it is on the reading list",
+              (audit(d)[0], list(total_claims(project_modules(d))),
+               [c["module"] for c in invisible(project_modules(d))]),
+              ([], [], ["FormalSchemes.Mid"]))
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  Exactly the **2** modules under `FormalSchemes/` importing\n"
+                     "`FormalSchemes.Base` pay for an edit there. -/\n")
+        check("a participle restricting the path is refused the same way",
               (audit(d)[0], list(total_claims(project_modules(d))),
                [c["module"] for c in invisible(project_modules(d))]),
               ([], [], ["FormalSchemes.Mid"]))
