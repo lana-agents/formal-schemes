@@ -680,14 +680,39 @@ it at all, which is why the total cannot be read as a companion of a claim. The 
 that paragraph is still unpinned, deliberately: it is on the reading list, which is where a sentence
 a checker cannot read belongs.
 
+**A tree *census* is the fifth spelling this section owes to a defect, and it is the one that hides
+best: the noun of the count phrase is elided, so there is nothing for any grammar to pin.** A census
+is a partition of the module set written with no closure phrase in it — *"the best any of the other
+**T−1** does is three: **A** reach none, **B** reach exactly one and **C** reach two"*, *"this
+module is the only one of the **T** that reaches all three"*. The figures are written as letters
+throughout this entry — **T** for the tree's module count, **A** to **D** for the buckets — because
+this file is outside every instrument's walk, so a real numeral copied into it is a figure nothing
+will ever re-check. Every numeral in one moves
+when a module is added, and the *reach none* bucket and the two totals move while the others do
+not, so **you cannot repair a census by adding one to every numeral in it**. Row 2207 falsified
+seven of them in one paragraph with `--tree` reporting MISMATCH 0 and `--sweep` silent, which is
+how this entry was paid for. Since row 2214 `--sweep` lists a census sentence that carries *the
+other **N***, *the only one of the **N*** or an *N reach* bucket predicate — a bare list of buckets
+(*"**A′** / **B′** / **C′** / **D** under the other convention"*) still reaches the list only if
+something else in the sentence is a marker — and `--tree` checks exactly one census spelling: *"the
+only one of the **T** modules under `FormalSchemes/`"*, where naming the path says which set the
+**T** counts. **Write that one if you want the figure checked.** *"the other **N**"* is deliberately
+never checked in any spelling, because *the other* needs an antecedent for what is excluded and no
+grammar has it — *"the other **T−6** modules under `FormalSchemes/`"* excluding a named six is the
+same words as the whole tree less this file. Bucket figures are never checked either: they need to
+know which modules the sentence partitions. Both are read by a human on every `--sweep` instead,
+which is this section's standing disposition. **A census MISMATCH prints its own remedy and it is
+not the total's**: post-modifying the noun phrase is what makes a *total* refuse and does nothing at
+all to a census, so what sends a census to `--sweep` is eliding the noun or naming the subset.
+
 Extending `CLOSURE` to those spellings was considered and declined twice, and the reason is not
 cost: *"the closure of `A` is N"* and *"`A` is in the closure of N"* are **opposite** claims in
 nearly the same words, so a second grammar would have to carry the direction, and getting that
 wrong turns a silent gap into confident mis-measurement. `--sweep` **counts** them instead. It
 lists every sentence that carries a numeral together with the word `closure`, a project-module
-total or *upstream of N*, and that `--tree` neither attributes nor declines; `--tree` prints the
-count in its header and never fails on it. Sentences naming Mathlib are left out — they measure a
-graph this script does not walk.
+total, a tree census or *upstream of N*, and that `--tree` neither attributes nor declines; `--tree`
+prints the count in its header and never fails on it. Sentences naming Mathlib are left out — they
+measure a graph this script does not walk.
 
 **That exclusion is deliberately over-wide, and it has already cost a figure.** Nine sentences name
 Mathlib; eight of them are genuinely about Mathlib's import graph, and the ninth,
