@@ -569,9 +569,11 @@ Two spellings are worth preferring for that reason alone, since both are checked
   was last named, which is exactly the one the description was written to avoid repeating.
   *"…in the forward closure of the first, whose own forward closure is **267**"* was attributed to
   a module named three clauses earlier, and reported as a MISMATCH twice (row 1840);
-* keep a companion figure in the same sentence as the claim it belongs to: *"N of the project's T
-  modules"*, *"against this file's M"*, *"K before this file"* and *"(J counted with itself)"* are
-  all checked against the same walk, and all four have been wrong on this tree.
+* keep a companion figure in the same sentence as the claim it belongs to: *"against this file's
+  M"*, *"K before this file"* and *"(J counted with itself)"* are all checked against the same walk,
+  and all three have been wrong on this tree. A **project total** used to be read that way too and
+  is not any more — it has no subject, so it needs no host claim and is checked wherever it stands
+  (row 2209); what it needs instead is the spelling below.
 
 A figure spelled in words is invisible to it. *"The reverse closure of `FormalSchemes.Foo` is the
 two consumers and nothing else"* was **five** modules by then and no check could say so; write the
@@ -638,6 +640,21 @@ Sweeping for every sentence that pairs a numeral with the word `closure`, with a
 total or with *upstream of N* reports all three. Row 1832 read that population and found **twelve**
 wrong sentences in eleven files carrying **twenty** wrong numerals, against the two the greps
 found: one project total stale by 62, one reverse closure stale by 32.
+
+**A project total is the one figure here with no subject, and it has its own spelling rule: pin the
+count to the tree by naming the path.** Write *"N of the project's **T** modules"* or *"N of the
+**T** modules under `FormalSchemes/`"*, and `--tree` checks the **T** wherever in the file it
+stands. A phrase with nothing pinning it to the whole tree is **not** checked and goes to `--sweep`
+instead — *"N of the **T** modules"* on its own, *"over the **T** modules under it"*, *"the **T**
+modules under `FormalSchemes/Tate`"* — because *"**2** of the **5** modules that import it"* is the
+same words about a subset, and a checker that read its **5** as the project total would report a
+MISMATCH against correct prose, which is worse than the gap. **The pinned spelling is the fourth one
+this section owes to a real defect, and it was found the expensive way**: it was invisible to
+`--tree` *and* to `--sweep` until row 2209, and `FormalSchemes/RefinedOverlapTransition.lean` had
+three numerals go stale behind it inside one paragraph while `--tree` reported MISMATCH 0 — one of
+them in a sentence with no closure phrase in it at all, which is why the total cannot be read as a
+companion of a claim. The unpinned half of that paragraph is still unpinned, deliberately: it is on
+the reading list, which is where a sentence a checker cannot read belongs.
 
 Extending `CLOSURE` to those spellings was considered and declined twice, and the reason is not
 cost: *"the closure of `A` is N"* and *"`A` is in the closure of N"* are **opposite** claims in
