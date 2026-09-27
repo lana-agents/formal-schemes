@@ -713,18 +713,45 @@ when a module is added, and the *reach none* bucket and the two totals move whil
 not, so **you cannot repair a census by adding one to every numeral in it**. Row 2207 falsified
 seven of them in one paragraph with `--tree` reporting MISMATCH 0 and `--sweep` silent, which is
 how this entry was paid for. Since row 2214 `--sweep` lists a census sentence that carries *the
-other **N***, *the only one of the **N*** or an *N reach* bucket predicate — a bare list of buckets
-(*"**A′** / **B′** / **C′** / **D** under the other convention"*) still reaches the list only if
-something else in the sentence is a marker — and `--tree` checks exactly one census spelling: *"the
+other **N***, *the only one of the **N*** or an *N reach* bucket predicate that row 2224's species
+does not read — a bare list of buckets (*"**A′** / **B′** / **C′** / **D** under the other
+convention"*) still reaches the list only if something else in the sentence is a marker — and
+`--tree` checks exactly one census spelling: *"the
 only one of the **T** modules under `FormalSchemes/`"*, where naming the path says which set the
-**T** counts. **Write that one if you want the figure checked.** *"the other **N**"* is deliberately
-never checked in any spelling, because *the other* needs an antecedent for what is excluded and no
+**T** counts. **Write that one if you want the figure checked.** *"the other **N**"* is
+never checked as a **total**, because *the other* needs an antecedent for what is excluded and no
 grammar has it — *"the other **T−6** modules under `FormalSchemes/`"* excluding a named six is the
-same words as the whole tree less this file. Bucket figures are never checked either: they need to
-know which modules the sentence partitions. Both are read by a human on every `--sweep` instead,
-which is this section's standing disposition. **A census MISMATCH prints its own remedy and it is
+same words as the whole tree less this file. **A census MISMATCH prints its own remedy and it is
 not the total's**: post-modifying the noun phrase is what makes a *total* refuse and does nothing at
-all to a census, so what sends a census to `--sweep` is eliding the noun or naming the subset.
+all to a census, so what sends a census total to `--sweep` is eliding the noun or naming the subset.
+
+**Since row 2224 the *buckets* are checked, and what makes that possible is that a census spells its
+own subject set's cardinality in words.** *"reaches all six of the above"* resolves to six module
+tokens or the reading is refused, and no other figure in this tree states the answer to the question
+its resolver is asking — which is why this is the one species here whose remedy is *change the
+numeral*. So write a census like this and every numeral in it is checked:
+
+- **name the set**, in the sentence itself or in the `## Placement` opener immediately before it and
+  before that opener's colon, and **spell how many** — *"reaches all six of the above"*. The count
+  and the modules named have to agree or the census declines;
+- **name the set being partitioned**, as *"the other **N**"* (every module but this one) or *"the
+  only one of the **N**"* (all of them), and not both. Here the **N** *is* checked, against the
+  walk — the census reading is a different use of the same words from the total reading above, and
+  it is available only because the subject set has already resolved;
+- **word each bucket** as *"**A** reach none"*, *"**B** reach exactly one"*, *"**C** reach two"*.
+  The predicate is read, so a bucket with a numeral and no readable index declines;
+- **name every bucket you do not give a numeral to**, in words — *"and this file is the one that
+  reaches three"*. The remainder is read off the walk rather than inferred from the shortfall, so a
+  bucket the sentence names nowhere is a MISMATCH, which is the failure a sum rule cannot see;
+- write *"this module is the only one of the **N**"* and the member of the top bucket is checked
+  **by name**, not just its count.
+
+A census stating the strict convention for its own buckets — not counting a module as reaching
+itself — declines, because accepting both readings silently would give a stale figure two ways to
+look right. The default is the self-counting one: a declaration placed in a file has that file's own
+contents. Anything the four gates refuse is printed in `--tree`'s `census-declined` block with the
+reason, which is where a census the buckets species cannot read is now read; `--sweep` no longer
+carries it, so there is one reading list per figure and not two.
 
 Extending `CLOSURE` to those spellings was considered and declined twice, and the reason is not
 cost: *"the closure of `A` is N"* and *"`A` is in the closure of N"* are **opposite** claims in
