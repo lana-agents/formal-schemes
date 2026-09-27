@@ -723,6 +723,49 @@ CENSUS_UNCHECKED = re.compile(r"\bthe other \*{0,2}\d+"
                               r"|\bthe only one of the \*{0,2}\d+"
                               r"|\b\*{0,2}\d+\*{0,2} reach(?:es)?\b", re.I)
 
+# **A tree census is not checked against its own arithmetic, and that is a decision rather than an
+# omission** (row 2220, measured at `2857956`).  A census that states both its buckets and its total
+# carries a partition identity -- the buckets sum to the total -- and checking it needs no walk at
+# all, which is why the idea has been raised four times, the fourth being row 2220 itself: it
+# reaches the bucket figures the comment above declines and the walk below checks, by a mechanism
+# no species here uses.  Three measurements say no, and the third is the one that settles it.
+#
+# * **The gate is the whole species, and it leaves a population of two.**  Gated on the bucket
+#   marker above, this tree carries **2** such sentences, of which **1** balances.  Ungated -- any
+#   sentence of three to eight numerals, asking only whether some subset of them sums to another --
+#   the population is **24** sentences of which exactly **1** is a census: the rest are EGA section
+#   numbers, issue numbers, `maxHeartbeats` values and `theorem` signatures whose binders count.
+#   Firing there is a confident MISMATCH against correct prose, which this file refuses everywhere,
+#   so no ungated design is admissible and the gated one has two sentences to work with.  The count
+#   of *eligible* sentences is deliberately not quoted here: it moves with every paragraph added
+#   anywhere on the tree, and it is the 24-to-1 ratio that carries the argument.
+# * **An unbalanced census and a census with a wordless bucket are the same observation, and this
+#   tree writes one of each.**  The second live census closes on *"and this file is the one that
+#   reaches three"* -- a bucket whose count is a word rather than a numeral -- so its numerals fall
+#   short by exactly one, and tolerating a shortfall is the only way to keep that correct sentence
+#   green.  Tolerating it is also what lets the realistic defect through: of the ten single-numeral
+#   perturbations of the *balancing* census, the strict reading catches ten and the
+#   shortfall-tolerant one catches five, and the five it misses are every bucket understated by one
+#   plus the total overstated by one -- which is what a module addition does to them.  **The decline
+#   path and the detection power are one clause pointed in opposite directions.**
+# * **The identity is invariant under the transformation that falsifies it.**  Adding a module to
+#   the tree adds one to the total and one to whichever bucket the new module lands in, so a census
+#   left *wholly* stale by an addition still balances.  Measured at `2857956` against a synthetic
+#   module importing nothing: the live figures balance, the post-addition figures balance, and the
+#   two are different figures.  So the check is silent on exactly the failure row 2214 paid for -- a
+#   batch of numerals falsified together by a module addition while `--tree` reported MISMATCH 0.
+#   It fires only when the addition lands *outside* the buckets the sentence enumerates, and there
+#   the claim the addition falsifies is a sentence with no numeral in it at all.
+#
+# **What was worth building instead is built, and it is the species below.**  Both live censuses
+# name the module set they partition -- one in its own sentence, one in the `## Placement` anchor
+# sentence one hop back -- and each spells that set's cardinality in words, which is a checksum on
+# the resolution rather than a guess.  That is what `census_claims` below walks (row 2226, #824,
+# merged as `e9679d6`), and at `2857956` all **13** numerals of that paragraph already reproduced
+# exactly, in both of the conventions it states.  So the buckets are pinned by a walk and the
+# decline above stands unchanged: the arithmetic pins none of those numerals and only ties them to
+# each other, which is why it is still not worth checking now that the buckets are.
+
 # A counterfactual **price**: *"**15** figure repairs in **9** files"*, the shape `--edge` and
 # `--stub` publish and the shape a `## Placement` paragraph quotes back at them.  It is a marker for
 # `--sweep` and never a species, and the reason is the one `--stub`'s section of the module
