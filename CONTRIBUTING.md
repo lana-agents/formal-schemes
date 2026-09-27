@@ -642,23 +642,43 @@ wrong sentences in eleven files carrying **twenty** wrong numerals, against the 
 found: one project total stale by 62, one reverse closure stale by 32.
 
 **A project total is the one figure here with no subject, and it has its own spelling rule: pin the
-count to the tree by naming the path.** Write *"N of the project's **T** modules"* or *"N of the
-**T** modules under `FormalSchemes/`"*, and `--tree` checks the **T** wherever in the file it
-stands. A phrase with nothing pinning it to the whole tree is **not** checked and goes to `--sweep`
-instead — *"N of the **T** modules"* on its own, *"over the **T** modules under it"*, *"the **T**
-modules under `FormalSchemes/Tate`"* — because *"**2** of the **5** modules that import it"* is the
-same words about a subset, and a checker that read its **5** as the project total would report a
-MISMATCH against correct prose, which is worse than the gap. **Do not hang a restricting clause on
-the pinned spelling either**: *"the **T** modules under `FormalSchemes/` that import `Foo`"* and its
-participial twin *"…`FormalSchemes/` importing `Foo`"* are subsets in the same words, they are
-refused for the same reason, and they go to the sweep too — so if what you mean **is** the total,
-let the path end the noun phrase. **The pinned spelling is the fourth one
-this section owes to a real defect, and it was found the expensive way**: it was invisible to
-`--tree` *and* to `--sweep` until row 2209, and `FormalSchemes/RefinedOverlapTransition.lean` had
-three numerals go stale behind it inside one paragraph while `--tree` reported MISMATCH 0 — one of
-them in a sentence with no closure phrase in it at all, which is why the total cannot be read as a
-companion of a claim. The unpinned half of that paragraph is still unpinned, deliberately: it is on
-the reading list, which is where a sentence a checker cannot read belongs.
+count to the tree, and let the noun phrase end there.** Write *"N of this tree's **T** modules"* —
+`the project's` and `the library's` read the same — or *"N of the **T** modules under
+`FormalSchemes/`"*, and `--tree` checks the **T** wherever in the file it stands. A phrase with
+nothing pinning it to the whole tree is **not** checked and goes to `--sweep` instead — *"N of the
+**T** modules"* on its own, *"over the **T** modules under it"*, *"the **T** modules under
+`FormalSchemes/Tate`"* — because *"**2** of the **5** modules that import it"* is the same words
+about a subset, and a checker that read its **5** as the project total would report a MISMATCH
+against correct prose, which is worse than the gap.
+
+**The second half of the rule is the one worth reading twice: a pin in front of the phrase is undone
+by anything hung on the back of it.** *"the **T** modules under `FormalSchemes/` that import
+`Foo`"*, *"…`FormalSchemes/` importing `Foo`"*, *"…`FormalSchemes/` repaired by row 2207"* and
+*"…`FormalSchemes/` with a redundant import"* are all subsets in the same words as the total —
+relative clause, present participle, past participle, preposition — and all four are refused and
+swept instead. So **if what you mean is the total, let a finite verb or a full stop follow the
+path**: *"…under `FormalSchemes/` **carry** an import"* is checked, and so is an anchor, *"…under
+`FormalSchemes/` **at** that commit"*, because `at`, `of`, `by`, `for`, `to`, `on`, `as`, `from` and
+`in` are deliberately outside the guard.
+
+**And if `--tree` reports a MISMATCH on a total that you know is right, do not touch the numeral.**
+This is the one species with no way to decline a figure by name, and that is deliberate — every
+other decline here is the script refusing an ambiguous subject, and an author-written opt-out would
+be the first place a stale figure could hide, in the species that exists because three of them hid.
+What you have instead is the shape: post-modify the phrase (*"that"*, *"which"*, a participle,
+*"with"*) and the sentence goes to the reading list with its numeral intact. Two shapes need that
+edit rather than being refused already, because nothing separates them from a finite verb — an
+adjective phrase, *"…under `FormalSchemes/` reachable from it"*, and a bare relative, *"…under
+`FormalSchemes/` `Foo` imports"*. Inserting *that* or *that are* is the whole repair, and `--tree`
+prints it under any total MISMATCH it reports.
+
+**The pinned spelling is the fourth one this section owes to a real defect, and it was found the
+expensive way**: it was invisible to `--tree` *and* to `--sweep` until row 2209, and
+`FormalSchemes/RefinedOverlapTransition.lean` had three numerals go stale behind it inside one
+paragraph while `--tree` reported MISMATCH 0 — one of them in a sentence with no closure phrase in
+it at all, which is why the total cannot be read as a companion of a claim. The unpinned half of
+that paragraph is still unpinned, deliberately: it is on the reading list, which is where a sentence
+a checker cannot read belongs.
 
 Extending `CLOSURE` to those spellings was considered and declined twice, and the reason is not
 cost: *"the closure of `A` is N"* and *"`A` is in the closure of N"* are **opposite** claims in
