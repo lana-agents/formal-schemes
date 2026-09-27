@@ -301,9 +301,10 @@ file's own contents; the closure convention of this section, which does not, giv
 alternative is an import into an existing file, which is the expensive direction.
 `FormalSchemes.RefinedOverlapRestrict` is the closest candidate and reaches **41**, and it is
 missing five of the six: the edges to `FormalSchemes.AwayCompletionAlgHomBasicOpen`,
+`FormalSchemes.CompletedTensorAwayInterchangePullbackLegs`,
 `FormalSchemes.AwayCompletionCongrEquiv`, `FormalSchemes.AwayBaseChangeTopFiniteType` and
-`FormalSchemes.AwayCompletionUniversal` cost **+6**, **+12**, **+15** and **+16** modules there,
-and every consumer that file ever gains would inherit them.
+`FormalSchemes.AwayCompletionUniversal` cost **+6**, **+11**, **+12**, **+15** and **+16** modules
+there, and every consumer that file ever gains would inherit them.
 
 **Two of the six imports are free in closure terms and both are kept anyway.**
 `FormalSchemes.AwayBaseChangeTopFiniteType` lies inside `FormalSchemes.AwayCompletionUniversal`'s
@@ -395,8 +396,7 @@ not merely conjectured. The reverse closure of `FormalSchemes.AwayCompletionAlgH
 They are kept here on the single-call-site half of the disposition alone, and **that is the one to
 revisit first** when anything else on this tree wants a basic open transported along a map of
 completed localizations. **Re-cost all seven when a consumer appears that does not reach this
-file**; a
-consumer inside this file's own subtree buys nothing, for the reason
+file**; a consumer inside this file's own subtree buys nothing, for the reason
 `FormalSchemes/RefinedOverlapRestrict.lean`'s `## Placement` gives at
 `FormalSpectrum.basicOpen_mul_le_of_basicOpen_le`.
 
