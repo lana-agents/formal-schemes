@@ -112,6 +112,17 @@ out.
 * `FormalSpectrum.basicOpen_awayCompletionAlgHom_congr` and
   `FormalSpectrum.basicOpen_awayCompletionAlgHom_inf`: the preimage statement of
   `FormalSchemes.AwayCompletionAlgHomBasicOpen` read forwards, at an equality and at a meet.
+* `FormalSpectrum.furtherLocFst_nestedOfLe` and
+  `FormalSpectrum.furtherLocSnd_nestedOfLe`: the identification that presents a refined chart
+  commutes with each further-localization leg — the naturality `hστ` at the refined index waits on,
+  at the containment this file's charts actually have rather than at the uncompleted unit
+  `FormalSchemes.AwayCompletionNestedNaturality` is keyed on.
+* `FormalSpectrum.algHom_eq_of_algebraMap`: the rigidity those two are proved by, at two
+  independent ambients, and the section on it records what packaging it this way is worth.
+* `FormalSpectrum.awayCompletionNestedAlgEquivOfLe_algebraMap`,
+  `FormalSpectrum.awayCompletionChartAlgEquivOfLe_algebraMap` and
+  `CompletedTensorAwayInterchange.awayCongrEquivOfEq_algebraMap`: each step of those squares fixes
+  the structural image of the base ring, which is the only thing the rigidity consumes.
 
 ## The route, in the order the term takes it
 
@@ -294,6 +305,51 @@ the three instances of `hστ` and the cocycle are hypotheses. Producing them fr
 at every ordered pair and triple — the diagonal included, where a coarse datum supplies no overlap
 element — is issue 2198 §6.3, and this module does not touch it.
 
+## The naturality the refined `hστ` waits on, and the 416 s that is not where it looks
+
+The two squares of `FormalSpectrum.furtherLocFst_nestedOfLe` and
+`FormalSpectrum.furtherLocSnd_nestedOfLe` say that presenting a refined chart over the coarse
+chart above it commutes with each of the two further-localization legs
+`AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` states `hστ` with. Both are needed and
+neither follows from the other: that obligation has its first leg over one chart algebra and its
+second over another, and the only thing joining them is the coarse law.
+
+**They are not instances of `FormalSpectrum.awayCongrHom_nested`**
+(`FormalSchemes.AwayCompletionNestedNaturality`), and the reason is the one this file's first step
+is built around. That square is keyed on `IsUnit (algebraMap B (Localization.Away u) f)`, a
+statement in the **uncompleted** localization; the refined presentation has `f := g_ij` and
+supplies only `FormalSpectrum.basicOpen_refinedOverlapElt_le`, the containment in `Spf (B, I·B)`,
+which is strictly weaker. Its proof does not transfer either: it collapses both legs to a single
+`AdicCompletion.mapCompletion` and applies
+`AdicCompletion.mapCompletion_congr_localizationAway`, and
+`FormalSpectrum.awayCompletionChartEquivOfLe` is not built as an `AdicCompletion.mapCompletion`.
+
+What replaces that route is rigidity, and it is shorter: every step of both squares fixes the
+structural image of the base ring, so
+`FormalSpectrum.algHom_eq_of_algebraMap` closes each of them in one rewrite chain.
+
+**The cost is in the kernel, and packaging the rigidity at abstract carriers removes all of it.**
+Proved by applying `FormalSpectrum.awayCompletion_hom_ext'`
+(`FormalSchemes.AwayCompletionRestrictUnique`) directly at the doubly nested completion, the first
+square costs **416 s** — and the profiler attributes **1.19 s** of that to tactic execution and the
+rest to `type checking`, so it is the kernel reducing the nested carrier while it checks the
+application, not the elaborator. Factored through `FormalSpectrum.algHom_eq_of_algebraMap`, whose
+two ambients stay abstract, the six declarations of that section elaborate and check together in
+about **10 s**. Two things follow and both are general: `FormalSchemes.BasicOpenCoverCharts`'s
+*state it abstractly* note is about the kernel and not about elaboration, and the figure to read on
+a statement at these completions is `type checking took`, which `set_option profiler true` prints
+and which no heartbeat budget reports.
+
+**What `hστ` still owes after these two, measured rather than predicted.** Issue 2198 §5 names
+`AlgebraicGeometry.BasicOpenCover.sigma_tau_conj` as this field's supplier. It cannot be, and the
+mismatch is structural rather than incidental: that lemma conjugates by `N₁`, `N₂` landing in one
+chart algebra `A₁`, whereas the refined transition is presented over `A_i{1/g_ij}` and the refined
+`σ` over `A_i{1/(g_ij · g_ik)}` — two different chart algebras at the same index. So the square
+still missing is a **cross-chart** one, comparing the two presentations of `A_i{1/(h · e_ij)}`
+along `CompletedTensorAwayInterchange.furtherLocFst` downstairs, and it is not the fixed-chart
+square §6.2 describes. The two here are the fixed-chart half and are what that comparison will be
+stated against.
+
 ## Placement
 
 A leaf over `FormalSchemes.RefinedOverlapRestrict`, `FormalSchemes.AwayCompletionAlgHomBasicOpen`,
@@ -386,8 +442,16 @@ with the tree while the **37**, the **17** and the two union figures beside it a
 with `scripts/closure_audit.py --tree`, and price any sixth import with `--edge` before writing a
 word about it.
 
-**Seven of the statements below are general and all seven are kept here, and the decisive one is
-decided by a walk rather than by taste.**
+**Sixteen of the statements below are general and all sixteen are kept here, and the decisive one
+is decided by a walk rather than by taste.** This paragraph said *seven* until this diff, and it
+was already wrong before it: the count was right when #808 and #809 wrote it and stale from #816,
+which added two `AlgEquiv` lemmas and a second base-change round trip without touching either
+numeral. The count is `git grep`-able — six under `namespace AlgEquiv`, two
+`FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans…`, two
+`FormalSpectrum.basicOpen_awayCompletionAlgHom_…`, and this diff's six — and the general lesson is
+the one issue 2211 was filed for: **the declarations a file lists as *general and kept local* are
+the ones its author already thought about, so a stale count is the cheapest tell that a later diff
+added one nobody re-costed.**
 `FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans_eq_refl` is general in both its chart
 algebras and names nothing of the refined overlap, so its subject-matter home is beside the base
 change it is about. It cannot go there: it needs
@@ -396,9 +460,11 @@ change it is about. It cannot go there: it needs
 that reaches all three** — 546 reach none of them, 35 reach exactly one, 5 reach two and this file
 is the one that reaches three. So its only homes besides this file are a new module over this one
 or an import into an existing one, and this section prices the second.
-The four `AlgEquiv` lemmas name nothing of this tree at all — they are statements about
-`AlgEquiv.trans` and `AlgEquiv.symm`, and Mathlib is where they belong, which is why all four are
-stated at `CommSemiring` and `Semiring` with their six carriers in independent universes rather
+`FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans₃_eq_refl` is the same statement at a
+cycle of three and is kept beside it, on the same walk.
+The six `AlgEquiv` lemmas name nothing of this tree at all — they are statements about
+`AlgEquiv.trans` and `AlgEquiv.symm`, and Mathlib is where they belong, which is why all six are
+stated at `CommSemiring` and `Semiring` with their carriers in independent universes rather
 than at this file's own `CommRing` and `Type u`: their proofs use nothing else, and a statement
 offered to Mathlib on that argument should carry Mathlib's hypotheses. The nearest thing to a
 subject-matter home here is an early module about algebra equivalences, and of those
@@ -414,10 +480,43 @@ not merely conjectured. The reverse closure of `FormalSchemes.AwayCompletionAlgH
 **1**, this file, so the move would cost a one-module re-elaboration rather than the 196 above.
 They are kept here on the single-call-site half of the disposition alone, and **that is the one to
 revisit first** when anything else on this tree wants a basic open transported along a map of
-completed localizations. **Re-cost all seven when a consumer appears that does not reach this
-file**; a consumer inside this file's own subtree buys nothing, for the reason
-`FormalSchemes/RefinedOverlapRestrict.lean`'s `## Placement` gives at
-`FormalSpectrum.basicOpen_mul_le_of_basicOpen_le`.
+completed localizations. **The six this diff adds are the ones with the clearest subject-matter
+home and the clearest price, and both were measured before they were written here.**
+`FormalSpectrum.algHom_eq_of_algebraMap`,
+`FormalSpectrum.awayCompletionChartAlgEquivOfLe_algebraMap`,
+`FormalSpectrum.awayCompletionNestedAlgEquivOfLe_algebraMap`,
+`FormalSpectrum.furtherLocFst_nestedOfLe`, `FormalSpectrum.furtherLocSnd_nestedOfLe` and
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq_algebraMap` say nothing about a refined overlap;
+`FormalSchemes.AwayCompletionNestedNaturality` is their subject-matter home by name, and its own
+docstring says it exists for a datum's `hστ`. It does not reach
+`FormalSchemes.AwayCompletionUniversal`, where the *OfLe* identification lives, and
+`scripts/closure_audit.py --edge` prices that import at **13** figure repairs in **8** files,
+against **0** here — this file needs no new import for any of the six, both modules being already
+among its own. `closure_audit --edge` prices a later edge from this file to that one — which is
+what moving them would also cost — at **5** figure repairs in **3** files. So the disposition is
+*keep, and move them together with the cross-chart square when it exists*, since that square will
+want the same imports and the two edges should be paid once.
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq_algebraMap` is the one with a closer home than
+that: its two siblings
+`CompletedTensorAwayInterchange.awayCongrHom_algebraMap` and
+`CompletedTensorAwayInterchange.awayCongrEquiv_algebraMap` are `FormalSchemes.AwayCongrAlgebraMap`,
+a file whose whole subject is that these maps fix the base and whose own docstring says it exists
+so that leaves can import it; `--edge` prices that import at **4** figure repairs in **2** files,
+all four of them this file's forward closure of **71** going to **72** or its *counted with itself*
+companion. **One of the four is the figure in this very sentence**, which is why a price for an
+edge out of the file you are editing has to be measured at your own head and after the docstring
+line that quotes it: at the base it comes out one short, and that is how the **3** this sentence
+used to say got here. It is declined here only because this diff adds no import at all, and it is
+the first one to revisit. **That module is also
+why the third of these lemmas is the transport and not the comparison map**: the first draft proved
+the squares through `CompletedTensorAwayInterchange.awayCongrHom` and restated
+`CompletedTensorAwayInterchange.awayCongrHom_algebraMap` locally, which is a **duplicate** of an
+existing declaration and compiled only because that file is outside this one's imports. The tell
+was arithmetic: `scripts/option_reference_audit.py --tree` reported **+5** declarations against a
+`git grep` of the file's own `+6`, because it keys on the fully qualified name. **Re-cost all
+sixteen when a consumer appears that does not reach this file**; a consumer inside this file's own
+subtree buys nothing, for the reason `FormalSchemes/RefinedOverlapRestrict.lean`'s `## Placement`
+gives at `FormalSpectrum.basicOpen_mul_le_of_basicOpen_le`.
 
 ## What is *not* proved here
 
@@ -435,11 +534,22 @@ the three of them close the `τ_symm`, `σ` and `hσc` arguments and leave **`h�
 `FormalSpectrum.refinedOverlapSigma` is a four-step composite exactly as
 `FormalSpectrum.refinedOverlapTransition` is, and its **cocycle** is now stated —
 `FormalSpectrum.refinedOverlapSigma_trans₃_eq_refl` — but its compatibility with the refined
-transition, the `hστ` of the refined index, is not, and is not priced here. That one is the field
-whose two legs are over *different* ambients, so the outer identifications do not cancel and a
-naturality statement about `FormalSpectrum.awayCompletionNestedAlgEquivOfLe` really is wanted; issue
-2198 §6.2 is where its cost is argued and `FormalSchemes.BasicOpenCoverCharts`'s cost note is what
-it has to be read against.
+transition, the `hστ` of the refined index, is not. That one is the field whose two legs are over
+*different* ambients, so the outer identifications do not cancel and a naturality statement about
+`FormalSpectrum.awayCompletionNestedAlgEquivOfLe` really is wanted.
+
+**Two thirds of that naturality is now here and the remaining third is named.**
+`FormalSpectrum.furtherLocFst_nestedOfLe` and `FormalSpectrum.furtherLocSnd_nestedOfLe` are
+the two squares at a **fixed** coarse chart, and the section above prices them at nothing once the
+rigidity is packaged. What is still owed is the **cross-chart** square: the refined transition
+presents `A_i{1/(h · e_ij)}` over `A_i{1/g_ij}` and the refined `σ` presents
+`A_i{1/((h · e_ij) · (h · e_ik))}` over `A_i{1/(g_ij · g_ik)}`, and `hστ` compares the two, so the
+comparison downstairs is `CompletedTensorAwayInterchange.furtherLocFst` at the *coarse* elements
+and not the identity. That is also why
+`AlgebraicGeometry.BasicOpenCover.sigma_tau_conj` — issue 2198 §5's named supplier for this field —
+cannot be it: that lemma's `N₁` and `N₂` land in **one** chart algebra `A₁`, and here they land in
+two. Neither this file nor `FormalSchemes.BasicOpenCoverTransitions` states the cross-chart square,
+and it is unpriced.
 
 **A prediction this module made about the cocycle was wrong, and it is corrected rather than
 deleted.** An earlier reading of this section said the outer-steps-cancel argument *"does not
@@ -640,12 +750,199 @@ theorem trans₃_eq_refl_of_middle_eq_refl
 
 end AlgEquiv
 
+namespace CompletedTensorAwayInterchange
+
+variable {R : Type u} [CommRing R] (I : Ideal R)
+
+/-- **The transport along an equality of away elements fixes the base ring.**
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq` is built by matching on `rfl`, so this is
+`rfl` after a `subst` and the statement is the whole of it; it is stated because a rigidity
+argument reads a composite one step at a time and this is the step that would otherwise have to be
+unfolded inside a doubly nested completion. The companion facts for
+`CompletedTensorAwayInterchange.awayCongrHom` and
+`CompletedTensorAwayInterchange.awayCongrEquiv` are
+`FormalSchemes.AwayCongrAlgebraMap`'s, and this one belongs beside them; see this module's
+`## Placement`. -/
+theorem awayCongrEquivOfEq_algebraMap {A : Type u} [CommRing A] [Algebra R A] {x y : A}
+    (h : x = y) (a : A) :
+    awayCongrEquivOfEq I h
+        (algebraMap A (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) x) a) =
+      algebraMap A (FormalSpectrum.awayCompletion (I.map (algebraMap R A)) y) a := by
+  subst h
+  rfl
+
+end CompletedTensorAwayInterchange
+
 open CompletedTensorAwayInterchange
 
 namespace FormalSpectrum
 
 variable {R : Type u} [CommRing R] (I : Ideal R)
 variable {Ai Aj : Type u} [CommRing Ai] [CommRing Aj] [Algebra R Ai] [Algebra R Aj]
+
+/-! ### Rigidity at two ambients, and the identification at a containment against the legs -/
+
+section NestedOfLeLegs
+
+variable {B : Type u} [CommRing B] [Algebra R B]
+
+/-- **Two `R`-algebra maps of completed localizations agree as soon as they agree on the structural
+image of the source's base ring**, with the two base rings independent.
+
+`FormalSpectrum.awayCompletion_hom_ext` (`FormalSchemes.AwayCompletionRestrictUnique`) is this at
+one ambient, and the primed form there already allows an arbitrary complete target; what is packaged
+here is the `R`-algebra shape, with the continuity of both maps discharged by
+`FormalSpectrum.le_comap_awayCompletionIdeal_algHom` rather than asked for, and the
+`IsAdicComplete` instance of the target produced rather than assumed.
+
+**The packaging is the whole point and it is a cost, not a convenience.** Applying the rigidity
+directly at a *doubly nested* completion — the shape the statements below are about — elaborates in
+about a second and then costs **416 s of kernel time**, because the kernel reduces the nested
+carrier while checking the application; the same proof factored through this lemma, whose carriers
+`B` and `C` stay abstract, costs nothing measurable. That is
+`FormalSchemes.BasicOpenCoverCharts`'s 368 s → 20 s note in its sharpest form, and the thing to
+carry away is that the measurement to take is `type checking took`, not the elaborator's. -/
+theorem algHom_eq_of_algebraMap {C : Type u} [CommRing C] [Algebra R C] (hI : I.FG)
+    (u : B) (c : C)
+    (F G : awayCompletion (I.map (algebraMap R B)) u →ₐ[R]
+      awayCompletion (I.map (algebraMap R C)) c)
+    (h : ∀ b : B, F (algebraMap B (awayCompletion (I.map (algebraMap R B)) u) b) =
+      G (algebraMap B (awayCompletion (I.map (algebraMap R B)) u) b)) :
+    F = G := by
+  haveI : IsAdicComplete (awayCompletionIdeal (I.map (algebraMap R C)) c)
+      (awayCompletion (I.map (algebraMap R C)) c) :=
+    (AdicCompletion.isAdicRing_map _ ((hI.map _).map _)).toIsAdicComplete
+  exact AlgHom.coe_ringHom_injective
+    (awayCompletion_hom_ext' (I.map (algebraMap R B)) u (hI.map _)
+      (le_comap_awayCompletionIdeal_algHom I u c F)
+      (le_comap_awayCompletionIdeal_algHom I u c G)
+      (RingHom.ext fun b => by
+        rw [RingHom.comp_apply, RingHom.comp_apply, awayCompletionHom_eq_algebraMap]
+        exact h b))
+
+/-- **The `R`-algebra upgrade of the identification at a containment still fixes `B`**, which is
+`FormalSpectrum.awayCompletionChartEquivOfLe_algebraMap` at the upgraded map — the *OfLe*
+counterpart of `FormalSpectrum.awayCompletionChartAlgEquiv_algebraMap`. -/
+theorem awayCompletionChartAlgEquivOfLe_algebraMap (hI : I.FG) (x y : B)
+    (hle : basicOpen (I.map (algebraMap R B)) y ≤ basicOpen (I.map (algebraMap R B)) x) (b : B) :
+    awayCompletionChartAlgEquivOfLe I hI x y hle
+        (algebraMap B (awayCompletion (I.map (algebraMap R B)) y) b) =
+      algebraMap B (awayCompletion (awayCompletionIdeal (I.map (algebraMap R B)) x)
+        (awayCompletionHom (I.map (algebraMap R B)) x y)) b :=
+  awayCompletionChartEquivOfLe_algebraMap (I.map (algebraMap R B)) x y (hI.map _) hle b
+
+/-- **The identification a refined chart is presented by fixes the base ring.** The *OfLe*
+counterpart of `FormalSpectrum.awayCompletionNestedAlgEquiv_algebraMap`
+(`FormalSchemes.AwayCompletionNested`), and the statement issue 2198 §6.2 asks for first: it is the
+`…_apply` fact that stops every later equation between doubly nested completions from having to
+reduce the identification at all.
+
+The transport contributes nothing, because `AdicCompletion.congrIdealₐ` is `subst`-built; the proof
+is the strong version's with `FormalSpectrum.awayCompletionChartAlgEquivOfLe_algebraMap` in place
+of `FormalSpectrum.awayCompletionChartAlgEquiv_algebraMap`. -/
+theorem awayCompletionNestedAlgEquivOfLe_algebraMap (hI : I.FG) (x y : B)
+    (hle : basicOpen (I.map (algebraMap R B)) y ≤ basicOpen (I.map (algebraMap R B)) x) (b : B) :
+    awayCompletionNestedAlgEquivOfLe I hI x y hle
+        (algebraMap B (awayCompletion (I.map (algebraMap R B)) y) b) =
+      algebraMap B (awayCompletion (I.map (algebraMap R (awayCompletion
+        (I.map (algebraMap R B)) x))) (awayCompletionHom (I.map (algebraMap R B)) x y)) b := by
+  rw [awayCompletionNestedAlgEquivOfLe, AlgEquiv.trans_apply,
+    awayCompletionChartAlgEquivOfLe_algebraMap,
+    IsScalarTower.algebraMap_apply B
+      (Localization.Away (awayCompletionHom (I.map (algebraMap R B)) x y))
+      (awayCompletion (awayCompletionIdeal (I.map (algebraMap R B)) x)
+        (awayCompletionHom (I.map (algebraMap R B)) x y)),
+    AdicCompletion.congrIdealₐ_algebraMap, ← IsScalarTower.algebraMap_apply]
+
+/-- **The naturality square, at a containment and at the first further-localization leg.** Reading
+`B{1/u₁} ⟶ B{1/(u₁ · u₂)}` and then presenting the target over the chart `B{1/f}` is presenting the
+source over that chart and then reading the corresponding leg inside it:
+
+```
+B{1/u₁}        --furtherLocFst-->   B{1/(u₁ · u₂)}
+   |  N_{f, u₁}                        |  N_{f, u₁·u₂}
+   v                                   v
+B{1/f}{1/ū₁}   --furtherLocFst-->   B{1/f}{1/(ū₁ · ū₂)}
+```
+
+**The bridge in the corner is not avoidable and is why `hmul` is a hypothesis.** `N_{f, u₁·u₂}`
+lands at `awayCompletionHom (I·B) f (u₁ · u₂)` and the upstairs leg lands at the product of the two
+images, and those are equal by `map_mul` and not by `rfl`; taking the equality as an argument keeps
+a `map_mul` out of the statement's own type, which is what lets a caller instantiate it without the
+kernel reducing either side.
+
+**This is `FormalSpectrum.awayCongrHom_nested` (`FormalSchemes.AwayCompletionNestedNaturality`) at
+the containment the refined overlap actually has, and it is not an instance of it.** That square is
+keyed on `IsUnit (algebraMap B (Localization.Away u₁) f)`, a statement in the *uncompleted*
+localization; at the refined presentation the chart element is `f := g_ij` and all that is
+available is `FormalSpectrum.basicOpen_refinedOverlapElt_le`, which is the containment in
+`Spf (B, I·B)` and strictly weaker —
+`FormalSchemes.AwayCompletionUniversal`'s own `## Placement` separates the two at `B = ℤ`,
+`J = (2)`, `f = 3`, `g = 5`. Its proof does not transfer either: it collapses both legs to a single
+`AdicCompletion.mapCompletion` and applies
+`AdicCompletion.mapCompletion_congr_localizationAway`, and
+`FormalSpectrum.awayCompletionChartEquivOfLe` is not built as an `AdicCompletion.mapCompletion`.
+
+What replaces it is rigidity, and it is shorter: every step of both sides fixes the structural
+image of `B` — `FormalSpectrum.awayCompletionNestedAlgEquivOfLe_algebraMap` for `N`,
+`CompletedTensorAwayInterchange.furtherLocFst_algebraMap` for each leg and
+`CompletedTensorAwayInterchange.awayCongrEquivOfEq_algebraMap` for the bridge — so
+`FormalSpectrum.algHom_eq_of_algebraMap` closes it and nothing about the completion is reduced. -/
+theorem furtherLocFst_nestedOfLe (hI : I.FG) (f u₁ u₂ : B)
+    (h1 : basicOpen (I.map (algebraMap R B)) u₁ ≤ basicOpen (I.map (algebraMap R B)) f)
+    (h12 : basicOpen (I.map (algebraMap R B)) (u₁ * u₂) ≤ basicOpen (I.map (algebraMap R B)) f)
+    (hmul : awayCompletionHom (I.map (algebraMap R B)) f (u₁ * u₂) =
+      awayCompletionHom (I.map (algebraMap R B)) f u₁ *
+        awayCompletionHom (I.map (algebraMap R B)) f u₂) :
+    (furtherLocFst I (awayCompletionHom (I.map (algebraMap R B)) f u₁)
+          (awayCompletionHom (I.map (algebraMap R B)) f u₂) hI).comp
+        (awayCompletionNestedAlgEquivOfLe I hI f u₁ h1).toAlgHom =
+      ((awayCongrEquivOfEq I hmul).toAlgHom.comp
+          (awayCompletionNestedAlgEquivOfLe I hI f (u₁ * u₂) h12).toAlgHom).comp
+        (furtherLocFst I u₁ u₂ hI) :=
+  algHom_eq_of_algebraMap I hI u₁ _ _ _ fun b => by
+    rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom,
+      AlgEquiv.coe_toAlgHom, AlgEquiv.coe_toAlgHom,
+      awayCompletionNestedAlgEquivOfLe_algebraMap, furtherLocFst_algebraMap,
+      awayCompletionNestedAlgEquivOfLe_algebraMap,
+      IsScalarTower.algebraMap_apply B (awayCompletion (I.map (algebraMap R B)) f)
+        (awayCompletion (I.map (algebraMap R (awayCompletion (I.map (algebraMap R B)) f)))
+          (awayCompletionHom (I.map (algebraMap R B)) f u₁)),
+      IsScalarTower.algebraMap_apply B (awayCompletion (I.map (algebraMap R B)) f)
+        (awayCompletion (I.map (algebraMap R (awayCompletion (I.map (algebraMap R B)) f)))
+          (awayCompletionHom (I.map (algebraMap R B)) f (u₁ * u₂))),
+      furtherLocFst_algebraMap, awayCongrEquivOfEq_algebraMap]
+
+/-- **The same square at the second leg**, which a datum's `hστ` needs beside the first: that
+obligation has `CompletedTensorAwayInterchange.furtherLocFst` over one chart algebra and
+`CompletedTensorAwayInterchange.furtherLocSnd` over the other, and the two never meet. Same proof,
+with `CompletedTensorAwayInterchange.furtherLocSnd_algebraMap` in place of the first leg's own. -/
+theorem furtherLocSnd_nestedOfLe (hI : I.FG) (f u₁ u₂ : B)
+    (h2 : basicOpen (I.map (algebraMap R B)) u₂ ≤ basicOpen (I.map (algebraMap R B)) f)
+    (h12 : basicOpen (I.map (algebraMap R B)) (u₁ * u₂) ≤ basicOpen (I.map (algebraMap R B)) f)
+    (hmul : awayCompletionHom (I.map (algebraMap R B)) f (u₁ * u₂) =
+      awayCompletionHom (I.map (algebraMap R B)) f u₁ *
+        awayCompletionHom (I.map (algebraMap R B)) f u₂) :
+    (furtherLocSnd I (awayCompletionHom (I.map (algebraMap R B)) f u₁)
+          (awayCompletionHom (I.map (algebraMap R B)) f u₂) hI).comp
+        (awayCompletionNestedAlgEquivOfLe I hI f u₂ h2).toAlgHom =
+      ((awayCongrEquivOfEq I hmul).toAlgHom.comp
+          (awayCompletionNestedAlgEquivOfLe I hI f (u₁ * u₂) h12).toAlgHom).comp
+        (furtherLocSnd I u₁ u₂ hI) :=
+  algHom_eq_of_algebraMap I hI u₂ _ _ _ fun b => by
+    rw [AlgHom.comp_apply, AlgHom.comp_apply, AlgHom.comp_apply, AlgEquiv.coe_toAlgHom,
+      AlgEquiv.coe_toAlgHom, AlgEquiv.coe_toAlgHom,
+      awayCompletionNestedAlgEquivOfLe_algebraMap, furtherLocSnd_algebraMap,
+      awayCompletionNestedAlgEquivOfLe_algebraMap,
+      IsScalarTower.algebraMap_apply B (awayCompletion (I.map (algebraMap R B)) f)
+        (awayCompletion (I.map (algebraMap R (awayCompletion (I.map (algebraMap R B)) f)))
+          (awayCompletionHom (I.map (algebraMap R B)) f u₂)),
+      IsScalarTower.algebraMap_apply B (awayCompletion (I.map (algebraMap R B)) f)
+        (awayCompletion (I.map (algebraMap R (awayCompletion (I.map (algebraMap R B)) f)))
+          (awayCompletionHom (I.map (algebraMap R B)) f (u₁ * u₂))),
+      furtherLocSnd_algebraMap, awayCongrEquivOfEq_algebraMap]
+
+end NestedOfLeLegs
 
 /-- **The two refined presentations of one overlap correspond under the coarse transition.** Inside
 `Spf (A_j{1/g_ji})`, the *τ_ij*-image of the open cut out by the *i*-side refined element
