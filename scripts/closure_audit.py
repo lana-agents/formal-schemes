@@ -29,6 +29,13 @@ the hunks; a diff-restricted run would be blind to the only way these figures ev
 is the same argument `citation_audit.py`'s `markdown_line_pointers` makes for reading whole
 documents.
 
+`--selftest` prints **one line per case and nothing else**, and since row 2225 that is checked
+rather than merely true: `main` captures the run, reports the count it printed, and exits **1** if
+any other line is in there.  So the mode has two ways to fail -- a case, or the shape -- and
+`grep -c ok` over its output is a reading of the case count.  What is *not* checked is that count
+against a literal; the comment beside the gate in `main` says why, and it is a decision rather than
+an omission.
+
 ## The conventions, which are the tree's own
 
 Stated the same way in a dozen `## Placement` paragraphs, and this script implements exactly them:
@@ -2768,15 +2775,38 @@ def selftest() -> int:
         write("Top", "import FormalSchemes.Mid\n"
                      "/-! Over `FormalSchemes.Mid`: forward closure **2**, reverse closure"
                      " **0**. -/\n")
+        # Row 2225 goal 4.  A second declined claim, in a file sorting **above** `Mid.lean` and with
+        # a different reason, so the block below has an order to get wrong.  It imports nothing, so
+        # `FormalSchemes.Base`'s reverse closure -- the mismatch this fixture turns on -- is
+        # still 2.
+        #
+        # **What this pins is the rendered order, not the `sorted` beside the print loop**, and the
+        # distinction is the whole of why row 2218's recipe for this did not work.  Three clauses
+        # guarantee that order independently: `project_modules` sorts its `glob`, the four walks
+        # take `sorted(mods.items())`, and the two print loops sort on `(path, line)`.  Measured at
+        # `ab0a3b4`: deleting **both** print sorts leaves `--tree` byte-identical on the tree's own
+        # **26** declined entries with every case green, and so does reversing the `glob` on top of
+        # that.  No single-clause mutation of a redundant guarantee can be caught by anything, which
+        # is why a fixture that writes one file after another -- the shape row 2218 proposed -- pins
+        # nothing at all: write order is not walk order here.  What this case does catch is the last
+        # of the three going: with all four walks on the dict, the `glob` reversed **and** the print
+        # loops unsorted, it fails and so does the case below, while the same mutation with the
+        # print loops left alone is green and the live tree's declined block is unmoved -- same 26
+        # entries in the same order.  That is the sense in which the sort is the guarantee, and
+        # this case is its witness.
+        write("Also", "/-! Nothing here names a module either, and a module has reverse closure"
+                      " **3**. -/\n")
         write("Base", "/-! Over nothing: forward closure **0**, reverse closure **9**. -/\n")
         rc, lines = tree_report(d)
-        check("the mismatch, the declined closure claim and the declined size claim render in that "
-              "order, each with its own reason and text",
+        check("the mismatch, the declined closure claims and the declined size claim render in "
+              "that order, each with its own reason and text, and the two declines are in path "
+              "order rather than in the order the walk happened to reach them",
               (rc, rows(lines)),
               (1,
                ["  MISMATCH  FormalSchemes/Base.lean:1  the reverse closure of"
                 " `FormalSchemes.Base`: states 9, walk gives 2",
                 "            reverse closure **9**. -/",
+                "  declined  FormalSchemes/Also.lean:1  no anchor -- reverse closure **3**. -/",
                 "  declined  FormalSchemes/Mid.lean:3  possessive pronoun: its antecedent is the"
                 " subject, not the last module named -- forward closure is **1** module. -/",
                 "  size-declined  FormalSchemes/Says.lean:1  no anchor -- **12** lines long. -/"]))
@@ -2912,6 +2942,22 @@ def selftest() -> int:
               (0, ["  by species                 : 1 / 4, unclassified 0   (a project total or tree"
                    " census /"]))
 
+        # Row 2225 goal 2: the `by_file` table, whose two clauses -- **the per-file repair count**
+        # and the tie-break -- were read by nothing.  Asserted as rendered rather than off the dict,
+        # because the defect this exists for is a column of numbers that add up to something a
+        # reader will quote: replacing `len([c for c in population if c["path"] == f])` with
+        # `len(population)` prints the whole population on every row, which on the live tree at
+        # `ab0a3b4` is `44 repairs` eighteen times, and it survived all 142 cases.
+        check("each file's own repair count is its own, not the population's, and the rebuild "
+              "table renders one row per file ordered by what a repair there re-elaborates",
+              [ln for ln in lines if ln.startswith("    FormalSchemes/")],
+              ["    FormalSchemes/Base.lean                                             1 repairs"
+               "     3",
+               "    FormalSchemes/Mid.lean                                              2 repairs"
+               "     2",
+               "    FormalSchemes/Top.lean                                              2 repairs"
+               "     1"])
+
         # Row 2221 §2a as a case rather than as a paragraph: **the price moves because a docstring
         # elsewhere in the fixture grew**, with the stub unchanged.  That is the mechanism that made
         # one live figure wrong at six consecutive heads -- the authoring pull request's own prose
@@ -2987,6 +3033,49 @@ def selftest() -> int:
               "written under it and there is no exit path on which something is",
               (before == after, before == snapshot(), len(before)), (True, True, 3))
 
+    # The other half of goal 2: what the table does when two files re-elaborate **the same number**
+    # of modules, which the chain above cannot exhibit because its three reverse closures are 3, 2
+    # and 1.  Two leaves quoting a figure about the stub's own import have reverse closure 0 apiece
+    # and different repair counts, so the tie is real and the rendered order says how it is broken.
+    #
+    # **The `key`'s second component cannot be killed by any fixture, and that is a fact about the
+    # input rather than a gap here.** `files` is `sorted({...})`, so `by_file`'s input is already in
+    # path order and Python's sort is stable: deleting `t[0]` from the key leaves every row where it
+    # was, on this fixture and on the tree. What a case *can* pin is that the tie is broken by the
+    # **name** and not by something correlated with it -- `-t[1]` would put `Zeta` above `Alpha`
+    # here, since it carries the second repair -- and that is what this asserts.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        # Every figure correct before the stub and falsified by it, so the price is the stub's: the
+        # two leaves state `Hub`'s reverse closure, `Hub` states its own, and none of the three
+        # imports anything, which is what makes the two closures equal.
+        write("Hub", "/-! Over nothing: forward closure **0**, reverse closure **0**. -/\n")
+        write("Alpha", "/-! The reverse closure of `FormalSchemes.Hub` is **0**. -/\n")
+        write("Zeta", "/-! The reverse closure of `FormalSchemes.Hub` is **0**.  Nothing imports"
+                      " it, so the\nreverse closure of `FormalSchemes.Hub` is **0** here too. -/\n")
+        # A module carrying no figure at all, which is what makes the **over-match** control bite:
+        # every module of the chain fixture above is an edited one, so a table with a row per module
+        # of the tree renders identically there and only this fixture can tell the two apart.
+        write("Quiet", "/-! Nothing here is a measurement of anything. -/\n")
+        check("the tie-break fixture is itself green, so what the table shows is the stub's cost",
+              audit(d)[0], [])
+        check("two files whose repairs re-elaborate equally many modules are ordered by name and "
+              "not by their repair counts, and the file the stub reaches sorts above both",
+              [ln for ln in tree_report(d, "--stub", "FormalSchemes.ZStub:FormalSchemes.Hub")[1]
+               if ln.startswith("    FormalSchemes/")],
+              ["    FormalSchemes/Hub.lean                                              1 repairs"
+               "     1",
+               "    FormalSchemes/Alpha.lean                                            1 repairs"
+               "     0",
+               "    FormalSchemes/Zeta.lean                                             2 repairs"
+               "     0"])
+
     # A stub's arrival makes a sentence that calls its own file a **leaf** false, and the repair is
     # a rewrite rather than a `+1` -- so the report counts those separately inside the reverse-
     # closure species.  Two trees differing in one word, because the sub-count is keyed on the
@@ -3021,6 +3110,13 @@ def selftest() -> int:
     # ...and the same through `main`, for the reason the `--edge ''` case above gives: `parse_stub`
     # alone does not pin the branch, and a falsy test there would run a full audit of whatever `.`
     # happened to be instead of reporting a bad argument.
+    #
+    # The **redirect** is row 2225 goal 1, and the `--edge` case above needs none only by accident:
+    # both of its arguments are malformed, so `main` raises before printing anything.  Here the
+    # second one is well formed on purpose -- that is the half of the case asserting a good
+    # invocation returns `0` -- so without this, `report_stub` writes its 20 lines into the middle
+    # of `--selftest`'s own case list, which was **162 lines for 142 cases** at `ab0a3b4`.  Only the
+    # return value is the subject; `tree_report` is the way to assert the text.
     with tempfile.TemporaryDirectory() as d:
         os.makedirs(os.path.join(d, "FormalSchemes"))
         with open(os.path.join(d, "FormalSchemes", "Only.lean"), "w", encoding="utf-8") as f:
@@ -3032,7 +3128,8 @@ def selftest() -> int:
             for a in ("", "FormalSchemes.Zed:FormalSchemes.Only"):
                 sys.argv = ["closure_audit.py", "--stub", a]
                 try:
-                    got.append(main())
+                    with contextlib.redirect_stdout(io.StringIO()):
+                        got.append(main())
                 except SystemExit as e:
                     got.append(str(e))
         finally:
@@ -3151,7 +3248,50 @@ def main() -> int:
                         " tree that does not exist, so it never fails")
     args = ap.parse_args()
     if args.selftest:
-        return selftest()
+        # `--selftest`'s **output shape** is part of its contract and nothing read it until row 2225
+        # goal 3: one line per case, so the tail of the output is the last case and `grep -c ok` is
+        # the case count.  Goal 1 above is what happens without this -- a case that calls `main`
+        # for its return value prints a whole report into the middle of the list, and the run still
+        # exits 0, so the first reader to notice was counting lines a week later.
+        #
+        # **A literal case count was the other candidate and is declined here, with the reason.** It
+        # catches a different defect -- a block of cases skipped by an early `return`, which the
+        # shape says nothing about -- at the price of one numeral to bump per case added, on a file
+        # that gained 22 cases in one day; and four rows quoted that count stale inside one day
+        # without it ever being wrong in the file.  What is cheap is to *publish* it rather than
+        # assert it: the line below is a live measurement of both figures, so a dropped block shows
+        # up as a count a reader can diff across two runs, exactly as `--tree`'s header counts do.
+        # Whoever wants the assertion should read this comment first and say why the churn is worth
+        # it, rather than take the silence for an oversight.
+        #
+        # Buffered rather than teed, which costs the streaming: `--selftest` is **0.15 s** at
+        # `ab0a3b4`, so there is nothing to stream, and a `finally` keeps the output of a run that
+        # raised.  Locals for the reason `selftest`'s own imports are local -- no other mode here
+        # captures a stream.
+        import contextlib
+        import io
+        buf = io.StringIO()
+        try:
+            with contextlib.redirect_stdout(buf):
+                rc = selftest()
+        finally:
+            sys.stdout.write(buf.getvalue())
+        # A diagnostic line under a FAIL is eight spaces in: that is `check`'s own spelling and the
+        # only third shape this output has.
+        stray = [ln for ln in buf.getvalue().splitlines()
+                 if not ln.startswith(("ok  ", "FAIL", "        "))]
+        # This line is itself one, and it is the last, so `grep -c ok` over the whole run is the
+        # figure below plus one -- said here because a count quoted off this output has been wrong
+        # four times in a week and an off-by-one is the cheapest way for that to happen again.
+        print("%s  %s: %d of them cases, %d stray"
+              % ("ok  " if not stray else "FAIL",
+                 "every line --selftest printed is a case line, which is what makes `grep -c ok` a"
+                 " reading of the case count",
+                 len([ln for ln in buf.getvalue().splitlines() if ln.startswith(("ok  ", "FAIL"))]),
+                 len(stray)))
+        for ln in stray[:3]:
+            print("        stray: %s" % ln[:100])
+        return rc or bool(stray)
     # `is not None`, not truthiness: `--edge ''` is a malformed argument and has to reach
     # `parse_edge`, not fall past this branch into the tree audit.
     if args.edge is not None:
