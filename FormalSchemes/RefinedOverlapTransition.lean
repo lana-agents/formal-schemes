@@ -293,10 +293,10 @@ A leaf over `FormalSchemes.RefinedOverlapRestrict`, `FormalSchemes.AwayCompletio
 itself), and the reverse closure of `FormalSchemes.RefinedOverlapTransition` is **0**.
 
 **A new module was forced for the transition, and that was measured rather than argued.** No
-module of this tree reaches all six of the above — the best any of the other 585 does is **three**,
-and only 4 of them manage that: **415** reach none, **146** reach exactly one and **20** reach two.
+module of this tree reaches all six of the above — the best any of the other 586 does is **three**,
+and only 4 of them manage that: **416** reach none, **146** reach exactly one and **20** reach two.
 (*Reaches* here counts a module as reaching itself, since a declaration placed in a file has that
-file's own contents; the closure convention of this section, which does not, gives 419 / 144 / 18 /
+file's own contents; the closure convention of this section, which does not, gives 420 / 144 / 18 /
 4.) So the *put it in a file that already imports enough* option does not exist, and the
 alternative is an import into an existing file, which is the expensive direction.
 `FormalSchemes.RefinedOverlapRestrict` is the closest candidate and reaches **41**, and it is
@@ -313,7 +313,7 @@ forward closure of **55** — that module imports it on its first line — and
 `FormalSchemes.AwayCompletionCongrEquiv`'s of **38**, so dropping either import line would leave
 the 71 above unchanged. Both are kept because `FormalSpectrum.awayCompletionAlgEquivOfBase` and
 `CompletedTensorAwayInterchange.furtherLocFst` are used here directly, which is this tree's
-practice and not a departure from it: **140** of the **586** modules under `FormalSchemes/` carry
+practice and not a departure from it: **140** of the **587** modules under `FormalSchemes/` carry
 an import some other import of the same file already reaches, this one included. Counting only
 what each import brings that no other of the six reaches, the split is **6** for
 `FormalSchemes.AwayCompletionAlgHomBasicOpen`, **2** for
@@ -345,16 +345,16 @@ in, and reports that it moves no forward closure, no reverse closure and no quot
 on the tree — that module is already inside this file's 71, through
 `FormalSchemes.AwayCompletionCongrEquiv`. The module was priced the way CONTRIBUTING.md's *What
 adding a module costs* says to, by writing the file and running `--tree` against it: **38** figure
-repairs in **18** files, whose union re-elaborates **539** of the 586 modules, **81** of them
+repairs in **18** files, whose union re-elaborates **540** of the 587 modules, **81** of them
 without `FormalSchemes/StructureSheaf.lean`. So the comparison here is **0 against 38**, the widest
 this file has seen, and it is not close.
 
 **What the module costs is the figure sweep, not the build.** Adding any module under
 `FormalSchemes/` falsifies every absolute *reverse*-closure figure quoted about anything it imports
 — CONTRIBUTING.md's *What adding a module costs* is the standing account — and here that is **37**
-numerals in **17** files, every one of them a `+1`. Editing those 17 re-elaborates **538** of the
-586 modules, and the concentration is the same one CONTRIBUTING.md records: the reverse closure of
-`FormalSchemes.StructureSheaf` is **529**, and dropping that one file from the 17 takes the sweep's
+numerals in **17** files, every one of them a `+1`. Editing those 17 re-elaborates **539** of the
+587 modules, and the concentration is the same one CONTRIBUTING.md records: the reverse closure of
+`FormalSchemes.StructureSheaf` is **530**, and dropping that one file from the 17 takes the sweep's
 rebuild to **80**. Two of the 37 are not renumberings:
 `FormalSchemes/RefinedOverlapRestrict.lean` and
 `FormalSchemes/AwayCompletionAlgHomBasicOpen.lean` each state that they are **leaves**, and this
@@ -373,8 +373,8 @@ decided by a walk rather than by taste.**
 algebras and names nothing of the refined overlap, so its subject-matter home is beside the base
 change it is about. It cannot go there: it needs
 `FormalSchemes.AwayBaseChangeTopFiniteType`, `FormalSchemes.AwayCompletionRestrictUnique` and
-`FormalSchemes.AwayCompletionAlgHomBasicOpen` at once, and **this module is the only one of the 586
-that reaches all three** — 545 reach none of them, 35 reach exactly one, 5 reach two and this file
+`FormalSchemes.AwayCompletionAlgHomBasicOpen` at once, and **this module is the only one of the 587
+that reaches all three** — 546 reach none of them, 35 reach exactly one, 5 reach two and this file
 is the one that reaches three. So its only homes besides this file are a new module over this one
 or an import into an existing one, and this section prices the second.
 The four `AlgEquiv` lemmas name nothing of this tree at all — they are statements about

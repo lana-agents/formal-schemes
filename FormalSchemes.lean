@@ -325,6 +325,7 @@ import FormalSchemes.OpenImmersionReflectsIdeal
 import FormalSchemes.OpenImmersionSheafComponentIso
 import FormalSchemes.OpenImmersionSourceFormalScheme
 import FormalSchemes.PreimageBasicOpen
+import FormalSchemes.PrincipalCoverCompletionDatum
 import FormalSchemes.ProjectiveLineCompletion
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
