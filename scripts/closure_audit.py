@@ -21,6 +21,7 @@ Usage, from the repository root -- no build needed, this reads `import` lines:
     python3 scripts/closure_audit.py --selftest
     python3 scripts/closure_audit.py --sweep
     python3 scripts/closure_audit.py --edge FormalSchemes.A:FormalSchemes.B
+    python3 scripts/closure_audit.py --stub FormalSchemes.New:FormalSchemes.A,FormalSchemes.B
 
 There is deliberately **no `--diff` mode**.  A closure figure is falsified by an edit somewhere
 else in the tree, so the population that matters is every claim in every file, not the claims in
@@ -238,6 +239,66 @@ the tree would say; comparing that against what a paragraph does say is the auth
 as with `--sweep`.  Every run that produces a report exits **0** -- there is no tree here for a
 gate to be about; an invocation this mode cannot make sense of, a name that is not a module of
 this tree or a module asked to import itself, still fails as any other bad argument does.
+
+## `--stub`, which prices a module that does not exist
+
+`CONTRIBUTING.md`'s *What adding a module costs* prescribes an experiment -- write a stub module,
+run `--tree`, count the MISMATCH population, delete the stub -- and a `## Placement` paragraph then
+quotes the result in prose.  That sentence is a measurement of a tree that does not exist, and until
+this mode it was the one figure species here with **no instrument at all**: `--tree` cannot check it
+because the subject is off the tree, `--edge` prices an import rather than a module, and `--sweep`
+could only list the sentence when something *else* in it happened to carry a marker.  The cost of
+that was not hypothetical.  One such figure was published wrong at six consecutive heads of one
+branch, by a different amount at each, because the count moves as the authoring pull request's own
+docstring grows -- so a figure measured mid-development is stale before the pull request opens, and
+nothing here could notice (issue 2221).
+
+`--stub NAME:A,B,C` runs the experiment instead of describing it: the tree is copied to a temporary
+directory, the stub is written into the copy as its import lines and nothing else, and both trees
+are audited.  The price is the copy's MISMATCH population minus the tree's own, so the report is
+about the stub even on a red tree -- `_fingerprint`'s argument, shared with `--edge`.
+
+**The imports are the experiment, so they are named and echoed and never inferred.**  *A module over
+this one* and *a module repeating this one's imports* are different questions with different
+answers, over file lists that can be identical, and a mode that let the second be spelled as the
+first would answer the wrong one silently.
+
+**Two species and no third**, which is `CONTRIBUTING.md`'s own table: a **project total or tree
+census**, which a new module falsifies wherever on the tree it is written, and a **reverse closure**
+of a module the stub reaches.  A stub is a leaf -- nothing imports it -- so no forward closure can
+move, and it adds a file rather than growing one, so no size figure can move either.  Anything
+landing outside those two is `unclassified`, which is never a level: it is a claim shape nobody has
+thought about, or a bug here.  The reverse-closure bucket carries a *leaf-sentence* sub-count beside
+it, because a paragraph that calls its own file a leaf is **rewritten** rather than renumbered when
+it gains a consumer, and that repair is not a `+1`.
+
+**The rebuild is the figure three sessions have disagreed about, so both conventions are printed and
+the self-inclusion rule is in the output text rather than in a comment.**  One sentence of this
+tree's prose has been published with three different union figures by three different sessions, and
+nobody miswalked anything: the differences are *counting a repaired file as re-elaborating itself*
+against *counting only the modules that import one*, and *with the stub on the tree* against
+*without it*.  A prose clause has never managed to carry that, and an instrument has to pick.  The
+union is taken on the tree the repairs are made in -- the one **with** the stub, since the new
+module has to be elaborated too -- and the same union without it is printed on the line below.  The
+largest single contributor is named with the union that drops it, which is the arithmetic
+`CONTRIBUTING.md` already does by hand for `FormalSchemes/StructureSheaf.lean`.
+
+**A copy of the tree, not a synthesised module map, and the reason is not caution.**  `--edge` needs
+no copy because it changes the *graph* and never the module *set*: `closures(mods, deps)` opens no
+file when `deps` is given.  A stub changes the set, and every other reader here -- `claims`,
+`total_claims`, `size_claims`, `invisible`, `file_size` -- resolves a module through `open(path)`,
+while `closures` keys the reverse closures on `mods`, so the stub has to be **in** `mods` and
+anything in `mods` is opened.  Copying is a tenth of a second against two audits of several seconds
+each, it makes this mode *literally* the manual experiment `CONTRIBUTING.md` prescribes, and it
+leaves every one of those readers untouched.  **Nothing is written under the repository**: the copy
+is a `tempfile.TemporaryDirectory`, removed on every exit path including an exception, and
+`--selftest` asserts the tree is byte-identical after a run that raised.
+
+Like `--edge`, this prices and does not check.  It reads no counterfactual sentence and it cannot go
+red against one -- the sentence names a stub that is not in the report's input, so there is nothing
+to attribute the figure to -- and every run that produces a report exits **0**.  **Reproducibility
+is the deliverable here and enforcement is not available**, which is worth saying out loud so that
+no reader waits for a MISMATCH that cannot come.
 
 ## Size figures, and the history figure beside one that is out of reach
 
@@ -600,16 +661,44 @@ CENSUS_UNCHECKED = re.compile(r"\bthe other \*{0,2}\d+"
                               r"|\bthe only one of the \*{0,2}\d+"
                               r"|\b\*{0,2}\d+\*{0,2} reach(?:es)?\b", re.I)
 
+# A counterfactual **price**: *"**15** figure repairs in **9** files"*, the shape `--edge` and
+# `--stub` publish and the shape a `## Placement` paragraph quotes back at them.  It is a marker for
+# `--sweep` and never a species, and the reason is the one `--stub`'s section of the module
+# docstring gives: the subject is a tree that does not exist, so there is nothing for `--tree` to
+# attribute the figure to -- which is exactly why the sentence wants a human reading it every run
+# rather than nothing reading it ever.  Measured at `2857956`: five sentences in three files carry
+# this shape,
+# four of which were already on the reading list for a neighbouring closure word or project total,
+# and the fifth was hidden by the per-sentence `CLOSURE` exclusion in `invisible` -- the row 2209
+# mechanism again, a figure invisible because of the claim beside it.  Keyed on the **numeral**, so
+# *"no figure repaired anywhere"*, which states a price of none in words, is not a hit: there is no
+# measurement in it to re-run.
+PRICE = re.compile(r"\*{0,2}\d+\*{0,2} figure repairs?\b", re.I)
+
+# A module name `--stub` will accept: at least one component under `FormalSchemes`, each of them a
+# word of the character class `IMPORT` reads.  It is deliberately not a check that the name is a
+# legal Lean identifier -- nothing here runs Lean -- only that the file it names is one the walk
+# finds.  A `startswith` test is not enough, and the two shapes it lets through are the reason this
+# is a `fullmatch`: `FormalSchemes.` builds the path `FormalSchemes/.lean`, which `glob` does not
+# match because of the leading dot, and a name carrying a path separator writes outside the
+# directory the walk reads.  Neither can reach
+# the repository -- the stub is written into a copy -- but both make the stub **absent** from the
+# tree that is then priced, and the failure is a `KeyError` two functions later rather than a bad
+# argument at the door.
+STUB_NAME = re.compile(r"FormalSchemes(?:\.[A-Za-z0-9_]+)+")
+
 # What makes a sentence a candidate for `--sweep`.  The word `closure` is the obvious trigger, but
 # it is not sufficient: *"`FormalSchemes.Gluing` being upstream of 272 of this tree's 496 modules"*
 # is a **reverse**-closure measurement carrying two figures and does not contain the word at all.
-# Three further markers are added for that shape -- a project-module total, a tree census, and
-# `upstream of N` -- all of which are assertions about this tree's import graph however worded.
+# Four further markers are added for that shape and for the counterfactual one -- a project-module
+# total, a tree census, `upstream of N` and `PRICE` -- and all of them are assertions about an
+# import graph however worded, the last about a graph this tree does not have.
 SWEEPABLE = re.compile(r"closure"
                        r"|of (?:this|the) (?:tree|project|library)'s \*{0,2}\d+\*{0,2} modules?"
                        r"|" + TOTAL_UNCHECKED.pattern +
                        r"|" + CENSUS_UNCHECKED.pattern +
-                       r"|\bupstream of \*{0,2}\d", re.I)
+                       r"|\bupstream of \*{0,2}\d"
+                       r"|" + PRICE.pattern, re.I)
 
 # A size figure: `**3001** lines`, `84 declarations`.  The noun is the trigger, so the figure has
 # to be adjacent to it -- `**28** commits touching it` is a history claim and not one of these, and
@@ -1027,8 +1116,17 @@ def invisible(mods: dict[str, str]):
             # exactly as the unpinned total was.  Population of *census and closure phrase in one
             # sentence* at `05a5fe2`: **0**; it is here because the mechanism is the one row 2209
             # paid for, not because the tree writes it today.
+            # `PRICE` joins the two totals in this exemption rather than being gated by the
+            # `CLOSURE` clause above, for the reason that clause's own comment gives and with a
+            # population this time: `AwayCompletionAlgHomBasicOpen.lean` states an edge price and
+            # the reverse closure it is argued from **in one sentence**, so the claim beside the
+            # price is what hid the price -- and the price is the half of that sentence nothing on
+            # this tree can check.  Adding the marker without this clause moves nothing at all,
+            # which is worth knowing before reading the delta: at `2857956` this is the whole of
+            # the +1.
             if CLOSURE.search(rest) and not (TOTAL_UNCHECKED.search(rest)
-                                             or CENSUS_UNCHECKED.search(rest)):
+                                             or CENSUS_UNCHECKED.search(rest)
+                                             or PRICE.search(rest)):
                 continue
             yield dict(path=path, line=raw[:off].count("\n") + 1, module=module,
                        text=" ".join(s.split()))
@@ -1252,6 +1350,189 @@ def report_edge(r: dict) -> None:
                         "nobody has thought about, or a bug here")):
         for c in r["species"][k]:
             print("  %s  %s:%d  %s: states %d, the edge would give %d"
+                  % (what, c["path"], c["line"],
+                     c.get("what") or "the %s closure of `%s`" % (c["kind"], c["about"]),
+                     c["stated"], c["actual"]))
+
+
+def stub_species(c: dict, reached: set) -> int:
+    """Which of the two species a mismatch belongs to, or **0**.
+
+    A stub is a **leaf**: nothing imports it, so no forward closure anywhere can move, and it is a
+    new file rather than a longer one, so no size figure can move either.  What is left is a project
+    total or tree census -- `len(mods)` went up, and that figure has no subject, so its position on
+    the tree is irrelevant -- and a reverse closure of a module the stub reaches.  The two are
+    exhaustive for that reason and **0 is never a level**: a claim landing there is a shape nobody
+    has thought about, or a bug in this function.
+
+    `reached` is checked rather than assumed, which is the whole value of returning 0: a reverse
+    closure the stub does not reach cannot have moved, so a mismatch about one is either already on
+    the tree -- and then the baseline subtraction should have taken it -- or evidence that something
+    above here is wrong.  Keyed on `subject` and not on `about`, for `edge_species`' reason: a
+    `self` companion's `about` is the module the sentence is comparing against.
+    """
+    if c.get("kind") == "total":
+        return 1
+    if c.get("kind") == "reverse" and c.get("subject") in reached:
+        return 2
+    return 0
+
+
+def stub_cost(root: str = ".", name: str = "", imports: tuple[str, ...] = ()) -> dict:
+    """Price adding module `name`, importing exactly `imports` and nothing else, to `root`'s tree.
+
+    `CONTRIBUTING.md`'s experiment run rather than described -- see the module docstring for why
+    this copies the tree where `--edge` does not, and for the two rebuild conventions the report
+    prints.  Nothing is written under `root`.
+    """
+    # Local for the reason the renderer's imports in `selftest` are: no other mode here materialises
+    # a tree, and these two are the only lines in this file that could write one anywhere.
+    import shutil
+    import tempfile
+
+    mods = project_modules(root)
+    # Argument checks before the copy, so a mistyped name costs nothing and fails like any other
+    # bad argument.  `--stub FormalSchemes.Gluing:…` is the interesting one: a name the tree already
+    # has would be **silently overwritten** in the copy, and the report would then price a tree with
+    # that module's contents deleted rather than a tree with one module more.
+    if not STUB_NAME.fullmatch(name):
+        raise SystemExit("`%s` is not a module name under FormalSchemes/" % name)
+    if name in mods:
+        raise SystemExit("`%s` is already a module of this tree" % name)
+    if len(set(imports)) != len(imports):
+        raise SystemExit("`%s` cannot import a module twice" % name)
+    for i in imports:
+        if i not in mods:
+            raise SystemExit("`%s` is not a module under FormalSchemes/" % i)
+
+    def rooted(cs: list, at: str) -> list:
+        """Every mismatch's `path` made root-relative, with `os.sep` normalised.
+
+        The two audits run under **different roots** and `_fingerprint` leads with `path`, so
+        without this the baseline subtraction matches nothing and the price silently swallows every
+        MISMATCH the tree already had -- a failure that reads as a large honest answer.  A
+        `--selftest` case pins it from the other side, on a tree carrying a wrong figure the stub
+        does not move.
+        """
+        return [dict(c, path=os.path.relpath(c["path"], at).replace(os.sep, "/")) for c in cs]
+
+    with tempfile.TemporaryDirectory() as tmp:
+        shutil.copytree(os.path.join(root, "FormalSchemes"), os.path.join(tmp, "FormalSchemes"))
+        stub = os.path.join(tmp, *name.split(".")) + ".lean"
+        os.makedirs(os.path.dirname(stub), exist_ok=True)
+        with open(stub, "w", encoding="utf-8") as f:
+            # The import lines and **nothing else**.  A docstring here would make the stub a claim
+            # of its own and the price would include it, which is the one way this mode could
+            # measure itself.
+            f.write("".join("import %s\n" % i for i in imports))
+        hypo = project_modules(tmp)
+        _forward, reverse = closures(hypo)
+        reached = _forward[name]
+        population = rooted(audit(tmp)[0], tmp)
+
+    base = {_fingerprint(c) for c in rooted(audit(root)[0], root)}
+    population = sorted((c for c in population if _fingerprint(c) not in base),
+                        key=lambda c: (c["path"], c["line"]))
+    files = sorted({c["path"] for c in population})
+    edited = [f[:-len(".lean")].replace("/", ".") for f in files]
+
+    def union(modules: list, inclusive: bool, drop: str = "", with_stub: bool = True) -> set:
+        """The modules a repair in each of `modules` re-elaborates, unioned.
+
+        `inclusive` counts an edited file as re-elaborating **itself**, which is the convention
+        `CONTRIBUTING.md` writes and the one printed first; the strict reading counts only the
+        modules that import an edited one.  `with_stub` decides whether the stub -- which is on the
+        tree the repairs are made in, but which no repair edits -- is in the answer.  Those two
+        flags are the three published figures this mode exists to stop being re-derived.
+        """
+        out: set = set()
+        for m in modules:
+            if m == drop:
+                continue
+            out |= reverse[m]
+            if inclusive:
+                out.add(m)
+        return out if with_stub else out - {name}
+
+    # Sorted so the largest contributor is deterministic on a tie, and by name so that a tie between
+    # two files of equal reverse closure does not depend on the walk order.
+    by_file = sorted(((f, len([c for c in population if c["path"] == f]), len(reverse[m]))
+                      for f, m in zip(files, edited)), key=lambda t: (-t[2], t[0]))
+    biggest = by_file[0][0][:-len(".lean")].replace("/", ".") if by_file else ""
+
+    return dict(name=name, imports=list(imports), size=len(mods), hypo_size=len(hypo),
+                population=population, files=files, by_file=by_file,
+                positions=len({(c["path"], c["line"]) for c in population}),
+                species={k: [c for c in population if stub_species(c, reached) == k]
+                         for k in (1, 2, 0)},
+                # Keyed on the phrase `audit` writes for that finding, which a `--selftest` case
+                # pins: rewording it there fails the case rather than silently zeroing this.
+                leaf_sentences=len([c for c in population
+                                    if "calls a leaf" in (c.get("what") or "")]),
+                baseline=len(base), biggest=biggest,
+                biggest_size=len(reverse[biggest]) if biggest else 0,
+                inclusive=union(edited, True), inclusive_no_stub=union(edited, True,
+                                                                      with_stub=False),
+                strict=union(edited, False), strict_no_stub=union(edited, False, with_stub=False),
+                dropped=union(edited, True, drop=biggest),
+                dropped_no_stub=union(edited, True, drop=biggest, with_stub=False))
+
+
+def report_stub(r: dict) -> None:
+    """`--stub`'s report, which is meant to be re-runnable from its own text: the stub, its imports,
+    the tree's size with and without it, the price with the convention that counts it named, the
+    files with what each one's repair re-elaborates, and the rebuild under both conventions.  Like
+    `report_edge` it prints what the tree would say, and comparing that against what a paragraph
+    does say is the reader's job."""
+    print("stub                         : `%s`, which this tree does not have" % r["name"])
+    print("  imports                    : %5d" % len(r["imports"]))
+    for m in r["imports"]:
+        print("    %s" % m)
+    print("  priced by                  : the tree copied to a temporary directory with the stub"
+          " written")
+    print("                               into the copy; nothing written under this repository")
+    print("modules under FormalSchemes/ : %5d   with the stub (%d without it)"
+          % (r["hypo_size"], r["size"]))
+    print("figure repairs the stub costs: %5d   in %d files, at %d distinct positions -- the"
+          % (len(r["population"]), len(r["files"]), r["positions"]))
+    print("                                       count is of figures, and one position can carry"
+          " two")
+    print("  by species                 : %d / %d, unclassified %d   (a project total or tree"
+          " census /"
+          % tuple(len(r["species"][k]) for k in (1, 2, 0)))
+    print("                                a reverse closure of a module the stub reaches)")
+    print("    of those, sentences calling their own file a leaf : %d   (rewritten, not renumbered)"
+          % r["leaf_sentences"])
+    print("  MISMATCHes already on this tree, excluded above : %d" % r["baseline"])
+    # The rebuild, under both conventions and with the self-inclusion rule in the **text** rather
+    # than only in a comment: three sessions published three different figures for one sentence of
+    # this tree, and each of them had walked correctly under a different one of these four readings.
+    # The colons are aligned across the block because a reader diffs two runs of this report.
+    print("the rebuild those repairs cost, as the union of the edited modules' reverse closures,")
+    print("walked on the tree the repairs are made in -- the one with the stub on it:")
+    print("  %-48s : %5d   of %d" % ("counting an edited file as re-elaborating itself",
+                                      len(r["inclusive"]), r["hypo_size"]))
+    print("    %-46s : %5d" % ("without the stub, which no repair edits",
+                               len(r["inclusive_no_stub"])))
+    print("  %-48s : %5d" % ("counting only modules that import an edited one", len(r["strict"])))
+    print("    %-46s : %5d" % ("without the stub", len(r["strict_no_stub"])))
+    if r["files"]:
+        print("  %-48s : `%s` at %d" % ("the largest single contributor", r["biggest"],
+                                        r["biggest_size"]))
+        print("  %-48s : %5d   (%d without the stub)"
+              % ("the first union without that one file", len(r["dropped"]),
+                 len(r["dropped_no_stub"])))
+    print("files edited, with each one's own reverse closure -- the rebuild is their union and not")
+    print("their sum, so these do not add up:")
+    for path, repairs, consumers in r["by_file"]:
+        # 65 is the longest path under `FormalSchemes/` at `2857956`; `--edge`'s 58 overflows on
+        # four of this tree's files and the columns stop lining up where it does.
+        print("    %-65s %3d repairs %5d" % (path, repairs, consumers))
+    for k, what in ((1, "total       "), (2, "reverse     "),
+                    (0, "UNCLASSIFIED -- the two species are exhaustive for a leaf, so this is a "
+                        "claim shape nobody has thought about, or a bug here")):
+        for c in r["species"][k]:
+            print("  %s  %s:%d  %s: states %d, the stub would give %d"
                   % (what, c["path"], c["line"],
                      c.get("what") or "the %s closure of `%s`" % (c["kind"], c["about"]),
                      c["stated"], c["actual"]))
@@ -2356,17 +2637,21 @@ def selftest() -> int:
     import contextlib
     import io
 
-    def tree_report(root: str) -> tuple[int, list[str]]:
-        """`--tree`'s own stdout on the tree at `root`, as `(exit code, lines)`.
+    def tree_report(root: str, *mode: str) -> tuple[int, list[str]]:
+        """A mode's own stdout on the tree at `root`, as `(exit code, lines)`; `--tree` by default.
 
         Through `main` rather than through `audit`, because here the text *is* the subject and the
         exit code comes free.  `os.sep` is normalised so a case can quote a rendered path without
         assuming the platform, exactly as the `split(os.sep)[-1]` cases above do.
+
+        `mode` was added by row 2221 for `--stub`, whose report is read the same way; every call
+        site written for `--tree` is unchanged by it, which is why it is a default and not a
+        parameter the existing cases had to grow.
         """
         argv, cwd, buf = sys.argv, os.getcwd(), io.StringIO()
         try:
             os.chdir(root)
-            sys.argv = ["closure_audit.py", "--tree"]
+            sys.argv = ["closure_audit.py"] + list(mode or ("--tree",))
             with contextlib.redirect_stdout(buf):
                 rc = main()
         finally:
@@ -2509,6 +2794,304 @@ def selftest() -> int:
                 " subject, not the last module named -- forward closure is **1** module. -/",
                 "  size-declined  FormalSchemes/Says.lean:1  no anchor -- **12** lines long. -/"]))
 
+    # `--stub` (row 2221), the mode that prices a module this tree does not have.  Two things are
+    # asserted in two ways on purpose, which is the division the `--edge` cases above already draw:
+    # the **arithmetic** against `stub_cost`'s returned dict, where a case can be precise and cannot
+    # rot on a reworded label, and the **rendering** against `main`'s own stdout, because a label
+    # sitting beside the wrong number is a defect no structural assertion can see.  Row 2221's
+    # design decisions are three and every one of them has a case here: which count is the number,
+    # which union convention, and that the stub's imports are the experiment rather than a detail.
+
+    def stub_figures(r: dict) -> tuple:
+        """The price of a stub, as the tuple a case can read: figures, files, positions, the two
+        species with the unclassified bucket, the leaf sub-count, and the baseline.
+
+        `figures` and `positions` are both here because they are **different numbers** and the
+        tree's prose quotes both -- one position can carry two figures, which is what a companion
+        figure is, and a report that conflated them would still pass a case asserting either alone.
+        """
+        return (len(r["population"]), len(r["files"]), r["positions"],
+                tuple(len(r["species"][k]) for k in (1, 2, 0)),
+                r["leaf_sentences"], r["baseline"])
+
+    def rebuild(r: dict) -> tuple:
+        """The four union figures, in the order the report prints them, with the contributor it
+        drops.  Row 2221 §2b is one sentence of this tree published with three different figures by
+        three sessions, none of whom miswalked anything; these four are what they were each walking.
+        """
+        return (len(r["inclusive"]), len(r["inclusive_no_stub"]),
+                len(r["strict"]), len(r["strict_no_stub"]),
+                r["biggest"], r["biggest_size"], len(r["dropped"]), len(r["dropped_no_stub"]))
+
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        # Three modules in a chain, every figure of them **correct**, so that everything below is
+        # the stub's own cost and not the fixture's.  `Mid` states its reverse closure twice, in the
+        # two conventions the tree writes, which is one position carrying two figures -- the
+        # distinction row 2221 §3 asks the report to name, and the reason `stub_figures` returns
+        # both counts.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **2**. -/\n")
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure **1**"
+                     " (2 counted with itself). -/\n")
+        write("Top", "import FormalSchemes.Mid\n"
+                     "/-! Over `FormalSchemes.Mid`: forward closure **2**, reverse closure **0**."
+                     "  It is one of the\n**3** modules under `FormalSchemes/`. -/\n")
+        check("the tree the --stub cases are read against is itself green", audit(d)[0], [])
+
+        # The `unclassified` bucket, tested on the function and not through the mode, because
+        # **the mode cannot produce one**: every mismatch in the price is caused by the stub, and a
+        # stub can only move a project total or a reverse closure of a module it reaches.  That is
+        # exactly why the guard is worth having and exactly why it needs a case here -- dropping the
+        # `reached` test would be invisible to every fixture below.
+        check("a reverse closure of a module the stub does not reach is unclassified rather than "
+              "counted, which is the one shape the mode's own report cannot produce",
+              [stub_species(c, {"FormalSchemes.Near"})
+               for c in ({"kind": "total", "subject": None},
+                         {"kind": "reverse", "subject": "FormalSchemes.Near"},
+                         {"kind": "reverse", "subject": "FormalSchemes.Far"},
+                         {"kind": "forward", "subject": "FormalSchemes.Near"})],
+              [1, 2, 0, 0])
+
+        S = "FormalSchemes.ZStub"
+        check("a stub over the tail of a chain costs one figure per module it reaches, plus the "
+              "project total, and its five figures stand at three positions",
+              stub_figures(stub_cost(d, S, ("FormalSchemes.Top",))),
+              (5, 3, 3, (1, 4, 0), 0, 0))
+        check("and its rebuild is four figures, not one: the stub is on the tree the repairs are "
+              "made in, and an edited file re-elaborates itself",
+              rebuild(stub_cost(d, S, ("FormalSchemes.Top",))),
+              (4, 3, 3, 2, "FormalSchemes.Base", 3, 3, 2))
+
+        # The decision row 2221 §3 calls unmissable: the same stub name over a different import is a
+        # different experiment.  Over `Base` the stub reaches one module instead of three, and
+        # nothing but that module's own figure and the total moves -- so a mode that inferred the
+        # imports, or that silently read a sibling as a module over this one, would answer this with
+        # the five above.
+        check("the stub's imports are the experiment: the same name over `Base` instead of `Top` "
+              "costs two figures, not five",
+              stub_figures(stub_cost(d, S, ("FormalSchemes.Base",))), (2, 2, 2, (1, 1, 0), 0, 0))
+        check("and a stub that imports nothing prices the project total alone, which is the "
+              "cheapest experiment there is and the one no reverse closure can reach",
+              stub_figures(stub_cost(d, S)), (1, 1, 1, (1, 0, 0), 0, 0))
+        check("a stub whose name is in a subdirectory the tree does not have is priced the same, "
+              "which is the whole of what the `makedirs` in the copy is for",
+              stub_figures(stub_cost(d, "FormalSchemes.Sub.ZStub", ("FormalSchemes.Top",))),
+              (5, 3, 3, (1, 4, 0), 0, 0))
+
+        # The rendering, which is the half `stub_cost` cannot be wrong about: these six lines are
+        # the four conventions with their labels, and a report that transposed two of the numbers
+        # would satisfy every structural case above.  Asserted by value, and with the colons aligned
+        # as the block is printed, because a reader diffs two runs of this report.
+        rc, lines = tree_report(d, "--stub", "%s:FormalSchemes.Top" % S)
+        check("the report says how big the tree would be and how big it is, which is the other "
+              "half of a union figure being reproducible from the report alone",
+              [ln for ln in lines if ln.startswith("modules under")],
+              ["modules under FormalSchemes/ :     4   with the stub (3 without it)"])
+        at = [i for i, ln in enumerate(lines) if ln.startswith("  counting an edited file")]
+        check("the rebuild block renders each convention beside its own figure, and says which one "
+              "counts the stub",
+              (rc, lines[at[0]:at[0] + 6] if at else lines),
+              (0,
+               ["  counting an edited file as re-elaborating itself :     4   of 4",
+                "    without the stub, which no repair edits        :     3",
+                "  counting only modules that import an edited one  :     3",
+                "    without the stub                               :     2",
+                "  the largest single contributor                   : `FormalSchemes.Base` at 3",
+                "  the first union without that one file            :     3   (2 without the"
+                " stub)"]))
+        check("a mode that prices a tree that does not exist cannot fail, so the run exits 0 even "
+              "though every figure in it is about to be reported as a repair",
+              (rc, [ln for ln in lines if "unclassified" in ln]),
+              (0, ["  by species                 : 1 / 4, unclassified 0   (a project total or tree"
+                   " census /"]))
+
+        # Row 2221 §2a as a case rather than as a paragraph: **the price moves because a docstring
+        # elsewhere in the fixture grew**, with the stub unchanged.  That is the mechanism that made
+        # one live figure wrong at six consecutive heads -- the authoring pull request's own prose
+        # kept adding sentences the stub would falsify -- and a mode whose only evidence is that the
+        # tree stays green has not been shown to see it.
+        write("Top", "import FormalSchemes.Mid\n"
+                     "/-! Over `FormalSchemes.Mid`: forward closure **2**, reverse closure **0**."
+                     "  It is one of the\n**3** modules under `FormalSchemes/`.  The reverse"
+                     " closure of `FormalSchemes.Base` is\n**2**. -/\n")
+        check("the price moves when a docstring elsewhere in the tree grows, with the same stub "
+              "over the same module -- which is how a figure measured mid-development goes stale",
+              stub_figures(stub_cost(d, S, ("FormalSchemes.Top",))), (6, 3, 4, (1, 5, 0), 0, 0))
+
+        # And the baseline, which is the one clause here a reader cannot check by eye.  The two
+        # audits run under different roots, so the population subtraction is on paths made relative
+        # to each -- without that the price swallows every MISMATCH the tree already had, and the
+        # answer is larger and looks more thorough.  `Mid`'s figure is wrong at both ends and is the
+        # baseline's; the companion beside it is right now and wrong with the stub, so it is the
+        # stub's, which is what makes this case about the subtraction and not about the file.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure **9**"
+                     " (2 counted with itself). -/\n")
+        check("a MISMATCH the tree already has is the baseline's and not the stub's, and the "
+              "companion beside it that only the stub falsifies still is",
+              (len(audit(d)[0]), stub_figures(stub_cost(d, S, ("FormalSchemes.Top",)))),
+              (1, (5, 3, 4, (1, 4, 0), 0, 1)))
+
+        # The argument checks, all of which land before the copy is made, so a mistyped name costs
+        # nothing.  `FormalSchemes.Base` as the *name* is the one worth a case: the stub would be
+        # written over that file in the copy, and the report would then price a tree with a module's
+        # contents **deleted** rather than a tree with one module more.
+        def refused(name, imports):
+            try:
+                stub_cost(d, name, imports)
+                return "no error"
+            except SystemExit as e:
+                return str(e)
+        check("a stub name the tree already has is refused rather than overwriting that module in "
+              "the copy, and so are a name outside the walk, two names that would make the stub "
+              "absent from the tree it prices, an import that is not a module and a repeated "
+              "import",
+              [refused(n, i) for n, i in ((("FormalSchemes.Base"), ("FormalSchemes.Top",)),
+                                          ("Elsewhere.Zed", ()),
+                                          ("FormalSchemes.", ()),
+                                          ("FormalSchemes.Sub/Zed", ()),
+                                          (S, ("FormalSchemes.Nope",)),
+                                          (S, ("FormalSchemes.Top", "FormalSchemes.Top")))],
+              ["`FormalSchemes.Base` is already a module of this tree",
+               "`Elsewhere.Zed` is not a module name under FormalSchemes/",
+               "`FormalSchemes.` is not a module name under FormalSchemes/",
+               "`FormalSchemes.Sub/Zed` is not a module name under FormalSchemes/",
+               "`FormalSchemes.Nope` is not a module under FormalSchemes/",
+               "`FormalSchemes.ZStub` cannot import a module twice"])
+
+        # Row 2221 §6: if the mode writes a file anywhere it deletes it on every exit path, and
+        # there is a case for the run that **raised**.  This mode writes nothing under the tree at
+        # all -- the stub goes into a `tempfile.TemporaryDirectory` -- so what is asserted is the
+        # stronger property, byte-for-byte, and the raising run is asserted after the successful one
+        # because a leak would otherwise be masked by the order.
+        def snapshot() -> list:
+            out = []
+            for here, _dirs, names in os.walk(d):
+                for n in sorted(names):
+                    p = os.path.join(here, n)
+                    out.append((os.path.relpath(p, d).replace(os.sep, "/"),
+                                open(p, "rb").read()))
+            return sorted(out)
+        before = snapshot()
+        stub_cost(d, S, ("FormalSchemes.Top",))
+        after = snapshot()
+        refused(S, ("FormalSchemes.Nope",))
+        check("the tree is byte-identical after a run, and after a run that raised -- nothing is "
+              "written under it and there is no exit path on which something is",
+              (before == after, before == snapshot(), len(before)), (True, True, 3))
+
+    # A stub's arrival makes a sentence that calls its own file a **leaf** false, and the repair is
+    # a rewrite rather than a `+1` -- so the report counts those separately inside the reverse-
+    # closure species.  Two trees differing in one word, because the sub-count is keyed on the
+    # phrase `audit` writes for that finding and a case has to fail if that phrase is reworded.
+    for opener, leaves, figures in (("A new leaf over", 1, 2), ("Over", 0, 1)):
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, "FormalSchemes"))
+            with open(os.path.join(d, "FormalSchemes", "Only.lean"), "w", encoding="utf-8") as f:
+                f.write("/-! %s nothing: forward closure **0**, reverse closure **0**. -/\n"
+                        % opener)
+            check("a sentence opening `%s` is counted as a leaf sentence %d time(s) by a stub "
+                  "over it, and carries %d figure(s)" % (opener, leaves, figures),
+                  stub_figures(stub_cost(d, "FormalSchemes.ZStub", ("FormalSchemes.Only",)))[:5],
+                  (figures, 1, 1, (0, figures, 0), leaves))
+
+    def stub_arg(a):
+        try:
+            return parse_stub(a)
+        except SystemExit as e:
+            return str(e)
+    STUB_USAGE = ("--stub takes `FormalSchemes.New:FormalSchemes.A,FormalSchemes.B`, or"
+                  " `FormalSchemes.New` for a stub that imports nothing")
+    check("a well-formed stub argument splits, and every malformed one is refused by name -- the "
+          "empty string and a bare trailing colon included, since those two differ by a character "
+          "nobody would see in a shell history",
+          [stub_arg(a) for a in ("FormalSchemes.N:FormalSchemes.A,FormalSchemes.B",
+                                 "FormalSchemes.N", "", "FormalSchemes.N:", "FormalSchemes.N:A,,B",
+                                 "A:B:C", ":")],
+          [("FormalSchemes.N", ("FormalSchemes.A", "FormalSchemes.B")),
+           ("FormalSchemes.N", ()), STUB_USAGE, STUB_USAGE, STUB_USAGE, STUB_USAGE, STUB_USAGE])
+
+    # ...and the same through `main`, for the reason the `--edge ''` case above gives: `parse_stub`
+    # alone does not pin the branch, and a falsy test there would run a full audit of whatever `.`
+    # happened to be instead of reporting a bad argument.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+        with open(os.path.join(d, "FormalSchemes", "Only.lean"), "w", encoding="utf-8") as f:
+            f.write("/-! Over nothing: forward closure **0**. -/\n")
+        argv, cwd = sys.argv, os.getcwd()
+        try:
+            os.chdir(d)
+            got = []
+            for a in ("", "FormalSchemes.Zed:FormalSchemes.Only"):
+                sys.argv = ["closure_audit.py", "--stub", a]
+                try:
+                    got.append(main())
+                except SystemExit as e:
+                    got.append(str(e))
+        finally:
+            sys.argv = argv
+            os.chdir(cwd)
+        check("`--stub ''` is refused by `main` rather than falling through to the tree audit, "
+              "and a well-formed one reports and exits 0", got, [STUB_USAGE, 0])
+
+    # `PRICE` and `--sweep` (row 2221 goal 4).  A counterfactual price is read by no species and
+    # cannot be -- its subject is a tree that does not exist -- so the answer is the reading list,
+    # and these four cases are the whole of what that decision buys.  The third is the one that
+    # matters: a price stated **beside a closure claim** was invisible because of the claim, which
+    # is the per-figure-versus-per-sentence mechanism row 2209 paid for.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        write("Alone", "/-! A new module over this one would cost **15** figure repairs in **9**"
+                       " files. -/\n")
+        write("Beside", "/-! Over nothing: forward closure **0**.  The reverse closure of"
+                        " `FormalSchemes.Alone` is\n**0**, so the edge costs **8** figure repairs"
+                        " in **4** files. -/\n")
+        write("Wordy", "/-! Declarations only: **3** of them, no module, no edge and no figure"
+                       " repairs at all. -/\n")
+        # The whole sentence and not a prefix of it, because the numeral is the reason the
+        # sentence is on the list and a slice short enough to be readable here would cut it off.
+        blind = sorted((c["module"], c["text"]) for c in invisible(project_modules(d)))
+        check("a counterfactual price with no closure word and no project total beside it is on "
+              "the reading list, which is the whole point: nothing else on this tree reads it",
+              [t for m, t in blind if m == "FormalSchemes.Alone"],
+              ["/-! A new module over this one would cost **15** figure repairs in **9** files."])
+        check("and a price stated beside a closure claim is on it too -- the claim is what hid the "
+              "price until the `CLOSURE` exclusion was read per figure rather than per sentence",
+              [t for m, t in blind if m == "FormalSchemes.Beside"],
+              ["The reverse closure of `FormalSchemes.Alone` is **0**, so the edge costs **8**"
+               " figure repairs in **4** files."])
+        check("a price of *none*, written in words, is not a measurement and is not listed: "
+              "there is nothing in it to re-run, and the sentence carries a numeral of its own so "
+              "it is the marker's adjacency that refuses it rather than `FIGURE`",
+              [m for m, _ in blind if m == "FormalSchemes.Wordy"], [])
+        # Goal 4's other half: the shape is on the list, and the list's own header says its remedy
+        # is not the one the header prescribes for everything else.  A reader who follows *rewrite
+        # it in the checked spelling* on a counterfactual price is being sent somewhere that does
+        # not exist.
+        header = tree_report(d, "--sweep")[1]
+        cut = [i for i, ln in enumerate(header) if "A counterfactual price" in ln]
+        check("and `--sweep`'s header says what to do with a price, which is not what to do with "
+              "the rest of the list",
+              header[cut[0]:cut[0] + 3] if cut else header,
+              [" is such a measurement.  A counterfactual price -- `N figure repairs` -- is the"
+               " one",
+               " shape here that cannot be rewritten that way at all, because its subject is a"
+               " tree",
+               " that does not exist: re-run `--edge` or `--stub`, and date what you write.)"])
+
 
     return 1 if bad else 0
 
@@ -2526,6 +3109,31 @@ def parse_edge(arg: str) -> tuple[str, str]:
     return a, b
 
 
+def parse_stub(arg: str) -> tuple[str, tuple[str, ...]]:
+    """`NAME:A,B,C` split into the stub's name and its imports, or the usage message.
+
+    `NAME` with **no colon** is a stub importing nothing -- a legal experiment and the cheapest one,
+    since it prices the project totals alone.  `NAME:` is refused rather than read as that, because
+    the two spellings would otherwise differ by a character nobody would notice in a shell history.
+
+    Its own function for `parse_edge`'s reason, and against the same trap: `--stub ''` has to reach
+    an arity check rather than fall past `main`'s branch into the tree audit, which neither reports
+    nor fails but silently answers a different question.
+    """
+    usage = ("--stub takes `FormalSchemes.New:FormalSchemes.A,FormalSchemes.B`, or"
+             " `FormalSchemes.New` for a stub that imports nothing")
+    if arg.count(":") > 1:
+        raise SystemExit(usage)
+    name, colon, rest = arg.partition(":")
+    imports = tuple(rest.split(",")) if colon else ()
+    # `all` catches every empty component at once: a trailing comma, a doubled comma and a bare
+    # `NAME:` are one mistake with three spellings, and an empty module name reaching `stub_cost`
+    # would be reported there as *not a module of this tree*, which names the wrong defect.
+    if not name or not all(imports):
+        raise SystemExit(usage)
+    return name, imports
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -2537,6 +3145,10 @@ def main() -> int:
     g.add_argument("--edge", metavar="A:B",
                    help="price adding `import B` to module A -- or deleting it, if A already has"
                         " it.  Reports a tree that does not exist, so it never fails")
+    g.add_argument("--stub", metavar="NAME:A,B,...",
+                   help="price adding a module NAME importing exactly A,B,... -- the experiment"
+                        " CONTRIBUTING.md's `What adding a module costs` prescribes.  Reports a"
+                        " tree that does not exist, so it never fails")
     args = ap.parse_args()
     if args.selftest:
         return selftest()
@@ -2545,17 +3157,26 @@ def main() -> int:
     if args.edge is not None:
         report_edge(edge_cost(".", *parse_edge(args.edge)))
         return 0
+    # `is not None` for `--edge`'s reason, and it is the same bug: `--stub ''` is a malformed
+    # argument and has to reach `parse_stub`.
+    if args.stub is not None:
+        report_stub(stub_cost(".", *parse_stub(args.stub)))
+        return 0
 
     mods = project_modules()
     if args.sweep:
         blind = list(invisible(mods))
-        print("sentences --tree cannot see (a numeral with a closure marker, or an unreadable"
-              " project total or tree census): %d" % len(blind))
+        print("sentences --tree cannot see (a numeral with a closure marker, a counterfactual"
+              " price, or an unreadable project total or tree census): %d" % len(blind))
         print("(Mathlib-closure sentences excluded; most of the rest are deltas, intersections or\n"
               " numerals that are not closure figures -- this is a reading list, not a failure\n"
               " list.  A plain measurement of this tree in here should be rewritten in the\n"
               " `forward closure` / `reverse closure` spelling, and one endpoint of every delta\n"
-              " is such a measurement.)")
+              " is such a measurement.  A counterfactual price -- `N figure repairs` -- is the"
+              " one\n"
+              " shape here that cannot be rewritten that way at all, because its subject is a"
+              " tree\n"
+              " that does not exist: re-run `--edge` or `--stub`, and date what you write.)")
         for c in blind:
             print("  invisible %s:%d  %s" % (c["path"], c["line"], c["text"][:150]))
         return 0
