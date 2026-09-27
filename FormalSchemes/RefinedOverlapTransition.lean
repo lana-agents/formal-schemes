@@ -508,11 +508,20 @@ home and the clearest price, and both were measured before they were written her
 docstring says it exists for a datum's `hστ`. It does not reach
 `FormalSchemes.AwayCompletionUniversal`, where the *OfLe* identification lives, and
 `scripts/closure_audit.py --edge` prices that import at **13** figure repairs in **8** files,
-against **0** here — this file needs no new import for any of the six, both modules being already
-among its own. `closure_audit --edge` prices a later edge from this file to that one — which is
-what moving them would also cost — at **5** figure repairs in **3** files. So the disposition is
-*keep, and move them together with the cross-chart square when it exists*, since that square will
-want the same imports and the two edges should be paid once.
+against **0** here — this file needs no new import for any of the six: the two *OfLe*
+identifications are `FormalSchemes.AwayCompletionUniversal`'s, the legs
+`FormalSchemes.CompletedTensorAwayInterchangePullbackLegs`' and the transport
+`FormalSchemes.AwayCompletionCongrEquiv`', three direct imports, and the rigidity
+`FormalSpectrum.algHom_eq_of_algebraMap` is proved from `FormalSpectrum.awayCompletion_hom_ext'`,
+`FormalSpectrum.le_comap_awayCompletionIdeal_algHom` and
+`FormalSpectrum.awayCompletionHom_eq_algebraMap`, which live in
+`FormalSchemes.AwayCompletionRestrictUnique`, `FormalSchemes.AwayCompletionAlgHomBasicOpen` and
+`FormalSchemes.BasicOpenChart`, of which only the middle one is a direct import — the other two
+this file *reaches*, which is all a proof needs and is the distinction the *only one of the 587
+that reaches all three* sentence above turns on. `closure_audit --edge` prices a later edge from
+this file to that one — which is what moving them would also cost — at **5** figure repairs in
+**3** files. So the disposition is *keep, and move them together with the cross-chart square when
+it exists*, since that square will want the same imports and the two edges should be paid once.
 `CompletedTensorAwayInterchange.awayCongrEquivOfEq_algebraMap` is the one with a closer home than
 that: its two siblings
 `CompletedTensorAwayInterchange.awayCongrHom_algebraMap` and
@@ -748,9 +757,14 @@ exactly as the two-fold case cancels its one pair, and only `Ni` and `Ni⁻¹` s
 Three charts is not three unpaired identifications; it is three pairs, one of which is the outside.
 
 As with the two-fold lemma the six steps of each composite are separate arguments and the middles
-are not packaged: at the doubly nested completions
-`FormalSpectrum.refinedOverlapSigma_trans₃_eq_refl` applies this to, re-associating a packaged
-middle is the `(deterministic) timeout at whnf` that section records. -/
+are not packaged, and the reason is the measurement
+`AlgEquiv.trans_symm_of_middle_eq_refl`'s docstring records: stating the composite with its
+middles packaged needs the conclusion re-associated, and at the doubly nested completions that
+re-association is a `(deterministic) timeout at whnf` at the default budget where the unpackaged
+shape is seconds. **That measurement is at the two-fold shape** — the module docstring's
+`## The symmetry law` section carries it — and nothing here or anywhere on this tree has measured
+the three-fold re-association. So this is why the lemma is shaped like the definition it is
+applied to, and it is not a claim about the triple. -/
 theorem trans₃_eq_refl_of_middle_eq_refl
     (Ni : X ≃ₐ[R] P) (B : P ≃ₐ[R] Q) (C : Q ≃ₐ[R] Q') (Nj : Y ≃ₐ[R] Q')
     (B' : Q' ≃ₐ[R] P') (C' : P' ≃ₐ[R] P'') (Nk : Z ≃ₐ[R] P'')
@@ -1695,8 +1709,9 @@ coarse cocycle is rotated by `AlgEquiv.trans₃_eq_refl_rotate`; the three
 `FormalSpectrum.SigmaIntertwinesLegs` hypotheses are *closed* under the rotation as a set, which is
 why they are named for their triples and not for their positions — the *(j,k,i)* instance wants
 `hjki`, `hijk`, `hkij` in that order, and the *(k,i,j)* one wants `hkij`, `hjki`, `hijk`. The only
-place a `AlgEquiv.symm_symm` is needed is the third rotation's *τ_ik*, and it is `rfl` at these
-completions.
+`AlgEquiv.symm_symm` needed is at *τ_ik*, and it is `rfl` at these completions: the `hkij`
+arguments of the *(j,k,i)* and the *(k,i,j)* instance both want *τ_ik* under two `AlgEquiv.symm`s
+where `hkij` supplies it bare, and so does the identification that closes the cycle.
 
 **The whole proof is `AlgEquiv.trans₃_eq_refl_of_middle_eq_refl` at
 `FormalSpectrum.awayCompletionAlgEquivOfBase_congr_trans₃_eq_refl`, in one term**, and that is a
