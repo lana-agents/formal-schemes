@@ -2463,10 +2463,11 @@ def selftest() -> int:
 
     # Goal 2: the `declined` and `size-declined` loops.  One tree carries a mismatch, a declined
     # closure claim and a declined size claim at once, because the **order** of the three blocks is
-    # what a reader of a red run relies on and no other case here observes it.  `size_declined` has
-    # population 0 on this tree, so this fixture is the only thing that will ever render its line at
-    # all -- a transposed `%s` there would ship, and neither the tree nor any other case would
-    # notice.
+    # what a reader of a red run relies on and no other case here observes it.  `size_declined`'s
+    # population on this tree is **0 or 1** depending on the head -- 0 at `75e9484`, and 1 with PR
+    # #820 on top of it, which adds a `+5` / `+6` declaration delta whose anchor is an anaphor --
+    # so the tree is not a reliable exercise of that line either way, and this fixture is.  A
+    # transposed `%s` there would otherwise ship on a run that happened to have nothing declined.
     with tempfile.TemporaryDirectory() as d:
         os.makedirs(os.path.join(d, "FormalSchemes"))
 
