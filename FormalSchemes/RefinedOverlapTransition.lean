@@ -413,31 +413,35 @@ on the tree — that module is already inside this file's 71, through
 `FormalSchemes.AwayCompletionCongrEquiv`. The module was priced the way CONTRIBUTING.md's *What
 adding a module costs* says to, by writing the file and running `--tree` against it, and the stub
 is `import FormalSchemes.RefinedOverlapTransition` and nothing else — a module *over* this one, not
-a sibling repeating this file's six imports, which is a different and cheaper experiment at **43**.
-Over this one it is **47** figure repairs in **18** files, whose union re-elaborates **540** of the
+a sibling repeating this file's six imports, which is a different and cheaper experiment at **44**.
+Over this one it is **48** figure repairs in **18** files, whose union re-elaborates **540** of the
 **588** modules that tree would have, **81** of them without `FormalSchemes/StructureSheaf.lean`.
-The **47** is `--tree`'s own header count and it counts *figures*, so it is **two** more than the
-**45** distinct positions the report prints, because two positions carry two figures each, both of
-them in this paragraph's own section: the *nearest thing to a subject-matter home* sentence below,
-which states two of them in one breath, and the census sentence above that one, whose universe size
-and top-bucket member both move because the stub grows the set *and* joins the bucket. The **540**
+The **48** is `--tree`'s own header count and it counts *figures*, so it is **three** more than the
+**45** distinct positions the report prints, because three positions carry two figures each, all
+three in this paragraph's own section: the *nearest thing to a subject-matter home* sentence below,
+which states two of them in one breath; the second census sentence, whose universe size and
+top-bucket member both move because the stub grows the set *and* joins the bucket; and the first
+census sentence above, whose universe size moves for the same reason and whose **superlative**
+moves because the stub joins a bucket higher than the one that sentence calls the best. The **540**
 and the **81** are counted with the stub on the tree, because the new module has to be elaborated
-too, and without it the same two are **539** and **80**. So the comparison here is
-**0 against 47**, the widest this file has seen, and it is not close.
+too, and without it the same two are **539** and **80**. So the comparison here is **0 against
+48**, the widest this file has seen, and it is not close.
 
-**Four of the 47 are figures about the whole tree rather than about one module's place in it**
-— the module count, both censuses' universes and that top-bucket member — and three of the four
-went unpriced until issue 2227 lifted `--stub`'s census filter, so a price for either experiment
-quoted from before that row is three figures and two positions short of what the mode says now. No
-numeral of the older reading is kept here, because a stale figure nothing reads is what rows 2209
-and 2212 exist to remove. `--edge` still prices no census figure, and **not** because an import
-leaves a census alone: the edge that gives `FormalSchemes.AdicRing` an import of
-`FormalSchemes.AwayCompletionUniversal` moves **nine** census figures, and every one of the nine is
-in this file — both censuses' buckets, both remainders, and the identity below. The reason is that
-`--edge`'s three species are exhaustive for *closures* and a bucket is not one, so a priced bucket
-could only print as unclassified, which would be false advice about a figure `--tree` already
-checks. `--stub` has a species that fits it: a stub grows the module count, and a census's universe
-is a count of modules.
+**Five of the 48 are figures about the whole tree rather than about one module's place in it** —
+the module count, both censuses' universes, that top-bucket member and the first census's
+superlative — and **four** of the five are census figures, three unpriced until issue 2227 lifted
+`--stub`'s census filter and the fourth until issue 2229 gave the superlative a clause of its own,
+so a price for either experiment quoted from before those two rows is four figures and two
+positions short of what the mode says now: the filtered reading is **44** at **43** here and **40**
+at **40** for the sibling. No numeral of the older reading is kept here, because a stale figure
+nothing reads is what rows 2209 and 2212 exist to remove. `--edge` still prices no census figure,
+and **not** because an import leaves a census alone: the edge that gives `FormalSchemes.AdicRing`
+an import of `FormalSchemes.AwayCompletionUniversal` moves **ten** census figures, and every one of
+the ten is in this file — both censuses' buckets, the second's remainder, the first's superlative,
+and the identity below. The reason is that `--edge`'s three species are exhaustive for *closures*
+and neither a bucket nor a superlative is one, so a priced bucket could only print as unclassified,
+which would be false advice about a figure `--tree` already checks. `--stub` has a species that
+fits it: a stub grows the module count, and a census's universe is a count of modules.
 
 **What the module costs is the figure sweep, not the build.** Adding any module under
 `FormalSchemes/` falsifies every absolute *reverse*-closure figure quoted about anything it imports

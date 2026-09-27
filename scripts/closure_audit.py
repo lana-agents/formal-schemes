@@ -897,6 +897,79 @@ CENSUS_STRICT = re.compile(r"\bdoes not count\b|\bnot counting\b|\bexcluding its
 # the accounted-for set and can only make the check **weaker**, never red against correct prose.
 BUCKET_ANY_WORD = re.compile(r"\b([a-z]+)\b", re.I)
 
+# ---------------------------------------------------------------------------------------------
+# A census's **superlative**, which row 2229 exists for: the one assertion in a census that is not
+# about a bucket the sentence names.
+#
+# *"the best any of the other 586 does is **three**"* is a claim about the **shape of the tail**,
+# and the tail is exactly what a new module changes.  Every other figure in a census is a count
+# beside a bucket predicate, and the four gates plus the remainder clause pin all of them -- but a
+# superlative is pinned by none of them, and row 2229 measured the consequence: put a sibling
+# module on this tree importing the six the first live census is of, and **all four bucket numerals
+# stay correct while the superlative goes false**.  `--tree` reds the universe size, the project
+# total, four reverse closures and the *other* census's identity, and says nothing about this.
+#
+# **The remainder clause absorbs it rather than catching it, and that is `BUCKET_ANY_WORD`'s
+# documented looseness being load-bearing in the wrong direction.**  The `six` of *"reaches all
+# six"* puts index 6 into `worded`, so the sibling's bucket counts as accounted for and the
+# arithmetic stays green: `587 - (416 + 146 + 20) = 5` against `hist[3] + hist[6] = 4 + 1`.  Row
+# 2224's argument that a loose `worded` can only weaken the check and never red correct prose is
+# true and still true; what row 2229 adds is the failing instance that shows *weaker* is not *free*.
+#
+# It needs no new resolver, and that is why it is a clause and not a species: the subject set, the
+# universe and the spelled cardinality have all resolved through the four existing gates by the
+# time the buckets are compared, and `hist` is already in hand.  The comparison is `max(hist)`.
+#
+# **The marker is separate from the grammar, and it is what makes the refusal a decline rather
+# than silence.**  Row 2229 section 3.1: every spelling other than the live one must decline *by
+# name*.  Without a marker an unreadable superlative would simply not be seen -- which is the state
+# this clause exists to end -- so `MARKER` is the loose test for *a superlative is being asserted
+# here* and `CENSUS_SUPERLATIVE` is the tight one for *and this walk can read it*.  Measured at
+# `7781393`: `the best` occurs in **1** sentence in the whole of `FormalSchemes/`, and it is a
+# census sentence and matches the full grammar.  So the marker is no looser than the grammar on
+# this tree, the decline path has population **0** and is pinned by fixtures rather than by prose,
+# and an over-refusal is impossible today -- a marker that reached a non-census sentence could not
+# decline anything anyway, because this species only looks inside sentences that carry a `BUCKET`.
+CENSUS_SUPERLATIVE_MARKER = re.compile(r"\bthe best\b", re.I)
+CENSUS_SUPERLATIVE = re.compile(
+    r"\bthe best any of the other \*{0,2}(\d+)\*{0,2} does is \*{0,2}([a-z]+)\*{0,2}", re.I)
+
+# The superlative's **companion**, and row 2229 section 3.3 asks for a decision about it rather than
+# an omission.  *"and only **4** of them manage that"* is a bucket figure whose index is *that* --
+# the superlative's -- and not a number word of its own, which is a binding no other gate here
+# produces: `BUCKET` requires `reach`/`reaches` after the numeral and this phrase has neither, so
+# the numeral is read by **nothing** today and only its index reaches `worded`.
+#
+# **Decided: read it, and bind it to the superlative's index.**  Checked rather than assumed, which
+# is what row 2229 section 3.3 demands -- on the live sentence `bound` is `{0: 416, 1: 146, 2: 20}`
+# and the `4` is not in it, so this is new coverage and not an accident already in hand.  Binding it
+# is strictly stronger than leaving it: the numeral becomes a checked figure, and the remainder
+# clause stays consistent because `worded` subtracts `bound`'s keys, so index 3 leaves the
+# accounted-for set at the same moment it gains a numeral.  Both readings are green on the live
+# tree (`remainder 4 == hist[3] + hist[6]` before, `remainder 0 == hist[6]` after) and the bound one
+# names the stale numeral instead of reporting a remainder that does not balance.
+#
+# Anchored **after** the superlative's own span, because *of them* has no antecedent otherwise, and
+# read only when the superlative resolved -- a companion bound to an index this walk could not
+# determine would be a guess, which is the one thing this species does not do.
+SUPERLATIVE_COMPANION = re.compile(r"\bonly \*{0,2}(\d+)\*{0,2} of them manage that\b", re.I)
+
+# The superlative's remedy, and it is **neither** incumbent's.  Row 2229 section 3.4 asks which was
+# chosen and why, so: `BUCKET_DISPOSITION`'s *re-run the walk* is the right instruction here --
+# unlike the identity's, where re-running returns the same number it returned before -- but its
+# closing words are *the numeral is what is stale*, and a superlative's figure is a **number word**.
+# An author who re-runs the walk, gets 6 and looks for a numeral to change finds none, and that is
+# the last inch of the advice doing nothing, which is what row 2214 rejected #814 for. One line of
+# difference, so it is a disposition of its own rather than a shared one with a footnote.  The
+# refusal route is shared, because breaking either gate takes the whole sentence out of this
+# species.
+SUPERLATIVE_DISPOSITION = (
+    "(this one is a number **word**, not a numeral.  The figure passed the same gates as a",
+    " bucket, so the reading is pinned and the word is what is stale: re-run the walk and",
+    " spell the index it gives.  To refuse the reading instead, elide the spelled cardinality",
+    " or word the superlative some other way, and it goes to --sweep.)",
+)
+
 # The bucket species' remedy, and it is the opposite of both incumbents'.  `TOTAL_DISPOSITION` and
 # `CENSUS_DISPOSITION` both end *"Do not change the numeral"*, because there the risk carried by
 # the grammar is that a numeral which is not a module count is being read as one -- the reading is
@@ -1330,6 +1403,19 @@ def census_spans(sentence: str) -> list[tuple[int, int]]:
     spans = []
     for pat in (BUCKET, CENSUS_SUBJECT, CENSUS_OTHER, CENSUS_ALL):
         spans += [m.span() for m in pat.finditer(sentence)]
+    # The superlative and its companion, on the same *one function decides both* rule the docstring
+    # above states -- and conditionally, mirroring `census_claims`: the superlative's span only when
+    # the tight grammar matched, and the companion's only when it did **and** the companion stands
+    # after it, which is the same anchoring the audit reads it under.  A sentence carrying the
+    # marker and not the grammar contributes neither, and it is not silent for it: the census
+    # declines and `--tree`'s `census-declined` block is its reading list, exactly as for every
+    # other refused gate.
+    sup = CENSUS_SUPERLATIVE.search(sentence)
+    if sup:
+        spans.append(sup.span())
+        comp = SUPERLATIVE_COMPANION.search(sentence, sup.end())
+        if comp:
+            spans.append(comp.span())
     return spans
 
 
@@ -1445,7 +1531,52 @@ def census_claims(mods: dict[str, str]):
                 bound[BUCKET_WORD[word]] = int(b.group(1))
             if bound is None:
                 continue
+            # The superlative, row 2229.  The marker decides whether the sentence is *asserting*
+            # one and the grammar whether this walk can read it, so a marker without the grammar is
+            # a decline by name rather than a figure nobody sees -- which is the whole state this
+            # clause ends.  Order matters against the gates above: the `the other N` exclusion
+            # decline fires before this, so row 2214's shape keeps the reason it already had even
+            # though that fixture's sentence carries a superlative.
+            sup = CENSUS_SUPERLATIVE.search(s)
+            if CENSUS_SUPERLATIVE_MARKER.search(s) and not sup:
+                yield decline("a superlative this walk cannot read -- the spelling it reads is"
+                              " `the best any of the other N does is <word>`")
+                continue
+            superlative = None
+            if sup:
+                word = sup.group(2).lower()
+                if word not in BUCKET_WORD:
+                    yield decline("superlative index `%s` is not a number word" % word)
+                    continue
+                if BUCKET_WORD[word] > spelled:
+                    yield decline("superlative index `%s` is not an index into a set of %d"
+                                  % (word, spelled))
+                    continue
+                # The superlative states its own universe and it has to be the census's.  On the
+                # live spelling this is the same `the other N` that `CENSUS_OTHER` read, so the
+                # population of the decline is **0** -- but it is not free to omit: `CENSUS_OTHER`
+                # takes the *first* match in the sentence, so a sentence stating two universes
+                # would otherwise have its superlative compared against a partition it is not
+                # about, and a figure read against the wrong set is worse than one read by nothing.
+                if int(sup.group(1)) != stated:
+                    yield decline("the superlative and the buckets name different sets being"
+                                  " partitioned (%s against %d)" % (sup.group(1), stated))
+                    continue
+                superlative = BUCKET_WORD[word]
+                comp = SUPERLATIVE_COMPANION.search(s, sup.end())
+                if comp:
+                    # Bound to the superlative's index, so a numeral already bound there by a
+                    # `N reach <word>` predicate is the same collision the loop above refuses and
+                    # gets the same answer.  Mutating `bound` here rather than after the yield is
+                    # what keeps the remainder consistent: `worded` below subtracts `bound`'s keys,
+                    # so this index leaves the accounted-for set as it gains a numeral.
+                    if superlative in bound:
+                        yield decline("the superlative's companion and a bucket predicate are"
+                                      " bound to the same bucket")
+                        continue
+                    bound[superlative] = int(comp.group(1))
             yield dict(rec, subject_set=subject, spelled=spelled, universe=universe,
+                       superlative=superlative, superlative_word=sup and sup.group(2).lower(),
                        stated_universe=stated, buckets=bound,
                        worded={BUCKET_WORD[w.lower()] for w in BUCKET_ANY_WORD.findall(s)
                                if w.lower() in BUCKET_WORD} - set(bound),
@@ -1628,6 +1759,20 @@ def audit(root: str = ".",
                 c, stated=remainder, actual=accounted,
                 what="the buckets this census names in words but not with a numeral"
                      " (indices %s)" % (", ".join(str(k) for k in sorted(c["worded"])) or "none")))
+        # The superlative, row 2229: the index the sentence spells against the top of the walk's own
+        # histogram.  `max(hist)` and not `max(hist, key=...)` -- the claim is about which bucket is
+        # the highest non-empty one, not about how many are in it, and the companion above is what
+        # checks the count.  `default=0` is unreachable on any tree with two modules in it and is
+        # here because a one-module tree makes `the other N` empty, which is an argument about the
+        # fixture rather than about the prose.
+        if c.get("superlative") is not None:
+            best = max(hist, default=0)
+            if c["superlative"] != best:
+                mismatches.append(dict(
+                    c, stated=c["superlative"], actual=best,
+                    disposition=SUPERLATIVE_DISPOSITION,
+                    what="the best any of the %d this census partitions reaches, which this"
+                         " sentence spells `%s`" % (len(c["universe"]), c["superlative_word"])))
         # The identity, as **two** figures.  *"This module is the only one of the N"* asserts that
         # this file is in the top bucket and that nothing else is, and one comparison of a set
         # against `[module]` collapses them into a line that reads `states 1, walk gives 1`
@@ -1737,20 +1882,23 @@ def edge_cost(root: str = ".", importer: str = "", imported: str = "") -> dict:
     # partition, whose subject is a set of modules and whose universe is every module.  Putting it
     # in the population would print it under `UNCLASSIFIED`, whose own line says *a claim shape
     # nobody has thought about, or a bug here*, which would be false advice about a figure `--tree`
-    # checks.  Measured at `2857956`: the edges that move a bucket at all are the ones bringing a
-    # member of a live census's subject set into a module that did not reach it, `--edge` is
-    # byte-identical on every edge that does not, and the population this filter drops is **0** on
+    # checks.  Measured at `2857956` and re-measured at `7781393` once row 2229 put a census's
+    # **superlative** in the population, which moved it by one: the edges that move a bucket at all
+    # are the ones bringing a member of a live census's subject set into a module that did not reach
+    # it, `--edge` is byte-identical on every edge that does not, and the population this filter
+    # drops is **0** on
     # `--edge FormalSchemes.RefinedOverlapTransition:FormalSchemes.AwayCongrAlgebraMap` against
-    # **9** on `--edge FormalSchemes.AdicRing:FormalSchemes.AwayCompletionUniversal`, where the
+    # **10** on `--edge FormalSchemes.AdicRing:FormalSchemes.AwayCompletionUniversal`, where the
     # brought-in module is a member of both live censuses' subject sets.  Naming the number here
     # rather than only in a pull request is the point: the cap is not silent.  If a later row wants
     # these priced, the honest shape is a species of its own with a label of its own, not a fourth
     # meaning for `UNCLASSIFIED`.
     #
     # **`--stub` does price them, and the difference is not a disagreement.** The rule is **which
-    # species can name the figure**, not which hypothetical moves it: both move it, and the 9 above
+    # species can name the figure**, not which hypothetical moves it: both move it, and the 10 above
     # is this mode's own count of how many it moves here.  There is nowhere honest to file one --
-    # the three species below are exhaustive for *closures*, a bucket is not a closure, and
+    # the three species below are exhaustive for *closures*, and neither a bucket nor a superlative
+    # is a closure, and
     # `UNCLASSIFIED` is the only level left.  `stub_species` has a level that fits: a stub grows
     # `len(mods)`, a census's universe is a count of modules, so the figure moves for the same
     # reason the project total's does and stands beside it.  A reader finding one filter and not
@@ -4108,6 +4256,185 @@ def selftest() -> int:
                               " one, 1 reaches two and 1 reaches four")[:2],
           ([], ["the set being partitioned is not stated, or is stated twice"]))
 
+    # ------------------------------------------------------------------------------------------
+    # The **superlative**, row 2229.  The census tree read under the *other N* idiom: the universe
+    # is the nine modules besides `Cen`, and over those nine the walk is `0 -> 1, 1 -> 6, 2 -> 1,
+    # 4 -> 1`, so the top non-empty bucket is **4** and `Rival` is its only member.  Every sentence
+    # below is that tree's, and the one that is true of it is the over-match control.
+    sup_ok = (subj + "no module of this tree reaches all five -- the best any of the other 9 does"
+                     " is four, and only 1 of them manage that: 1 reaches none, 6 reach exactly"
+                     " one and 1 reaches two")
+    check("a census whose superlative and companion both agree with the walk is green, and the "
+          "over-match control is that nothing else fires on it either",
+          census_run(sentence=sup_ok), ([], [], []))
+
+    # **Positive control 1, and it is the shape row 2229 exists for**: the superlative alone is
+    # stale and **every bucket numeral is right**.  This is the state the live tree reached when a
+    # sibling was put on it -- four correct numerals, a false superlative, and the remainder
+    # balancing -- and before this clause the whole of `--tree` was silent on it.  Exactly one
+    # figure fires, which is what says the clause is the only thing reading it.
+    #
+    # The top bucket is given its own predicate (`1 reaches four`) and the companion is left out,
+    # and both are forced rather than stylistic.  Without the predicate the module at bucket 4 is
+    # named nowhere and the **remainder** reds, so the control would prove nothing about the
+    # superlative.  And the companion cannot be present: it is bound to the superlative's index, so
+    # a wrong index takes its numeral to a wrong bucket and a second figure fires -- which is a
+    # property of the binding and is pinned by its own case below, not something to hide here.
+    sup_stale = (subj + "no module of this tree reaches all five -- the best any of the other 9"
+                        " does is three: 1 reaches none, 6 reach exactly one, 1 reaches two and"
+                        " 1 reaches four")
+    check("a stale superlative with every bucket numeral correct is caught, and it is the only "
+          "figure that fires",
+          census_run(sentence=sup_stale)[0],
+          [(3, 4, "the best any of the 9 this census partitions reaches, which this sentence"
+                  " spells `three`")])
+
+    # **Positive control 2**: a bucket stale and the superlative right, so the two are independent
+    # witnesses rather than one figure reported twice.  Row 2229 section 4 asks for both directions
+    # and this is why: a clause that fired whenever anything in the sentence was stale would pass
+    # control 1 and be worthless, and one that only ever fired with a bucket would pass control 2
+    # and miss the population it was built for.  `6 reach exactly one` becomes `7`, so that bucket's
+    # own predicate reds and the remainder reds with it -- and the superlative does not.
+    check("a bucket stale with the superlative correct reds the bucket and the remainder and not "
+          "the superlative, so the two clauses are independent witnesses",
+          [what for _stated, _actual, what in
+           census_run(sentence=subj + "no module of this tree reaches all five -- the best any of"
+                                      " the other 9 does is four, and only 1 of them manage that:"
+                                      " 1 reaches none, 7 reach exactly one and 1 reaches two")[0]],
+          ["the modules reaching 1 of the 5 this census is of",
+           "the buckets this census names in words but not with a numeral (indices 5)"])
+
+    # The **companion** is read, which row 2229 section 3.3 asks to be checked rather than assumed.
+    # `only 1` becomes `only 2` and the walk has one module in the top bucket, so the numeral reds
+    # **as bucket 4** -- the index it is bound to and not one of its own.  Before this clause that
+    # numeral was read by nothing: `BUCKET` wants `reach`/`reaches` after it and this phrase has
+    # neither, so only its *index* ever reached `worded`.
+    check("the superlative's companion is a checked bucket numeral, bound to the superlative's "
+          "index rather than to a number word of its own",
+          [(stated, actual, what) for stated, actual, what in
+           census_run(sentence=subj + "no module of this tree reaches all five -- the best any of"
+                                      " the other 9 does is four, and only 2 of them manage that:"
+                                      " 1 reaches none, 6 reach exactly one and 1 reaches two")[0]
+           if "reaching 4" in (what or "")],
+          [(2, 1, "the modules reaching 4 of the 5 this census is of")])
+
+    # **The remedy, followed on a live fixture, which is what row 2229 section 3.4 requires and what
+    # #814 was rejected for not doing.**  `SUPERLATIVE_DISPOSITION` says *re-run the walk and spell
+    # the index it gives*: the walk gives 4, the word is `four`, and writing it makes the same tree
+    # green.  The pair is the whole argument that the advice is not a no-op -- red before, green
+    # after, same tree, one word changed.
+    check("following the superlative's own remedy -- spell the index the walk gives -- takes the "
+          "same tree from red to green",
+          (len(census_run(sentence=sup_stale)[0]),
+           census_run(sentence=sup_stale.replace("does is three", "does is four"))),
+          (1, ([], [], [])))
+
+    # The over-refusal controls, all four of them, and each is a reading this walk cannot pin rather
+    # than a spelling it dislikes.  Row 2229 section 3.1: every spelling but the live one declines
+    # **by name**, and the marker is what makes that possible -- without it an unreadable
+    # superlative would be silence, which is the state this clause ends.
+    for name, sentence, why in [
+            # The universe phrase is kept and only the superlative's own words change, so the
+            # earlier gates all pass and this decline is reached: a sentence with no `the other N`
+            # in it declines two gates sooner, for *the set being partitioned is not stated*, and
+            # would say nothing about this clause at all.
+            ("a superlative the grammar cannot read declines by name rather than passing",
+             subj + "no module of this tree reaches all five -- of the other 9, the best is four:"
+                    " 1 reaches none, 6 reach exactly one, 1 reaches two and 1 reaches four",
+             "a superlative this walk cannot read -- the spelling it reads is `the best any of the"
+             " other N does is <word>`"),
+            ("a superlative index outside the number-word vocabulary declines",
+             subj + "no module of this tree reaches all five -- the best any of the other 9 does"
+                    " is middling: 1 reaches none, 6 reach exactly one and 1 reaches two",
+             "superlative index `middling` is not a number word"),
+            ("a superlative index larger than the set the census is of declines",
+             subj + "no module of this tree reaches all five -- the best any of the other 9 does"
+                    " is nine: 1 reaches none, 6 reach exactly one and 1 reaches two",
+             "superlative index `nine` is not an index into a set of 5"),
+            ("a companion bound to a bucket a predicate already bound declines, which is the "
+             "bucket loop's own collision answered the same way",
+             subj + "no module of this tree reaches all five -- the best any of the other 9 does"
+                    " is two, and only 1 of them manage that: 1 reaches none, 6 reach exactly one"
+                    " and 1 reaches two",
+             None)]:
+        if why is None:
+            # The collision, spelled so that the superlative's index **is** one a predicate binds:
+            # `two` is bucket 2 and `1 reaches two` binds it, so the companion has nowhere to go.
+            # This is also the case that shows the guard is not decoration -- without it the
+            # companion would silently overwrite the predicate's numeral, and the sentence would be
+            # checked against a figure it does not state.
+            check(name, census_run(sentence=sentence)[:2],
+                  ([], ["the superlative's companion and a bucket predicate are bound to the same"
+                        " bucket"]))
+        else:
+            check(name, census_run(sentence=sentence)[:2], ([], [why]))
+
+    # The superlative and its companion are spans this species **reads**, so `census_spans` has to
+    # blank them or `--sweep` keeps carrying a figure `--tree` now checks -- the drift the shared
+    # function exists to prevent, in the direction row 2213 paid for.  Four spans without a
+    # superlative (two buckets, the cardinality, the universe) and six with one and its companion.
+    check("a superlative and its companion are blanked from the reading list, because they are now "
+          "checked -- and a sentence with neither is unchanged",
+          (len(census_spans("this module is the only one of the 10 that reaches all five -- 1"
+                            " reaches none and 6 reach exactly one")),
+           len(census_spans("no module reaches all five -- the best any of the other 9 does is"
+                            " four, and only 1 of them manage that: 1 reaches none and 6 reach"
+                            " exactly one"))),
+          (4, 6))
+
+    # The superlative's **own universe numeral**, which has population 0 on the live tree because
+    # the live spelling puts `the other N` inside the superlative phrase itself -- so the only way
+    # to reach this gate is a sentence stating two universes, and `CENSUS_OTHER` takes the first.
+    # Here the buckets are read against the other **9** and the superlative claims to be about the
+    # other **8**, which is a figure read against a partition it is not about, and that is worse
+    # than one read by nothing.
+    check("a superlative naming a different set from the one the buckets partition declines, "
+          "rather than being compared against the buckets' partition",
+          census_run(sentence=subj + "of the other 9 modules, none reaches all five -- the best any"
+                                     " of the other 8 does is four: 1 reaches none, 6 reach exactly"
+                                     " one, 1 reaches two and 1 reaches four")[:2],
+          ([], ["the superlative and the buckets name different sets being partitioned"
+                " (8 against 9)"]))
+
+    # The companion's **anchoring**.  *of them* has no antecedent before the superlative, so the
+    # search starts at its end -- and this is the fixture that makes that a decision rather than a
+    # coincidence: the companion stands **first** and names a numeral the superlative's index is
+    # already bound to by a predicate.  Anchored, it is not a companion at all and the tree is
+    # green; unanchored, it collides and the whole census declines.
+    check("a `only N of them manage that` standing before the superlative is not its companion, "
+          "because *of them* has no antecedent there",
+          census_run(sentence=subj + "no module of this tree reaches all five -- only 3 of them"
+                                     " manage that, and the best any of the other 9 does is four:"
+                                     " 1 reaches none, 6 reach exactly one, 1 reaches two and"
+                                     " 1 reaches four"),
+          ([], [], []))
+
+    # And the remedy printed **beside** the superlative is its own and not the bucket species'.  The
+    # identity has the same case for the same reason (row 2214, #814): a remedy that names the wrong
+    # kind of edit is advice that does nothing, and nothing else here reads a `disposition`.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        census_tree(d, write, sentence=sup_stale)
+        sup_mis = [c for c in audit(d)[0] if c.get("kind") == "census"]
+        check("the superlative's MISMATCH carries its own remedy, which says the figure is a "
+              "number word and not a numeral",
+              [c["disposition"] is SUPERLATIVE_DISPOSITION for c in sup_mis], [True])
+
+    # And the marker's own population, measured rather than asserted, because the decline path above
+    # has population **0** on this tree and an over-refusal would show up here first: a sentence
+    # carrying `the best` and **no** bucket is not a census at all, so this species neither reads
+    # nor declines it and it keeps whatever `--sweep` gave it.
+    check("`the best` in a sentence with no bucket in it is not a census, so the superlative "
+          "clause neither reads nor declines it",
+          census_spans("The best any of the other 9 does is four, and nothing here is a census."),
+          [])
+
     # `--edge` does not price a bucket, and this is the pair of cases that says so without the
     # assertion being vacuous.  `Q` gaining `FormalSchemes.A1` moves it out of the *reaches none*
     # bucket, so the figures really do move -- the first case writes that import and watches the
@@ -4369,6 +4696,14 @@ def main() -> int:
     print("                                       set, its spelled cardinality and the universe")
     print("                                       are all read from the sentence)")
     print("  censuses read              : %5d" % len(censuses))
+    # A line of its own rather than a summand of the buckets, because the buckets' own parenthetical
+    # says the figure is a partition and a superlative is not one -- it is a claim about which
+    # bucket is the highest non-empty one.  Folding it in would leave `census buckets checked` no
+    # longer a count of buckets, which is a figure reviewers hold fixed across a diff.
+    print("  superlatives checked       : %5d   (`the best any of the other N does is <word>`;"
+          % sum(1 for c in censuses if c.get("superlative") is not None))
+    print("                                       the companion `only N of them manage that` is a")
+    print("                                       bucket numeral and is counted above)")
     print("  declined (see below)       : %5d" % len(census_declined))
     for c in sorted(mismatches, key=lambda c: (c["path"], c["line"])):
         what = c.get("what") or "the %s closure of `%s`" % (c["kind"], c["about"])
