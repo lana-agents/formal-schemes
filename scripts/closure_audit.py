@@ -448,14 +448,78 @@ WITH_ITSELF = re.compile(r"^\s*(?:project |modules? )*(?:counted )?(?:with itsel
 # can check it.  It is left out of `--sweep` rather than reported and dismissed every run.
 MATHLIB = re.compile(r"Mathlib", re.I)
 
+# A **tree census** is the third shape this tree writes about its own module set, after a closure
+# figure and a project total: a partition of the modules into buckets, stated with no closure phrase
+# in it and with the noun of the count phrase *elided*.
+#
+#     the best any of the other 585 does is **three**, and only 4 of them manage that:
+#     **415** reach none, **146** reach exactly one and **20** reach two.
+#     this module is the only one of the 586 that reaches all three -- 545 reach none of
+#     them, 35 reach exactly one, 5 reach two and this file is the one that reaches three.
+#
+# **Row 2214's decision, and it is a decision rather than the obvious reading of its own §3.**  That
+# row proposes checking *"the other **N**"* as `len(mods) - 1` and *"the only one of the **N**"* as
+# `len(mods)`, on the ground that neither needs a subject.  The arithmetic is right and the grammar
+# is not, and both halves were measured before this was written:
+#
+# * *"the other **N**"* is **not** checked here, in any spelling.  `the other` needs an antecedent
+#   for what is *excluded*, and the regex cannot see it: on this tree the exclusion is the module
+#   the docstring is in, so the figure is `len(mods) - 1`, but *"the other **580** modules under
+#   `FormalSchemes/`"* excluding a named six is the same words and the same shape.  Reading one as
+#   the other is a confident MISMATCH against correct prose in the one species with **no decline
+#   path**, which is the trade this file refuses everywhere.  It goes to the reading list.
+# * *"the only one of the **N**"* **is** checked, and only when the noun phrase is pinned to the
+#   tree by the path -- because `the only one of the N modules under `FormalSchemes/`` asks no
+#   *other than what* question: the `N` is the size of the set the one is drawn from, and the phrase
+#   says which set that is.  The bare spelling, with the noun elided, is not checked, because *"the
+#   only one of the **6** imports"* is the same words about something that is not the module set.
+# * the **bucket** figures (*"**415** reach none"*) are not checked by anything and are not meant to
+#   be: they need the instrument to know which nine modules the sentence is a census *of*, which is
+#   a richer reading than any species here does.  Reading list.
+#
+# **The population of the checked spelling on this tree is 0, and that is the point rather than a
+# disappointment.**  Both live census totals have the noun elided, so the row's own proposal would
+# not have checked either of them either; what the two options differ in is which spelling an author
+# can *opt into*, and what closes row 2214's actual cost -- seven numerals falsified silently by a
+# module addition while `--tree` reported MISMATCH 0 -- is `CENSUS_UNCHECKED` below, which puts both
+# sentences on `--sweep` where a human reads them every run.
+#
+# **No trailing guard, deliberately, and this is the one place `RESTRICTION`-shaped reasoning does
+# not transfer.**  In *"the only one of the **N** modules under `FormalSchemes/` that reaches all
+# three"* the relative clause restricts *the only one*, not *the N modules*, so the figure is a true
+# total and refusing it would be wrong.  That is also why this cannot be a `TOTAL` alternation: at
+# `05a5fe2` `TOTAL[1]`'s own `(?!\s+(?:that|which|who|whose)\b)` refuses exactly that sentence, so
+# the pinned census total is invisible to it.  Having no trailing guard also means there is no
+# lookahead here for `**` to defeat -- which matters, because the tree bolds emphasised words and a
+# bolded post-modifier walks straight past a guard that begins `\s+`.  The **path** still has to be
+# unbolded, exactly as in `TOTAL`: ``under **`FormalSchemes/`**`` is read by neither species, and
+# the population of that spelling under `FormalSchemes/` at `05a5fe2` is **0**.
+CENSUS = [
+    re.compile(r"the only one of the \*{0,2}(\d+)\*{0,2} modules under "
+               r"(?:`FormalSchemes/`|FormalSchemes/(?![A-Za-z]))", re.I),
+]
+
+# The census spellings nothing checks, which are therefore the ones `--sweep` has to carry: the two
+# elided count phrases and the bucket predicate.  The bucket marker is deliberately the loose
+# `N reach` / `N reaches` rather than an alternation of *none* / *exactly one* / *two* -- it reaches
+# every bucket predicate the tree writes and, measured at `05a5fe2`, both spellings put the same
+# **2** sentences on the list, so the narrower one buys nothing and would go stale against the next
+# way somebody words a bucket.  `the only one of the N` is matched here as well as in `CENSUS`,
+# being a prefix of it; `invisible` tries `CENSUS` first for that reason, exactly as it does for
+# `TOTAL`.
+CENSUS_UNCHECKED = re.compile(r"\bthe other \*{0,2}\d+"
+                              r"|\bthe only one of the \*{0,2}\d+"
+                              r"|\b\*{0,2}\d+\*{0,2} reach(?:es)?\b", re.I)
+
 # What makes a sentence a candidate for `--sweep`.  The word `closure` is the obvious trigger, but
 # it is not sufficient: *"`FormalSchemes.Gluing` being upstream of 272 of this tree's 496 modules"*
 # is a **reverse**-closure measurement carrying two figures and does not contain the word at all.
-# Two further markers are added for that shape -- a project-module total, and `upstream of N` --
-# both of which are unambiguous assertions about the import graph however the sentence is worded.
+# Three further markers are added for that shape -- a project-module total, a tree census, and
+# `upstream of N` -- all of which are assertions about this tree's import graph however worded.
 SWEEPABLE = re.compile(r"closure"
                        r"|of (?:this|the) (?:tree|project|library)'s \*{0,2}\d+\*{0,2} modules?"
                        r"|" + TOTAL_UNCHECKED.pattern +
+                       r"|" + CENSUS_UNCHECKED.pattern +
                        r"|\bupstream of \*{0,2}\d", re.I)
 
 # A size figure: `**3001** lines`, `84 declarations`.  The noun is the trigger, so the figure has
@@ -767,21 +831,39 @@ def total_claims(mods: dict[str, str]):
     The scan is over whole files for the reason `claims` gives: *modules under* and *the project's
     modules* are prose, not Lean syntax, so a hit is a sentence wherever it lands.
 
-    **No two patterns can read one numeral, so nothing here deduplicates.**  That is a property of
-    the grammar and not luck: the second pattern needs the numeral immediately after *the*, and in
-    the first `project's` stands in that slot -- ``of the project's **3** modules under
-    `FormalSchemes/` `` is one claim, read by the first pattern only.  A dedup would be a branch no
-    fixture could reach; a third pattern would need this sentence re-read rather than trusted, and
-    the `--selftest` case *two spellings in one sentence* is where that would show up.
+    **Two patterns can now read one numeral, and the span set is what stops it being counted
+    twice.**  Until row 2214 they could not, and this docstring said so: `TOTAL`'s second pattern
+    needs the numeral immediately after *the*, and in the first `project's` stands in that slot, so
+    ``of the project's **3** modules under `FormalSchemes/` `` was one claim read by the first
+    pattern only.  `CENSUS` is the third pattern that docstring said *"would need this sentence
+    re-read rather than trusted"*, and re-reading it is what this is: *"the only one of the **3**
+    modules under `FormalSchemes/` reaches it"* is read by `CENSUS[0]` **and**, because nothing
+    restricts the phrase, by `TOTAL[1]` at the numeral inside it.  Both want `len(mods)`, so the
+    verdict is the same either way and only the *count* was ever at risk -- but a figure reported
+    twice is a figure whose population moves when somebody rewords a sentence, so the first
+    pattern to reach a numeral keeps it.  `TOTAL` is scanned first, which makes the incumbent
+    species the one that keeps its own spelling.  The `--selftest` cases *two spellings in one
+    sentence* and *a census total in the unrestricted spelling is one claim, not two* are the two
+    sides of this.
     """
     for module, path in sorted(mods.items()):
         raw = open(path, encoding="utf-8").read()
         flat = raw.replace("\n", " ")
-        for pat in TOTAL:
+        taken: list[tuple[int, int]] = []
+        for pat, what in ([(p, "the number of modules under `FormalSchemes/`") for p in TOTAL]
+                          + [(p, "the number of modules under `FormalSchemes/`, as the size of the"
+                                 " set this sentence is a census of") for p in CENSUS]):
             for m in pat.finditer(flat):
+                # The numeral's own span, not the phrase's: two spellings of one census overlap in
+                # their wording far more often than they overlap on a figure, and it is the figure
+                # that must not be counted twice.
+                span = m.span(1)
+                if any(a < span[1] and span[0] < b for a, b in taken):
+                    continue
+                taken.append(span)
                 yield dict(path=path, line=raw[:m.start()].count("\n") + 1, module=module,
                            stated=int(m.group(1)), about=None, kind="total", subject=None,
-                           what="the number of modules under `FormalSchemes/`",
+                           what=what,
                            text=" ".join(flat[m.start():m.start() + 90].split()))
 
 
@@ -825,11 +907,14 @@ def invisible(mods: dict[str, str]):
                 continue
             if MATHLIB.search(s):
                 continue
-            # A total `TOTAL` reads is checked, so it is not invisible and the sentence carrying it
-            # is not on the reading list.  The gate is per **sentence** and so deliberately coarse:
-            # a sentence stating a checked total *and* an unchecked one drops out here, which can
-            # only shorten the list and never mis-measure anything.  That population is 0 today.
-            if any(p.search(s) for p in TOTAL):
+            # A total `TOTAL` reads, or a census total `CENSUS` reads, is checked -- so it is not
+            # invisible and the sentence carrying it is not on the reading list.  `CENSUS` is in
+            # this gate because `CENSUS_UNCHECKED` matches the checked spelling too, being a prefix
+            # of it, so without it every checked census total would put its own sentence on the
+            # list.  The gate is per **sentence** and so deliberately coarse: a sentence stating a
+            # checked total *and* an unchecked one drops out here, which can only shorten the list
+            # and never mis-measure anything.  That population is 0 today.
+            if any(p.search(s) for p in TOTAL + CENSUS):
                 continue
             # The `CLOSURE` exclusion is per sentence for the reason it exists -- a sentence with a
             # closure phrase in it is one `claims` has already seen, attributed or declined -- and
@@ -837,8 +922,12 @@ def invisible(mods: dict[str, str]):
             # unchecked total *and* a reverse-closure claim in one sentence, so the claim beside the
             # total is exactly what hid it from both instruments at once.  This is the one marker
             # read per figure rather than per sentence, and it is why row 2209 found three numerals
-            # rotting under a MISMATCH 0.
-            if CLOSURE.search(s) and not TOTAL_UNCHECKED.search(s):
+            # rotting under a MISMATCH 0.  A census is in the same position for the same reason and
+            # since row 2214 is exempted with it -- a bucket partition beside a closure claim would
+            # otherwise be hidden by the claim exactly as the unpinned total was.  Population of
+            # *census and closure phrase in one sentence* at `05a5fe2`: **0**; it is here because
+            # the mechanism is the one row 2209 paid for, not because the tree writes it today.
+            if CLOSURE.search(s) and not (TOTAL_UNCHECKED.search(s) or CENSUS_UNCHECKED.search(s)):
                 continue
             yield dict(path=path, line=raw[:off].count("\n") + 1, module=module,
                        text=" ".join(s.split()))
@@ -1747,6 +1836,128 @@ def selftest() -> int:
         check("and only the stale one of the two is reported",
               [(c["stated"], c["actual"]) for c in audit(d)[0]], [(9, 3)])
 
+        # A **tree census** (row 2214).  `the only one of the N modules under `FormalSchemes/`` is
+        # the one census spelling checked, and the relative clause after the path is why it needs a
+        # species of its own: it restricts *the only one*, not *the N modules*, so `TOTAL[1]`'s
+        # guard refuses a true total there.  The case below asserts both halves at once -- one claim
+        # from `CENSUS`, and `TOTAL` alone yielding nothing for the same sentence.
+        CENSUS_WHAT = ("the number of modules under `FormalSchemes/`, as the size of the set this"
+                       " sentence is a census of")
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  This module is the only one of the **3** modules under\n"
+                     "`FormalSchemes/` that reaches `FormalSchemes.Base` twice. -/\n")
+        check("a census total pinned by the path is checked, and the clause after the path does "
+              "not refuse it",
+              (audit(d)[0], [(c["stated"], c["what"])
+                             for c in total_claims(project_modules(d))],
+               [any(p.search("the only one of the **3** modules under `FormalSchemes/` that r")
+                    for p in TOTAL)]),
+              ([], [(3, CENSUS_WHAT)], [False]))
+        check("and a checked census total does not put its own sentence on the reading list",
+              [c["module"] for c in invisible(project_modules(d))], [])
+
+        # The positive control row 2214 §3 asks for in terms: a census sentence true at N modules, a
+        # module added, and the instrument going red.  The stale numeral is the census total and
+        # nothing else moves, because the added module reaches none of the three.
+        write("Extra", "/-! Over nothing: forward closure **0**, reverse closure **0**. -/\n")
+        check("adding a module falsifies a census total and `--tree` goes red",
+              [(c["line"], c["stated"], c["actual"], c["what"]) for c in audit(d)[0]],
+              [(3, 3, 4, CENSUS_WHAT)])
+        os.remove(os.path.join(d, "FormalSchemes", "Extra.lean"))
+        check("and removing it again is green, so that case is the module and not the prose",
+              audit(d)[0], [])
+
+        # The dedup `total_claims` now carries.  With **no** clause after the path, `TOTAL[1]` reads
+        # the same numeral as `CENSUS[0]`, and both want `len(mods)` -- so the verdict never
+        # differed and only the *count* did.  The first pattern to reach the numeral keeps it, and
+        # `TOTAL` is scanned first, so the `what` here is the total's and not the census's.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  This module is the only one of the **3** modules under\n"
+                     "`FormalSchemes/` reaches `FormalSchemes.Base` twice. -/\n")
+        check("a census total in the unrestricted spelling is one claim, not two",
+              (audit(d)[0], [(c["stated"], c["what"])
+                             for c in total_claims(project_modules(d))]),
+              ([], [(3, "the number of modules under `FormalSchemes/`")]))
+
+        # `the other **N**` is the census total this row **declines** to check, in every spelling
+        # including the pinned one, because `the other` needs an antecedent for what is excluded and
+        # no regex has it.  The disposition is the reading list, and that is the whole of goal 2.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  The best any of the other **2** modules under `FormalSchemes/`\n"
+                     "does is one. -/\n")
+        check("`the other N` is not checked even pinned to the path, and it is on the reading list",
+              (audit(d)[0], list(total_claims(project_modules(d))),
+               [c["module"] for c in invisible(project_modules(d))]),
+              ([], [], ["FormalSchemes.Mid"]))
+
+        # The elided spelling, which is the one the tree actually writes and the reason goal 1's
+        # choice has population 0 either way: with the noun gone there is nothing pinning the count
+        # to the module set, and *"the only one of the **6** imports"* is the same words.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  This module is the only one of the **3** that reaches\n"
+                     "`FormalSchemes.Base` twice. -/\n")
+        check("a census total with the noun elided is not checked, and it is swept",
+              (audit(d)[0], list(total_claims(project_modules(d))),
+               [c["module"] for c in invisible(project_modules(d))]),
+              ([], [], ["FormalSchemes.Mid"]))
+
+        # The negative controls row 2214 §3 names: the same words about something that is **not**
+        # the module set.  Neither is checked -- which is the failure goal 1 exists to avoid -- and
+        # both are on the reading list, which costs nothing because the list is read and not failed
+        # on.  Population of either shape under `FormalSchemes/` at `05a5fe2`: **0**.
+        #
+        # The row spells the first one *"the other **3** declarations in this file"*.  `sections`
+        # stands in for `declarations` here because `N declarations` is the `SIZE` species' own noun
+        # phrase, so the row's literal wording is read as a **size** claim about
+        # `FormalSchemes.Base` and reports a size MISMATCH rather than nothing -- a correct reading
+        # by a different species, and one that would make this case assert the wrong thing.
+        for census in ("the other **3** sections in this file are about the base",
+                       "it is the only one of the **6** imports that is not transitive"):
+            write("Mid", "import FormalSchemes.Base\n"
+                         "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                         "**1**.  %s. -/\n" % census)
+            check("`%s…` is not a tree census" % census[:34],
+                  (audit(d)[0], list(total_claims(project_modules(d)))), ([], []))
+
+        # A **subtree** census is the same words about a subset of the tree, and the path
+        # alternation is what refuses it -- the same clause, for the same reason, as in `TOTAL[1]`.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  This module is the only one of the **2** modules under\n"
+                     "`FormalSchemes/Sub` that reaches `FormalSchemes.Base` twice. -/\n")
+        check("a census of a subtree is not a census of the tree",
+              (audit(d)[0], list(total_claims(project_modules(d)))), ([], []))
+
+        # The bucket figures, which are nobody's checked species and are the reason `--sweep` grew
+        # the loose `N reach` marker: a partition of the tree needs the instrument to know *which*
+        # modules the sentence partitions, and reading `**1**` here as anything would be a guess.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  Of the rest, **1** reaches none and **1** reaches exactly one. -/\n")
+        check("bucket figures are not checked and are on the reading list",
+              (audit(d)[0], list(total_claims(project_modules(d))),
+               [c["module"] for c in invisible(project_modules(d))]),
+              ([], [], ["FormalSchemes.Mid"]))
+
+        # And the exemption from the per-sentence `CLOSURE` exclusion, which is row 2209's mechanism
+        # applied to this species: a census beside a closure claim would otherwise be hidden by the
+        # claim, which is exactly how the unpinned total rotted.  Population on this tree: 0.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1** and reverse closure\n"
+                     "**1**, and the best any of the other **2** does is one. -/\n")
+        check("a census sharing its sentence with a closure claim is still on the reading list",
+              (audit(d)[0], [c["module"] for c in invisible(project_modules(d))]),
+              ([], ["FormalSchemes.Mid"]))
+
+        # From here on the totals block's own fixture is restored, so the cases below are unchanged.
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure\n"
+                     "**1**.  It is one of the **3** modules under `FormalSchemes/` today. -/\n")
+
         # The negative controls, which are where the boundary was drawn.  A subset count and a
         # subtree count are the same words about something that is not the tree; both are refused,
         # and both land on the reading list instead, which is the disposition the row asked for.
@@ -1908,7 +2119,7 @@ def main() -> int:
     if args.sweep:
         blind = list(invisible(mods))
         print("sentences --tree cannot see (a numeral with a closure marker, or an unreadable"
-              " project total): %d" % len(blind))
+              " project total or tree census): %d" % len(blind))
         print("(Mathlib-closure sentences excluded; most of the rest are deltas, intersections or\n"
               " numerals that are not closure figures -- this is a reading list, not a failure\n"
               " list.  A plain measurement of this tree in here should be rewritten in the\n"
