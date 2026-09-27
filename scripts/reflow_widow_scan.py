@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Flag a docstring paragraph that has been left with a word or two stranded on a line of its own.
+"""Flag a docstring paragraph a re-fill left ragged: a stranded word, or a stub in the middle.
 
 A figure repair that lengthens a word -- `two` to `three`, `three` to `four` -- re-fills the
 paragraph it sits in, and can push the tail of a sentence onto a line by itself:
@@ -14,6 +14,14 @@ because the line is *short* rather than long.  The board has named two classes o
 digits, which `closure_audit --tree` catches, and word-spellings, which only a hand-written scan
 catches -- and this is a third.  Issue 2139's forty-one-site figure repair introduced two of them
 and issue 2154 repaired them by hand; this is the instrument.
+
+**This file reports two species and they are separate populations.**  A *stranded line* -- a widow
+-- is the shape above: a word or two left at a paragraph's end.  A *stub* is the commoner one,
+filed as issue 2236 after #826 shipped a 58-column line in the middle of a thirty-one-line
+paragraph: a re-fill that stops partway leaves a short line where it stopped, and
+`is_short_plain`'s two-word cutoff cannot see it.  Both report paths print each species under its
+own `FLAGGED:` line, `--diff` compares each against its own population at the base, and `## The
+stub species` below is where the second one is derived and priced.
 
 Usage, from the repository root.  No `lake`, no build, no environment.
 
@@ -362,6 +370,106 @@ in-scope paragraph line here is **98** columns (`TateInvQuotientNodeLocusChart.l
 backticked declaration name plus `'s`), which is already long enough to block a one-column widow
 at 99.  The arrangement is missing, not the vocabulary, and that is why the branch is a branch
 rather than an assertion.
+
+## The stub species, and the diagnosis issue 2236 filed that turned out to be wrong
+
+**A widow is a word or two left at a paragraph's *end*.  A stub is a short line in its *middle*,
+left where a re-fill stopped** -- a clause is inserted, a numeral widens, the author repairs the
+line they touched and the fill below it is never redone.  Issue 2236 filed that species, and it
+filed a diagnosis with it: that `widows` applies `is_short_plain` to *the paragraph's last line*.
+**It does not**, and re-reading the loop is how that was settled: it runs over every line of the
+paragraph, excludes the first, and excludes a line whose successor is a single unfittable token.  A
+mid-paragraph short line has been in scope since that loop was written.
+
+**So the blindness is `is_short_plain`'s *two-word* cutoff and nothing positional**, and #826 is
+the witness that settles it.  At `3a724e0` the paragraph at `:404` runs thirty-one lines and holds
+three lines a fill would not have left -- `:415` at 95 columns, `:424` at 58 and `:427` at 35.  Its
+**first** conjunct passes: the suffix from `:427` refills eleven lines into ten.  Yet `widows`
+returns `[]`, because `:424` carries **eleven** words and `:427` carries **eight**, so
+`is_short_plain` rejects both, and the exclusions are never consulted.  `--diff e9679d6..3a724e0`
+reported **0** stranded lines over a paragraph with two stubs in it, and that is the regression
+this species exists for.
+
+**A threshold in columns is the obvious rule and it is the wrong one**, for the reason that row
+gives: a short mid-paragraph line is sometimes *forced* and sometimes correct, and a width cannot
+tell those from the third case.  The rule here is the counterfactual instead -- *would a greedy
+re-fill put a different unit on this line* -- and its three conjuncts are `stubs`'.  Each was
+measured over the 8124 in-scope paragraphs at `7781393` rather than argued, and a pull request that
+adds a module moves all of these, so re-measure rather than quoting them.
+
+    conjunct, each adding to the one above                                     lines   paragraphs
+    -------------------------------------------------------------------------  -----   ----------
+    a non-first non-last line some window containing it refills shorter, with
+      the next *word* fitting on it -- the counterfactual, at `refill`'s own
+      whitespace tokenisation                                                     815          480
+    ... with the next **atom** fitting instead: a backticked span and a short
+      bolded figure are single units                                              685          426
+    ... and the atoms that would move up are **plain**, `is_short_plain`'s own
+      word -- backtick-free and at most `--max-token` characters                   345          230
+    **... and at least `--min-atoms` of them fit**                              **81**       **72**
+
+**The atom rule is derived from the tree, not invented.**  Over the 35413 in-scope paragraph lines
+here, **118** carry an odd number of `` ` `` marks -- 0.33 %, so a backticked span crosses a break,
+rarely.  A **short bolded figure** crosses one **0** times out of **329**.  So neither is a law and
+the first is not even close to one: `splits_an_atom` exists because the 118 are real, and it
+returns a line to the population it belongs in rather than pretending the break is impossible.  The
+16-character bound in `FILL_ATOM`, and the digit-and-at-most-three-words test in `atoms`, are what
+keep a bolded *sentence* -- 995 lines carry an odd number of `**` -- from being read as an
+unbreakable unit; without them #826's own `:427` is invisible, because the bolded sentence
+beginning on the line below it becomes a 97-column atom that cannot fit anywhere.
+
+**The plain conjunct is what keeps the tree's commonest deliberate break out**, and it is the
+single largest of the four steps: 685 to 345.  The break is *before a long backticked name* --
+`RefinedOverlapTransition.lean:193` is 47 columns and the line under it opens with a 47-column
+declaration name -- and it is the habit `## The predicate` already records under *authors break
+before long backticked names*.  Counting past the name would flag every one of them, so the count
+stops at the first atom that is not plain.
+
+**And `--min-atoms` is 2 because the curve says so, not because two is a nice number.**  345 at
+one, **81** at two, 59 at three, 43 at four: a factor of **4.3** at the first step and **1.4**,
+**1.4** after it.  That is a knee.  The reading behind the shape is that a line short by exactly
+one atom differs from the greedy fill by a *single* decision, which is what a break taken for sense
+looks like; `RefinedOverlapTransition.lean:415`, 95 columns with one three-letter word fitting
+beside it, is that case and is correctly not reported.
+
+**What it costs on `--diff`, which is the mode that earns it.**  Over the last **60** commits on
+`master` at `7781393`, the species reports **16** introduced lines in **6** commits, against the
+widow species' **4** in the same range -- and the largest single commit is **4**.  The standing
+`--tree` population is **81** lines in 72 paragraphs against the widow species' 163 in 159, of
+which **16** lines are both.  Nothing in `refill`, `widows`, `is_short_plain` or `STRUCTURAL`
+moves: the `--tree` report is **additive**, 158 lines added and 0 removed, and `--selftest` keeps
+its exit code and every case it had.
+
+**The one migration this row priced and declined.**  Reading `widows`' own successor exclusion at
+atoms rather than at words -- which is arguably what it always meant -- moves that species by **33
+lost and 3 gained** out of 163.  That is a change to a documented standing population with its own
+fixtures and its own line in `CONTRIBUTING.md`, it is not what issue 2236 asked for, and the two
+questions are genuinely different: a widow asks *is a word stranded*, where the rest of the line is
+empty and the unit below hardly matters; a stub asks *would a re-fill put something here*, which is
+a question about units.  So `refill` is untouched and `atoms` is the stub species' alone.  **The
+33/3 is the price of doing it later**, and it is here so that the next row does not have to
+re-derive it.
+
+**The judgement issue 2236 asked for out loud: the missing blank line is declined, and here is
+where it belongs.**  #826's second defect was a paragraph break that was never written, so `**Four
+of the 47 ...**`  renders as a continuation and `file has seen, and it is not close.`  sits
+mid-paragraph rather than at a paragraph's end.  **Its consequence is caught here** -- that line is
+`:427` and it is a stub by this rule, with no special case for it -- but the *cause* is not this
+scan's business.  Inferring an intended paragraph break means deciding that a bolded lead-in opens
+a paragraph, and `## Where the population comes from` is the record of what happened the last time
+a rule guessed at emphasis: 1104 misclassified lines.  A scan that starts inferring paragraph
+breaks can be wrong about prose in a way a fill scan cannot.  It belongs with a Markdown-structure
+check over the whole docstring -- the natural home is a mode of `scripts/outward_prose_scan.py`,
+which already walks prose rather than fills -- and it is worth a row of its own.  **Declined here,
+named there, and the stranded line it causes is reported all the same.**
+
+**What a stub report is not.**  Like a widow it is a question: the window printed against it is the
+smallest one that *absorbs* the line, which is not always the one an author would try first -- when
+the stub and everything under it refill to the same count, the window starts *above* the stub, and
+`--selftest` pins that branch through the report.  And it is not always the repair to make: at
+#826's `:404` the printed window removes both stubs and strands nothing, but what it leaves is one
+paragraph where the author meant two, and the blank line is the better fix.  Widen it, decline it
+by name, or repair the structure instead.
 """
 
 from __future__ import annotations
@@ -389,6 +497,10 @@ MAX_TOKEN = 14
 # because the default moved once (issue 2167) and the figures it moved were quoted without it.
 WIDTH_LINE = "fill width / max plain word       : %5d / %d"
 
+# The stub species' own parameter, on the same footing and for the same reason: a stub count is
+# meaningless without it, so both report paths print it beside the width.
+ATOMS_LINE = "plain atoms a stub must fit       : %5d"
+
 # A line that is not filled prose.  Indented text, a list item, a table row, a heading, a block
 # quote, a fence, and the `/-` and `-/` delimiters themselves: rewrapping any of them is wrong, so
 # none of them may be inside a paragraph this script considers.
@@ -399,6 +511,21 @@ WIDTH_LINE = "fill width / max plain word       : %5d / %d"
 # continuation line opening `10.12's` as structure.  All three are filled prose and this tree
 # re-fills them; see the segmentation section of the docstring for what the omission cost.
 STRUCTURAL = re.compile(r"^\s|^[*\-+]\s|^[|#>]|^\d+\.\s|^```|^/-|^-/")
+
+# The spans a fill may not break, for the **stub** species only: a backticked span and a bolded
+# figure.  Both are measured over this tree's own in-scope paragraphs rather than asserted -- 118
+# lines of 35413 split a `` ` ``-span, **0** of 329 short bolded figures split -- and the bound of
+# 16 characters plus the digit-and-at-most-three-words test in `atoms` is what keeps a bolded
+# *sentence* from being read as an unbreakable unit.  `refill` is untouched and still splits on
+# whitespace, so the widow species' population does not move; see `## The stub species`.
+FILL_ATOM = re.compile(r"``[^`]*``|`[^`]*`|\*\*[^*]{1,16}\*\*")
+
+# Plain atoms that must fit before a short mid-paragraph line is a stub.  **Two, and it is
+# measured**: at one the tree reads 345 lines and at two it reads 81, a factor of 4.3, while
+# every step after that is a factor of 1.4 -- so two is a knee and not a point on a slope.  The
+# reading behind the shape is that a line short by exactly one atom differs from the greedy fill
+# by a single decision, which is what a break taken for sense looks like.
+MIN_ATOMS = 2
 
 
 def cols(text: str) -> int:
@@ -545,6 +672,121 @@ def widows(paragraph: list[tuple[int, str]], width: int = WIDTH,
     return out
 
 
+def atoms(text: str) -> list[str]:
+    """`text` split into the units a fill may not break: words, except that a backticked span
+    and a short bolded figure are single atoms even when they hold spaces.
+
+    `refill` splits on whitespace, which is right for the *widow* species and wrong for this one:
+    the question a stub asks is *would a re-fill put a different unit here*, and answering it with
+    a unit this tree's authors never split gives the wrong answer at every break taken to keep a
+    name whole.  Both exceptions are measured over the in-scope paragraphs rather than chosen --
+    see `## The stub species` in the module docstring -- and neither is a claim that the tree
+    *cannot* split them: `` ` ``-spans cross a break on 118 of 35413 lines, and a short bolded
+    figure on **0** of 329.
+    """
+    guards = []
+    for span in FILL_ATOM.finditer(text):
+        body = span.group(0)
+        if " " not in body:
+            continue                                  # already one whitespace word
+        if body.startswith("*"):
+            inner = body[2:-2]
+            if not any(c.isdigit() for c in inner) or len(inner.split()) > 3:
+                continue                              # a bolded sentence, not a figure
+        guards.append((span.start(), span.end()))
+    out: list[str] = []
+    current = ""
+    index = guard = 0
+    while index < len(text):
+        while guard < len(guards) and guards[guard][0] < index:
+            guard += 1
+        if guard < len(guards) and index == guards[guard][0]:
+            current += text[guards[guard][0]:guards[guard][1]]
+            index = guards[guard][1]
+            guard += 1
+            continue
+        if text[index].isspace():
+            if current:
+                out.append(current)
+                current = ""
+        else:
+            current += text[index]
+        index += 1
+    if current:
+        out.append(current)
+    return out
+
+
+def splits_an_atom(lines: list[str], index: int) -> bool:
+    """Whether the break after `lines[index]` falls **inside** an atom.
+
+    Counted rather than reconstructed: joining the two lines merges the two halves into one atom,
+    so the join holds fewer atoms than the parts do.  The 118 lines that do this are not stubs by
+    any reading -- the author put the break there deliberately or the span is longer than the
+    width -- and the count is the cheapest test that says so.
+    """
+    return (len(atoms(lines[index])) + len(atoms(lines[index + 1]))
+            != len(atoms(lines[index] + " " + lines[index + 1])))
+
+
+def plain_atoms_fitting(lines: list[str], index: int, width: int, max_token: int) -> int:
+    """How many **plain** atoms from below would fit on `lines[index]`, stopping at the first
+    that is not plain.  `-1` when the break after the line already splits an atom.
+
+    *Plain* is `is_short_plain`'s own vocabulary -- backtick-free and at most `max_token`
+    characters -- reused rather than re-invented, because the two species are asking the same
+    question about the same text and a second spelling of *plain* would be a second thing to keep
+    true.  Stopping at the first non-plain atom is what keeps this off the break a reader can see
+    the reason for: an author who starts a line with a 47-column declaration name has explained the
+    short line above it, and counting past that name would flag every one of them.
+    """
+    if splits_an_atom(lines, index):
+        return -1
+    room = cols(lines[index])
+    count = 0
+    for atom in atoms(" ".join(lines[index + 1:])):
+        room += 1 + cols(atom)
+        if room > width:
+            break
+        if "`" in atom or len(atom) > max_token:
+            return count
+        count += 1
+    return count
+
+
+def stubs(paragraph: list[tuple[int, str]], width: int = WIDTH, max_token: int = MAX_TOKEN,
+          min_atoms: int = MIN_ATOMS) -> list[tuple[int, str]]:
+    """The **mid-paragraph stubs** of `paragraph`: lines the fill was abandoned at.
+
+    A widow is a line *at the end* of a paragraph with a word or two left on it.  A stub is the
+    other shape, and the commoner one: a short line in the **middle** of a paragraph, left behind
+    because an edit re-filled around it and stopped.  Nothing above reads it -- `widows` cannot,
+    because a stub carries more than two words as often as not, and `--tree` at any width cannot,
+    because the line is short rather than long.
+
+    Three conjuncts, each measured in `## The stub species`:
+
+    * the line is neither the paragraph's **first** nor its **last**.  A short first line has
+      nothing above it to be pulled onto; a short last line is a widow and is the other species'
+      to report, so the two populations are disjoint by construction except where a line is both;
+    * at least `min_atoms` **plain** atoms from below would fit on it.  One is the counterfactual
+      -- *a greedy re-fill puts a different unit here* -- and `min_atoms` above one is what keeps
+      a deliberate break out, since a break taken one atom early is a single fill decision and is
+      what a sense-break looks like;
+    * some window **containing** the line refills shorter, so the flag arrives with a repair that
+      can absorb it.  This is `repair_window`'s `covering` question, the same one `show` asks.
+    """
+    lines = [line for _, line in paragraph]
+    out = []
+    for index in range(1, len(lines) - 1):
+        if plain_atoms_fitting(lines, index, width, max_token) < min_atoms:
+            continue
+        if repair_window(lines, width, index) is None:
+            continue
+        out.append(paragraph[index])
+    return out
+
+
 def lean_files(root: str) -> list[str]:
     """Every module under `FormalSchemes/`, by a filesystem walk rather than `git ls-files`.
 
@@ -568,13 +810,34 @@ def scan_text(text: str, width: int, max_token: int):
     return found
 
 
-def scan_tree(root: str, width: int, max_token: int):
+def scan_text_stubs(text: str, width: int, max_token: int, min_atoms: int = MIN_ATOMS):
+    found = []
+    for paragraph in paragraphs(text):
+        stubbed = stubs(paragraph, width, max_token, min_atoms)
+        if stubbed:
+            found.append((paragraph, stubbed))
+    return found
+
+
+def species_scans(width: int, max_token: int, min_atoms: int):
+    """`(label, scan)` for each species, in report order and with their parameters bound.
+
+    One list, used by both report paths, so a species cannot be counted on one end of a `--diff`
+    and compared against the other's population at the other end -- which is the shape of mistake
+    that makes a flag look pre-existing when it is new.
+    """
+    return [("stranded lines", lambda t: scan_text(t, width, max_token)),
+            ("mid-paragraph stubs", lambda t: scan_text_stubs(t, width, max_token, min_atoms))]
+
+
+def scan_tree(root: str, species):
+    """`species` is `scan_text` or `scan_text_stubs` with its parameters already bound."""
     out = []
     for path in lean_files(root):
         with open(os.path.join(root, path), encoding="utf-8") as handle:
             text = handle.read()
-        for paragraph, stranded in scan_text(text, width, max_token):
-            out.append((path, paragraph, stranded))
+        for paragraph, flagged in species(text):
+            out.append((path, paragraph, flagged))
     return out
 
 
@@ -594,20 +857,38 @@ def show(path: str, paragraph, stranded, width: int) -> None:
         print("      :%d  %r" % (number, line.strip()))
 
 
-def report_tree(root: str, width: int, max_token: int) -> int:
-    hits = scan_tree(root, width, max_token)
+def list_hits(hits, width: int) -> None:
+    """Every flagged paragraph of one species, under the count line that announced it.
+
+    One listing for both species and both report paths, so a count and the paragraphs under it
+    cannot come from different places -- a report that prints `81` over an empty list is the
+    failure this shares out rather than repeats.
+    """
+    for path, paragraph, flagged in hits:
+        show(path, paragraph, flagged, width)
+
+
+def report_tree(root: str, width: int, max_token: int, min_atoms: int = MIN_ATOMS) -> int:
+    hits = scan_tree(root, lambda t: scan_text(t, width, max_token))
+    stubbed = scan_tree(root, lambda t: scan_text_stubs(t, width, max_token, min_atoms))
     modules = len(lean_files(root))
     stranded = sum(len(s) for _, _, s in hits)
     print("modules under FormalSchemes/      : %5d" % modules)
     print(WIDTH_LINE % (width, max_token))
+    print(ATOMS_LINE % min_atoms)
     print("FLAGGED: paragraphs with a stranded line : %5d   (%d lines)" % (len(hits), stranded))
-    for path, paragraph, s in hits:
-        show(path, paragraph, s, width)
+    list_hits(hits, width)
+    print("FLAGGED: paragraphs with a mid-paragraph stub : %5d   (%d lines)"
+          % (len(stubbed), sum(len(s) for _, _, s in stubbed)))
+    list_hits(stubbed, width)
     print()
     print("A flag is a question, not a finding: re-fill the paragraph by the smallest window that")
     print("absorbs the line, or decline it by name with a reason.  This scan has no verdict or")
     print("exit code of its own -- the standing population is a wart with precedent (issue 2159),")
     print("and `--diff` is the mode that keeps it from growing.")
+    print("A *stranded line* is a widow -- a word or two left at a paragraph's end.  A *stub* is")
+    print("the other shape: a short line in the middle of a paragraph, left where a re-fill")
+    print("stopped.  The two are separate populations and the second one is read here first.")
     return 0
 
 
@@ -661,7 +942,8 @@ def changed_paths(records: str) -> list[tuple[str | None, str | None]]:
     return out
 
 
-def report_diff(diff_range: str, root: str, width: int, max_token: int) -> int:
+def report_diff(diff_range: str, root: str, width: int, max_token: int,
+                min_atoms: int = MIN_ATOMS) -> int:
     base, head, from_merge_base = range_ends(diff_range)
     if from_merge_base:
         base = subprocess.run(["git", "-C", root, "merge-base", base, head],
@@ -674,7 +956,9 @@ def report_diff(diff_range: str, root: str, width: int, max_token: int) -> int:
     print("its `-` side is read at           : %s" % (base or "(the index)"))
     print("`.lean` files it touches          : %5d" % len(pairs))
     print(WIDTH_LINE % (width, max_token))
-    introduced = []
+    print(ATOMS_LINE % min_atoms)
+    species = species_scans(width, max_token, min_atoms)
+    introduced = {label: [] for label, _ in species}
     for old_path, new_path in pairs:
         if new_path is None:
             continue
@@ -682,26 +966,31 @@ def report_diff(diff_range: str, root: str, width: int, max_token: int) -> int:
                                capture_output=True, text=True)
         if after.returncode:
             continue
-        was = set()
+        before = None
         if old_path is not None:
-            before = subprocess.run(["git", "-C", root, "show", "%s:%s" % (base, old_path)],
-                                    capture_output=True, text=True)
-            if before.returncode == 0:
-                for _, stranded in scan_text(before.stdout, width, max_token):
-                    was |= {line.strip() for _, line in stranded}
-        for paragraph, stranded in scan_text(after.stdout, width, max_token):
-            fresh = [(n, l) for n, l in stranded if l.strip() not in was]
-            if fresh:
-                introduced.append((new_path, paragraph, fresh))
-    print("FLAGGED: stranded lines this range introduces : %5d"
-          % sum(len(s) for _, _, s in introduced))
-    for path, paragraph, s in introduced:
-        show(path, paragraph, s, width)
+            got = subprocess.run(["git", "-C", root, "show", "%s:%s" % (base, old_path)],
+                                 capture_output=True, text=True)
+            before = got.stdout if got.returncode == 0 else None
+        for label, scan in species:
+            was = set()
+            if before is not None:
+                for _, flagged in scan(before):
+                    was |= {line.strip() for _, line in flagged}
+            for paragraph, flagged in scan(after.stdout):
+                fresh = [(n, l) for n, l in flagged if l.strip() not in was]
+                if fresh:
+                    introduced[label].append((new_path, paragraph, fresh))
+    for label, _ in species:
+        print("FLAGGED: %s this range introduces : %5d"
+              % (label, sum(len(s) for _, _, s in introduced[label])))
+        list_hits(introduced[label], width)
     print()
     print("A flag is a question, not a finding: re-fill the paragraph by the smallest window that")
     print("absorbs the line, or decline it by name.  Comparison is by the stranded line's *text*,")
     print("not its number, so a paragraph that merely moved down the file is not reported, and a")
     print("renamed one is compared against its own old path.")
+    print("A *stranded line* is a widow at a paragraph's end; a *stub* is a short line in its")
+    print("middle.  Each species is compared against its own population at the base.")
     return 0
 
 
@@ -1088,11 +1377,238 @@ def selftest() -> int:
           changed_paths("M\0A.lean\0R100\0Old.lean\0New.lean\0M\0B.lean\0"),
           [("A.lean", "A.lean"), ("Old.lean", "New.lean"), ("B.lean", "B.lean")])
 
+    # --- the stub species ----------------------------------------------------------------------
+    # A widow is a word or two left at a paragraph's END; a stub is a short line in its MIDDLE,
+    # left where a re-fill stopped.  `widows` sees a stub only when it happens to be short *plain*
+    # -- at most two words -- and the commoner shape carries more, which is why `--diff` on
+    # `e9679d6..3a724e0` reported 0 stranded lines over a paragraph holding two stubs.  Every
+    # fixture below states which conjunct it is pinning **and** checks that the other two do not
+    # reach, because `[]` is also what a broken predicate returns.
+    def stub_numbers(text, min_atoms=MIN_ATOMS):
+        return [n for p, s in scan_text_stubs(text, WIDTH, MAX_TOKEN, min_atoms) for n, _ in s]
+
+    def stub_summary(text, path):
+        """`show`'s own first line over the stub species, so the fixtures drive the report."""
+        held, sys.stdout = sys.stdout, io.StringIO()
+        try:
+            for paragraph, stubbed in scan_text_stubs(text, WIDTH, MAX_TOKEN):
+                show(path, paragraph, stubbed, WIDTH)
+            return sys.stdout.getvalue().splitlines()[0]
+        finally:
+            sys.stdout = held
+
+    def stub_repaired(text):
+        """`text` with the window the stub report prints applied, written back and re-segmented."""
+        lines = text.split("\n")
+        (paragraph, stubbed), = scan_text_stubs(text, WIDTH, MAX_TOKEN)
+        body = [line for _, line in paragraph]
+        flagged = {number for number, _ in stubbed}
+        first = min(i for i, (number, _) in enumerate(paragraph) if number in flagged)
+        start, filled = repair_window(body, WIDTH, first)
+        base = paragraph[0][0]
+        return "\n".join(lines[:base - 1] + body[:start] + filled + lines[base - 1 + len(body):])
+
+    tail = "and a tail that shortens the refill."
+
+    # The species itself: a short line in the middle that a re-fill absorbs.  `widows` is silent
+    # on it -- three words, so not short plain -- which is the whole finding of issue 2236.
+    stub = doc("x" * 97, "a short stub", tail)
+    check("a short mid-paragraph line a re-fill absorbs IS reported as a stub",
+          stub_numbers(stub), [3])
+    check("... and the widow species is silent on it, which is why the row exists",
+          (numbers(stub), is_short_plain("a short stub")), ([], False))
+
+    # Over-refusal control 1, and the one the row names first: the line below opens with a token
+    # too long to join, so no re-fill would put it here and the line is forced.  Sighted on both
+    # of the other conjuncts -- a covering window exists, so only the atom count keeps it out.
+    forced = doc("x" * 97, "a short stub", "z" * 95, "aa bb", "cc dd ee ff gg")
+    forced_lines = [l for _, l in paragraphs(forced)[0]]
+    check("a short mid-paragraph line whose successor cannot join it is NOT a stub",
+          3 in stub_numbers(forced), False)
+    check("... and it is sighted: no plain atom fits, while a covering window does exist",
+          (plain_atoms_fitting(forced_lines, 1, WIDTH, MAX_TOKEN),
+           repair_window(forced_lines, WIDTH, 1) is not None), (0, True))
+
+    # Over-refusal control 2: forced by a protected span.  The next line opens a backticked span
+    # holding spaces; its first whitespace *word* fits and the span does not, so this fixture is
+    # exactly the difference `atoms` makes.  `` ` ``-spans cross a break on 118 of 35413 in-scope
+    # lines here, so the rule is the tree's practice and not a law -- hence `splits_an_atom`.
+    span = "`Spf (A " + "q" * 80 + " B)`"
+    protected = doc("x" * 97, "a short stub", span, "aa bb", "cc dd ee ff gg")
+    protected_lines = [l for _, l in paragraphs(protected)[0]]
+    check("a short mid-paragraph line held short by a backticked span is NOT a stub",
+          3 in stub_numbers(protected), False)
+    check("... and it is sighted: the span's first *word* would have fitted, and the span does not",
+          (cols("a short stub") + 1 + cols(span.split()[0]) <= WIDTH,
+           cols("a short stub") + 1 + cols(span) > WIDTH), (True, True))
+    check("a backticked span holding spaces is one atom, and a bolded figure is one too",
+          (atoms("`Spf (A, I)` and **0 against 47**, done"),
+           atoms("**a bolded sentence with 47 in it** and more")),
+          (["`Spf (A, I)`", "and", "**0 against 47**,", "done"],
+           ["**a", "bolded", "sentence", "with", "47", "in", "it**", "and", "more"]))
+    check("a bolded span is an atom only if it holds a digit, and only up to three words",
+          (atoms("**a bold aside** and more"), atoms("**1 a b c d** and more"),
+           atoms("**2 of 3** and more")),
+          (["**a", "bold", "aside**", "and", "more"],
+           ["**1", "a", "b", "c", "d**", "and", "more"],
+           ["**2 of 3**", "and", "more"]))
+    check("a break inside a span is seen, so those 118 lines are not read as stubs",
+          (splits_an_atom(["and the map `Spf (A,", "I)` is the chart", "tail"], 0),
+           splits_an_atom(["and the map", "`Spf (A, I)` is the chart", "tail"], 0)),
+          (True, False))
+    # ... and the guard has to be reached from `stubs`, not only asserted about: a line whose
+    # break falls inside a span is not a stub even when everything else about it says it is.
+    inside = doc("x" * 97, "a short stub and the map `Spf (A,",
+                 "I)` is the chart aa bb", "cc dd ee ff gg", "hh ii jj kk ll")
+    inside_lines = [l for _, l in paragraphs(inside)[0]]
+    check("a short mid-paragraph line whose break falls inside a span is NOT a stub",
+          3 in stub_numbers(inside), False)
+    check("... and it is sighted: `plain_atoms_fitting` returns -1 there, and a window exists",
+          (plain_atoms_fitting(inside_lines, 1, WIDTH, MAX_TOKEN),
+           repair_window(inside_lines, WIDTH, 1) is not None), (-1, True))
+
+    # The bound on `FILL_ATOM`, driven through `stubs` rather than through `atoms`: #826's `:427`
+    # sits above a bolded *sentence*, and read as one atom that sentence fits nowhere, so the stub
+    # the row was filed for would go invisible.
+    long_bold = "**a 47 " + "c" * 80 + "**"
+    bold_below = doc("x" * 97, "a short stub", long_bold + " aa bb", "cc dd ee ff gg",
+                     "hh ii jj kk ll mm nn")
+    check("a bolded SENTENCE below a stub does not hide it -- the 16-character bound",
+          3 in stub_numbers(bold_below), True)
+    check("... and it is sighted: read as one atom that span is too wide to fit anywhere",
+          (len(atoms(long_bold)), cols("a short stub") + 1 + cols(long_bold) > WIDTH), (3, True))
+
+    # `plain` stops the count; it does not merely skip.  Each half of it gets a fixture, because
+    # dropping either one alone leaves the other looking like the whole rule.  In both, the atom
+    # below FITS -- so the width is not what is refusing it -- and plain atoms follow it, so
+    # counting past it instead of stopping would reach `min_atoms`.
+    long_word_below = doc("x" * 97, "a short stub", "indistinguishable aa bb cc",
+                          "dd ee ff gg hh ii")
+    backtick_below = doc("x" * 97, "a short stub", "`abc` aa bb cc", "dd ee ff gg hh ii")
+    check("a fitting atom that is long stops the count, so the line is not a stub",
+          3 in stub_numbers(long_word_below), False)
+    check("... and a fitting atom that is backticked stops it too, however short",
+          3 in stub_numbers(backtick_below), False)
+    check("... and both are sighted: each atom fits, and two plain atoms follow it",
+          (cols("a short stub") + 1 + cols("indistinguishable") <= WIDTH,
+           len("indistinguishable") > MAX_TOKEN,
+           cols("a short stub") + 1 + cols("`abc`") <= WIDTH, len("`abc`") <= MAX_TOKEN),
+          (True, True, True, True))
+
+    # The joining space and the width comparison, at the boundary where each one decides.  The
+    # second atom lands on exactly the fill width, which is the column `room > width` admits and
+    # `room >= width` does not; drop the space and a third would land there instead.
+    boundary = doc("x" * 97, "s" * 91, "aa bbbb cc dd ee ff", "gg hh ii jj", "kk ll mm nn")
+    boundary_lines = [l for _, l in paragraphs(boundary)[0]]
+    check("a line whose second atom lands on exactly the fill width IS a stub",
+          3 in stub_numbers(boundary), True)
+    check("... and it is sighted: that atom ends at column 99, so `>` and `>=` disagree here",
+          (cols("s" * 91) + 1 + cols("aa") + 1 + cols("bbbb"), WIDTH), (99, 99))
+    check("... and the count there is exactly two, so a third atom does not rescue it",
+          plain_atoms_fitting(boundary_lines, 1, WIDTH, MAX_TOKEN), 2)
+
+    # The `min_atoms` conjunct, which is what separates a stub from a break taken for sense: a
+    # line short by exactly ONE plain atom differs from the greedy fill by a single decision.
+    # Sighted from both sides -- at `--min-atoms 1` the same line is reported.
+    one_atom = doc("x" * 97, "s" * 95, "aa bbbb cccc dddd", "aa bb", "cc dd ee ff gg")
+    one_lines = [l for _, l in paragraphs(one_atom)[0]]
+    check("a mid-paragraph line short by exactly one plain atom is NOT a stub",
+          3 in stub_numbers(one_atom), False)
+    check("... and it is sighted: exactly one atom fits, and at `--min-atoms 1` it is reported",
+          (plain_atoms_fitting(one_lines, 1, WIDTH, MAX_TOKEN), 3 in stub_numbers(one_atom, 1)),
+          (1, True))
+    check("the default is two plain atoms, and it is measured (345 lines against 81)",
+          MIN_ATOMS, 2)
+
+    # The covering-window conjunct: a line every window containing it breaks even on.  The
+    # paragraph is still reported, at another line, so the fixture is not passing by being empty.
+    no_window = doc("x" * 99, "oo bb cc",
+                    "p" * 14 + " " + "q" * 10 + " " + "t" * 92 + " " + "r" * 90, "c" * 60, "dd ee")
+    no_window_lines = [l for _, l in paragraphs(no_window)[0]]
+    check("a short mid-paragraph line no window containing it can absorb is NOT a stub",
+          stub_numbers(no_window), [5])
+    check("... and it is sighted: two plain atoms fit, and only the window conjunct refuses it",
+          (plain_atoms_fitting(no_window_lines, 1, WIDTH, MAX_TOKEN),
+           repair_window(no_window_lines, WIDTH, 1)), (2, None))
+    # ... so `show`'s `no window` branch is unreachable for this species, by construction.
+    check("every stub has a covering window, so the stub report never says it has none",
+          all(repair_window([l for _, l in p], WIDTH,
+                            min(i for i, (n, _) in enumerate(p) if n == s[0][0])) is not None
+              for text in (stub, no_window)
+              for p, s in scan_text_stubs(text, WIDTH, MAX_TOKEN)), True)
+
+    # The two positional exclusions, and they are what keeps the two populations apart.
+    leading = doc("a short stub", "and a tail here", "aa bb", "cc dd ee ff gg")
+    check("a paragraph's FIRST line is never a stub, however short -- and the fixture is"
+          " sighted, since the lines under it are reported",
+          (2 in stub_numbers(leading), stub_numbers(leading)), (False, [3, 4]))
+    trailing = doc("x" * 97, "and a middle line short enough to be a stub in its own right",
+                   "four imports")
+    check("... and a paragraph's LAST line is never a stub either -- that is the widow species",
+          (stub_numbers(doc("y" * 80, "four imports")),
+           numbers(doc("y" * 80, "four imports"))), ([], [3]))
+    check("... and in a paragraph whose middle IS a stub, the last line is still only a widow",
+          (stub_numbers(trailing), numbers(trailing)), ([3], [4]))
+
+    # The two report paths take their species from one list, so a count cannot be taken from one
+    # of them and compared against the other's population at the base.
+    labels_and_scans = species_scans(WIDTH, MAX_TOKEN, MIN_ATOMS)
+    check("both report paths read the same two species, in this order",
+          ([label for label, _ in labels_and_scans],
+           [[n for p, s in scan(stub) for n, _ in s] for _, scan in labels_and_scans]),
+          (["stranded lines", "mid-paragraph stubs"], [[], [3]]))
+    check("the atom count is on the summary line, at the value actually used",
+          ATOMS_LINE % MIN_ATOMS, "plain atoms a stub must fit       :     2")
+
+    # The report body itself: one listing for both species and both paths, so the count line and
+    # the paragraphs under it cannot come from different places.  Driven rather than asserted.
+    def listing(hits):
+        held, sys.stdout = sys.stdout, io.StringIO()
+        try:
+            list_hits(hits, WIDTH)
+            return sys.stdout.getvalue().splitlines()
+        finally:
+            sys.stdout = held
+
+    check("the listing prints every flagged paragraph it is handed, and nothing when handed none",
+          (listing([("FormalSchemes/S.lean", p, s)
+                    for p, s in scan_text_stubs(stub, WIDTH, MAX_TOKEN)]), listing([])),
+          (["  FormalSchemes/S.lean:2  paragraph of 3 lines; 2 of them refill to 1",
+            "      :3  'a short stub'"], []))
+
+    # Over-match control: prose that is a byte-exact greedy fill is flagged by neither species.
+    exact = doc(*refill(["word"] * 80, WIDTH))
+    check("a paragraph that is an exact greedy fill is flagged by neither species",
+          (stub_numbers(exact), numbers(exact)), ([], []))
+    check("... and it is sighted: it really is the fill, four lines of exactly 99 columns",
+          [cols(l) for l in refill(["word"] * 80, WIDTH)], [99, 99, 99, 99])
+
+    # The remedy, followed rather than described (issue 2236 §5).  First the ordinary case.
+    check("the stub report prints the window that absorbs the line, and following it works",
+          (stub_summary(stub, "FormalSchemes/Stub.lean"), stub_numbers(stub_repaired(stub))),
+          ("  FormalSchemes/Stub.lean:2  paragraph of 3 lines; 2 of them refill to 1", []))
+
+    # ... and then the branch an author would get wrong: the smallest window that absorbs the
+    # stub starts ABOVE it, because the stub and everything under it refill to the same count.
+    # The window an author would try first -- from the stub down -- saves nothing.
+    above = doc("aa bb cc dd ee ff gg hh", "jj kk ll mm nn oo pp qq rr ss tt uu vv ww",
+                " ".join(["zz"] * 21))
+    above_lines = [l for _, l in paragraphs(above)[0]]
+    check("a stub whose absorbing window starts above it is reported with THAT window",
+          (stub_numbers(above), repair_window(above_lines, WIDTH, 1)[0],
+           stub_summary(above, "FormalSchemes/Above.lean")),
+          ([3], 0, "  FormalSchemes/Above.lean:2  paragraph of 3 lines; 3 of them refill to 2"))
+    check("... and the window from the stub down -- the one to try first -- saves nothing",
+          len(above_lines[1:]) - len(refill(above_lines[1:], WIDTH)), 0)
+    check("... and following the printed window does remove it",
+          (stub_numbers(stub_repaired(above)), numbers(stub_repaired(above))), ([], []))
+
     # --- dogfooding: this script's own docstring ------------------------------------------------
-    own = [n for p, s in
-           [(p, widows(p)) for p in _paragraphs_of(__doc__.split("\n"), lambda _n: True)]
-           for n, _ in s]
+    own_paragraphs = _paragraphs_of(__doc__.split("\n"), lambda _n: True)
+    own = [n for p, s in [(p, widows(p)) for p in own_paragraphs] for n, _ in s]
     check("this script's own module docstring strands nothing", own, [])
+    own_stubs = [n for p, s in [(p, stubs(p)) for p in own_paragraphs] for n, _ in s]
+    check("... and holds no stub either, under the rule it ships", own_stubs, [])
 
     print("\n%d ok / %d FAIL" % (ok, fail))
     return 1 if fail else 0
@@ -1106,15 +1622,17 @@ def main() -> int:
     parser.add_argument("--width", type=int, default=WIDTH, help="the fill width this tree uses")
     parser.add_argument("--max-token", type=int, default=MAX_TOKEN,
                         help="longest word a line may hold and still count as plain")
+    parser.add_argument("--min-atoms", type=int, default=MIN_ATOMS,
+                        help="plain atoms that must fit before a mid-paragraph line is a stub")
     parser.add_argument("--selftest", action="store_true", help="needs no build and no tree")
     args = parser.parse_args()
 
     if args.selftest:
         return selftest()
     if args.diff:
-        return report_diff(args.diff, args.root, args.width, args.max_token)
+        return report_diff(args.diff, args.root, args.width, args.max_token, args.min_atoms)
     if args.tree:
-        return report_tree(args.root, args.width, args.max_token)
+        return report_tree(args.root, args.width, args.max_token, args.min_atoms)
     parser.error("one of --tree, --diff or --selftest is required")
 
 

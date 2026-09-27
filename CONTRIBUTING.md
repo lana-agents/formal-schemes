@@ -918,7 +918,8 @@ an `import` line. Its scope is the library, so re-measure over `git ls-files` ra
 this section — an unenforced rule rots, and this one did: it was written without a scope, against
 a tree that already broke it. `scripts/reflow_widow_scan.py` does measure a width elsewhere, and
 it is not this limit: a *fill* width of **99**, in `.lean` files through its two modes and in its
-own `.py` module docstring through `--selftest`, which exits 1 when that docstring strands a word.
+own `.py` module docstring through `--selftest`, which exits 1 when that docstring strands a word
+or holds a short line in a paragraph's middle, which is issue 2236's stub species.
 
 `lake env lean <file>` does **not** apply the lakefile's `leanOptions`, so it runs neither
 `linter.style.longLine` nor the `show`-vs-`change` linter. Iterate with it if you like, but finish
