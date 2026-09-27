@@ -2345,6 +2345,170 @@ def selftest() -> int:
                      {"subject": "FormalSchemes.Extra", "kind": "reverse"})],
           [0, 0, 0, 0, 1, 2, 3])
 
+    # The **report writer** (row 2218), which until this row no case here read.  `main`'s three
+    # remaining print loops -- the per-mismatch block with its disposition lines, `declined` and
+    # `size-declined` -- were the only part of this file no fixture observed, and the gap was never
+    # a missing harness: both halves of one already existed above.  `report_edge` is rendered
+    # through `contextlib.redirect_stdout` in the `--edge` block, and `main()` is already called
+    # under a synthetic working directory with `sys.argv` and `os.getcwd()` restored in a `finally`.
+    # This composes those two and adds nothing else.  The imports are local again rather than
+    # hoisted, for the reason the first pair are: nothing outside `--selftest` renders anything.
+    import contextlib
+    import io
+
+    def tree_report(root: str) -> tuple[int, list[str]]:
+        """`--tree`'s own stdout on the tree at `root`, as `(exit code, lines)`.
+
+        Through `main` rather than through `audit`, because here the text *is* the subject and the
+        exit code comes free.  `os.sep` is normalised so a case can quote a rendered path without
+        assuming the platform, exactly as the `split(os.sep)[-1]` cases above do.
+        """
+        argv, cwd, buf = sys.argv, os.getcwd(), io.StringIO()
+        try:
+            os.chdir(root)
+            sys.argv = ["closure_audit.py", "--tree"]
+            with contextlib.redirect_stdout(buf):
+                rc = main()
+        finally:
+            sys.argv = argv
+            os.chdir(cwd)
+        return rc, [ln.replace(os.sep, "/") for ln in buf.getvalue().splitlines()]
+
+    def rows(lines: list[str]) -> list[str]:
+        """The report from its first `MISMATCH` **row** onwards -- what `audit`'s return value
+        cannot show, and where *which line sits under which* is the claim.
+
+        The header's count line and a report row both open `  MISMATCH  `; the row is the one that
+        continues with a path, which is what the prefix here tests rather than the keyword.
+        """
+        at = [i for i, ln in enumerate(lines) if ln.startswith("  MISMATCH  FormalSchemes/")]
+        return lines[at[0]:] if at else []
+
+    # Goal 1's tree carries a stale **total** *and* a stale closure figure, and the total is in the
+    # file that sorts **first**, which is the whole design of the fixture rather than an accident:
+    # the report is sorted by path, so with the total last, printing the advisory per mismatch and
+    # printing it once at the foot produce byte-identical output and the case cannot tell them
+    # apart.  With the total first they differ, and that is the mutation row 2218 §3 names third.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: forward closure **1**, reverse closure"
+                     " **9**. -/\n")
+        write("Top", "import FormalSchemes.Mid\n"
+                     "/-! Over `FormalSchemes.Mid`: forward closure **2**, reverse closure"
+                     " **0**. -/\n")
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **2**.  It is one"
+                      " of the\n**9** modules under `FormalSchemes/`. -/\n")
+        # The block by value, which pins five things no single assertion could: the advisory's
+        # **wording**, that it sits directly under the total's own two lines, that it sits *above*
+        # the next mismatch rather than at the foot, that the closure mismatch carries none, and the
+        # continuation lines' indentation, which is what keeps it readable under a file name.  Row
+        # 2218 §3 asks for the text and not the presence, and the precedent is the two `report_edge`
+        # cases above: the defect they were written for was a wrong *word* in a line whose presence
+        # was never in doubt.
+        rc, lines = tree_report(d)
+        check("a stale total prints its three advisory lines directly under its own text and above "
+              "the next mismatch, which carries none",
+              (rc, rows(lines)),
+              (1,
+               ["  MISMATCH  FormalSchemes/Base.lean:1  the number of modules under"
+                " `FormalSchemes/`: states 9, walk gives 3",
+                "            the **9** modules under `FormalSchemes/`. -/",
+                "            (if that numeral is not the tree's module count, the sentence is"
+                " right and the reading is",
+                "             wrong: post-modify the noun phrase -- `that`, `which`, a participle"
+                " or `with` -- and it",
+                "             goes to --sweep instead.  Do not change the numeral.)",
+                "  MISMATCH  FormalSchemes/Mid.lean:2  the reverse closure of `FormalSchemes.Mid`:"
+                " states 9, walk gives 1",
+                "            reverse closure **9**. -/"]))
+
+        # The same tree with that total written as a **census**, which is the case that separates
+        # *the printer prints the claim's own disposition* from *the printer prints the total's*.
+        # The row 2214 cases above assert which disposition a claim carries and that the two differ;
+        # this is the only case that reads either of them through `main`, so a printer hard-coding
+        # `TOTAL_DISPOSITION` passes every one of those and fails only here.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **2**.  It is the"
+                      " only\none of the **9** modules under `FormalSchemes/` that reaches"
+                      " none. -/\n")
+        check("and a stale census prints the census's advisory in the same position, not the "
+              "total's",
+              rows(tree_report(d)[1])[2:5],
+              ["            (if that numeral is not the tree's module count, the sentence is right"
+               " and the reading is",
+               "             wrong: post-modifying it does not help here -- elide the noun (`the"
+               " only one of the N`)",
+               "             or name the subset, and it goes to --sweep instead.  Do not change"
+               " the numeral.)"])
+
+        # And the gate from the other side.  The closure mismatch is left in place deliberately, so
+        # the report is still non-empty and still exits 1: the same case on a green tree would pass
+        # with the advisory deleted, printed twice, or printed under every mismatch there is.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **2**. -/\n")
+        rc, lines = tree_report(d)
+        check("no advisory anywhere in a report whose only mismatch is a closure figure, which is "
+              "the species that can be declined and therefore needs none",
+              (rc, rows(lines),
+               [ln for ln in lines if "post-modif" in ln or "change the numeral" in ln]),
+              (1,
+               ["  MISMATCH  FormalSchemes/Mid.lean:2  the reverse closure of `FormalSchemes.Mid`:"
+                " states 9, walk gives 1",
+                "            reverse closure **9**. -/"], []))
+
+    # Goal 2: the `declined` and `size-declined` loops.  One tree carries a mismatch, a declined
+    # closure claim and a declined size claim at once, because the **order** of the three blocks is
+    # what a reader of a red run relies on and no other case here observes it.  `size_declined` has
+    # population 0 on this tree, so this fixture is the only thing that will ever render its line at
+    # all -- a transposed `%s` there would ship, and neither the tree nor any other case would
+    # notice.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        write("Mid", "import FormalSchemes.Base\n"
+                     "/-! Over `FormalSchemes.Base`: the reverse closure of `FormalSchemes.Mid`\n"
+                     "is **1** and its forward closure is **1** module. -/\n")
+        write("Says", "/-! Nothing here names a module, and something is **12** lines long. -/\n")
+        write("Top", "import FormalSchemes.Mid\n"
+                     "/-! Over `FormalSchemes.Mid`: forward closure **2**, reverse closure"
+                     " **0**. -/\n")
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **9**. -/\n")
+        rc, lines = tree_report(d)
+        check("the mismatch, the declined closure claim and the declined size claim render in that "
+              "order, each with its own reason and text",
+              (rc, rows(lines)),
+              (1,
+               ["  MISMATCH  FormalSchemes/Base.lean:1  the reverse closure of"
+                " `FormalSchemes.Base`: states 9, walk gives 2",
+                "            reverse closure **9**. -/",
+                "  declined  FormalSchemes/Mid.lean:3  possessive pronoun: its antecedent is the"
+                " subject, not the last module named -- forward closure is **1** module. -/",
+                "  size-declined  FormalSchemes/Says.lean:1  no anchor -- **12** lines long. -/"]))
+
+        # And with nothing stale left, both declines still print and the run is **green**: a decline
+        # is a reading a reviewer judges, not a failure, and the exit code is the only place that
+        # distinction lives.
+        write("Base", "/-! Over nothing: forward closure **0**, reverse closure **2**. -/\n")
+        rc, lines = tree_report(d)
+        check("and both still print on a tree with no mismatch at all, which exits 0 -- a decline "
+              "is read, not failed on",
+              (rc, lines[-2:]),
+              (0,
+               ["  declined  FormalSchemes/Mid.lean:3  possessive pronoun: its antecedent is the"
+                " subject, not the last module named -- forward closure is **1** module. -/",
+                "  size-declined  FormalSchemes/Says.lean:1  no anchor -- **12** lines long. -/"]))
+
+
     return 1 if bad else 0
 
 
