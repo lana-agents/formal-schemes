@@ -243,8 +243,19 @@ cannot see it.
 This is the species where a MISMATCH means **change the numeral**, which is the opposite of what a
 total's or a census total's remedy says.  A figure that has passed four gates is one whose reading
 is pinned, so the sentence is stale rather than misread; refusing the reading is still available and
-is done by breaking a gate -- elide the spelled cardinality, or state the bucket without the
-`N reach` spelling -- and the sentence goes to `--sweep`.
+is done by breaking a gate.  The two gates cost different things and it is worth saying which is
+which: **eliding the spelled cardinality** leaves the sentence a census this walk cannot pin, so it
+is printed in `--tree`'s `census-declined` block with the reason, while **dropping the `N reach`
+spelling** stops it being a census here at all and puts it back on `--sweep`.  Either way `--tree`
+goes green on it; only the second returns it to the list row 2214 kept it on.
+
+The one claim in the species that is **not** a numeral is the identity -- *"this module is the only
+one of the **N**"* -- and it is reported as two figures rather than one, because the sentence
+asserts two things: that this file is in the top bucket, and that nothing else is.  Both are
+reported against a count the reader can act on, and the second names the modules the walk found,
+because *states 1, walk gives 1* is what a single membership figure degenerates to when the count
+is right and the member is wrong.  Its remedy is its own for the same reason: there is no numeral
+to re-run for.
 
 ## `--edge`, which prices a tree that does not exist
 
@@ -853,6 +864,34 @@ BUCKET_DISPOSITION = (
     " instead, elide the spelled cardinality or drop the `N reach ...` spelling.)",
 )
 
+# And the identity's, which is **not** `BUCKET_DISPOSITION`.  Every other figure this species
+# reports is a count, so *re-run the walk* names the repair; the identity is a claim about **which
+# module** the top bucket holds, and re-running the walk on a sentence that names the wrong module
+# returns the same number it returned before.  Printing the bucket remedy under it would be advice
+# that does nothing, which is the defect row 2214 rejected #814 for -- there a census mismatch
+# carried the *total's* three suggestions and all three were no-ops.  The refusal route is shared,
+# because breaking either gate takes the whole sentence out of this species and the identity with
+# it.
+IDENTITY_DISPOSITION = (
+    "(this one is not a numeral.  The sentence names which module is the top bucket's sole",
+    " member and the walk names a different set, so the repair is the **name** -- say it of",
+    " the module the walk gives, or drop the claim.  To refuse the reading instead, elide the",
+    " spelled cardinality or drop the `N reach ...` spelling.)",
+)
+
+
+def _module_list(mods: list[str], cap: int = 3) -> str:
+    """A bounded, backticked rendering of a module list for a report line.
+
+    Capped because a report line is read in a terminal and the population it names is unbounded in
+    principle, and **the cap is spoken** -- a truncated list that does not say it was truncated is
+    the silent-cap failure `stub_cost`'s comment is about, one line long instead of one mode long.
+    """
+    if not mods:
+        return "nothing"
+    shown = ", ".join("`%s`" % m for m in mods[:cap])
+    return shown if len(mods) <= cap else "%s and %d more" % (shown, len(mods) - cap)
+
 # What makes a sentence a candidate for `--sweep`.  The word `closure` is the obvious trigger, but
 # it is not sufficient: *"`FormalSchemes.Gluing` being upstream of 272 of this tree's 496 modules"*
 # is a **reverse**-closure measurement carrying two figures and does not contain the word at all.
@@ -1244,6 +1283,26 @@ def census_spans(sentence: str) -> list[tuple[int, int]]:
     return spans
 
 
+def _identity_is_self(before: str) -> bool:
+    """Whether the subject of *the only one of the **N*** is the file the sentence is in.
+
+    By `attribute()`'s rule and not a looser one: collect the self-phrases and the module tokens
+    that stand before the phrase and take the **last** of them.  *Is `this file` present anywhere
+    earlier* and *is `this file` the nearest thing before the claim* are different questions, and
+    they differ on exactly the sentences that name another module in between -- which is the normal
+    way to write a comparison:
+
+        This file is a leaf, and `FormalSchemes.X` is the only one of the 10 that reaches all five
+
+    is a claim about `X`.  Reading it as a claim about this file makes `--tree` red on prose that is
+    **true**, and a species that can do that has no business failing a build.  Whether a *named*
+    module really is the only one is `attribute()`'s kind of question and not this species'.
+    """
+    anchors = [(m.start(), True) for m in SELF_PHRASE.finditer(before)]
+    anchors += [(m.start(), False) for m in MODULE_TOKEN.finditer(before)]
+    return bool(anchors) and max(anchors)[1]
+
+
 def census_claims(mods: dict[str, str]):
     """Yield every tree census whose **buckets** this species can read, as a dict, resolved but
     not yet compared: the subject set, the universe, the bucket numerals with the index each is
@@ -1342,10 +1401,10 @@ def census_claims(mods: dict[str, str]):
                                if w.lower() in BUCKET_WORD} - set(bound),
                        # `the only one of the N` asserts that the top bucket holds exactly one
                        # module and that it is this one.  Checked by name rather than inferred from
-                       # the shortfall, and only when the sentence says *this* -- a named module
-                       # can be the only one of the N too, and the resolver for that is
-                       # `attribute()`'s job and not this species'.
-                       identity=bool(whole) and bool(SELF_PHRASE.search(s[:whole.start()])))
+                       # the shortfall, and only when the sentence says *this* of **this** claim --
+                       # see `_identity_is_self` for why a self-phrase merely occurring earlier in
+                       # the sentence is not enough, and for the fixture that settles it.
+                       identity=bool(whole) and _identity_is_self(s[:whole.start()]))
 
 
 def invisible(mods: dict[str, str]):
@@ -1519,13 +1578,25 @@ def audit(root: str = ".",
                 c, stated=remainder, actual=accounted,
                 what="the buckets this census names in words but not with a numeral"
                      " (indices %s)" % (", ".join(str(k) for k in sorted(c["worded"])) or "none")))
+        # The identity, as **two** figures.  *"This module is the only one of the N"* asserts that
+        # this file is in the top bucket and that nothing else is, and one comparison of a set
+        # against `[module]` collapses them into a line that reads `states 1, walk gives 1`
+        # whenever the count is right and the member is wrong -- which is the one population the
+        # clause exists for.  Split, each half is a count the reader can act on, and the second
+        # names what the walk found, because the repair is a name and the report has to carry it.
         if c["identity"]:
             only = sorted(m for m, n in hit.items() if n == top)
-            if only != [c["module"]]:
+            others = [m for m in only if m != c["module"]]
+            if c["module"] not in only:
                 mismatches.append(dict(
-                    c, stated=1, actual=len(only),
-                    what="the modules reaching all %d, which this sentence says is this one alone"
-                         % top))
+                    c, stated=1, actual=0, disposition=IDENTITY_DISPOSITION,
+                    what="this file among the modules reaching all %d, which this sentence says"
+                         " it is the only one of" % top))
+            if others:
+                mismatches.append(dict(
+                    c, stated=0, actual=len(others), disposition=IDENTITY_DISPOSITION,
+                    what="the modules besides this one reaching all %d, which this sentence says"
+                         " is none -- the walk gives %s" % (top, _module_list(others))))
     for c in size_claims(mods):
         if c["about"] is None:
             size_declined.append(c)
@@ -3543,6 +3614,21 @@ def selftest() -> int:
     check("the census tree is green: four buckets, a universe and an identity all agree with the "
           "walk, and nothing else on the tree is stale either", census_run(), ([], [], []))
 
+    # `_module_list` directly, because its **cap** is the one thing about it a census fixture
+    # cannot reach -- the live tree has one module in the top bucket and the trees above have one
+    # rival, so nothing here ever renders four.  A cap that stops speaking is the silent-truncation
+    # failure `stub_cost`'s comment argues against, one report line long instead of one mode long,
+    # and it would read as *the walk gives these three* when the walk gave five.
+    check("a module list says it was truncated rather than ending silently, and an empty one is "
+          "a word rather than a blank",
+          (_module_list([]),
+           _module_list(["FormalSchemes.A", "FormalSchemes.B", "FormalSchemes.C"]),
+           _module_list(["FormalSchemes.A", "FormalSchemes.B", "FormalSchemes.C",
+                         "FormalSchemes.D", "FormalSchemes.E"])),
+          ("nothing",
+           "`FormalSchemes.A`, `FormalSchemes.B`, `FormalSchemes.C`",
+           "`FormalSchemes.A`, `FormalSchemes.B`, `FormalSchemes.C` and 2 more"))
+
     # **Positive control 1, the one row 2224 goal 3 calls the interesting one.**  One bucket
     # moved by one, nothing else touched.  Two independent witnesses fire and that is the design
     # rather than noise: the bucket's own predicate, and the remainder, which is what says the
@@ -3589,10 +3675,34 @@ def selftest() -> int:
     # the remainder all still agree, and the only false thing in the sentence is *this module is
     # the only one*.  Row 2224 §1 reads that bucket's member by name rather than inferring it
     # from the shortfall; this is why.
-    check("the only-one claim is checked by name, and it is the sole witness when the top bucket's "
-          "member changes without its size changing",
+    #
+    # **It is reported as two figures and the second names `Rival`.**  One comparison of the top
+    # bucket against `[module]` is enough to *detect* this, and that is what row 2224 shipped; it
+    # is not enough to *report* it, because `stated=1, actual=len(only)` renders as `states 1,
+    # walk gives 1` on exactly this population -- the count is right and the member is wrong.  The
+    # assertion below is on the `what` strings and not only on the pair, which is the one thing a
+    # structured fixture can do about a rendering defect.
+    check("the only-one claim is checked by name, and when the top bucket's member changes "
+          "without its size changing both halves are reported and the walk's module is named",
           census_run(cen_imports="A1 A2 A3 A4", rival_imports="A1 A2 A3 A4 A5")[0],
-          [(1, 1, "the modules reaching all 5, which this sentence says is this one alone")])
+          [(1, 0, "this file among the modules reaching all 5, which this sentence says it is"
+                  " the only one of"),
+           (0, 1, "the modules besides this one reaching all 5, which this sentence says is"
+                  " none -- the walk gives `FormalSchemes.Rival`")])
+
+    # The other half of the same claim, alone: nobody at all reaches the whole set, so there is no
+    # rival to name and the sentence is still false.  `Cen` and `Rival` both reach four of the five
+    # here, which is why the buckets below are not the default tree's.  A `len(only) != 1` reading
+    # of the identity would pass this, and so would one that only looked for a rival.
+    check("a sentence claiming the top bucket when the top bucket is empty is caught, with no "
+          "second figure because there is no other module to name",
+          census_run(cen_imports="A1 A2 A3 A4",
+                     sentence="Over `FormalSchemes.A1`, `FormalSchemes.A2`, `FormalSchemes.A3`,"
+                              " `FormalSchemes.A4` and `FormalSchemes.A5`: this module is the only"
+                              " one of the 10 that reaches all five -- 1 reaches none, 6 reach"
+                              " exactly one, 1 reaches two and 2 reach four")[0],
+          [(1, 0, "this file among the modules reaching all 5, which this sentence says it is"
+                  " the only one of")])
 
     # The subject set resolved **one hop back, before the opener's colon** -- `:305`'s mechanism,
     # and the one the `## Placement` idiom needs.  A separate tree, because this census's universe
@@ -3723,6 +3833,41 @@ def selftest() -> int:
                               " 1 reaches two and 1 reaches four"),
           ([], [], []))
 
+    # **And the over-match control for that gate, which is the case the one above cannot make.**
+    # The case above has no self-phrase in the census sentence at all, so it measures that the gate
+    # is *present*; it says nothing about how the gate decides when there is one.  Here the same
+    # true sentence -- `Rival` really is the only one of the ten -- opens with four words about
+    # this file, which is the ordinary way to write a comparison.  Asking *is a self-phrase
+    # anywhere before the claim* reds this tree; asking `attribute()`'s question, *is a
+    # self-phrase the **last** anchor before the claim*, does not.  See `_identity_is_self`.
+    check("a self-phrase earlier in the sentence does not make a named module's only-one claim "
+          "an assertion about this file, and the true sentence stays green",
+          census_run(cen_imports="A1 A2 A3 A4", rival_imports="A1 A2 A3 A4 A5",
+                     sentence="Over `FormalSchemes.A1`, `FormalSchemes.A2`, `FormalSchemes.A3`,"
+                              " `FormalSchemes.A4` and `FormalSchemes.A5`: nothing is measured"
+                              " here.  This file is a leaf, and `FormalSchemes.Rival` is the only"
+                              " one of the 10 that reaches all five -- 1 reaches none, 6 reach"
+                              " exactly one, 1 reaches two and 1 reaches four"),
+          ([], [], []))
+
+    # And the same shape the other way round, so the pair is not one-sided: a *named* module
+    # standing earlier in the sentence does not stop the claim being about this file when the
+    # self-phrase is what the claim is made of.  This is `:393`'s own word order -- *"it needs `A`,
+    # `B` and `C` at once, and this module is the only one of the 587"* -- and a gate that took the
+    # last **named** module instead of the last anchor would lose the tree's one live identity.
+    check("a module named earlier in the sentence does not stop `this module is the only one` "
+          "being about this file",
+          census_run(cen_imports="A1 A2 A3 A4", rival_imports="A1 A2 A3 A4 A5",
+                     sentence="It needs `FormalSchemes.A1`, `FormalSchemes.A2`,"
+                              " `FormalSchemes.A3`, `FormalSchemes.A4` and `FormalSchemes.A5` at"
+                              " once, and this module is the only one of the 10 that reaches all"
+                              " five -- 1 reaches none, 6 reach exactly one, 1 reaches two and"
+                              " 1 reaches four")[0],
+          [(1, 0, "this file among the modules reaching all 5, which this sentence says it is"
+                  " the only one of"),
+           (0, 1, "the modules besides this one reaching all 5, which this sentence says is"
+                  " none -- the walk gives `FormalSchemes.Rival`")])
+
     # And the prose gate, which `invisible`'s docstring gives the general argument for: `reaches` is
     # not Lean syntax but a numeral beside it in a proof body is not a census either, and a census
     # report quoting a run of tactic script would be read as advice about a sentence.  Without the
@@ -3778,6 +3923,53 @@ def selftest() -> int:
               (s["size"], s["hypo_size"], s["population"], s["species"][0]),
               (10, 11, [], []))
 
+    # **The identity, rendered.**  Every other census case above reads `audit`'s return value, and
+    # on this population that is not enough: the defect the two-figure split repairs was a
+    # *rendering* -- `stated=1, actual=len(only)` printed as `states 1, walk gives 1`, under a
+    # remedy telling the reader to re-run a walk that gives the same number.  A fixture reading
+    # `(stated, actual, what)` asserts the tuple it is handed and cannot see the sentence built
+    # from it, which is the gap row 2218 built `tree_report` to close for the incumbents.  So this
+    # is the block **by value**: both figures, the module the walk found spelled inside the first
+    # line rather than left to the reader, and `IDENTITY_DISPOSITION` under each instead of
+    # `BUCKET_DISPOSITION`.  A tree of its own because `census_tree`'s `Cen` has no sentence break
+    # before its census, so its rendered `text` line is a run of `import` statements.
+    with tempfile.TemporaryDirectory() as d:
+        os.makedirs(os.path.join(d, "FormalSchemes"))
+
+        def write(name, body):
+            with open(os.path.join(d, "FormalSchemes", name + ".lean"), "w",
+                      encoding="utf-8") as f:
+                f.write(body)
+
+        for i in (1, 2, 3):
+            write("A%d" % i, "/-! Nothing measured here. -/\n")
+        write("Rival", "import FormalSchemes.A1\nimport FormalSchemes.A2\nimport FormalSchemes.A3\n"
+                       "/-! Nothing measured here. -/\n")
+        write("Cen", "import FormalSchemes.A1\n/-!\nNothing else is measured here.\n"
+                     "Over `FormalSchemes.A1`, `FormalSchemes.A2` and `FormalSchemes.A3`: this"
+                     " module is\nthe only one of the 5 that reaches all three -- 4 reach exactly"
+                     " one.\n-/\n")
+        text = ("            Over `FormalSchemes.A1`, `FormalSchemes.A2` and `FormalSchemes.A3`:"
+                " this module is the onl")
+        advice = ["            (this one is not a numeral.  The sentence names which module is the"
+                  " top bucket's sole",
+                  "             member and the walk names a different set, so the repair is the"
+                  " **name** -- say it of",
+                  "             the module the walk gives, or drop the claim.  To refuse the"
+                  " reading instead, elide the",
+                  "             spelled cardinality or drop the `N reach ...` spelling.)"]
+        rc, lines = tree_report(d)
+        check("the identity prints as two figures, names the module the walk found, and carries "
+              "its own remedy rather than the bucket species'",
+              (rc, rows(lines)),
+              (1,
+               ["  MISMATCH  FormalSchemes/Cen.lean:4  this file among the modules reaching all 3,"
+                " which this sentence says it is the only one of: states 1, walk gives 0",
+                text] + advice +
+               ["  MISMATCH  FormalSchemes/Cen.lean:4  the modules besides this one reaching all 3,"
+                " which this sentence says is none -- the walk gives `FormalSchemes.Rival`:"
+                " states 0, walk gives 1",
+                text] + advice))
 
     return 1 if bad else 0
 

@@ -744,7 +744,11 @@ numeral*. So write a census like this and every numeral in it is checked:
   reaches three"*. The remainder is read off the walk rather than inferred from the shortfall, so a
   bucket the sentence names nowhere is a MISMATCH, which is the failure a sum rule cannot see;
 - write *"this module is the only one of the **N**"* and the member of the top bucket is checked
-  **by name**, not just its count.
+  **by name**, not just its count — two figures, one saying this file is in that bucket and one
+  saying nothing else is, and the second names what the walk found. *This module* has to be what
+  the claim is **made of** and not merely present earlier in the sentence: *"this file is a leaf,
+  and `FormalSchemes.X` is the only one of the **N**"* is a claim about `X`, and the species reads
+  it as one, because whether a **named** module is the only one is a question no walk here answers.
 
 A census stating the strict convention for its own buckets — not counting a module as reaching
 itself — declines, because accepting both readings silently would give a stale figure two ways to
