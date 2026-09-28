@@ -521,9 +521,10 @@ can move and no file's size changes; a claim landing outside those two is report
 population deliberately has no census in it, and the asymmetry is about which species can name the
 figure rather than about which hypothetical moves it.** Both move it — an import changes what
 reaches what, which is what a census partitions by, and `--edge
-FormalSchemes.AdicRing:FormalSchemes.AwayCompletionUniversal` moves nine census figures, a count
+FormalSchemes.AdicRing:FormalSchemes.AwayCompletionUniversal` moves ten census figures, a count
 `edge_cost`'s own comment carries so the cap is not silent. What differs is where the figure would
-go: `--edge`'s three species are exhaustive for *closures* and a bucket is not one, so pricing it
+go: `--edge`'s three species are exhaustive for *closures* and neither a bucket nor a superlative is
+one, so pricing it
 would print it as `unclassified`, which is false advice about a figure `--tree` already checks,
 while `--stub`'s first species fits a census exactly — a stub grows `len(mods)` and a census's
 universe is a count of modules, so it moves for the same reason the project total does. So a
@@ -716,9 +717,10 @@ a checker cannot read belongs.
 **A tree *census* is the fifth spelling this section owes to a defect, and it is the one that hides
 best: the noun of the count phrase is elided, so there is nothing for any grammar to pin.** A census
 is a partition of the module set written with no closure phrase in it — *"the best any of the other
-**T−1** does is three: **A** reach none, **B** reach exactly one and **C** reach two"*, *"this
-module is the only one of the **T** that reaches all three"*. The figures are written as letters
-throughout this entry — **T** for the tree's module count, **A** to **D** for the buckets — because
+**T−1** does is **M**, and only **E** of them manage that: **A** reach none, **B** reach exactly one
+and **C** reach two"*, *"this module is the only one of the **T** that reaches all three"*. The
+figures are written as letters throughout this entry — **T** for the tree's module count, **A** to
+**D** for the buckets, **M** for the superlative's index and **E** for its companion — because
 this file is outside every instrument's walk, so a real numeral copied into it is a figure nothing
 will ever re-check. Every numeral in one moves
 when a module is added, and the *reach none* bucket and the two totals move while the others do
@@ -755,6 +757,20 @@ numeral*. So write a census like this and every numeral in it is checked:
 - **name every bucket you do not give a numeral to**, in words — *"and this file is the one that
   reaches three"*. The remainder is read off the walk rather than inferred from the shortfall, so a
   bucket the sentence names nowhere is a MISMATCH, which is the failure a sum rule cannot see;
+- **word the superlative as *"the best any of the other **N** does is **M***"*, and **M** is checked
+  against the top non-empty bucket of the walk's own histogram. Since row 2229 this is the fifth
+  assertion in a census and it was the one nothing read: it is a claim about the **shape of the
+  tail**, and the tail is what a new module changes, so every bucket numeral beside it can stay true
+  while it goes false. That is not hypothetical — a sibling module importing the six the first live
+  census is of leaves **A**, **B**, **C** and **E** all correct and the superlative wrong, and
+  before row 2229 `--tree` reported the universe size, the project total, four reverse closures and
+  the *other* census's identity and said nothing about this. The remainder clause does not catch it:
+  the *"reaches all **six**"* of the first bullet puts index six into the accounted-for set, so the
+  arithmetic balances. Any other wording **declines by name** rather than passing, and the remedy is
+  the one figure here that is a **number word** — re-run the walk and spell the index it gives;
+- **give the superlative a companion or do not**, as *"and only **E** of them manage that"*. It is
+  read when the superlative resolved, and **E** is a bucket numeral bound to **M** rather than to a
+  number word of its own, so a predicate already binding that bucket makes the census decline;
 - write *"this module is the only one of the **N**"* and the member of the top bucket is checked
   **by name**, not just its count — two figures, one saying this file is in that bucket and one
   saying nothing else is, and the second names what the walk found. *This module* has to be what
