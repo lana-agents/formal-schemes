@@ -78,14 +78,22 @@ is representative, and `FormalSchemes.lean` is the only exhaustive index of the 
   What makes the affine object a *completion* rather than `Spf` of a completed ring is
   `FormalSpectrum.completionStructureSheafIso`: its structure sheaf, carried along the base
   homeomorphism, is the inverse limit of the structure sheaves of the thickenings of the
-  **original** ring. The glued analogue of that comparison is not proved.
+  **original** ring. The glued analogue of that comparison is not proved. A scheme with an
+  affine cover whose pairwise overlaps are basic opens of both charts, together with a
+  `Scheme.IdealSheafData`, produces a datum —
+  `AlgebraicGeometry.PrincipalAffineCover.completionDatum` — but nothing yet identifies the
+  scheme glued from that datum with `X`, so its `completionGlued` is not yet `X_{/Z}` at a
+  general `X`.
 * **Topologically finite type** (EGA I, 10.13): the property `IsTopologicallyFiniteType`, its
   affine-local character, and the composition law
   `AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans`.
 * **Closed immersions and separatedness** (EGA I, 10.14–10.15):
   `AlgebraicGeometry.FormalScheme.IsClosedImmersion` and
   `AlgebraicGeometry.FormalScheme.IsSeparatedOverSpf`, the latter through the diagonal of a
-  formal scheme over an affine adic base.
+  formal scheme over an affine adic base. Separatedness survives restricting the source to an
+  open inside one chart, or to a union of chart ranges
+  (`AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range`); at an
+  arbitrary open it is open (the basic-open refinement of the chart family is in progress).
 * **Fibre products** over an affine adic base, built from the completed tensor product of the
   chart algebras — `AlgebraicGeometry.BothChartedFibreDatum.generalFibreProduct`.
 * **Quotients by a free, properly discontinuous action** of a discrete group, as a formal scheme —
@@ -102,7 +110,7 @@ is representative, and `FormalSchemes.lean` is the only exhaustive index of the 
 
 ## Module map: the affine core
 
-`FormalSchemes.lean` imports the whole library — **500 modules** at commit `0bfe6b5`. The list
+`FormalSchemes.lean` imports the whole library — **587 modules** at commit `f2077bd`. The list
 below is the twelve the library consisted of when this map was first written, and they are still
 where the construction above lives and still the place to start reading; it is a sample of the
 library, not an index of it.
@@ -161,6 +169,35 @@ declaration names above to find the rest.
 * The Tate annulus, the Tate chain and the Tate curve model — `FormalSchemes/TateAnnulus.lean`,
   `FormalSchemes/TateChainGlue.lean`, `FormalSchemes/TateCurveModel.lean`,
   `FormalSchemes/TateSeparatedScheme.lean`
+
+## Status
+
+* **No `sorry`, no axioms.** At `f2077bd`, `git grep -w sorry -- '*.lean'` has no hits, and no
+  `axiom` declaration, `admit` or `native_decide` occurs in the library. Every declaration named
+  in this README is a complete proof (the library has not been re-audited with `#print axioms`
+  for this page).
+* **Not proved** (open, stated honestly in the modules themselves):
+  * the glued analogue of `FormalSpectrum.completionStructureSheafIso`, and the identification of
+    the scheme glued from `PrincipalAffineCover.completionDatum` with the given scheme
+    (`FormalSchemes/PrincipalCoverCompletionDatum.lean`, *What is not proved here*);
+  * separatedness over `Spf R` after restricting the source to an open meeting several charts
+    (`FormalSchemes/GeneralSeparatedHomRestrictOpen.lean`);
+  * a Tate model of period `q` (the model here has period `q²`, see above).
+* **Out of scope**: Raynaud generic fibres and the rigid-analytic side, étale morphisms and
+  normalization of formal schemes, Grothendieck existence, admissible blow-ups — see
+  `docs/rigid-analytic-interface.md`.
+
+## Use in the IUT programme
+
+[`lana-agents/iut`](https://github.com/lana-agents/iut) does not require this library directly:
+it enters `iut`'s `lake-manifest.json` as an inherited dependency of
+[`tate-curves-theta`](https://github.com/lana-agents/tate-curves-theta), which requires it at
+`51aa935` (the affine theory and the formal completion of an affine scheme; an ancestor of the
+current `master`). No module of `tate-curves-theta` or `iut` imports `FormalSchemes` at that pin.
+[`tempered-fundamental-groups`](https://github.com/lana-agents/tempered-fundamental-groups) is
+designed on top of formal schemes (Lepage's tempered π₁ via formal models), but works with
+algebraic `O`-models and their special fibres and does not import this library; its Blueprint (§2,
+§7) lists what a literally formal-scheme version would need from here.
 
 ## Conventions and further documents
 
