@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 LANA Project. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: LANA Project
+-/
 import FormalSchemes.AdicHausdorff
 import FormalSchemes.FormalScheme
 import Mathlib.RingTheory.AdicCompletion.Completeness
