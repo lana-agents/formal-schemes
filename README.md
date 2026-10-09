@@ -215,3 +215,5 @@ algebraic `O`-models and their special fibres and does not import this library; 
   (Tags 07E7, 0AHZ, 0AI5, 0AI7, 0AIL ff.).
 * S. Bosch, *Lectures on Formal and Rigid Geometry*, Lecture Notes in Mathematics 2105 — the
   reference the Tate half of this library follows (Part B, §9).
+
+License: Apache 2.0 (see LICENSE)

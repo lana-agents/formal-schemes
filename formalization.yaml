@@ -1,0 +1,188 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# formalization.yaml (v0.4): repo-root metadata for this formalization,
+# following https://github.com/mathlib-initiative/formalization.yaml
+
+version: "v0.4"
+
+project:
+  name: "formal-schemes"
+  description: >-
+    A Lean 4 / Mathlib formalization of formal schemes following EGA I (Ch. 0 §7, §10, Ch. I §10)
+    and the Stacks project. For an adic ring R with ideal of definition I it constructs the formal
+    spectrum Spf R with structure sheaf the inverse limit of the structure sheaves of the
+    thickenings Spec (R ⧸ I^(n+1)), computes global sections (≃ R) and sections on basic opens (the
+    I-adic completion of R_f), shows that stalks are local, that Spf is functorial as a locally
+    ringed space and independent of the ideal of definition, and defines formal schemes. Beyond the
+    affine case: gluing, the colimit property of morphisms out of Spf R, formal completion along a
+    closed subset, topologically finite type morphisms, closed immersions and separatedness over an
+    affine adic base, fibre products over an affine adic base, quotients by free properly
+    discontinuous actions, and a formal model of the Tate curve (a Néron 2-gon of period q²).
+  authors:
+    - "Claude (Anthropic)"
+    - "LANA Project"
+  responsible_maintainers:
+    - "Christian Merten"
+  license: "Apache-2.0"
+
+sources:
+  - title: "Éléments de géométrie algébrique I"
+    authors: ["Alexander Grothendieck", "Jean Dieudonné"]
+    type: "book"
+    location: "Ch. 0 §7, §10 and Ch. I §10 (10.1-10.15)"
+    relationship: "formalizes"
+    note: "The affine theory and the notion of formal scheme; see fidelity.divergences for what is open."
+    author_endorsement: "n/a"
+  - title: "The Stacks Project, Chapter Formal Schemes"
+    authors: ["The Stacks project authors"]
+    id: "https://stacks.math.columbia.edu/tag/0AHY"
+    type: "web"
+    location: "Tags 07E7, 0AHZ, 0AI5, 0AI7, 0AIL ff."
+    relationship: "adapts"
+    author_endorsement: "n/a"
+  - title: "Lectures on Formal and Rigid Geometry"
+    authors: ["Siegfried Bosch"]
+    id: "doi:10.1007/978-3-319-04417-0"
+    type: "book"
+    location: "Lecture Notes in Mathematics 2105, Part B, §9 (the Tate curve)"
+    relationship: "adapts"
+    author_endorsement: "n/a"
+
+related_formalizations:
+  - id: "https://github.com/lana-agents/tate-curves-theta"
+    relationship: "other"
+    note: >-
+      Used by: tate-curves-theta requires formal-schemes at 51aa935 (no module imports it there);
+      through it formal-schemes enters lana-agents/iut's lake-manifest.json.
+
+classification:
+  arxiv: ["math.AG"]
+  msc2020: ["14A15", "14B20", "13J10", "14G22"]
+
+status:
+  scope: >-
+    The affine theory of formal schemes (Spf R, its structure sheaf, sections, stalks,
+    functoriality, independence of the ideal of definition) and the definition of formal schemes,
+    together with gluing, the colimit property, formal completion along a closed subset,
+    topologically finite type morphisms, closed immersions, separatedness and fibre products over an
+    affine adic base, free quotients, and a formal model of the Tate curve of period q². Open: the
+    glued analogue of completionStructureSheafIso and the identification of the scheme glued from
+    PrincipalAffineCover.completionDatum with the given scheme, separatedness after restriction to
+    an open meeting several charts, and a Tate model of period q. Out of scope: Raynaud generic
+    fibres and the rigid-analytic side.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+  main_results:
+    - declaration: "FormalSpectrum.globalSectionsEquiv"
+      file: "FormalSchemes/Sections.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "FormalSpectrum.sectionsBasicOpenEquiv"
+      file: "FormalSchemes/Sections.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "FormalSpectrum.isLocalRing_structureSheaf_stalk"
+      file: "FormalSchemes/Spf.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "FormalSpectrum.locallyRingedSpaceMap"
+      file: "FormalSchemes/SpfMap.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "FormalSpectrum.generalCofinalSpfIso"
+      file: "FormalSchemes/CofinalSheafComparisonGeneral.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "FormalSpectrum.existsUnique_hom_thickeningMap_formalScheme"
+      file: "FormalSchemes/SpfHomFormalScheme.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "FormalSpectrum.completionStructureSheafIso"
+      file: "FormalSchemes/CompletionSheafComparison.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "AlgebraicGeometry.FormalScheme.IsTopFiniteTypeHom.trans"
+      file: "FormalSchemes/TopFiniteTypeHomTrans.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "AlgebraicGeometry.FormalScheme.isSeparatedOverSpf_restrictOpen_of_subset_range"
+      file: "FormalSchemes/GeneralSeparatedHomRestrictOpen.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "AlgebraicGeometry.tateCurveModel_isSeparatedOverSpf_and_isRelativelyTopFiniteType"
+      file: "FormalSchemes/TateSeparatedScheme.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+    - declaration: "AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction"
+      file: "FormalSchemes/TateInvPeriodNodePoint.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      literature_dependencies: []
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["claude-opus-4-8", "claude-opus-5", "claude-fable-5", "claude-sonnet-5"]
+      framework: "Claude Code"
+      tool_setup: >-
+        orchestra for running the agents, taxis for project management, and Claude (Claude Code) as the
+        coding agent; Lean/Lake builds with `lake build --wfail`.
+      prompting_notes: >-
+        Human input consisted of high-level task descriptions and scope decisions.
+  notes: >-
+    Agents were run with orchestra; project management (issues, status) was done in taxis;
+    Claude was the coding agent.
+
+fidelity:
+  divergences: >-
+    Following Mathlib's conventions the structure sheaf of Spf R is a sheaf of plain commutative
+    rings; the adic topology of EGA is recovered through the explicit limit description of its
+    sections. Formal completion is constructed for an affine ambient scheme and for schemes
+    presented by affine charts; the glued comparison with the thickenings and the identification
+    of the glued scheme with X are open. Separatedness and fibre products are over an affine adic
+    base. The Tate curve model has period q² (a Néron 2-gon), not q.
+
+review:
+  status: "agent-reviewed"
+  reviewers: ["Claude (Anthropic)"]
+  notes: >-
+    The formalization has only been reviewed by Claude; it has not been reviewed by a human.
+    All results are machine-checked by the Lean kernel; `#print axioms` of every main result listed
+    under status (checked on a build of this revision) gives only propext, Classical.choice and
+    Quot.sound, and `git grep` finds no sorry, axiom declaration, admit or native_decide.
+
+alignment:
+  namespace: "FormalSpectrum"
+  statements:
+    - source: "EGA I, 10.1.3 (global sections of Spf R)"
+      lean: "FormalSpectrum.globalSectionsEquiv"
+      module: "FormalSchemes/Sections.lean"
+      status: "proved"
+    - source: "EGA I, 10.1.4 / Stacks Tag 0AI7 (sections on D(f))"
+      lean: "FormalSpectrum.sectionsBasicOpenEquiv"
+      module: "FormalSchemes/Sections.lean"
+      status: "proved"
+    - source: "EGA I, 10.1.6 (Spf R is a locally ringed space)"
+      lean: "FormalSpectrum.isLocalRing_structureSheaf_stalk"
+      module: "FormalSchemes/Spf.lean"
+      status: "proved"
+    - source: "EGA I, 10.2.2 (functoriality of Spf)"
+      lean: "FormalSpectrum.locallyRingedSpaceMap"
+      module: "FormalSchemes/SpfMap.lean"
+      status: "proved"
+    - source: "EGA I, 10.6.10 (morphisms out of Spf R)"
+      lean: "FormalSpectrum.existsUnique_hom_thickeningMap_formalScheme"
+      module: "FormalSchemes/SpfHomFormalScheme.lean"
+      status: "proved"
+
+acknowledgements: "Built on Mathlib (Apache-2.0)."
