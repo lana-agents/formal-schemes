@@ -157,9 +157,11 @@ review:
   reviewers: ["Claude (Anthropic)"]
   notes: >-
     The formalization has only been reviewed by Claude; it has not been reviewed by a human.
-    All results are machine-checked by the Lean kernel; `#print axioms` of every main result listed
-    under status (checked on a build of this revision) gives only propext, Classical.choice and
-    Quot.sound, and `git grep` finds no sorry, axiom declaration, admit or native_decide.
+    All results are machine-checked by the Lean kernel. The axioms listed under status were not
+    re-checked with `#print axioms` for this file: no built, idle clone of this revision was
+    available (a local build of this revision was killed for memory). The evidence is `git grep`:
+    no sorry, axiom declaration, admit or native_decide occurs in any .lean file, so every
+    declaration depends at most on Lean's three standard axioms.
 
 alignment:
   namespace: "FormalSpectrum"
