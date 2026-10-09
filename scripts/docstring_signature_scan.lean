@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 LANA Project. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: LANA Project
+-/
+/-
 Emit one line per declaration of this project that carries a docstring, with the finiteness
 notions its own signature mentions.  `scripts/docstring_signature_scan.py` reads the prose and
 decides; this file only produces the rows.

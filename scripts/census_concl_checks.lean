@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 LANA Project. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: LANA Project
+-/
+/-
 The subsumption claims of `docs/signature-census-concl.md`, as elaborated terms.
 
 Run from the repository root, after a full `lake build`:

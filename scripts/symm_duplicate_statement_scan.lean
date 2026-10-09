@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 LANA Project. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: LANA Project
+-/
+/-
 Bucket every theorem of the environment by its statement, **up to the orientation of a top-level
 `Eq` or `Iff`**, and report the buckets that contain two or more of this project's theorems.
 

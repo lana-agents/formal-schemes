@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 LANA Project. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: LANA Project
+-/
+/-
 Emit one line per declaration of this project, keyed by the *shape of its statement*.
 
 Run from the repository root, after a full `lake build`:
