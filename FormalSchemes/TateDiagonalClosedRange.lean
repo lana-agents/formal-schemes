@@ -225,6 +225,7 @@ theorem mem_range_of_branch {W X Y Z : LocallyRingedSpace.{u}}
 
 section MixedCharts
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The mixed chart `(false, true)`.** The preimage of `range Δ.base` under the chart inclusion
 is exactly the union of the two graph pieces `Q_x ∪ Q_y`. -/
 theorem preimage_range_diagonal_ft (hq : q ∈ I) (hI : I.FG) :
@@ -274,6 +275,7 @@ theorem preimage_range_diagonal_ft (hq : q ∈ I) (hI : I.FG) :
     · exact range_spfGraphCodiagX_ft_subset R I q hq hI ⟨w, rfl⟩
     · exact range_spfGraphCodiagY_ft_subset R I q hq hI ⟨w, rfl⟩
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The mixed chart `(true, false)`.** The mirror of `preimage_range_diagonal_ft`, with the two
 factor-swapped graph pieces. -/
 theorem preimage_range_diagonal_tf (hq : q ∈ I) (hI : I.FG) :
