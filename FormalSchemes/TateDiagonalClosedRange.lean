@@ -352,6 +352,7 @@ theorem isClosed_coe_preimage_range_diagonal_offChart (hq : q ∈ I) (hI : I.FG)
 
 /-! ### Global closedness and the closed embedding -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The range of the glued Tate self-product diagonal is closed.** Checked local-at-target along
 the four-chart open cover: on the diagonal charts by `restrictPreimage_diagonal_diagChart`, on the
 mixed charts by `isClosed_coe_preimage_range_diagonal_offChart`. -/
