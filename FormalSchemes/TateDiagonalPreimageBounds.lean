@@ -1090,6 +1090,7 @@ theorem spfFirstTransitionDXA_eq (hI : I.FG) :
 
 /-! ### Geometric forms of the eight bounds -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Geometric form** for the mixed
 chart `(false, true)`, `c = false`, `dAY` summand: the preimage of the
 affine diagonal locus under that summand's transition composite lies in the range of its graph
@@ -1138,6 +1139,7 @@ theorem spfPreimage_range_diagChart_subset_second_dAY_x (hI : I.FG) :
   rw [spfSecondTransitionDAY_eq]
   exact preimage_range_diagChart_subset_second_dAY_x R I q hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Geometric form** for the mixed
 chart `(true, false)`, `c = true`, `dAY` summand: the preimage of the
 affine diagonal locus under that summand's transition composite lies in the range of its graph
@@ -1186,6 +1188,7 @@ theorem spfPreimage_range_diagChart_subset_second_dAY_y (hI : I.FG) :
   rw [spfSecondTransitionDAY_eq]
   exact preimage_range_diagChart_subset_second_dAY_y R I q hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Geometric form** for the mixed
 chart `(false, true)`, `c = false`, `dAX` summand: the preimage of the
 affine diagonal locus under that summand's transition composite lies in the range of its graph
@@ -1234,6 +1237,7 @@ theorem spfPreimage_range_diagChart_subset_second_dAX_y (hI : I.FG) :
   rw [spfSecondTransitionDAX_eq]
   exact preimage_range_diagChart_subset_second_dAX_y R I q hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Geometric form** for the mixed
 chart `(true, false)`, `c = true`, `dAX` summand: the preimage of the
 affine diagonal locus under that summand's transition composite lies in the range of its graph
@@ -1282,6 +1286,7 @@ theorem spfPreimage_range_diagChart_subset_second_dAX_x (hI : I.FG) :
   rw [spfSecondTransitionDAX_eq]
   exact preimage_range_diagChart_subset_second_dAX_x R I q hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Geometric form** for the mixed
 chart `(false, true)`, `c = true`, `dYA` summand: the preimage of the
 affine diagonal locus under that summand's transition composite lies in the range of its graph
@@ -1330,6 +1335,7 @@ theorem spfPreimage_range_diagChart_subset_first_dYA_y (hI : I.FG) :
   rw [spfFirstTransitionDYA_eq]
   exact preimage_range_diagChart_subset_first_dYA_y R I q hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Geometric form** for the mixed
 chart `(true, false)`, `c = false`, `dYA` summand: the preimage of the
 affine diagonal locus under that summand's transition composite lies in the range of its graph
@@ -1378,6 +1384,7 @@ theorem spfPreimage_range_diagChart_subset_first_dYA_x (hI : I.FG) :
   rw [spfFirstTransitionDYA_eq]
   exact preimage_range_diagChart_subset_first_dYA_x R I q hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Geometric form** for the mixed
 chart `(false, true)`, `c = true`, `dXA` summand: the preimage of the
 affine diagonal locus under that summand's transition composite lies in the range of its graph
@@ -1426,6 +1433,7 @@ theorem spfPreimage_range_diagChart_subset_first_dXA_x (hI : I.FG) :
   rw [spfFirstTransitionDXA_eq]
   exact preimage_range_diagChart_subset_first_dXA_x R I q hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Geometric form** for the mixed
 chart `(true, false)`, `c = false`, `dXA` summand: the preimage of the
 affine diagonal locus under that summand's transition composite lies in the range of its graph

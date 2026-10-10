@@ -296,6 +296,7 @@ theorem isClosedEmbedding_map_graphCodiagX (hI : I.FG) :
 
 omit [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
   [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))] in
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The base map of `Spf ∇ʸ : Spf (A{1/y}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 This is the `y`-piece of the mixed-chart preimage of the Tate diagonal. -/
 theorem isClosedEmbedding_map_graphCodiagY (hI : I.FG) :

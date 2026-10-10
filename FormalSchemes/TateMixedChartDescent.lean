@@ -406,7 +406,7 @@ section GraphPieces
 
 variable [TopologicalSpace R] [IsAdicRing I] (hI : I.FG)
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `x`-side graph piece is closed in all of `Spf(A ⊗̂_R A)`. -/
 theorem isClosed_range_spfGraphCodiagX :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -453,7 +453,7 @@ theorem isClosed_range_spfGraphCodiagXComm :
         (B := annulusAlgebra R I q) hI).surjective
   exact (FormalSpectrum.isClosedEmbedding_map_of_surjective _ _ _ _ hsurj).isClosed_range
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The factor-swapped `y`-side graph piece is closed. -/
 theorem isClosed_range_spfGraphCodiagYComm :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI

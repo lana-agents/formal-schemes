@@ -309,7 +309,7 @@ private theorem graphCodiagY_mem_pow (m : ℕ)
     rw [Ideal.map_pow, map_graphCodiagY_eq]
   exact h.le (Ideal.mem_map_of_mem _ hx)
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** for the `(false, true)` chart's `dAX` summand: the `y`-side graph codiagonal factors
 through the `x`-summand of the second-factor overlap chart. -/
 theorem graphLiftAXtoY_comp_map :
@@ -350,7 +350,7 @@ theorem graphLiftXAtoX_comp_map :
   · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftXAtoX_inr, invFlipLocX_apply,
       graphCodiagX_inr]
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** for the `(true, false)` chart's `dXA` summand. -/
 theorem graphLiftXAtoY_comp_map :
     (graphLiftXAtoY R I q hI).comp
@@ -522,7 +522,7 @@ theorem spfGraphCodiagY_eq_ft_dAX (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftAXtoY_comp_map R I q hI).symm
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** at the `(false, true)` chart's `dXA` summand. -/
 theorem spfGraphCodiagX_eq_ft_dXA (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -592,7 +592,7 @@ theorem spfGraphCodiagYComm_eq_tf_dXA (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXAtoY_comp_map R I q hI).symm
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** at the `(true, false)` chart's `dAX` summand. -/
 theorem spfGraphCodiagXComm_eq_tf_dAX (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
