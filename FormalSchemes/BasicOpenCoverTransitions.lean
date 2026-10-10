@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenCoverCharts
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The transitions of a basic-open cover of a formal affine
 
@@ -58,6 +55,9 @@ each is rewritten into `CompletedTensorAwayInterchange.awayCongrHom` over its ow
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

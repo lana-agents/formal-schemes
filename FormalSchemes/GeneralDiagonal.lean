@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductOfFactors
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The diagonal datum `X ×_{Spf R} X`
 
@@ -42,6 +39,9 @@ an `hs`-shaped hypothesis: thread the adic bound into the chart *type* instead.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum

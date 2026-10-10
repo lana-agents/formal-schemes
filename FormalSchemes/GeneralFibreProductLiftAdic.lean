@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicOverBaseChart
 import FormalSchemes.GeneralFibreProductLiftCharts
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The adic-over-base mediating morphism `Z ⟶ X ×_{Spf R} Y`
 
@@ -109,6 +106,9 @@ need and pass it in; do not reintroduce a chosen one.**
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.12, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

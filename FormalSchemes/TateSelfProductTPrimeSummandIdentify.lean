@@ -5,12 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateSelfProductTPrimeSummand
 
--- The completed-tensor interchange charts range over the nested localization/completion towers of
--- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
--- (matching `TateSelfProductTPrimeSummand.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Identifying the conjugated self-map `t'` with an explicit summand permutation
 
@@ -50,6 +44,12 @@ a follow-up; it is what brick (c3b) consumes to close the `GlueData'` cocycle by
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * Mathlib `CategoryTheory.GlueData'` (the `t'`/`t_fac`/`cocycle` fields).
 -/
+
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductTPrimeSummand.lean`).
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

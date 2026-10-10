@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductTPrimeSummandIdentify
 import FormalSchemes.TateSelfProductSummandNaturality
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Naturality of the swap involutions against the both-overlap chart (Family A)
 
@@ -53,6 +50,9 @@ is the completed localization of the coordinate swap) on the touched factor and 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

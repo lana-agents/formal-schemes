@@ -10,9 +10,6 @@ import FormalSchemes.GlueDataImageInter
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.SpfMap
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The product chart of `X ×_{Spf R} Y` as a preimage intersection of the projections
 
@@ -44,12 +41,13 @@ locally-closed-immersion diagonal of `X ×_{Spf R} Y ⟶ X × Y`).
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
 open CompletedTensorAwayInterchange CompletedTensorProduct
-
-open scoped Classical
 
 universe u
 

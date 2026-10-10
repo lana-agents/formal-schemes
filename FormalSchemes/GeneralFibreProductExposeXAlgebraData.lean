@@ -7,9 +7,6 @@ import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.GeneralFibreProductAlgebraData
 import FormalSchemes.GeneralFibreProductExposeX
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # A smart constructor for `AffineChartedFibreDatumX` from pure algebra data
 
@@ -91,6 +88,9 @@ to provide the six geometric fields by hand.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

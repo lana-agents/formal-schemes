@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductProjectionLeft
 import FormalSchemes.GeneralFibreProductExposeXStructMap
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The cone identity of the general fibre product `X ×_{Spf R} Spf B`
 
@@ -48,6 +45,9 @@ charts `A_i`, so `fibre_cone_comm` — which needs those instances — is not in
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

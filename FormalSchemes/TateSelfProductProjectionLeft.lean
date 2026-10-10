@@ -16,9 +16,6 @@ import FormalSchemes.TateSelfProductObjectInv
 import FormalSchemes.TateSelfProductTransitionInv
 import FormalSchemes.TateSelfProductDSigmaInv
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The first projection of the four-chart Tate self-fibre-product into `𝔈_q`
 
@@ -58,6 +55,9 @@ twelve pairs of **distinct** charts, splitting by the *difference type* of `i, j
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

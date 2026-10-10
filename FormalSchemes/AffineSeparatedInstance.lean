@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralSeparated
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The affine formal scheme `Spf A` is separated over `Spf R` (EGA I §10.15)
 
@@ -34,6 +31,9 @@ sharpened to a single index.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

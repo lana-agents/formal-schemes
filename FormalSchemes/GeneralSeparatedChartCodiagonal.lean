@@ -9,9 +9,6 @@ import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 import FormalSchemes.GeneralSeparatedChartPreimage
 import FormalSchemes.GlueDataImageInter
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The chart-restricted diagonal is `Spf` of the chart codiagonal (EGA I §10.15)
 
@@ -129,6 +126,9 @@ than as `_`.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum Topology
@@ -196,6 +196,7 @@ def chartCodiagonal (i j : DX.J) (h : i ≠ j) :
     (map_algebraMap_awayCompletion_eq I (DX.g i j)).le
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The chart codiagonal restricted to the first factor is the away-completion map `A i → A i{1/g}`
 — the ring map of the overlap's inclusion into the chart `i`. -/
 theorem chartCodiagonal_comp_inl (i j : DX.J) (h : i ≠ j) :
@@ -210,6 +211,7 @@ theorem chartCodiagonal_comp_inl (i j : DX.J) (h : i ≠ j) :
   exact RingHom.ext fun a => CompletedTensorProduct.lift_inl _
     (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ a
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The chart codiagonal restricted to the second factor is the away-completion map
 `A j → A j{1/g j i}` followed by the transition `(τ i j)⁻¹`. -/
 theorem chartCodiagonal_comp_inr (i j : DX.J) (h : i ≠ j) :
@@ -243,6 +245,7 @@ def chartCodiagonalMap (i j : DX.J) (h : i ≠ j) :
   CompletedTensorProduct.fibreLift (map_algebraMap_awayCompletion_eq I (DX.g i j)).le
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h) hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The chart-restricted diagonal followed by the first projection is the overlap's inclusion
 into the chart `i`** — `fibreLift_comp_pr₁` for the chart codiagonal. -/
 theorem chartCodiagonalMap_comp_fibrePr₁ (i j : DX.J) (h : i ≠ j) :
@@ -258,6 +261,7 @@ theorem chartCodiagonalMap_comp_fibrePr₁ (i j : DX.J) (h : i ≠ j) :
     CompletedTensorProduct.isAdicRing R I (DX.A i) (DX.A j) hI
   exact CompletedTensorProduct.fibreLift_comp_pr₁ _ _ _ hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The chart-restricted diagonal followed by the second projection is the overlap's inclusion
 into the chart `j`**, read through the datum's transition `τ i j`. -/
 theorem chartCodiagonalMap_comp_fibrePr₂ (i j : DX.J) (h : i ≠ j) :
@@ -405,6 +409,7 @@ theorem chartLift_comp_diagonal'
 
 /-! ### The two instances of the chart-lift identification -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The overlap's inclusion into `X`, read through the chart `j`.** The same morphism
 `X_i ∩ X_j ⟶ X` that the chart `i` presents as `basicOpenChart (g i j) ≫ ι_i` is presented by the
 chart `j` as `Spf` of the second structure map `overlapAlgSnd`, by the datum's glue relation
@@ -519,6 +524,7 @@ theorem preimage_range_diagonal'_eq_range_fibreLift
 
 /-! ### The overlap is the intersection of the two charts -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The image of the overlap `Spf(A i{1/g i j}^)` in `X` is `X_i ∩ X_j`.** The containment `⊇` is
 `LocallyRingedSpace.GlueData.range_ι_inter_subset` (two glued pieces meet only along the image of
 their overlap object); `⊆` is the glue relation `x_glue_rel`, which exhibits the same map as

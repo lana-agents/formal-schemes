@@ -7,9 +7,6 @@ import FormalSchemes.OpenImmersionSourceFormalScheme
 import FormalSchemes.AdicOnSections
 import FormalSchemes.OpenCoverHomExt
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Covering the source of an open immersion into `Spf J` by lifted basic-open charts
 
@@ -34,6 +31,9 @@ appealing to the false general "open immersions are adic" statement (issue 460).
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §§10.4, 10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 
@@ -64,6 +64,7 @@ namespace AlgebraicGeometry.FormalScheme
 
 variable {S : Type u} [CommRing S] [TopologicalSpace S] {J : Ideal S} [IsAdicRing J]
 
+omit [TopologicalSpace S] [IsAdicRing J] in
 /-- The lift of a basic-open chart of `Spf J` (whose range sits inside `range pf`) through the open
 immersion `pf` is again an open immersion. Mirrors `exists_lifted_affineChart`. -/
 theorem isOpenImmersion_lift_basicOpenChart {W : LocallyRingedSpace.{u}}

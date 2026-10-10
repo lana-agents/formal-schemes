@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicOverBaseChart
 import FormalSchemes.GlueOpenCoverFactorBothAlg
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The glued factor `xGlued` is adic over its structural morphism `xStructMap`
 
@@ -34,6 +31,9 @@ data replaced by `B`/`Y`.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4.6, §10.7, §10.12.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

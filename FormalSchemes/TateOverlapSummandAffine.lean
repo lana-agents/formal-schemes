@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateAwaySplit
 import FormalSchemes.TateOverlapChartIso
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The two summands of the Tate two-chart overlap are affine
 
@@ -59,6 +57,8 @@ into `A{1/x}^`, which `awaySplitEquiv_of` already computes.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1, §10.8.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

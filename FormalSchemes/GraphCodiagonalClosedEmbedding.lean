@@ -105,6 +105,7 @@ abbrev locY : annulusAlgebra R I q →ₐ[R] annulusOverlapY R I q :=
 
 /-! ### The two automorphisms of `A ⊗̂_R A` -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `id ⊗̂ flip` is surjective: it is an involution of `A ⊗̂_R A`, by functoriality of
 `CompletedTensorProduct.map` and the involutivity of the coordinate swap `annulusFlip`. -/
 theorem map_id_flip_surjective (hI : I.FG) :
@@ -115,6 +116,7 @@ theorem map_id_flip_surjective (hI : I.FG) :
   rw [← RingHom.comp_apply, ← map_comp, AlgHom.id_comp, annulusFlipHom_annulusFlipHom, map_id,
     RingHom.id_apply]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The swap `commHom : A ⊗̂_R A →+* A ⊗̂_R A` is surjective (it underlies `commEquiv`). -/
 theorem commHom_surjective_self (hI : I.FG) :
     Function.Surjective (commHom (R := R) (I := I) (A := annulusAlgebra R I q)
@@ -135,6 +137,7 @@ def graphCodiagX (hI : I.FG) :
 
 variable {R I q}
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 @[simp] theorem graphCodiagX_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     graphCodiagX R I q hI (inl R I _ _ a) = locX R I q a := by
   rw [graphCodiagX, RingHom.comp_apply, map_inl, AlgHom.id_apply, localizedCodiagInvX_inl]
@@ -264,6 +267,8 @@ variable
   [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
   [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
 
+omit [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
+  [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))] in
 /-- **The base map of `Spf ∇ˣ : Spf (A{1/x}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 This is the `x`-piece of the mixed-chart preimage of the Tate diagonal. -/
 theorem isClosedEmbedding_map_graphCodiagX (hI : I.FG) :
@@ -277,6 +282,8 @@ theorem isClosedEmbedding_map_graphCodiagX (hI : I.FG) :
     (annulusOverlapIdeal R I q) (graphCodiagX R I q hI)
     (graphCodiagX_le_comap hI) (graphCodiagX_surjective hI)
 
+omit [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
+  [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))] in
 /-- **The base map of `Spf ∇ʸ : Spf (A{1/y}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 This is the `y`-piece of the mixed-chart preimage of the Tate diagonal. -/
 theorem isClosedEmbedding_map_graphCodiagY (hI : I.FG) :

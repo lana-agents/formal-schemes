@@ -7,8 +7,6 @@ import FormalSchemes.BasicOpenDisjointUnion
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.TateSelfProductTripleOverlap
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The tensored Tate two-chart overlap is a single chart
 
@@ -69,6 +67,8 @@ and along `inr`.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

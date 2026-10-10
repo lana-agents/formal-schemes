@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductTransition
 import FormalSchemes.TateOverlapInversion
 
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The 𝔾m-inversion overlap transition isomorphisms of the Tate self-fibre-product
 
@@ -36,6 +33,9 @@ Assembled purely additively for issue 442a: it reuses all the chart-domain objec
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

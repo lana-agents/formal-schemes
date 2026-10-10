@@ -7,9 +7,6 @@ import FormalSchemes.GeneralDiagonalUnconditional
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.OpenCover
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Separatedness of a general formal scheme over `Spf R` (EGA I §10.15)
 
@@ -55,6 +52,9 @@ of the merged general-diagonal (487) and closed-immersion (492) infrastructure.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

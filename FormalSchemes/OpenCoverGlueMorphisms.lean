@@ -7,9 +7,6 @@ import FormalSchemes.OpenCoverHomExt
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.GlueDataCarrier
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Gluing morphisms out of an open cover of a formal scheme
 
@@ -46,6 +43,9 @@ so `LocallyRingedSpace.IsOpenImmersion.to_iso` applies. Precomposing the glued-o
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * Mathlib `AlgebraicGeometry.Scheme.OpenCover.glueMorphisms` / `fromGlued`.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

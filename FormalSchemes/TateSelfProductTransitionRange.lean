@@ -7,12 +7,6 @@ import FormalSchemes.TateSelfProductTripleOverlap
 import FormalSchemes.TateSelfProductTransition
 import FormalSchemes.TwoPatchFibreProductProjection
 
--- The completed-tensor interchange morphisms range over the nested localization/completion
--- towers of the completed tensor product, which are slow for the elaborator and the kernel;
--- raise the budgets (matching `TateSelfProductTripleOverlap.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Base-map / range tracking of the Tate self-product overlap transitions
 
@@ -53,6 +47,12 @@ range (secondFactorOverlapChart)` (`range_bothFactorOverlapChart_eq_inter_first_
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductTripleOverlap.lean`).
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

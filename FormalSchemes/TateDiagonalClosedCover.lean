@@ -7,9 +7,6 @@ import FormalSchemes.TateSeparated
 import Mathlib.Topology.LocalAtTarget
 import Mathlib.Topology.Sets.OpenCover
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The four-chart open cover of the Tate self-product and its diagonal charts
 
@@ -47,6 +44,9 @@ diagonal `diagChart`, whose base map is a closed embedding
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

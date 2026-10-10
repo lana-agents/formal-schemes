@@ -8,9 +8,6 @@ import FormalSchemes.GeneralSeparatedTopological
 import FormalSchemes.TateDiagonalClosedImmersion
 import FormalSchemes.TateFibreProductIso
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The Tate curve model is separated over `Spf R` (EGA I §10.15)
 
@@ -81,6 +78,9 @@ mode with type-ascribed `congrArg` lambdas.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -99,6 +99,7 @@ def tateSchemeDiagonal (hq : q ∈ I) (hI : I.FG) :
     tateCurveModel R I q hq hI ⟶ tateSelfProductInv R I q hq hI :=
   FormalScheme.Hom.mk (tateSelfProductDiagonal R I q hq hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- Its underlying locally-ringed-space morphism is the glued diagonal. -/
 theorem tateSchemeDiagonal_toLRSHom (hq : q ∈ I) (hI : I.FG) :
     (tateSchemeDiagonal R I q hq hI).toLRSHom = tateSelfProductDiagonal R I q hq hI := rfl

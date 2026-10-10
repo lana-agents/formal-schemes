@@ -6,11 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletedTensorAwayInterchangeSpf
 import FormalSchemes.PullbackRangeLRS
 
--- The interchange open immersions range over the nested localization/completion towers of the
--- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The triple overlap of two interchange charts is again an affine interchange chart
 
@@ -44,6 +39,11 @@ chart — the input to constructing the geometric triple-overlap cocycle `t'`/`t
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+-- The interchange open immersions range over the nested localization/completion towers of the
+-- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
+set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

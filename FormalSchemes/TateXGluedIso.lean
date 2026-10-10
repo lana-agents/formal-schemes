@@ -8,8 +8,6 @@ import FormalSchemes.TateCurveExposeXDatum
 import FormalSchemes.TateChartTransitionInvAlgEq
 import FormalSchemes.TateOverlapSummandAffine
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The glued object of the Tate `X`-expose datum is the Tate curve model
 
@@ -101,6 +99,8 @@ completion types.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

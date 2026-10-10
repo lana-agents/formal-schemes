@@ -6,10 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateDiagonalPreimageBounds
 import FormalSchemes.TateMixedChartDescent
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-set_option maxRecDepth 8000
-
 /-!
 # Global closedness of the range of the Tate self-product diagonal
 
@@ -66,6 +62,10 @@ That is eight branches, tabulated in `mem_range_of_branch`'s uses below.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+set_option maxRecDepth 8000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace Topology
@@ -116,24 +116,28 @@ section Legs
 
 variable (hI : I.FG)
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dAX` leg of the second-factor overlap chart. -/
 theorem inl_comp_secondFactorOverlapChart :
     (coprod.inl : dAX R I q ⟶ dAX R I q ⨿ dAY R I q) ≫ secondFactorOverlapChart R I q hI =
       rightInterchangeOpenImmersion (A := annulusAlgebra R I q) I (overlapX R I q) hI :=
   coprod.inl_desc _ _
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dAY` leg of the second-factor overlap chart. -/
 theorem inr_comp_secondFactorOverlapChart :
     (coprod.inr : dAY R I q ⟶ dAX R I q ⨿ dAY R I q) ≫ secondFactorOverlapChart R I q hI =
       rightInterchangeOpenImmersion (A := annulusAlgebra R I q) I (overlapY R I q) hI :=
   coprod.inr_desc _ _
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dXA` leg of the first-factor overlap chart. -/
 theorem inl_comp_firstFactorOverlapChart :
     (coprod.inl : dXA R I q ⟶ dXA R I q ⨿ dYA R I q) ≫ firstFactorOverlapChart R I q hI =
       interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapX R I q) hI :=
   coprod.inl_desc _ _
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dYA` leg of the first-factor overlap chart. -/
 theorem inr_comp_firstFactorOverlapChart :
     (coprod.inr : dYA R I q ⟶ dXA R I q ⨿ dYA R I q) ≫ firstFactorOverlapChart R I q hI =
@@ -361,6 +365,7 @@ theorem isClosed_range_tateSelfProductDiagonal_base (hq : q ∈ I) (hI : I.FG) :
   | true, false =>
     exact isClosed_coe_preimage_range_diagonal_offChart R I q hq hI (⟨true⟩ : ULift.{u} Bool)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The base map of the glued Tate self-product diagonal is a topological embedding.** It is a
 section of the first projection `pr₁` (`tateSelfProductDiagonal_comp_pr₁`), hence a
 left-invertible continuous map. -/

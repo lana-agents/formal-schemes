@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothObject
 import FormalSchemes.CompletedTensorAwayInterchangeBoth
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Object-level dispatch for the two-sided fibre product `X ×_{Spf R} Y` from algebra data
 
@@ -50,6 +47,9 @@ self-inverse law reduces uniformly to `mapSpfIso`'s `hom`-then-`symm.hom` cancel
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -58,8 +58,6 @@ open CompletedTensorAwayInterchange CompletedTensorProduct
 universe u
 
 namespace AlgebraicGeometry
-
-open scoped Classical
 
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {JX JY : Type u}
@@ -89,15 +87,17 @@ theorem eqAlgEquivB_symm {j j' : JY} (h : j = j') :
 
 /-! ### The dispatched overlap object -/
 
+open Classical in
 /-- **The coordinate-difference-dispatched overlap object** of two distinct product-index charts of
-`X ×_{Spf R} Y`, over the concrete double-tensor charts. The finite-generation witness `hI` is
-carried only to pin the base ideal `I` (hence `R`) at use sites. -/
-def bothAlgDataV (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
-    (p p' : JX × JY) (h : p ≠ p') : LocallyRingedSpace.{u} :=
-  if h1 : p.1 = p'.1 then
+`X ×_{Spf R} Y`, over the concrete double-tensor charts. The finite-generation witness `_hI` and
+the distinctness witness `_h` are carried only to pin the base ideal `I` (hence `R`) and the domain
+at use sites. -/
+def bothAlgDataV (_hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
+    (p p' : JX × JY) (_h : p ≠ p') : LocallyRingedSpace.{u} :=
+  if _h1 : p.1 = p'.1 then
     locallyRingedSpaceObj (idealOfDefinition R I (A p.1)
       (awayCompletion (I.map (algebraMap R (B p.2))) (gY p.2 p'.2)))
-  else if h2 : p.2 = p'.2 then
+  else if _h2 : p.2 = p'.2 then
     locallyRingedSpaceObj (idealOfDefinition R I
       (awayCompletion (I.map (algebraMap R (A p.1))) (gX p.1 p'.1)) (B p.2))
   else
@@ -106,7 +106,7 @@ def bothAlgDataV (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
       (awayCompletion (I.map (algebraMap R (B p.2))) (gY p.2 p'.2)))
 
 /-- Reduction of `bothAlgDataV` in the *second-coordinate-differs* shape (`p.1 = p'.1`). -/
-theorem bothAlgDataV_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+theorem bothAlgDataV_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' : JX × JY) (h : p ≠ p') (h1 : p.1 = p'.1) :
     bothAlgDataV hI gX gY p p' h =
       locallyRingedSpaceObj (idealOfDefinition R I (A p.1)
@@ -115,7 +115,7 @@ theorem bothAlgDataV_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : 
 
 /-- Reduction of `bothAlgDataV` in the *first-coordinate-differs* shape (`p.1 ≠ p'.1`,
 `p.2 = p'.2`). -/
-theorem bothAlgDataV_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+theorem bothAlgDataV_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' : JX × JY) (h : p ≠ p') (h1 : p.1 ≠ p'.1) (h2 : p.2 = p'.2) :
     bothAlgDataV hI gX gY p p' h =
       locallyRingedSpaceObj (idealOfDefinition R I
@@ -123,7 +123,7 @@ theorem bothAlgDataV_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : 
   unfold bothAlgDataV; rw [dif_neg h1, dif_pos h2]
 
 /-- Reduction of `bothAlgDataV` in the *both-coordinates-differ* shape. -/
-theorem bothAlgDataV_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+theorem bothAlgDataV_both (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' : JX × JY) (h : p ≠ p') (h1 : p.1 ≠ p'.1) (h2 : p.2 ≠ p'.2) :
     bothAlgDataV hI gX gY p p' h =
       locallyRingedSpaceObj (idealOfDefinition R I
@@ -133,8 +133,9 @@ theorem bothAlgDataV_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' :
 
 /-! ### The dispatched overlap immersion and its open-immersion witness -/
 
+open Classical in
 /-- **The coordinate-difference-dispatched overlap immersion** `bothAlgDataV p p' → Spf(A ⊗̂ B)`. -/
-def bothAlgDataF (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataF (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' : JX × JY) (h : p ≠ p') :
     bothAlgDataV hI gX gY p p' h ⟶
       locallyRingedSpaceObj (idealOfDefinition R I (A p.1) (B p.2)) :=
@@ -149,7 +150,7 @@ def bothAlgDataF (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
       bothInterchangeOpenImmersion I (gX p.1 p'.1) (gY p.2 p'.2) hI
 
 /-- **The overlap immersion `bothAlgDataF` is an open immersion.** -/
-theorem bothAlgDataHf (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+theorem bothAlgDataHf (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' : JX × JY) (h : p ≠ p') :
     LocallyRingedSpace.IsOpenImmersion (bothAlgDataF hI gX gY p p' h) := by
   unfold bothAlgDataF
@@ -163,10 +164,11 @@ theorem bothAlgDataHf (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY,
 
 /-! ### The dispatched transition and its self-inverse law -/
 
+open Classical in
 /-- **The coordinate-difference-dispatched transition** `bothAlgDataV p p' → bothAlgDataV p' p` of
 the two overlap objects of a pair of distinct charts. The shared coordinate is carried by
 `eqAlgEquivA`/`eqAlgEquivB`, the differing one(s) by `τX`/`τY`. -/
-def bothAlgDataT (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataT (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (τX : ∀ (i i' : JX), i ≠ i' →
       (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
@@ -193,7 +195,7 @@ def bothAlgDataT (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
 
 section Reductions
 
-variable (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+variable (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
   (τX : ∀ (i i' : JX), i ≠ i' →
     (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
       awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
@@ -243,7 +245,7 @@ theorem mapSpfIso_hom_symm_hom (hI : I.FG) {A₀ B₀ A₀' B₀' : Type u} [Com
   exact (mapSpfIso hI e₁ e₂).hom_inv_id
 
 /-- **The dispatched transitions are mutually inverse.** -/
-theorem bothAlgDataT_inv (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+theorem bothAlgDataT_inv (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (τX : ∀ (i i' : JX), i ≠ i' →
       (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))

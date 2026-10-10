@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ClosedImmersionSplitMono
 import FormalSchemes.TateDiagonalClosedRange
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The Tate diagonal is a closed immersion (EGA I §10.15)
 
@@ -70,6 +67,9 @@ is a separate job. Once it is done, `FormalScheme.isClosedImmersion_of_retractio
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 * [The Stacks Project, Tag 01HJ](https://stacks.math.columbia.edu/tag/01HJ).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

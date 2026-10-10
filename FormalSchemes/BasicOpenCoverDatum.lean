@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenCoverTransitions
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The basic-open cover datum: `Spf A` presented by a family of basic opens
 
@@ -86,6 +83,9 @@ this tower glues the charts and only then compares the result back to `Spf A`.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

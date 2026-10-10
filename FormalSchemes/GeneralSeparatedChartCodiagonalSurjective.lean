@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayCompletionSurjective
 import FormalSchemes.GeneralSeparatedChartCodiagonal
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Surjectivity of the chart codiagonal of an arbitrary datum (EGA I §10.15)
 
@@ -79,6 +76,9 @@ every identity against that.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits FormalSpectrum
@@ -94,6 +94,7 @@ variable [TopologicalSpace R] [IsAdicRing I]
 variable {BX : Type u} [CommRing BX] [Algebra R BX]
 variable (DX : AffineChartedFibreDatumX R I hI BX)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The chart codiagonal on the first factor is the away-completion map, pointwise. -/
 theorem chartCodiagonal_inl (i j : DX.J) (h : i ≠ j) :
     letI := DX.commRing; letI := DX.algebra
@@ -102,6 +103,7 @@ theorem chartCodiagonal_inl (i j : DX.J) (h : i ≠ j) :
   letI := DX.commRing; letI := DX.algebra
   exact fun c => RingHom.congr_fun (DX.chartCodiagonal_comp_inl i j h) c
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The chart codiagonal on the second factor is the away-completion map of the `j`-th chart read
 through the datum's transition, pointwise. -/
 theorem chartCodiagonal_inr (i j : DX.J) (h : i ≠ j) :
@@ -112,6 +114,7 @@ theorem chartCodiagonal_inr (i j : DX.J) (h : i ≠ j) :
   letI := DX.commRing; letI := DX.algebra
   exact fun c => RingHom.congr_fun (DX.chartCodiagonal_comp_inr i j h) c
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The chart codiagonal is a map of `R`-algebras, in the composite spelling the ideal computation
 below consumes. -/
 theorem chartCodiagonal_comp_algebraMap (i j : DX.J) (h : i ≠ j) :

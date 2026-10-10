@@ -7,11 +7,6 @@ import FormalSchemes.CompletedTensorAwayInterchangeRightPullback
 import FormalSchemes.CompletedTensorAwayInterchangeBoth
 import FormalSchemes.CompletedTensorAwayInterchangePullbackLegs
 
--- The interchange open immersions range over the nested localization/completion towers of the
--- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The mixed (first × second) interchange triple overlap, and its two legs
 
@@ -44,6 +39,11 @@ the both-localized chart `both = bothInterchangeOpenImmersion I a b hI`, whose r
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+-- The interchange open immersions range over the nested localization/completion towers of the
+-- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

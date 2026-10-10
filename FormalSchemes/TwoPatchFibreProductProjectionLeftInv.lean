@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TwoPatchFibreProductProjectionLeft
 import FormalSchemes.TateChartTransitionInvAlgEq
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The `y`-side bridge square for the 𝔾m-inversion two-patch first projection
 
@@ -33,6 +30,9 @@ proof cites `annulusChartTransitionInvAlg`/`annulusChartTransitionInvSpf`
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

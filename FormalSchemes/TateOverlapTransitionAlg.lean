@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateAwaySplit
 import FormalSchemes.TateSelfProductTransitionInv
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The `R`-algebra transition of the Tate two-chart overlap, presented as a single chart
 
@@ -81,6 +79,8 @@ once, generically, as `AlgEquiv.symm_trans_trans_symm_of_symm_eq`.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

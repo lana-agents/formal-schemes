@@ -7,9 +7,6 @@ import FormalSchemes.TateSelfProductProjectionLeft
 import FormalSchemes.TateSelfProductProjectionRight
 import FormalSchemes.AffineFibreProduct
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The cone identity of the four-chart Tate self-fibre-product over `Spf R`
 
@@ -41,6 +38,9 @@ instance of `CompletedTensorProduct.fibre_cone_comm`.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

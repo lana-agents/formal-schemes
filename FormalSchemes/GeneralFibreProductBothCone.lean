@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothProjectionLeft
 import FormalSchemes.GeneralFibreProductBothProjectionRight
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The cone identity of the general two-sided fibre product `X ×_{Spf R} Y`
 
@@ -51,6 +48,9 @@ so `fibre_cone_comm` — which needs those instances — is not invoked directly
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductTripleOverlap
 import FormalSchemes.TateSelfProductTransition
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The glue-datum skeleton of the four-chart Tate self-fibre-product
 
@@ -53,6 +50,9 @@ The three families are dispatched by an explicit 16-way match on the two chart v
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

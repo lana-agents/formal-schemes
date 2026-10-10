@@ -5,10 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateGraphCodiagonalFactor
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-set_option maxRecDepth 8000
-
 /-!
 # The graph lifts through the `x`-localized overlap summands
 
@@ -43,6 +39,10 @@ together with their `Spf`-level forms `spfGraphLift…` and the geometric factor
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+set_option maxRecDepth 8000
 
 noncomputable section
 
@@ -82,6 +82,7 @@ def graphChartAlgXY (hI : I.FG) :
       annulusOverlapY R I q :=
   (graphChartAlgX R I q).trans (annulusOverlapInversionAlg R I q hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphChartAlgXY_algebraMap (hI : I.FG) (a : annulusAlgebra R I q) :
     graphChartAlgXY R I q hI
         (algebraMap (annulusAlgebra R I q)
@@ -144,12 +145,14 @@ def graphLiftAXtoX :
 
 /-! #### Legs -/
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftAXtoY_inl (a : annulusAlgebra R I q) :
     graphLiftAXtoY R I q hI (inl R I _ _ a) = locY R I q a := by
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
   rw [graphLiftAXtoY, lift_inl]
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftAXtoY_inr
     (z : awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)) :
     graphLiftAXtoY R I q hI (inr R I _ _ z) = graphChartAlgXY R I q hI z := by
@@ -158,6 +161,7 @@ theorem graphLiftAXtoY_inr
   rw [graphLiftAXtoY, lift_inr]
   rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftXAtoX_inl
     (z : awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)) :
     graphLiftXAtoX R I q hI (inl R I _ _ z) = graphChartAlgX R I q z := by
@@ -166,12 +170,14 @@ theorem graphLiftXAtoX_inl
   rw [graphLiftXAtoX, lift_inl]
   rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftXAtoX_inr (a : annulusAlgebra R I q) :
     graphLiftXAtoX R I q hI (inr R I _ _ a) = invFlipLocX R I q hI a := by
   haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
   rw [graphLiftXAtoX, lift_inr]
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftXAtoY_inl
     (z : awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)) :
     graphLiftXAtoY R I q hI (inl R I _ _ z) = graphChartAlgXY R I q hI z := by
@@ -180,18 +186,21 @@ theorem graphLiftXAtoY_inl
   rw [graphLiftXAtoY, lift_inl]
   rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftXAtoY_inr (a : annulusAlgebra R I q) :
     graphLiftXAtoY R I q hI (inr R I _ _ a) = locY R I q a := by
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
   rw [graphLiftXAtoY, lift_inr]
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftAXtoX_inl (a : annulusAlgebra R I q) :
     graphLiftAXtoX R I q hI (inl R I _ _ a) = invFlipLocX R I q hI a := by
   haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
   rw [graphLiftAXtoX, lift_inl]
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftAXtoX_inr
     (z : awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q)) :
     graphLiftAXtoX R I q hI (inr R I _ _ z) = graphChartAlgX R I q z := by
@@ -202,6 +211,7 @@ theorem graphLiftAXtoX_inr
 
 /-! #### Continuity -/
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftAXtoY_mem_pow (m : ℕ)
     {x : CompletedTensorProduct R I (annulusAlgebra R I q)
       (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))}
@@ -212,6 +222,7 @@ theorem graphLiftAXtoY_mem_pow (m : ℕ)
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
   exact lift_mem_pow _ _ _ _ hI m hx
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftXAtoX_mem_pow (m : ℕ)
     {x : CompletedTensorProduct R I
       (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))
@@ -224,6 +235,7 @@ theorem graphLiftXAtoX_mem_pow (m : ℕ)
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
   exact lift_mem_pow _ _ _ _ hI m hx
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftXAtoY_mem_pow (m : ℕ)
     {x : CompletedTensorProduct R I
       (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))
@@ -236,6 +248,7 @@ theorem graphLiftXAtoY_mem_pow (m : ℕ)
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
   exact lift_mem_pow _ _ _ _ hI m hx
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftAXtoX_mem_pow (m : ℕ)
     {x : CompletedTensorProduct R I (annulusAlgebra R I q)
       (awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapX R I q))}
@@ -272,6 +285,7 @@ section Factor
 
 variable (hI : I.FG)
 
+omit [IsNoetherianRing R] in
 private theorem graphCodiagX_mem_pow (m : ℕ)
     {x : CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q)}
     (hx : x ∈ (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) ^ m) :
@@ -281,6 +295,7 @@ private theorem graphCodiagX_mem_pow (m : ℕ)
     rw [Ideal.map_pow, map_graphCodiagX_eq]
   exact h.le (Ideal.mem_map_of_mem _ hx)
 
+omit [IsNoetherianRing R] in
 private theorem graphCodiagY_mem_pow (m : ℕ)
     {x : CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q)}
     (hx : x ∈ (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) ^ m) :

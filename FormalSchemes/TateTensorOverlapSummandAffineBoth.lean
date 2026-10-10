@@ -7,8 +7,6 @@ import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 import FormalSchemes.TateTensorOverlapChartIsoBoth
 import FormalSchemes.TateTensorOverlapSummandAffine
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The four summands of the tensored both-factor Tate overlap
 
@@ -57,6 +55,8 @@ the packaged form; see the section note at the end.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.8, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

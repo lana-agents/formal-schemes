@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.GeneralFibreProductExposeXAlgebraData
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The first genuinely three-chart affine-charted formal scheme
 
@@ -76,6 +73,9 @@ rewrites. The only real work is exhibiting the divisibilities that produce the u
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

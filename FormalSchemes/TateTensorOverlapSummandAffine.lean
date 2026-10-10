@@ -7,8 +7,6 @@ import FormalSchemes.CompletedTensorAwayInterchangeMixedPullback
 import FormalSchemes.TateOverlapSummandAffine
 import FormalSchemes.TateTensorOverlapChartIso
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The summands of the one-sided tensored Tate overlaps are `Spf` of the splitting's projections
 
@@ -76,6 +74,8 @@ to conjugate 703's projection into the spelling 738/739 use.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.8, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

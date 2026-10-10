@@ -7,9 +7,6 @@ import FormalSchemes.AwayCongrAlgebraMap
 import FormalSchemes.GeneralSeparatedChartCodiagonalSurjective
 import FormalSchemes.BasicOpenCoverDatum
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # A basic-open cover of a formal affine is separated (EGA I §10.15)
 
@@ -111,6 +108,9 @@ issue 778 — `AlgHom.comp_algebraMap`'s coercion, and `rw` failing to build a m
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -191,6 +191,7 @@ theorem tau_symm_algebraMap (hI : I.FG) (i j : J) (a : A) :
 def chartInvSelf (i : J) : chartAlgebra I f i :=
   algebraMap (Localization.Away (f i)) (chartAlgebra I f i) (IsLocalization.Away.invSelf (f i))
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `f_i` is inverted in its own chart. -/
 theorem chartInvSelf_mul (i : J) :
     chartInvSelf I f i * algebraMap A (chartAlgebra I f i) (f i) = 1 := by
@@ -262,6 +263,7 @@ theorem chartCodiagonal_inr_chartInvSelf (hI : I.FG) (i j : J) (hij : i ≠ j) :
   rw [datumX_chartCodiagonal_inr I f B hI i j hij, hfj, ← map_mul, ← map_mul, chartInvSelf_mul,
     map_one, map_one]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The image of the overlap element in the overlap chart is the product of the images of `f_i` and
 `f_j`. -/
 theorem algebraMap_overlapElt (i j : J) :

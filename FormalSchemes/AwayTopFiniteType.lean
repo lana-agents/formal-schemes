@@ -7,13 +7,6 @@ import FormalSchemes.AwayCompletionSurjective
 import FormalSchemes.BaseChange
 import FormalSchemes.TopFiniteType
 
--- `awayEval_comp_coordIncl` compares two ring homomorphisms out of `R{X₁, …, Xₙ}` whose
--- targets are nested completions of a localization; the `isDefEq` checks that unfold
--- `awayCompletion`/`RestrictedPowerSeries` through `AdicCompletion` are what costs the
--- heartbeats. 400000 and 800000 both time out; 1600000 leaves headroom.
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 400000
-
 /-!
 # A basic-open chart of a tf-type formal affine is tf-type (EGA I §10.13)
 
@@ -80,6 +73,13 @@ the bridge, and it is used explicitly wherever the two spellings meet — see
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.13.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.
 -/
+
+-- `awayEval_comp_coordIncl` compares two ring homomorphisms out of `R{X₁, …, Xₙ}` whose
+-- targets are nested completions of a localization; the `isDefEq` checks that unfold
+-- `awayCompletion`/`RestrictedPowerSeries` through `AdicCompletion` are what costs the
+-- heartbeats. 400000 and 800000 both time out; 1600000 leaves headroom.
+set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 400000
 
 noncomputable section
 

@@ -78,14 +78,20 @@ diagonal `Δ_{A/R}` (`CompletedTensorProduct.diagonal`). -/
 def codiagonal : CompletedTensorProduct R I A A →+* A :=
   lift (I.map (algebraMap R A)) (le_refl _) (AlgHom.id R A) (AlgHom.id R A)
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 @[simp]
 theorem codiagonal_inl (a : A) : codiagonal R I A (inl R I A A a) = a := by
   rw [codiagonal, lift_inl, AlgHom.id_apply]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 @[simp]
 theorem codiagonal_inr (a : A) : codiagonal R I A (inr R I A A a) = a := by
   rw [codiagonal, lift_inr, AlgHom.id_apply]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- The codiagonal `∇ : A ⊗̂_R A →+* A` is **surjective**: it splits the canonical inclusion
 `inl : A → A ⊗̂_R A`. This is the ring-level input to `Δ_{A/R}` being a closed immersion. -/
 theorem codiagonal_surjective : Function.Surjective (codiagonal R I A) :=

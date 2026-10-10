@@ -7,12 +7,6 @@ import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.CompletedTensorAwayInterchangeSpf
 import FormalSchemes.CoproductOpenImmersion
 
--- The completed-tensor interchange morphisms range over the nested localization/completion
--- towers of the completed tensor product, which are slow for the elaborator and the kernel;
--- raise the budgets (matching `CompletedTensorAwayInterchangeSpf.lean`).
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The base-changed overlap chart of the Tate self-fibre-product
 
@@ -56,6 +50,12 @@ one-factor-differing chart shape) that the eventual four-chart glue of `𝔈_q �
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7, §9.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.13.
 -/
+
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `CompletedTensorAwayInterchangeSpf.lean`).
+set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

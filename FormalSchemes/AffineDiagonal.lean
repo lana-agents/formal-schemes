@@ -73,6 +73,7 @@ def diagonal (hI : I.FG) :
       locallyRingedSpaceObj (idealOfDefinition R I A A) :=
   fibreLift (le_refl _) (AlgHom.id R A) (AlgHom.id R A) hI
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The diagonal is a **section of the first projection**: `Δ_{A/R} ≫ pr₁ = 𝟙 (Spf A)`. -/
 theorem diagonal_comp_pr₁ (hI : I.FG) :
     diagonal (A := A) hI ≫ fibrePr₁ (R := R) (A := A) (B := A) =
@@ -80,6 +81,7 @@ theorem diagonal_comp_pr₁ (hI : I.FG) :
   rw [diagonal, fibreLift_comp_pr₁]
   exact locallyRingedSpaceMap_id (I := I.map (algebraMap R A))
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The diagonal is a **section of the second projection**: `Δ_{A/R} ≫ pr₂ = 𝟙 (Spf A)`. -/
 theorem diagonal_comp_pr₂ (hI : I.FG) :
     diagonal (A := A) hI ≫ fibrePr₂ (R := R) (A := A) (B := A) =

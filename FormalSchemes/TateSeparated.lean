@@ -9,9 +9,6 @@ import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.ClosedImmersionSections
 import FormalSchemes.ClosedImmersionSplitMono
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The diagonal of the Tate curve model and its separatedness over `Spf R`
 
@@ -78,6 +75,9 @@ the `ULift (Bool × Bool)` object-defeq wall, reducing per chart to the affine s
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

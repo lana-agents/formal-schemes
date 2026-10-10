@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductBothAlgebraDataObject
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Range of the dispatched product-overlap immersion of `X ×_{Spf R} Y`
 
@@ -38,6 +35,9 @@ files had also restated, and it now lives in `FormalSchemes.LocallyRingedSpaceRa
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -47,14 +47,13 @@ universe u
 
 namespace AlgebraicGeometry
 
-open scoped Classical
-
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {JX JY : Type u}
 variable {A : JX → Type u} {B : JY → Type u}
 variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
 variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
 
+open Classical in
 /-- **The underlying-space range of the dispatched product-overlap immersion.** For distinct
 product-index charts `p`, `p'` of `X ×_{Spf R} Y`, the range of the overlap immersion
 `bothAlgDataF hI gX gY p p' h` in the chart `Spf(A_{p.1} ⊗̂_R B_{p.2})` is the intersection of the

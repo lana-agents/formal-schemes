@@ -71,6 +71,9 @@ variable [TopologicalSpace B] [IsAdicRing (I.map (algebraMap R B))]
 variable [TopologicalSpace A'] [IsAdicRing (I.map (algebraMap R A'))]
 variable [TopologicalSpace B'] [IsAdicRing (I.map (algebraMap R B'))]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B]
+  [IsAdicRing (Ideal.map (algebraMap R B) I)] [TopologicalSpace B']
+  [IsAdicRing (Ideal.map (algebraMap R B') I)] in
 /-- **Naturality of the first projection under `mapSpf`.** The functorial morphism of formal
 spectra commutes with the first projections and the induced map `Spf f` of the first factor. -/
 theorem mapSpf_comp_fibrePr₁ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') :
@@ -94,6 +97,9 @@ theorem mapSpf_comp_fibrePr₁ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R]
   exact locallyRingedSpaceMap_congr _ _ _ _ _ _
     (RingHom.ext fun a => map_inl hI f g a)
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A]
+  [IsAdicRing (Ideal.map (algebraMap R A) I)] [TopologicalSpace A']
+  [IsAdicRing (Ideal.map (algebraMap R A') I)] in
 /-- **Naturality of the second projection under `mapSpf`.** The functorial morphism of formal
 spectra commutes with the second projections and the induced map `Spf g` of the second factor. -/
 theorem mapSpf_comp_fibrePr₂ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') :

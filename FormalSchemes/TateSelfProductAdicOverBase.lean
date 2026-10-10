@@ -7,9 +7,6 @@ import FormalSchemes.TateSelfProductCone
 import FormalSchemes.AdicOverBaseChart
 import FormalSchemes.AffineFibreProductLRS
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The Tate self-fibre product is adic over `Spf R`
 
@@ -64,6 +61,9 @@ the computation is wanted, not the agreement.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

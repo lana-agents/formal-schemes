@@ -115,6 +115,7 @@ theorem oneChartXStructMapChart :
       locallyRingedSpaceMap I (I.map (algebraMap R A)) (algebraMap R A) Ideal.le_comap_map :=
   rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The one-chart gluing isomorphism lies over `Spf R`**, inverse spelling: its inverse followed
 by the glued structural morphism is the structural morphism of `Spf A`.
 

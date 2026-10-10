@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductCocycle
 import FormalSchemes.TwoPatchFibreProduct
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The four-chart Tate self-fibre-product `𝔈_q ×_{Spf R} 𝔈_q` as a glued formal scheme
 
@@ -46,6 +43,9 @@ the `Bool × Bool`-indexed fields, converting `i ≠ j` to `i.down ≠ j.down` v
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

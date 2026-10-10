@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.LocallyFG
 import FormalSchemes.AdicOnSections
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Adic-over-base affine charts and the adic-over-base neighborhood basis
 
@@ -53,6 +50,9 @@ missing adic-over-base bound.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4.6, §10.7, §10.12.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

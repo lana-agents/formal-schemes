@@ -5,12 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateSelfProductGlueTPrime
 
--- The completed-tensor interchange charts range over the nested localization/completion towers of
--- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
--- (matching `TateSelfProductGlueTPrime.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # `tateSelfProductGlueT'` is an isomorphism (the cocycle input for brick c3)
 
@@ -46,6 +40,12 @@ and `t '' univ = univ` is exactly surjectivity.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * Mathlib `CategoryTheory.GlueData'` (the `cocycle` field consumes iso `t'`).
 -/
+
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

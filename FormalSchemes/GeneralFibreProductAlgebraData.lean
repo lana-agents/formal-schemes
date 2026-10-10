@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductAffineBase
 import FormalSchemes.CompletedTensorAwayInterchangePullbackLegs
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # A smart constructor for `AffineChartedFibreDatum` from pure algebra data
 
@@ -44,6 +41,9 @@ all vacuous (no pairwise-distinct triple exists on `ULift Bool`).
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

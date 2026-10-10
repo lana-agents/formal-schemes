@@ -8,9 +8,6 @@ import FormalSchemes.CompletedTensorAwayInterchangePr
 import FormalSchemes.CompletedTensorMapSpfPr
 import FormalSchemes.GlueMorphisms
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The second projection of the two-patch fibre product `X ×_{Spf R} Spf B`
 
@@ -51,6 +48,9 @@ itself keeps `B` a bare `R`-algebra.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

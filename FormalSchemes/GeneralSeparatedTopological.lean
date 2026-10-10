@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ClosedImmersionSplitMono
 import FormalSchemes.GeneralSeparated
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Separatedness over `Spf R` is a purely topological condition (EGA I §10.15)
 
@@ -49,6 +46,9 @@ hypothesis.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

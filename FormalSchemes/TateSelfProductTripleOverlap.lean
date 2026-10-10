@@ -6,12 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductBothOverlap
 import FormalSchemes.PullbackRangeLRS
 
--- The completed-tensor interchange morphisms range over the nested localization/completion
--- towers of the completed tensor product, which are slow for the elaborator and the kernel;
--- raise the budgets (matching `TateSelfProductBothOverlap.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Triple overlaps of the four-chart Tate self-fibre-product glue
 
@@ -52,6 +46,12 @@ the geometric input the cocycle construction consumes, reducing it to summand tr
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * Mathlib `AlgebraicGeometry.Scheme.Pullback` (the scheme-level analogue of the glue cocycle).
 -/
+
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductBothOverlap.lean`).
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

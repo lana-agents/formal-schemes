@@ -80,6 +80,8 @@ theorem mem_zeroLocus_ker_of_ker_le
       p.asIdeal := Ideal.map_le_iff_le_comap.mpr hp
   exact fun z hz => hp' (hker hz)
 
+omit [TopologicalSpace C] [TopologicalSpace D] [TopologicalSpace E] [TopologicalSpace A]
+  [IsAdicRing IC] [IsAdicRing ID] [IsAdicRing IE] [IsAdicRing IA] in
 /-- **Preimage of the range of a closed immersion.** For surjections `c : C →+* A`, `g : D →+* E`
 and any adic map `φ : C →+* D`, if the level-`0` kernel of `g` is contained in the ideal generated
 by the image under `φ` of the level-`0` kernel of `c`, then
@@ -157,6 +159,8 @@ private theorem mem_bot_pow_of_mem {S : Type u} [CommRing S]
     rw [hb, Ideal.mem_bot]
     exact hF x (Ideal.pow_le_self hm.ne' hx)
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A B)]
+  [IsAdicRing (idealOfDefinition R I A B)] in
 /-- **The graph-relation criterion.** Let `g : A ⊗̂_R B →+* E` be continuous with a continuous
 section `s : E →+* A ⊗̂_R B` (`g ∘ s` need not be the identity — only the displayed relations are
 used), and let `K` be an ideal of `A ⊗̂_R B` containing the ideal of definition and the two *graph
@@ -208,6 +212,8 @@ variable [TopologicalSpace (CompletedTensorProduct R I A A)]
 variable [TopologicalSpace (CompletedTensorProduct R I A₁ B₁)]
   [IsAdicRing (idealOfDefinition R I A₁ B₁)]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- The two legs of `A ⊗̂_R A` agree on the codiagonal, so their difference lies in `ker ∇`: this is
 the generator of the diagonal ideal. -/
 theorem inl_sub_inr_mem_ker_codiagonal (a : A) :
@@ -225,6 +231,8 @@ theorem map_inl_sub_map_inr_mem {S : Type u} [CommRing S]
   rw [← map_sub]
   exact Ideal.mem_map_of_mem _ (inl_sub_inr_mem_ker_codiagonal a)
 
+omit [TopologicalSpace (CompletedTensorProduct R I A₁ B₁)]
+  [IsAdicRing (idealOfDefinition R I A₁ B₁)] in
 /-- **The preimage of the affine diagonal locus lies in the range of `Spf g`.** Let
 `φ : A ⊗̂_R A →+* A₁ ⊗̂_R B₁` be adic and let `g : A₁ ⊗̂_R B₁ →+* E` be an adic surjection
 admitting a continuous section `s`. If the two *graph relations* `inl a - s (g (inl a))` and

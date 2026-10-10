@@ -7,9 +7,6 @@ import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.GeneralFibreProductLiftAdic
 import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The identity law of the general fibre product's universal property
 
@@ -52,6 +49,9 @@ That comparison is deliberately not attempted here — it needs a statement of w
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

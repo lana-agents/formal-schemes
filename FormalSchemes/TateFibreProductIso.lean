@@ -8,9 +8,6 @@ import FormalSchemes.TateFibreOverlapTransition
 import FormalSchemes.TateFibreProductHom
 import FormalSchemes.TateSelfProductAdicOverBase
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # `𝔈_q ×_{Spf R} 𝔈_q`: the generic fibre product is the hand-built four-chart object
 
@@ -101,6 +98,9 @@ needs it anyway.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -167,6 +167,7 @@ def glueOut
       congr 1
       exact hk p p' hpp))
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `glueOut` restricts to `k p` along each glue inclusion. -/
 theorem ι_glueOut
     (hV : letI := D.commRingA; letI := D.algebraA; letI := D.commRingB; letI := D.algebraB
@@ -218,6 +219,7 @@ theorem tateSelfProduct_glue_raw_inv (hq : q ∈ I) (hI : I.FG) {i j : Bool × B
 
 /-! ### The overlap obligation -/
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 /-- The overlap obligation of `Ψ`, at the level of the raw algebra data. -/
 theorem tatePsi_overlap (hq : q ∈ I) (hI : I.FG)
     (p p' : ULift.{u} Bool × ULift.{u} Bool) (h : p ≠ p') :
@@ -250,6 +252,7 @@ def tateFibreProductPsi (hq : q ∈ I) (hI : I.FG) :
     (fun p => (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨tateFibreIdx p⟩)
     (tatePsi_overlap R I q hq hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `Ψ` restricted to the `p`-th product chart is the Tate glue inclusion at `tateFibreIdx p`. -/
 theorem ι_tateFibreProductPsi (hq : q ∈ I) (hI : I.FG)
     (p : ULift.{u} Bool × ULift.{u} Bool) :
@@ -260,6 +263,7 @@ theorem ι_tateFibreProductPsi (hq : q ∈ I) (hI : I.FG)
 
 /-! ### The base ideal-convention bridge is the chart comparison -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The base ideal-convention bridge is 704's chart comparison isomorphism. -/
 theorem annulusBaseBridge_eq (hI : I.FG) :
     annulusBaseBridge R I q = (tateChartCompIso R I q).hom := by
@@ -269,6 +273,7 @@ theorem annulusBaseBridge_eq (hI : I.FG) :
   rw [annulusBaseBridge, tateChartCompIso, eqToIso.hom,
     FormalSpectrum.locallyRingedSpaceMap_id_eq_eqToHom (annulus_map_eq R I q)]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The base bridge cancels the chart comparison of 704. -/
 theorem annulusBaseBridge_comp_tateChartCompUInv (hq : q ∈ I) (hI : I.FG)
     (i : tateModelIdx R I q hq hI) :

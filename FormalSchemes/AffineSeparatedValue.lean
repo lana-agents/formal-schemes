@@ -8,9 +8,6 @@ import FormalSchemes.ClosedImmersionAffine
 import FormalSchemes.ClosedImmersionIso
 import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # `Spf A` over `Spf R`: the first `BothChartedFibreDatumXY.IsSeparated` value (EGA I §10.15)
 
@@ -47,6 +44,9 @@ isomorphisms with `FormalScheme.IsClosedImmersion.iso_comp`/`comp_iso` then give
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -71,6 +71,7 @@ private theorem oneChartNeElim {R : Type u} [CommRing R] {I : Ideal R} {hI : I.F
     {i j : (oneChartExposeXDatum R I hI A).J} (h : i ≠ j) : False :=
   h (Subsingleton.elim (α := ULift.{u} Unit) i j)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The inverse of the one-chart identification `xGlued ≅ Spf A` is the single chart inclusion. -/
 theorem oneChartXGluedIso_inv_toLRSHom :
     (oneChartXGluedIso hI (A := A)).inv.toLRSHom =
@@ -89,6 +90,7 @@ abbrev oneChartDiagDatum : BothChartedFibreDatumXY R I hI :=
 
 variable [IsAdicRing (CompletedTensorProduct.idealOfDefinition R I A A)]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The inverse of the one-chart identification `X ×_{Spf R} X ≅ Spf (A ⊗̂_R A)` is the single
 product chart inclusion. -/
 theorem oneChartFibreProductIso_inv_toLRSHom :
@@ -98,22 +100,26 @@ theorem oneChartFibreProductIso_inv_toLRSHom :
   exact (Functor.FullyFaithful.ofFullyFaithful
     FormalScheme.forgetToLocallyRingedSpace).map_preimage _
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The single product chart's first projection is the affine one. -/
 theorem oneChartDiagDatum_pr₁ChartSelf :
     (oneChartDiagDatum hI (A := A)).pr₁ChartSelf ⟨⟨⟨⟩⟩, ⟨⟨⟩⟩⟩ =
       CompletedTensorProduct.fibrePr₁ (R := R) (I := I) (A := A) (B := A) := rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The single product chart's second projection is the affine one. -/
 theorem oneChartDiagDatum_pr₂ChartSelf :
     (oneChartDiagDatum hI (A := A)).pr₂ChartSelf ⟨⟨⟨⟩⟩, ⟨⟨⟩⟩⟩ =
       CompletedTensorProduct.fibrePr₂ (R := R) (I := I) (A := A) (B := A) := rfl
 
+omit [IsAdicRing (idealOfDefinition R I A A)] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `X`-factor chart inclusion of the diagonal datum is the inverse of `oneChartXGluedIso`. -/
 theorem oneChartDiagDatum_xFormalGlueData_ι :
     (oneChartDiagDatum hI (A := A)).xFormalGlueData.ι ⟨⟨⟩⟩ =
       (oneChartXGluedIso hI (A := A)).inv.toLRSHom :=
   (oneChartXGluedIso_inv_toLRSHom hI).symm
 
+omit [IsAdicRing (idealOfDefinition R I A A)] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `Y`-factor chart inclusion of the diagonal datum is the inverse of `oneChartXGluedIso`
 (the two factors of the diagonal datum are the same). -/
 theorem oneChartDiagDatum_yFormalGlueData_ι :

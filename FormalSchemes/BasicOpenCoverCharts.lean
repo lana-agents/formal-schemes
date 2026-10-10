@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayCompletionNestedNaturality
 import FormalSchemes.ThreeChartDatum
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The charts of a basic-open cover of a formal affine, and their overlaps
 
@@ -75,6 +72,9 @@ time or an out-of-memory kill:
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1 (10.1.4), §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

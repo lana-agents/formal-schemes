@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductExposeX
 import FormalSchemes.CompletedTensorAwayInterchangePrLeft
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The structural morphism of the exposed affine-charted `X`
 
@@ -47,6 +44,9 @@ single `locallyRingedSpaceMap` out of `Spf(A_i{1/g_ij})` whose underlying ring m
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

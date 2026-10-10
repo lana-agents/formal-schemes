@@ -7,8 +7,6 @@ import FormalSchemes.TateSelfProductGlueDatum
 import FormalSchemes.TateTensorOverlapChartIsoBoth
 import FormalSchemes.GeneralFibreProductBothAlgebraDataObject
 
-set_option maxHeartbeats 3200000
-
 /-!
 # Comparing the two presentations of the Tate self-fibre-product overlaps
 
@@ -63,6 +61,8 @@ by `rfl`.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

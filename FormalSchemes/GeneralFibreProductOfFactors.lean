@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothExposeXY
 import FormalSchemes.GeneralFibreProductBothAlgebraDataCocycle
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Assembling `X ×_{Spf R} Y` from two exposed single-factor data
 
@@ -46,6 +43,9 @@ consumes: feeding the same factor twice makes `yGlued` defeq `xGlued`.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

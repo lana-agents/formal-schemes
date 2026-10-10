@@ -7,9 +7,6 @@ import FormalSchemes.TateSelfProductTPrimeSummandIdentify
 import FormalSchemes.TateSelfProductSummandNaturality
 import FormalSchemes.TateSelfProductSwapNaturality
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Identifying the conjugated self-map `t'` with the explicit summand permutation
 
@@ -52,6 +49,9 @@ the right side by the second square; both sides become `bothFactorOverlapChart �
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * Mathlib `CategoryTheory.GlueData'` (the `t'`/`t_fac`/`cocycle` fields).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

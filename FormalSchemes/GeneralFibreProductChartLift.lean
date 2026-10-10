@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothProjectionLeft
 import FormalSchemes.GeneralFibreProductBothProjectionRight
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The per-chart mediating morphism of the general two-sided fibre product `X ×_{Spf R} Y`
 
@@ -48,6 +45,9 @@ Like the projections `pr₁`/`pr₂`, the factorisation lemmas take the three co
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry FormalSpectrum
@@ -81,6 +81,7 @@ def chartLift (p : D.JX × D.JY)
   letI := D.topologyA; letI := D.isAdicA; letI := D.topologyB; letI := D.isAdicB
   CompletedTensorProduct.fibreLift hIL f g hI ≫ D.formalGlueData.ι p
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The mediating morphism recovers `Spf(f)` after the first projection.** Composing `chartLift`
 with `pr₁` and restricting to the `I·A_{p.1}` convention of the exposed `X` yields `Spf(f)` followed
 by `X`'s chart inclusion `ι_{p.1}`. -/
@@ -114,6 +115,7 @@ theorem chartLift_comp_pr₁ (p : D.JX × D.JY)
       (Category.assoc _ _ _).symm.trans
         (CompletedTensorProduct.fibreLift_comp_pr₁ hIL f g hI =≫ D.xFormalGlueData.ι p.1)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The mediating morphism recovers `Spf(g)` after the second projection.** Composing `chartLift`
 with `pr₂` and restricting to the `I·B_{p.2}` convention of the exposed `Y` yields `Spf(g)` followed
 by `Y`'s chart inclusion `ι_{p.2}`. -/

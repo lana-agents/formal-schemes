@@ -143,6 +143,7 @@ def fibreStructMap :
     locallyRingedSpaceObj (idealOfDefinition R I A B) ⟶ locallyRingedSpaceObj I :=
   algebraMap_isAdicHom.spfMap
 
+omit [TopologicalSpace B] [IsAdicRing (Ideal.map (algebraMap R B) I)] in
 /-- The fibre-product square commutes over `Spf R` on the first factor: the first projection
 followed by the structural morphism of `Spf A` is the structural morphism of `Spf (A ⊗̂_R B)`. -/
 theorem fibrePr₁_comp_structMap :
@@ -155,6 +156,7 @@ theorem fibrePr₁_comp_structMap :
     (hIK := ((IsAdicHom.of_map I (A := A)).comp inl_isAdicHom).le_comap)]
   exact locallyRingedSpaceMap_congr _ _ _ _ _ _ (AlgHom.comp_algebraMap (inl R I A B))
 
+omit [TopologicalSpace A] [IsAdicRing (Ideal.map (algebraMap R A) I)] in
 /-- The fibre-product square commutes over `Spf R` on the second factor. -/
 theorem fibrePr₂_comp_structMap :
     fibrePr₂ (R := R) (A := A) (B := B) ≫ (IsAdicHom.of_map I (A := B)).spfMap =
@@ -184,6 +186,8 @@ def fibreLift (hI : I.FG) :
   locallyRingedSpaceMap (idealOfDefinition R I A B) L (lift L hIL f g)
     (lift_le_comap hIL f g hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B]
+  [IsAdicRing (Ideal.map (algebraMap R B) I)] in
 set_option maxHeartbeats 800000 in
 -- The `lift` term unfolds into the completion's continuous-extension machinery, which is slow for
 -- the kernel when comparing the composite structure-sheaf maps against `Spf f`.
@@ -207,6 +211,8 @@ theorem fibreLift_comp_pr₁ (hI : I.FG) :
     (hIJ := inl_isAdicHom.le_comap) (hJK := lift_le_comap hIL f g hI) (hIK := hik)]
   exact locallyRingedSpaceMap_congr _ _ _ _ _ _ (RingHom.ext fun a => lift_inl L hIL f g a)
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A]
+  [IsAdicRing (Ideal.map (algebraMap R A) I)] in
 set_option maxHeartbeats 800000 in
 -- The `lift` term unfolds into the completion's continuous-extension machinery, which is slow for
 -- the kernel when comparing the composite structure-sheaf maps against `Spf g`.

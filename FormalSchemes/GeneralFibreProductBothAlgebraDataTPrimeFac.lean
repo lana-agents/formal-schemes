@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothAlgebraDataTPrime
 import FormalSchemes.GeneralFibreProductBothAlgebraDataTPrimeFacAux
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The `t_fac` law of the dispatched triple-overlap transition `bothAlgDataT'`
 
@@ -49,6 +46,9 @@ over the localisation identities `awayCompletionSelfMulEquiv`/`furtherLoc*`), an
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -57,8 +57,6 @@ open CompletedTensorAwayInterchange CompletedTensorProduct
 universe u
 
 namespace AlgebraicGeometry
-
-open scoped Classical
 
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {JX JY : Type u}
@@ -73,7 +71,7 @@ transport `eqAlgEquiv` (discharged by `AlgHom.id_comp`/`comp_id`). -/
 
 section Leaves
 
-variable (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j) (hI : I.FG)
+variable (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j) (hI : I.FG)
   (τX : ∀ (i i' : JX), i ≠ i' →
     (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
       awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))

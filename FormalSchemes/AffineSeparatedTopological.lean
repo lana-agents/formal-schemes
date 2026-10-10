@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AffineSeparatedValue
 import FormalSchemes.GeneralSeparatedTopological
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The affine `BothChartedFibreDatumXY.IsSeparated` value, seen through the topological criterion
 
@@ -35,6 +32,9 @@ datum fail to elaborate at `instances` transparency.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

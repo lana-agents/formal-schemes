@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AffineSeparatedInstance
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The one-chart gluing isomorphisms for `Spf A`'s separatedness (EGA I §10.15)
 
@@ -36,6 +33,9 @@ isomorphism to a `FormalScheme` isomorphism.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

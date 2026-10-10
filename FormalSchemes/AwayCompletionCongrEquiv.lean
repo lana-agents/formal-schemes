@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CompletedTensorAwayInterchangePullbackLegs
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Comparison maps of completed localizations, and their rigidity
 
@@ -74,6 +71,9 @@ at an arbitrary index type, is built exactly this way.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1 (10.1.4), §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

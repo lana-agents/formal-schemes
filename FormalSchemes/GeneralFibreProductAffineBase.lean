@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TwoPatchFibreProductObject
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The general fibre product `X ×_{Spf R} Spf B` of an affine-charted glued `X` over an affine base
 
@@ -68,6 +65,9 @@ Tate datum; see `AlgebraicGeometry.twoPatchFibreProductDatum` at the end of the 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 
@@ -171,7 +171,7 @@ structure AffineChartedFibreDatum where
   [commRing : ∀ i, CommRing (A i)]
   [algebra : ∀ i, Algebra R (A i)]
   /-- The away element cutting out the overlap of the `i`-th chart with the `j`-th. -/
-  g : ∀ (i j : J), A i
+  g : ∀ i : J, J → A i
   /-- The `R`-algebra transition `A_i{1/g_ij} ≃ₐ[R] A_j{1/g_ji}` between the two presentations of
   the double overlap. -/
   τ : ∀ (i j : J), i ≠ j →

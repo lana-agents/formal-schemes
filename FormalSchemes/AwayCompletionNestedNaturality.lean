@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayCompletionCongrEquiv
 import FormalSchemes.AwayCompletionNested
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Naturality of the nested basic-open chart identification
 
@@ -90,6 +87,9 @@ appear (`F ∘ e.symm = G` ⟺ `F = G ∘ e`) before applying anything here.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1 (10.1.4), §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

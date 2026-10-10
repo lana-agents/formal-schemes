@@ -11,9 +11,6 @@ import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 import FormalSchemes.CompletedTensorAwayInterchangeMixedPullback
 import FormalSchemes.GlueMorphisms
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The first projection of the fully general two-sided fibre product `X ×_{Spf R} Y`
 
@@ -64,6 +61,9 @@ The overlap obligation dispatches by which coordinate of `p, p'` differs:
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

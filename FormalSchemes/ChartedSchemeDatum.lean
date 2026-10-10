@@ -157,7 +157,7 @@ structure ChartedSchemeDatum where
   /-- The ideal of the `i`-th chart along which it is to be completed. Unrelated to the others. -/
   K : ∀ i, Ideal (C i)
   /-- The away element cutting out the overlap of the `i`-th chart with the `j`-th. -/
-  g : ∀ (i j : J), C i
+  g : ∀ i : J, J → C i
   /-- The identification of the two presentations of the double overlap, at the localization. -/
   θ : ∀ (i j : J), i ≠ j →
     (Localization.Away (g i j) ≃+* Localization.Away (g j i))

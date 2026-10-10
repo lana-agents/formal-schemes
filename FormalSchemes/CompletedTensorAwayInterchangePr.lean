@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletedTensorAwayInterchangeSpf
 import FormalSchemes.AffineFibreProduct
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Naturality of the second projection under the away-localization interchange
 
@@ -36,6 +33,9 @@ locally-ringed-space map), so it needs no adic-ring instances and applies after 
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductAffineBase
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The two-sided general fibre product `X ×_{Spf R} Y` (both factors affine-charted)
 
@@ -53,6 +50,9 @@ Mirroring the one-sided template we build, from a `BothChartedFibreDatum`:
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -97,9 +97,9 @@ structure BothChartedFibreDatum (R : Type u) [CommRing R] (I : Ideal R) (hI : I.
   [commRingB : ∀ j, CommRing (B j)]
   [algebraB : ∀ j, Algebra R (B j)]
   /-- The away element cutting out the overlap of the `i`-th chart of `X` with the `i'`-th. -/
-  gX : ∀ (i i' : JX), A i
+  gX : ∀ i : JX, JX → A i
   /-- The away element cutting out the overlap of the `j`-th chart of `Y` with the `j'`-th. -/
-  gY : ∀ (j j' : JY), B j
+  gY : ∀ j : JY, JY → B j
   /-- The `R`-algebra transition between the two presentations of the double overlap in `X`. -/
   τX : ∀ (i i' : JX), i ≠ i' →
     (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]

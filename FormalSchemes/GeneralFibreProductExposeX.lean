@@ -7,9 +7,6 @@ import FormalSchemes.GeneralFibreProductAffineBase
 import FormalSchemes.TwoPatchFibreProductProjectionLeft
 import FormalSchemes.GlueMorphisms
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Exposing the glued affine-charted scheme `X` inside the fibre-product datum
 
@@ -40,6 +37,9 @@ overlaps live over `FormalSpectrum.basicOpenChart` with no ideal-convention brid
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

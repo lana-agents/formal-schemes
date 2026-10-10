@@ -11,9 +11,6 @@ import FormalSchemes.TateChartTransitionAlgEq
 import FormalSchemes.CompletedTensorAwayInterchangeMixedPullback
 import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Transition-through-chart naturality of the Tate self-product overlaps (Family B)
 
@@ -50,6 +47,9 @@ completed localization of the coordinate swap.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

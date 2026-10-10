@@ -7,11 +7,6 @@ import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.CompletedTensor
 import Mathlib.RingTheory.Localization.Away.Basic
 
--- The `lift`/`mapCompletion`/`extendRingHom` terms live over nested localization/completion
--- towers, which are slow for the elaborator, the instance cache and the kernel; raise the budgets.
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The completed-tensor / away-localization interchange
 
@@ -60,6 +55,11 @@ property of localization (`IsLocalization.ringHom_ext`).
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.
 -/
+
+-- The `lift`/`mapCompletion`/`extendRingHom` terms live over nested localization/completion
+-- towers, which are slow for the elaborator, the instance cache and the kernel; raise the budgets.
+set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

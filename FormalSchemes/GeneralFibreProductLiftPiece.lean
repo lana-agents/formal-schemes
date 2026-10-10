@@ -7,9 +7,6 @@ import FormalSchemes.AffineFibreProductLRS
 import FormalSchemes.GeneralFibreProductChartInter
 import FormalSchemes.SpfGammaFunctorial
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The per-piece uniqueness primitive for the general fibre product `X ×_{Spf R} Y`
 
@@ -33,6 +30,9 @@ substitution of the caller-supplied chart data for the refined-cover data.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

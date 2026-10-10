@@ -9,9 +9,6 @@ import FormalSchemes.TateSelfProductAdicOverBase
 import FormalSchemes.TateSelfProductCone
 import FormalSchemes.TateXGluedIso
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The comparison morphism `𝔈_q ×_{Spf R} 𝔈_q ⟶ (Tate diagonal datum).generalFibreProduct`
 
@@ -91,6 +88,9 @@ that points at the wrong lemma.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

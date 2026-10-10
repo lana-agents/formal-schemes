@@ -6,12 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductBothOverlap
 import FormalSchemes.TwoPatchFibreProductObject
 
--- The completed-tensor interchange morphisms range over the nested localization/completion
--- towers of the completed tensor product, which are slow for the elaborator and the kernel;
--- raise the budgets (matching `TateSelfProductOverlap.lean`).
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The overlap transition isomorphisms of the Tate self-fibre-product
 
@@ -58,6 +52,12 @@ then `Iso.hom_inv_id` of these; the same isomorphisms feed the genuine `Bool × 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductOverlap.lean`).
+set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

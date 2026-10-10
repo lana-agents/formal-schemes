@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductBothAlgebraData
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Leg laws for the triple-overlap source pullback isomorphisms
 
@@ -28,6 +25,9 @@ All nine shapes — `snd_snd`, `fst_fst`, `both_both`, `fst_snd`, `fst_both`, `s
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -36,8 +36,6 @@ open CompletedTensorAwayInterchange CompletedTensorProduct
 universe u
 
 namespace AlgebraicGeometry
-
-open scoped Classical
 
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {JX JY : Type u}
@@ -55,8 +53,8 @@ applying the underlying interchange-pullback leg law. The result is the correspo
 the object-reduction cast `eqToHom` into the overlap object `bothAlgDataV p p'` (resp. `p p''`). -/
 
 /-- **`fst` leg of the (2nd, 2nd) source iso.** -/
-theorem bothAlgDataSrcIso_snd_snd_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_snd_snd_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -75,8 +73,8 @@ theorem bothAlgDataSrcIso_snd_snd_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
       (rightInterchangePullbackIso_hom_fst (A := A p.1) I (gY p.2 p'.2) (gY p.2 p''.2) hI)]
 
 /-- **`snd` leg of the (2nd, 2nd) source iso.** -/
-theorem bothAlgDataSrcIso_snd_snd_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_snd_snd_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -95,8 +93,8 @@ theorem bothAlgDataSrcIso_snd_snd_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
       (rightInterchangePullbackIso_hom_snd (A := A p.1) I (gY p.2 p'.2) (gY p.2 p''.2) hI)]
 
 /-- **`fst` leg of the (1st, 1st) source iso.** -/
-theorem bothAlgDataSrcIso_fst_fst_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_fst_fst_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -114,8 +112,8 @@ theorem bothAlgDataSrcIso_fst_fst_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
     reassoc_of% (interchangePullbackIso_hom_fst (B := B p.2) I (gX p.1 p'.1) (gX p.1 p''.1) hI)]
 
 /-- **`snd` leg of the (1st, 1st) source iso.** -/
-theorem bothAlgDataSrcIso_fst_fst_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_fst_fst_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -133,8 +131,8 @@ theorem bothAlgDataSrcIso_fst_fst_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
     reassoc_of% (interchangePullbackIso_hom_snd (B := B p.2) I (gX p.1 p'.1) (gX p.1 p''.1) hI)]
 
 /-- **`fst` leg of the (both, both) source iso.** -/
-theorem bothAlgDataSrcIso_both_both_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_both_both_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -154,8 +152,8 @@ theorem bothAlgDataSrcIso_both_both_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i
       (gY p.2 p'.2) (gY p.2 p''.2) hI)]
 
 /-- **`snd` leg of the (both, both) source iso.** -/
-theorem bothAlgDataSrcIso_both_both_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_both_both_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -175,8 +173,8 @@ theorem bothAlgDataSrcIso_both_both_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i
       (gY p.2 p'.2) (gY p.2 p''.2) hI)]
 
 /-- **`fst` leg of the (1st, 2nd) source iso.** -/
-theorem bothAlgDataSrcIso_fst_snd_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_fst_snd_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -195,8 +193,8 @@ theorem bothAlgDataSrcIso_fst_snd_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
       (gY p.2 p''.2) hI)]
 
 /-- **`snd` leg of the (1st, 2nd) source iso.** -/
-theorem bothAlgDataSrcIso_fst_snd_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_fst_snd_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -215,8 +213,8 @@ theorem bothAlgDataSrcIso_fst_snd_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
       (gY p.2 p''.2) hI)]
 
 /-- **`fst` leg of the (1st, both) source iso.** -/
-theorem bothAlgDataSrcIso_fst_both_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_fst_both_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -236,8 +234,8 @@ theorem bothAlgDataSrcIso_fst_both_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
       (gY p.2 p''.2) hI)]
 
 /-- **`snd` leg of the (1st, both) source iso.** -/
-theorem bothAlgDataSrcIso_fst_both_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_fst_both_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -256,8 +254,8 @@ theorem bothAlgDataSrcIso_fst_both_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
       (gY p.2 p''.2) hI)]
 
 /-- **`fst` leg of the (2nd, both) source iso.** -/
-theorem bothAlgDataSrcIso_snd_both_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_snd_both_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -278,8 +276,8 @@ theorem bothAlgDataSrcIso_snd_both_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
       (gY p.2 p''.2) hI)]
 
 /-- **`snd` leg of the (2nd, both) source iso.** -/
-theorem bothAlgDataSrcIso_snd_both_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_snd_both_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -304,8 +302,8 @@ These postcompose a `pullbackSymmetry`, so each leg is computed from the *opposi
 forward source iso obtained by swapping the two charts. -/
 
 /-- **`fst` leg of the (2nd, 1st) source iso.** -/
-theorem bothAlgDataSrcIso_snd_fst_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_snd_fst_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -320,8 +318,8 @@ theorem bothAlgDataSrcIso_snd_fst_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
     bothAlgDataSrcIso_fst_snd_hom_snd hI gX gY p p'' p' hpp'' hpp' h1'' h2'' h1']
 
 /-- **`snd` leg of the (2nd, 1st) source iso.** -/
-theorem bothAlgDataSrcIso_snd_fst_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_snd_fst_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -336,8 +334,8 @@ theorem bothAlgDataSrcIso_snd_fst_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
     bothAlgDataSrcIso_fst_snd_hom_fst hI gX gY p p'' p' hpp'' hpp' h1'' h2'' h1']
 
 /-- **`fst` leg of the (both, 1st) source iso.** -/
-theorem bothAlgDataSrcIso_both_fst_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_both_fst_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -352,8 +350,8 @@ theorem bothAlgDataSrcIso_both_fst_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
     bothAlgDataSrcIso_fst_both_hom_snd hI gX gY p p'' p' hpp'' hpp' h1'' h2'' h1' h2']
 
 /-- **`snd` leg of the (both, 1st) source iso.** -/
-theorem bothAlgDataSrcIso_both_fst_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_both_fst_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -369,8 +367,8 @@ theorem bothAlgDataSrcIso_both_fst_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
     bothAlgDataSrcIso_fst_both_hom_fst hI gX gY p p'' p' hpp'' hpp' h1'' h2'' h1' h2']
 
 /-- **`fst` leg of the (both, 2nd) source iso.** -/
-theorem bothAlgDataSrcIso_both_snd_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_both_snd_hom_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''
@@ -386,8 +384,8 @@ theorem bothAlgDataSrcIso_both_snd_hom_fst (hI : I.FG) (gX : ∀ i i' : JX, A i)
     bothAlgDataSrcIso_snd_both_hom_snd hI gX gY p p'' p' hpp'' hpp' h1'' h1' h2']
 
 /-- **`snd` leg of the (both, 2nd) source iso.** -/
-theorem bothAlgDataSrcIso_both_snd_hom_snd (hI : I.FG) (gX : ∀ i i' : JX, A i)
-    (gY : ∀ j j' : JY, B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
+theorem bothAlgDataSrcIso_both_snd_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i)
+    (gY : ∀ j : JY, JY → B j) (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
     letI := bothAlgDataHf hI gX gY p p'' hpp''

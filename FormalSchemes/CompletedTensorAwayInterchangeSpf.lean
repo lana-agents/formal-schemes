@@ -8,11 +8,6 @@ import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.AdicMorphism
 import FormalSchemes.SpfRingEquivIso
 
--- The formal-spectrum morphisms range over the nested localization/completion towers of the
--- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The geometric completed-tensor / away-localization interchange
 
@@ -53,6 +48,11 @@ other — was written here but is not about completed tensor products, and now l
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.
 -/
+
+-- The formal-spectrum morphisms range over the nested localization/completion towers of the
+-- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
+set_option maxHeartbeats 1600000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

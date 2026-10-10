@@ -96,11 +96,13 @@ def localizedCodiagInvY (hI : I.FG) :
 
 variable {R I q}
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 theorem localizedCodiagInvY_apply (hI : I.FG)
     (t : CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :
     localizedCodiagInvY R I q hI t =
       annulusOverlapInversion R I q hI (localizedCodiagInvX R I q hI t) := rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 @[simp]
 theorem localizedCodiagInvY_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     localizedCodiagInvY R I q hI (inl R I _ _ a) =
@@ -135,6 +137,7 @@ theorem localizedCodiagInvY_surjective (hI : I.FG) :
   obtain ⟨t, rfl⟩ := localizedCodiagInvX_surjective (R := R) (I := I) (q := q) hI y
   exact ⟨t, rfl⟩
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The inversion transition carries the x-side ideal of definition `I·A{1/x}` onto the y-side one
 `I·A{1/y}` (it is an `R`-algebra isomorphism). -/
 theorem map_annulusOverlapInversion_annulusOverlapIdeal (hI : I.FG) :

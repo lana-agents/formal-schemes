@@ -125,7 +125,7 @@ theorem annulusOverlapInversion_toRingHom_eq :
     (annulusOverlapInversion R I q hI).toRingHom =
       (annulusOverlapTransitionHom R I q hI).comp (annulusOverlapInvX R I q hI).toRingHom := by
   refine RingHom.ext fun x => ?_
-  show annulusOverlapInversion R I q hI x
+  change annulusOverlapInversion R I q hI x
     = annulusOverlapTransitionHom R I q hI (annulusOverlapInvX R I q hI x)
   rw [annulusOverlapInversion_apply, annulusOverlapTransition_apply]
 
@@ -135,7 +135,7 @@ theorem annulusOverlapInversion_symm_toRingHom_eq :
     (annulusOverlapInversion R I q hI).symm.toRingHom =
       (annulusOverlapInvX R I q hI).symm.toRingHom.comp (annulusOverlapTransitionInv R I q hI) := by
   refine RingHom.ext fun y => ?_
-  show (annulusOverlapInversion R I q hI).symm y
+  change (annulusOverlapInversion R I q hI).symm y
     = (annulusOverlapInvX R I q hI).symm (annulusOverlapTransitionInv R I q hI y)
   rw [annulusOverlapInversion_symm_apply, annulusOverlapTransition_symm_apply]
 
@@ -232,7 +232,7 @@ theorem annulusOverlapInversion_symm_comp_algebraMap :
         (algebraMap R (annulusOverlapY R I q)) =
       algebraMap R (annulusOverlap R I q) := by
   refine RingHom.ext fun r => ?_
-  show (annulusOverlapInversion R I q hI).symm (algebraMap R (annulusOverlapY R I q) r) = _
+  change (annulusOverlapInversion R I q hI).symm (algebraMap R (annulusOverlapY R I q) r) = _
   rw [← annulusOverlapInversion_algebraMap R I q hI r, RingEquiv.symm_apply_apply]
 
 /-- **Geometric acceptance witness: the corrected transition glues by genuine 𝔾m-inversion, not the

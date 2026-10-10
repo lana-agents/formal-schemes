@@ -7,9 +7,6 @@ import FormalSchemes.GeneralDiagonal
 import FormalSchemes.GeneralFibreProductLiftCharts
 import FormalSchemes.BothDatumAdicOverBase
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The unconditional general diagonal `Δ : X ⟶ X ×_{Spf R} X`
 
@@ -38,6 +35,9 @@ immersion for the separated case).
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.12, §10.15.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

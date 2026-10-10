@@ -10,9 +10,6 @@ import FormalSchemes.CompletedTensorMapSpfPr
 import FormalSchemes.TateChartTransitionAlgEq
 import FormalSchemes.GlueMorphisms
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The first projection of the two-patch fibre product `X ×_{Spf R} Spf B`
 
@@ -57,6 +54,9 @@ The compatibility datum `glueMorphisms` consumes on the double overlap is the na
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

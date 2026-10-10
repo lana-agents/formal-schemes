@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenChart
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Surjectivity onto a completed away localization
 
@@ -61,6 +58,9 @@ definitionally, so `awayCompletion` does not even typecheck as its target.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.14, §10.15.
 * [Atiyah–Macdonald, *Introduction to Commutative Algebra*][AM], Ch. 10.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

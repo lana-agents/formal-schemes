@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothAlgebraDataLegs
 import FormalSchemes.AwayCompletionSelfMul
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The dispatched triple-overlap transition `bothAlgDataT'` of the two-sided fibre product
 
@@ -42,6 +39,9 @@ these together with the shared-coordinate transport `eqAlgEquivA`, the element-c
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -50,8 +50,6 @@ open CompletedTensorAwayInterchange CompletedTensorProduct
 universe u
 
 namespace AlgebraicGeometry
-
-open scoped Classical
 
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {JX JY : Type u}
@@ -106,7 +104,7 @@ def awaySelfMulB (hI : I.FG) {j : JY} (g : B j) :
 product-index charts, `pullback (f p p') (f p p'') ⟶ pullback (f p' p'') (f p' p)`. Built as
 `src.inv ≫ (mapSpfIso hI σX_branch σY_branch).hom ≫ tgt.hom`, dispatched on the coordinate
 equalities exactly as `bothAlgDataF`. -/
-def bothAlgDataT' (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataT' (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (τX : ∀ (i i' : JX), i ≠ i' →
       (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (A i'))) (gX i' i)))
@@ -281,7 +279,7 @@ the coordinate hypotheses of each branch, so the downstream `_fac`/`_cocycle` pr
 `dif_pos`/`dif_neg` sequence; proof irrelevance absorbs the internally-derived distinctness proofs.
 -/
 
-variable (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+variable (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
 variable
   (τX : ∀ (i i' : JX), i ≠ i' →
     (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]

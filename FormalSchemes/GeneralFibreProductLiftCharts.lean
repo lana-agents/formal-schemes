@@ -10,9 +10,6 @@ import FormalSchemes.GlueOpenCoverFactorBothAlg
 import FormalSchemes.LiftedBasicOpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The general fibre-product mediating morphism over an *explicit* refined chart family
 
@@ -42,6 +39,9 @@ separatedness.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

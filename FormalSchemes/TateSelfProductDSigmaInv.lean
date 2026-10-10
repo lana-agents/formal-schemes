@@ -8,9 +8,6 @@ import FormalSchemes.TateSelfProductTPrimeSummandIdentify
 import FormalSchemes.CompletedTensorAwayInterchangeMixedPullback
 import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The 𝔾m-inversion self-product cocycle payload `tateSelfProductD_eq_sigma_inv`
 
@@ -71,6 +68,9 @@ succeeds on trees that `lake build` then OOM-kills) before changing anything her
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * Mathlib `CategoryTheory.GlueData'` (the `t'`/`t_fac`/`cocycle` fields).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 
@@ -845,18 +845,18 @@ private theorem firstShapeDInv (hq : q ∈ I) (hI : I.FG)
     rw [← cancel_mono (firstFactorOverlapChart R I q hI), hp, firstShapeIota_comp]
   refine coprod.hom_ext (coprod.hom_ext ?_ ?_) (coprod.hom_ext ?_ ?_)
   · simp only [firstShapeIota, coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc,
-      coprod.inr_desc_assoc, Category.assoc, tateSelfProductFirstTransitionInv,
+      Category.assoc, tateSelfProductFirstTransitionInv,
       tateSelfProductSwapFirstTransitionInv, firstFactorOverlapChart, bothFactorOverlapChart]
     exact firstLegXX R I q hI
-  · simp only [firstShapeIota, coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc,
+  · simp only [firstShapeIota, coprod.inr_desc, coprod.inl_desc_assoc,
       coprod.inr_desc_assoc, Category.assoc, tateSelfProductFirstTransitionInv,
       tateSelfProductSwapFirstTransitionInv, firstFactorOverlapChart, bothFactorOverlapChart]
     exact firstLegXY R I q hI
-  · simp only [firstShapeIota, coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc,
+  · simp only [firstShapeIota, coprod.inl_desc, coprod.inl_desc_assoc,
       coprod.inr_desc_assoc, Category.assoc, tateSelfProductFirstTransitionInv,
       tateSelfProductSwapFirstTransitionInv, firstFactorOverlapChart, bothFactorOverlapChart]
     exact firstLegYX R I q hI
-  · simp only [firstShapeIota, coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc,
+  · simp only [firstShapeIota, coprod.inl_desc, coprod.inr_desc,
       coprod.inr_desc_assoc, Category.assoc, tateSelfProductFirstTransitionInv,
       tateSelfProductSwapFirstTransitionInv, firstFactorOverlapChart, bothFactorOverlapChart]
     exact firstLegYY R I q hI
@@ -872,18 +872,18 @@ private theorem secondShapeDInv (hq : q ∈ I) (hI : I.FG)
     rw [← cancel_mono (secondFactorOverlapChart R I q hI), hp, secondShapeIota_comp]
   refine coprod.hom_ext (coprod.hom_ext ?_ ?_) (coprod.hom_ext ?_ ?_)
   · simp only [secondShapeIota, coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc,
-      coprod.inr_desc_assoc, Category.assoc, tateSelfProductRightTransitionInv,
+      Category.assoc, tateSelfProductRightTransitionInv,
       tateSelfProductSwapSecondTransitionInv, secondFactorOverlapChart, bothFactorOverlapChart]
     exact secondLegXX R I q hI
-  · simp only [secondShapeIota, coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc,
+  · simp only [secondShapeIota, coprod.inl_desc, coprod.inl_desc_assoc,
       coprod.inr_desc_assoc, Category.assoc, tateSelfProductRightTransitionInv,
       tateSelfProductSwapSecondTransitionInv, secondFactorOverlapChart, bothFactorOverlapChart]
     exact secondLegXY R I q hI
-  · simp only [secondShapeIota, coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc,
+  · simp only [secondShapeIota, coprod.inr_desc, coprod.inl_desc_assoc,
       coprod.inr_desc_assoc, Category.assoc, tateSelfProductRightTransitionInv,
       tateSelfProductSwapSecondTransitionInv, secondFactorOverlapChart, bothFactorOverlapChart]
     exact secondLegYX R I q hI
-  · simp only [secondShapeIota, coprod.inl_desc, coprod.inr_desc, coprod.inl_desc_assoc,
+  · simp only [secondShapeIota, coprod.inl_desc, coprod.inr_desc,
       coprod.inr_desc_assoc, Category.assoc, tateSelfProductRightTransitionInv,
       tateSelfProductSwapSecondTransitionInv, secondFactorOverlapChart, bothFactorOverlapChart]
     exact secondLegYY R I q hI

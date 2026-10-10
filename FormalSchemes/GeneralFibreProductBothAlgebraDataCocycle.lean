@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothAlgebraDataCocycleAux
 import FormalSchemes.GeneralFibreProductBothAlgebraDataTPrimeFac
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The cocycle law `bothAlgDataT'_cocycle` and the smart constructor `ofAlgebraData`
 
@@ -24,6 +21,9 @@ and packages everything into `ofAlgebraData`, validated on a subsingleton produc
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -32,8 +32,6 @@ open CompletedTensorAwayInterchange CompletedTensorProduct
 universe u
 
 namespace AlgebraicGeometry
-
-open scoped Classical
 
 /-- **Conjugated-`mapSpf` collapse.** If the two underlying algebra endomorphisms are the identity,
 the `Sp`-conjugated `mapSpf` is the identity. This packages the final collapse shared by every mixed
@@ -120,7 +118,7 @@ middle-element equalities. -/
 inverse algebra maps around the `A` factor is the identity. -/
 theorem cocycle_snd_fst_hfA {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u}
     {A : JX → Type u} [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
-    (gX : ∀ i i' : JX, A i)
+    (gX : ∀ i : JX, JX → A i)
     (τX : ∀ (i i' : JX), i ≠ i' →
       awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (A i'))) (gX i' i))
@@ -145,7 +143,7 @@ theorem cocycle_snd_fst_hfA {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u
 inverse algebra maps around the `B` factor is the identity. -/
 theorem cocycle_snd_fst_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u}
     {B : JY → Type u} [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
-    (gY : ∀ j j' : JY, B j)
+    (gY : ∀ j : JY, JY → B j)
     (τY : ∀ (j j' : JY), j ≠ j' →
       awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (B j'))) (gY j' j))
@@ -171,7 +169,7 @@ theorem cocycle_snd_fst_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u
 leaves whose `A`-factor order is `[Fwd, Bwd, I]`. -/
 theorem cocycle_fst_snd_hfA {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u}
     {A : JX → Type u} [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
-    (gX : ∀ i i' : JX, A i)
+    (gX : ∀ i : JX, JX → A i)
     (τX : ∀ (i i' : JX), i ≠ i' →
       awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (A i'))) (gX i' i))
@@ -197,7 +195,7 @@ theorem cocycle_fst_snd_hfA {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u
 `B`-mirror of `cocycle_snd_fst_hfA`); used by leaves whose `B`-factor order is `[I, Fwd, Bwd]`. -/
 theorem cocycle_fst_snd_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u}
     {B : JY → Type u} [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
-    (gY : ∀ j j' : JY, B j)
+    (gY : ∀ j : JY, JY → B j)
     (τY : ∀ (j j' : JY), j ≠ j' →
       awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (B j'))) (gY j' j))
@@ -225,7 +223,7 @@ are mutually inverse. The index-transport factor sits in the *middle*; used by l
 `B`-factor order is `[Bwd, I, Fwd]` at a `both`-edge endpoint. -/
 theorem cocycle_snd_both_fst_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u}
     {B : JY → Type u} [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
-    (gY : ∀ j j' : JY, B j)
+    (gY : ∀ j : JY, JY → B j)
     (τY : ∀ (j j' : JY), j ≠ j' →
       awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (B j'))) (gY j' j))
@@ -251,7 +249,7 @@ product.** Companion of `cocycle_snd_both_fst_hfB` for the `both_snd` source iso
 lists the two Y-neighbours in the opposite order `gY j j'' * gY j j'`. -/
 theorem cocycle_both_snd_fst_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : Type u}
     {B : JY → Type u} [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
-    (gY : ∀ j j' : JY, B j)
+    (gY : ∀ j : JY, JY → B j)
     (τY : ∀ (j j' : JY), j ≠ j' →
       awayCompletion (I.map (algebraMap R (B j))) (gY j j') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (B j'))) (gY j' j))
@@ -277,7 +275,7 @@ theorem cocycle_both_snd_fst_hfB {R : Type u} [CommRing R] {I : Ideal R} {JY : T
 of the two X-neighbours, which coincide (`i' = i''`), so the composite collapses. -/
 theorem cocycle_fst_both_snd_hfA {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u}
     {A : JX → Type u} [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
-    (gX : ∀ i i' : JX, A i)
+    (gX : ∀ i : JX, JX → A i)
     (τX : ∀ (i i' : JX), i ≠ i' →
       awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (A i'))) (gX i' i))
@@ -303,7 +301,7 @@ product.** The `A`-mirror of `cocycle_both_snd_fst_hfB`: the `both_fst` source i
 X-neighbours in the opposite order `gX i i'' * gX i i'`. -/
 theorem cocycle_both_fst_snd_hfA {R : Type u} [CommRing R] {I : Ideal R} {JX : Type u}
     {A : JX → Type u} [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
-    (gX : ∀ i i' : JX, A i)
+    (gX : ∀ i : JX, JX → A i)
     (τX : ∀ (i i' : JX), i ≠ i' →
       awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]
         awayCompletion (I.map (algebraMap R (A i'))) (gX i' i))
@@ -330,7 +328,7 @@ variable {A : JX → Type u} {B : JY → Type u}
 variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
 variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
 
-variable (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+variable (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
 variable
   (τX : ∀ (i i' : JX), i ≠ i' →
     (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]

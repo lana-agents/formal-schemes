@@ -9,8 +9,6 @@ import FormalSchemes.TateTensorOverlapSummandAffineBoth
 import FormalSchemes.TateCurveExposeXDatum
 import FormalSchemes.TateXGluedIso
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The transition law of the `Ψ` comparison of the two Tate self-fibre-product presentations
 
@@ -124,6 +122,8 @@ Two smaller ones, both hit here:
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

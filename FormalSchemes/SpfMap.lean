@@ -209,9 +209,21 @@ theorem comp_hom_app_right (n : ℕ) (U : (Opens (FormalSpectrum I))ᵒᵖ) :
         (stepSheafHom J n).hom.app (op ((Opens.map (mapTop I J φ hφ)).obj U.unop)) :=
   rfl
 
-set_option maxHeartbeats 4000000 in
--- Verifying the composite of `StructureSheaf.comap`s against `comap` of the composite ring
--- homomorphism unfolds the section rings of the structure sheaves, which is slow.
+/-- Two composites of `StructureSheaf.comap`s agree when the underlying composites of ring
+homomorphisms do. Stated for arbitrary rings, so that applying it to the thickening towers
+below needs no unfolding of the concrete section rings. -/
+theorem comap_comp_eq_comap_comp {A B C D : Type u} [CommRing A] [CommRing B] [CommRing C]
+    [CommRing D] (f : A →+* B) (g : B →+* D) (f' : A →+* C) (g' : C →+* D)
+    (h : g.comp f = g'.comp f')
+    (U : Opens (PrimeSpectrum.Top A)) (V : Opens (PrimeSpectrum.Top B))
+    (W : Opens (PrimeSpectrum.Top C)) (X : Opens (PrimeSpectrum.Top D))
+    (hUV : ∀ p ∈ V, PrimeSpectrum.comap f p ∈ U) (hVX : ∀ p ∈ X, PrimeSpectrum.comap g p ∈ V)
+    (hUW : ∀ p ∈ W, PrimeSpectrum.comap f' p ∈ U) (hWX : ∀ p ∈ X, PrimeSpectrum.comap g' p ∈ W) :
+    (StructureSheaf.comap g V X hVX).comp (StructureSheaf.comap f U V hUV) =
+      (StructureSheaf.comap g' W X hWX).comp (StructureSheaf.comap f' U W hUW) := by
+  rw [← StructureSheaf.comap_comp, ← StructureSheaf.comap_comp]
+  exact comap_congr h _ _ _ _
+
 theorem comap_levelRingHom_square (n : ℕ) (V : Opens (FormalSpectrum I)) :
     (StructureSheaf.comap (levelRingHom I J φ hφ n)
         (thickeningOpen I n V) (thickeningOpen J n ((Opens.map (mapTop I J φ hφ)).obj V))
@@ -227,18 +239,7 @@ theorem comap_levelRingHom_square (n : ℕ) (V : Opens (FormalSpectrum I)) :
         (thickeningOpen I (n + 1) V)
         (thickeningOpen J (n + 1) ((Opens.map (mapTop I J φ hφ)).obj V))
         (thickeningOpen_map_le I J φ hφ (n + 1) V)) :=
-  (StructureSheaf.comap_comp (stepRingHom I n).hom (levelRingHom I J φ hφ n)
-      (thickeningOpen I (n + 1) V) (thickeningOpen I n V)
-      (thickeningOpen J n ((Opens.map (mapTop I J φ hφ)).obj V))
-      (thickeningOpen_le_comap I n V)
-      (thickeningOpen_map_le I J φ hφ n V)).symm.trans
-    ((comap_congr (levelRingHom_step I J φ hφ n) _ _ _ _).trans
-      (StructureSheaf.comap_comp (levelRingHom I J φ hφ (n + 1)) (stepRingHom J n).hom
-        (thickeningOpen I (n + 1) V)
-        (thickeningOpen J (n + 1) ((Opens.map (mapTop I J φ hφ)).obj V))
-        (thickeningOpen J n ((Opens.map (mapTop I J φ hφ)).obj V))
-        (thickeningOpen_map_le I J φ hφ (n + 1) V)
-        (thickeningOpen_le_comap J n ((Opens.map (mapTop I J φ hφ)).obj V))))
+  comap_comp_eq_comap_comp _ _ _ _ (levelRingHom_step I J φ hφ n) _ _ _ _ _ _ _ _
 
 set_option maxHeartbeats 1000000 in
 -- Bundling the previous square into `CommRingCat` is still slow for the kernel.

@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralDiagonalUnconditional
 import FormalSchemes.GeneralFibreProductLiftAdic
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The unconditional diagonal is the adic-over-base `fibreLift` at the identity legs
 
@@ -33,6 +30,9 @@ remaining arguments of `fibreLiftOf` (`hcomm`, `hs`) are proofs too.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

@@ -8,12 +8,6 @@ import FormalSchemes.TateSelfProductTransitionRange
 import FormalSchemes.TateSelfProductTransitionRangeRight
 import FormalSchemes.GlueTPrimeOfLift
 
--- The completed-tensor interchange charts range over the nested localization/completion towers of
--- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
--- (matching `TateSelfProductGlueDatum.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The transition-of-transitions `t'` and `t_fac` of the four-chart Tate self-fibre-product glue
 
@@ -78,6 +72,12 @@ The whole dispatch is a single `Bool × Bool` case split of the reduced statemen
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * Mathlib `CategoryTheory.GlueData'` (the `t'`/`t_fac` fields).
 -/
+
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueDatum.lean`).
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

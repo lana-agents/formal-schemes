@@ -155,7 +155,7 @@ structure ChartedCompletionDatum where
   /-- Every ideal is finitely generated, which `formalCompletion` needs to name the chart. -/
   hK : ∀ i, (K i).FG
   /-- The away element cutting out the overlap of the `i`-th chart with the `j`-th. -/
-  g : ∀ (i j : J), C i
+  g : ∀ i : J, J → C i
   /-- The identification of the two presentations of the double overlap, at the localization. -/
   θ : ∀ (i j : J), i ≠ j →
     (Localization.Away (g i j) ≃+* Localization.Away (g j i))

@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductBothAlgebraDataTPrime
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Away-completion compatibility lemmas for the mixed `bothAlgDataT'_fac` leaves
 
@@ -26,6 +23,9 @@ bridge is proved by identifying the underlying localization maps via
 `IsLocalization.ringHom_ext (Submonoid.powers g)` and then lifting through the completion functor.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry FormalSpectrum CompletedTensorProduct
@@ -34,8 +34,6 @@ open CompletedTensorAwayInterchange
 universe u
 
 namespace AlgebraicGeometry
-
-open scoped Classical
 
 /-! ### The self-multiply bridge (single-ring statement) -/
 

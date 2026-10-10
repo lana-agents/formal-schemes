@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateTensorOverlapChartIso
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The tensored Tate two-chart overlap is a single chart: the both-factor shape
 
@@ -56,6 +54,8 @@ two one-sided ones.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

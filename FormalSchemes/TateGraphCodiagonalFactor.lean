@@ -6,10 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateSelfProductMixedGlue
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-set_option maxRecDepth 8000
-
 /-!
 # The graph-codiagonal factorisations of the mixed Tate self-product charts
 
@@ -43,6 +39,10 @@ and the resulting range inclusions `range_spfGraphCodiag*_subset` into `range Δ
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+set_option maxRecDepth 8000
 
 noncomputable section
 open Ideal AlgebraicGeometry CategoryTheory CategoryTheory.Limits FormalSpectrum
@@ -482,6 +482,7 @@ For the other mixed chart the roles of the two tensor factors are exchanged; the
 the graph codiagonals precomposed with the commutativity swap `commHom`.
 -/
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem commHom_le_comap_self (hI : I.FG) :
     idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
       (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)).comap
@@ -579,6 +580,7 @@ def spfGraphLiftYX (hI : I.FG) :
     have h := graphLiftYX_mem_pow R I q hI 1 (by rwa [pow_one])
     rwa [pow_one] at h)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 theorem locX_comp_codiagonal_le_comap (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -928,6 +930,7 @@ theorem range_comp_comp_base_subset {W X Y Z : LocallyRingedSpace.{u}}
   rintro y ⟨w, rfl⟩
   exact ⟨g.base (f.base w), rfl⟩
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The factorisation of the glued diagonal on the `c`-chart: `ι c ≫ Δ = diagChart ≫ ι (c, c)`.
 (The same statement as the `424` scaffold's `curve_ι_comp_diagonal`, kept here so that this file
 is self-contained; drop one of the two copies when the scaffold lands.) -/

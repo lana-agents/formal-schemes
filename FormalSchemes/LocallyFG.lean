@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.OpenCover
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Locally finitely-generated formal schemes and the affine-chart neighborhood basis
 
@@ -43,6 +40,9 @@ fibre-product universal property) consumes.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

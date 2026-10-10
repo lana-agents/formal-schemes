@@ -6,10 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GraphCodiagonalClosedEmbedding
 import FormalSchemes.TateSeparated
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-set_option maxRecDepth 8000
-
 /-!
 # The two chart bridges of the Tate graph codiagonals
 
@@ -40,6 +36,10 @@ transition intertwines `ψˣ` and `ψʸ`, and each bridge computes the structura
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+set_option maxRecDepth 8000
 
 noncomputable section
 
@@ -245,6 +245,7 @@ theorem graphLiftX_mem_pow (hI : I.FG) (m : ℕ)
 
 /-! ### The two ring identities -/
 
+omit [IsNoetherianRing R] in
 theorem graphLiftX_comp_map (hI : I.FG) :
     (graphLiftX R I q hI).comp
         (map hI (AlgHom.id R (annulusAlgebra R I q))
@@ -253,10 +254,6 @@ theorem graphLiftX_comp_map (hI : I.FG) :
       graphCodiagX R I q hI := by
   haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
-  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
-    annulus_isAdicRing_map R I q hI
-  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
-    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
   refine hom_ext (annulusOverlapIdeal R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
     (fun a => ?_) (fun b => ?_)
   · exact graphLiftX_mem_pow R I q hI m (map_mem_pow hI _ _ m hx)
@@ -268,6 +265,7 @@ theorem graphLiftX_comp_map (hI : I.FG) :
       graphChartAlgY_algebraMap, graphCodiagX_inr]
     rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftX_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -449,6 +447,7 @@ theorem graphLiftYX_mem_pow (hI : I.FG) (m : ℕ)
 
 /-! ### The `(A)` and `(B)` identities of the three remaining lifts -/
 
+omit [IsNoetherianRing R] in
 theorem graphLiftY_comp_map (hI : I.FG) :
     (graphLiftY R I q hI).comp
         (map hI
@@ -460,10 +459,6 @@ theorem graphLiftY_comp_map (hI : I.FG) :
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
-  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
-    annulus_isAdicRing_map R I q hI
-  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
-    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
   haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
     CompletedTensorProduct.isAdicRing R I _ _ hI
   refine hom_ext (annulusOverlapIdealY R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
@@ -491,6 +486,7 @@ theorem graphLiftY_comp_map (hI : I.FG) :
       graphCodiagY_inr]
     rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftY_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -542,6 +538,7 @@ theorem graphLiftY_comp_map_transition (hI : I.FG) :
       lift_inr, RingHom.comp_apply, codiagonal_inr]
     rfl
 
+omit [IsNoetherianRing R] in
 theorem graphLiftXY_comp_map (hI : I.FG) :
     (graphLiftXY R I q hI).comp
         (map hI
@@ -555,10 +552,6 @@ theorem graphLiftXY_comp_map (hI : I.FG) :
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
-  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
-    annulus_isAdicRing_map R I q hI
-  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
-    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
   haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
     CompletedTensorProduct.isAdicRing R I _ _ hI
   have hcod : ∀ (m : ℕ) (z : CompletedTensorProduct R I (annulusAlgebra R I q)
@@ -588,6 +581,7 @@ theorem graphLiftXY_comp_map (hI : I.FG) :
   · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftXY, lift_inr, RingHom.comp_apply,
       commHom_inr, graphCodiagX_inl]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftXY_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -633,6 +627,7 @@ theorem graphLiftXY_comp_map_transition (hI : I.FG) :
       lift_inr, RingHom.comp_apply, codiagonal_inr]
     rfl
 
+omit [IsNoetherianRing R] in
 theorem graphLiftYX_comp_map (hI : I.FG) :
     (graphLiftYX R I q hI).comp
         (map hI (AlgHom.id R (annulusAlgebra R I q))
@@ -645,10 +640,6 @@ theorem graphLiftYX_comp_map (hI : I.FG) :
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
-  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
-    annulus_isAdicRing_map R I q hI
-  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
-    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
   haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
     CompletedTensorProduct.isAdicRing R I _ _ hI
   have hcod : ∀ (m : ℕ) (z : CompletedTensorProduct R I (annulusAlgebra R I q)
@@ -684,6 +675,7 @@ theorem graphLiftYX_comp_map (hI : I.FG) :
       graphCodiagY_inl]
     rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftYX_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI

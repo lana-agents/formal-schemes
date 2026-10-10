@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductBothAlgebraDataTPrimeFacAux
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Per-leaf cocycle closers for the dispatched triple-overlap transition `bothAlgDataT'`
 
@@ -34,6 +31,9 @@ atoms of `FormalSchemes.GeneralFibreProductBothAlgebraDataTPrimeFacAux`.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -42,8 +42,6 @@ open CompletedTensorAwayInterchange CompletedTensorProduct
 universe u
 
 namespace AlgebraicGeometry
-
-open scoped Classical
 
 /-! ### The generic 3-fold `AlgEquiv` cocycle closer
 
@@ -71,7 +69,7 @@ variable {A : JX → Type u} {B : JY → Type u}
 variable [∀ i, CommRing (A i)] [∀ i, Algebra R (A i)]
 variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
 
-variable (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+variable (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
 variable
   (τX : ∀ (i i' : JX), i ≠ i' →
     (awayCompletion (I.map (algebraMap R (A i))) (gX i i') ≃ₐ[R]

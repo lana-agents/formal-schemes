@@ -98,6 +98,8 @@ variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
 variable [TopologicalSpace (CompletedTensorProduct R I A A)]
   [IsAdicRing (idealOfDefinition R I A A)]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- The codiagonal `∇ : A ⊗̂_R A →+* A` carries the ideal of definition `idealOfDefinition R I A A`
 of `A ⊗̂_R A` into the ideal of definition `I·A` of `A` — the continuity/adic-compatibility input
 making `∇` induce a morphism of formal spectra. It is `CompletedTensorProduct.lift_le_comap`
@@ -108,6 +110,8 @@ theorem codiagonal_le_comap (hI : I.FG) :
     ‹IsAdicRing (I.map (algebraMap R A))›.toIsAdicComplete
   exact lift_le_comap (le_refl _) (AlgHom.id R A) (AlgHom.id R A) hI
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- The affine diagonal `Δ_{A/R} : Spf A ⟶ Spf (A ⊗̂_R A)` is, on underlying continuous maps,
 `FormalSpectrum.map` of the codiagonal `∇`. -/
 theorem diagonal_base_eq (hI : I.FG) :

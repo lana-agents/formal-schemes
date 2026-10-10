@@ -56,6 +56,10 @@ variable [TopologicalSpace (CompletedTensorProduct R I A B)]
   [IsAdicRing (idealOfDefinition R I A B)]
 variable {S : Type u} [CommRing S] [TopologicalSpace S] {L : Ideal S} [IsAdicRing L]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A]
+  [IsAdicRing (Ideal.map (algebraMap R A) I)] [TopologicalSpace B]
+  [IsAdicRing (Ideal.map (algebraMap R B) I)] [TopologicalSpace (CompletedTensorProduct R I A B)]
+  [IsAdicRing (idealOfDefinition R I A B)] [TopologicalSpace S] [IsAdicRing L] in
 /-- The composite `φ ∘ inl` carries `I·A` into `L`, given that `φ` carries the ideal of definition
 of `A ⊗̂_R B` into `L`. -/
 theorem comp_inl_le_comap (φ : CompletedTensorProduct R I A B →+* S)
@@ -66,6 +70,10 @@ theorem comp_inl_le_comap (φ : CompletedTensorProduct R I A B →+* S)
       idealOfDefinition R I A B from inl_isAdicHom]
   exact hφ
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A]
+  [IsAdicRing (Ideal.map (algebraMap R A) I)] [TopologicalSpace B]
+  [IsAdicRing (Ideal.map (algebraMap R B) I)] [TopologicalSpace (CompletedTensorProduct R I A B)]
+  [IsAdicRing (idealOfDefinition R I A B)] [TopologicalSpace S] [IsAdicRing L] in
 /-- The composite `φ ∘ inr` carries `I·B` into `L`. -/
 theorem comp_inr_le_comap (φ : CompletedTensorProduct R I A B →+* S)
     (hφ : idealOfDefinition R I A B ≤ L.comap φ) :
@@ -75,6 +83,8 @@ theorem comp_inr_le_comap (φ : CompletedTensorProduct R I A B →+* S)
       idealOfDefinition R I A B from inr_isAdicHom]
   exact hφ
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace B]
+  [IsAdicRing (Ideal.map (algebraMap R B) I)] [TopologicalSpace S] [IsAdicRing L] in
 /-- Composing `Spf φ` with the first projection `fibrePr₁` collapses to `Spf` of the composite
 ring homomorphism `φ ∘ inl : A → S`. -/
 theorem spfMap_comp_fibrePr₁ (φ : CompletedTensorProduct R I A B →+* S)
@@ -87,6 +97,8 @@ theorem spfMap_comp_fibrePr₁ (φ : CompletedTensorProduct R I A B →+* S)
       (J := idealOfDefinition R I A B) (K := L) (φ := (inl R I A B).toRingHom) (ψ := φ)
       (hIJ := inl_isAdicHom.le_comap) (hJK := hφ) (hIK := comp_inl_le_comap φ hφ)]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A]
+  [IsAdicRing (Ideal.map (algebraMap R A) I)] [TopologicalSpace S] [IsAdicRing L] in
 /-- Composing `Spf φ` with the second projection `fibrePr₂` collapses to `Spf` of `φ ∘ inr`. -/
 theorem spfMap_comp_fibrePr₂ (φ : CompletedTensorProduct R I A B →+* S)
     (hφ : idealOfDefinition R I A B ≤ L.comap φ) :
@@ -98,6 +110,10 @@ theorem spfMap_comp_fibrePr₂ (φ : CompletedTensorProduct R I A B →+* S)
       (J := idealOfDefinition R I A B) (K := L) (φ := (inr R I A B).toRingHom) (ψ := φ)
       (hIJ := inr_isAdicHom.le_comap) (hJK := hφ) (hIK := comp_inr_le_comap φ hφ)]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A]
+  [IsAdicRing (Ideal.map (algebraMap R A) I)] [TopologicalSpace B]
+  [IsAdicRing (Ideal.map (algebraMap R B) I)] [TopologicalSpace (CompletedTensorProduct R I A B)]
+  [IsAdicRing (idealOfDefinition R I A B)] [TopologicalSpace S] [IsAdicRing L] in
 /-- A ring homomorphism `φ` carrying the ideal of definition into `L` is continuous in the
 filtration sense: it carries every power `(I·(A ⊗̂_R B))^m` into `L^m`. -/
 theorem pow_mem_of_le_comap (φ : CompletedTensorProduct R I A B →+* S)

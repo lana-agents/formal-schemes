@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductDSigmaInv
 import FormalSchemes.TateSelfProductGlueDatum
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The four-chart Tate self-product `GlueData'` cocycle (𝔾m-inversion model)
 
@@ -49,6 +46,9 @@ then compose to `𝟙` by pure category algebra, and `tateSelfProductSigmaInv_tr
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * Mathlib `CategoryTheory.GlueData'` (the `t'`/`t_fac`/`cocycle` fields).
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

@@ -10,10 +10,6 @@ import FormalSchemes.TateDiagonalClosedCover
 import FormalSchemes.TateGraphCodiagonalFactor
 import FormalSchemes.TateSelfProductMixedGlue
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-set_option maxRecDepth 8000
-
 /-!
 # Descending a mixed chart of the Tate self-product into the overlap summands
 
@@ -51,6 +47,10 @@ companion, ring-theoretic half.
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+set_option maxRecDepth 8000
 
 noncomputable section
 
@@ -127,6 +127,7 @@ theorem mixedChartDescent (hq : q ∈ I) (hI : I.FG) {W : LocallyRingedSpace.{u}
 
 section GlueF
 
+omit [IsNoetherianRing R] in
 /-- The glue datum's overlap inclusion for a pair of distinct charts is the corresponding merged
 overlap chart, up to the `eqToHom` produced by `CategoryTheory.GlueData'.f'`; on ranges this makes
 the former land inside the latter. -/
@@ -149,6 +150,7 @@ private theorem glueF_range_subset_second_ft (hq : q ∈ I) (hI : I.FG) :
       rfl]
   exact range_comp_base_subset _ _
 
+omit [IsNoetherianRing R] in
 private theorem glueF_range_subset_first_ft (hq : q ∈ I) (hI : I.FG) :
     Set.range ⇑((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.f
           ⟨(false, true)⟩ ⟨(true, true)⟩ ≫
@@ -168,6 +170,7 @@ private theorem glueF_range_subset_first_ft (hq : q ∈ I) (hI : I.FG) :
       rfl]
   exact range_comp_base_subset _ _
 
+omit [IsNoetherianRing R] in
 private theorem glueF_range_subset_second_tf (hq : q ∈ I) (hI : I.FG) :
     Set.range ⇑((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.f
           ⟨(true, false)⟩ ⟨(true, true)⟩ ≫
@@ -187,6 +190,7 @@ private theorem glueF_range_subset_second_tf (hq : q ∈ I) (hI : I.FG) :
       rfl]
   exact range_comp_base_subset _ _
 
+omit [IsNoetherianRing R] in
 private theorem glueF_range_subset_first_tf (hq : q ∈ I) (hI : I.FG) :
     Set.range ⇑((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.f
           ⟨(true, false)⟩ ⟨(false, false)⟩ ≫
@@ -380,6 +384,7 @@ theorem mixedChartSplit_first_tf (hq : q ∈ I) (hI : I.FG)
 
 /-! ### Transport of closedness from the affine chart to the cover -/
 
+omit [IsNoetherianRing R] in
 /-- **Chart transport.** A set of the glued Tate self-product has closed coe-preimage in the chart
 `p` of `tateSelfProductChartCover` as soon as its preimage under the affine chart inclusion `ι p`
 is closed. This is the `ψ`-step of `restrictPreimage_diagonal_diagChart`, stated once for an
@@ -401,6 +406,7 @@ section GraphPieces
 
 variable [TopologicalSpace R] [IsAdicRing I] (hI : I.FG)
 
+omit [IsNoetherianRing R] in
 /-- The `x`-side graph piece is closed in all of `Spf(A ⊗̂_R A)`. -/
 theorem isClosed_range_spfGraphCodiagX :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -413,6 +419,7 @@ theorem isClosed_range_spfGraphCodiagX :
   exact (CompletedTensorProduct.isClosedEmbedding_map_graphCodiagX
     (R := R) (I := I) (q := q) hI).isClosed_range
 
+omit [IsNoetherianRing R] in
 /-- The `y`-side graph piece is closed in all of `Spf(A ⊗̂_R A)`. -/
 theorem isClosed_range_spfGraphCodiagY :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI

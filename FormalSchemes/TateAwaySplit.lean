@@ -7,8 +7,6 @@ import FormalSchemes.AdicCompletionAwayTrans
 import FormalSchemes.AdicCompletionSplitAway
 import FormalSchemes.TateOverlapDisjoint
 
-set_option maxHeartbeats 3200000
-
 /-!
 # The Tate annulus overlap splits: `A{1/(x+y)}^ ≃ₐ[R] A{1/x}^ × A{1/y}^`
 
@@ -53,6 +51,8 @@ Note that `D(x) ⊆ D(x + y)` fails in `Spec A`: `x + y = x · (1 + q/x²)` and 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1, §10.8.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9 (the Tate curve).
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 

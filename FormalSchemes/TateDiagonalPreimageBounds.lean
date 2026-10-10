@@ -6,10 +6,6 @@ Authors: LANA Project
 import FormalSchemes.DiagonalPreimageGraph
 import FormalSchemes.TateGraphCodiagonalXLift
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-set_option maxRecDepth 8000
-
 /-!
 # The eight preimage bounds of the Tate diagonal in a mixed chart
 
@@ -53,6 +49,10 @@ with `Spf` of the corresponding ring map, and the resulting geometric forms
 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+set_option maxRecDepth 8000
 
 noncomputable section
 
@@ -196,6 +196,7 @@ theorem preimage_range_codiagonal_subset_of_inl_iso
     rw [h2, ← hφl a, ← hφr a, ← neg_sub]
     exact Submodule.neg_mem _ (Submodule.mem_sup_left (map_inl_sub_map_inr_mem φ a))
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- Adicity of a composite of two functorial maps. -/
 theorem map_comp_map_le_comap {A B A' B' A'' B'' : Type u}
     [CommRing A] [CommRing B] [CommRing A'] [CommRing B'] [CommRing A''] [CommRing B'']
@@ -225,6 +226,7 @@ variable [TopologicalSpace R] [IsAdicRing I]
 
 /-! ### The affine diagonal chart as `Spf` of the codiagonal -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The codiagonal `∇ : A ⊗̂_R A →+* A` is adic for the annulus ideal convention
 `annulusIdealOfDefinition` — the continuity witness built into `diagChart`, exposed by name. -/
 theorem annulusCodiagonal_le_comap (hI : I.FG) :
@@ -259,6 +261,7 @@ theorem diagChart_base_eq (hI : I.FG) :
 
 /-! ### The four leg identities -/
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- `ψʸ ∘ τ ∘ (A → A{1/x})` is the structural map `A → A[x⁻¹]^∧`. -/
 theorem graphChartAlgY_transition_locX (hI : I.FG) (a : annulusAlgebra R I q) :
     graphChartAlgY R I q hI
@@ -268,6 +271,7 @@ theorem graphChartAlgY_transition_locX (hI : I.FG) (a : annulusAlgebra R I q) :
       algebraMap (annulusAlgebra R I q) (annulusOverlap R I q) a := by
   rw [graphChartAlgY_transition_apply, IsScalarTower.coe_toAlgHom', graphChartAlgX_algebraMap]
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- `ψʸ_plain ∘ τ ∘ (A → A{1/x})` is `invLocXY`. -/
 theorem chartBridgeY_transition_locX (hI : I.FG) (a : annulusAlgebra R I q) :
     chartBridgeY R I q
@@ -278,6 +282,7 @@ theorem chartBridgeY_transition_locX (hI : I.FG) (a : annulusAlgebra R I q) :
   rw [chartBridgeY_transition_apply, IsScalarTower.coe_toAlgHom', graphChartAlgX_algebraMap,
     invLocXY_apply]
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- `ψˣ ∘ τ⁻¹ ∘ (A → A{1/y})` is `invFlipLocX`. -/
 theorem graphChartAlgX_transitionSymm_locY (hI : I.FG) (a : annulusAlgebra R I q) :
     graphChartAlgX R I q
@@ -311,6 +316,7 @@ theorem graphChartAlgXY_transitionSymm_locY (hI : I.FG) (a : annulusAlgebra R I 
 
 /-! ### The legs of the three `#236` lifts that were not exposed -/
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftY_inl (hI : I.FG)
     (z : awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) :
     graphLiftY R I q hI (inl R I _ _ z) = chartBridgeY R I q z := by
@@ -319,12 +325,14 @@ theorem graphLiftY_inl (hI : I.FG)
   rw [graphLiftY, lift_inl]
   rfl
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftY_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     graphLiftY R I q hI (inr R I _ _ a) = invLocXY R I q hI a := by
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
   rw [graphLiftY, lift_inr]
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftXY_inl (hI : I.FG)
     (z : awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) :
     graphLiftXY R I q hI (inl R I _ _ z) = graphChartAlgY R I q hI z := by
@@ -333,6 +341,7 @@ theorem graphLiftXY_inl (hI : I.FG)
   rw [graphLiftXY, lift_inl]
   rfl
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftXY_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     graphLiftXY R I q hI (inr R I _ _ a) =
       algebraMap (annulusAlgebra R I q) (annulusOverlap R I q) a := by
@@ -341,12 +350,14 @@ theorem graphLiftXY_inr (hI : I.FG) (a : annulusAlgebra R I q) :
   rw [graphLiftXY, lift_inr]
   rfl
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftYX_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     graphLiftYX R I q hI (inl R I _ _ a) = invLocXY R I q hI a := by
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
   rw [graphLiftYX, lift_inl]
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftYX_inr (hI : I.FG)
     (z : awayCompletion (I.map (algebraMap R (annulusAlgebra R I q))) (overlapY R I q)) :
     graphLiftYX R I q hI (inr R I _ _ z) = chartBridgeY R I q z := by
@@ -905,6 +916,7 @@ theorem preimage_range_diagChart_subset_first_dXA_y (hI : I.FG) :
 
 /-! ### The four transition composites as `Spf` of the corresponding ring map -/
 
+omit [IsNoetherianRing R] in
 /-- The `dAY`-summand transition composite of the second-factor overlap, as `Spf` of `φ`. -/
 theorem spfSecondTransitionDAY_eq (hI : I.FG) :
     haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
@@ -940,6 +952,7 @@ theorem spfSecondTransitionDAY_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
+omit [IsNoetherianRing R] in
 /-- The `dAX`-summand transition composite of the second-factor overlap, as `Spf` of `φ`. -/
 theorem spfSecondTransitionDAX_eq (hI : I.FG) :
     haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
@@ -976,6 +989,7 @@ theorem spfSecondTransitionDAX_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
+omit [IsNoetherianRing R] in
 /-- The `dYA`-summand transition composite of the first-factor overlap, as `Spf` of `φ`. -/
 theorem spfFirstTransitionDYA_eq (hI : I.FG) :
     haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
@@ -1017,6 +1031,7 @@ theorem spfFirstTransitionDYA_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
+omit [IsNoetherianRing R] in
 /-- The `dXA`-summand transition composite of the first-factor overlap, as `Spf` of `φ`. -/
 theorem spfFirstTransitionDXA_eq (hI : I.FG) :
     haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=

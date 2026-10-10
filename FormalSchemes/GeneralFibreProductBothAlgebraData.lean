@@ -7,9 +7,6 @@ import FormalSchemes.GeneralFibreProductBothAlgebraDataObject
 import FormalSchemes.CompletedTensorAwayInterchangeMixedPullback
 import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # The geometric triple-overlap datum of the two-sided fibre product `X ×_{Spf R} Y`
 
@@ -35,6 +32,9 @@ legs, and the per-shape pullback identifications are the six interchange-pullbac
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
+
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -43,8 +43,6 @@ open CompletedTensorAwayInterchange CompletedTensorProduct
 universe u
 
 namespace AlgebraicGeometry
-
-open scoped Classical
 
 variable {R : Type u} [CommRing R] {I : Ideal R}
 variable {JX JY : Type u}
@@ -56,7 +54,7 @@ variable [∀ j, CommRing (B j)] [∀ j, Algebra R (B j)]
 
 /-- Reduction of `bothAlgDataF` in the *second-coordinate-differs* shape (`p.1 = p'.1`): it is the
 `B`-localizing `rightInterchangeOpenImmersion`, prefixed by the object-reduction `eqToHom`. -/
-theorem bothAlgDataF_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+theorem bothAlgDataF_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' : JX × JY) (h : p ≠ p') (h1 : p.1 = p'.1) :
     bothAlgDataF hI gX gY p p' h =
       eqToHom (bothAlgDataV_snd hI gX gY p p' h h1) ≫
@@ -65,7 +63,7 @@ theorem bothAlgDataF_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : 
 
 /-- Reduction of `bothAlgDataF` in the *first-coordinate-differs* shape (`p.1 ≠ p'.1`,
 `p.2 = p'.2`): it is the `A`-localizing `interchangeOpenImmersion`. -/
-theorem bothAlgDataF_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+theorem bothAlgDataF_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' : JX × JY) (h : p ≠ p') (h1 : p.1 ≠ p'.1) (h2 : p.2 = p'.2) :
     bothAlgDataF hI gX gY p p' h =
       eqToHom (bothAlgDataV_fst hI gX gY p p' h h1 h2) ≫
@@ -74,7 +72,7 @@ theorem bothAlgDataF_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : 
 
 /-- Reduction of `bothAlgDataF` in the *both-coordinates-differ* shape: it is the both-localizing
 `bothInterchangeOpenImmersion`. -/
-theorem bothAlgDataF_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+theorem bothAlgDataF_both (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' : JX × JY) (h : p ≠ p') (h1 : p.1 ≠ p'.1) (h2 : p.2 ≠ p'.2) :
     bothAlgDataF hI gX gY p p' h =
       eqToHom (bothAlgDataV_both hI gX gY p p' h h1 h2) ≫
@@ -138,7 +136,7 @@ interchange-pullback isomorphisms. -/
 
 /-- **Source iso, (2nd, 2nd) shape.** Both legs localize the `B` factor (`p.1 = p'.1`,
 `p.1 = p''.1`): the triple overlap is `Spf(A_{p.1} ⊗̂_R B_{p.2}{1/(g_Y·g_Y)})`. -/
-def bothAlgDataSrcIso_snd_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_snd_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -159,7 +157,7 @@ def bothAlgDataSrcIso_snd_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j 
       (bothAlgDataF_snd hI gX gY p p'' hpp'' h1'')).symm
 
 /-- **Source iso, (1st, 1st) shape.** Both legs localize the `A` factor. -/
-def bothAlgDataSrcIso_fst_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_fst_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -180,7 +178,7 @@ def bothAlgDataSrcIso_fst_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j 
       (bothAlgDataF_fst hI gX gY p p'' hpp'' h1'' h2'')).symm
 
 /-- **Source iso, (both, both) shape.** Both legs localize both factors. -/
-def bothAlgDataSrcIso_both_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_both_both (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -205,7 +203,7 @@ def bothAlgDataSrcIso_both_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ 
 /-- **Source iso, (1st, 2nd) shape.** The first leg localizes `A` (`p.1 ≠ p'.1`, `p.2 = p'.2`), the
 second localizes `B` (`p.1 = p''.1`): the triple overlap is the mixed double-localized chart, via
 `mixedInterchangePullbackIso`. -/
-def bothAlgDataSrcIso_fst_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_fst_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -228,7 +226,7 @@ def bothAlgDataSrcIso_fst_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j 
 
 /-- **Source iso, (1st, both) shape.** The first leg localizes `A`, the second localizes both
 factors, via `firstBothInterchangePullbackIso`. -/
-def bothAlgDataSrcIso_fst_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_fst_both (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 = p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -251,7 +249,7 @@ def bothAlgDataSrcIso_fst_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j
 
 /-- **Source iso, (2nd, both) shape.** The first leg localizes `B`, the second localizes both
 factors, via `rightBothInterchangePullbackIso`. -/
-def bothAlgDataSrcIso_snd_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_snd_both (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 ≠ p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -275,7 +273,7 @@ def bothAlgDataSrcIso_snd_both (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j
 /-- **Source iso, (2nd, 1st) shape.** Reverse of the mixed shape: first leg localizes `B`, second
 localizes `A`. Obtained from `bothAlgDataSrcIso_fst_snd` (with the two legs swapped) followed by
 `pullbackSymmetry`. -/
-def bothAlgDataSrcIso_snd_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_snd_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 = p'.1) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -290,7 +288,7 @@ def bothAlgDataSrcIso_snd_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j 
     pullbackSymmetry (bothAlgDataF hI gX gY p p'' hpp'') (bothAlgDataF hI gX gY p p' hpp')
 
 /-- **Source iso, (both, 1st) shape.** Reverse of the (1st, both) shape. -/
-def bothAlgDataSrcIso_both_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_both_fst (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 ≠ p''.1) (h2'' : p.2 = p''.2) :
     letI := bothAlgDataHf hI gX gY p p' hpp'
@@ -305,7 +303,7 @@ def bothAlgDataSrcIso_both_fst (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j
     pullbackSymmetry (bothAlgDataF hI gX gY p p'' hpp'') (bothAlgDataF hI gX gY p p' hpp')
 
 /-- **Source iso, (both, 2nd) shape.** Reverse of the (2nd, both) shape. -/
-def bothAlgDataSrcIso_both_snd (hI : I.FG) (gX : ∀ i i' : JX, A i) (gY : ∀ j j' : JY, B j)
+def bothAlgDataSrcIso_both_snd (hI : I.FG) (gX : ∀ i : JX, JX → A i) (gY : ∀ j : JY, JY → B j)
     (p p' p'' : JX × JY) (hpp' : p ≠ p') (hpp'' : p ≠ p'')
     (h1' : p.1 ≠ p'.1) (h2' : p.2 ≠ p'.2) (h1'' : p.1 = p''.1) :
     letI := bothAlgDataHf hI gX gY p p' hpp'

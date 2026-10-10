@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothObject
 import FormalSchemes.GeneralFibreProductExposeXStructMap
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 /-!
 # Exposing the glued factors `X` and `Y` inside the two-sided fibre-product datum
 
@@ -47,6 +44,9 @@ the projections `pr₁ : X ×_{Spf R} Y ⟶ X`, `pr₂ : X ×_{Spf R} Y ⟶ Y` a
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
+
+set_option maxHeartbeats 3200000
+set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

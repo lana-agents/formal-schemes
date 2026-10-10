@@ -7,8 +7,6 @@ import Mathlib.RingTheory.Idempotents
 import Mathlib.RingTheory.Nilpotent.Basic
 import Mathlib.RingTheory.Localization.Away.Basic
 
-set_option maxHeartbeats 3200000
-
 /-!
 # A ring splits as a product of two localizations when `f + g` is a unit and `f · g` is nilpotent
 
@@ -64,6 +62,8 @@ annulus, so this lemma does **not** apply to that ring directly: it applies leve
   disconnections of `Spec`), Tag 00J9 (lifting idempotents along a nil ideal).
 * Mathlib `Mathlib/RingTheory/Idempotents.lean`.
 -/
+
+set_option maxHeartbeats 3200000
 
 noncomputable section
 
