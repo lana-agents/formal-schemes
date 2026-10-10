@@ -148,6 +148,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
       annulusOverlapInvX R I q hI (locX R I q (annulusFlipHom R I q hI a)) := by
   rw [graphCodiagX, RingHom.comp_apply, map_inr, localizedCodiagInvX_inr]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `x`-side graph codiagonal is surjective**: it is the surjection `localizedCodiagInvX`
 precomposed with the automorphism `id ⊗̂ flip`. -/
 theorem graphCodiagX_surjective (hI : I.FG) :
@@ -173,6 +174,7 @@ theorem map_graphCodiagX_eq (hI : I.FG) :
       (B := annulusAlgebra R I q), Ideal.map_map, graphCodiagX_comp_algebraMap,
     ← overlapIdeal_eq_map]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ˣ` is continuous for the adic topologies. -/
 theorem graphCodiagX_le_comap (hI : I.FG) :
     idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
@@ -252,6 +254,7 @@ theorem graphCodiagY_comp_algebraMap (hI : I.FG) :
   rw [RingHom.comp_apply, graphCodiagY, RingHom.comp_apply, RingHom.comp_apply, hc, hx,
     RingHom.coe_coe, annulusOverlapInversion_algebraMap]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ʸ` carries the ideal of definition of `A ⊗̂_R A` exactly onto `I·A{1/y}`. -/
 theorem map_graphCodiagY_eq (hI : I.FG) :
     (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)).map

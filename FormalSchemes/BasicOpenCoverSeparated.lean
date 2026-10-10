@@ -283,6 +283,7 @@ theorem algebraMap_overlapElt (i j : J) :
     (f i * f j)]
   rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The witness.** `inl (f_i⁻¹) · inr (f_j⁻¹)` maps to an inverse of the overlap element: the two
 factors of `g_ij = f_i·f_j` are inverted in the two *different* charts, and that is exactly what the
 two legs of the chart codiagonal supply. -/

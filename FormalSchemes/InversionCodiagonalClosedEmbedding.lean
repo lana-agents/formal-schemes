@@ -295,6 +295,7 @@ theorem localizedCodiagInvX_le_comap (hI : I.FG) :
 
 omit [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
   [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))] in
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The base map of `Spf ∇ᵢ : Spf (A{1/x}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 `∇ᵢ` is surjective (`localizedCodiagInvX_surjective`), and `Spf` of a surjection is a closed
 embedding (`FormalSpectrum.isClosedEmbedding_map_of_surjective`). This is the shape the merged right

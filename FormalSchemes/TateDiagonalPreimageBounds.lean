@@ -74,6 +74,8 @@ variable [TopologicalSpace E]
 variable [TopologicalSpace (CompletedTensorProduct R I A A)]
   [IsAdicRing (idealOfDefinition R I A A)]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- **The preimage bound, right shape.** Let `φ : A ⊗̂_R A →+* A ⊗̂_R C` send `inl a ↦ inl a` and
 `inr a ↦ inr (θ a)`, and let `g : A ⊗̂_R C →+* E` be adic with `g (inl a) = f₁ a` and
 `g (inr c) = ψ c` for an `R`-algebra isomorphism `ψ : C ≃ₐ[R] E`. If `ψ ∘ θ = f₁` — the *graph
@@ -138,6 +140,8 @@ theorem preimage_range_codiagonal_subset_of_inr_iso
     rw [h2, sub_self]
     exact Submodule.zero_mem _
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- **The preimage bound, left shape** — the mirror of
 `CompletedTensorProduct.preimage_range_codiagonal_subset_of_inr_iso` with the isomorphism leg of
 `g` on the *first* tensor factor. Here the `inl` graph relation vanishes and the `inr` one is

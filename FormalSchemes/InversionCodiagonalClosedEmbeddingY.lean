@@ -130,6 +130,7 @@ theorem localizedCodiagInvY_comp_algebraMap (hI : I.FG) :
     rw [← RingHom.comp_apply, localizedCodiagInvX_comp_algebraMap]
   rw [RingHom.comp_apply, localizedCodiagInvY_apply, hx, annulusOverlapInversion_algebraMap]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The y-side inversion localized codiagonal `∇ᵢʸ` is surjective**: `∇ᵢ` is surjective
 (`localizedCodiagInvX_surjective`) and `annulusOverlapInversion` is a bijection. -/
 theorem localizedCodiagInvY_surjective (hI : I.FG) :
@@ -162,6 +163,7 @@ theorem map_localizedCodiagInvY_eq (hI : I.FG) :
     map_idealOfDefinition_localizedCodiagInvX (R := R) (I := I) (q := q) hI,
     map_annulusOverlapInversion_annulusOverlapIdeal]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ᵢʸ` carries the ideal of definition of `A ⊗̂_R A` into that of `A{1/y}` — the
 continuity/adic-compatibility input making `∇ᵢʸ` induce a morphism of formal spectra. -/
 theorem localizedCodiagInvY_le_comap (hI : I.FG) :

@@ -289,7 +289,7 @@ section Factor
 
 variable (hI : I.FG)
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 private theorem graphCodiagX_mem_pow (m : ℕ)
     {x : CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q)}
     (hx : x ∈ (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) ^ m) :

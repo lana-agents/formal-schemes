@@ -447,7 +447,7 @@ theorem graphLiftYX_mem_pow (hI : I.FG) (m : ℕ)
 
 /-! ### The `(A)` and `(B)` identities of the three remaining lifts -/
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftY_comp_map (hI : I.FG) :
     (graphLiftY R I q hI).comp
         (map hI
@@ -627,7 +627,7 @@ theorem graphLiftXY_comp_map_transition (hI : I.FG) :
       lift_inr, RingHom.comp_apply, codiagonal_inr]
     rfl
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftYX_comp_map (hI : I.FG) :
     (graphLiftYX R I q hI).comp
         (map hI (AlgHom.id R (annulusAlgebra R I q))

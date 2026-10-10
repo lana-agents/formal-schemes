@@ -49,6 +49,7 @@ variable {R : Type u} [CommRing R] {I : Ideal R} {hI : I.FG}
 variable [TopologicalSpace R] [IsAdicRing I]
 variable (D : BothChartedFibreDatumXY R I hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Per-chart uniqueness primitive.** Let `m₁ m₂ : Z ⟶ X ×_{Spf R} Y` agree after both
 projections. On a single finitely generated affine chart `w : Spf L ⟶ Z`, suppose the restriction
 `w ≫ m₁` of `m₁` factors through the product chart `Spf(A_{P.1} ⊗̂_R B_{P.2})` via

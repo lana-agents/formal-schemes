@@ -193,6 +193,7 @@ theorem chartCodiagonal_surjective_of_invSelf_mem_range (i j : DX.J) (h : i ≠ 
       DX.chartCodiagonal_inl i j h c⟩)
     hinv
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The chart codiagonal is surjective as soon as some element of `A_i ⊗̂_R A_j` maps to an
 inverse of the overlap element `g_ij`.** The practical form of
 `chartCodiagonal_surjective_of_invSelf_mem_range`: inverses are unique, so a witness for the

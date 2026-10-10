@@ -96,6 +96,7 @@ section Characterisation
 
 variable [Algebra R S]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **`fibreLift` is the unique mediating morphism**, now among *all* locally-ringed-space morphisms
 from `Spf S` with continuous global-sections map. Given `R`-algebra maps `f : A →ₐ[R] S`,
 `g : B →ₐ[R] S` (into a complete adic `R`-algebra `S` with `I·S ≤ L`), any morphism `m : Spf S ⟶
