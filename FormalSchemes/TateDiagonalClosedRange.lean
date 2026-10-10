@@ -80,6 +80,7 @@ variable [TopologicalSpace R] [IsAdicRing I]
 
 /-! ### The range decomposition of the glued diagonal -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Range decomposition of the glued diagonal.** The range of `Δ.base` is the union, over the two
 curve charts `b : ULift Bool`, of the ranges of the diagonal-chart composites
 `diagChart ≫ ι (b, b)`. This follows from the joint surjectivity of the two curve-chart
@@ -144,6 +145,7 @@ theorem inr_comp_firstFactorOverlapChart :
       interchangeOpenImmersion (B := annulusAlgebra R I q) I (overlapY R I q) hI :=
   coprod.inr_desc _ _
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `dAX`-summand transition composite** of the second-factor overlap: the shape bounded by
 `spfPreimage_range_diagChart_subset_second_dAX_*`. -/
 theorem inl_comp_secondTransition_comp_chart :
@@ -156,6 +158,7 @@ theorem inl_comp_secondTransition_comp_chart :
       (rightSummandInv R I q hI).hom ≫ coprod.inr := coprod.inl_desc _ _
   rw [← Category.assoc, htr, Category.assoc, inr_comp_secondFactorOverlapChart]
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `dAY`-summand transition composite** of the second-factor overlap. -/
 theorem inr_comp_secondTransition_comp_chart :
     (coprod.inr : dAY R I q ⟶ dAX R I q ⨿ dAY R I q) ≫
@@ -167,6 +170,7 @@ theorem inr_comp_secondTransition_comp_chart :
       (rightSummandInv R I q hI).inv ≫ coprod.inl := coprod.inr_desc _ _
   rw [← Category.assoc, htr, Category.assoc, inl_comp_secondFactorOverlapChart]
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `dXA`-summand transition composite** of the first-factor overlap. -/
 theorem inl_comp_firstTransition_comp_chart :
     (coprod.inl : dXA R I q ⟶ dXA R I q ⨿ dYA R I q) ≫
@@ -178,6 +182,7 @@ theorem inl_comp_firstTransition_comp_chart :
       (firstSummandInv R I q hI).hom ≫ coprod.inr := coprod.inl_desc _ _
   rw [← Category.assoc, htr, Category.assoc, inr_comp_firstFactorOverlapChart]
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `dYA`-summand transition composite** of the first-factor overlap. -/
 theorem inr_comp_firstTransition_comp_chart :
     (coprod.inr : dYA R I q ⟶ dXA R I q ⨿ dYA R I q) ≫

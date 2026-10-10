@@ -220,6 +220,8 @@ theorem inl_sub_inr_mem_ker_codiagonal (a : A) :
     inl R I A A a - inr R I A A a ∈ RingHom.ker (codiagonal R I A) := by
   rw [RingHom.mem_ker, map_sub, codiagonal_inl, codiagonal_inr, sub_self]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- **The graph relations are automatic for the image of a diagonal generator.** For any ring map
 `φ` out of `A ⊗̂_R A`, the difference `φ (inl a) - φ (inr a)` lies in `(ker ∇).map φ`. In practice
 `φ` is a `CompletedTensorProduct.map`, so the two terms are `inl (u a)` and `inr (v a)`, and this is
@@ -233,6 +235,8 @@ theorem map_inl_sub_map_inr_mem {S : Type u} [CommRing S]
 
 omit [TopologicalSpace (CompletedTensorProduct R I A₁ B₁)]
   [IsAdicRing (idealOfDefinition R I A₁ B₁)] in
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- **The preimage of the affine diagonal locus lies in the range of `Spf g`.** Let
 `φ : A ⊗̂_R A →+* A₁ ⊗̂_R B₁` be adic and let `g : A₁ ⊗̂_R B₁ →+* E` be an adic surjection
 admitting a continuous section `s`. If the two *graph relations* `inl a - s (g (inl a))` and

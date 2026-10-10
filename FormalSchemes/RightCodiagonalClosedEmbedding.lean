@@ -140,7 +140,9 @@ theorem rightCodiagonal_le_comap (hI : I.FG) (f : A →ₐ[R] C) :
     ‹IsAdicRing (I.map (algebraMap R C))›.toIsAdicComplete
   exact lift_le_comap (le_refl _) f (AlgHom.id R C) hI
 
-omit [TopologicalSpace (CompletedTensorProduct R I A C)] [IsAdicRing (idealOfDefinition R I A C)] in
+omit [TopologicalSpace (CompletedTensorProduct R I A C)] [IsAdicRing (idealOfDefinition R I A C)]
+  [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace A]
+  [IsAdicRing (Ideal.map (algebraMap R A) I)] in
 /-- **The base map of `Spf ∇_f : Spf C → Spf (A ⊗̂_R C)` is a closed topological embedding.** The
 right codiagonal `∇_f : A ⊗̂_R C →+* C` is surjective (`rightCodiagonal_surjective`), and `Spf`
 (i.e. `Spec` of the level-`0` reduction) of a surjection is a closed embedding

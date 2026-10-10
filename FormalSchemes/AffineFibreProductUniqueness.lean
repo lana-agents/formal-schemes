@@ -125,6 +125,7 @@ theorem pow_mem_of_le_comap (φ : CompletedTensorProduct R I A B →+* S)
     exact Ideal.pow_right_mono hmap m
   exact hpow (Ideal.mem_map_of_mem φ hx)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Uniqueness of the mediating morphism, among `Spf`-of-ring-map morphisms** (the uniqueness
 half of the affine fibre-product universal property, EGA I 10.7). Two morphisms `Spf φ₁`,
 `Spf φ₂ : Spf S ⟶ Spf (A ⊗̂_R B)` induced by adic ring homomorphisms `φ₁, φ₂ : A ⊗̂_R B →+* S` that

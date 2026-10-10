@@ -129,6 +129,7 @@ theorem oneChartXGluedIso_inv_comp_xStructMap :
     (oneChartXGluedIso_inv_toLRSHom hI)).trans
       ((oneChartExposeXDatum R I hI A).ι_xStructMap ⟨⟨⟩⟩)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The one-chart gluing isomorphism lies over `Spf R`**, forward spelling: this is the
 compatibility `FormalScheme.isSeparatedOverSpf_iff` consumes, so it is stated in that shape.
 

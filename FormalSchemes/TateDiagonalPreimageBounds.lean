@@ -244,6 +244,7 @@ theorem annulusCodiagonal_le_comap (hI : I.FG) :
   rw [CompletedTensorProduct.map_codiagonal_eq (R := R) (I := I) (A := annulusAlgebra R I q)]
   exact (annulus_map_eq R I q).le
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The base map of the affine diagonal chart is `FormalSpectrum.map` of the codiagonal. -/
 theorem diagChart_base_eq (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -298,6 +299,7 @@ theorem graphChartAlgX_transitionSymm_locY (hI : I.FG) (a : annulusAlgebra R I q
   rw [← h, IsScalarTower.coe_toAlgHom', graphChartAlgY_algebraMap, invFlipLocX_apply,
     IsScalarTower.coe_toAlgHom']
 
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- `ψˣʸ ∘ τ⁻¹ ∘ (A → A{1/y})` is the structural map `A → A[y⁻¹]^∧`. -/
 theorem graphChartAlgXY_transitionSymm_locY (hI : I.FG) (a : annulusAlgebra R I q) :
     graphChartAlgXY R I q hI
@@ -916,7 +918,7 @@ theorem preimage_range_diagChart_subset_first_dXA_y (hI : I.FG) :
 
 /-! ### The four transition composites as `Spf` of the corresponding ring map -/
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dAY`-summand transition composite of the second-factor overlap, as `Spf` of `φ`. -/
 theorem spfSecondTransitionDAY_eq (hI : I.FG) :
     haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
@@ -952,7 +954,7 @@ theorem spfSecondTransitionDAY_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dAX`-summand transition composite of the second-factor overlap, as `Spf` of `φ`. -/
 theorem spfSecondTransitionDAX_eq (hI : I.FG) :
     haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
@@ -989,7 +991,7 @@ theorem spfSecondTransitionDAX_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dYA`-summand transition composite of the first-factor overlap, as `Spf` of `φ`. -/
 theorem spfFirstTransitionDYA_eq (hI : I.FG) :
     haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=
@@ -1031,7 +1033,7 @@ theorem spfFirstTransitionDYA_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dXA`-summand transition composite of the first-factor overlap, as `Spf` of `φ`. -/
 theorem spfFirstTransitionDXA_eq (hI : I.FG) :
     haveI : IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :=

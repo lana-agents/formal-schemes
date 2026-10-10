@@ -212,6 +212,8 @@ theorem map_codiagonal_eq :
     (idealOfDefinition R I A A).map (codiagonal R I A) = I.map (algebraMap R A) := by
   rw [idealOfDefinition_eq_map, Ideal.map_map, codiagonal_comp_algebraMap]
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- **The affine diagonal `Δ_{A/R}` is a closed immersion** (EGA I §10.15): its underlying base map
 `Spf A → Spf (A ⊗̂_R A)` (`diagonal_base_eq`) is a closed embedding and its stalk maps are
 surjective. The inducing ring hom is the surjective codiagonal `∇ : A ⊗̂_R A → A`, with

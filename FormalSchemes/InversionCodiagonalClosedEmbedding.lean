@@ -146,6 +146,7 @@ theorem localizedCodiagInvX_inl_apply (hI : I.FG) (a : annulusAlgebra R I q) :
     IsScalarTower.algebraMap_apply (annulusAlgebra R I q) (annulusLoc R I q)
       (annulusOverlap R I q)]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ᵢ (inr x) = algebraMap L (A{1/x}) (x⁻¹)`: the second leg sends the coordinate `x` to the
 localization inverse `x⁻¹`. Both `algebraMap L (A{1/x}) (x⁻¹)` and `∇ᵢ (inr x) = x⁻¹`
 (`annulusOverlapInvX` applied to `x`) are two-sided inverses of `algebraMap A (A{1/x}) x` in the
@@ -200,6 +201,7 @@ theorem sub_algebraMap_mem_annulusOverlapIdeal (hI : I.FG) (y : annulusOverlap R
   FormalSpectrum.sub_algebraMap_mem_idealOfDefinition (overlapX R I q) (annulusLocIdeal R I q)
     (hI.map _) y w hw
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ᵢ` carries the ideal of definition of `A ⊗̂_R A` onto that of `A{1/x}` (`I·A{1/x}`). Same
 statement as `map_localizedCodiagInvX_eq`, restated here so it is usable inside the surjectivity
 proof (which precedes the `IsAdicRing` variable block). -/
@@ -265,6 +267,7 @@ variable
 
 omit [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
   [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))] in
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ᵢ` carries the ideal of definition of `A ⊗̂_R A` exactly onto that of `A{1/x}`
 (`annulusOverlapIdeal = I·A{1/x}`). -/
 theorem map_localizedCodiagInvX_eq (hI : I.FG) :

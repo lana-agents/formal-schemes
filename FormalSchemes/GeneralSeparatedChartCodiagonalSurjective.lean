@@ -142,6 +142,7 @@ theorem chartCodiagonal_comp_algebraMap (i j : DX.J) (h : i ≠ j) :
         congrArg (fun ψ => RingHom.comp ψ (algebraMap R (DX.A i)))
           (DX.chartCodiagonal_comp_inl i j h)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The chart codiagonal carries the ideal of definition of `A_i ⊗̂_R A_j` onto that of the
 overlap.** Both are the extension of `I`, and the codiagonal is a map of `R`-algebras. -/
 theorem map_idealOfDefinition_chartCodiagonal (i j : DX.J) (h : i ≠ j) :

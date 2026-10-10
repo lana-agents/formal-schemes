@@ -142,6 +142,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
     graphCodiagX R I q hI (inl R I _ _ a) = locX R I q a := by
   rw [graphCodiagX, RingHom.comp_apply, map_inl, AlgHom.id_apply, localizedCodiagInvX_inl]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 @[simp] theorem graphCodiagX_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     graphCodiagX R I q hI (inr R I _ _ a) =
       annulusOverlapInvX R I q hI (locX R I q (annulusFlipHom R I q hI a)) := by
@@ -154,6 +155,7 @@ theorem graphCodiagX_surjective (hI : I.FG) :
   (localizedCodiagInvX_surjective (R := R) (I := I) (q := q) hI).comp
     (map_id_flip_surjective (R := R) (I := I) (q := q) hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ˣ` is an `R`-algebra map. -/
 theorem graphCodiagX_comp_algebraMap (hI : I.FG) :
     (graphCodiagX R I q hI).comp
@@ -201,6 +203,7 @@ variable {R I q}
     annulusOverlapTransition_algebraMap_annulus, annulusFlip_apply, ← AlgHom.comp_apply,
     annulusFlipHom_annulusFlipHom, AlgHom.id_apply, IsScalarTower.toAlgHom_apply]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 @[simp] theorem graphCodiagY_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     graphCodiagY R I q hI (inr R I _ _ a) =
       annulusOverlapInversion R I q hI (locX R I q a) := by

@@ -120,6 +120,8 @@ theorem diagonal_base_eq (hI : I.FG) :
         (codiagonal_le_comap hI) :=
   rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- The underlying continuous map of the affine diagonal `Δ_{A/R} : Spf A ⟶ Spf (A ⊗̂_R A)` is a
 **closed topological embedding** (EGA I §10.15): `Spf A` maps homeomorphically onto a closed subset
 of `Spf (A ⊗̂_R A)`. This is the topological `base_closed` half of "`Δ_{A/R}` is a closed
@@ -132,6 +134,8 @@ theorem isClosedEmbedding_diagonal_base (hI : I.FG) :
   exact isClosedEmbedding_map_of_surjective (idealOfDefinition R I A A) (I.map (algebraMap R A))
     (codiagonal R I A) (codiagonal_le_comap hI) codiagonal_surjective
 
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace (CompletedTensorProduct R I A A)]
+  [IsAdicRing (idealOfDefinition R I A A)] in
 /-- The **range** of the diagonal's base map is the vanishing locus of the kernel of the level-`0`
 reduction of the codiagonal: the image of `Δ_{A/R}` is the closed "diagonal locus" in
 `Spf (A ⊗̂_R A)` (EGA I §10.15). -/

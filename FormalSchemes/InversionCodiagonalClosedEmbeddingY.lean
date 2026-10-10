@@ -109,12 +109,14 @@ theorem localizedCodiagInvY_inl (hI : I.FG) (a : annulusAlgebra R I q) :
       annulusOverlapInversion R I q hI (locX R I q a) := by
   rw [localizedCodiagInvY_apply, localizedCodiagInvX_inl]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 @[simp]
 theorem localizedCodiagInvY_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     localizedCodiagInvY R I q hI (inr R I _ _ a) =
       annulusOverlapInversion R I q hI (annulusOverlapInvX R I q hI (locX R I q a)) := by
   rw [localizedCodiagInvY_apply, localizedCodiagInvX_inr]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The y-side inversion localized codiagonal is an `R`-algebra map: both legs and the inversion
 transition commute with `algebraMap R`. -/
 theorem localizedCodiagInvY_comp_algebraMap (hI : I.FG) :

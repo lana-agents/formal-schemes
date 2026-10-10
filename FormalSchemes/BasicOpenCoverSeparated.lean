@@ -211,6 +211,7 @@ def coverCodiagonal (hI : I.FG) (i j : J) (hij : i ≠ j) :
       awayCompletion (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j) :=
   (datumX I f B hI).chartCodiagonal i j hij
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `chartCodiagonal_inl` at this datum, in the concrete spelling of the chart algebras. -/
 theorem datumX_chartCodiagonal_inl (hI : I.FG) (i j : J) (hij : i ≠ j)
     (c : chartAlgebra I f i) :
@@ -220,6 +221,7 @@ theorem datumX_chartCodiagonal_inl (hI : I.FG) (i j : J) (hij : i ≠ j)
         (awayCompletion (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j)) c :=
   (datumX I f B hI).chartCodiagonal_inl i j hij c
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `chartCodiagonal_inr` at this datum, in the concrete spelling of the chart algebras. -/
 theorem datumX_chartCodiagonal_inr (hI : I.FG) (i j : J) (hij : i ≠ j)
     (c : chartAlgebra I f j) :

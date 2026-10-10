@@ -84,6 +84,7 @@ def spfGraphLiftX (hI : I.FG) :
     have h := graphLiftX_mem_pow R I q hI 1 (by rwa [pow_one])
     rwa [pow_one] at h)
 
+omit [IsNoetherianRing R] in
 /-- **(A)** The `x`-side graph codiagonal factors through the `y`-summand of the second-factor
 overlap chart. -/
 theorem spfGraphCodiagX_eq (hI : I.FG) :
@@ -130,6 +131,7 @@ def spfLocX (hI : I.FG) :
         ← IsScalarTower.algebraMap_eq R (annulusAlgebra R I q) (annulusOverlap R I q),
         overlapIdeal_eq_map]))
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **(B)** The graph lift, transported back through the second-factor inversion transition and the
 `x`-summand chart, is the diagonal chart along the structural map. -/
 theorem spfGraphLiftX_comp_transition (hI : I.FG) :
@@ -307,6 +309,7 @@ def spfInvLocXY (hI : I.FG) :
       rw [h0, ← annulus_map_eq, ← Ideal.map_map, h1,
         map_annulusOverlapInversion_annulusOverlapIdeal]))
 
+omit [IsNoetherianRing R] in
 /-- **(A)** for the `y`-piece: the `y`-side graph codiagonal factors through the `y`-summand of the
 first-factor overlap chart. -/
 theorem spfGraphCodiagY_eq (hI : I.FG) :
@@ -341,6 +344,7 @@ theorem spfGraphCodiagY_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftY_comp_map R I q hI).symm
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **(B)** for the `y`-piece. -/
 theorem spfGraphLiftY_comp_transition (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -606,6 +610,7 @@ theorem locX_comp_codiagonal_le_comap (hI : I.FG) :
     rwa [pow_one] at this
   exact h1.le (Ideal.mem_map_of_mem _ hc)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 theorem invLocXY_comp_codiagonal_le_comap (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -637,6 +642,7 @@ theorem invLocXY_comp_codiagonal_le_comap (hI : I.FG) :
     rwa [pow_one] at this
   exact hid.le (Ideal.mem_map_of_mem _ hc)
 
+omit [IsNoetherianRing R] in
 /-- **(A)** for the swapped `x`-piece. -/
 theorem spfGraphCodiagXComm_eq (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -672,6 +678,7 @@ theorem spfGraphCodiagXComm_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXY_comp_map R I q hI).symm
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **(B)** for the swapped `x`-piece. -/
 theorem spfGraphLiftXY_comp_transition (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -784,6 +791,7 @@ theorem spfGraphCodiagXComm_comp_ι_tf (hq : q ∈ I) (hI : I.FG) :
           (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ := by
         rw [spfGraphLiftXY_comp_transition R I q hI]; simp only [Category.assoc]
 
+omit [IsNoetherianRing R] in
 /-- **(A)** for the swapped `y`-piece. -/
 theorem spfGraphCodiagYComm_eq (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI

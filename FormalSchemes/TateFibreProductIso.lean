@@ -287,6 +287,7 @@ theorem annulusBaseBridge_comp_tateChartCompUInv (hq : q ∈ I) (hI : I.FG)
 
 /-! ### The two legs of `Φ`, chartwise -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The first affine projection into the model chart, carried by 704's comparison, is the raw
 `Spf(inl)` into the datum's chart. Stated over a **variable** model index: at a spelled-out index
 the statement is not type-correct at `instances` transparency and `rw` cannot build a motive. -/
@@ -310,6 +311,7 @@ theorem pr₁Chart_comp_ι_tateXGluedInv (hq : q ∈ I) (hI : I.FG) (b : tateMod
       (congrArg (· ≫ (tateCurveExposeXDatum R I q B hq hI).xFormalGlueData.ι
         (tateModelIdxToX B b)) hbridge)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The second-projection companion of `pr₁Chart_comp_ι_tateXGluedInv`. -/
 theorem pr₂Chart_comp_ι_tateXGluedInv (hq : q ∈ I) (hI : I.FG) (b : tateModelIdx R I q hq hI) :
     pr₂Chart R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≫

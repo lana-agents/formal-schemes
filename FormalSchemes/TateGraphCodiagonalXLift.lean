@@ -261,18 +261,22 @@ theorem graphLiftAXtoX_mem_pow (m : ℕ)
 
 /-! #### Surjectivity -/
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftAXtoY_surjective : Function.Surjective (graphLiftAXtoY R I q hI) := fun e =>
   ⟨inr R I _ _ ((graphChartAlgXY R I q hI).symm e), by
     rw [graphLiftAXtoY_inr]; exact (graphChartAlgXY R I q hI).apply_symm_apply e⟩
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftXAtoX_surjective : Function.Surjective (graphLiftXAtoX R I q hI) := fun e =>
   ⟨inl R I _ _ ((graphChartAlgX R I q).symm e), by
     rw [graphLiftXAtoX_inl]; exact (graphChartAlgX R I q).apply_symm_apply e⟩
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftXAtoY_surjective : Function.Surjective (graphLiftXAtoY R I q hI) := fun e =>
   ⟨inl R I _ _ ((graphChartAlgXY R I q hI).symm e), by
     rw [graphLiftXAtoY_inl]; exact (graphChartAlgXY R I q hI).apply_symm_apply e⟩
 
+omit [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] in
 theorem graphLiftAXtoX_surjective : Function.Surjective (graphLiftAXtoX R I q hI) := fun e =>
   ⟨inr R I _ _ ((graphChartAlgX R I q).symm e), by
     rw [graphLiftAXtoX_inr]; exact (graphChartAlgX R I q).apply_symm_apply e⟩
@@ -305,6 +309,7 @@ private theorem graphCodiagY_mem_pow (m : ℕ)
     rw [Ideal.map_pow, map_graphCodiagY_eq]
   exact h.le (Ideal.mem_map_of_mem _ hx)
 
+omit [IsNoetherianRing R] in
 /-- **(A)** for the `(false, true)` chart's `dAX` summand: the `y`-side graph codiagonal factors
 through the `x`-summand of the second-factor overlap chart. -/
 theorem graphLiftAXtoY_comp_map :
@@ -327,6 +332,7 @@ theorem graphLiftAXtoY_comp_map :
   · rw [RingHom.comp_apply, map_inr, graphLiftAXtoY_inr, IsScalarTower.coe_toAlgHom',
       graphChartAlgXY_algebraMap, graphCodiagY_inr]
 
+omit [IsNoetherianRing R] in
 /-- **(A)** for the `(false, true)` chart's `dXA` summand: the `x`-side graph codiagonal factors
 through the `x`-summand of the first-factor overlap chart. -/
 theorem graphLiftXAtoX_comp_map :
@@ -352,6 +358,7 @@ theorem graphLiftXAtoX_comp_map :
   · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftXAtoX_inr, invFlipLocX_apply,
       graphCodiagX_inr]
 
+omit [IsNoetherianRing R] in
 /-- **(A)** for the `(true, false)` chart's `dXA` summand. -/
 theorem graphLiftXAtoY_comp_map :
     (graphLiftXAtoY R I q hI).comp
@@ -377,6 +384,7 @@ theorem graphLiftXAtoY_comp_map :
   · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftXAtoY_inr, RingHom.comp_apply,
       commHom_inr, graphCodiagY_inl]
 
+omit [IsNoetherianRing R] in
 /-- **(A)** for the `(true, false)` chart's `dAX` summand. -/
 theorem graphLiftAXtoX_comp_map :
     (graphLiftAXtoX R I q hI).comp
