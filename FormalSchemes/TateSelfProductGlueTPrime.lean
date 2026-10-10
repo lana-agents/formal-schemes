@@ -76,8 +76,6 @@ The whole dispatch is a single `Bool × Bool` case split of the reduced statemen
 -- The completed-tensor interchange charts range over the nested localization/completion towers of
 -- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
 -- (matching `TateSelfProductGlueDatum.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 
@@ -96,6 +94,8 @@ The three merged range-tracking lemmas (`TateSelfProductTransitionRange`, `...Ri
 three Klein-four orderings whose *third* shape is `both`. The two orderings whose third shape is a
 single factor (`Y = both`) reduce to them via `range f_both = range f_first ∩ range f_second`. -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **First shape, swapped ordering** `(first, both, second)`: `tateSelfProductFirstTransition`
 carries `f_first ⁻¹' range f_both` into `f_first ⁻¹' range f_second`. Since
 `range f_both = range f_first ∩ range f_second`, both regions equal `f_first ⁻¹' range f_second`, so
@@ -122,6 +122,8 @@ theorem tateSelfProductFirstTransition_image_subset' (hI : I.FG) :
     _ = ⇑(firstFactorOverlapChart R I q hI).base ⁻¹'
           Set.range (secondFactorOverlapChart R I q hI).base := hset
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Right shape, swapped ordering** `(second, both, first)`: `tateSelfProductRightTransition`
 carries `f_second ⁻¹' range f_both` into `f_second ⁻¹' range f_first`. Since
 `range f_both = range f_first ∩ range f_second`, both regions equal `f_second ⁻¹' range f_first`, so
@@ -148,6 +150,8 @@ theorem tateSelfProductRightTransition_image_subset' (hI : I.FG) :
     _ = ⇑(secondFactorOverlapChart R I q hI).base ⁻¹'
           Set.range (firstFactorOverlapChart R I q hI).base := hset
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Both shape, swapped ordering** `(both, second, first)`: `tateSelfProductBothTransition`
 carries `f_both ⁻¹' range f_second` into `f_both ⁻¹' range f_first`. Trivial:
 `range f_both ⊆ range f_first`
@@ -168,6 +172,8 @@ theorem tateSelfProductBothTransition_image_subset' (hI : I.FG) :
 
 /-! ### The range inclusion `H`, dispatched by Klein-four shape -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The reduced range inclusion** `H` for every pairwise-distinct triple: the transition `t i j`
 carries the source triple-overlap region `(f i j) ⁻¹' range (f i k)` into the target region
 `(f j i) ⁻¹' range (f j k)`. Proved by a single `Bool × Bool` case split dispatching each of the 24

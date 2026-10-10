@@ -49,9 +49,6 @@ itself keeps `B` a bare `R`-algebra.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry FormalSpectrum
@@ -113,6 +110,8 @@ def pr₂Chart (A : Type u) [CommRing A] [Algebra R A] :
     (CompletedTensorProduct.idealOfDefinition R I A B)
     (CompletedTensorProduct.inr R I A B).toRingHom CompletedTensorProduct.inr_isAdicHom.le_comap
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The double-overlap compatibility square of the second projection.** The `x`-overlap chart
 followed by the second projection equals the base-changed transition `t.hom` followed by the
 `y`-overlap chart and the second projection — the datum `glueMorphisms` consumes to define `pr₂`

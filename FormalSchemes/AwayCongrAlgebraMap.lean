@@ -36,9 +36,6 @@ transition is a genuine automorphism, like the Tate model's, does not have it.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open FormalSpectrum

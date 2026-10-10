@@ -48,9 +48,6 @@ which is `mapSpf`/`interchangeOpenImmersion` naturality and finally the ring-lev
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -213,6 +210,8 @@ theorem gCHom_map_comp (s t : A) (hI : I.FG)
 
 /-! ### The interchange open immersion as `Spf` of `gCHom` -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- The interchange isomorphism's `symm` composed with the structural map `C → C{1/f̄}` is exactly
 the completed-tensor lift `gCHom`. The underlying ring map of `(equiv I f hI).symm` is
 definitionally `backwardHom I f hI`. -/
@@ -225,6 +224,8 @@ theorem interchange_ringHom (f : A) (hI : I.FG) :
   rw [RingHom.comp_apply]
   exact backwardHom_awayCompletionHom I f hI c
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The interchange open immersion is `Spf` of `gCHom`.** It equals the morphism of formal
 spectra induced by the completed-tensor lift `gCHom I f hI : C →+* A{1/f} ⊗̂_R B`. -/
 theorem interchangeOpenImmersion_eq_map (f : A) (hI : I.FG) :

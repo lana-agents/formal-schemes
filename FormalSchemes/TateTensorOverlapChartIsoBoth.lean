@@ -55,8 +55,6 @@ two one-sided ones.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits FormalSpectrum
@@ -68,6 +66,8 @@ namespace AlgebraicGeometry
 
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The merged and the coproduct both-factor overlap charts have the same range.** The merged
 side is the intersection `D(inl (x+y)) ⊓ D(inr (x+y))`; rewriting each factor by 705a's
 `selfProductBasicOpen_inl_add` / `_inr_add` and distributing gives precisely the four-fold union

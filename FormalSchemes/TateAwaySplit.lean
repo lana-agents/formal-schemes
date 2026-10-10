@@ -52,8 +52,6 @@ Note that `D(x) ⊆ D(x + y)` fails in `Spec A`: `x + y = x · (1 + q/x²)` and 
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9 (the Tate curve).
 -/
 
-set_option maxHeartbeats 3200000
-
 noncomputable section
 
 open FormalSpectrum
@@ -256,6 +254,8 @@ def awaySplitEquiv (hq : q ∈ I) :
       ((AdicCompletion.congrIdeal (awayIdeal_eq_locX R I q)).trans (transEquivX R I q hq).symm)
       ((AdicCompletion.congrIdeal (awayIdeal_eq_locY R I q)).trans (transEquivY R I q hq).symm))
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The splitting is the pair of canonical maps on the image of `A`.** This is the computation
 rule a geometric consumer needs: it identifies the two components with the chart maps. -/
 theorem awaySplitEquiv_of (hq : q ∈ I) (a : annulusAlgebra R I q) :

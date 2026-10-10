@@ -48,8 +48,6 @@ a follow-up; it is what brick (c3b) consumes to close the `GlueData'` cocycle by
 -- The completed-tensor interchange charts range over the nested localization/completion towers of
 -- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
 -- (matching `TateSelfProductTPrimeSummand.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

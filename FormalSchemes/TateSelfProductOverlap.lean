@@ -54,8 +54,6 @@ one-factor-differing chart shape) that the eventual four-chart glue of `ùîà_q √
 -- The completed-tensor interchange morphisms range over the nested localization/completion
 -- towers of the completed tensor product, which are slow for the elaborator and the kernel;
 -- raise the budgets (matching `CompletedTensorAwayInterchangeSpf.lean`).
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

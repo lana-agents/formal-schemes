@@ -80,8 +80,6 @@ once, generically, as `AlgEquiv.symm_trans_trans_symm_of_symm_eq`.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-
 noncomputable section
 
 open FormalSpectrum

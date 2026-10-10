@@ -51,9 +51,6 @@ is the completed localization of the coordinate swap) on the touched factor and 
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -107,6 +104,8 @@ private theorem mapSpf_congr {A₀ B₀ A₁ B₁ : Type u} [CommRing A₀] [Com
 
 /-! ### The two swap naturality squares -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Swap-first naturality.** The first-coordinate swap involution of the both-overlap object,
 composed with the both-factor overlap chart into `Spf(A ⊗̂_R A)`, is `mapSpf` of the coordinate swap
 on the first tensor factor (the second factor untouched). -/
@@ -141,6 +140,8 @@ theorem tateSelfProductSwapFirstTransition_naturality (hI : I.FG) :
       ← CompletedTensorProduct.mapSpf_comp]
     exact mapSpf_congr R I hI (chartTrans_comp_locX R I q hI) (by ext a; simp)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Swap-second naturality.** The second-coordinate swap involution of the both-overlap object,
 composed with the both-factor overlap chart into `Spf(A ⊗̂_R A)`, is `mapSpf` of the coordinate swap
 on the second tensor factor (the first factor untouched). -/

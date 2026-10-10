@@ -48,9 +48,6 @@ completed localization of the coordinate swap.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -304,6 +301,8 @@ theorem tateSelfProductRightTransition_naturality (hI : I.FG) :
       ← CompletedTensorProduct.mapSpf_comp]
     exact mapSpf_congr R I hI (refl_comp_id R I q) (chartTrans_comp_locX R I q hI)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Both-factor transition naturality.** The both-factor overlap transition, composed with the
 both-factor overlap chart into `Spf(A ⊗̂_R A)`, is `mapSpf` of the coordinate swap on *both* tensor
 factors. -/

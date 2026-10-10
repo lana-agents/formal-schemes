@@ -63,9 +63,6 @@ twelve pairs of **distinct** charts, splitting by the *difference type* of `i, j
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -117,6 +114,8 @@ variable (R : Type u) [CommRing R] (I : Ideal R) (q : R) [IsNoetherianRing R]
 
 /-! ### SHAPE 2: second-differ naturality squares (ported to `𝔈_q`) -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- `x`-overlap second-projection naturality (`ι₀`-side, forward). -/
 theorem secondShape_inl (hq : q ∈ I) (hI : I.FG) :
     rightInterchangeOpenImmersion (A := annulusAlgebra R I q) I (overlapX R I q) hI ≫
@@ -139,6 +138,8 @@ theorem secondShape_inl (hq : q ∈ I) (hI : I.FG) :
     tateCurve_glue_rel_x R I q hq hI,
     reassoc_of% (spfESymm_comp_spfAwayY_comp_baseBridge_inv R I q hI)]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- `y`-overlap second-projection naturality (`ι₀`-side, with prepended transition). -/
 theorem secondShape_inr' (hq : q ∈ I) (hI : I.FG) :
     (rightSummandInv R I q hI).hom ≫
@@ -222,6 +223,8 @@ theorem firstShapeInvariant (hq : q ∈ I) (hI : I.FG) (b : ULift.{u} Bool) :
 
 /-! ### SHAPE 3: both-differ (the coordinate inversion realises the chart transition) -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] in
 /-- **Per-summand second-projection factorisation.** Under the second projection `Spf(inr)`, the
 both-factor interchange chart at `(a, b)` collapses onto the second-factor interchange chart at `b`,
@@ -304,6 +307,8 @@ theorem bothChart_secondProj_factor (hI : I.FG) :
       Category.assoc]
     exact bothInterchange_pr₂Chart_factor R I q (overlapY R I q) (overlapY R I q) hI
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] in
 /-- **Backbone naturality of the forget-first-factor collapse `Ξ'`.** The both-factor inversion
 transition, followed by the both-chart collapse onto the second-factor chart (`Ξ'`), followed by the
@@ -368,6 +373,8 @@ theorem bothTransitionInv_secondProj_naturality (hI : I.FG) :
       reassoc_of% CompletedTensorProduct.mapSpf_comp_inrMap, locallyRingedSpaceMap_algHom_id,
       Category.id_comp]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **SHAPE 3 forward** (`i.2 = false`, `j.2 = true`). -/
 theorem bothShapeRight_fwd (hq : q ∈ I) (hI : I.FG) :
     bothFactorOverlapChart R I q hI ≫
@@ -379,6 +386,8 @@ theorem bothShapeRight_fwd (hq : q ∈ I) (hI : I.FG) :
   rw [reassoc_of% (bothTransitionInv_secondProj_naturality R I q hI),
     reassoc_of% (bothChart_secondProj_factor R I q hI), secondShape_fwd R I q hq hI]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **SHAPE 3 reverse** (`i.2 = true`, `j.2 = false`). -/
 theorem bothShapeRight_rev (hq : q ∈ I) (hI : I.FG) :
     bothFactorOverlapChart R I q hI ≫

@@ -85,9 +85,6 @@ that is a deletion in the style of issues 805/812 and it touches the Tate tower.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.12.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory TopologicalSpace Topology FormalSpectrum

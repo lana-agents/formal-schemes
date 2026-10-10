@@ -58,8 +58,6 @@ into `A{1/x}^`, which `awaySplitEquiv_of` already computes.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1, §10.8.
 -/
 
-set_option maxHeartbeats 3200000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits FormalSpectrum

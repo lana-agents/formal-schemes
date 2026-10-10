@@ -40,8 +40,6 @@ together with their `Spf`-level forms `spfGraphLift…` and the geometric factor
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 set_option maxRecDepth 8000
 
 noncomputable section
@@ -522,6 +520,8 @@ theorem spfGraphCodiagY_eq_ft_dAX (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftAXtoY_comp_map R I q hI).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** at the `(false, true)` chart's `dXA` summand. -/
 theorem spfGraphCodiagX_eq_ft_dXA (hI : I.FG) :
@@ -556,6 +556,8 @@ theorem spfGraphCodiagX_eq_ft_dXA (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXAtoX_comp_map R I q hI).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** at the `(true, false)` chart's `dXA` summand. -/
 theorem spfGraphCodiagYComm_eq_tf_dXA (hI : I.FG) :
@@ -592,6 +594,8 @@ theorem spfGraphCodiagYComm_eq_tf_dXA (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXAtoY_comp_map R I q hI).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** at the `(true, false)` chart's `dAX` summand. -/
 theorem spfGraphCodiagXComm_eq_tf_dAX (hI : I.FG) :

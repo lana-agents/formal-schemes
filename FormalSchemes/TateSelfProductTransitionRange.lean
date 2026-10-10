@@ -51,8 +51,6 @@ range (secondFactorOverlapChart)` (`range_bothFactorOverlapChart_eq_inter_first_
 -- The completed-tensor interchange morphisms range over the nested localization/completion
 -- towers of the completed tensor product, which are slow for the elaborator and the kernel;
 -- raise the budgets (matching `TateSelfProductTripleOverlap.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 
@@ -149,6 +147,8 @@ theorem secondFactorOverlapChart_range_eq_preimage (hI : I.FG) :
               (overlapY R I q)) :
             Set (FormalSpectrum (I.map (algebraMap R (annulusAlgebra R I q))))))).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **First shape.** `tateSelfProductFirstTransition` carries the source triple-overlap region
 `f_first ⁻¹' range f_second` into the target region `f_first ⁻¹' range f_both`. This is the range
 inclusion `H` for the four-chart cocycle where the source chart transition is the first-factor swap.
@@ -175,6 +175,8 @@ theorem tateSelfProductFirstTransition_image_subset (hI : I.FG) :
 
 /-! ### Both shape: trivial, the both-overlap range sits inside both single-factor ranges -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Both shape.** `tateSelfProductBothTransition` carries the source region
 `f_both ⁻¹' range f_first` into `f_both ⁻¹' range f_second`. Trivial: every point of the
 both-overlap object maps under `f_both` into `range f_both ⊆ range f_second`

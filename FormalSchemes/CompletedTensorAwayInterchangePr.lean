@@ -34,9 +34,6 @@ locally-ringed-space map), so it needs no adic-ring instances and applies after 
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry FormalSpectrum
@@ -49,6 +46,8 @@ variable {R : Type u} [CommRing R] (I : Ideal R)
 variable {A B : Type u} [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 variable (f : A)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The interchange open immersion is a morphism over the affine base `Spf B`.** Composing the
 away-localization interchange chart `Spf((A{1/f}) ⊗̂_R B) ⟶ Spf(A ⊗̂_R B)` with the second
 projection `fibrePr₂ = Spf(inr) : Spf(A ⊗̂_R B) ⟶ Spf B` recovers the second projection of the

@@ -34,9 +34,6 @@ base ring does not change, so it is available as an `R`-algebra isomorphism.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1 (10.1.4).
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open TopologicalSpace

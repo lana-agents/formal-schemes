@@ -62,8 +62,6 @@ by `rfl`.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -295,6 +293,8 @@ variable (R I q)
 
 /-! ### The overlap comparison isomorphism -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The overlap comparison isomorphism.** For each pair of distinct product-index charts, the
 generic (merged) overlap object `bothAlgDataV` and the Tate glue datum's (coproduct) overlap object
 `tateSelfProductGlueV` are isomorphic, by 738/739's `tensorOverlapChartIso{Second,First,Both}`
@@ -320,6 +320,8 @@ def tateOverlapCompareIso (hq : q ∈ I) (hI : I.FG) (p p' : ULift.{u} Bool × U
       eqToIso (tateSelfProductGlueV_both hI _ _ (tateFibreIdx_ne h)
         (fun e => h1 (ULift.ext _ _ e)) (fun e => h2 (ULift.ext _ _ e))).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The overlap comparison is a morphism over the common chart** `Spf(A ⊗̂_R A)`: it carries the
 Tate glue datum's overlap chart to the generic datum's overlap immersion. This is the `f` law of the
 `Ψ` comparison, and it is 738/739's `…_hom_fac` in each of the three shapes — the merged chart on

@@ -50,8 +50,6 @@ with `Spf` of the corresponding ring map, and the resulting geometric forms
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 set_option maxRecDepth 8000
 
 noncomputable section
@@ -374,6 +372,8 @@ theorem graphLiftYX_inr (hI : I.FG)
 
 /-! ### The eight preimage bounds -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(false, true)`, `c = false`, `dAY` summand.** The preimage of the affine
 diagonal locus under the transition composite of the `y`-localized summand of the second-factor
@@ -430,6 +430,8 @@ theorem preimage_range_diagChart_subset_second_dAY_x (hI : I.FG) :
     (fun a => graphLiftX_inl R I q hI a) (fun z => graphLiftX_inr R I q hI z)
     (fun a => graphChartAlgY_transition_locX R I q hI a)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(true, false)`, `c = true`, `dAY` summand.** -/
 theorem preimage_range_diagChart_subset_second_dAY_y (hI : I.FG) :
@@ -501,6 +503,8 @@ theorem preimage_range_diagChart_subset_second_dAY_y (hI : I.FG) :
     (fun a => graphLiftYX_inl R I q hI a) (fun z => graphLiftYX_inr R I q hI z)
     (fun a => chartBridgeY_transition_locX R I q hI a)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(false, true)`, `c = false`, `dAX` summand.** -/
 theorem preimage_range_diagChart_subset_second_dAX_y (hI : I.FG) :
@@ -572,6 +576,8 @@ theorem preimage_range_diagChart_subset_second_dAX_y (hI : I.FG) :
     (fun a => graphLiftAXtoY_inl R I q hI a) (fun z => graphLiftAXtoY_inr R I q hI z)
     (fun a => graphChartAlgXY_transitionSymm_locY R I q hI a)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(true, false)`, `c = true`, `dAX` summand.** -/
 theorem preimage_range_diagChart_subset_second_dAX_x (hI : I.FG) :
@@ -643,6 +649,8 @@ theorem preimage_range_diagChart_subset_second_dAX_x (hI : I.FG) :
     (fun a => graphLiftAXtoX_inl R I q hI a) (fun z => graphLiftAXtoX_inr R I q hI z)
     (fun a => graphChartAlgX_transitionSymm_locY R I q hI a)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(false, true)`, `c = true`, `dYA` summand.** -/
 theorem preimage_range_diagChart_subset_first_dYA_y (hI : I.FG) :
@@ -714,6 +722,8 @@ theorem preimage_range_diagChart_subset_first_dYA_y (hI : I.FG) :
     (fun z => graphLiftY_inl R I q hI z) (fun a => graphLiftY_inr R I q hI a)
     (fun a => chartBridgeY_transition_locX R I q hI a)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(true, false)`, `c = false`, `dYA` summand.** -/
 theorem preimage_range_diagChart_subset_first_dYA_x (hI : I.FG) :
@@ -785,6 +795,8 @@ theorem preimage_range_diagChart_subset_first_dYA_x (hI : I.FG) :
     (fun z => graphLiftXY_inl R I q hI z) (fun a => graphLiftXY_inr R I q hI a)
     (fun a => graphChartAlgY_transition_locX R I q hI a)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(false, true)`, `c = true`, `dXA` summand.** -/
 theorem preimage_range_diagChart_subset_first_dXA_x (hI : I.FG) :
@@ -856,6 +868,8 @@ theorem preimage_range_diagChart_subset_first_dXA_x (hI : I.FG) :
     (fun z => graphLiftXAtoX_inl R I q hI z) (fun a => graphLiftXAtoX_inr R I q hI a)
     (fun a => graphChartAlgX_transitionSymm_locY R I q hI a)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(true, false)`, `c = false`, `dXA` summand.** -/
 theorem preimage_range_diagChart_subset_first_dXA_y (hI : I.FG) :
@@ -927,9 +941,10 @@ theorem preimage_range_diagChart_subset_first_dXA_y (hI : I.FG) :
     (fun z => graphLiftXAtoY_inl R I q hI z) (fun a => graphLiftXAtoY_inr R I q hI a)
     (fun a => graphChartAlgXY_transitionSymm_locY R I q hI a)
 
-
 /-! ### The four transition composites as `Spf` of the corresponding ring map -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dAY`-summand transition composite of the second-factor overlap, as `Spf` of `φ`. -/
 theorem spfSecondTransitionDAY_eq (hI : I.FG) :
@@ -966,6 +981,8 @@ theorem spfSecondTransitionDAY_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dAX`-summand transition composite of the second-factor overlap, as `Spf` of `φ`. -/
 theorem spfSecondTransitionDAX_eq (hI : I.FG) :
@@ -1003,6 +1020,8 @@ theorem spfSecondTransitionDAX_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dYA`-summand transition composite of the first-factor overlap, as `Spf` of `φ`. -/
 theorem spfFirstTransitionDYA_eq (hI : I.FG) :
@@ -1045,6 +1064,8 @@ theorem spfFirstTransitionDYA_eq (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp
       (hIK := CompletedTensorProduct.map_comp_map_le_comap hI _ _ _ _)]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `dXA`-summand transition composite of the first-factor overlap, as `Spf` of `φ`. -/
 theorem spfFirstTransitionDXA_eq (hI : I.FG) :
@@ -1481,6 +1502,5 @@ theorem spfPreimage_range_diagChart_subset_first_dXA_y (hI : I.FG) :
     CompletedTensorProduct.isAdicRing R I _ _ hI
   rw [spfFirstTransitionDXA_eq]
   exact preimage_range_diagChart_subset_first_dXA_y R I q hI
-
 
 end AlgebraicGeometry

@@ -39,9 +39,6 @@ general statement.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §§10.4.6, 10.12.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory

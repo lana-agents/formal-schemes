@@ -65,8 +65,6 @@ is `pr₁`-saturated (`firstFactorOverlapChart_range_eq_preimage`).
 -- The completed-tensor interchange morphisms range over the nested localization/completion
 -- towers of the completed tensor product, which are slow for the elaborator and the kernel;
 -- raise the budgets (matching `TateSelfProductTransitionRange.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 
@@ -204,6 +202,8 @@ def pr₁ChartSelf :
 
 /-! ### Right shape: the second-factor transition is a morphism over the first projection -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- The double-overlap compatibility of the second-factor interchange charts over the first
 projection `Spf(inl)`: the `x`-overlap chart followed by `pr₁` equals the second-factor summand
 transition `rightSummand` (`mapSpfIso (refl A) (annulus chart transition)`) followed by the
@@ -315,6 +315,8 @@ theorem firstFactorOverlapChart_range_eq_preimage (hI : I.FG) :
               (overlapY R I q)) :
             Set (FormalSpectrum (I.map (algebraMap R (annulusAlgebra R I q))))))).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Right shape.** `tateSelfProductRightTransition` carries the source triple-overlap region
 `f_second ⁻¹' range f_first` into the target region `f_second ⁻¹' range f_both`. This is the range
 inclusion `H` for the four-chart cocycle where the source chart transition is the second-factor

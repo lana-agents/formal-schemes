@@ -51,8 +51,6 @@ is the ring-level splitting `A{1/(x+y)}^ ≃ A{1/x}^ × A{1/y}^`.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-
 open AlgebraicGeometry TopologicalSpace
 
 universe u

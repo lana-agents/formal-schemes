@@ -98,9 +98,6 @@ needs it anyway.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -260,7 +257,6 @@ theorem ι_tateFibreProductPsi (hq : q ∈ I) (hI : I.FG)
       (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨tateFibreIdx p⟩ :=
   (tateDiagonalDatum R I q B hq hI).ι_glueOut _ _ _ _ _ p
 
-
 /-! ### The base ideal-convention bridge is the chart comparison -/
 
 omit [TopologicalSpace R] [IsAdicRing I] in
@@ -283,7 +279,6 @@ theorem annulusBaseBridge_comp_tateChartCompUInv (hq : q ∈ I) (hI : I.FG)
     annulus_map_eq R I q ▸ annulus_isAdicRing R I q hI
   rw [annulusBaseBridge_eq R I q hI, tateChartCompUInv]
   exact (tateChartCompIso R I q).hom_inv_id
-
 
 /-! ### The two legs of `Φ`, chartwise -/
 
@@ -368,7 +363,6 @@ theorem ι_tateFibreLegY (hq : q ∈ I) (hI : I.FG) (c : ULift.{u} (Bool × Bool
           (Category.assoc _ _ _)).trans
           (pr₂Chart_comp_ι_tateXGluedInv R I q B hq hI ⟨c.down.2⟩))
 
-
 /-! ### `Φ` on the Tate charts -/
 
 /-- Abbreviation for the product index attached to a Tate chart index. -/
@@ -424,7 +418,6 @@ theorem ι_tateFibreProductHom (hq : q ∈ I) (hI : I.FG)
       (ι_tateSelfProductStructMap R I q hq hI c).trans
         (pr₁Chart_comp_annulusStructMap R I q (annulusAlgebra R I q) hI)
 
-
 /-! ### The two round trips -/
 
 /-- `Ψ ≫ Φ = 𝟙` on the general fibre product. -/
@@ -445,7 +438,6 @@ theorem tateFibreProductHom_comp_psi (hq : q ∈ I) (hI : I.FG) :
     (congrArg (· ≫ tateFibreProductPsi R I q B hq hI)
       (ι_tateFibreProductHom R I q B hq hI c)).trans <|
       (ι_tateFibreProductPsi R I q B hq hI (tateProdIdx c)).trans (Category.comp_id _).symm
-
 
 /-! ### The comparison isomorphism -/
 
@@ -479,7 +471,6 @@ theorem forgetToLocallyRingedSpace_map_tateFibreProductIso_inv (hq : q ∈ I) (h
       tateFibreProductHom R I q B hq hI :=
   (Functor.FullyFaithful.ofFullyFaithful
     FormalScheme.forgetToLocallyRingedSpace).map_preimage _
-
 
 /-! ### The characterisations brick 4c consumes -/
 

@@ -56,8 +56,6 @@ then `Iso.hom_inv_id` of these; the same isomorphisms feed the genuine `Bool × 
 -- The completed-tensor interchange morphisms range over the nested localization/completion
 -- towers of the completed tensor product, which are slow for the elaborator and the kernel;
 -- raise the budgets (matching `TateSelfProductOverlap.lean`).
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

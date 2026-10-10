@@ -54,8 +54,6 @@ involution (`flip_comp_flip`).
 -- The completed-tensor interchange charts range over nested localization/completion towers of the
 -- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
 -- (matching `TateSelfProductDSigma.lean`).
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 
@@ -110,6 +108,8 @@ theorem mapSpf_triple_eq_id (hI : I.FG)
 
 /-! ### The `σ`-triple identity -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The `σ`-triple identity.** For every pairwise-distinct triple `i j k : Bool × Bool` the three
 summand permutations of the cyclic triple compose to the identity of the both-overlap object. Proved
 uniformly by pushing the both-overlap chart through the three naturality squares
@@ -137,6 +137,8 @@ theorem tateSelfProductSigma_triple (hq : q ∈ I) (hI : I.FG) (i j k : Bool × 
 
 /-! ### The cocycle -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The four-chart Tate self-product `GlueData'` cocycle.** For every pairwise-distinct triple
 `i j k : Bool × Bool` the three transitions-of-transitions of the cyclic triple compose to the
 identity, matching the `GlueData'.cocycle` field. Obtained by conjugating to the both-overlap

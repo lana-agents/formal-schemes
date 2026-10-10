@@ -62,8 +62,6 @@ That is eight branches, tabulated in `mem_range_of_branch`'s uses below.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 set_option maxRecDepth 8000
 
 noncomputable section

@@ -31,9 +31,6 @@ proof cites `annulusChartTransitionInvAlg`/`annulusChartTransitionInvSpf`
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry FormalSpectrum
@@ -56,6 +53,8 @@ theorem annulusFibreChartTransitionInvAlg_symm_toRingHom (hI : I.FG) :
   rw [annulusFibreChartTransitionInvAlg, AlgEquiv.symm_trans_eq, AlgEquiv.symm_trans_eq,
     AlgEquiv.symm_symm, algEquiv_trans_toRingHom, algEquiv_trans_toRingHom]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The base-changed inversion transition, followed by the `y`-first-projection into the target
 convention, factors through the annulus inversion chart transition and the `y`-overlap chart.** The
 inversion analogue of `spfESymm_comp_spfAwayY_comp_baseBridge`. -/

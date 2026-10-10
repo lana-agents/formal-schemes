@@ -42,8 +42,6 @@ chart — the input to constructing the geometric triple-overlap cocycle `t'`/`t
 
 -- The interchange open immersions range over the nested localization/completion towers of the
 -- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

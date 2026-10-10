@@ -44,9 +44,6 @@ consumes: feeding the same factor twice makes `yGlued` defeq `xGlued`.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -154,6 +151,8 @@ theorem ofFactors_hf :
             (ofFactors DX DY σX σY hστX hστY hσcX hσcY).gY p p' h :=
   fun _ _ _ => rfl
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- The overlap transitions of `ofFactors` are the `bothAlgData` transitions — the `ht` input to
 `fibreLift`. -/
 theorem ofFactors_ht :

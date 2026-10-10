@@ -59,9 +59,6 @@ definitionally, so `awayCompletion` does not even typecheck as its target.
 * [Atiyah–Macdonald, *Introduction to Commutative Algebra*][AM], Ch. 10.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 universe u
@@ -69,7 +66,6 @@ universe u
 namespace FormalSpectrum
 
 variable {C : Type u} [CommRing C] (K : Ideal C) (g : C)
-
 
 /-- Every element of the away localization `C_g` is `c · (g⁻¹)ⁿ` for the chosen numerator and
 exponent `(c, n) = IsLocalization.Away.sec g w`. -/

@@ -126,9 +126,6 @@ than as `_`.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum Topology
@@ -458,7 +455,6 @@ theorem overlapChart_comp_diagonal' (i j : DX.J) (h : i ≠ j) :
     (DX.overlapAlgFst i j) (DX.overlapAlgSnd i j h) _ rfl
     (overlapChart_comp_ι_eq DX σX hστX hσcX i j h)
 
-
 /-! ### What the product chart sees of the diagonal, as a range -/
 
 /-- **The chart-restricted diagonal, as a set.** Under the hypotheses of
@@ -521,7 +517,6 @@ theorem preimage_range_diagonal'_eq_range_fibreLift
   · obtain ⟨y, rfl⟩ := hz
     exact ⟨w.base y, hpt y⟩
 
-
 /-! ### The overlap is the intersection of the two charts -/
 
 omit [TopologicalSpace R] [IsAdicRing I] in
@@ -567,7 +562,6 @@ theorem range_overlapChart_comp_ι (i j : DX.J) (h : i ≠ j) :
       rw [e]
       exact LocallyRingedSpace.range_eqToHom_comp_base _ _
     exact hr ▸ (diagonalDatum DX σX hστX hσcX).xLrsGlueData.range_ι_inter_subset i j hx
-
 
 /-! ### The two chart-restricted diagonals, as ranges -/
 
@@ -693,7 +687,6 @@ theorem isSeparated_of_chartCodiagonal_surjective
     (CompletedTensorProduct.lift_le_comap
       (map_algebraMap_awayCompletion_eq I (DX.g i j)).le _ _ hI)
     (hsurj i j hij)).isClosed_range
-
 
 end BothChartedFibreDatumXY
 

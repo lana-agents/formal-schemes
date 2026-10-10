@@ -44,9 +44,6 @@ so `LocallyRingedSpace.IsOpenImmersion.to_iso` applies. Precomposing the glued-o
 * Mathlib `AlgebraicGeometry.Scheme.OpenCover.glueMorphisms` / `fromGlued`.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace Topology

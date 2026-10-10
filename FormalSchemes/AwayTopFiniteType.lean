@@ -78,8 +78,6 @@ the bridge, and it is used explicitly wherever the two spellings meet — see
 -- targets are nested completions of a localization; the `isDefEq` checks that unfold
 -- `awayCompletion`/`RestrictedPowerSeries` through `AdicCompletion` are what costs the
 -- heartbeats. 400000 and 800000 both time out; 1600000 leaves headroom.
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 400000
 
 noncomputable section
 
@@ -124,7 +122,6 @@ theorem awayLocIdeal_fg (hI : I.FG) (h : I.map (algebraMap R A) = L) :
 theorem awayCompletion_isAdicComplete (hI : I.FG) (h : I.map (algebraMap R A) = L) :
     IsAdicComplete (awayCompletionIdeal L g) (awayCompletion L g) :=
   AdicCompletion.isAdicComplete_map _ (awayLocIdeal_fg g hI h)
-
 
 /-! ### The two evaluation homomorphisms -/
 
@@ -180,8 +177,8 @@ theorem awayEval_last (hI : I.FG) (h : I.map (algebraMap R A) = L)
   rw [RestrictedPowerSeries.evalHom_of, MvPolynomial.aeval_X]
   exact Fin.snoc_last _ _
 
-
-
+set_option maxHeartbeats 1600000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- The ideal condition of the presentation: `χ` carries the ideal of definition of the polydisc
 onto that of `A{1/g}^`. It does not depend on the evaluation tuple — only on `χ` being an
 `R`-algebra map — so it reduces to `map_algebraMap_awayCompletion`. -/
@@ -198,6 +195,8 @@ theorem map_idealOfDefinition_awayEval (hI : I.FG) (h : I.map (algebraMap R A) =
 
 /-! ### `χ ∘ ι` is the completion map composed with the presentation -/
 
+set_option maxHeartbeats 1600000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The key compatibility**: on the first `n` coordinates, `χ` is the presentation `ψ` followed
 by `A → A{1/g}^`. Both sides are continuous ring homomorphisms out of the polydisc agreeing on the
 constants and on the coordinates, so the uniqueness half of the polydisc's universal property
@@ -235,6 +234,10 @@ theorem awayEval_comp_coordIncl (hI : I.FG) (h : I.map (algebraMap R A) = L)
 
 /-! ### The theorem -/
 
+set_option maxHeartbeats 1600000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+set_option synthInstance.maxHeartbeats 400000 in
+-- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
 /-- **A basic-open chart of a topologically-finite-type formal affine is topologically of finite
 type** (EGA I §10.13): if `A` is tf-type over `(R, I)` with ideal of definition `L`, then so is the
 completed localization `A{1/g}^`, with one extra variable. -/
@@ -260,7 +263,6 @@ theorem _root_.IsTopologicallyFiniteType.awayCompletion (hI : I.FG)
       exact RingHom.congr_fun (awayEval_comp_coordIncl g hI h ψ hL) x
     · exact ⟨rpsCoord R I (n + 1) (Fin.last n), awayEval_last g hI h ψ⟩
   · exact map_idealOfDefinition_awayEval g hI h ψ
-
 
 /-- **A complete adic ring is topologically of finite type over itself**, via the zero-variable
 presentation: `R{} = AdicCompletion (I·R[∅]) R[∅]` evaluates onto `R` at the empty tuple, and that

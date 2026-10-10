@@ -100,8 +100,6 @@ completion types.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits FormalSpectrum
@@ -395,7 +393,6 @@ theorem tateOverlapCompIso_transition_fac (hq : q ∈ I) (hI : I.FG) :
   simp only [Category.assoc]
   rw [tateOverlapChartIso_transition_comm]
 
-
 private abbrev tcOverlap : LocallyRingedSpace.{u} :=
   locallyRingedSpaceObj (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapX R I q)) ⨿
     locallyRingedSpaceObj (awayCompletionIdeal (annulusIdealOfDefinition R I q) (overlapY R I q))
@@ -447,7 +444,6 @@ private theorem tcm_glue_raw (hq : q ∈ I) (hI : I.FG) {i j : tateModelIdx R I 
       tcTransition R I q hI ≫ tcChartU R I q hq hI j ≫
         (tateCurveFormalGlueData R I q hq hI).ι j := by
   exact CategoryTheory.GlueData.ofGlueData'_ι_comp (tateCurveGlueData' R I q hq hI) i j hij
-
 
 namespace AffineChartedFibreDatumX
 section Generic
@@ -514,7 +510,6 @@ theorem xGlueData_glue_raw {i j : D.xIdx} (hij : i ≠ j) :
     D.xChartU i j ≫ D.xFormalGlueData.ι i =
       D.xTransitionU hij ≫ D.xChartU j i ≫ D.xFormalGlueData.ι j := by
   exact CategoryTheory.GlueData.ofGlueData'_ι_comp D.xGlueData' i j hij
-
 
 end Generic
 end AffineChartedFibreDatumX
@@ -748,7 +743,6 @@ theorem forgetToLocallyRingedSpace_map_tateXGluedIso_hom (hq : q ∈ I) (hI : I.
       tateXGluedHom R I q B hq hI :=
   (Functor.FullyFaithful.ofFullyFaithful
     FormalScheme.forgetToLocallyRingedSpace).map_preimage _
-
 
 end AlgebraicGeometry
 

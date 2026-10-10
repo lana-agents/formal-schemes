@@ -68,9 +68,6 @@ is a separate job. Once it is done, `FormalScheme.isClosedImmersion_of_retractio
 * [The Stacks Project, Tag 01HJ](https://stacks.math.columbia.edu/tag/01HJ).
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory Topology

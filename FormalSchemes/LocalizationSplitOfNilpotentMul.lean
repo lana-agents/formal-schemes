@@ -63,8 +63,6 @@ annulus, so this lemma does **not** apply to that ring directly: it applies leve
 * Mathlib `Mathlib/RingTheory/Idempotents.lean`.
 -/
 
-set_option maxHeartbeats 3200000
-
 noncomputable section
 
 universe u

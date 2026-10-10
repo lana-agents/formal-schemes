@@ -49,8 +49,6 @@ immersion (`Set.image_preimage_eq_inter_range`).
 
 -- The formal-spectrum morphisms range over the nested localization/completion towers of the
 -- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-set_option maxHeartbeats 1600000
-set_option synthInstance.maxHeartbeats 1000000
 
 noncomputable section
 

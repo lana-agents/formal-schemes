@@ -23,9 +23,6 @@ bridge is proved by identifying the underlying localization maps via
 `IsLocalization.ringHom_ext (Submonoid.powers g)` and then lifting through the completion functor.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry FormalSpectrum CompletedTensorProduct

@@ -45,9 +45,6 @@ Like the projections `pr₁`/`pr₂`, the factorisation lemmas take the three co
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry FormalSpectrum

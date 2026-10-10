@@ -25,9 +25,6 @@ All nine shapes — `snd_snd`, `fst_fst`, `both_both`, `fst_snd`, `fst_both`, `s
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -400,6 +397,5 @@ theorem bothAlgDataSrcIso_both_snd_hom_snd (hI : I.FG) (gX : ∀ i : JX, JX → 
   haveI := bothAlgDataHf hI gX gY p p'' hpp''
   rw [bothAlgDataSrcIso_both_snd, Iso.trans_hom, Category.assoc, pullbackSymmetry_hom_comp_snd,
     bothAlgDataSrcIso_snd_both_hom_fst hI gX gY p p'' p' hpp'' hpp' h1'' h1' h2']
-
 
 end AlgebraicGeometry

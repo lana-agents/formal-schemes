@@ -37,8 +37,6 @@ transition intertwines `ψˣ` and `ψʸ`, and each bridge computes the structura
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 set_option maxRecDepth 8000
 
 noncomputable section
@@ -265,6 +263,8 @@ theorem graphLiftX_comp_map (hI : I.FG) :
       graphChartAlgY_algebraMap, graphCodiagX_inr]
     rfl
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftX_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -306,7 +306,6 @@ theorem graphLiftX_comp_map_transition (hI : I.FG) :
     simp only [AlgEquiv.coe_toAlgHom, IsScalarTower.coe_toAlgHom']
     rw [graphChartAlgY_transition_apply, graphChartAlgX_algebraMap, RingHom.comp_apply,
       codiagonal_inr]
-
 
 /-! ### The plain `y`-chart bridge and the `y`-side lifts -/
 
@@ -447,6 +446,8 @@ theorem graphLiftYX_mem_pow (hI : I.FG) (m : ℕ)
 
 /-! ### The `(A)` and `(B)` identities of the three remaining lifts -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftY_comp_map (hI : I.FG) :
     (graphLiftY R I q hI).comp
@@ -486,6 +487,8 @@ theorem graphLiftY_comp_map (hI : I.FG) :
       graphCodiagY_inr]
     rfl
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftY_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -538,6 +541,8 @@ theorem graphLiftY_comp_map_transition (hI : I.FG) :
       lift_inr, RingHom.comp_apply, codiagonal_inr]
     rfl
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftXY_comp_map (hI : I.FG) :
     (graphLiftXY R I q hI).comp
@@ -581,6 +586,8 @@ theorem graphLiftXY_comp_map (hI : I.FG) :
   · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftXY, lift_inr, RingHom.comp_apply,
       commHom_inr, graphCodiagX_inl]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftXY_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -627,6 +634,8 @@ theorem graphLiftXY_comp_map_transition (hI : I.FG) :
       lift_inr, RingHom.comp_apply, codiagonal_inr]
     rfl
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftYX_comp_map (hI : I.FG) :
     (graphLiftYX R I q hI).comp
@@ -675,6 +684,8 @@ theorem graphLiftYX_comp_map (hI : I.FG) :
       graphCodiagY_inl]
     rfl
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 theorem graphLiftYX_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=

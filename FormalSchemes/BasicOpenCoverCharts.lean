@@ -73,9 +73,6 @@ time or an out-of-memory kill:
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.1 (10.1.4), §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -253,7 +250,6 @@ theorem awayCongrHom_chartOverlapEquiv' (hI : I.FG) (i j k : J)
       (isUnit_self_mul f i j) (isUnit_self_triple f i k j) (isUnit_mul_triple' f i j k)
       (isUnit_overlapElt_chartHom' I f i j k) _ (chartHom_triple I f i k j)
       (isUnit_overlapElt_mul_right I f i j k) x)
-
 
 end BasicOpenCover
 

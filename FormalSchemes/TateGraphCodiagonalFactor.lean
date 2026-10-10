@@ -40,8 +40,6 @@ and the resulting range inclusions `range_spfGraphCodiag*_subset` into `range Δ
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.15.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
 set_option maxRecDepth 8000
 
 noncomputable section
@@ -131,6 +129,8 @@ def spfLocX (hI : I.FG) :
         ← IsScalarTower.algebraMap_eq R (annulusAlgebra R I q) (annulusOverlap R I q),
         overlapIdeal_eq_map]))
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **(B)** The graph lift, transported back through the second-factor inversion transition and the
 `x`-summand chart, is the diagonal chart along the structural map. -/
@@ -206,6 +206,8 @@ theorem spfGraphLiftX_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftX_comp_map_transition R I q hI)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `x`-piece of the mixed chart `(false, true)` lands in the diagonal.** -/
 theorem spfGraphCodiagX_comp_ι_ft (hq : q ∈ I) (hI : I.FG) :
@@ -345,6 +347,8 @@ theorem spfGraphCodiagY_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftY_comp_map R I q hI).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **(B)** for the `y`-piece. -/
 theorem spfGraphLiftY_comp_transition (hI : I.FG) :
@@ -438,6 +442,8 @@ theorem spfGraphLiftY_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftY_comp_map_transition R I q hI)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `y`-piece of the mixed chart `(false, true)` lands in the diagonal.** -/
 theorem spfGraphCodiagY_comp_ι_ft (hq : q ∈ I) (hI : I.FG) :
@@ -505,6 +511,8 @@ theorem commHom_le_comap_self (hI : I.FG) :
     (show x ∈ _ ^ 1 by rwa [pow_one])
   rwa [pow_one] at h
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- `Spf` of the swapped `x`-side graph codiagonal. -/
 def spfGraphCodiagXComm (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -525,6 +533,8 @@ def spfGraphCodiagXComm (hI : I.FG) :
       rw [Ideal.mem_comap, RingHom.comp_apply]
       exact graphCodiagX_le_comap hI (commHom_le_comap_self R I q hI hx))
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- `Spf` of the swapped `y`-side graph codiagonal. -/
 def spfGraphCodiagYComm (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -644,6 +654,8 @@ theorem invLocXY_comp_codiagonal_le_comap (hI : I.FG) :
     rwa [pow_one] at this
   exact hid.le (Ideal.mem_map_of_mem _ hc)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** for the swapped `x`-piece. -/
 theorem spfGraphCodiagXComm_eq (hI : I.FG) :
@@ -680,6 +692,8 @@ theorem spfGraphCodiagXComm_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXY_comp_map R I q hI).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **(B)** for the swapped `x`-piece. -/
 theorem spfGraphLiftXY_comp_transition (hI : I.FG) :
@@ -749,6 +763,8 @@ theorem spfGraphLiftXY_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXY_comp_map_transition R I q hI)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `x`-piece of the mixed chart `(true, false)` lands in the diagonal.** -/
 theorem spfGraphCodiagXComm_comp_ι_tf (hq : q ∈ I) (hI : I.FG) :
@@ -794,6 +810,8 @@ theorem spfGraphCodiagXComm_comp_ι_tf (hq : q ∈ I) (hI : I.FG) :
           (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ := by
         rw [spfGraphLiftXY_comp_transition R I q hI]; simp only [Category.assoc]
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** for the swapped `y`-piece. -/
 theorem spfGraphCodiagYComm_eq (hI : I.FG) :
@@ -827,6 +845,8 @@ theorem spfGraphCodiagYComm_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftYX_comp_map R I q hI).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **(B)** for the swapped `y`-piece. -/
 theorem spfGraphLiftYX_comp_transition (hI : I.FG) :
@@ -890,6 +910,8 @@ theorem spfGraphLiftYX_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftYX_comp_map_transition R I q hI)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `y`-piece of the mixed chart `(true, false)` lands in the diagonal.** -/
 theorem spfGraphCodiagYComm_comp_ι_tf (hq : q ∈ I) (hI : I.FG) :

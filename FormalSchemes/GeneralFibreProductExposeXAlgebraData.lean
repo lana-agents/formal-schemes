@@ -89,9 +89,6 @@ to provide the six geometric fields by hand.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -387,7 +384,6 @@ def ofAlgebraData
     xt' := xAlgDataT' hI A g σ
     xt_fac := xAlgDataT'_fac hI A g τ σ hστ
     xcocycle := xAlgDataT'_cocycle hI A g σ hσc }
-
 
 /-! ### Rigidity: a datum carrying algebra data is the smart constructor's -/
 

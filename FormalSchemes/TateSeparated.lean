@@ -76,9 +76,6 @@ the `ULift (Bool × Bool)` object-defeq wall, reducing per chart to the affine s
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -437,6 +434,8 @@ def diagChartYY (hI : I.FG) :
           (overlapY R I q)]
       exact FormalSpectrum.le_comap_congrIdeal _)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Diagonal/localization factorisation (x).** The `x`-overlap chart followed by the affine
 diagonal factors through the localized `(x,x)` diagonal and the both-factor interchange chart. -/
 theorem overlapChart_comp_diagChart_x (hI : I.FG) :
@@ -504,6 +503,8 @@ theorem overlapChart_comp_diagChart_x (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIK_R)]
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ hring
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Diagonal/localization factorisation (y).** -/
 theorem overlapChart_comp_diagChart_y (hI : I.FG) :
     annulusOverlapChartY R I q ≫ diagChart R I q hI =
@@ -572,6 +573,8 @@ theorem overlapChart_comp_diagChart_y (hI : I.FG) :
 
 /-! ### The transition reconciliation on the diagonal charts -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 omit [IsNoetherianRing R] in
 /-- **Diagonal-chart transition reconciliation.** Through the affine diagonals, the annulus chart
 transition `annulusChartTransitionSpf` realises the diagonal both-summand transition
@@ -657,6 +660,8 @@ theorem diagXX_transition (hI : I.FG) :
     ← FormalSpectrum.locallyRingedSpaceMap_comp (hIK := hIK_R)]
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _ hring
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 set_option maxRecDepth 4000 in
 omit [IsNoetherianRing R] in
 /-- Diagonal-chart transition reconciliation (inversion); mirror of `diagXX_transition`

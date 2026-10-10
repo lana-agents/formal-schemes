@@ -44,9 +44,6 @@ isomorphisms with `FormalScheme.IsClosedImmersion.iso_comp`/`comp_iso` then give
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -132,6 +129,10 @@ theorem CompletedTensorProduct.schemeDiagonal_toLRSHom :
     (CompletedTensorProduct.schemeDiagonal (R := R) (I := I) (A := A) hI).toLRSHom =
       CompletedTensorProduct.diagonal (R := R) (I := I) (A := A) hI := rfl
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+set_option synthInstance.maxHeartbeats 1000000 in
+-- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
 set_option backward.isDefEq.respectTransparency false in
 /-- **The general diagonal of the one-chart datum is the affine diagonal**, conjugated by the two
 gluing isomorphisms of `FormalSchemes/AffineSeparatedIso.lean`.
@@ -181,6 +182,10 @@ theorem oneChart_schemeDiagonal'_eq :
     exact (congrArg (· ≫ (oneChartDiagDatum hI (A := A)).xStructMap)
       (BothChartedFibreDatumXY.diagonal'_comp_pr₁ _ _ _ _)).trans (Category.id_comp _)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+set_option synthInstance.maxHeartbeats 1000000 in
+-- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
 /-- **`Spf A` is separated over `Spf R`** (EGA I §10.15): the general diagonal of the one-chart
 datum presenting `Spf A` is a closed immersion of formal schemes.
 

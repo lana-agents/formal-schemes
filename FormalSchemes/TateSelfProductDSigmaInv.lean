@@ -69,9 +69,6 @@ succeeds on trees that `lake build` then OOM-kills) before changing anything her
 * Mathlib `CategoryTheory.GlueData'` (the `t'`/`t_fac`/`cocycle` fields).
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -133,6 +130,8 @@ The inversion transitions have the same per-factor `refl` shape as the swap ones
 projection-naturality proofs transfer mechanically. Only the transition-dependent lemmas are
 re-derived; the set-theoretic saturation helpers are reused verbatim. -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **First-factor inversion transition naturality over the second projection**, base-changed form.
 The inversion analogue of `twoPatchFibreProduct_pr₂_naturality`; identical proof with
 `annulusFibreChartTransitionInvAlg` in place of `annulusFibreChartTransitionAlg`. -/
@@ -183,6 +182,8 @@ theorem firstTransitionInv_comp_secondProj (hI : I.FG) :
       coprod.inl_desc_assoc, coprod.inr_desc_assoc, Category.assoc]
     exact (twoPatchFibreProduct_pr₂_naturality_inv' R I q (annulusAlgebra R I q) hI).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **First shape (inversion).** The inversion analogue of
 `tateSelfProductFirstTransition_image_subset`. -/
 theorem tateSelfProductFirstTransitionInv_image_subset (hI : I.FG) :
@@ -203,6 +204,8 @@ theorem tateSelfProductFirstTransitionInv_image_subset (hI : I.FG) :
     rw [firstTransitionInv_comp_secondProj R I q hI]
   simpa only [LocallyRingedSpace.comp_base, TopCat.coe_comp] using h1
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Both shape (inversion).** The inversion analogue of
 `tateSelfProductBothTransition_image_subset`; the transition never enters (target region is `univ`).
 -/
@@ -220,6 +223,8 @@ theorem tateSelfProductBothTransitionInv_image_subset (hI : I.FG) :
   rw [huniv]
   exact Set.subset_univ _
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Second-factor inversion transition naturality over the first projection**, per-summand form.
 The inversion analogue of `rightInterchange_pr₁_naturality`. -/
 theorem rightInterchange_pr₁_naturality_inv (hI : I.FG) :
@@ -271,6 +276,8 @@ theorem rightTransitionInv_comp_firstProj (hI : I.FG) :
       coprod.inl_desc_assoc, coprod.inr_desc_assoc, Category.assoc]
     exact (rightInterchange_pr₁_naturality_inv' R I q hI).symm
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Right shape (inversion).** The inversion analogue of
 `tateSelfProductRightTransition_image_subset`. -/
 theorem tateSelfProductRightTransitionInv_image_subset (hI : I.FG) :
@@ -289,6 +296,8 @@ theorem tateSelfProductRightTransitionInv_image_subset (hI : I.FG) :
     rw [rightTransitionInv_comp_firstProj R I q hI]
   simpa only [LocallyRingedSpace.comp_base, TopCat.coe_comp] using h1
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **First shape, swapped ordering (inversion).** Analogue of
 `tateSelfProductFirstTransition_image_subset'`. -/
 theorem tateSelfProductFirstTransitionInv_image_subset' (hI : I.FG) :
@@ -313,6 +322,8 @@ theorem tateSelfProductFirstTransitionInv_image_subset' (hI : I.FG) :
     _ = ⇑(firstFactorOverlapChart R I q hI).base ⁻¹'
           Set.range (secondFactorOverlapChart R I q hI).base := hset
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Right shape, swapped ordering (inversion).** Analogue of
 `tateSelfProductRightTransition_image_subset'`. -/
 theorem tateSelfProductRightTransitionInv_image_subset' (hI : I.FG) :
@@ -337,6 +348,8 @@ theorem tateSelfProductRightTransitionInv_image_subset' (hI : I.FG) :
     _ = ⇑(secondFactorOverlapChart R I q hI).base ⁻¹'
           Set.range (firstFactorOverlapChart R I q hI).base := hset
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Both shape, swapped ordering (inversion).** Analogue of
 `tateSelfProductBothTransition_image_subset'`; target region is `univ`. -/
 theorem tateSelfProductBothTransitionInv_image_subset' (hI : I.FG) :
@@ -353,6 +366,8 @@ theorem tateSelfProductBothTransitionInv_image_subset' (hI : I.FG) :
   rw [huniv]
   exact Set.subset_univ _
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The reduced range inclusion `H` (inversion)**, dispatched by Klein-four shape. The inversion
 analogue of `tateSelfProductGlueT'_range_reduced`. -/
 theorem tateSelfProductGlueTInv'_range_reduced (hI : I.FG) (i j k : Bool × Bool)
@@ -446,6 +461,8 @@ def tateSelfProductDInv (hI : I.FG) (i j k : Bool × Bool)
     tateSelfProductGlueTInv' R I q hI i j k hij hik hjk ≫
       (tateSelfProductBothChartIso R I q hI j k i hjk hij.symm hik.symm).inv
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The defining law of `tateSelfProductDInv`.** The inversion analogue of
 `tateSelfProductD_comp_bothChart`. -/
 theorem tateSelfProductDInv_comp_bothChart (hI : I.FG) (i j k : Bool × Bool)
@@ -654,6 +671,8 @@ rather than inlining them as branches of the shape lemmas — is what keeps this
 kernel's memory budget: see this module's docstring, "Build cost — do not inline the leg lemmas
 back into the shape lemmas (issue 636)". -/
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- First shape, `(x, x)` summand. -/
 private theorem firstLegXX (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI (AlgHom.id R (awXInv R I q)) (locXInv R I q) ≫
@@ -667,6 +686,8 @@ private theorem firstLegXX (hI : I.FG) :
     bothInterchangeOpenImmersion_eq_mapSpf]
   exact legFirstShape R I hI _ _ _ _ (reflSymmToAlgHom R) _ (reflSymmToAlgHom R)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- First shape, `(x, y)` summand. -/
 private theorem firstLegXY (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI (AlgHom.id R (awXInv R I q)) (locYInv R I q) ≫
@@ -680,6 +701,8 @@ private theorem firstLegXY (hI : I.FG) :
     bothInterchangeOpenImmersion_eq_mapSpf]
   exact legFirstShape R I hI _ _ _ _ (reflSymmToAlgHom R) _ (reflSymmToAlgHom R)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- First shape, `(y, x)` summand. -/
 private theorem firstLegYX (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI (AlgHom.id R (awYInv R I q)) (locXInv R I q) ≫
@@ -693,6 +716,8 @@ private theorem firstLegYX (hI : I.FG) :
     bothInterchangeOpenImmersion_eq_mapSpf]
   exact legFirstShape R I hI _ _ _ _ (reflToAlgHom R) _ (reflToAlgHom R)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- First shape, `(y, y)` summand. -/
 private theorem firstLegYY (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI (AlgHom.id R (awYInv R I q)) (locYInv R I q) ≫
@@ -706,6 +731,8 @@ private theorem firstLegYY (hI : I.FG) :
     bothInterchangeOpenImmersion_eq_mapSpf]
   exact legFirstShape R I hI _ _ _ _ (reflToAlgHom R) _ (reflToAlgHom R)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- Second shape, `(x, x)` summand. -/
 private theorem secondLegXX (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI (locXInv R I q) (AlgHom.id R (awXInv R I q)) ≫
@@ -718,6 +745,8 @@ private theorem secondLegXX (hI : I.FG) :
     rightInterchangeOpenImmersion_eq_mapSpf, bothInterchangeOpenImmersion_eq_mapSpf]
   exact legSecondShape R I hI _ _ _ _ (reflSymmToAlgHom R) _ (reflSymmToAlgHom R)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- Second shape, `(x, y)` summand. -/
 private theorem secondLegXY (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI (locXInv R I q) (AlgHom.id R (awYInv R I q)) ≫
@@ -730,6 +759,8 @@ private theorem secondLegXY (hI : I.FG) :
     rightInterchangeOpenImmersion_eq_mapSpf, bothInterchangeOpenImmersion_eq_mapSpf]
   exact legSecondShape R I hI _ _ _ _ (reflToAlgHom R) _ (reflToAlgHom R)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- Second shape, `(y, x)` summand. -/
 private theorem secondLegYX (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI (locYInv R I q) (AlgHom.id R (awXInv R I q)) ≫
@@ -742,6 +773,8 @@ private theorem secondLegYX (hI : I.FG) :
     rightInterchangeOpenImmersion_eq_mapSpf, bothInterchangeOpenImmersion_eq_mapSpf]
   exact legSecondShape R I hI _ _ _ _ (reflSymmToAlgHom R) _ (reflSymmToAlgHom R)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- Second shape, `(y, y)` summand. -/
 private theorem secondLegYY (hI : I.FG) :
     CompletedTensorProduct.mapSpf hI (locYInv R I q) (AlgHom.id R (awYInv R I q)) ≫
@@ -832,6 +865,8 @@ private theorem secondShapeIota_comp (hI : I.FG) :
       coprod.inr_desc, coprod.inl_desc_assoc, coprod.inr_desc_assoc, Category.assoc]
     exact iotaSecondLeg R I q _ _ hI
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **First shape (inversion).** For a prefix `p` cut out over the first-factor overlap chart
 (`p ≫ firstFactorOverlapChart = bothFactorOverlapChart`), the first-factor inversion transition
 followed by the return chart matches the swap-first permutation followed by the both-chart. -/
@@ -861,6 +896,8 @@ private theorem firstShapeDInv (hq : q ∈ I) (hI : I.FG)
       tateSelfProductSwapFirstTransitionInv, firstFactorOverlapChart, bothFactorOverlapChart]
     exact firstLegYY R I q hI
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Second shape (inversion).** The second-factor analogue of `firstShapeDInv`. -/
 private theorem secondShapeDInv (hq : q ∈ I) (hI : I.FG)
     (p : ((dXX R I q ⨿ dXY R I q) ⨿ (dYX R I q ⨿ dYY R I q)) ⟶ (dAX R I q ⨿ dAY R I q))
@@ -888,6 +925,8 @@ private theorem secondShapeDInv (hq : q ∈ I) (hI : I.FG)
       tateSelfProductSwapSecondTransitionInv, secondFactorOverlapChart, bothFactorOverlapChart]
     exact secondLegYY R I q hI
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **Both shape (inversion).** When `i` and `j` differ in both coordinates the prefix `p` is forced
 to be the identity (it factors through the mono `bothFactorOverlapChart`), and both the transition
 and the permutation are `tateSelfProductBothTransitionInv`. -/
@@ -901,6 +940,8 @@ private theorem bothShapeDInv (hq : q ∈ I) (hI : I.FG)
   obtain rfl : p = 𝟙 _ := by
     rw [← cancel_mono (bothFactorOverlapChart R I q hI), Category.id_comp]; exact hp
   rw [Category.id_comp]
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The shape-dispatched summand comparison.** For a prefix `p : bothOverlapObj ⟶ V i j` cut out
 over the overlap chart `f i j` (`p ≫ f i j = bothChart`), the genuine transition `t_inv i j` on the
 shared overlap, composed with the return chart `f j i`, agrees with the summand permutation
@@ -927,6 +968,8 @@ private theorem tateSelfProductDInv_dispatch (hq : q ∈ I) (hI : I.FG) (i j k :
            | exact secondShapeDInv R I q hq hI p hp
            | exact bothShapeDInv R I q hq hI p hp)
 
+set_option maxHeartbeats 3200000 in
+-- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
 /-- **The 𝔾m-inversion self-product cocycle payload.** For every pairwise-distinct triple
 `i j k : Bool × Bool` the conjugated self-map `tateSelfProductDInv i j k` equals the `hom` leg of
 the explicit summand permutation `tateSelfProductSigmaInv i j k`. The inversion analogue of

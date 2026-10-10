@@ -78,9 +78,6 @@ mode with type-ascribed `congrArg` lambdas.
 * [The Stacks Project, Tag 01KJ](https://stacks.math.columbia.edu/tag/01KJ).
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -110,7 +107,6 @@ theorem tateSchemeDiagonal_isClosedImmersion (hq : q ∈ I) (hI : I.FG) :
     FormalScheme.IsClosedImmersion (tateSchemeDiagonal R I q hq hI) where
   base_closedEmbedding := isClosedEmbedding_tateSelfProductDiagonal_base R I q hq hI
   surjective_stalkMap := tateSelfProductDiagonal_surjective_stalkMap R I q hq hI
-
 
 /-- The underlying locally-ringed-space morphism of the conjugated diagonal. -/
 theorem tateConjugatedDiagonal_toLRSHom (hq : q ∈ I) (hI : I.FG) :
@@ -214,7 +210,6 @@ theorem tate_schemeDiagonal'_eq (hq : q ∈ I) (hI : I.FG) :
           m ≫ (tateDiagonalDatum R I q B hq hI).xStructMap)
         (BothChartedFibreDatumXY.diagonal'_comp_pr₁ _ _ _ _)).trans (Category.id_comp _))
 
-
 /-! ### Separatedness -/
 
 /-- **The Tate curve model `𝔈_q` is separated over `Spf R`** (EGA I §10.15), in the §10.15
@@ -229,7 +224,6 @@ theorem tate_isSeparated (hq : q ∈ I) (hI : I.FG) :
   rw [tate_schemeDiagonal'_eq R I q B hq hI]
   exact FormalScheme.IsClosedImmersion.iso_comp _
     ((tateSchemeDiagonal_isClosedImmersion R I q hq hI).comp_iso _)
-
 
 end AlgebraicGeometry
 

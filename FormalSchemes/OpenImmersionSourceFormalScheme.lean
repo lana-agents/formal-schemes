@@ -33,9 +33,6 @@ discharge the `glueMorphisms` overlap obligation via `fibreLift_unique` (issue 2
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits TopologicalSpace Topology FormalSpectrum

@@ -41,9 +41,6 @@ fibre-product universal property) consumes.
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.4.
 -/
 
-set_option maxHeartbeats 3200000
-set_option synthInstance.maxHeartbeats 1000000
-
 noncomputable section
 
 open CategoryTheory TopologicalSpace Topology FormalSpectrum
