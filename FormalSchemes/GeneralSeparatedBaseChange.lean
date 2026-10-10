@@ -685,7 +685,6 @@ theorem xGlued_diagonalDatum_ofAlgebraData_congr
     (AffineChartedFibreDatumX.ofAlgebraData_xGlued_congr (B := BX) (B' := BX') hI hI' A g
       τ τ_symm σ hστ hσc τ' τ'_symm σ' hστ' hσc' hK hτ hσ)
 
-omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
 set_option maxHeartbeats 400000 in
 -- A raised limit, and the measurement behind it. The statements below compose a morphism written
 -- at `AlgebraicGeometry.DoubleChartGlue` with one written at
@@ -702,6 +701,7 @@ set_option maxHeartbeats 400000 in
 -- in the datum vocabulary at a literal
 -- `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair is issue 2074's instance wall.
 set_option backward.isDefEq.respectTransparency false in
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
 /-- **The glued base change commutes with the first projection.** At one chart family `A`, one away
 family `g` and two adic bases whose induced ideal families agree, the comparison
 `AlgebraicGeometry.DoubleChartGlue.baseChange` followed by the first projection of the `(R, I)`
@@ -775,7 +775,6 @@ theorem baseChange_comp_pr₁ (hII' : I.map (algebraMap R R') = I')
       (AffineChartedFibreDatumX.xAlgDataT'_heq hI hI' A g hK hσ) p.1
   rw [← Category.assoc, hchart, Category.assoc, hxι]
 
-omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
 set_option maxHeartbeats 400000 in
 -- A raised limit, and the measurement behind it. The statements below compose a morphism written
 -- at `AlgebraicGeometry.DoubleChartGlue` with one written at
@@ -792,6 +791,7 @@ set_option maxHeartbeats 400000 in
 -- in the datum vocabulary at a literal
 -- `AlgebraicGeometry.AffineChartedFibreDatumX.ofAlgebraData` pair is issue 2074's instance wall.
 set_option backward.isDefEq.respectTransparency false in
+omit [TopologicalSpace R] [IsAdicRing I] [TopologicalSpace R'] [IsAdicRing I'] in
 /-- **The glued base change commutes with the second projection**, by the same chartwise argument
 as `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁` on the other side of the tensor,
 over `AlgebraicGeometry.DoubleChartGlue.chartBaseChange_comp_inr`.
