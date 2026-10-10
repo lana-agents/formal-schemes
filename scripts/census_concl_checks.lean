@@ -256,6 +256,8 @@ of which it needs, so the two are incomparable and the bucket is F.
 
 section Subsumed519
 
+set_option linter.unusedVariables false
+
 open FormalSpectrum
 
 /-- **B17.** `le_radical_map_of_range_eq_basicOpenChart` is `le_radical_map_of_openImmersion`

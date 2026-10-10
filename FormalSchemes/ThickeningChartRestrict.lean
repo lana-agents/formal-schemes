@@ -92,7 +92,7 @@ consumers can reach.
 
 Three pieces of friction, all of the same kind: a term is definitionally what a lemma wants but
 not syntactically, so `rw` refuses while `exact` does not. None of them needs a transparency
-bump, and this file sets no option beyond the header linter.
+bump, and this file sets no option.
 
 `Opens.set_range_inclusion'` is stated about `Opens.inclusion' V`, while the goals here are about
 `(Y.ofRestrict V.isOpenEmbedding).base`. Leaving `V` as a metavariable makes the `rw` fail with a

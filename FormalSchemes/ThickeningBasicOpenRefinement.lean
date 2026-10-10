@@ -46,8 +46,8 @@ is pure topology; the sheaf-theoretic half starts after it.
 `↑(basicOpen I r) = v` with the coercion on the left, against which `▸` fails — *"invalid `▸`
 notation … does not contain the expected result type on either the left or the right hand side"*.
 `subst` closes the gap, after which the `Set`-level membership and inclusion satisfy the
-`Opens`-level goals definitionally. There is no transparency question here and this file sets no
-options beyond the header linter.
+`Opens`-level goals definitionally. There is no transparency question here, and this file sets
+no options at all.
 
 ## References
 

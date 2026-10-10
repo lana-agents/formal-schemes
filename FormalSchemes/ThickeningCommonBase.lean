@@ -73,7 +73,7 @@ n)).base`, whose type Lean spells `↑(Spec.locallyRingedSpaceObj _).toPresheafe
 `Spec.topMap` wants `Spec.topObj _`. The two are definitionally equal, `rw` will not see it, and
 the error carries the familiar *"not type-correct under the `instances` transparency level"*
 note. Naming the factor with `change` fixes it; `set_option backward.isDefEq.respectTransparency
-false` is not needed and this file sets no options beyond the header linter.
+false` is not needed and this file sets no options.
 
 ## References
 

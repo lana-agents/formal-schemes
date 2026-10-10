@@ -59,9 +59,9 @@ Inside `hom_ext_toSpec`, `homEquiv_symm_unop_apply` must be applied with `Eq.tra
 definitionally equal `Spec.locallyRingedSpaceObj (CommRingCat.of B)`, and `rw`'s keyed matching
 does not see through that. A `set_option backward.isDefEq.respectTransparency false` bump does
 **not** fix it either — it was tried, and it is the `rw` that has to go; once the rewrites are
-replaced by `Eq.trans` the bump is unnecessary and this file needs no `set_option` beyond
-`linter.style.header false`. Worth recording, since the reflex on this tree is to reach for the
-transparency bump whenever an `instances`-transparency note appears in the error.
+replaced by `Eq.trans` the bump is unnecessary and this file needs no `set_option`. Worth
+recording, since the reflex on this tree is to reach for the transparency bump whenever an
+`instances`-transparency note appears in the error.
 
 The same applies one line later, to Mathlib's `StructureSheaf.toOpen_comp_comap_apply`: it spells
 the target open as `Opens.comap ⟨PrimeSpectrum.comap f, _⟩ U` where the goal of

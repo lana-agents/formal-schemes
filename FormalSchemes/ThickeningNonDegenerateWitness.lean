@@ -63,7 +63,7 @@ with no bridging at all — but not at `instances` transparency, so `rw [commonB
 against such a goal with an application type mismatch on `Quiver.Hom`. `simp only
 [commonBase_taut]` fires where `rw` does not, because it elaborates the motive differently. Per the
 standing diagnosis on this tree, two `rw` spellings failing and a third tactic succeeding means the
-**tactic** was wrong, not the transparency; this file sets no option beyond the header linter.
+**tactic** was wrong, not the transparency; this file sets no option.
 
 Nothing here edits a landed module. In particular the `private` `Spec ℤ = D(2) ∪ D(3)` helpers
 duplicated in `ThickeningCoverPullback.lean` and `ThickeningBasicOpenRefinement.lean` are left

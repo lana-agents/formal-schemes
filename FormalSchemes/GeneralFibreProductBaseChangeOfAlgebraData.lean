@@ -67,7 +67,7 @@ the `def` `..ofAlgebraData` to see that the datum's field *is* the ambient insta
 read at type `AlgebraicGeometry.DoubleChartGlue R I A B`: the ascription is checked at `default`
 transparency, where the datum's fields do reduce to the ambient instances, so the definition is
 accepted and every later mention of it carries the ambient instance signature. Nothing is made
-`@[reducible]`, this file needs no `set_option` beyond `linter.style.header false`, and neither
+`@[reducible]`, this file needs no `set_option`, and neither
 `..ofAlgebraData` nor `..toDoubleChartGlue` is restated, generalised or weakened.
 
 The idiom is not new here: `AlgebraicGeometry.BothChartedFibreDatumXY.diagonalDoubleChartGlue`

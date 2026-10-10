@@ -8,14 +8,6 @@ import FormalSchemes.GeneralFibreProductBaseChange
 import FormalSchemes.GeneralFibreProductExposeXIdealCongr
 import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 
--- This file carries six per-declaration `set_option`s, three heartbeat raises and three
--- `backward.isDefEq.respectTransparency false`, on
--- `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₁`, on
--- `AlgebraicGeometry.BothChartedFibreDatumXY.baseChange_comp_pr₂` and on
--- `AlgebraicGeometry.BothChartedFibreDatumXY.diagonal'_comp_baseChange`; the measurement behind
--- them is commented at each. The line below is what keeps the style linter quiet about those six,
--- and it is named here so that disabling the linter is itself visible rather than silent.
-
 /-!
 # Separatedness descends along the base change of the diagonal (EGA I §10.15)
 
