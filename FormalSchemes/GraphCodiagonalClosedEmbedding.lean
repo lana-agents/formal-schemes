@@ -214,6 +214,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
   rw [graphCodiagY, RingHom.comp_apply, RingHom.comp_apply, commHom_inr, graphCodiagX_inl,
     RingHom.coe_coe]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `y`-side graph codiagonal is surjective.** -/
 theorem graphCodiagY_surjective (hI : I.FG) :
     Function.Surjective (graphCodiagY R I q hI) :=
@@ -263,6 +264,7 @@ theorem map_graphCodiagY_eq (hI : I.FG) :
       (B := annulusAlgebra R I q), Ideal.map_map, graphCodiagY_comp_algebraMap,
     ← overlapIdealY_eq_map]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ʸ` is continuous for the adic topologies. -/
 theorem graphCodiagY_le_comap (hI : I.FG) :
     idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
@@ -278,6 +280,7 @@ variable
 
 omit [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
   [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))] in
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The base map of `Spf ∇ˣ : Spf (A{1/x}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 This is the `x`-piece of the mixed-chart preimage of the Tate diagonal. -/
 theorem isClosedEmbedding_map_graphCodiagX (hI : I.FG) :

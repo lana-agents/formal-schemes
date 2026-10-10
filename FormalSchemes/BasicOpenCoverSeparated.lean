@@ -323,6 +323,7 @@ theorem chartCodiagonal_witness_mul_eq_one (hI : I.FG) (i j : J) (hij : i ≠ j)
 
 /-! #### The value -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The chart codiagonals of the open cover are surjective.** -/
 theorem datumX_chartCodiagonal_surjective (hI : I.FG) (i j : J) (hij : i ≠ j) :
     Function.Surjective ((datumX I f B hI).chartCodiagonal i j hij) :=

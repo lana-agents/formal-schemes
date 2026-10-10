@@ -299,7 +299,7 @@ private theorem graphCodiagX_mem_pow (m : ℕ)
     rw [Ideal.map_pow, map_graphCodiagX_eq]
   exact h.le (Ideal.mem_map_of_mem _ hx)
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 private theorem graphCodiagY_mem_pow (m : ℕ)
     {x : CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q)}
     (hx : x ∈ (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)) ^ m) :
@@ -328,7 +328,7 @@ theorem graphLiftAXtoY_comp_map :
   · rw [RingHom.comp_apply, map_inr, graphLiftAXtoY_inr, IsScalarTower.coe_toAlgHom',
       graphChartAlgXY_algebraMap, graphCodiagY_inr]
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** for the `(false, true)` chart's `dXA` summand: the `x`-side graph codiagonal factors
 through the `x`-summand of the first-factor overlap chart. -/
 theorem graphLiftXAtoX_comp_map :
@@ -372,7 +372,7 @@ theorem graphLiftXAtoY_comp_map :
   · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftXAtoY_inr, RingHom.comp_apply,
       commHom_inr, graphCodiagY_inl]
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** for the `(true, false)` chart's `dAX` summand. -/
 theorem graphLiftAXtoX_comp_map :
     (graphLiftAXtoX R I q hI).comp

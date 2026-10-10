@@ -374,6 +374,7 @@ theorem graphLiftYX_inr (hI : I.FG)
 
 /-! ### The eight preimage bounds -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(false, true)`, `c = false`, `dAY` summand.** The preimage of the affine
 diagonal locus under the transition composite of the `y`-localized summand of the second-factor
 overlap lies in the range of the `x`-side graph lift. -/
@@ -429,6 +430,7 @@ theorem preimage_range_diagChart_subset_second_dAY_x (hI : I.FG) :
     (fun a => graphLiftX_inl R I q hI a) (fun z => graphLiftX_inr R I q hI z)
     (fun a => graphChartAlgY_transition_locX R I q hI a)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(true, false)`, `c = true`, `dAY` summand.** -/
 theorem preimage_range_diagChart_subset_second_dAY_y (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -499,6 +501,7 @@ theorem preimage_range_diagChart_subset_second_dAY_y (hI : I.FG) :
     (fun a => graphLiftYX_inl R I q hI a) (fun z => graphLiftYX_inr R I q hI z)
     (fun a => chartBridgeY_transition_locX R I q hI a)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(false, true)`, `c = false`, `dAX` summand.** -/
 theorem preimage_range_diagChart_subset_second_dAX_y (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -569,6 +572,7 @@ theorem preimage_range_diagChart_subset_second_dAX_y (hI : I.FG) :
     (fun a => graphLiftAXtoY_inl R I q hI a) (fun z => graphLiftAXtoY_inr R I q hI z)
     (fun a => graphChartAlgXY_transitionSymm_locY R I q hI a)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(true, false)`, `c = true`, `dAX` summand.** -/
 theorem preimage_range_diagChart_subset_second_dAX_x (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -639,6 +643,7 @@ theorem preimage_range_diagChart_subset_second_dAX_x (hI : I.FG) :
     (fun a => graphLiftAXtoX_inl R I q hI a) (fun z => graphLiftAXtoX_inr R I q hI z)
     (fun a => graphChartAlgX_transitionSymm_locY R I q hI a)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(false, true)`, `c = true`, `dYA` summand.** -/
 theorem preimage_range_diagChart_subset_first_dYA_y (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -709,6 +714,7 @@ theorem preimage_range_diagChart_subset_first_dYA_y (hI : I.FG) :
     (fun z => graphLiftY_inl R I q hI z) (fun a => graphLiftY_inr R I q hI a)
     (fun a => chartBridgeY_transition_locX R I q hI a)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(true, false)`, `c = false`, `dYA` summand.** -/
 theorem preimage_range_diagChart_subset_first_dYA_x (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -779,6 +785,7 @@ theorem preimage_range_diagChart_subset_first_dYA_x (hI : I.FG) :
     (fun z => graphLiftXY_inl R I q hI z) (fun a => graphLiftXY_inr R I q hI a)
     (fun a => graphChartAlgY_transition_locX R I q hI a)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(false, true)`, `c = true`, `dXA` summand.** -/
 theorem preimage_range_diagChart_subset_first_dXA_x (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
@@ -849,6 +856,7 @@ theorem preimage_range_diagChart_subset_first_dXA_x (hI : I.FG) :
     (fun z => graphLiftXAtoX_inl R I q hI z) (fun a => graphLiftXAtoX_inr R I q hI a)
     (fun a => graphChartAlgX_transitionSymm_locY R I q hI a)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Mixed chart `(true, false)`, `c = false`, `dXA` summand.** -/
 theorem preimage_range_diagChart_subset_first_dXA_y (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=

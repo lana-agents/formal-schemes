@@ -172,6 +172,7 @@ theorem localizedCodiagInvY_le_comap (hI : I.FG) :
   rw [← map_localizedCodiagInvY_eq (R := R) (I := I) (q := q) hI]
   exact Ideal.le_comap_map
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The base map of `Spf ∇ᵢʸ : Spf (A{1/y}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 `∇ᵢʸ` is surjective (`localizedCodiagInvY_surjective`), and `Spf` of a surjection is a closed
 embedding (`FormalSpectrum.isClosedEmbedding_map_of_surjective`). Closed into *all* of

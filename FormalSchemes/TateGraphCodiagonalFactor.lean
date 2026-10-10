@@ -84,7 +84,7 @@ def spfGraphLiftX (hI : I.FG) :
     have h := graphLiftX_mem_pow R I q hI 1 (by rwa [pow_one])
     rwa [pow_one] at h)
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** The `x`-side graph codiagonal factors through the `y`-summand of the second-factor
 overlap chart. -/
 theorem spfGraphCodiagX_eq (hI : I.FG) :
@@ -642,7 +642,7 @@ theorem invLocXY_comp_codiagonal_le_comap (hI : I.FG) :
     rwa [pow_one] at this
   exact hid.le (Ideal.mem_map_of_mem _ hc)
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** for the swapped `x`-piece. -/
 theorem spfGraphCodiagXComm_eq (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI

@@ -432,7 +432,7 @@ theorem isClosed_range_spfGraphCodiagY :
   exact (CompletedTensorProduct.isClosedEmbedding_map_graphCodiagY
     (R := R) (I := I) (q := q) hI).isClosed_range
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The factor-swapped `x`-side graph piece is closed: `graphCodiagX ∘ comm` is surjective, being
 the composite of a surjection with the commutativity isomorphism. -/
 theorem isClosed_range_spfGraphCodiagXComm :
