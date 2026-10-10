@@ -327,6 +327,7 @@ theorem preimage_range_diagonal_tf (hq : q ∈ I) (hI : I.FG) :
 
 /-! ### The mixed-chart coe-preimage is closed -/
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The coe-preimage of `range Δ.base` over a mixed chart `(b, ¬b)` is closed** (issue 424-ii).
 This is the genuine new content over the corrected inversion model: the diagonal-over-overlap locus
 in the mixed chart is the union of the two graphs of the 𝔾m-inversion transition, each realised as
