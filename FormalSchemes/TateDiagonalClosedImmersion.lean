@@ -82,6 +82,7 @@ namespace AlgebraicGeometry
 variable (R : Type u) [CommRing R] (I : Ideal R) (q : R) [IsNoetherianRing R]
 variable [TopologicalSpace R] [IsAdicRing I]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The local-at-target form, uniform in the chart.** On *every* one of the four charts `p` of the
 Tate self-product — diagonal and mixed alike — the restriction of `Δ.base` to the preimage of the
 chart is a closed topological embedding.
@@ -101,6 +102,7 @@ theorem restrictPreimage_diagonal (hq : q ∈ I) (hI : I.FG) (p : ULift (Bool ×
   Set.restrictPreimage_isClosedEmbedding _
     (isClosedEmbedding_tateSelfProductDiagonal_base R I q hq hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The glued diagonal of the Tate curve model is a closed immersion** (EGA I §10.15): its base
 map is a closed topological embedding (`isClosedEmbedding_tateSelfProductDiagonal_base`) and all of
 its stalk maps are surjective (`tateSelfProductDiagonal_surjective_stalkMap`). Equivalently, the

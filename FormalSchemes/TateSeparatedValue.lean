@@ -104,6 +104,7 @@ omit [TopologicalSpace R] [IsAdicRing I] in
 theorem tateSchemeDiagonal_toLRSHom (hq : q ∈ I) (hI : I.FG) :
     (tateSchemeDiagonal R I q hq hI).toLRSHom = tateSelfProductDiagonal R I q hq hI := rfl
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The glued Tate diagonal is a closed immersion of formal schemes** — #243, repackaged. -/
 theorem tateSchemeDiagonal_isClosedImmersion (hq : q ∈ I) (hI : I.FG) :
     FormalScheme.IsClosedImmersion (tateSchemeDiagonal R I q hq hI) where
