@@ -320,10 +320,6 @@ theorem graphLiftAXtoY_comp_map :
       graphCodiagY R I q hI := by
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
-  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
-    annulus_isAdicRing_map R I q hI
-  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
-    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
   refine hom_ext (annulusOverlapIdealY R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
     (fun a => ?_) (fun b => ?_)
   · exact graphLiftAXtoY_mem_pow R I q hI m (map_mem_pow hI _ _ m hx)
@@ -344,10 +340,6 @@ theorem graphLiftXAtoX_comp_map :
       graphCodiagX R I q hI := by
   haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
-  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
-    annulus_isAdicRing_map R I q hI
-  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
-    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
   refine hom_ext (annulusOverlapIdeal R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
     (fun a => ?_) (fun b => ?_)
   · exact graphLiftXAtoX_mem_pow R I q hI m (map_mem_pow hI _ _ m hx)
@@ -371,10 +363,6 @@ theorem graphLiftXAtoY_comp_map :
           (B := annulusAlgebra R I q) hI) := by
   haveI : IsAdicComplete (annulusOverlapIdealY R I q) (annulusOverlapY R I q) :=
     (annulusOverlapY_isAdicRing R I q hI).toIsAdicComplete
-  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
-    annulus_isAdicRing_map R I q hI
-  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
-    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
   refine hom_ext (annulusOverlapIdealY R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
     (fun a => ?_) (fun b => ?_)
   · exact graphLiftXAtoY_mem_pow R I q hI m (map_mem_pow hI _ _ m hx)
@@ -396,10 +384,6 @@ theorem graphLiftAXtoX_comp_map :
           (B := annulusAlgebra R I q) hI) := by
   haveI : IsAdicComplete (annulusOverlapIdeal R I q) (annulusOverlap R I q) :=
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
-  haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
-    annulus_isAdicRing_map R I q hI
-  haveI : IsAdicComplete (I.map (algebraMap R (annulusAlgebra R I q))) (annulusAlgebra R I q) :=
-    (annulus_isAdicRing_map R I q hI).toIsAdicComplete
   refine hom_ext (annulusOverlapIdeal R I q) hI (fun m x hx => ?_) (fun m x hx => ?_)
     (fun a => ?_) (fun b => ?_)
   · exact graphLiftAXtoX_mem_pow R I q hI m (map_mem_pow hI _ _ m hx)
@@ -504,6 +488,7 @@ def spfGraphLiftAXtoX (hI : I.FG) :
     have h := graphLiftAXtoX_mem_pow R I q hI 1 (by rwa [pow_one])
     rwa [pow_one] at h)
 
+omit [IsNoetherianRing R] in
 /-- **(A)** at the `(false, true)` chart's `dAX` summand. -/
 theorem spfGraphCodiagY_eq_ft_dAX (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -537,6 +522,7 @@ theorem spfGraphCodiagY_eq_ft_dAX (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftAXtoY_comp_map R I q hI).symm
 
+omit [IsNoetherianRing R] in
 /-- **(A)** at the `(false, true)` chart's `dXA` summand. -/
 theorem spfGraphCodiagX_eq_ft_dXA (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -570,6 +556,7 @@ theorem spfGraphCodiagX_eq_ft_dXA (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXAtoX_comp_map R I q hI).symm
 
+omit [IsNoetherianRing R] in
 /-- **(A)** at the `(true, false)` chart's `dXA` summand. -/
 theorem spfGraphCodiagYComm_eq_tf_dXA (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -605,6 +592,7 @@ theorem spfGraphCodiagYComm_eq_tf_dXA (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXAtoY_comp_map R I q hI).symm
 
+omit [IsNoetherianRing R] in
 /-- **(A)** at the `(true, false)` chart's `dAX` summand. -/
 theorem spfGraphCodiagXComm_eq_tf_dAX (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI

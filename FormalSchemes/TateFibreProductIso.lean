@@ -334,6 +334,7 @@ theorem pr₂Chart_comp_ι_tateXGluedInv (hq : q ∈ I) (hI : I.FG) (b : tateMod
       congrArg (pr₂Chart R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≫ ·)
         (Category.id_comp _)))
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The `X`-leg of `Φ` restricted to the `c`-th Tate chart. -/
 theorem ι_tateFibreLegX (hq : q ∈ I) (hI : I.FG) (c : ULift.{u} (Bool × Bool)) :
     (tateSelfProductFormalGlueDataInv R I q hq hI).ι c ≫ tateFibreLegX R I q B hq hI =
@@ -349,6 +350,7 @@ theorem ι_tateFibreLegX (hq : q ∈ I) (hI : I.FG) (c : ULift.{u} (Bool × Bool
       (Category.assoc _ _ _).trans
         (pr₁Chart_comp_ι_tateXGluedInv R I q B hq hI ⟨c.down.1⟩)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The `Y`-leg of `Φ` restricted to the `c`-th Tate chart. -/
 theorem ι_tateFibreLegY (hq : q ∈ I) (hI : I.FG) (c : ULift.{u} (Bool × Bool)) :
     (tateSelfProductFormalGlueDataInv R I q hq hI).ι c ≫ tateFibreLegY R I q B hq hI =

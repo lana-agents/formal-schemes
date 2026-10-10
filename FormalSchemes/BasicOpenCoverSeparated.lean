@@ -232,6 +232,7 @@ theorem datumX_chartCodiagonal_inr (hI : I.FG) (i j : J) (hij : i ≠ j)
           (awayCompletion (I.map (algebraMap R (chartAlgebra I f j))) (overlapElt I f j i)) c) :=
   (datumX I f B hI).chartCodiagonal_inr i j hij c
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The first leg inverts `f_i`**: the `i`-th chart already contains `f_i⁻¹`. -/
 theorem chartCodiagonal_inl_chartInvSelf (hI : I.FG) (i j : J) (hij : i ≠ j) :
     coverCodiagonal I f B hI i j hij
@@ -244,6 +245,7 @@ theorem chartCodiagonal_inl_chartInvSelf (hI : I.FG) (i j : J) (hij : i ≠ j) :
       (awayCompletion (I.map (algebraMap R (chartAlgebra I f i))) (overlapElt I f i j)) (f i),
     ← map_mul, chartInvSelf_mul, map_one]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The second leg inverts `f_j`**: the `j`-th chart contains `f_j⁻¹`, and the transition carries
 it to an inverse of `f_j` read in the `i`-th chart because it fixes the image of `A`
 (`tau_symm_algebraMap`). This is the step that fails for a non-separated datum. -/

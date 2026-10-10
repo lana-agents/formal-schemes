@@ -167,6 +167,7 @@ theorem map_idealOfDefinition_chartCodiagonal (i j : DX.J) (h : i ≠ j) :
     _ = awayCompletionIdeal (I.map (algebraMap R (DX.A i))) (DX.g i j) :=
         map_awayCompletionHom _ _
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The separatedness criterion, one pair at a time: the chart codiagonal is surjective as soon
 as the inverse of the overlap element is in its image.**
 

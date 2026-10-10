@@ -223,6 +223,7 @@ theorem annulusLoc_eq_sec (w : annulusLoc R I q) :
             ^ (IsLocalization.Away.sec (overlapX R I q) w).2 :=
   FormalSpectrum.localizationAway_eq_sec (overlapX R I q) w
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- The explicit lift of `w : L = A[x⁻¹]` through `∇ᵢ`: with `(r, n) = sec x w`, the element
 `inl r · (inr x)ⁿ` of `A ⊗̂_R A` maps to `algebraMap L (A{1/x}) w`, using
 `∇ᵢ (inl r) = algebraMap L (A{1/x}) (algebraMap A L r)`,
@@ -237,6 +238,7 @@ theorem localizedCodiagInvX_sec_witness (hI : I.FG) (w : annulusLoc R I q) :
   rw [map_mul, map_pow, localizedCodiagInvX_inl_apply, localizedCodiagInvX_inr_overlapX,
     ← map_pow, ← map_mul, ← annulusLoc_eq_sec]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The inversion localized codiagonal `∇ᵢ` is surjective.** Modulo the ideal of definition
 `A{1/x}` is the localization `Ā[x⁻¹]` of `Ā = A/I·A` at `x̄`; the image of `∇ᵢ` mod `I` contains
 `Ā` (via `inl`/`locX`) and the unit `x̄⁻¹` (via `inr`), so it is all of `Ā[x⁻¹]`. This lifts to

@@ -164,6 +164,7 @@ theorem graphCodiagX_comp_algebraMap (hI : I.FG) :
       algebraMap R (annulusOverlap R I q) := by
   rw [graphCodiagX, RingHom.comp_assoc, map_comp_algebraMap, localizedCodiagInvX_comp_algebraMap]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ˣ` carries the ideal of definition of `A ⊗̂_R A` exactly onto `I·A{1/x}`. -/
 theorem map_graphCodiagX_eq (hI : I.FG) :
     (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)).map
@@ -196,6 +197,7 @@ def graphCodiagY (hI : I.FG) :
 
 variable {R I q}
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 @[simp] theorem graphCodiagY_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     graphCodiagY R I q hI (inl R I _ _ a) = locY R I q a := by
   rw [graphCodiagY, RingHom.comp_apply, RingHom.comp_apply, commHom_inl, graphCodiagX_inr,
@@ -217,6 +219,7 @@ theorem graphCodiagY_surjective (hI : I.FG) :
     (graphCodiagX_surjective (R := R) (I := I) (q := q) hI)).comp
       (commHom_surjective_self (R := R) (I := I) (q := q) hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ʸ` is an `R`-algebra map. -/
 theorem graphCodiagY_comp_algebraMap (hI : I.FG) :
     (graphCodiagY R I q hI).comp

@@ -64,6 +64,7 @@ variable [TopologicalSpace (CompletedTensorProduct R I A B)]
   [IsAdicRing (idealOfDefinition R I A B)]
 variable {S : Type u} [CommRing S] [TopologicalSpace S] {L : Ideal S} [IsAdicRing L]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **Full locally-ringed-space uniqueness of the fibre-product mediating morphism** (EGA I 10.7,
 for affine-formal-spectrum sources). Two *arbitrary* morphisms of locally ringed spaces
 `f₁, f₂ : Spf S ⟶ Spf (A ⊗̂_R B)` with continuous global-sections maps

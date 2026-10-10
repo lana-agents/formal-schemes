@@ -152,6 +152,7 @@ theorem map_annulusOverlapInversion_annulusOverlapIdeal (hI : I.FG) :
     RingHom.ext fun r => annulusOverlapInversion_algebraMap R I q hI r
   rw [overlapIdeal_eq_map, Ideal.map_map, he, ← overlapIdealY_eq_map]
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- `∇ᵢʸ` carries the ideal of definition of `A ⊗̂_R A` exactly onto that of `A{1/y}`
 (`annulusOverlapIdealY = I·A{1/y}`). -/
 theorem map_localizedCodiagInvY_eq (hI : I.FG) :

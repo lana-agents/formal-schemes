@@ -824,6 +824,7 @@ theorem spfGraphCodiagYComm_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftYX_comp_map R I q hI).symm
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **(B)** for the swapped `y`-piece. -/
 theorem spfGraphLiftYX_comp_transition (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
