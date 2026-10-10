@@ -302,7 +302,7 @@ theorem tateSelfProductRightTransition_naturality (hI : I.FG) :
     exact mapSpf_congr R I hI (refl_comp_id R I q) (chartTrans_comp_locX R I q hI)
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **Both-factor transition naturality.** The both-factor overlap transition, composed with the
 both-factor overlap chart into `Spf(A ⊗̂_R A)`, is `mapSpf` of the coordinate swap on *both* tensor
 factors. -/

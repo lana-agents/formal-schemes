@@ -130,9 +130,9 @@ theorem CompletedTensorProduct.schemeDiagonal_toLRSHom :
       CompletedTensorProduct.diagonal (R := R) (I := I) (A := A) hI := rfl
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 set_option synthInstance.maxHeartbeats 1000000 in
--- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
+-- Instance synthesis here exceeds the default synthInstance heartbeat budget.
 set_option backward.isDefEq.respectTransparency false in
 /-- **The general diagonal of the one-chart datum is the affine diagonal**, conjugated by the two
 gluing isomorphisms of `FormalSchemes/AffineSeparatedIso.lean`.
@@ -183,9 +183,9 @@ theorem oneChart_schemeDiagonal'_eq :
       (BothChartedFibreDatumXY.diagonal'_comp_pr₁ _ _ _ _)).trans (Category.id_comp _)
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 set_option synthInstance.maxHeartbeats 1000000 in
--- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
+-- Instance synthesis here exceeds the default synthInstance heartbeat budget.
 /-- **`Spf A` is separated over `Spf R`** (EGA I §10.15): the general diagonal of the one-chart
 datum presenting `Spf A` is a closed immersion of formal schemes.
 

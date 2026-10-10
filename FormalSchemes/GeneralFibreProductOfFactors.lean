@@ -152,7 +152,7 @@ theorem ofFactors_hf :
   fun _ _ _ => rfl
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The overlap transitions of `ofFactors` are the `bothAlgData` transitions — the `ht` input to
 `fibreLift`. -/
 theorem ofFactors_ht :

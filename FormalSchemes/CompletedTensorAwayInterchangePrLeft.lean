@@ -58,7 +58,7 @@ theorem le_comap_awayCompletionHom_base :
   exact FormalSpectrum.le_comap_awayCompletionHom (I.map (algebraMap R A)) f
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The interchange open immersion followed by the first projection is the localised first
 projection followed by the basic-open chart of `A`.** Composing the away-localization interchange
 chart `Spf((A{1/f}) ⊗̂_R B) ⟶ Spf(A ⊗̂_R B)` with the first fibre-product projection

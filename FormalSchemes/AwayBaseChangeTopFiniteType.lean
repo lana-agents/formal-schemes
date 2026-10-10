@@ -200,10 +200,6 @@ if a third module inside this file's own imports wants the fact;
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.3.
 -/
 
--- The composite runs through three nested localization/completion towers (`R{1/c}^ ⊗̂_R A`, the
--- interchange, and `A{1/(c·A)}^`); the `isDefEq` checks that unfold `awayCompletion` and
--- `CompletedTensorProduct` through `AdicCompletion` are what costs the heartbeats.
-
 noncomputable section
 
 open Ideal

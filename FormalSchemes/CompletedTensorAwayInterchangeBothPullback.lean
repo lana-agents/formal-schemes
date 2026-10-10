@@ -45,9 +45,6 @@ further-localization algebra identity `furtherLoc ∘ loc = loc`.
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
--- The interchange open immersions range over the nested localization/completion towers of the
--- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum

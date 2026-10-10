@@ -53,10 +53,6 @@ then `Iso.hom_inv_id` of these; the same isomorphisms feed the genuine `Bool × 
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §9.
 -/
 
--- The completed-tensor interchange morphisms range over the nested localization/completion
--- towers of the completed tensor product, which are slow for the elaborator and the kernel;
--- raise the budgets (matching `TateSelfProductOverlap.lean`).
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum

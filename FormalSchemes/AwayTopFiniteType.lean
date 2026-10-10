@@ -74,11 +74,6 @@ the bridge, and it is used explicitly wherever the two spellings meet — see
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.
 -/
 
--- `awayEval_comp_coordIncl` compares two ring homomorphisms out of `R{X₁, …, Xₙ}` whose
--- targets are nested completions of a localization; the `isDefEq` checks that unfold
--- `awayCompletion`/`RestrictedPowerSeries` through `AdicCompletion` are what costs the
--- heartbeats. 400000 and 800000 both time out; 1600000 leaves headroom.
-
 noncomputable section
 
 open AlgebraicGeometry FormalSpectrum RestrictedPowerSeries
@@ -178,7 +173,7 @@ theorem awayEval_last (hI : I.FG) (h : I.map (algebraMap R A) = L)
   exact Fin.snoc_last _ _
 
 set_option maxHeartbeats 1600000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The ideal condition of the presentation: `χ` carries the ideal of definition of the polydisc
 onto that of `A{1/g}^`. It does not depend on the evaluation tuple — only on `χ` being an
 `R`-algebra map — so it reduces to `map_algebraMap_awayCompletion`. -/
@@ -196,7 +191,10 @@ theorem map_idealOfDefinition_awayEval (hI : I.FG) (h : I.map (algebraMap R A) =
 /-! ### `χ ∘ ι` is the completion map composed with the presentation -/
 
 set_option maxHeartbeats 1600000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- `awayEval_comp_coordIncl` compares two ring homomorphisms out of `R{X₁, …, Xₙ}` whose
+-- targets are nested completions of a localization; the `isDefEq` checks that unfold
+-- `awayCompletion`/`RestrictedPowerSeries` through `AdicCompletion` are what costs the
+-- heartbeats. 400000 and 800000 both time out; 1600000 leaves headroom.
 /-- **The key compatibility**: on the first `n` coordinates, `χ` is the presentation `ψ` followed
 by `A → A{1/g}^`. Both sides are continuous ring homomorphisms out of the polydisc agreeing on the
 constants and on the coordinates, so the uniqueness half of the polydisc's universal property
@@ -235,9 +233,9 @@ theorem awayEval_comp_coordIncl (hI : I.FG) (h : I.map (algebraMap R A) = L)
 /-! ### The theorem -/
 
 set_option maxHeartbeats 1600000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 set_option synthInstance.maxHeartbeats 400000 in
--- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
+-- Instance synthesis here exceeds the default synthInstance heartbeat budget.
 /-- **A basic-open chart of a topologically-finite-type formal affine is topologically of finite
 type** (EGA I §10.13): if `A` is tf-type over `(R, I)` with ideal of definition `L`, then so is the
 completed localization `A{1/g}^`, with one extra variable. -/

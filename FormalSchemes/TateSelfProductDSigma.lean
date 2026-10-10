@@ -109,7 +109,7 @@ theorem tateSelfProductSigma_hom_comp_bothChart (hI : I.FG) (i j k : Bool × Boo
       | exact tateSelfProductBothTransition_naturality R I q hI
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The identification of the conjugated self-map with the summand permutation.** For every
 pairwise-distinct triple `i j k : Bool × Bool` the conjugated self-map `tateSelfProductD i j k` of
 the both-overlap object equals the `hom` leg of the explicit summand permutation

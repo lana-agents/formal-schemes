@@ -56,9 +56,6 @@ property of localization (`IsLocalization.ringHom_ext`).
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.
 -/
 
--- The `lift`/`mapCompletion`/`extendRingHom` terms live over nested localization/completion
--- towers, which are slow for the elaborator, the instance cache and the kernel; raise the budgets.
-
 noncomputable section
 
 open Ideal TensorProduct
@@ -550,9 +547,10 @@ theorem backwardHom_awayCompletionHom (hI : I.FG) (c : CompletedTensorProduct R 
   rw [backwardHom_algebraMap, psiHom_algebraMap]
 
 set_option maxHeartbeats 1600000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The `lift`/`mapCompletion`/`extendRingHom` terms live over nested localization/completion
+-- towers, which are slow for the elaborator, the instance cache and the kernel; raise the budgets.
 set_option synthInstance.maxHeartbeats 1000000 in
--- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
+-- Instance synthesis here exceeds the default synthInstance heartbeat budget.
 /-- On the first factor `A{1/f}`, backward ∘ forwardAway is the canonical map `inl`. -/
 theorem backward_forwardAway (hI : I.FG) :
     (backwardHom I f hI).comp (forwardAwayHom I f hI).toRingHom =
@@ -633,7 +631,8 @@ theorem forward_comp_backward (hI : I.FG) :
       forward_psiHom, algebraMap_eq_of]
 
 set_option maxHeartbeats 1600000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The `lift`/`mapCompletion`/`extendRingHom` terms live over nested localization/completion
+-- towers, which are slow for the elaborator, the instance cache and the kernel; raise the budgets.
 /-- backward ∘ forward = id on `CompletedTensorProduct R I (A{1/f}) B`. -/
 theorem backward_comp_forward (hI : I.FG) :
     (backwardHom I f hI).comp (forwardHom I f hI) =

@@ -54,7 +54,7 @@ theorem annulusFibreChartTransitionInvAlg_symm_toRingHom (hI : I.FG) :
     AlgEquiv.symm_symm, algEquiv_trans_toRingHom, algEquiv_trans_toRingHom]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The base-changed inversion transition, followed by the `y`-first-projection into the target
 convention, factors through the annulus inversion chart transition and the `y`-overlap chart.** The
 inversion analogue of `spfESymm_comp_spfAwayY_comp_baseBridge`. -/

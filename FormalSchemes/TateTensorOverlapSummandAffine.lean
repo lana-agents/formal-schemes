@@ -282,7 +282,7 @@ theorem coprod_inr_comp_tensorOverlapChartIsoFirst_inv (hq : q ∈ I) (hI : I.FG
     tensorOverlapSummandYFirst_comp]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `hom` form of `coprod_inl_comp_tensorOverlapChartIsoFirst_inv`. -/
 @[reassoc (attr := simp)]
 theorem tensorOverlapSummandXFirst_comp_tensorOverlapChartIsoFirst_hom (hq : q ∈ I) (hI : I.FG) :
@@ -292,7 +292,7 @@ theorem tensorOverlapSummandXFirst_comp_tensorOverlapChartIsoFirst_hom (hq : q �
     Iso.inv_hom_id, Category.comp_id]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `hom` form of `coprod_inr_comp_tensorOverlapChartIsoFirst_inv`. -/
 @[reassoc (attr := simp)]
 theorem tensorOverlapSummandYFirst_comp_tensorOverlapChartIsoFirst_hom (hq : q ∈ I) (hI : I.FG) :
@@ -302,7 +302,7 @@ theorem tensorOverlapSummandYFirst_comp_tensorOverlapChartIsoFirst_hom (hq : q �
     Iso.inv_hom_id, Category.comp_id]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The packaged form**: the inverse of the tensored first-factor identification is the coproduct
 of the two affine summand maps. This is the shape 705c's `coprod.hom_ext` consumes. -/
 @[reassoc]
@@ -385,7 +385,7 @@ theorem coprod_inr_comp_tensorOverlapChartIsoSecond_inv (hq : q ∈ I) (hI : I.F
     tensorOverlapSummandYSecond_comp]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `hom` form of `coprod_inl_comp_tensorOverlapChartIsoSecond_inv`. -/
 @[reassoc (attr := simp)]
 theorem tensorOverlapSummandXSecond_comp_tensorOverlapChartIsoSecond_hom (hq : q ∈ I) (hI : I.FG) :
@@ -395,7 +395,7 @@ theorem tensorOverlapSummandXSecond_comp_tensorOverlapChartIsoSecond_hom (hq : q
     Iso.inv_hom_id, Category.comp_id]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `hom` form of `coprod_inr_comp_tensorOverlapChartIsoSecond_inv`. -/
 @[reassoc (attr := simp)]
 theorem tensorOverlapSummandYSecond_comp_tensorOverlapChartIsoSecond_hom (hq : q ∈ I) (hI : I.FG) :
@@ -405,7 +405,7 @@ theorem tensorOverlapSummandYSecond_comp_tensorOverlapChartIsoSecond_hom (hq : q
     Iso.inv_hom_id, Category.comp_id]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The packaged form** for the second-factor overlap. -/
 @[reassoc]
 theorem coprod_desc_tensorOverlapSummandSecond (hq : q ∈ I) (hI : I.FG) :

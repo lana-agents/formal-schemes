@@ -111,7 +111,7 @@ def pr₂Chart (A : Type u) [CommRing A] [Algebra R A] :
     (CompletedTensorProduct.inr R I A B).toRingHom CompletedTensorProduct.inr_isAdicHom.le_comap
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The double-overlap compatibility square of the second projection.** The `x`-overlap chart
 followed by the second projection equals the base-changed transition `t.hom` followed by the
 `y`-overlap chart and the second projection — the datum `glueMorphisms` consumes to define `pr₂`

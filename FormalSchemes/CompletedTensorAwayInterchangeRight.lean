@@ -50,9 +50,6 @@ class of `inl_{B,A} g` to the class of `inr_{A,B} g` (`commEquiv_inl`).
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.
 -/
 
--- The formal-spectrum morphisms range over the nested localization/completion towers of the
--- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum

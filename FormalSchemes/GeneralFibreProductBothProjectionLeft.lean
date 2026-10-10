@@ -300,7 +300,7 @@ theorem snd_base (i : D.JX) (j j' : D.JY) (h : j ≠ j') :
 /-! ### SHAPE both: the both-differ base square -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `A`-base structural map `IsScalarTower.toAlgHom` coincides with `awayCompletionHom` as a
 ring homomorphism, letting the `mapSpf` first-projection naturality (which produces the former) feed
 `aBaseGlue` (which is phrased with the latter). -/
@@ -315,7 +315,7 @@ theorem toAlgHom_toRingHom_eq (i i' : D.JX) :
   rfl
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The both-differ base square.** For distinct `X`-charts `i ≠ i'` and distinct `Y`-charts
 `j ≠ j'`, the both-factor interchange chart followed by `pr₁ChartSelf` and `ι_i` equals the
 base-changed transition `(mapSpfIso (τX i i') (τY j j')).hom` followed by the flipped both chart,
@@ -363,7 +363,7 @@ theorem both_base (i i' : D.JX) (h : i ≠ i') (j j' : D.JY) (h' : j ≠ j') :
 /-! ### The reduced overlap obligation, dispatched by shape -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The reduced overlap obligation of the first projection**, on the concrete `bothAlgData*` glue.
 For distinct product-index charts `(i, j) ≠ (i', j')`, the concrete overlap immersion followed by
 the per-chart first projection into its glue chart equals the concrete transition then the flipped
@@ -420,9 +420,9 @@ theorem bothAlgData_pr₁_naturality (i i' : D.JX) (j j' : D.JY) (h : (i, j) ≠
 /-! ### The glued first projection -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 set_option synthInstance.maxHeartbeats 1000000 in
--- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
+-- Instance synthesis here exceeds the default synthInstance heartbeat budget.
 /-- **The first projection of the fully general two-sided fibre product** `pr₁ : X ×_{Spf R} Y ⟶ X`
 into the glued factor `X`, glued from the per-chart first projections `pr₁ChartSelf p` composed with
 the glue inclusions of the exposed `X`, via `FormalScheme.GlueData.glueMorphisms`. The three

@@ -121,7 +121,7 @@ theorem e1_YY (hI : I.FG) :
   · norm_refl; exact AlgHom.id_comp _
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **Klein e1: `both = swapFirst ≫ swapSecond`.** -/
 theorem tateSelfProductBothTransitionInv_eq_swapFirst_swapSecond (hI : I.FG) :
     (tateSelfProductSwapFirstTransitionInv R I q hI).hom ≫
@@ -177,7 +177,7 @@ theorem e2_YY (hI : I.FG) :
   · norm_refl; exact AlgHom.comp_id _
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **Klein e2: `both = swapSecond ≫ swapFirst`.** -/
 theorem tateSelfProductBothTransitionInv_eq_swapSecond_swapFirst (hI : I.FG) :
     (tateSelfProductSwapSecondTransitionInv R I q hI).hom ≫
@@ -257,7 +257,7 @@ private theorem klein_SBF (hI : I.FG) :
   exact swapSecondInv_hom_hom R I q hI
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `σ`-triple identity (inversion).** For every pairwise-distinct triple `i j k` in
 `Bool × Bool` the three summand permutations of the cyclic triple compose to the identity of the
 both-overlap object. Each `tateSelfProductSigmaInv` reduces (by `Bool × Bool` case split) to one of
@@ -302,7 +302,7 @@ theorem tateSelfProductGlueTInv_fac (hI : I.FG) (i j k : Bool × Bool)
     (tateSelfProductGlueTInv'_range R I q hI i j k hij hik hjk)
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The four-chart Tate self-product `GlueData'` cocycle (𝔾m-inversion model).** For every
 pairwise-distinct triple `i j k : Bool × Bool` the three transitions-of-transitions of the cyclic
 triple compose to the identity, matching the `GlueData'.cocycle` field. Obtained by conjugating to

@@ -230,7 +230,7 @@ theorem spfAwayX_comp_baseBridge :
     ((RingHom.comp_id _).trans (awayCompletionHom_bridgeX_symm R I q).symm)
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The base-changed transition, followed by the `y`-first-projection into the target convention,
 factors through the annulus chart transition and the `y`-overlap chart.** This is the `y`-side
 companion of `spfAwayX_comp_baseBridge`, incorporating the base-changed transition `Spf(e.symm)`. -/
@@ -321,7 +321,7 @@ theorem tateTwoPatch_glue_rel [IsNoetherianRing R] (hI : I.FG) :
 /-! ### The double-overlap compatibility squares -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The double-overlap compatibility square of the first projection.** The `x`-overlap chart
 followed by the per-chart first projection and the glue inclusion `ι₀` equals the base-changed
 transition `t.hom` followed by the `y`-overlap chart, the first projection and `ι₁`. -/

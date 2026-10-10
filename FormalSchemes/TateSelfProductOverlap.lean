@@ -51,10 +51,6 @@ one-factor-differing chart shape) that the eventual four-chart glue of `𝔈_q �
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7, §10.13.
 -/
 
--- The completed-tensor interchange morphisms range over the nested localization/completion
--- towers of the completed tensor product, which are slow for the elaborator and the kernel;
--- raise the budgets (matching `CompletedTensorAwayInterchangeSpf.lean`).
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum

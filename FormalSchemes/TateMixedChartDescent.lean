@@ -149,7 +149,7 @@ private theorem glueF_range_subset_second_ft (hq : q ∈ I) (hI : I.FG) :
   exact range_comp_base_subset _ _
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 omit [IsNoetherianRing R] in
 private theorem glueF_range_subset_first_ft (hq : q ∈ I) (hI : I.FG) :
     Set.range ⇑((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.f
@@ -191,7 +191,7 @@ private theorem glueF_range_subset_second_tf (hq : q ∈ I) (hI : I.FG) :
   exact range_comp_base_subset _ _
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 omit [IsNoetherianRing R] in
 private theorem glueF_range_subset_first_tf (hq : q ∈ I) (hI : I.FG) :
     Set.range ⇑((tateSelfProductLRSGlueDataInv R I q hq hI).toGlueData.f
@@ -236,9 +236,9 @@ theorem mixedChartDescent_second_ft (hq : q ∈ I) (hI : I.FG)
     (tateSelfProduct_second_glue_condition_inv_ft R I q hq hI) z hz
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 set_option synthInstance.maxHeartbeats 1000000 in
--- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
+-- Instance synthesis here exceeds the default synthInstance heartbeat budget.
 /-- **Chart `(false, true)` against the diagonal chart `(true, true)`.** The two differ in the
 first factor, so the overlap object is `Spf(A{1/x} ⊗̂ A) ⨿ Spf(A{1/y} ⊗̂ A)`. -/
 theorem mixedChartDescent_first_ft (hq : q ∈ I) (hI : I.FG)
@@ -277,9 +277,9 @@ theorem mixedChartDescent_second_tf (hq : q ∈ I) (hI : I.FG)
     (tateSelfProduct_second_glue_condition_inv_tf R I q hq hI) z hz
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 set_option synthInstance.maxHeartbeats 1000000 in
--- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
+-- Instance synthesis here exceeds the default synthInstance heartbeat budget.
 /-- **Chart `(true, false)` against the diagonal chart `(false, false)`** (first factor differs). -/
 theorem mixedChartDescent_first_tf (hq : q ∈ I) (hI : I.FG)
     (z : locallyRingedSpaceObj

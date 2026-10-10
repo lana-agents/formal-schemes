@@ -48,10 +48,6 @@ range (secondFactorOverlapChart)` (`range_bothFactorOverlapChart_eq_inter_first_
 * [Grothendieck, *Éléments de géométrie algébrique I*][EGA1], Ch. I, §10.7.
 -/
 
--- The completed-tensor interchange morphisms range over the nested localization/completion
--- towers of the completed tensor product, which are slow for the elaborator and the kernel;
--- raise the budgets (matching `TateSelfProductTripleOverlap.lean`).
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -148,7 +144,9 @@ theorem secondFactorOverlapChart_range_eq_preimage (hI : I.FG) :
             Set (FormalSpectrum (I.map (algebraMap R (annulusAlgebra R I q))))))).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductTripleOverlap.lean`).
 /-- **First shape.** `tateSelfProductFirstTransition` carries the source triple-overlap region
 `f_first ⁻¹' range f_second` into the target region `f_first ⁻¹' range f_both`. This is the range
 inclusion `H` for the four-chart cocycle where the source chart transition is the first-factor swap.
@@ -176,7 +174,9 @@ theorem tateSelfProductFirstTransition_image_subset (hI : I.FG) :
 /-! ### Both shape: trivial, the both-overlap range sits inside both single-factor ranges -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductTripleOverlap.lean`).
 /-- **Both shape.** `tateSelfProductBothTransition` carries the source region
 `f_both ⁻¹' range f_first` into `f_both ⁻¹' range f_second`. Trivial: every point of the
 both-overlap object maps under `f_both` into `range f_both ⊆ range f_second`

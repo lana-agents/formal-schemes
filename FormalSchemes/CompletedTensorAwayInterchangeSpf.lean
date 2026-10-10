@@ -49,9 +49,6 @@ other — was written here but is not about completed tensor products, and now l
 * [Bosch, *Lectures on Formal and Rigid Geometry*, LNM 2105], §7.
 -/
 
--- The formal-spectrum morphisms range over the nested localization/completion towers of the
--- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-
 noncomputable section
 
 open CategoryTheory AlgebraicGeometry Ideal
@@ -78,7 +75,8 @@ transport are recorded here, so that each induces a morphism of formal spectra v
 `FormalSpectrum.locallyRingedSpaceMap`. -/
 
 set_option maxHeartbeats 1600000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The formal-spectrum morphisms range over the nested localization/completion towers of the
+-- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
 /-- The interchange isomorphism is an **adic homomorphism** `IL → IT`: it carries the ideal of
 definition of `L = (A{1/f}) ⊗̂_R B` onto that of `T = C{1/f̄}`. This is just
 `equiv_map_idealOfDefinition` read through the definition of `IsAdicHom`. -/
@@ -101,9 +99,10 @@ theorem isAdicHom_equiv (hI : I.FG) :
 /-! ### The induced isomorphism of formal spectra -/
 
 set_option maxHeartbeats 1600000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The formal-spectrum morphisms range over the nested localization/completion towers of the
+-- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
 set_option synthInstance.maxHeartbeats 1000000 in
--- Instance synthesis here exceeds the default `synthInstance.maxHeartbeats` budget.
+-- Instance synthesis here exceeds the default synthInstance heartbeat budget.
 /-- **The interchange isomorphism of affine formal spectra** `Spf IL ≅ Spf IT`, induced by the ring
 isomorphism `equiv` via the abstract construction `FormalSpectrum.isoOfAdicRingEquiv` applied to the
 adic homomorphism `isAdicHom_equiv`. -/

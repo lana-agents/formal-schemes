@@ -47,7 +47,7 @@ variable {A B : Type u} [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
 variable (f : A)
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The interchange open immersion is a morphism over the affine base `Spf B`.** Composing the
 away-localization interchange chart `Spf((A{1/f}) ⊗̂_R B) ⟶ Spf(A ⊗̂_R B)` with the second
 projection `fibrePr₂ = Spf(inr) : Spf(A ⊗̂_R B) ⟶ Spf B` recovers the second projection of the

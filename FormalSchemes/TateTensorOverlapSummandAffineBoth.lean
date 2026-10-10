@@ -174,7 +174,7 @@ theorem tensorOverlapSummandYYBoth_comp (hq : q ∈ I) (hI : I.FG) :
     annulusTensorProjYₐ_comp]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `(x, x)`-summand inclusion of the tensored both-factor overlap is `mapSpf`
 of the corresponding pair of projections.**
 
@@ -198,7 +198,7 @@ theorem coprod_inl_inl_comp_tensorOverlapChartIsoBoth_inv (hq : q ∈ I) (hI : I
   exact (tensorOverlapSummandXXBoth_comp R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `(x, y)`-summand inclusion of the tensored both-factor overlap is `mapSpf`
 of the corresponding pair of projections.**
 
@@ -222,7 +222,7 @@ theorem coprod_inr_inl_comp_tensorOverlapChartIsoBoth_inv (hq : q ∈ I) (hI : I
   exact (tensorOverlapSummandXYBoth_comp R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `(y, x)`-summand inclusion of the tensored both-factor overlap is `mapSpf`
 of the corresponding pair of projections.**
 
@@ -246,7 +246,7 @@ theorem coprod_inl_inr_comp_tensorOverlapChartIsoBoth_inv (hq : q ∈ I) (hI : I
   exact (tensorOverlapSummandYXBoth_comp R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `(y, y)`-summand inclusion of the tensored both-factor overlap is `mapSpf`
 of the corresponding pair of projections.**
 
@@ -288,7 +288,7 @@ This is the same discipline as the note on the four headline lemmas above: at th
 four-fold coproduct of completed tensor products be re-elaborated inside a tactic branch. -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The left half of the packaged form**: the `x`-row of the both-factor overlap. -/
 theorem coprod_desc_tensorOverlapSummandXBoth (hq : q ∈ I) (hI : I.FG) :
     coprod.desc (tensorOverlapSummandXXBoth R I q hq hI)
@@ -301,7 +301,7 @@ theorem coprod_desc_tensorOverlapSummandXBoth (hq : q ∈ I) (hI : I.FG) :
     exact (coprod_inr_inl_comp_tensorOverlapChartIsoBoth_inv R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The right half of the packaged form**: the `y`-row of the both-factor overlap. -/
 theorem coprod_desc_tensorOverlapSummandYBoth (hq : q ∈ I) (hI : I.FG) :
     coprod.desc (tensorOverlapSummandYXBoth R I q hq hI)
@@ -314,7 +314,7 @@ theorem coprod_desc_tensorOverlapSummandYBoth (hq : q ∈ I) (hI : I.FG) :
     exact (coprod_inr_inr_comp_tensorOverlapChartIsoBoth_inv R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The packaged form**: the inverse of the tensored both-factor identification is the four-fold
 coproduct of the affine summand maps, nested as `bothFactorOverlapChart` nests them. -/
 theorem coprod_desc_tensorOverlapSummandBoth (hq : q ∈ I) (hI : I.FG) :

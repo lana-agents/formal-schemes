@@ -261,7 +261,7 @@ Here `Spf` of the tensored transition is `mapSpfIso hI (refl A) τ`, the shape `
 when the two product indices share their first coordinate. -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `x`-summand of the tensored second-factor overlap is carried to the `y`-summand**, and the
 identification is the base-changed 𝔾m-inversion `rightSummandInv`. Both sides collapse under
 `← mapSpf_comp` to a single `mapSpf`, and the second components are the crux. -/
@@ -281,7 +281,7 @@ theorem tensorOverlapSummandXSecond_comp_transitionSpf (hq : q ∈ I) (hI : I.FG
     annulusFibreOverlapTransitionAlg_symm, annulusTensorProjXₐ_comp_transitionAlg, hid]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `y`-summand is carried to the `x`-summand**, through the inverse identification. -/
 theorem tensorOverlapSummandYSecond_comp_transitionSpf (hq : q ∈ I) (hI : I.FG) :
     tensorOverlapSummandYSecond R I q hq hI ≫
@@ -306,7 +306,7 @@ theorem tateSelfProductRightTransitionInv_hom (hI : I.FG) :
         ((rightSummandInv R I q hI).inv ≫ coprod.inl) := rfl
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The second-factor `t` law, at the level of the overlap objects.** 738/739's identification of
 the merged chart `Spf(A ⊗̂_R A{1/(x+y)}^)` with the coproduct `Spf(A ⊗̂ A{1/x}) ⨿ Spf(A ⊗̂ A{1/y})`
 carries `Spf` of the tensored transition to the summand swap. The two summandwise obligations are
@@ -335,7 +335,7 @@ The same statements with the tensor factors exchanged; `bothAlgDataT` takes this
 product indices share their *second* coordinate. -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The first-factor mirror of `tensorOverlapSummandXSecond_comp_transitionSpf`. -/
 theorem tensorOverlapSummandXFirst_comp_transitionSpf (hq : q ∈ I) (hI : I.FG) :
     tensorOverlapSummandXFirst R I q hq hI ≫
@@ -354,7 +354,7 @@ theorem tensorOverlapSummandXFirst_comp_transitionSpf (hq : q ∈ I) (hI : I.FG)
     annulusFibreOverlapTransitionAlg_symm, annulusTensorProjXₐ_comp_transitionAlg, hid]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The first-factor mirror of `tensorOverlapSummandYSecond_comp_transitionSpf`. -/
 theorem tensorOverlapSummandYFirst_comp_transitionSpf (hq : q ∈ I) (hI : I.FG) :
     tensorOverlapSummandYFirst R I q hq hI ≫
@@ -379,7 +379,7 @@ theorem tateSelfProductFirstTransitionInv_hom (hI : I.FG) :
         ((firstSummandInv R I q hI).inv ≫ coprod.inl) := rfl
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The first-factor `t` law, at the level of the overlap objects.** -/
 theorem tensorOverlapChartIsoFirst_transition_comm (hq : q ∈ I) (hI : I.FG) :
     (tensorOverlapChartIsoFirst R I q hq hI).hom ≫
@@ -406,7 +406,7 @@ theorem tensorOverlapChartIsoFirst_transition_comm (hq : q ∈ I) (hI : I.FG) :
 each. -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `(x, x)`-summand goes to the `(y, y)`-summand, through `bothSummandDiagInv`. -/
 theorem tensorOverlapSummandXXBoth_comp_transitionSpf (hq : q ∈ I) (hI : I.FG) :
     tensorOverlapSummandXXBoth R I q hq hI ≫
@@ -419,7 +419,7 @@ theorem tensorOverlapSummandXXBoth_comp_transitionSpf (hq : q ∈ I) (hI : I.FG)
     annulusFibreOverlapTransitionAlg_symm, annulusTensorProjXₐ_comp_transitionAlg]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `(x, y)`-summand goes to the `(y, x)`-summand, through `bothSummandAntiInv`. -/
 theorem tensorOverlapSummandXYBoth_comp_transitionSpf (hq : q ∈ I) (hI : I.FG) :
     tensorOverlapSummandXYBoth R I q hq hI ≫
@@ -433,7 +433,7 @@ theorem tensorOverlapSummandXYBoth_comp_transitionSpf (hq : q ∈ I) (hI : I.FG)
     AlgEquiv.symm_symm, annulusTensorProjYₐ_comp_transitionAlg]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `(y, x)`-summand goes to the `(x, y)`-summand, through the inverse of
 `bothSummandAntiInv`. -/
 theorem tensorOverlapSummandYXBoth_comp_transitionSpf (hq : q ∈ I) (hI : I.FG) :
@@ -448,7 +448,7 @@ theorem tensorOverlapSummandYXBoth_comp_transitionSpf (hq : q ∈ I) (hI : I.FG)
     annulusTensorProjYₐ_comp_transitionAlg]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `(y, y)`-summand goes to the `(x, x)`-summand, through the inverse of
 `bothSummandDiagInv`. -/
 theorem tensorOverlapSummandYYBoth_comp_transitionSpf (hq : q ∈ I) (hI : I.FG) :
@@ -471,7 +471,7 @@ theorem tateSelfProductBothTransitionInv_hom (hI : I.FG) :
           ((bothSummandDiagInv R I q hI).inv ≫ coprod.inl ≫ coprod.inl)) := rfl
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `(x, x)` branch of the both-factors law, pinned as its own declaration. See the module
 docstring, implementation note 4: the same `rw` inside the assembled four-way goal times out. -/
 theorem tateSelfProductBothTransitionInv_branch_xx (hq : q ∈ I) (hI : I.FG) :
@@ -484,7 +484,7 @@ theorem tateSelfProductBothTransitionInv_branch_xx (hq : q ∈ I) (hI : I.FG) :
   exact (tensorOverlapSummandXXBoth_comp_transitionSpf R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `(x, y)` branch of the both-factors law. -/
 theorem tateSelfProductBothTransitionInv_branch_xy (hq : q ∈ I) (hI : I.FG) :
     ((bothSummandAntiInv R I q hI).hom ≫ coprod.inl ≫ coprod.inr) ≫
@@ -496,7 +496,7 @@ theorem tateSelfProductBothTransitionInv_branch_xy (hq : q ∈ I) (hI : I.FG) :
   exact (tensorOverlapSummandXYBoth_comp_transitionSpf R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `(y, x)` branch of the both-factors law. -/
 theorem tateSelfProductBothTransitionInv_branch_yx (hq : q ∈ I) (hI : I.FG) :
     ((bothSummandAntiInv R I q hI).inv ≫ coprod.inr ≫ coprod.inl) ≫
@@ -508,7 +508,7 @@ theorem tateSelfProductBothTransitionInv_branch_yx (hq : q ∈ I) (hI : I.FG) :
   exact (tensorOverlapSummandYXBoth_comp_transitionSpf R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `(y, y)` branch of the both-factors law. -/
 theorem tateSelfProductBothTransitionInv_branch_yy (hq : q ∈ I) (hI : I.FG) :
     ((bothSummandDiagInv R I q hI).inv ≫ coprod.inl ≫ coprod.inl) ≫
@@ -520,7 +520,7 @@ theorem tateSelfProductBothTransitionInv_branch_yy (hq : q ∈ I) (hI : I.FG) :
   exact (tensorOverlapSummandYYBoth_comp_transitionSpf R I q hq hI).symm
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `x`-row of the both-factors law. -/
 theorem tateSelfProductBothTransitionInv_half_x (hq : q ∈ I) (hI : I.FG) :
     coprod.desc
@@ -538,7 +538,7 @@ theorem tateSelfProductBothTransitionInv_half_x (hq : q ∈ I) (hI : I.FG) :
   rw [tateSelfProductBothTransitionInv_branch_xx, tateSelfProductBothTransitionInv_branch_xy]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- The `y`-row of the both-factors law. -/
 theorem tateSelfProductBothTransitionInv_half_y (hq : q ∈ I) (hI : I.FG) :
     coprod.desc
@@ -556,7 +556,7 @@ theorem tateSelfProductBothTransitionInv_half_y (hq : q ∈ I) (hI : I.FG) :
   rw [tateSelfProductBothTransitionInv_branch_yx, tateSelfProductBothTransitionInv_branch_yy]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The both-factors `t` law, in `Iso.inv` form.** Stated against the `Iso.inv` leg of
 `tensorOverlapChartIsoBoth` on both sides so that 761's packaged
 `coprod_desc_tensorOverlapSummandBoth` can replace the right-hand `Iso.inv` and `coprod.desc_comp`
@@ -573,7 +573,7 @@ theorem tateSelfProductBothTransitionInv_hom_comp_inv (hq : q ∈ I) (hI : I.FG)
   rw [tateSelfProductBothTransitionInv_half_x, tateSelfProductBothTransitionInv_half_y]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The both-factors `t` law, at the level of the overlap objects.** -/
 theorem tensorOverlapChartIsoBoth_transition_comm (hq : q ∈ I) (hI : I.FG) :
     (tensorOverlapChartIsoBoth R I q hq hI).hom ≫
@@ -696,7 +696,7 @@ end Const
 /-! ### The transition law of the `Ψ` comparison -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `t` law in the second-coordinate-differs shape.** -/
 theorem tateOverlapCompareIso_hom_t_snd (hq : q ∈ I) (hI : I.FG)
     (p p' : ULift.{u} Bool × ULift.{u} Bool) (h : p ≠ p') (h1 : p.1 = p'.1) :
@@ -717,7 +717,7 @@ theorem tateOverlapCompareIso_hom_t_snd (hq : q ∈ I) (hI : I.FG)
   rw [reassoc_of% (tensorOverlapChartIsoSecond_transition_comm R I q hq hI)]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `t` law in the first-coordinate-differs shape.** -/
 theorem tateOverlapCompareIso_hom_t_fst (hq : q ∈ I) (hI : I.FG)
     (p p' : ULift.{u} Bool × ULift.{u} Bool) (h : p ≠ p') (h1 : p.1 ≠ p'.1) (h2 : p.2 = p'.2) :
@@ -740,7 +740,7 @@ theorem tateOverlapCompareIso_hom_t_fst (hq : q ∈ I) (hI : I.FG)
   rw [reassoc_of% (tensorOverlapChartIsoFirst_transition_comm R I q hq hI)]
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The `t` law in the both-coordinates-differ shape.** -/
 theorem tateOverlapCompareIso_hom_t_both (hq : q ∈ I) (hI : I.FG)
     (p p' : ULift.{u} Bool × ULift.{u} Bool) (h : p ≠ p') (h1 : p.1 ≠ p'.1) (h2 : p.2 ≠ p'.2) :

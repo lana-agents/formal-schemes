@@ -45,10 +45,6 @@ a follow-up; it is what brick (c3b) consumes to close the `GlueData'` cocycle by
 * Mathlib `CategoryTheory.GlueData'` (the `t'`/`t_fac`/`cocycle` fields).
 -/
 
--- The completed-tensor interchange charts range over the nested localization/completion towers of
--- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
--- (matching `TateSelfProductTPrimeSummand.lean`).
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum

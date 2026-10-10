@@ -44,10 +44,6 @@ shared overlap. Since `bothFactorOverlapChart` is a mono, that law pins `tateSel
 * Mathlib `CategoryTheory.GlueData'` (the `t'`/`t_fac`/`cocycle` fields).
 -/
 
--- The completed-tensor interchange charts range over the nested localization/completion towers of
--- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
--- (matching `TateSelfProductGlueTPrime.lean`).
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -62,7 +58,9 @@ variable (R : Type u) [CommRing R] (I : Ideal R) (q : R)
 /-! ### The uniform both-overlap range equality, dispatched by Klein-four shape -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **The both-overlap range equality** for every pairwise-distinct triple: the range of the
 both-factor overlap chart equals the intersection `im (f i j) ∩ im (f i k)` of the two
 triple-overlap charts. Proved by a single `Bool × Bool` case split (mirroring
@@ -190,7 +188,9 @@ def tateSelfProductD (hI : I.FG) (i j k : Bool × Bool)
       (tateSelfProductBothChartIso R I q hI j k i hjk hij.symm hik.symm).inv
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **The defining law of `tateSelfProductD`.** Composing the conjugated self-map with the
 both-chart `bothFactorOverlapChart` exposes the genuine transition `t i j ≫ f j i` on the shared
 overlap:

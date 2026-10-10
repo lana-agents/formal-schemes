@@ -47,10 +47,6 @@ the geometric input the cocycle construction consumes, reducing it to summand tr
 * Mathlib `AlgebraicGeometry.Scheme.Pullback` (the scheme-level analogue of the glue cocycle).
 -/
 
--- The completed-tensor interchange morphisms range over the nested localization/completion
--- towers of the completed tensor product, which are slow for the elaborator and the kernel;
--- raise the budgets (matching `TateSelfProductBothOverlap.lean`).
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -151,7 +147,9 @@ theorem range_secondFactorOverlapChart (hI : I.FG) :
   · exact range_rightInterchangeOpenImmersion_base (A := annulusAlgebra R I q) I (overlapY R I q) hI
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductBothOverlap.lean`).
 /-- The range of the both-factor overlap chart is `⋃_{a,b∈{x,y}} (D(a⊗1) ⊓ D(1⊗b))`, the nested
 union of the four intersections `D(inl a) ⊓ D(inr b)`. -/
 theorem range_bothFactorOverlapChart (hI : I.FG) :
@@ -213,7 +211,9 @@ theorem range_bothFactorOverlapChart (hI : I.FG) :
 /-! ### The triple-overlap range identity and the pullback identifications -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductBothOverlap.lean`).
 /-- The both-overlap range is contained in the first-factor overlap range: every summand
 `D(inl a) ⊓ D(inr b)` sits inside `D(inl a) ⊆ D(inl x) ∪ D(inl y)`. Proved by destructuring the
 four-fold union membership (definitional), avoiding the `FormalSpectrum`/carrier friction that
@@ -229,7 +229,9 @@ theorem range_bothFactorOverlapChart_subset_first (hI : I.FG) :
   · exact Or.inr h.1
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductBothOverlap.lean`).
 /-- The both-overlap range is contained in the second-factor overlap range: every summand
 `D(inl a) ⊓ D(inr b)` sits inside `D(inr b) ⊆ D(inr x) ∪ D(inr y)`. -/
 theorem range_bothFactorOverlapChart_subset_second (hI : I.FG) :
@@ -243,7 +245,9 @@ theorem range_bothFactorOverlapChart_subset_second (hI : I.FG) :
   · exact Or.inr h.2
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange morphisms range over the nested localization/completion
+-- towers of the completed tensor product, which are slow for the elaborator and the kernel;
+-- raise the budgets (matching `TateSelfProductBothOverlap.lean`).
 /-- **The key distributivity:** the both-overlap range equals the intersection of the first- and
 second-factor overlap ranges: `(D(x⊗1)∪D(y⊗1)) ∩ (D(1⊗x)∪D(1⊗y)) = ⋃_{a,b}(D(a⊗1)⊓D(1⊗b))`. The
 `⊆` direction is the two containments above; the `⊇` direction distributes the intersection of the

@@ -41,10 +41,6 @@ and `t '' univ = univ` is exactly surjectivity.
 * Mathlib `CategoryTheory.GlueData'` (the `cocycle` field consumes iso `t'`).
 -/
 
--- The completed-tensor interchange charts range over the nested localization/completion towers of
--- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
--- (matching `TateSelfProductGlueTPrime.lean`).
-
 noncomputable section
 
 open CategoryTheory CategoryTheory.Limits AlgebraicGeometry FormalSpectrum
@@ -80,7 +76,9 @@ theorem image_preimage_eq_of_comp_eq {α β : Type*} {h : α → α} {g : α →
 /-! ### The three shape equalities (and their two swapped variants) -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **First shape, equality.** The `⊆` version `tateSelfProductFirstTransition_image_subset`
 upgraded to `=` via surjectivity of the transition base map. -/
 theorem tateSelfProductFirstTransition_image_eq (hI : I.FG) :
@@ -103,7 +101,9 @@ theorem tateSelfProductFirstTransition_image_eq (hI : I.FG) :
   simpa only [LocallyRingedSpace.comp_base, TopCat.coe_comp] using h1
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **Right shape, equality.** The `⊆` version `tateSelfProductRightTransition_image_subset`
 upgraded to `=`. -/
 theorem tateSelfProductRightTransition_image_eq (hI : I.FG) :
@@ -124,7 +124,9 @@ theorem tateSelfProductRightTransition_image_eq (hI : I.FG) :
   simpa only [LocallyRingedSpace.comp_base, TopCat.coe_comp] using h1
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **Both shape, equality.** Both regions are `Set.univ` (the both-overlap range sits inside each
 single-factor range), and `t_both '' univ = univ` is surjectivity of the transition base map. -/
 theorem tateSelfProductBothTransition_image_eq (hI : I.FG) :
@@ -145,7 +147,9 @@ theorem tateSelfProductBothTransition_image_eq (hI : I.FG) :
   exact (bijective_hom_base (tateSelfProductBothTransition R I q hI)).surjective
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **First shape, swapped ordering, equality.** Cf. `tateSelfProductFirstTransition_image_subset'`;
 both regions equal `f_first ⁻¹' range f_second`, so this is the base first-shape equality with the
 `range f_both` region rewritten. -/
@@ -165,7 +169,9 @@ theorem tateSelfProductFirstTransition_image_eq' (hI : I.FG) :
   exact hset
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **Right shape, swapped ordering, equality.** Cf. `tateSelfProductRightTransition_image_subset'`.
 -/
 theorem tateSelfProductRightTransition_image_eq' (hI : I.FG) :
@@ -184,7 +190,9 @@ theorem tateSelfProductRightTransition_image_eq' (hI : I.FG) :
   exact hset
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **Both shape, swapped ordering, equality.** Both regions are `Set.univ`; cf.
 `tateSelfProductBothTransition_image_subset'`. -/
 theorem tateSelfProductBothTransition_image_eq' (hI : I.FG) :
@@ -207,7 +215,9 @@ theorem tateSelfProductBothTransition_image_eq' (hI : I.FG) :
 /-! ### The reduced range equality, and the pullback-form `H` as an equality -/
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- The completed-tensor interchange charts range over the nested localization/completion towers of
+-- the completed tensor product, which are slow for the elaborator and the kernel; raise the budgets
+-- (matching `TateSelfProductGlueTPrime.lean`).
 /-- **The reduced range equality** for every pairwise-distinct triple: the transition `t i j` maps
 the source triple-overlap region `(f i j) ⁻¹' range (f i k)` *onto* the target region
 `(f j i) ⁻¹' range (f j k)`. Same single `Bool × Bool` case split as

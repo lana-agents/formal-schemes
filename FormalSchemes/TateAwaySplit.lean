@@ -255,7 +255,7 @@ def awaySplitEquiv (hq : q ∈ I) :
       ((AdicCompletion.congrIdeal (awayIdeal_eq_locY R I q)).trans (transEquivY R I q hq).symm))
 
 set_option maxHeartbeats 3200000 in
--- Elaborating this declaration exceeds the default `maxHeartbeats` budget.
+-- Elaborating this declaration exceeds the default heartbeat budget.
 /-- **The splitting is the pair of canonical maps on the image of `A`.** This is the computation
 rule a geometric consumer needs: it identifies the two components with the chart maps. -/
 theorem awaySplitEquiv_of (hq : q ∈ I) (a : annulusAlgebra R I q) :
