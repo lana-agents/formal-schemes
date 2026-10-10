@@ -970,6 +970,7 @@ theorem range_spfGraphCodiagX_ft_subset (hq : q ∈ I) (hI : I.FG) :
     ← curve_ι_comp_selfProductDiagonal R I q hq hI false]
   exact range_comp_comp_base_subset _ _ _
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `y`-piece of the chart `(false, true)` lies in `range Δ.base`.** -/
 theorem range_spfGraphCodiagY_ft_subset (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -1001,6 +1002,7 @@ theorem range_spfGraphCodiagXComm_tf_subset (hq : q ∈ I) (hI : I.FG) :
     ← curve_ι_comp_selfProductDiagonal R I q hq hI false]
   exact range_comp_comp_base_subset _ _ _
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `y`-piece of the chart `(true, false)` lies in `range Δ.base`.** -/
 theorem range_spfGraphCodiagYComm_tf_subset (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
