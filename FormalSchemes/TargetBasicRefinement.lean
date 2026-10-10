@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ConservativityTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # Refining the target cover to basic opens, and conservativity
 

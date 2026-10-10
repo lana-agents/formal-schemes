@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvSaturation
 import FormalSchemes.ActionInvariantExtension
 
-set_option linter.style.header false
-
 /-!
 # An invariant section on a saturation is determined by one patch
 

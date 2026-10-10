@@ -7,8 +7,6 @@ import FormalSchemes.BasicOpenChartRestrict
 import FormalSchemes.BasicOpenRestrictionIdentification
 import FormalSchemes.SpfGamma
 
-set_option linter.style.header false
-
 /-!
 # The chart inclusion of a basic open acts on global sections as the restriction
 

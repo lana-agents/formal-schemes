@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicOnOpenSections
 import FormalSchemes.TateInvNodeChartComplete
 
-set_option linter.style.header false
-
 /-!
 # The node chart's four legs are adically continuous
 

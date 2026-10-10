@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayCompletionRestrictUnique
 import FormalSchemes.BasicOpenChartImage
 
-set_option linter.style.header false
-
 /-!
 # The refined overlap's leg out of the coarse one
 

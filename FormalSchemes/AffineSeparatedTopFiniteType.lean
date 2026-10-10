@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AffineSeparatedScheme
 import FormalSchemes.RelativeTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # An affine formal scheme of finite type over `Spf R` is separated (EGA I §10.13, §10.15)
 

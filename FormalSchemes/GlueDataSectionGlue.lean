@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GlueDataSectionExt
 import FormalSchemes.ActionInvariantExtension
 
-set_option linter.style.header false
-
 /-!
 # Sections of a glued formal scheme glue, patch by patch
 

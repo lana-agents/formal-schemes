@@ -7,8 +7,6 @@ import FormalSchemes.ChartedCompletionRange
 import FormalSchemes.ChartedSchemeDatumChartOverlap
 import FormalSchemes.CompletionTwoPatchSupport
 
-set_option linter.style.header false
-
 /-!
 # `X_{/Y}` is supported on `Y`, chart by chart, at an arbitrary index (EGA I, 10.8)
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.Geometry.RingedSpace.LocallyRingedSpace
 
-set_option linter.style.header false
-
 /-!
 # Surjectivity of stalk maps is stable under composition
 

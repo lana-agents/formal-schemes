@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayCompletionUniversal
 import FormalSchemes.GeneralFibreProductExposeXIdealCongr
 
-set_option linter.style.header false
-
 /-!
 # The base change of a charted `X` along a tower, and along `R → R{1/f}`
 

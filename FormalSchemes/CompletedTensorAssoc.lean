@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CompletedTensor
 
-set_option linter.style.header false
-
 /-!
 # The associativity isomorphism of the completed tensor product
 

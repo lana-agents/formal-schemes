@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ChartedCompletionDatum
 import FormalSchemes.ChartedSchemeDatumDesc
 
-set_option linter.style.header false
-
 /-!
 # The canonical morphism `X_{/Y} ⟶ X` at an arbitrary index (EGA I, 10.8)
 

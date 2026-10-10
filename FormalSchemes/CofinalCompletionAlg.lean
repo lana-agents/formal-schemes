@@ -7,8 +7,6 @@ import FormalSchemes.CofinalCompletion
 import FormalSchemes.CofinalIdeal
 import FormalSchemes.RestrictedPowerSeries
 
-set_option linter.style.header false
-
 /-!
 # The cofinality isomorphism is an algebra isomorphism, and restricted power series only see the
 topology

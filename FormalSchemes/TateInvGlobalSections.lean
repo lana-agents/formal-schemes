@@ -8,8 +8,6 @@ import FormalSchemes.TateChartTransitionInvAlgEq
 import FormalSchemes.AdicOnSections
 import FormalSchemes.SpfGammaFunctorial
 
-set_option linter.style.header false
-
 /-!
 # `Γ (T_inv/⟨σ⟩)` as an explicit subring of `A = R{x, y}/(x·y − q)`
 

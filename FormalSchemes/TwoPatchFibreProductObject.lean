@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TwoPatchFibreProduct
 
-set_option linter.style.header false
-
 /-!
 # The two-patch fibre product `X ×_{Spf R} Spf B` as a glued formal scheme
 

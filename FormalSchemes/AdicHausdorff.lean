@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.RingTheory.AdicCompletion.Basic
 
-set_option linter.style.header false
-
 /-!
 # Comparing elements of an adic ring modulo every power of the ideal
 

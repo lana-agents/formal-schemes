@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CofinalIdeal
 
-set_option linter.style.header false
-
 /-!
 # Being an adic ring only depends on the ideal of definition up to cofinality
 

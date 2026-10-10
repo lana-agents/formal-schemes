@@ -10,8 +10,6 @@ import FormalSchemes.GeneralFibreProductBothOverlapRange
 import FormalSchemes.CompletedTensorAwayInterchangePullbackLegs
 import FormalSchemes.AwayTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # The base change of a general fibre product, glued from its charts
 

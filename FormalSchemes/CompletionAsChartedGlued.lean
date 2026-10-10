@@ -7,8 +7,6 @@ import FormalSchemes.AffineSeparatedIso
 import FormalSchemes.CompletionBasicOpenGlue
 import FormalSchemes.BasicOpenCoverOpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # The formal completion is an `AffineChartedFibreDatumX.xGlued` (EGA I, 10.8)
 

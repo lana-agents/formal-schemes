@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.RingTheory.AdicCompletion.Algebra
 
-set_option linter.style.header false
-set_option linter.style.setOption false
-
 /-!
 # The `R`-algebra transport of an adic completion along an equality of ideals
 

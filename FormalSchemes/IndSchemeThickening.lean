@@ -7,8 +7,6 @@ import FormalSchemes.IndSchemeForward
 import FormalSchemes.Completion
 import FormalSchemes.TwoAdicWitness
 
-set_option linter.style.header false
-
 /-!
 # The ind-scheme universal property is restriction to the thickenings
 

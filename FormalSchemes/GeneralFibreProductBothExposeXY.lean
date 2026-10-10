@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothObject
 import FormalSchemes.GeneralFibreProductExposeXStructMap
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
@@ -61,7 +59,6 @@ namespace AlgebraicGeometry
 
 /-! ### The two-sided expose-both input datum -/
 
-set_option linter.unusedVariables false in
 /-- **A two-sided affine-charted fibre-product datum with both factors exposed as glueable
 objects.** This extends `BothChartedFibreDatum` (which packages `X` and `Y` only through their
 algebra data and the carried product cocycle) with each factor's **own** geometric triple-overlap

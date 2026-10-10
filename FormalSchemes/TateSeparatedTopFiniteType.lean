@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateFibreProductHom
 import FormalSchemes.TateTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # `𝔈_q` is separated and topologically of finite type — as statements about one object
 

@@ -7,8 +7,6 @@ import FormalSchemes.AwayBaseChangeTopFiniteType
 import FormalSchemes.AwayCompletionRestrictUnique
 import FormalSchemes.AwayTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # `R{1/f}` as a base ring: its universal property, and what becomes `R{1/f}`-linear
 

@@ -9,8 +9,6 @@ import FormalSchemes.SpfGammaRoundTrip
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.ThickeningHomExt
 
-set_option linter.style.header false
-
 /-!
 # An affine scheme is the formal spectrum of its ring, taken discrete (EGA I, 10.1.6)
 

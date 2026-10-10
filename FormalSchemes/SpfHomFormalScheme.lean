@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.LocallyFG
 import FormalSchemes.SpfHomColimitTarget
 
-set_option linter.style.header false
-
 /-!
 # EGA I, 10.6.10 at a formal-scheme target
 

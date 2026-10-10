@@ -7,8 +7,6 @@ import FormalSchemes.BasicOpenDisjointUnion
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.TateSelfProductTripleOverlap
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 
 /-!

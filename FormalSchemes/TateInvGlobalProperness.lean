@@ -7,8 +7,6 @@ import FormalSchemes.TateInvGlobalSections
 import FormalSchemes.TateChartTransitionInvAlgEq
 import FormalSchemes.GraphCodiagonalClosedEmbedding
 
-set_option linter.style.header false
-
 /-!
 # `Γ (T_inv/⟨σ⟩)` is a **proper** subring of `A = R{x, y}/(x·y − q)`
 

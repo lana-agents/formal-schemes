@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.CategoryTheory.Endomorphism
 
-set_option linter.style.header false
-
 /-!
 # The quotient of an object by a group action: the universal property
 

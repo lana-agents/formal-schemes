@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicSubringPrincipal
 import FormalSchemes.TateInvNodeChartLegContinuous
 
-set_option linter.style.header false
-
 /-!
 # The node chart ring over a principal base ideal: the filtration bridge and finite generation
 

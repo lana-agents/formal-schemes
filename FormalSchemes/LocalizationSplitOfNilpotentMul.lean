@@ -7,8 +7,6 @@ import Mathlib.RingTheory.Idempotents
 import Mathlib.RingTheory.Nilpotent.Basic
 import Mathlib.RingTheory.Localization.Away.Basic
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 
 /-!

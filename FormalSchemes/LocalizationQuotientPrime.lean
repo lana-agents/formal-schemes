@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.RingTheory.Localization.Ideal
 import Mathlib.RingTheory.Localization.AtPrime.Basic
 
-set_option linter.style.header false
-
 /-!
 # Localization at a prime commutes with quotient by an ideal
 

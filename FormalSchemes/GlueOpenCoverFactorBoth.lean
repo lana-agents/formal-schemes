@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductBothExposeXY
 
-set_option linter.style.header false
-
 /-!
 # Two-sided refined charts for the general fibre product — the chart data type
 

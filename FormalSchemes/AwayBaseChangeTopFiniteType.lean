@@ -8,8 +8,6 @@ import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.CompletedTensorAwayInterchange
 import FormalSchemes.TopFiniteTypeBaseChange
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 -- The composite runs through three nested localization/completion towers (`R{1/c}^ ⊗̂_R A`, the
 -- interchange, and `A{1/(c·A)}^`); the `isDefEq` checks that unfold `awayCompletion` and
 -- `CompletedTensorProduct` through `AdicCompletion` are what costs the heartbeats.

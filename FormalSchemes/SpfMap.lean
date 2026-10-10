@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.FormalScheme
 
-set_option linter.style.header false
-
 /-!
 # Functoriality of the formal spectrum on locally ringed spaces
 
@@ -211,7 +209,6 @@ theorem comp_hom_app_right (n : ℕ) (U : (Opens (FormalSpectrum I))ᵒᵖ) :
         (stepSheafHom J n).hom.app (op ((Opens.map (mapTop I J φ hφ)).obj U.unop)) :=
   rfl
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 4000000 in
 -- Verifying the composite of `StructureSheaf.comap`s against `comap` of the composite ring
 -- homomorphism unfolds the section rings of the structure sheaves, which is slow.
@@ -243,7 +240,6 @@ theorem comap_levelRingHom_square (n : ℕ) (V : Opens (FormalSpectrum I)) :
         (thickeningOpen_map_le I J φ hφ (n + 1) V)
         (thickeningOpen_le_comap J n ((Opens.map (mapTop I J φ hφ)).obj V))))
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 1000000 in
 -- Bundling the previous square into `CommRingCat` is still slow for the kernel.
 theorem ofHom_comap_levelRingHom_square (n : ℕ) (V : Opens (FormalSpectrum I)) :
@@ -402,7 +398,6 @@ def presheafedSpaceMap :
   base := mapTop I J φ hφ
   c := (mapSheafHom I J φ hφ).hom
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 1000000 in
 -- The proof chases a germ through the level-0 projections of both structure sheaves and
 -- evaluates it, which unfolds the section rings of the structure sheaves; this is slow.

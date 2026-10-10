@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AdicOnOpenSections
 
-set_option linter.style.header false
-
 /-!
 # The structural map, pointwise, in the `locallyRingedSpaceObj` spelling
 

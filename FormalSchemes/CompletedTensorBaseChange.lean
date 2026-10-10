@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ClosedImmersionAffine
 
-set_option linter.style.header false
-
 /-!
 # The completed tensor product under a change of base ring
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.Geometry.RingedSpace.LocallyRingedSpace
 
-set_option linter.style.header false
-
 /-!
 # An `eqToHom` prefix is invisible to a locally ringed space morphism's base map
 

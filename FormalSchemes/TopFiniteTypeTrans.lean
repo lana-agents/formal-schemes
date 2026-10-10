@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AwayTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # Transitivity of `IsTopologicallyFiniteType`, and arity-additivity of the formal polydisc
 

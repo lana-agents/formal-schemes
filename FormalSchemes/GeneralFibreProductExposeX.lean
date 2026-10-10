@@ -7,8 +7,6 @@ import FormalSchemes.GeneralFibreProductAffineBase
 import FormalSchemes.TwoPatchFibreProductProjectionLeft
 import FormalSchemes.GlueMorphisms
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
@@ -110,7 +108,6 @@ end AwayTransition
 
 /-! ### The general affine-charted `X` input datum -/
 
-set_option linter.unusedVariables false in
 /-- **A general affine-charted glued `X` over `Spf R`, exposed as a glueable object.** This extends
 `AffineChartedFibreDatum` (which packages `X` only through its algebra data and the fibre-product
 cocycle) with `X`'s **own** geometric triple-overlap cocycle over the basic-open charts, together

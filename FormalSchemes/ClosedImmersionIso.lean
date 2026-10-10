@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ClosedImmersion
 
-set_option linter.style.header false
-
 /-!
 # Isomorphisms are closed immersions
 

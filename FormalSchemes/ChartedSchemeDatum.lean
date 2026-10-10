@@ -7,8 +7,6 @@ import FormalSchemes.CompletionTwoPatchToScheme
 import FormalSchemes.SpecAwayOverlap
 import FormalSchemes.SpfRingEquivIso
 
-set_option linter.style.header false
-
 /-!
 # The arbitrary-index charted-scheme datum, and the glued scheme (EGA I, 10.8)
 
@@ -141,7 +139,6 @@ theorem specGlueIso_hom_comp_symm_hom {A B : Type u} [CommRing A] [CommRing B] (
 
 /-! ### The datum -/
 
-set_option linter.unusedVariables false in
 /-- **A family of affine charts glued along basic opens, with an ideal in each chart.**
 
 The fields up to `hθ` are the two-patch line's input at an arbitrary index: chart rings `C i`, an

@@ -8,8 +8,6 @@ import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.Gluing
 
-set_option linter.style.header false
-
 /-!
 # The basic-open charts of `Spf R` are functorial in the basic open
 

@@ -8,8 +8,6 @@ import FormalSchemes.GlueMorphisms
 import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateChartTransition
 
-set_option linter.style.header false
-
 /-!
 # The `q^ℤ`-shift automorphism of the formal Tate chain
 

@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AffineFibreProduct
 import FormalSchemes.SpfGamma
 
-set_option linter.style.header false
-set_option linter.unusedSectionVars false
-
 /-!
 # Uniqueness of the mediating morphism of the affine fibre product
 

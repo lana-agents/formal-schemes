@@ -7,8 +7,6 @@ import FormalSchemes.AdicSectionsRestrictOpen
 import FormalSchemes.AdicOnOpenSections
 import FormalSchemes.AwayCompletionRestrictUnique
 
-set_option linter.style.header false
-
 /-!
 # The basic-open chart realises the sections over its own range
 

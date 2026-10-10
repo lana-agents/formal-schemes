@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateOverlapInversionIso
 
-set_option linter.style.header false
-
 /-!
 # The geometric adjacent-overlap crux for the corrected 𝔾m-inversion Tate gluing
 

@@ -7,8 +7,6 @@ import FormalSchemes.TateChainGlue
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.TateAnnulus
 
-set_option linter.style.header false
-
 /-!
 # Towards the structural morphism of the formal Tate chain
 

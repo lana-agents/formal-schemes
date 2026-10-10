@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfTargetSurjective
 
-set_option linter.style.header false
-
 /-!
 # Being a target of the colimit property, as a property of one space
 

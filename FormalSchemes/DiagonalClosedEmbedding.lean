@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AffineSeparated
 import Mathlib.RingTheory.Spectrum.Prime.RingHom
 
-set_option linter.style.header false
-
 /-!
 # The diagonal of an affine formal spectrum is a closed embedding
 
@@ -100,7 +98,6 @@ variable [TopologicalSpace A] [IsAdicRing (I.map (algebraMap R A))]
 variable [TopologicalSpace (CompletedTensorProduct R I A A)]
   [IsAdicRing (idealOfDefinition R I A A)]
 
-set_option linter.unusedSectionVars false in
 /-- The codiagonal `∇ : A ⊗̂_R A →+* A` carries the ideal of definition `idealOfDefinition R I A A`
 of `A ⊗̂_R A` into the ideal of definition `I·A` of `A` — the continuity/adic-compatibility input
 making `∇` induce a morphism of formal spectra. It is `CompletedTensorProduct.lift_le_comap`

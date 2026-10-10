@@ -9,8 +9,6 @@ import FormalSchemes.CompletionGlueTwoPatchCondition
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.SpecAwayOverlap
 
-set_option linter.style.header false
-
 /-!
 # The two-patch glued scheme, and the completion morphism into it (EGA I, 10.8)
 

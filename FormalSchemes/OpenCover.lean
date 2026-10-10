@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.Gluing
 
-set_option linter.style.header false
-
 /-!
 # Open covers of formal schemes
 

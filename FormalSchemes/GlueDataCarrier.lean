@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.Geometry.RingedSpace.PresheafedSpace.Gluing
 import FormalSchemes.EmptyLocallyRingedSpace
 
-set_option linter.style.header false
-
 /-!
 # The underlying space of a glued locally ringed space, and disjointness of the pieces
 

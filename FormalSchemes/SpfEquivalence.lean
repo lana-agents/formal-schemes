@@ -7,8 +7,6 @@ import FormalSchemes.AdicOnSections
 import FormalSchemes.SpfFullyFaithful
 import FormalSchemes.SpfGammaFunctorial
 
-set_option linter.style.header false
-
 /-!
 # `Spf` as an equivalence onto affine formal schemes (EGA I, 10.4.6)
 

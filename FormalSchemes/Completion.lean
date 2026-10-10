@@ -8,8 +8,6 @@ import FormalSchemes.AdicExtend
 import FormalSchemes.SpfMap
 import FormalSchemes.SpfFunctorial
 
-set_option linter.style.header false
-
 /-!
 # The formal completion of an affine scheme along a closed subscheme
 

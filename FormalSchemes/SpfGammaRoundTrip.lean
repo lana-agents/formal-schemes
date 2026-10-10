@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfGammaSheafComponentArbCont
 import FormalSchemes.SpfGammaSheafComponent
 
-set_option linter.style.header false
-
 /-!
 # The Spf–Γ round-trip (converse of EGA I 10.4.6, step (c))
 

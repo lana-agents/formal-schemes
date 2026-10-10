@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CofinalSheafComparison
 import FormalSchemes.SpfGammaSheafComponentArbComp
 
-set_option linter.style.header false
-
 /-!
 # Naturality of the ideal-independence section isos along the `⊤ → D(g)` restriction
 

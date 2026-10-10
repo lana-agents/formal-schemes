@@ -7,8 +7,6 @@ import FormalSchemes.BasicOpenDisjointUnion
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.TateCurveModel
 
-set_option linter.style.header false
-
 /-!
 # The Tate two-chart overlap is a single affine chart, as a morphism over `Spf A`
 

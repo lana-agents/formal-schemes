@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenImmersion
 import FormalSchemes.CofinalCompletionFunctorial
 
-set_option linter.style.header false
-
 /-!
 # Basis-restriction naturality of the ideal-independence comparison (ring level)
 

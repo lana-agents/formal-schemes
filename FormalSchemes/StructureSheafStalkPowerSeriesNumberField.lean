@@ -7,8 +7,6 @@ import FormalSchemes.StructureSheafStalkPowerSeriesDedekind
 import Mathlib.NumberTheory.NumberField.Basic
 import Mathlib.RingTheory.Ideal.GoingUp
 
-set_option linter.style.header false
-
 /-!
 # The denominator condition fails at the ring of integers of every number field
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.StructureSheafStalkPowerSeries
 
-set_option linter.style.header false
-
 /-!
 # `FormalSpectrum.IsStalkLimit` at a point that is not closed: `(X) ⊆ ℤ⟦X⟧` at the generic point
 

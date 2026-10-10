@@ -7,8 +7,6 @@ import FormalSchemes.AffineFibreProductScheme
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionSections
 
-set_option linter.style.header false
-
 /-!
 # The affine diagonal as a closed immersion of formal schemes
 

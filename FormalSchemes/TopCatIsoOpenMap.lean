@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.Topology.Category.TopCat.Basic
 
-set_option linter.style.header false
-
 /-!
 # An isomorphism of topological spaces, unbundled into bijective and open
 

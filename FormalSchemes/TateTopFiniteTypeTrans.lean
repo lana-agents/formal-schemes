@@ -7,8 +7,6 @@ import FormalSchemes.RelativeTopFiniteTypeTrans
 import FormalSchemes.TateTopFiniteType
 import FormalSchemes.TopFiniteTypeBasis
 
-set_option linter.style.header false
-
 /-!
 # The Tate curve model over a topologically-finite-type base
 

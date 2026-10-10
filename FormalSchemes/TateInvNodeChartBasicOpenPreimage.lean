@@ -8,8 +8,6 @@ import FormalSchemes.InvariantSectionCongr
 import FormalSchemes.PreimageBasicOpen
 import FormalSchemes.TateInvNodeChartDescentBasicOpen
 
-set_option linter.style.header false
-
 /-!
 # The preimage of `D(g)` along the node chart's base map, without a chart
 

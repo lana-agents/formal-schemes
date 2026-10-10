@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvGlobalNormalForm
 
-set_option linter.style.header false
-
 /-!
 # What the separation hypothesis of the Tate annulus costs
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionInvariantExtension
 
-set_option linter.style.header false
-
 /-!
 # Transporting an injectivity-and-invariant-image statement along an equality of opens
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductBothExposeXY
 
-set_option linter.style.header false
-
 /-!
 # Global sections of the chart structural morphisms of a two-sided datum
 

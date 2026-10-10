@@ -7,8 +7,6 @@ import FormalSchemes.SpfRingEquivIso
 import FormalSchemes.TateInvNodeChartQuotientOpen
 import FormalSchemes.TateInvNodeChartSpfNonempty
 
-set_option linter.style.header false
-
 /-!
 # `hnode`'s residue, moved onto the quotient's own sections
 

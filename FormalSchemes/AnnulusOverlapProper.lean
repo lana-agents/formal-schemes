@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AnnulusNontrivial
 import FormalSchemes.TateOverlapImmersion
 
-set_option linter.style.header false
-
 /-!
 # The Tate-annulus overlap `D(x)` is a *proper* open of the patch
 

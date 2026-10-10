@@ -7,8 +7,6 @@ import FormalSchemes.ActionQuotientColimit
 import FormalSchemes.TateQuotientMap
 import Mathlib.Geometry.RingedSpace.LocallyRingedSpace.HasColimits
 
-set_option linter.style.header false
-
 /-!
 # The generic quotient exists for locally ringed spaces, and it is `𝔈_q`
 

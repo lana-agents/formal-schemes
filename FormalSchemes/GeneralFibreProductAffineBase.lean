@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TwoPatchFibreProductObject
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
@@ -148,7 +146,6 @@ variable (B : Type u) [CommRing B] [Algebra R B]
 
 /-! ### The general affine-charted fibre-product input datum -/
 
-set_option linter.unusedVariables false in
 /-- **A general affine-charted glued `X` over `Spf R`, together with an affine base `Spf B`.**
 This is the input datum for the fibre product `X ×_{Spf R} Spf B`. It records:
 

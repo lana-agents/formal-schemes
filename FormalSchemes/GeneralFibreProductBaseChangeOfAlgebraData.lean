@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBaseChange
 import FormalSchemes.GeneralFibreProductBothAlgebraDataCocycle
 
-set_option linter.style.header false
-
 /-!
 # The glued base change at a pair of glues the smart constructor builds
 

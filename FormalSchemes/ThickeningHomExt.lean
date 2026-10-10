@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.Thickenings
 import FormalSchemes.StructureSheafSections
 
-set_option linter.style.header false
-
 /-!
 # A morphism out of `Spf R` is determined by its restrictions to the thickenings
 
@@ -73,7 +71,6 @@ namespace FormalSpectrum
 variable {R : Type u} [CommRing R] [TopologicalSpace R] {I : Ideal R} [IsAdicRing I]
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
 -- The `rw [← cancel_mono …]` below rewrites under `(structureSheaf I).presheaf.obj`, whose
 -- argument is spelled as an object of `TopCat.Presheaf` in one place and of the plain functor
 -- category in the other. The two are `rfl` but not at `instances` transparency, which is where

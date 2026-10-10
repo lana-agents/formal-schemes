@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.OpenCoverGlueMorphisms
 
-set_option linter.style.header false
-
 /-!
 # `Spf R` is covered by its basic-open charts
 
@@ -72,7 +70,6 @@ theorem exists_mem_basicOpen_of_iSup_eq_top (hcov : (⨆ i, basicOpen I (r i)) =
     (x : FormalSpectrum I) : ∃ i, x ∈ basicOpen I (r i) :=
   Opens.mem_iSup.mp (by rw [hcov]; trivial)
 
-set_option linter.style.setOption false in
 -- The `covers` field compares a point of `(FormalScheme.Spf I).toPresheafedSpace` with a point of
 -- `FormalSpectrum I`; the two are `rfl` but not at `instances` transparency. See the module
 -- docstring.

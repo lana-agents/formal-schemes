@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GlueDataCompact
 import FormalSchemes.TateGlueTwoPatch
 
-set_option linter.style.header false
-
 /-!
 # The glued formal Tate annulus is quasi-compact
 

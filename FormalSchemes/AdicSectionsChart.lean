@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicOverBaseChart
 import FormalSchemes.GlobalSectionsHomGlue
 
-set_option linter.style.header false
-
 /-!
 # Gluing a morphism into a formal spectrum with no `hs`-shaped hypothesis
 

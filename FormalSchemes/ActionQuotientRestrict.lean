@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionQuotientCarrier
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 
-set_option linter.style.header false
-
 /-!
 # Restricting an action quotient to an open of the quotient
 

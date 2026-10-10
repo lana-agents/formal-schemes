@@ -7,8 +7,6 @@ import FormalSchemes.StructureSheafSections
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.LocalizationQuotient
 
-set_option linter.style.header false
-
 /-!
 # Sections of the structure sheaf of the formal spectrum
 

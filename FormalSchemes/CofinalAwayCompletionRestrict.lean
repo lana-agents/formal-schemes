@@ -7,8 +7,6 @@ import FormalSchemes.CofinalFormalSpectrumPoint
 import FormalSchemes.CofinalCompletionFunctorial
 import FormalSchemes.AwayCompletionRestrict
 
-set_option linter.style.header false
-
 /-!
 # Restriction between basic opens commutes with the change of ideal of definition
 

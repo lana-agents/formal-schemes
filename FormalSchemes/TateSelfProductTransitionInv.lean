@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductTransition
 import FormalSchemes.TateOverlapInversion
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 1600000
 set_option synthInstance.maxHeartbeats 1000000
 

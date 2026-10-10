@@ -7,8 +7,6 @@ import FormalSchemes.LocalizationSplitOfNilpotentMul
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.AdicCompletionLimit
 
-set_option linter.style.header false
-
 /-!
 # The adic completion splits as a product of two completed localizations
 

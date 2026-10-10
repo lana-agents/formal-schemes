@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AdicCompletionCongrLevel
 
-set_option linter.style.header false
-
 /-!
 # Formal transitivity of completed localizations
 

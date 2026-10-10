@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionQuotientTop
 import FormalSchemes.TateQuotientColimit
 
-set_option linter.style.header false
-
 /-!
 # The underlying space of the quotient of a locally ringed space is the orbit space
 

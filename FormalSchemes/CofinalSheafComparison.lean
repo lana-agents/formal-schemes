@@ -7,8 +7,6 @@ import FormalSchemes.SpfFunctorial
 import FormalSchemes.Sections
 import FormalSchemes.CofinalCompletionFunctorial
 
-set_option linter.style.header false
-
 /-!
 # Comparing the formal spectra for two ideals of definition (EGA I, §10.3)
 

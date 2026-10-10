@@ -7,8 +7,6 @@ import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.TateQuotientMap
 
-set_option linter.style.header false
-
 /-!
 # The Tate curve model is topologically of finite type over `Spf R` (EGA I §10.13)
 

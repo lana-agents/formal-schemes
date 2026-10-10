@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.RelativeTopFiniteTypeTrans
 import FormalSchemes.TopFiniteTypeHom
 
-set_option linter.style.header false
-
 /-!
 # Composition of finite-type morphisms at a non-affine target, over a shared chart
 

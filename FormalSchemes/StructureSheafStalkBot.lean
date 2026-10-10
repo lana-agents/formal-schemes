@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.StructureSheafStalkComparison
 import FormalSchemes.AwayCompletionRestrict
 
-set_option linter.style.header false
-
 /-!
 # `FormalSpectrum.IsStalkLimit` at `I = ⊥`: the predicate's first value
 

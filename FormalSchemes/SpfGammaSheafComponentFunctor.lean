@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfGammaSheafComponent
 
-set_option linter.style.header false
-
 /-!
 # Functoriality of the model morphism's sheaf component on basic opens
 

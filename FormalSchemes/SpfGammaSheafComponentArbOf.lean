@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfGammaSheafComponentArbComp
 
-set_option linter.style.header false
-
 /-!
 # An arbitrary morphism's basic-open component on the dense image of the localization
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AwayCompletionRestrictUnique
 
-set_option linter.style.header false
-
 /-!
 # The restriction of `O_{Spf R}` between two basic opens *is* the canonical map `R{1/f} →+* R{1/g}`
 

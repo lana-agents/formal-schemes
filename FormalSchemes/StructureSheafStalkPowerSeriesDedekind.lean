@@ -8,8 +8,6 @@ import FormalSchemes.StructureSheafStalkPowerSeriesCounterexample
 import Mathlib.RingTheory.Ideal.MinimalPrime.Noetherian
 import Mathlib.RingTheory.DedekindDomain.PID
 
-set_option linter.style.header false
-
 /-!
 # The denominator condition at a Dedekind domain: finitely many prime ideals
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicSectionsChart
 import FormalSchemes.TateInvNodeChartPatchChartAdic
 
-set_option linter.style.header false
-
 /-!
 # Hypothesis 2 of the node chart's four, and `hnode` over two conditions instead of four
 

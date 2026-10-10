@@ -8,8 +8,6 @@ import FormalSchemes.IndSchemeColimitEquiv
 import FormalSchemes.FormalLineWitness
 import FormalSchemes.TwoAdicDegeneracy
 
-set_option linter.style.header false
-
 /-!
 # Running the affine case on a chart: `Spf R{1/r} ⟶ X` from a compatible family
 
@@ -200,7 +198,6 @@ theorem chartInclusion_comp_ofRestrict (n : ℕ) :
   LocallyRingedSpace.restrictLE_comp_ofRestrict _
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
 -- Mixes `Spec (CommRingCat.of _)` (from `chartStep`) with
 -- `Spec.locallyRingedSpaceObj (CommRingCat.of _)` (from `stepChartRestrict`). The two are `rfl`
 -- but not at `instances` transparency, which is the transparency `rw` builds its motive at.
@@ -234,7 +231,6 @@ def chartFamily (n : ℕ) :
   (chartIsoLRS I r hI n).inv ≫ chartInclusion I f hf U r hr n ≫ chartRestrict I f U n ≫ e.hom
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
 -- Same mixture of the two spellings of `Spec` as `chartStepLRS_comp_chartInclusion`; see the
 -- implementation notes.
 set_option backward.isDefEq.respectTransparency false in
@@ -296,7 +292,6 @@ def chartSpfHomAmbient : locallyRingedSpaceObj (awayCompletionIdeal I r) ⟶ X :
   chartSpfHom I f hf U r hr hI B e ≫ e.inv ≫ X.ofRestrict U.isOpenEmbedding
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
 -- Same mixture of the two spellings of `Spec`; see the implementation notes.
 set_option backward.isDefEq.respectTransparency false in
 /-- **The restriction rule, with the affine chart eliminated.** `chartSpfHomAmbient` restricts on

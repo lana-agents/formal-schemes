@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartSpaceHalf
 import FormalSchemes.TateInvNodeChartPatchChartTrace
 
-set_option linter.style.header false
-
 /-!
 # The space half of hypothesis 4, with no germ in it
 

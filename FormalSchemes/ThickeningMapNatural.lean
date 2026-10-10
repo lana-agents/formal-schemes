@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ThickeningCocone
 
-set_option linter.style.header false
-
 /-!
 # The thickening morphisms are natural in the adic ring (EGA I, 10.6.3)
 
@@ -130,7 +128,6 @@ theorem thickeningMap_c_app_levelSheafHom (V : Opens (FormalSpectrum I))
   rw [thickeningMap_c_app, thickeningMap_c_app]
   exact congrArg (fun t => t.hom.app (op V)) (mapSheafHom_π I J φ hφ n)
 
-set_option linter.style.setOption false in
 -- Splitting the composite `NatTrans` along the base-map `eqToHom` transport requires relaxing the
 -- transparency at which `rw` builds its motive; see the module docstring.
 set_option backward.isDefEq.respectTransparency false in

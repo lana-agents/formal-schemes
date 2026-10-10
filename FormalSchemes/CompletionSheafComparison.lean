@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.Completion
 
-set_option linter.style.header false
-
 /-!
 # The structure sheaf of a formal completion is the completion of the tower (EGA I, 10.8)
 

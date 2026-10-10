@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.PullbackRangeLRS
 import Mathlib.AlgebraicGeometry.OpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # The overlap of two affine basic-open charts (EGA I, 10.8)
 

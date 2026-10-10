@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartRing
 import FormalSchemes.GlueDataSectionGlue
 
-set_option linter.style.header false
-
 /-!
 # A section of the model patch extends to a `σ`-invariant section of the chain
 

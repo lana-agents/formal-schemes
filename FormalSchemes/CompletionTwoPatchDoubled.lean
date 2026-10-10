@@ -9,8 +9,6 @@ import FormalSchemes.CompletionToSpec
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.LocallyRingedSpaceRange
 
-set_option linter.style.header false
-
 /-!
 # The glued two-patch formal completion is genuinely glued (EGA I, 10.8)
 
@@ -121,7 +119,6 @@ variable {A B : Type u} [CommRing A] [CommRing B] (I : Ideal A) (hI : I.FG) (a :
 /-- The two indices of the two-patch completion glue datum are distinct. -/
 private theorem cpIdxNe : ¬ @Eq (ULift.{u} Bool) ⟨false⟩ ⟨true⟩ := by simp
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- The transparency requirement is the one documented on the `Spec` side: the glue datum is a
 -- `def`, so its index type does not reduce to `ULift Bool` at `instances` transparency and the

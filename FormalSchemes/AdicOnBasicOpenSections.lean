@@ -7,8 +7,6 @@ import FormalSchemes.AdicOnSections
 import FormalSchemes.SpfGammaSheafComponentArbCont
 import FormalSchemes.RestrictedPowerSeries
 
-set_option linter.style.header false
-
 /-!
 # The ideal-power spelling of adicity on a basic open
 

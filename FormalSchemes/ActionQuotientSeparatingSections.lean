@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionInvariantExtension
 
-set_option linter.style.header false
-
 /-!
 # Over a separating open, the quotient has exactly the sections of `X`
 

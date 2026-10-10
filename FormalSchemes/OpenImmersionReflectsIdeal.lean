@@ -5,9 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfGammaSheafComponentArbComp
 
-set_option linter.style.header false
-set_option linter.style.setOption false
-
 /-!
 # Reflecting the ideal of definition through the sheaf component of an open immersion
 

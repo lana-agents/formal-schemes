@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CofinalCompletion
 import FormalSchemes.BasicOpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # Naturality of the cofinal comparison map
 

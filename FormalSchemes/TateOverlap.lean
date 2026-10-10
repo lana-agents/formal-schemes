@@ -8,8 +8,6 @@ import FormalSchemes.FormalGm
 import FormalSchemes.BaseChange
 import Mathlib.RingTheory.Localization.Away.Basic
 
-set_option linter.style.header false
-
 /-!
 # The Tate-annulus overlap: `A[x⁻¹]^∧ ≅ R{x, x⁻¹}`
 

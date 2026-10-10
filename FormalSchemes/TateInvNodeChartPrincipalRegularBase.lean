@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateAnnulusRegular
 import FormalSchemes.TateInvNodeChartBaseRegular
 
-set_option linter.style.header false
-
 /-!
 # The node chart's principal-base results at a base whose generator is a non-zero-divisor
 

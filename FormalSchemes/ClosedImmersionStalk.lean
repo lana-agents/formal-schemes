@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.DiagonalClosedEmbedding
 
-set_option linter.style.header false
-
 /-!
 # Closed immersions of formal spectra: reducing the sheaf half to sections (EGA I §10.14, §10.15)
 

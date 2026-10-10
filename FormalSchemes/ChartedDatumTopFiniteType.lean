@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GlueDataTopFiniteType
 import FormalSchemes.GeneralFibreProductExposeXStructMap
 
-set_option linter.style.header false
-
 /-!
 # A charted datum with tf-type charts is of finite type over the base (EGA I §10.13)
 

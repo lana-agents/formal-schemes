@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicSectionsChart
 import FormalSchemes.OpenFormalSubscheme
 
-set_option linter.style.header false
-
 /-!
 # Adicity over `ψ` on an open formal subscheme is a condition on charts of the ambient
 

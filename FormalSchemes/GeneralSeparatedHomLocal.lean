@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralSeparatedHom
 import FormalSchemes.NestedOpenFormalSubscheme
 
-set_option linter.style.header false
-
 /-!
 # Separatedness of a morphism of formal schemes is local on the target, in one direction
 

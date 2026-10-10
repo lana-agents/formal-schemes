@@ -7,8 +7,6 @@ import FormalSchemes.ActionQuotientColimit
 import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Equalizers
 import Mathlib.CategoryTheory.Limits.Preserves.Shapes.Products
 
-set_option linter.style.header false
-
 /-!
 # The quotient by a group action is preserved by a functor that preserves its two colimits
 

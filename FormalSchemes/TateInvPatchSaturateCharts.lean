@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvOverlapBand
 import FormalSchemes.TateInvPeriodNotDiscontinuous
 
-set_option linter.style.header false
-
 /-!
 # `tateInvPatchSaturate` in the annulus charts
 

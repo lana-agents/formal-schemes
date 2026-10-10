@@ -9,8 +9,6 @@ import Mathlib.RingTheory.MvPowerSeries.Equiv
 import Mathlib.Data.Finsupp.Encodable
 import Mathlib.Data.Rat.Encodable
 
-set_option linter.style.header false
-
 /-!
 # `X_{/Y} ⟶ X` is **not** a closed immersion: the question, decided
 

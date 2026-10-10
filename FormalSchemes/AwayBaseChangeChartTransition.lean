@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBaseChange
 import FormalSchemes.AwayBaseChangeGluedX
 
-set_option linter.style.header false
-
 /-!
 # The chart-transition hypothesis of the fibre-product base change, at an away base
 

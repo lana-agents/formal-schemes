@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AffineSeparatedValue
 import FormalSchemes.GeneralSeparatedScheme
 
-set_option linter.style.header false
-
 /-!
 # `Spf A` is separated over `Spf R`, as a formal scheme (EGA I §10.15)
 

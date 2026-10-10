@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.OpenCoverHomExt
 import FormalSchemes.BasicOpenCoverToBase
 
-set_option linter.style.header false
-
 /-!
 # The basic-open cover maps to `Spf A` *over* `Spf R` (EGA I §10.13, §10.15)
 

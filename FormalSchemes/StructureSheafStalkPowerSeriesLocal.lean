@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.StructureSheafStalkPowerSeriesDedekind
 
-set_option linter.style.header false
-
 /-!
 # `IsStalkLimit` takes both values on one formal spectrum
 

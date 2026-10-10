@@ -7,8 +7,6 @@ import FormalSchemes.ActionDiscontinuous
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.TateActionInv
 
-set_option linter.style.header false
-
 /-!
 # The patch overlaps of the inversion-glued Tate chain separate the one-step shift
 

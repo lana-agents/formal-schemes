@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfOpenSeparated
 import FormalSchemes.GeneralSeparatedHomIdentity
 
-set_option linter.style.header false
-
 /-!
 # An open formal subscheme is separated over its ambient scheme (EGA I §10.15)
 

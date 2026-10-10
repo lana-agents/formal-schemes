@@ -10,8 +10,6 @@ import FormalSchemes.CompletedTensorAwayInterchangeSpf
 import FormalSchemes.CompletedTensorMapSpfIso
 import FormalSchemes.Gluing
 
-set_option linter.style.header false
-
 /-!
 # The base-changed chart transition of the two-patch fibre product `X ×_{Spf R} Spf B`
 

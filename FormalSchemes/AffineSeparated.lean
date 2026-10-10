@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AffineDiagonal
 
-set_option linter.style.header false
-
 /-!
 # Affine formal spectra are separated over the base
 
@@ -80,12 +78,10 @@ diagonal `Δ_{A/R}` (`CompletedTensorProduct.diagonal`). -/
 def codiagonal : CompletedTensorProduct R I A A →+* A :=
   lift (I.map (algebraMap R A)) (le_refl _) (AlgHom.id R A) (AlgHom.id R A)
 
-set_option linter.unusedSectionVars false in
 @[simp]
 theorem codiagonal_inl (a : A) : codiagonal R I A (inl R I A A a) = a := by
   rw [codiagonal, lift_inl, AlgHom.id_apply]
 
-set_option linter.unusedSectionVars false in
 @[simp]
 theorem codiagonal_inr (a : A) : codiagonal R I A (inr R I A A a) = a := by
   rw [codiagonal, lift_inr, AlgHom.id_apply]

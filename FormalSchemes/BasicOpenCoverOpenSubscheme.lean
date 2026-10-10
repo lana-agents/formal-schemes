@@ -9,8 +9,6 @@ import FormalSchemes.BasicOpenCoverOverBase
 import FormalSchemes.BasicOpenCoverSeparatedScheme
 import FormalSchemes.BasicOpenCoverTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # The basic-open cover, chart-free: `⋃ D(f_i)` as an open formal subscheme
 

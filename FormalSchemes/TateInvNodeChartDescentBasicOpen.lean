@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartDescentIso
 import FormalSchemes.BasicOpenSectionsHom
 
-set_option linter.style.header false
-
 /-!
 # The sheaf half of hypothesis 4 is a family of ring maps indexed by the node chart's ring
 

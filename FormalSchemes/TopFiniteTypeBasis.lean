@@ -7,8 +7,6 @@ import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.GlobalTopFiniteType
 import FormalSchemes.LocallyFG
 
-set_option linter.style.header false
-
 /-!
 # Topologically-finite-type affine opens form a basis (EGA I §10.13)
 

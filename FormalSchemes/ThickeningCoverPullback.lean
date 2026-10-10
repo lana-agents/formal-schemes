@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ThickeningCommonBase
 
-set_option linter.style.header false
-
 /-!
 # Pulling an open cover of `X` back to `|Spf R|` (EGA I, 10.6.10)
 

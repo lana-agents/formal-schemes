@@ -8,8 +8,6 @@ import FormalSchemes.ThickeningHomExt
 import FormalSchemes.ThickeningMapNatural
 import FormalSchemes.BasicOpenChartOverlapLegs
 
-set_option linter.style.header false
-
 /-!
 # The chart morphisms agree on the overlap `D(r·s)` (EGA I, 10.6.10)
 

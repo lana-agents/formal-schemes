@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvSaturation
 
-set_option linter.style.header false
-
 /-!
 # The uncharted locus of `T_inv/⟨σ⟩` is closed, and is the node locus of a single patch
 

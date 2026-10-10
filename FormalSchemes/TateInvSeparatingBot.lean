@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvGlobalNormalForm
 
-set_option linter.style.header false
-
 /-!
 # The separation hypothesis holds over a discrete base
 

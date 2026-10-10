@@ -7,8 +7,6 @@ import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.LocalizationQuotient
 import Mathlib.RingTheory.Nilpotent.Basic
 
-set_option linter.style.header false
-
 /-!
 # Isomorphisms of adic completions from isomorphisms of thickenings
 

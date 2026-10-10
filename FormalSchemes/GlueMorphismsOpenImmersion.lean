@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GlueMorphisms
 
-set_option linter.style.header false
-
 /-!
 # When a morphism glued out of a formal scheme is an open immersion
 

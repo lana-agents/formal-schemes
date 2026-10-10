@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ChartedCompletionSupport
 
-set_option linter.style.header false
-
 /-!
 # The image of `X_{/Y} ⟶ X` is closed, at an arbitrary index (EGA I, 10.8)
 

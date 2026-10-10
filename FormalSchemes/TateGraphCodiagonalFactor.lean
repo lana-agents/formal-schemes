@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateGraphCodiagonalBridge
 import FormalSchemes.TateSelfProductMixedGlue
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 set_option maxRecDepth 8000
@@ -309,7 +307,6 @@ def spfInvLocXY (hI : I.FG) :
       rw [h0, ← annulus_map_eq, ← Ideal.map_map, h1,
         map_annulusOverlapInversion_annulusOverlapIdeal]))
 
-set_option linter.unusedSectionVars false in
 /-- **(A)** for the `y`-piece: the `y`-side graph codiagonal factors through the `y`-summand of the
 first-factor overlap chart. -/
 theorem spfGraphCodiagY_eq (hI : I.FG) :
@@ -344,7 +341,6 @@ theorem spfGraphCodiagY_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftY_comp_map R I q hI).symm
 
-set_option linter.unusedSectionVars false in
 /-- **(B)** for the `y`-piece. -/
 theorem spfGraphLiftY_comp_transition (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -437,7 +433,6 @@ theorem spfGraphLiftY_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftY_comp_map_transition R I q hI)
 
-set_option linter.unusedSectionVars false in
 /-- **The `y`-piece of the mixed chart `(false, true)` lands in the diagonal.** -/
 theorem spfGraphCodiagY_comp_ι_ft (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -487,7 +482,6 @@ For the other mixed chart the roles of the two tensor factors are exchanged; the
 the graph codiagonals precomposed with the commutativity swap `commHom`.
 -/
 
-set_option linter.unusedSectionVars false in
 theorem commHom_le_comap_self (hI : I.FG) :
     idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
       (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)).comap
@@ -585,7 +579,6 @@ def spfGraphLiftYX (hI : I.FG) :
     have h := graphLiftYX_mem_pow R I q hI 1 (by rwa [pow_one])
     rwa [pow_one] at h)
 
-set_option linter.unusedSectionVars false in
 theorem locX_comp_codiagonal_le_comap (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -611,7 +604,6 @@ theorem locX_comp_codiagonal_le_comap (hI : I.FG) :
     rwa [pow_one] at this
   exact h1.le (Ideal.mem_map_of_mem _ hc)
 
-set_option linter.unusedSectionVars false in
 theorem invLocXY_comp_codiagonal_le_comap (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -643,7 +635,6 @@ theorem invLocXY_comp_codiagonal_le_comap (hI : I.FG) :
     rwa [pow_one] at this
   exact hid.le (Ideal.mem_map_of_mem _ hc)
 
-set_option linter.unusedSectionVars false in
 /-- **(A)** for the swapped `x`-piece. -/
 theorem spfGraphCodiagXComm_eq (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -679,7 +670,6 @@ theorem spfGraphCodiagXComm_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXY_comp_map R I q hI).symm
 
-set_option linter.unusedSectionVars false in
 /-- **(B)** for the swapped `x`-piece. -/
 theorem spfGraphLiftXY_comp_transition (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -748,7 +738,6 @@ theorem spfGraphLiftXY_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXY_comp_map_transition R I q hI)
 
-set_option linter.unusedSectionVars false in
 /-- **The `x`-piece of the mixed chart `(true, false)` lands in the diagonal.** -/
 theorem spfGraphCodiagXComm_comp_ι_tf (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -793,7 +782,6 @@ theorem spfGraphCodiagXComm_comp_ι_tf (hq : q ∈ I) (hI : I.FG) :
           (tateSelfProductFormalGlueDataInv R I q hq hI).ι ⟨(false, false)⟩ := by
         rw [spfGraphLiftXY_comp_transition R I q hI]; simp only [Category.assoc]
 
-set_option linter.unusedSectionVars false in
 /-- **(A)** for the swapped `y`-piece. -/
 theorem spfGraphCodiagYComm_eq (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -826,7 +814,6 @@ theorem spfGraphCodiagYComm_eq (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftYX_comp_map R I q hI).symm
 
-set_option linter.unusedSectionVars false in
 /-- **(B)** for the swapped `y`-piece. -/
 theorem spfGraphLiftYX_comp_transition (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -889,7 +876,6 @@ theorem spfGraphLiftYX_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftYX_comp_map_transition R I q hI)
 
-set_option linter.unusedSectionVars false in
 /-- **The `y`-piece of the mixed chart `(true, false)` lands in the diagonal.** -/
 theorem spfGraphCodiagYComm_comp_ι_tf (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -942,7 +928,6 @@ theorem range_comp_comp_base_subset {W X Y Z : LocallyRingedSpace.{u}}
   rintro y ⟨w, rfl⟩
   exact ⟨g.base (f.base w), rfl⟩
 
-set_option linter.unusedSectionVars false in
 /-- The factorisation of the glued diagonal on the `c`-chart: `ι c ≫ Δ = diagChart ≫ ι (c, c)`.
 (The same statement as the `424` scaffold's `curve_ι_comp_diagonal`, kept here so that this file
 is self-contained; drop one of the two copies when the scaffold lands.) -/
@@ -953,7 +938,6 @@ theorem curve_ι_comp_selfProductDiagonal (hq : q ∈ I) (hI : I.FG) (c : Bool) 
   rw [tateSelfProductDiagonal]
   exact (tateCurveFormalGlueData R I q hq hI).ι_glueMorphisms _ _ ⟨c⟩
 
-set_option linter.unusedSectionVars false in
 /-- **The `x`-piece of the chart `(false, true)` lies in `range Δ.base`.** -/
 theorem range_spfGraphCodiagX_ft_subset (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -969,7 +953,6 @@ theorem range_spfGraphCodiagX_ft_subset (hq : q ∈ I) (hI : I.FG) :
     ← curve_ι_comp_selfProductDiagonal R I q hq hI false]
   exact range_comp_comp_base_subset _ _ _
 
-set_option linter.unusedSectionVars false in
 /-- **The `y`-piece of the chart `(false, true)` lies in `range Δ.base`.** -/
 theorem range_spfGraphCodiagY_ft_subset (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -985,7 +968,6 @@ theorem range_spfGraphCodiagY_ft_subset (hq : q ∈ I) (hI : I.FG) :
     ← curve_ι_comp_selfProductDiagonal R I q hq hI true]
   exact range_comp_comp_base_subset _ _ _
 
-set_option linter.unusedSectionVars false in
 /-- **The `x`-piece of the chart `(true, false)` lies in `range Δ.base`.** -/
 theorem range_spfGraphCodiagXComm_tf_subset (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -1001,7 +983,6 @@ theorem range_spfGraphCodiagXComm_tf_subset (hq : q ∈ I) (hI : I.FG) :
     ← curve_ι_comp_selfProductDiagonal R I q hq hI false]
   exact range_comp_comp_base_subset _ _ _
 
-set_option linter.unusedSectionVars false in
 /-- **The `y`-piece of the chart `(true, false)` lies in `range Δ.base`.** -/
 theorem range_spfGraphCodiagYComm_tf_subset (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI

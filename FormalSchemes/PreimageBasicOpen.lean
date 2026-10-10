@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GlobalSectionsHom
 import FormalSchemes.TwoChartBasicOpen
 
-set_option linter.style.header false
-
 /-!
 # The preimage of a basic open along a morphism into a formal spectrum
 

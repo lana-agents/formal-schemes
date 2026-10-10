@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicSectionsChart
 import FormalSchemes.TateInvNodeChartHomOfSections
 
-set_option linter.style.header false
-
 /-!
 # The node chart's morphism from one neighbourhood-basis witness
 

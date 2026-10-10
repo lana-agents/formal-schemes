@@ -10,8 +10,6 @@ import FormalSchemes.AwayCompletionUniversal
 import FormalSchemes.CompletedTensorAwayInterchangePullbackLegs
 import FormalSchemes.RefinedOverlapRestrict
 
-set_option linter.style.header false
-
 /-!
 # The refined overlap's cross-chart transition and its triple-overlap equivalence
 

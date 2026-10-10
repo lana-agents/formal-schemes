@@ -7,8 +7,6 @@ import FormalSchemes.GeneralFibreProductExposeX
 import FormalSchemes.GeneralFibreProductExposeXStructMap
 import FormalSchemes.GlueMorphisms
 
-set_option linter.style.header false
-
 /-!
 # Gluing a family of chart morphisms out of an affine-charted formal scheme
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CompletionTwoPatchRange
 
-set_option linter.style.header false
-
 /-!
 # `hθ` becomes a statement about primes: `X_{/Y}` chart by chart (EGA I, 10.8)
 

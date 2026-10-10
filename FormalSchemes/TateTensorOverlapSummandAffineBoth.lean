@@ -7,8 +7,6 @@ import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 import FormalSchemes.TateTensorOverlapChartIsoBoth
 import FormalSchemes.TateTensorOverlapSummandAffine
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 
 /-!

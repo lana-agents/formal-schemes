@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvNodeChartRestrictedQuotient
 
-set_option linter.style.header false
-
 /-!
 # The node chart as one invariant morphism, descended
 

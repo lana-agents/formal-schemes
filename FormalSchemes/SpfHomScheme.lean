@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.IndSchemeFamilyLimitLRS
 import Mathlib.AlgebraicGeometry.Scheme
 
-set_option linter.style.header false
-
 /-!
 # EGA I, 10.6.7 and 10.6.10 for an arbitrary scheme
 

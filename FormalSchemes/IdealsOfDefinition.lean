@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.FormalSpectrum
 
-set_option linter.style.header false
-
 /-!
 # Ideals of definition of a formal spectrum
 

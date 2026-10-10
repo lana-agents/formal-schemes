@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionDiscontinuous
 
-set_option linter.style.header false
-
 /-!
 # The translates of a small open inside a separating open
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.Geometry.RingedSpace.LocallyRingedSpace
 import Mathlib.Topology.Sheaves.SheafCondition.Sites
 
-set_option linter.style.header false
-
 /-!
 # The comparison maps of a morphism of locally ringed spaces are detected on a basis
 

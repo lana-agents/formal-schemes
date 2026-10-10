@@ -7,8 +7,6 @@ import FormalSchemes.FormalTorus
 import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 
-set_option linter.style.header false
-
 /-!
 # The Hopf-algebra structure on the general formal group algebra
 

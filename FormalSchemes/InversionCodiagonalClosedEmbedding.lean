@@ -7,8 +7,6 @@ import FormalSchemes.AwayCompletionSurjective
 import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.TateOverlapInversion
 
-set_option linter.style.header false
-
 /-!
 # The inversion localized codiagonal `A ⊗̂_R A → A{1/x}` and its closed-embedding formal spectrum
 
@@ -84,7 +82,6 @@ variable {R I q}
 def invAutX (hI : I.FG) : annulusOverlap R I q ≃ₐ[R] annulusOverlap R I q :=
   AlgEquiv.ofRingEquiv (f := annulusOverlapInvX R I q hI) (annulusOverlapInvX_algebraMap R I q hI)
 
-set_option linter.unusedSectionVars false in
 @[simp] theorem invAutX_apply (hI : I.FG) (x : annulusOverlap R I q) :
     invAutX hI x = annulusOverlapInvX R I q hI x := rfl
 
@@ -93,7 +90,6 @@ variable (R I q) in
 def invLocX (hI : I.FG) : annulusAlgebra R I q →ₐ[R] annulusOverlap R I q :=
   (invAutX hI).toAlgHom.comp (locX R I q)
 
-set_option linter.unusedSectionVars false in
 @[simp] theorem invLocX_apply (hI : I.FG) (a : annulusAlgebra R I q) :
     invLocX R I q hI a = annulusOverlapInvX R I q hI (locX R I q a) := rfl
 
@@ -108,7 +104,6 @@ def localizedCodiagInvX (hI : I.FG) :
   lift (annulusOverlapIdeal R I q) (le_of_eq (overlapIdeal_eq_map R I q).symm)
     (locX R I q) (invLocX R I q hI)
 
-set_option linter.unusedSectionVars false in
 @[simp]
 theorem localizedCodiagInvX_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     localizedCodiagInvX R I q hI (inl R I _ _ a) = locX R I q a := by
@@ -116,7 +111,6 @@ theorem localizedCodiagInvX_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
   rw [localizedCodiagInvX, lift_inl]
 
-set_option linter.unusedSectionVars false in
 @[simp]
 theorem localizedCodiagInvX_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     localizedCodiagInvX R I q hI (inr R I _ _ a) = annulusOverlapInvX R I q hI (locX R I q a) := by
@@ -124,7 +118,6 @@ theorem localizedCodiagInvX_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     (annulusOverlap_isAdicRing R I q hI).toIsAdicComplete
   rw [localizedCodiagInvX, lift_inr, invLocX_apply]
 
-set_option linter.unusedSectionVars false in
 /-- The inversion localized codiagonal is an `R`-algebra map: it sends `algebraMap R (A ⊗̂_R A)` to
 `algebraMap R (A{1/x})`. -/
 theorem localizedCodiagInvX_comp_algebraMap (hI : I.FG) :
@@ -136,7 +129,6 @@ theorem localizedCodiagInvX_comp_algebraMap (hI : I.FG) :
     ← (inl R I (annulusAlgebra R I q) (annulusAlgebra R I q)).commutes r,
     localizedCodiagInvX_inl, AlgHom.commutes]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ᵢ (inl a) = algebraMap L (A{1/x}) (algebraMap A L a)`: the first leg factors through the
 away-localization `L = A[x⁻¹]` before completing to `A{1/x}`. -/
 theorem localizedCodiagInvX_inl_apply (hI : I.FG) (a : annulusAlgebra R I q) :
@@ -148,7 +140,6 @@ theorem localizedCodiagInvX_inl_apply (hI : I.FG) (a : annulusAlgebra R I q) :
     IsScalarTower.algebraMap_apply (annulusAlgebra R I q) (annulusLoc R I q)
       (annulusOverlap R I q)]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ᵢ (inr x) = algebraMap L (A{1/x}) (x⁻¹)`: the second leg sends the coordinate `x` to the
 localization inverse `x⁻¹`. Both `algebraMap L (A{1/x}) (x⁻¹)` and `∇ᵢ (inr x) = x⁻¹`
 (`annulusOverlapInvX` applied to `x`) are two-sided inverses of `algebraMap A (A{1/x}) x` in the
@@ -190,7 +181,6 @@ theorem localizedCodiagInvX_inr_overlapX (hI : I.FG) :
       _ = b := by rw [hna, one_mul]
   exact huniq _ _ hb ha
 
-set_option linter.unusedSectionVars false in
 /-- If a completion element `y : A{1/x}` and the image of a localization element `w : L = A[x⁻¹]`
 share their first thickening (`mk w = evalₐ 1 y`), then they differ by an element of the ideal of
 definition `annulusOverlapIdeal = I·A{1/x}` — the level-`1` step of successive approximation. The
@@ -203,7 +193,6 @@ theorem sub_algebraMap_mem_annulusOverlapIdeal (hI : I.FG) (y : annulusOverlap R
   FormalSpectrum.sub_algebraMap_mem_idealOfDefinition (overlapX R I q) (annulusLocIdeal R I q)
     (hI.map _) y w hw
 
-set_option linter.unusedSectionVars false in
 /-- `∇ᵢ` carries the ideal of definition of `A ⊗̂_R A` onto that of `A{1/x}` (`I·A{1/x}`). Same
 statement as `map_localizedCodiagInvX_eq`, restated here so it is usable inside the surjectivity
 proof (which precedes the `IsAdicRing` variable block). -/
@@ -214,7 +203,6 @@ theorem map_idealOfDefinition_localizedCodiagInvX (hI : I.FG) :
       (B := annulusAlgebra R I q), Ideal.map_map, localizedCodiagInvX_comp_algebraMap,
     ← overlapIdeal_eq_map]
 
-set_option linter.unusedSectionVars false in
 /-- Any element `w` of the away-localization `L = A[x⁻¹]` is `(algebraMap A L r)·(x⁻¹)ⁿ` for the
 chosen numerator/exponent `(r, n) = sec x w`. The Tate spelling of
 `FormalSpectrum.localizationAway_eq_sec`. -/
@@ -225,7 +213,6 @@ theorem annulusLoc_eq_sec (w : annulusLoc R I q) :
             ^ (IsLocalization.Away.sec (overlapX R I q) w).2 :=
   FormalSpectrum.localizationAway_eq_sec (overlapX R I q) w
 
-set_option linter.unusedSectionVars false in
 /-- The explicit lift of `w : L = A[x⁻¹]` through `∇ᵢ`: with `(r, n) = sec x w`, the element
 `inl r · (inr x)ⁿ` of `A ⊗̂_R A` maps to `algebraMap L (A{1/x}) w`, using
 `∇ᵢ (inl r) = algebraMap L (A{1/x}) (algebraMap A L r)`,
@@ -240,7 +227,6 @@ theorem localizedCodiagInvX_sec_witness (hI : I.FG) (w : annulusLoc R I q) :
   rw [map_mul, map_pow, localizedCodiagInvX_inl_apply, localizedCodiagInvX_inr_overlapX,
     ← map_pow, ← map_mul, ← annulusLoc_eq_sec]
 
-set_option linter.unusedSectionVars false in
 /-- **The inversion localized codiagonal `∇ᵢ` is surjective.** Modulo the ideal of definition
 `A{1/x}` is the localization `Ā[x⁻¹]` of `Ā = A/I·A` at `x̄`; the image of `∇ᵢ` mod `I` contains
 `Ā` (via `inl`/`locX`) and the unit `x̄⁻¹` (via `inr`), so it is all of `Ā[x⁻¹]`. This lifts to
@@ -269,7 +255,6 @@ variable
   [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
   [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ᵢ` carries the ideal of definition of `A ⊗̂_R A` exactly onto that of `A{1/x}`
 (`annulusOverlapIdeal = I·A{1/x}`). -/
 theorem map_localizedCodiagInvX_eq (hI : I.FG) :
@@ -279,7 +264,6 @@ theorem map_localizedCodiagInvX_eq (hI : I.FG) :
       (B := annulusAlgebra R I q), Ideal.map_map, localizedCodiagInvX_comp_algebraMap,
     ← overlapIdeal_eq_map]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ᵢ` carries the ideal of definition of `A ⊗̂_R A` into the ideal of definition
 `annulusOverlapIdeal` of `A{1/x}` — the continuity/adic-compatibility input making `∇ᵢ` induce a
 morphism of formal spectra. -/
@@ -291,7 +275,6 @@ theorem localizedCodiagInvX_le_comap (hI : I.FG) :
   exact lift_le_comap (le_of_eq (overlapIdeal_eq_map R I q).symm)
     (locX R I q) (invLocX R I q hI) hI
 
-set_option linter.unusedSectionVars false in
 /-- **The base map of `Spf ∇ᵢ : Spf (A{1/x}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 `∇ᵢ` is surjective (`localizedCodiagInvX_surjective`), and `Spf` of a surjection is a closed
 embedding (`FormalSpectrum.isClosedEmbedding_map_of_surjective`). This is the shape the merged right

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.DiagonalClosedEmbedding
 
-set_option linter.style.header false
-
 /-!
 # The right codiagonal `A ⊗̂_R C → C` and its closed-embedding formal spectrum
 
@@ -76,7 +74,6 @@ def rightCodiagonal (f : A →ₐ[R] C) : CompletedTensorProduct R I A C →+* C
     ‹IsAdicRing (I.map (algebraMap R C))›.toIsAdicComplete
   lift (I.map (algebraMap R C)) (le_refl _) f (AlgHom.id R C)
 
-set_option linter.unusedSectionVars false in
 @[simp]
 theorem rightCodiagonal_inr (f : A →ₐ[R] C) (c : C) :
     rightCodiagonal R I A C f (inr R I A C c) = c := by
@@ -84,7 +81,6 @@ theorem rightCodiagonal_inr (f : A →ₐ[R] C) (c : C) :
     ‹IsAdicRing (I.map (algebraMap R C))›.toIsAdicComplete
   rw [rightCodiagonal, lift_inr, AlgHom.id_apply]
 
-set_option linter.unusedSectionVars false in
 @[simp]
 theorem rightCodiagonal_inl (f : A →ₐ[R] C) (a : A) :
     rightCodiagonal R I A C f (inl R I A C a) = f a := by
@@ -92,7 +88,6 @@ theorem rightCodiagonal_inl (f : A →ₐ[R] C) (a : A) :
     ‹IsAdicRing (I.map (algebraMap R C))›.toIsAdicComplete
   rw [rightCodiagonal, lift_inl]
 
-set_option linter.unusedSectionVars false in
 /-- The right codiagonal `∇_f : A ⊗̂_R C →+* C` is **surjective**: it splits the canonical second
 inclusion `inr : C → A ⊗̂_R C`. This is the ring-level input to `Spf ∇_f` being a closed
 embedding. -/
@@ -100,7 +95,6 @@ theorem rightCodiagonal_surjective (f : A →ₐ[R] C) :
     Function.Surjective (rightCodiagonal R I A C f) :=
   fun c => ⟨inr R I A C c, rightCodiagonal_inr f c⟩
 
-set_option linter.unusedSectionVars false in
 /-- The right codiagonal is an `R`-algebra map: it sends `algebraMap R (A ⊗̂_R C)` to
 `algebraMap R C`. -/
 theorem rightCodiagonal_comp_algebraMap (f : A →ₐ[R] C) :
@@ -117,14 +111,12 @@ theorem rightCodiagonal_comp_algebraMap (f : A →ₐ[R] C) :
 variable [TopologicalSpace (CompletedTensorProduct R I A C)]
   [IsAdicRing (idealOfDefinition R I A C)]
 
-set_option linter.unusedSectionVars false in
 /-- The right codiagonal `∇_f` carries the ideal of definition of `A ⊗̂_R C` exactly onto that of
 `C` (`I·C`); it is surjective, so the containment `rightCodiagonal_le_comap` is an equality. -/
 theorem map_rightCodiagonal_eq (f : A →ₐ[R] C) :
     (idealOfDefinition R I A C).map (rightCodiagonal R I A C f) = I.map (algebraMap R C) := by
   rw [idealOfDefinition_eq_map, Ideal.map_map, rightCodiagonal_comp_algebraMap]
 
-set_option linter.unusedSectionVars false in
 /-- The right codiagonal `∇_f` carries the ideal of definition `idealOfDefinition R I A C` of
 `A ⊗̂_R C` into the ideal of definition `I·C` of `C` — the continuity/adic-compatibility input
 making `∇_f` induce a morphism of formal spectra. -/
@@ -134,7 +126,6 @@ theorem rightCodiagonal_le_comap (hI : I.FG) (f : A →ₐ[R] C) :
     ‹IsAdicRing (I.map (algebraMap R C))›.toIsAdicComplete
   exact lift_le_comap (le_refl _) f (AlgHom.id R C) hI
 
-set_option linter.unusedSectionVars false in
 /-- **The base map of `Spf ∇_f : Spf C → Spf (A ⊗̂_R C)` is a closed topological embedding.** The
 right codiagonal `∇_f : A ⊗̂_R C →+* C` is surjective (`rightCodiagonal_surjective`), and `Spf`
 (i.e. `Spec` of the level-`0` reduction) of a surjection is a closed embedding

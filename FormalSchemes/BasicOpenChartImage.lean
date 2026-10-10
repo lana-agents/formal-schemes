@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenChart
 
-set_option linter.style.header false
-
 /-!
 # The image of a basic open of a basic-open chart is a basic open
 

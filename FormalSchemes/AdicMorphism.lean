@@ -7,8 +7,6 @@ import FormalSchemes.SpfMap
 import FormalSchemes.AdicQuotient
 import Mathlib.RingTheory.Spectrum.Prime.RingHom
 
-set_option linter.style.header false
-
 /-!
 # Adic morphisms of formal spectra, and closed formal subschemes
 

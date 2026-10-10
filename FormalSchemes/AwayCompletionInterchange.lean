@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AwayCompletionAway
 
-set_option linter.style.header false
-
 /-!
 # The completion–localization interchange for a basic-open chart
 

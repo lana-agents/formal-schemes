@@ -8,8 +8,6 @@ import FormalSchemes.CompletionToSpec
 import FormalSchemes.SpfDiscrete
 import FormalSchemes.SpfTargetColimit
 
-set_option linter.style.header false
-
 /-!
 # The `Spf`-target colimit property at an affine target (EGA I, 10.6.7), issue 62m goal 2
 

@@ -10,8 +10,6 @@ import Mathlib.RingTheory.AdicCompletion.RingHom
 import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
 import Mathlib.Algebra.MvPolynomial.CommRing
 
-set_option linter.style.header false
-
 /-!
 # Restricted power series and the formal polydisc
 

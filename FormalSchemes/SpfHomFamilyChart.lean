@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionQuotientChartAt
 import FormalSchemes.SpfHomColimitTarget
 
-set_option linter.style.header false
-
 /-!
 # EGA I 10.6.10's target datum already charts the image of the morphism it produces
 

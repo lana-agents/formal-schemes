@@ -9,8 +9,6 @@ import Mathlib.Algebra.DirectSum.Internal
 import Mathlib.RingTheory.Noetherian.Defs
 import Mathlib.LinearAlgebra.Finsupp.LinearCombination
 
-set_option linter.style.header false
-
 /-!
 # A complete separated ring with Noetherian associated graded is Noetherian
 

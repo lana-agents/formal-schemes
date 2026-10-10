@@ -7,8 +7,6 @@ import FormalSchemes.TateInvNodeLocus
 import FormalSchemes.GlueDataSectionExt
 import FormalSchemes.ActionQuotientSectionInjective
 
-set_option linter.style.header false
-
 /-!
 # The sections of `T_inv/⟨σ⟩` live on a single patch
 

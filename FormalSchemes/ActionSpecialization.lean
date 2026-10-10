@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionDiscontinuous
 
-set_option linter.style.header false
-
 /-!
 # A specialization obstruction to proper discontinuity
 

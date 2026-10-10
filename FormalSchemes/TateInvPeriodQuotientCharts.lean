@@ -8,8 +8,6 @@ import FormalSchemes.TateChainInvLocallyFG
 import FormalSchemes.TateInvOverlapDiscontinuous
 import FormalSchemes.TateInvPeriodNodePoint
 
-set_option linter.style.header false
-
 /-!
 # Charts of `T_inv/⟨σ⟩`, and the node locus that is left
 

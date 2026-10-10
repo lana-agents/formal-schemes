@@ -7,8 +7,6 @@ import FormalSchemes.ChartedCompletionToScheme
 import FormalSchemes.CompletionCompact
 import Mathlib.Algebra.Polynomial.Laurent
 
-set_option linter.style.header false
-
 /-!
 # The projective line completed at a closed point (EGA I, 10.8)
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.AffineFibreProduct
 
-set_option linter.style.header false
-
 /-!
 # Naturality of the affine fibre-product projections under `mapSpf`
 
@@ -73,7 +71,6 @@ variable [TopologicalSpace B] [IsAdicRing (I.map (algebraMap R B))]
 variable [TopologicalSpace A'] [IsAdicRing (I.map (algebraMap R A'))]
 variable [TopologicalSpace B'] [IsAdicRing (I.map (algebraMap R B'))]
 
-set_option linter.unusedSectionVars false in
 /-- **Naturality of the first projection under `mapSpf`.** The functorial morphism of formal
 spectra commutes with the first projections and the induced map `Spf f` of the first factor. -/
 theorem mapSpf_comp_fibrePr₁ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') :
@@ -97,7 +94,6 @@ theorem mapSpf_comp_fibrePr₁ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R]
   exact locallyRingedSpaceMap_congr _ _ _ _ _ _
     (RingHom.ext fun a => map_inl hI f g a)
 
-set_option linter.unusedSectionVars false in
 /-- **Naturality of the second projection under `mapSpf`.** The functorial morphism of formal
 spectra commutes with the second projections and the induced map `Spf g` of the second factor. -/
 theorem mapSpf_comp_fibrePr₂ (hI : I.FG) (f : A →ₐ[R] A') (g : B →ₐ[R] B') :

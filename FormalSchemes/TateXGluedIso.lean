@@ -8,8 +8,6 @@ import FormalSchemes.TateCurveExposeXDatum
 import FormalSchemes.TateChartTransitionInvAlgEq
 import FormalSchemes.TateOverlapSummandAffine
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 
 /-!

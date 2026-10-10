@@ -6,10 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralFibreProductBothObject
 import FormalSchemes.CompletedTensorAwayInterchangeBoth
 
-set_option linter.style.header false
-set_option linter.style.setOption false
-set_option linter.style.openClassical false
-set_option linter.unusedVariables false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
@@ -93,7 +89,6 @@ theorem eqAlgEquivB_symm {j j' : JY} (h : j = j') :
 
 /-! ### The dispatched overlap object -/
 
-set_option linter.unusedVariables false in
 /-- **The coordinate-difference-dispatched overlap object** of two distinct product-index charts of
 `X ×_{Spf R} Y`, over the concrete double-tensor charts. The finite-generation witness `hI` is
 carried only to pin the base ideal `I` (hence `R`) at use sites. -/

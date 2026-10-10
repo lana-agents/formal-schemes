@@ -8,8 +8,6 @@ import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.RestrictedPowerSeries
 import Mathlib.RingTheory.Polynomial.Basic
 
-set_option linter.style.header false
-
 /-!
 # Restricted power series over a Noetherian adic ring are Noetherian
 

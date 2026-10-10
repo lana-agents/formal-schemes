@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.RingTheory.Localization.Ideal
 import Mathlib.RingTheory.Localization.Away.Basic
 
-set_option linter.style.header false
-
 /-!
 # Localization away from `f` commutes with quotient by an ideal
 

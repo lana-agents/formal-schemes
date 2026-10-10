@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.TopFiniteTypeBasis
 
-set_option linter.style.header false
-
 /-!
 # The relative refinement: `IsRelativelyTopFiniteType` refines to any open cover (EGA I §10.13)
 

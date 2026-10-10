@@ -7,8 +7,6 @@ import FormalSchemes.SpfGamma
 import FormalSchemes.Thickenings
 import Mathlib.AlgebraicGeometry.GammaSpecAdjunction
 
-set_option linter.style.header false
-
 /-!
 # The affine-target mapping-out universal property of the formal spectrum
 

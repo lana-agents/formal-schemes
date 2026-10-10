@@ -10,8 +10,6 @@ import Mathlib.Algebra.BigOperators.Finsupp.Basic
 import Mathlib.Algebra.Group.TypeTags.Hom
 import Mathlib.Data.Int.Cast.Lemmas
 
-set_option linter.style.header false
-
 /-!
 # Formal group algebras, the formal multiplicative group and formal tori
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenChartOpensSections
 import FormalSchemes.TateInvNodeChartAdicSectionsChain
 
-set_option linter.style.header false
-
 /-!
 # The node chart's source is adic over `nodeChartPsi`: hypothesis 1 of the four
 

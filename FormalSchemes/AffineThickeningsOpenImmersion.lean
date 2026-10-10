@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AdicOpennessHalf
 
-set_option linter.style.header false
-
 /-!
 # The range of an affine open immersion of formal spectra has affine thickenings
 

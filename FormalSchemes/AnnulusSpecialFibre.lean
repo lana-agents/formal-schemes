@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateTransition
 import FormalSchemes.CompletionToSpec
 
-set_option linter.style.header false
-
 /-!
 # The special fibre of the Tate annulus, and evaluation of the annulus at a discrete point
 

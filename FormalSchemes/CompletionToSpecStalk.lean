@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CompletionToSpec
 
-set_option linter.style.header false
-
 /-!
 # The stalk maps of `X_{/Y} ⟶ X`, and the closed-immersion question posed
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionQuotient
 import FormalSchemes.TateAction
 
-set_option linter.style.header false
-
 /-!
 # Action-invariance of the Tate-chain structural morphism
 

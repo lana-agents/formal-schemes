@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ChartedSchemeDatumAlgebraData
 import FormalSchemes.CompletionAwayOverlapLegs
 
-set_option linter.style.header false
-
 /-!
 # The glued formal completion of a charted scheme, at an arbitrary index (EGA I, 10.8)
 
@@ -144,7 +142,6 @@ private theorem ccMapSymmEq {R S : Type u} [CommRing R] [CommRing S] (e : R ≃+
 
 /-! ### The datum -/
 
-set_option linter.unusedVariables false in
 /-- **A family of affine charts glued along basic opens, with an ideal in each chart, presented by
 localization data.** -/
 structure ChartedCompletionDatum where

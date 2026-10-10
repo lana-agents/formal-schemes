@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.GlueDataCompact
 
-set_option linter.style.header false
-
 /-!
 # The formal completion is quasi-compact (EGA I, 10.8)
 

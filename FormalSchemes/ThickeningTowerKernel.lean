@@ -7,8 +7,6 @@ import FormalSchemes.AffineThickenings
 import Mathlib.AlgebraicGeometry.IdealSheaf.Basic
 import Mathlib.RingTheory.Ideal.Quotient.PowTransition
 
-set_option linter.style.header false
-
 /-!
 # The kernel of the tower of sections over an open with affine thickenings
 

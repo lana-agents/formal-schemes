@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TopFiniteTypeHom
 import FormalSchemes.TateTopFiniteTypeTrans
 
-set_option linter.style.header false
-
 /-!
 # The Tate curve as a value of the general finite-type predicate
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GlobalSectionsHom
 import FormalSchemes.LocallyRingedSpaceBasisComponent
 
-set_option linter.style.header false
-
 /-!
 # Sections of a morphism into a formal spectrum over a basic open, and the sheaf half on a basis
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicSectionsRestrictOpen
 import FormalSchemes.TateInvNodeChartAdicSections
 
-set_option linter.style.header false
-
 /-!
 # The node chart's adicity condition, restated on the chain
 

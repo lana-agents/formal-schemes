@@ -7,8 +7,6 @@ import FormalSchemes.ActionQuotientFormalScheme
 import FormalSchemes.TateChainInvLocallyFG
 import FormalSchemes.TateQuotientColimit
 
-set_option linter.style.header false
-
 /-!
 # The Tate curve as the quotient produced by the general criterion, modulo the stalk lemma
 

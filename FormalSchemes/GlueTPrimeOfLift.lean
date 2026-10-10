@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.PullbackRangeLRS
 
-set_option linter.style.header false
-
 /-!
 # The transition-of-transitions `t'` of a same-target open-immersion glue datum, by lift
 

@@ -8,8 +8,6 @@ import FormalSchemes.GeneralFibreProductBothOverlapRange
 import FormalSchemes.BasicOpenCoverDatum
 import FormalSchemes.BasicOpenCoverSeparated
 
-set_option linter.style.header false
-
 /-!
 # The basic-open cover maps down to `Spf A` (EGA I §10.15)
 

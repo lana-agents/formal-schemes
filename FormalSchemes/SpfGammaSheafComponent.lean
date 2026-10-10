@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenImmersionSheaf
 import FormalSchemes.Completion
 
-set_option linter.style.header false
-
 /-!
 # The reconstructed morphism's sheaf component on basic opens is a completed localization
 
@@ -143,7 +141,6 @@ theorem awayCompletionIdeal_pow_le_comap (n : ℕ) :
   rw [← Ideal.map_le_iff_le_comap, Ideal.map_pow]
   exact Ideal.pow_right_mono (awayCompletionIdeal_map_awayMap_le I J φ hφ g) n
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 4000000 in
 -- The section rings of the thickening/structure sheaves unfold slowly through the defining
 -- `ℕᵒᵖ`-limit, so this level-matching proof needs a generous heartbeat budget.

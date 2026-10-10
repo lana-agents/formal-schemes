@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateChartTransition
 import FormalSchemes.Gluing
 
-set_option linter.style.header false
-
 /-!
 # The two-patch (`J = Bool`) slice of the Tate chain
 

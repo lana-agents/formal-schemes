@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvNodeChartPrincipalRegularBase
 
-set_option linter.style.header false
-
 /-!
 # `Spf` of the node chart ring, and `hnode` as one open immersion
 

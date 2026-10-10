@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.OpenFormalSubscheme
 
-set_option linter.style.header false
-
 /-!
 # Closed immersions of formal schemes are local on the target
 

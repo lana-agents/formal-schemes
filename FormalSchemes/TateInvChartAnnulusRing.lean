@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvOverlapBand
 import FormalSchemes.TateInvQuotientChartRing
 
-set_option linter.style.header false
-
 /-!
 # The chart ring of `T_inv/⟨σ⟩`, as the equalizer of two annulus-chart restrictions
 

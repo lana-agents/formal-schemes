@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.TwoAdicWitness
 
-set_option linter.style.header false
-
 /-!
 # A compatible family out of the thickenings has a single base map (EGA I, 10.6.10)
 

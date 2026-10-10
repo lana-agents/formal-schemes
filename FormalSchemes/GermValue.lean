@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.AlgebraicGeometry.StructureSheaf
 import Mathlib.RingTheory.Localization.AtPrime.Basic
 
-set_option linter.style.header false
-
 /-!
 # Germs of sections of the structure sheaf versus their values
 

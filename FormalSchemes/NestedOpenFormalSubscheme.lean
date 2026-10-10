@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.OpenFormalSubscheme
 
-set_option linter.style.header false
-
 /-!
 # Nested open formal subschemes
 

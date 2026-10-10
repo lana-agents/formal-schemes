@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.Geometry.RingedSpace.PresheafedSpace.Gluing
 
-set_option linter.style.header false
-
 /-!
 # Mapping out of a glued locally ringed space
 

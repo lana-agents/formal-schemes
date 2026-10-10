@@ -7,8 +7,6 @@ import FormalSchemes.TateChainInvGlue
 import FormalSchemes.GlueMorphisms
 import FormalSchemes.TateShift
 
-set_option linter.style.header false
-
 /-!
 # The `q^ℤ`-shift automorphism of the inversion-glued formal Tate chain
 

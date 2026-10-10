@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionInvariantExtension
 import FormalSchemes.ActionQuotientRestrictSections
 
-set_option linter.style.header false
-
 /-!
 # The restriction of an action quotient to an open of the quotient is an action quotient
 
@@ -251,7 +249,6 @@ theorem IsInvariantOpen.map_ofRestrict (hU : IsInvariantOpen a U) (hW : IsInvari
   rw [restrictAction_hom, ← preimage_restrictOpensHom_eq (a g).hom U U (hU.image_hom_subset g) W,
     hW g]
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The translation between the two notions of invariance.** For invariant opens `W ≤ U`, a
 section of `X` over `W` is invariant under `a` exactly when its image in `X|_U` is invariant under
@@ -384,7 +381,6 @@ theorem isIso_base_restrictπComparison (h : IsActionQuotient a π) (V : Opens Q
   rw [hb, hkey]
   infer_instance
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The sections of `Q|_V` over `W`, described inside the restriction.** For an open `W ≤ V` of
 `Q`, a section of `X|_{π ⁻¹ V}` over the preimage of `W` is the pullback of a section of `Q|_V`
@@ -444,7 +440,6 @@ theorem exists_c_app_restrictπ_eq_iff_isInvariantSection' (h : IsActionQuotient
   obtain ⟨W, hWV, rfl⟩ := exists_le_preimage_eq Q V O
   exact exists_c_app_restrictπ_eq_iff_isInvariantSection h V W hWV t
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The comparison morphism is an isomorphism on sections.** An arbitrary open of `Q|_V` is the
 preimage of an open `W ≤ V` (`AlgebraicGeometry.LocallyRingedSpace.exists_le_preimage_eq`), and

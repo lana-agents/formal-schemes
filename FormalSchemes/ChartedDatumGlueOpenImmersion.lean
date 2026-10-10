@@ -7,8 +7,6 @@ import FormalSchemes.ChartedDatumGlueMorphisms
 import FormalSchemes.GeneralFibreProductBothOverlapRange
 import FormalSchemes.GlueMorphismsOpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # When a charted datum's glued morphism is an open immersion
 

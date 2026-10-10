@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.AlgebraicGeometry.AffineScheme
 import FormalSchemes.ChartedCompletionToScheme
 
-set_option linter.style.header false
-
 /-!
 # The glued object of a charted datum is a scheme, at an arbitrary index (EGA I, 10.8)
 

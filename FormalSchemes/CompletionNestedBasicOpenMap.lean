@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletionNestedBasicOpen
 import FormalSchemes.CompletionBasicOpenMap
 
-set_option linter.style.header false
-
 /-!
 # The nested basic-open completion immersion is `formalCompletion.map` (EGA I, 10.8)
 

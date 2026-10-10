@@ -9,8 +9,6 @@ import FormalSchemes.Completion
 import FormalSchemes.LocalizationQuotient
 import Mathlib.RingTheory.Spectrum.Prime.Topology
 
-set_option linter.style.header false
-
 /-!
 # The affine basic-open chart of a formal spectrum
 

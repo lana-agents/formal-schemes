@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateChartTransition
 import FormalSchemes.EmptyLocallyRingedSpace
 
-set_option linter.style.header false
-
 /-!
 # The Tate annulus has empty doubly-invertible locus
 

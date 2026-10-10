@@ -9,8 +9,6 @@ import Mathlib.Algebra.Category.Ring.Limits
 import Mathlib.CategoryTheory.Functor.OfSequence
 import Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic
 
-set_option linter.style.header false
-
 /-!
 # The adic completion as a categorical limit of the quotient tower
 

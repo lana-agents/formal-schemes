@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.Gluing
 
-set_option linter.style.header false
-
 /-!
 # Quasi-compactness of a glued formal scheme
 

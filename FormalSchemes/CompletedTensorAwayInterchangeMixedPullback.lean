@@ -7,10 +7,8 @@ import FormalSchemes.CompletedTensorAwayInterchangeRightPullback
 import FormalSchemes.CompletedTensorAwayInterchangeBoth
 import FormalSchemes.CompletedTensorAwayInterchangePullbackLegs
 
-set_option linter.style.header false
 -- The interchange open immersions range over the nested localization/completion towers of the
 -- completed tensor product, which are slow for the elaborator and the kernel; raise the budgets.
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 

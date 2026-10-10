@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.Geometry.RingedSpace.OpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # Morphisms of locally ringed spaces are determined on an open cover of the source
 

@@ -7,8 +7,6 @@ import FormalSchemes.GlobalSectionsHom
 import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.OpenImmersionSourceFormalScheme
 
-set_option linter.style.header false
-
 /-!
 # Gluing a morphism into a formal spectrum out of a homomorphism on global sections
 

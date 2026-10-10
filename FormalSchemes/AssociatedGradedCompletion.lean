@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AssociatedGraded
 import FormalSchemes.Completion
 
-set_option linter.style.header false
-
 /-!
 # Completion preserves the associated graded ring
 

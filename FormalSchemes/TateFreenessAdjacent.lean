@@ -7,8 +7,6 @@ import FormalSchemes.TateFreeness
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.AnnulusOverlapProper
 
-set_option linter.style.header false
-
 /-!
 # Full freeness of the `q^ℤ`-period action on the formal Tate chain
 

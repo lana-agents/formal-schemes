@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicRingCat
 import FormalSchemes.SpfGammaRoundTrip
 
-set_option linter.style.header false
-
 /-!
 # `Spf` is fully faithful onto the continuous morphisms of formal schemes
 

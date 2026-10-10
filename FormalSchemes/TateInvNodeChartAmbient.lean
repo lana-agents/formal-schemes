@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicOnOpenSections
 import FormalSchemes.TateInvNodeChartDomain
 
-set_option linter.style.header false
-
 /-!
 # The node chart's ambient ring is `A{1/(x + y − 1)}`
 

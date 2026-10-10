@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ClosedImmersion
 
-set_option linter.style.header false
-
 /-!
 # Sections are closed immersions as soon as their image is closed
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.IndSchemeColimitEquiv
 import FormalSchemes.IndSchemeLimitComponents
 
-set_option linter.style.header false
-
 /-!
 # The two presentations of the colimit property agree (EGA I, 10.6.7)
 

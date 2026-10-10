@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.RelativeTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # Glued formal schemes are topologically of finite type over the base (EGA I §10.13)
 

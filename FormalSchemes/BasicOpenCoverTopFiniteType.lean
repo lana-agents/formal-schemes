@@ -7,8 +7,6 @@ import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.ChartedDatumTopFiniteType
 import FormalSchemes.BasicOpenCoverSeparatedScheme
 
-set_option linter.style.header false
-
 /-!
 # The basic-open cover is of finite type over `Spf R`, and separated (EGA I §10.13, §10.15)
 

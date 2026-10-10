@@ -5,10 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.DiagonalClosedEmbedding
 
-set_option linter.style.header false
-set_option linter.style.setOption false
-set_option linter.unusedSectionVars false
-
 /-!
 # Preimages of the affine diagonal locus
 

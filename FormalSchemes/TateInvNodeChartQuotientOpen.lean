@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartNontrivial
 import FormalSchemes.TateInvNodeChartSpf
 
-set_option linter.style.header false
-
 /-!
 # The node chart's open in `T_inv/⟨σ⟩` is unique, so it can be named
 

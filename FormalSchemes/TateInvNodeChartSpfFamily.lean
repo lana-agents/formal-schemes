@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfHomFamilyChart
 import FormalSchemes.TateInvNodeChartAmbient
 
-set_option linter.style.header false
-
 /-!
 # The EGA I 10.6.10 route to the node chart is circular, and the circularity is not in the capstone
 

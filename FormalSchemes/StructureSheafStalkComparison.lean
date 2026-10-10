@@ -8,8 +8,6 @@ import FormalSchemes.BasicOpenChartComponent
 import FormalSchemes.StructureSheafStalkBasicOpen
 import FormalSchemes.BasicOpenRestriction
 
-set_option linter.style.header false
-
 /-!
 # The stalk comparison on a germ from a basic open
 

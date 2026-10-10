@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.RestrictedPowerSeriesCoeff
 import FormalSchemes.TateInvSeparatingDivision
 
-set_option linter.style.header false
-
 /-!
 # A regular element of the base stays regular in the Tate annulus algebra
 

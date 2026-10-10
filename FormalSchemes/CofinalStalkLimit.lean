@@ -8,8 +8,6 @@ import FormalSchemes.StructureSheafStalkCofinalTarget
 import FormalSchemes.CofinalAwayToAtPrimeSquare
 import FormalSchemes.CofinalAwayCompletionRestrict
 
-set_option linter.style.header false
-
 /-!
 # `FormalSpectrum.IsStalkLimit` does not depend on the ideal of definition
 

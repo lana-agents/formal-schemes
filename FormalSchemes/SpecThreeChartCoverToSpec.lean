@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ChartedSchemeDatumDesc
 import FormalSchemes.SpecThreeChartCover
 
-set_option linter.style.header false
-
 /-!
 # The three-chart cover is an open subscheme of `Spec A`, and is `Spec A` when the charts cover
 

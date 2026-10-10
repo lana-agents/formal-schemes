@@ -7,8 +7,6 @@ import FormalSchemes.LocallyFG
 import FormalSchemes.TateChainInvGlue
 import FormalSchemes.AnnulusNontrivial
 
-set_option linter.style.header false
-
 /-!
 # The inversion-glued Tate chain is locally finitely generated
 

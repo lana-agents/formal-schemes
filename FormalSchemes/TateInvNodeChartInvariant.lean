@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicSectionsInvariant
 import FormalSchemes.TateInvNodeChartOverlapAdic
 
-set_option linter.style.header false
-
 /-!
 # Hypothesis 3 of the node chart's four: the morphism is invariant, and for a structural reason
 
@@ -105,7 +103,6 @@ variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I)
 
 /-! ### The candidate homomorphism is a section map -/
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **`AlgebraicGeometry.nodeChartSectionsHom` is the section map of
 `T_inv|_{π⁻¹ V₀} ⟶ T_inv ⟶ T_inv/⟨σ⟩` over the node chart's open.** Its definition is the
@@ -128,7 +125,6 @@ theorem nodeChartSectionsHom_eq :
     LocallyRingedSpace.restrictTopSectionsIso_inv_eq _ _
       (le_of_eq (LocallyRingedSpace.range_ofRestrict _ _))]
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **`AlgebraicGeometry.nodeChartPsi` is invariant on global sections.** By
 `AlgebraicGeometry.nodeChartSectionsHom_eq` it is the section map of an invariant morphism, and

@@ -6,9 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateChartTransition
 import FormalSchemes.TateOverlapInversion
 
-set_option linter.style.header false
-set_option linter.style.show false
-
 /-!
 # The geometric 𝔾m-inversion overlap transition of the Tate curve
 

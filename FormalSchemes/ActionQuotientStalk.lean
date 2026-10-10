@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionQuotientSeparatingSections
 
-set_option linter.style.header false
-
 /-!
 # The stalk maps of an action quotient are isomorphisms over a separating open
 

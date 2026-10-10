@@ -9,9 +9,6 @@ import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 import FormalSchemes.GeneralSeparatedChartPreimage
 import FormalSchemes.GlueDataImageInter
 
-set_option linter.style.header false
-set_option linter.style.setOption false
-set_option linter.unusedSectionVars false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 

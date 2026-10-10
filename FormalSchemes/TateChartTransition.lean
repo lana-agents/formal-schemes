@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateOverlapImmersion
 import FormalSchemes.TateOverlapTransitionIso
 
-set_option linter.style.header false
-
 /-!
 # The Tate chart transition on the annulus overlap charts
 

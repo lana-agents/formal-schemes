@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.PullbackRangeLRS
 
-set_option linter.style.header false
-
 /-!
 # The overlap of two affine basic-open formal completions (EGA I, 10.8)
 

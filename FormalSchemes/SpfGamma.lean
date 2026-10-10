@@ -7,8 +7,6 @@ import FormalSchemes.AdicHausdorff
 import FormalSchemes.SpfMap
 import FormalSchemes.Sections
 
-set_option linter.style.header false
-
 /-!
 # Global sections of a morphism of formal spectra
 

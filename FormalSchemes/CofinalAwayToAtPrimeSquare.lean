@@ -7,8 +7,6 @@ import FormalSchemes.StructureSheafStalkComparison
 import FormalSchemes.CofinalCompletionFunctorial
 import FormalSchemes.CofinalIdeal
 
-set_option linter.style.header false
-
 /-!
 # The stalk comparison at a basic open commutes with a change of ideal of definition
 

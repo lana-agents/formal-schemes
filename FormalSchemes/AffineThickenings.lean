@@ -7,8 +7,6 @@ import FormalSchemes.AdicCofinalOpenImmersion
 import FormalSchemes.StructureSheafSections
 import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
 
-set_option linter.style.header false
-
 /-!
 # Opens of `Spf R` whose infinitesimal thickenings are affine
 

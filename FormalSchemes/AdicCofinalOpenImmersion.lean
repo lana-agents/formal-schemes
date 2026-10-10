@@ -7,8 +7,6 @@ import FormalSchemes.AffineOpenTopFiniteType
 import FormalSchemes.CofinalAdicRing
 import FormalSchemes.CofinalSheafComparisonIso
 
-set_option linter.style.header false
-
 /-!
 # Adicity of a morphism of formal spectra, up to cofinality
 

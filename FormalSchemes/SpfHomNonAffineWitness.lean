@@ -7,8 +7,6 @@ import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.IndSchemeColimitEquivLRS
 
-set_option linter.style.header false
-
 /-!
 # EGA I, 10.6.10 at a target that is not affine
 

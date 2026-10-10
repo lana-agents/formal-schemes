@@ -7,8 +7,6 @@ import FormalSchemes.EmptyLocallyRingedSpace
 import FormalSchemes.IndSchemeColimitEquivLRS
 import FormalSchemes.IndSchemeFamilyLimit
 
-set_option linter.style.header false
-
 /-!
 # The `limit` form of the colimit property, for a general target (EGA I, 10.6.7)
 

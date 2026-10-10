@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvGlobalCoeff
 
-set_option linter.style.header false
-
 /-!
 # The two `Ĝm` coordinate maps of the Tate annulus, and the constants of `Γ (T_inv/⟨σ⟩)`
 

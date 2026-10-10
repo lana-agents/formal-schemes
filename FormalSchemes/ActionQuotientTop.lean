@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionQuotientType
 import Mathlib.Topology.Category.TopCat.Basic
 
-set_option linter.style.header false
-
 /-!
 # The quotient of a topological space by a group action is the orbit space
 

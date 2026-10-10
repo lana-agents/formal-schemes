@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfMap
 
-set_option linter.style.header false
-
 /-!
 # Functoriality of the formal spectrum: identity and composition laws
 
@@ -397,7 +395,6 @@ theorem structureSheaf_pushforward_mapTop_comp :
         (structureSheaf K) := by
   rw [mapTop_comp I J K φ ψ hIJ hJK hIK]; rfl
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 4000000 in
 -- Comparing the composite of two `StructureSheaf.comap`s against `comap` of the composite ring
 -- homomorphism unfolds the section rings of the structure sheaves, which is slow for the kernel.
@@ -500,7 +497,6 @@ theorem mapSheafHom_comp_hom :
   rw [hC]
   rfl
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 2000000 in
 -- Collapsing the `eqToHom`/`whiskerRight` transport across the propositional base-map equality
 -- `mapTop_comp` unfolds the section rings of the structure sheaves, which is slow for the kernel.

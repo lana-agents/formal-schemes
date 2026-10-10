@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionSpecialization
 import FormalSchemes.TateActionInv
 
-set_option linter.style.header false
-
 /-!
 # The period-`q` shift of the Tate chain, and what it would take to be properly discontinuous
 

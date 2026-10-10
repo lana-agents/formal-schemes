@@ -7,8 +7,6 @@ import FormalSchemes.AffineFibreProductUniqueness
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.FormalScheme
 
-set_option linter.style.header false
-
 /-!
 # The affine fibre product as an object of the category of formal schemes
 
@@ -121,7 +119,6 @@ def schemeStructMapᵣ :
     FormalScheme.Spf (I.map (algebraMap R B)) ⟶ FormalScheme.Spf I :=
   FormalScheme.Hom.mk (IsAdicHom.of_map I (A := B)).spfMap
 
-set_option linter.unusedSectionVars false in
 /-- The fibre-product square commutes over `Spf R` on the first factor. -/
 theorem schemePr₁_comp_structMap :
     schemePr₁ (R := R) (I := I) (A := A) (B := B) ≫ schemeStructMapₗ =
@@ -129,7 +126,6 @@ theorem schemePr₁_comp_structMap :
   apply FormalScheme.Hom.ext'
   exact fibrePr₁_comp_structMap
 
-set_option linter.unusedSectionVars false in
 /-- The fibre-product square commutes over `Spf R` on the second factor. -/
 theorem schemePr₂_comp_structMap :
     schemePr₂ (R := R) (I := I) (A := A) (B := B) ≫ schemeStructMapᵣ =
@@ -137,7 +133,6 @@ theorem schemePr₂_comp_structMap :
   apply FormalScheme.Hom.ext'
   exact fibrePr₂_comp_structMap
 
-set_option linter.unusedSectionVars false in
 /-- **The fibre-product square commutes**: the two projections agree over `Spf R`, as morphisms of
 formal schemes. -/
 theorem scheme_cone_comm :
@@ -157,7 +152,6 @@ def schemeFibreLift (hI : I.FG) :
     FormalScheme.Spf L ⟶ schemeFibreProduct R I A B :=
   FormalScheme.Hom.mk (fibreLift hIL f g hI)
 
-set_option linter.unusedSectionVars false in
 /-- The mediating morphism recovers `f` after the first projection. -/
 theorem schemeFibreLift_comp_pr₁ (hI : I.FG) :
     schemeFibreLift hIL f g hI ≫ schemePr₁ =
@@ -166,7 +160,6 @@ theorem schemeFibreLift_comp_pr₁ (hI : I.FG) :
   apply FormalScheme.Hom.ext'
   exact fibreLift_comp_pr₁ hIL f g hI
 
-set_option linter.unusedSectionVars false in
 /-- The mediating morphism recovers `g` after the second projection. -/
 theorem schemeFibreLift_comp_pr₂ (hI : I.FG) :
     schemeFibreLift hIL f g hI ≫ schemePr₂ =
@@ -184,7 +177,6 @@ def schemeSpfMap {S : Type u} [CommRing S] [TopologicalSpace S] {L : Ideal S} [I
     FormalScheme.Spf L ⟶ schemeFibreProduct R I A B :=
   FormalScheme.Hom.mk (locallyRingedSpaceMap (idealOfDefinition R I A B) L φ h)
 
-set_option linter.unusedSectionVars false in
 /-- **Uniqueness of the mediating morphism, among `Spf`-of-ring-map morphisms of formal schemes**
 (the uniqueness half of the affine fibre-product universal property, EGA I 10.7, in the category of
 formal schemes). Two morphisms `Spf φ₁`, `Spf φ₂ : Spf S ⟶ Spf (A ⊗̂_R B)` induced by adic ring
@@ -224,7 +216,6 @@ def schemeDiagonal (hI : I.FG) :
     FormalScheme.Spf (I.map (algebraMap R A)) ⟶ schemeFibreProduct R I A A :=
   FormalScheme.Hom.mk (diagonal hI)
 
-set_option linter.unusedSectionVars false in
 /-- The diagonal is a **section of the first projection** in `FormalScheme`. -/
 theorem schemeDiagonal_comp_pr₁ (hI : I.FG) :
     schemeDiagonal (R := R) (I := I) (A := A) hI ≫ schemePr₁ (R := R) (I := I) (A := A) (B := A) =
@@ -232,7 +223,6 @@ theorem schemeDiagonal_comp_pr₁ (hI : I.FG) :
   apply FormalScheme.Hom.ext'
   exact diagonal_comp_pr₁ hI
 
-set_option linter.unusedSectionVars false in
 /-- The diagonal is a **section of the second projection** in `FormalScheme`. -/
 theorem schemeDiagonal_comp_pr₂ (hI : I.FG) :
     schemeDiagonal (R := R) (I := I) (A := A) hI ≫ schemePr₂ (R := R) (I := I) (A := A) (B := A) =
@@ -240,14 +230,12 @@ theorem schemeDiagonal_comp_pr₂ (hI : I.FG) :
   apply FormalScheme.Hom.ext'
   exact diagonal_comp_pr₂ hI
 
-set_option linter.unusedSectionVars false in
 /-- **The affine diagonal is a split monomorphism** in the category of formal schemes: the first
 projection is a retraction. -/
 theorem isSplitMono_schemeDiagonal (hI : I.FG) :
     IsSplitMono (schemeDiagonal (R := R) (I := I) (A := A) hI) :=
   IsSplitMono.mk' ⟨schemePr₁ (R := R) (I := I) (A := A) (B := A), schemeDiagonal_comp_pr₁ hI⟩
 
-set_option linter.unusedSectionVars false in
 /-- **`Spf A` is separated over `Spf R`** (EGA I §10.15, affine case, categorical level): the
 diagonal `Δ_{A/R}` is a monomorphism in the category of formal schemes. -/
 theorem mono_schemeDiagonal (hI : I.FG) : Mono (schemeDiagonal (R := R) (I := I) (A := A) hI) :=

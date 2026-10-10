@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.RelativeTopFiniteType
 import FormalSchemes.TopFiniteTypeTrans
 
-set_option linter.style.header false
-
 /-!
 # Composition of topologically-finite-type morphisms over an affine base
 

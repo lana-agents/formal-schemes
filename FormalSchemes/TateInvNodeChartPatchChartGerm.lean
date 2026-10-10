@@ -7,8 +7,6 @@ import FormalSchemes.ChartGermCriterion
 import FormalSchemes.TateInvNodeChartBasicOpenPreimage
 import FormalSchemes.TateInvNodeChartPatchChartAdic
 
-set_option linter.style.header false
-
 /-!
 # The germ of `nodeChartPsi g` on the patch chart, computed
 

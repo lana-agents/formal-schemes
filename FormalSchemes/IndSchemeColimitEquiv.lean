@@ -7,8 +7,6 @@ import FormalSchemes.IndSchemeExistenceGeometric
 import FormalSchemes.ThickeningCocone
 import FormalSchemes.TwoAdicWitness
 
-set_option linter.style.header false
-
 /-!
 # The colimit property of `Spf R` as a bijection (EGA I, 10.6.7)
 

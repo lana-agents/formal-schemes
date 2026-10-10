@@ -8,8 +8,6 @@ import FormalSchemes.CompletedTensorAssoc
 import FormalSchemes.Completion
 import Mathlib.Algebra.MvPolynomial.Basic
 
-set_option linter.style.header false
-
 /-!
 # Base change of restricted power series
 

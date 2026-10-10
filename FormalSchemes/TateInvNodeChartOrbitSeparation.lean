@@ -7,8 +7,6 @@ import FormalSchemes.TateInvNodeChartAmbientNotInjective
 import FormalSchemes.TateInvNodeChartLegGeneral
 import FormalSchemes.TateInvNodeChartSpaceHalfTrace
 
-set_option linter.style.header false
-
 /-!
 # The `σ`-action moves the chart index and fixes the prime
 

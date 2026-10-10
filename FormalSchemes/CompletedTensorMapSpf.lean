@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletedTensorFunctor
 import FormalSchemes.SpfFunctorial
 
-set_option linter.style.header false
-
 /-!
 # Functor laws for the geometric fibre-product map `mapSpf`
 

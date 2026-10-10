@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartGlue
 import FormalSchemes.GlueDataOverlapCompat
 
-set_option linter.style.header false
-
 /-!
 # The overlap condition on the Tate chain, as a condition on one section of one patch
 

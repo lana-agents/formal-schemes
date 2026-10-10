@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionQuotientRestrictQuotient
 import FormalSchemes.TateInvNodeChartQuotientSpf
 
-set_option linter.style.header false
-
 /-!
 # `hnode` reduces to one isomorphism: the restricted quotient being affine formal
 

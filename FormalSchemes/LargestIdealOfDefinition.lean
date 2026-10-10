@@ -7,8 +7,6 @@ import FormalSchemes.IdealsOfDefinition
 import Mathlib.RingTheory.Finiteness.Ideal
 import Mathlib.Topology.Algebra.TopologicallyNilpotent
 
-set_option linter.style.header false
-
 /-!
 # The largest ideal of definition of a Noetherian adic ring
 

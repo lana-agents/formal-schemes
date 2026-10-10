@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenChart
 import FormalSchemes.CofinalCompletionAlg
 
-set_option linter.style.header false
-
 /-!
 # An `R`-algebra map of two completed localizations carries basic opens to basic opens
 

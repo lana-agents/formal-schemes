@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductExposeXAlgebraData
 
-set_option linter.style.header false
-
 /-!
 # The glued `X` of an affine-charted datum does not see the base ring
 

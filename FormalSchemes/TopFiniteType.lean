@@ -7,8 +7,6 @@ import FormalSchemes.AdicQuotient
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.SpfMap
 
-set_option linter.style.header false
-
 /-!
 # Algebras topologically of finite type
 

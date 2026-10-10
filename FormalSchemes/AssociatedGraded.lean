@@ -10,8 +10,6 @@ import Mathlib.RingTheory.GradedAlgebra.Basic
 import Mathlib.Algebra.DirectSum.Decomposition
 import Mathlib.LinearAlgebra.DFinsupp
 
-set_option linter.style.header false
-
 /-!
 # The associated graded ring of an ideal-adic filtration
 

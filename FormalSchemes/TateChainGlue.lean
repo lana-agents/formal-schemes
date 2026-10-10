@@ -7,8 +7,6 @@ import FormalSchemes.TateOverlapDisjoint
 import FormalSchemes.Gluing
 import FormalSchemes.LocallyRingedSpaceRange
 
-set_option linter.style.header false
-
 /-!
 # The Tate chain: the ℤ-indexed glue datum of the formal annulus chain
 

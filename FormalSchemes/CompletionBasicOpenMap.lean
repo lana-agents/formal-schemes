@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletionToSpec
 
-set_option linter.style.header false
-
 /-!
 # The basic-open completion immersion is `formalCompletion.map` of the localization (EGA I, 10.8)
 

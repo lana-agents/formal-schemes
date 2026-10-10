@@ -8,8 +8,6 @@ import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.Gluing
 import FormalSchemes.OpenCoverGlueMorphisms
 
-set_option linter.style.header false
-
 /-!
 # Gluing the basic-open completions of one affine, at an arbitrary index (EGA I, 10.8)
 
@@ -673,7 +671,6 @@ private theorem cbSpanAway (hcov : Ideal.span (Set.range f) = ⊤) :
     ← Set.range_comp]
   rfl
 
-set_option linter.style.setOption false in
 -- The `covers` field compares a point of `(formalCompletion R I hI).toPresheafedSpace` with a
 -- point of `FormalSpectrum (idealOfDefinition I)`; the two are `rfl` but not at `instances`
 -- transparency, as `FormalSchemes/SpfBasicOpenCover.lean` records for the same field.

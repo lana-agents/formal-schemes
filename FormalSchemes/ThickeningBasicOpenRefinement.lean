@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ThickeningCoverPullback
 
-set_option linter.style.header false
-
 /-!
 # Refining the pulled-back cover by basic opens (EGA I, 10.6.10)
 

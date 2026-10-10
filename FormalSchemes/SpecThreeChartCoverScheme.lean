@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ChartedSchemeDatumScheme
 import FormalSchemes.SpecThreeChartCoverToSpec
 
-set_option linter.style.header false
-
 /-!
 # The three-chart cover as a scheme, and its affineness (EGA I, 10.8)
 

@@ -7,8 +7,6 @@ import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.GeneralFibreProductLiftAdic
 import FormalSchemes.GeneralFibreProductLiftUniqueAdic
 
-set_option linter.style.header false
-
 /-!
 # The general fibre product is unique up to canonical isomorphism
 

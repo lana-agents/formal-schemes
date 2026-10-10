@@ -7,8 +7,6 @@ import FormalSchemes.ActionTranslates
 import FormalSchemes.ActionQuotientInvariantSections
 import FormalSchemes.DisjointGluing
 
-set_option linter.style.header false
-
 /-!
 # The invariant extension of a section from a separating open
 

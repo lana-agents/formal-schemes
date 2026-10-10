@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GlueDataSectionGlue
 import FormalSchemes.GlueDataImageInter
 
-set_option linter.style.header false
-
 /-!
 # The compatibility condition on a patch-wise family, read on the glue datum's overlaps
 

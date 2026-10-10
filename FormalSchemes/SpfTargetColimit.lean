@@ -8,8 +8,6 @@ import FormalSchemes.SpfFullyFaithful
 import FormalSchemes.ThickeningHomExt
 import FormalSchemes.TwoAdicWitness
 
-set_option linter.style.header false
-
 /-!
 # The colimit property of `Spf R` at a **formal-affine** target: what is free and what is not
 

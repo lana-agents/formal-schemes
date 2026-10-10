@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.IndScheme
 
-set_option linter.style.header false
-
 /-!
 # The forward computation rule for the affine-target universal property
 

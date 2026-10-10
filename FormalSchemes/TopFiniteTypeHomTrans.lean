@@ -13,8 +13,6 @@ import FormalSchemes.SpfIsoIdealRecovery
 import FormalSchemes.TopFiniteTypeHomComp
 import FormalSchemes.TwoChartBasicOpen
 
-set_option linter.style.header false
-
 /-!
 # EGA I 10.13's composition law at a non-affine target
 

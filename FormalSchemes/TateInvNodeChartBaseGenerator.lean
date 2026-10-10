@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvChartBaseImage
 import FormalSchemes.TateInvNodeChartPrincipal
 
-set_option linter.style.header false
-
 /-!
 # The node chart over a principal base ideal, with the membership hypothesis discharged
 

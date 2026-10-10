@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.Gluing
 import FormalSchemes.LocallyRingedSpaceGlueDesc
 
-set_option linter.style.header false
-
 /-!
 # Gluing morphisms out of a glued formal scheme
 

@@ -7,8 +7,6 @@ import FormalSchemes.AdicCofinalOpenImmersion
 import FormalSchemes.RelativeTopFiniteTypeTrans
 import FormalSchemes.TopFiniteTypeHomTrans
 
-set_option linter.style.header false
-
 /-!
 # Conservativity for topologically-finite-type morphisms
 

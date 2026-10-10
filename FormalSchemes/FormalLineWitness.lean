@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.Completion
 import FormalSchemes.RestrictedPowerSeries
 
-set_option linter.style.header false
-
 /-!
 # A second adic witness, whose formal spectrum is not a point: `ℤ⟦X⟧`
 

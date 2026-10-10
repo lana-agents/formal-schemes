@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfIsoIdealRecovery
 import FormalSchemes.TwoChartBasicOpen
 
-set_option linter.style.header false
-
 /-!
 # An isomorphism of formal spectra over a base is an isomorphism of algebras over it
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.RestrictedLaurentCoeffInv
 import FormalSchemes.TateInvGlobalProperness
 
-set_option linter.style.header false
-
 /-!
 # `Γ (T_inv/⟨σ⟩)` as a single equalizer in `Ĝm` coordinates
 

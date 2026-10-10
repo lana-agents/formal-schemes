@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GlueHomToSpf
 
-set_option linter.style.header false
-
 /-!
 # The glued morphism into a formal spectrum induces the homomorphism it was built from
 

@@ -7,10 +7,6 @@ import FormalSchemes.GeneralFibreProductBothAlgebraDataObject
 import FormalSchemes.CompletedTensorAwayInterchangeMixedPullback
 import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 
-set_option linter.style.header false
-set_option linter.style.setOption false
-set_option linter.style.openClassical false
-set_option linter.unusedVariables false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 

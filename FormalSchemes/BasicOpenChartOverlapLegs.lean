@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenChartOverlap
 
-set_option linter.style.header false
-
 /-!
 # The legs of the basic-open chart overlap (EGA I, §10.8, §10.15)
 

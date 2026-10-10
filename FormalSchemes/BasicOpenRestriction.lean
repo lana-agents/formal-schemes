@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfGammaSheafComponentArbComp
 
-set_option linter.style.header false
-
 /-!
 # The restriction of `O_{Spf R}` between two basic opens, as a map of completed localizations
 

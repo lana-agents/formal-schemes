@@ -7,8 +7,6 @@ import FormalSchemes.TopFiniteType
 import FormalSchemes.BaseChange
 import FormalSchemes.CompletedTensorFunctor
 
-set_option linter.style.header false
-
 /-!
 # Base change of algebras topologically of finite type
 

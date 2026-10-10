@@ -8,8 +8,6 @@ import Mathlib.Geometry.RingedSpace.LocallyRingedSpace.HasColimits
 import Mathlib.Topology.Category.TopCat.Limits.Products
 import Mathlib.Algebra.Category.Ring.Constructions
 
-set_option linter.style.header false
-
 /-!
 # Coproducts of open immersions of locally ringed spaces
 

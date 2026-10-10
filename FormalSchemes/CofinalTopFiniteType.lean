@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.CofinalCompletionAlg
 
-set_option linter.style.header false
-
 /-!
 # Topological finite type is invariant under a cofinal ideal of definition on the base
 

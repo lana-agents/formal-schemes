@@ -7,8 +7,6 @@ import FormalSchemes.OpenCoverGlueMorphisms
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.ThickeningChartSpfHom
 
-set_option linter.style.header false
-
 /-!
 # A two-piece open cover of `Spf ℤ⟦X⟧`, and the gluing combinator run on it
 
@@ -117,7 +115,6 @@ private theorem isAdicRing_twoChartRing (b : Bool) :
 
 attribute [local instance] isAdicRing_twoChartRing
 
-set_option linter.style.setOption false in
 -- The `covers` field compares a point of `(Spf formalLineIdeal).toPresheafedSpace` with a point of
 -- `FormalSpectrum formalLineIdeal`; the two are `rfl` but not at `instances` transparency, which is
 -- the transparency instance search and `rw` work at. Same accommodation as

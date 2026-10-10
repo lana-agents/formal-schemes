@@ -8,8 +8,6 @@ import Mathlib.RingTheory.Spectrum.Prime.Homeomorph
 import Mathlib.RingTheory.Spectrum.Prime.Topology
 import Mathlib.Topology.Spectral.Basic
 
-set_option linter.style.header false
-
 /-!
 # The formal spectrum of an adic ring
 

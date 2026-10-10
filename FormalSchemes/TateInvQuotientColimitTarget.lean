@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateChainInvColimitTarget
 import FormalSchemes.TateInvNodeChartQuotientOpen
 
-set_option linter.style.header false
-
 /-!
 # The colimit property of `T_inv/⟨σ⟩` is a question about one open around the node
 

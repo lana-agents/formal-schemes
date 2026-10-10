@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.Data.Countable.Basic
 import Mathlib.RingTheory.Localization.FractionRing
 
-set_option linter.style.header false
-
 /-!
 # A localization of a countable ring is countable
 

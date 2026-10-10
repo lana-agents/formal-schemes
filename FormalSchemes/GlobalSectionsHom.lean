@@ -7,8 +7,6 @@ import FormalSchemes.LocallyFG
 import FormalSchemes.OpenCoverHomExt
 import FormalSchemes.SpfGammaRoundTrip
 
-set_option linter.style.header false
-
 /-!
 # Global sections of a morphism into a formal spectrum, and faithfulness of `Spf` over a
 non-affine source (EGA I, 10.4.6)

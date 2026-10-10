@@ -7,8 +7,6 @@ import FormalSchemes.StructureSheafStalkPowerSeriesCounterexample
 import Mathlib.Order.Filter.Germ.Basic
 import Mathlib.RingTheory.Polynomial.RationalRoot
 
-set_option linter.style.header false
-
 /-!
 # The denominator condition without a common denominator: an ultrapower of `ℤ`
 

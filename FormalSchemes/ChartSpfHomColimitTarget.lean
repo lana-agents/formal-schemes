@@ -7,8 +7,6 @@ import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
 import FormalSchemes.ThickeningColimitTarget
 
-set_option linter.style.header false
-
 /-!
 # The chart morphism `Spf R{1/r} ⟶ X`, at a chart that need not be affine
 
@@ -97,7 +95,6 @@ def chartFamily (n : ℕ) :
   (chartIsoLRS I r hI n).inv ≫ chartInclusion I f hf U r hr n ≫ chartRestrict I f U n ≫ e.hom
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
 -- Mixes `Spec (CommRingCat.of _)` (from `chartStep`) with
 -- `Spec.locallyRingedSpaceObj (CommRingCat.of _)` (from `stepChartRestrict`). The two are `rfl`
 -- but not at `instances` transparency; the same accommodation `ThickeningChartSpfHom.lean` makes.
@@ -161,7 +158,6 @@ def chartSpfHomAmbient : locallyRingedSpaceObj (awayCompletionIdeal I r) ⟶ X :
   chartSpfHom I f hf U r hr hI e hY ≫ e.inv ≫ X.ofRestrict U.isOpenEmbedding
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
 -- Same mixture of the two spellings of `Spec`; see `chartFamily_step`.
 set_option backward.isDefEq.respectTransparency false in
 /-- **The restriction rule, with the chart eliminated.** Neither `U`, nor `e`, nor `Y` appears on

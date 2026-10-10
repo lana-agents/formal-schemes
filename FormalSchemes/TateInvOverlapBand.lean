@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvNodeChartOverlap
 
-set_option linter.style.header false
-
 /-!
 # The chain's overlap condition lives on the adjacent pairs
 

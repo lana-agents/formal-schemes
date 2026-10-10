@@ -8,8 +8,6 @@ import FormalSchemes.TateChainInvGlue
 import FormalSchemes.GlueDataCarrier
 import FormalSchemes.ActionQuotient
 
-set_option linter.style.header false
-
 /-!
 # The `q^ℤ`-period action on the inversion-glued formal Tate chain, over `Spf R`
 

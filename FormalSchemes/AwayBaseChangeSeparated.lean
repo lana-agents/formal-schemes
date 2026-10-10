@@ -7,8 +7,6 @@ import FormalSchemes.GeneralSeparatedBaseChange
 import FormalSchemes.GeneralSeparatedScheme
 import FormalSchemes.AwayBaseChangeGluedX
 
-set_option linter.style.header false
-
 /-!
 # Separatedness over `Spf R` descends to a basic open of the base (EGA I §10.15)
 
@@ -662,7 +660,6 @@ theorem xStructMapChart_awayBase_comp_awayBaseChart (i : J) :
   exact locallyRingedSpaceMap_congr _ _ _ _ _ _ htower
 
 omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
 -- The glue inclusion's codomain is the glued formal scheme of
 -- `AlgebraicGeometry.AffineChartedFibreDatumX.xFormalGlueData`, and the structural morphism's
 -- domain is `AlgebraicGeometry.AffineChartedFibreDatumX.xGlued`; the two are the same by `rfl`,

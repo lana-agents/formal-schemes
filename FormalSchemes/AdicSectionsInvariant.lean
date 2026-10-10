@@ -7,8 +7,6 @@ import FormalSchemes.ActionQuotientRestrict
 import FormalSchemes.AdicSectionsChart
 import FormalSchemes.AdicSectionsRestrictOpen
 
-set_option linter.style.header false
-
 /-!
 # Invariance of the morphism built from a `ψ`-adic neighbourhood basis
 
@@ -101,7 +99,6 @@ variable {X Q : LocallyRingedSpace.{u}}
 
 variable {G : Type v} [Monoid G]
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The section map of an invariant morphism is invariant on global sections.** If
 `f : W ⟶ Q` is invariant under `b` and its range lies in `U`, then reading a section of `Q` over
@@ -128,7 +125,6 @@ theorem range_ofRestrict_comp_subset (π : X ⟶ Q) (V : Opens Q) :
   rintro _ ⟨x, rfl⟩
   exact x.2
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **An invariant morphism, read on the preimage of an open, is invariant for the restricted
 action.** `AlgebraicGeometry.LocallyRingedSpace.isActionInvariant_restrictπ` says the same of
@@ -205,7 +201,6 @@ theorem isInvariantSectionsHom_iff_forall_apply :
 
 variable (hX : AdicSectionsLocallyFG I ψ) (hI : I.FG)
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The morphism a `ψ`-adic neighbourhood basis builds is invariant exactly when `ψ` is.**
 

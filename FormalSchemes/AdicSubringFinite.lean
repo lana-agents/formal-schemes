@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicSubringComplete
 import Mathlib.RingTheory.Filtration
 
-set_option linter.style.header false
-
 /-!
 # The filtration bridge at a module-finite subring, for an arbitrary ideal
 

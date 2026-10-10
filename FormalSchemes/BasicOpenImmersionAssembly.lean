@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenImmersionSheaf
 
-set_option linter.style.header false
-
 /-!
 # The affine basic-open chart is an open immersion (issue 163)
 
@@ -58,7 +56,6 @@ namespace FormalSpectrum
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (f g : R)
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 4000000 in
 -- The section rings of the thickening/structure sheaves unfold slowly through the defining
 -- `ℕᵒᵖ`-limit, so this level-matching proof needs a generous heartbeat budget.

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralSeparatedPresentation
 
-set_option linter.style.header false
-
 /-!
 # Separatedness as a property of the formal scheme
 

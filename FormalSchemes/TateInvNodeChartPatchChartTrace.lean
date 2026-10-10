@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvNodeChartPatchChartGerm
 
-set_option linter.style.header false
-
 /-!
 # The germ-invertibility pattern is the trace of a prime on the away subring
 

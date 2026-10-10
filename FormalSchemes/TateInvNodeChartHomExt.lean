@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartSpfNonempty
 import FormalSchemes.ThickeningHomExt
 
-set_option linter.style.header false
-
 /-!
 # The node chart morphism is determined by its thickenings
 

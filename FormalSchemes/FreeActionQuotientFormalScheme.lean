@@ -7,8 +7,6 @@ import FormalSchemes.ActionQuotientStalk
 import FormalSchemes.ActionQuotientFormalScheme
 import Mathlib.Algebra.Group.Shrink
 
-set_option linter.style.header false
-
 /-!
 # The quotient of a formal scheme by a free, properly discontinuous action is a formal scheme
 

@@ -9,8 +9,6 @@ import FormalSchemes.LocallyRingedSpaceHomExt
 import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.ThickeningBasicOpenRefinement
 
-set_option linter.style.header false
-
 /-!
 # `Spf R` is the colimit of its infinitesimal thickenings (EGA I, 10.6.10)
 
@@ -180,7 +178,6 @@ theorem iSup_chartOpen_eq_top (n : ℕ) : (⨆ i, chartOpen I (r i) n) = ⊤ := 
   have hy : y ∈ thickeningOpen I n (basicOpen I (r i)) := hi
   rwa [thickeningOpen_basicOpen] at hy
 
-set_option linter.style.setOption false in
 -- The cover of the thickening is given by `chartOpen`, which is stated about the *scheme*
 -- `Spec (CommRingCat.of _)`, while `thickeningMap` and the joint-epi lemma are stated about
 -- `Spec.locallyRingedSpaceObj (CommRingCat.of _)`. The two are `rfl` but not at `instances`

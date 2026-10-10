@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CofinalFormalSpectrumPoint
 import FormalSchemes.CofinalCompletion
 
-set_option linter.style.header false
-
 /-!
 # The target of the stalk comparison does not depend on the ideal of definition
 

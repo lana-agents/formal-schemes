@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.Algebra.Polynomial.RingDivision
 import Mathlib.RingTheory.Spectrum.Prime.Basic
 
-set_option linter.style.header false
-
 /-!
 # The standing two-patch witness: `𝔸¹_ℚ` doubled along `D(X)`, completed at `1`
 

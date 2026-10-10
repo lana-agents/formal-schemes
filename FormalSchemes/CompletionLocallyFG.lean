@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.LocallyFG
 import FormalSchemes.CompletionCompact
 
-set_option linter.style.header false
-
 /-!
 # The formal completion is locally finitely generated (EGA I, 10.8)
 

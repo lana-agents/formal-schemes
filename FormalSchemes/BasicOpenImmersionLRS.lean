@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenImmersionAssembly
 import Mathlib.Geometry.RingedSpace.OpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # The affine basic-open chart is a `LocallyRingedSpace` open immersion (issue 163)
 

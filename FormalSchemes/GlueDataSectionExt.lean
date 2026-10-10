@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GlobalSectionsHomGlue
 
-set_option linter.style.header false
-
 /-!
 # Sections of a glued formal scheme are determined chart by chart
 

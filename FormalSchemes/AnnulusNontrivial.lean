@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateAnnulus
 
-set_option linter.style.header false
-
 /-!
 # Nontriviality of the Tate annulus and nonemptiness of its formal spectrum
 

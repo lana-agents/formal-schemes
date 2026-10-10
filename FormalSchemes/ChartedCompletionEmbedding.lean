@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ChartedCompletionClosed
 
-set_option linter.style.header false
-
 /-!
 # `X_{/Y} ⟶ X` is a closed embedding, at an arbitrary index (EGA I, 10.8)
 

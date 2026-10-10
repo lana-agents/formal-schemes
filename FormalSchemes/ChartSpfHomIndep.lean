@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ThickeningChartSpfHom
 import FormalSchemes.ThickeningHomExt
 
-set_option linter.style.header false
-
 /-!
 # The chart morphism does not depend on the affine chart it was built from
 

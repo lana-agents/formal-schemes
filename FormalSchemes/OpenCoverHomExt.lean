@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.LocallyRingedSpaceHomExt
 import FormalSchemes.OpenCover
 
-set_option linter.style.header false
-
 /-!
 # Uniqueness of morphisms out of an open cover of a formal scheme
 

@@ -8,8 +8,6 @@ import FormalSchemes.LimitUnits
 import FormalSchemes.GermValue
 import Mathlib.Geometry.RingedSpace.LocallyRingedSpace
 
-set_option linter.style.header false
-
 /-!
 # The affine formal scheme `Spf R` as a locally ringed space
 

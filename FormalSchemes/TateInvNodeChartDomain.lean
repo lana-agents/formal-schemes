@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvGlobalProperness
 import FormalSchemes.TateInvPatchSaturateCharts
 
-set_option linter.style.header false
-
 /-!
 # The node chart's domain: `D(x + y − 1)` on the model patch
 

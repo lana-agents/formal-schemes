@@ -7,8 +7,6 @@ import FormalSchemes.ThickeningChartRestrict
 import FormalSchemes.AwayCompletionResiduePow
 import Mathlib.AlgebraicGeometry.AffineScheme
 
-set_option linter.style.header false
-
 /-!
 # The chart of a thickening cut out by a basic open is affine, and it is the thickening of `R{1/r}`
 

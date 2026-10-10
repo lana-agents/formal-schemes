@@ -7,8 +7,6 @@ import FormalSchemes.LocallyFG
 import FormalSchemes.TateGlueTwoPatch
 import FormalSchemes.AnnulusNontrivial
 
-set_option linter.style.header false
-
 /-!
 # The two-patch Tate formal scheme is locally finitely generated
 

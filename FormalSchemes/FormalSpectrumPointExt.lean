@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.FormalSpectrum
 
-set_option linter.style.header false
-
 /-!
 # Points of a formal spectrum are separated by its basic opens
 

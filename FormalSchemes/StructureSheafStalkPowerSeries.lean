@@ -7,8 +7,6 @@ import FormalSchemes.StructureSheafStalkAlgebraic
 import FormalSchemes.StructureSheafStalkNilpotent
 import Mathlib.RingTheory.PowerSeries.Inverse
 
-set_option linter.style.header false
-
 /-!
 # `FormalSpectrum.IsStalkLimit` at `(X) ⊆ R⟦X⟧`
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AdicSubringComplete
 
-set_option linter.style.header false
-
 /-!
 # The filtration bridge at a principal ideal, and the ideal it contracts to
 

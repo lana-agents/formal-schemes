@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TwoPatchFibreProduct
 
-set_option linter.style.header false
-
 /-!
 # The geometric annulus chart transition is `Spf` of its `R`-algebra avatar
 

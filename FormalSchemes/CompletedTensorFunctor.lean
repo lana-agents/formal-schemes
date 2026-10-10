@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletedTensor
 import FormalSchemes.AdicMorphism
 
-set_option linter.style.header false
-
 /-!
 # Functoriality of the completed tensor product and base change of adic morphisms
 

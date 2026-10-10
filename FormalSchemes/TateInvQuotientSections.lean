@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvNodeChartGlue
 
-set_option linter.style.header false
-
 /-!
 # Descent to the period-`q` quotient, over an arbitrary base ring
 

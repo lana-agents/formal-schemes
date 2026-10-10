@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicCompletionLimit
 import FormalSchemes.IdealsOfDefinition
 
-set_option linter.style.header false
-
 /-!
 # Cofinal ideals have isomorphic adic completions
 

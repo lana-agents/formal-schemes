@@ -7,8 +7,6 @@ import FormalSchemes.GeneralDiagonal
 import FormalSchemes.GeneralFibreProductLiftCharts
 import FormalSchemes.BothDatumAdicOverBase
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 

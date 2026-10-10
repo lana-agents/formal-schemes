@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.IndSchemeColimitEquiv
 import FormalSchemes.SpfHomOfFamily
 
-set_option linter.style.header false
-
 /-!
 # The colimit property of `Spf R` as a bijection, for a general target (EGA I, 10.6.10)
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionQuotientSections
 
-set_option linter.style.header false
-
 /-!
 # The sections of an action quotient are the invariant sections
 
@@ -145,7 +143,6 @@ def sigmaIsoPresheafedSpace :
         (Discrete.functor fun _ : G => X)) ≪≫
     preservesColimitIso SheafedSpace.forgetToPresheafedSpace _
 
-set_option linter.style.setOption false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The comparison isomorphism carries the coproduct legs to the coproduct legs.** -/
@@ -158,7 +155,6 @@ theorem ι_comp_sigmaIsoPresheafedSpace_hom (g : G) :
     ι_preservesColimitIso_hom, ι_preservesColimitIso_hom]
   rfl
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **Every open of the coproduct is the comparison isomorphism's image of one downstairs**, which
 is what lets `obtain ⟨U', rfl⟩` put a goal about sections into the shape the transport wants. -/
@@ -186,7 +182,6 @@ variable [Limits.HasColimitsOfShape (Discrete G) TopCat.{u}]
 variable [∀ Z : TopCat.{u}, Limits.HasLimitsOfShape (Discrete G)ᵒᵖ (Z.Presheaf CommRingCat.{u})]
 variable [Limits.HasLimitsOfShape (Discrete G)ᵒᵖ CommRingCat.{u}]
 
-set_option linter.style.setOption false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- **A section of a coproduct of locally ringed spaces is determined by its pullbacks along the
@@ -309,7 +304,6 @@ variable [Limits.HasColimitsOfShape (Discrete G) TopCat.{u}]
 variable [∀ Z : TopCat.{u}, Limits.HasLimitsOfShape (Discrete G)ᵒᵖ (Z.Presheaf CommRingCat.{u})]
 variable [Limits.HasLimitsOfShape (Discrete G)ᵒᵖ CommRingCat.{u}]
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The two pullbacks of `s` agree exactly when `s` is invariant under every `a g`.** The `←`
 direction is `sigma_section_ext` — a section of the coproduct is determined by its pullbacks along

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartBasicOpenPreimage
 import FormalSchemes.TopCatIsoOpenMap
 
-set_option linter.style.header false
-
 /-!
 # The space half of hypothesis 4 is a statement about the chain, in all three of its clauses
 

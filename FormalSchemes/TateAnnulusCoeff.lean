@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.RestrictedPowerSeriesCoeff
 import FormalSchemes.TateAnnulus
 
-set_option linter.style.header false
-
 /-!
 # Coefficients on the Tate polydisc, and the recursion for division by `x·y − q`
 

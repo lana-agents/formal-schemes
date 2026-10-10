@@ -7,8 +7,6 @@ import FormalSchemes.AdicExtend
 import FormalSchemes.RestrictedPowerSeries
 import Mathlib.RingTheory.TensorProduct.Maps
 
-set_option linter.style.header false
-
 /-!
 # The completed tensor product of adic algebras
 

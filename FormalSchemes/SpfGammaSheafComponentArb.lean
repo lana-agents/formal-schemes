@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfGammaBase
 import FormalSchemes.SpfGammaSheafComponent
 
-set_option linter.style.header false
-
 /-!
 # The sheaf component of an arbitrary morphism of formal spectra on a basic open
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.InversionCodiagonalClosedEmbeddingY
 
-set_option linter.style.header false
-
 /-!
 # The graph codiagonals `A ⊗̂_R A → A{1/x}`, `A ⊗̂_R A → A{1/y}` of the Tate gluing
 
@@ -107,7 +105,6 @@ abbrev locY : annulusAlgebra R I q →ₐ[R] annulusOverlapY R I q :=
 
 /-! ### The two automorphisms of `A ⊗̂_R A` -/
 
-set_option linter.unusedSectionVars false in
 /-- `id ⊗̂ flip` is surjective: it is an involution of `A ⊗̂_R A`, by functoriality of
 `CompletedTensorProduct.map` and the involutivity of the coordinate swap `annulusFlip`. -/
 theorem map_id_flip_surjective (hI : I.FG) :
@@ -118,7 +115,6 @@ theorem map_id_flip_surjective (hI : I.FG) :
   rw [← RingHom.comp_apply, ← map_comp, AlgHom.id_comp, annulusFlipHom_annulusFlipHom, map_id,
     RingHom.id_apply]
 
-set_option linter.unusedSectionVars false in
 /-- The swap `commHom : A ⊗̂_R A →+* A ⊗̂_R A` is surjective (it underlies `commEquiv`). -/
 theorem commHom_surjective_self (hI : I.FG) :
     Function.Surjective (commHom (R := R) (I := I) (A := annulusAlgebra R I q)
@@ -139,18 +135,15 @@ def graphCodiagX (hI : I.FG) :
 
 variable {R I q}
 
-set_option linter.unusedSectionVars false in
 @[simp] theorem graphCodiagX_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     graphCodiagX R I q hI (inl R I _ _ a) = locX R I q a := by
   rw [graphCodiagX, RingHom.comp_apply, map_inl, AlgHom.id_apply, localizedCodiagInvX_inl]
 
-set_option linter.unusedSectionVars false in
 @[simp] theorem graphCodiagX_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     graphCodiagX R I q hI (inr R I _ _ a) =
       annulusOverlapInvX R I q hI (locX R I q (annulusFlipHom R I q hI a)) := by
   rw [graphCodiagX, RingHom.comp_apply, map_inr, localizedCodiagInvX_inr]
 
-set_option linter.unusedSectionVars false in
 /-- **The `x`-side graph codiagonal is surjective**: it is the surjection `localizedCodiagInvX`
 precomposed with the automorphism `id ⊗̂ flip`. -/
 theorem graphCodiagX_surjective (hI : I.FG) :
@@ -158,7 +151,6 @@ theorem graphCodiagX_surjective (hI : I.FG) :
   (localizedCodiagInvX_surjective (R := R) (I := I) (q := q) hI).comp
     (map_id_flip_surjective (R := R) (I := I) (q := q) hI)
 
-set_option linter.unusedSectionVars false in
 /-- `∇ˣ` is an `R`-algebra map. -/
 theorem graphCodiagX_comp_algebraMap (hI : I.FG) :
     (graphCodiagX R I q hI).comp
@@ -167,7 +159,6 @@ theorem graphCodiagX_comp_algebraMap (hI : I.FG) :
       algebraMap R (annulusOverlap R I q) := by
   rw [graphCodiagX, RingHom.comp_assoc, map_comp_algebraMap, localizedCodiagInvX_comp_algebraMap]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ˣ` carries the ideal of definition of `A ⊗̂_R A` exactly onto `I·A{1/x}`. -/
 theorem map_graphCodiagX_eq (hI : I.FG) :
     (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)).map
@@ -176,7 +167,6 @@ theorem map_graphCodiagX_eq (hI : I.FG) :
       (B := annulusAlgebra R I q), Ideal.map_map, graphCodiagX_comp_algebraMap,
     ← overlapIdeal_eq_map]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ˣ` is continuous for the adic topologies. -/
 theorem graphCodiagX_le_comap (hI : I.FG) :
     idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
@@ -201,7 +191,6 @@ def graphCodiagY (hI : I.FG) :
 
 variable {R I q}
 
-set_option linter.unusedSectionVars false in
 @[simp] theorem graphCodiagY_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     graphCodiagY R I q hI (inl R I _ _ a) = locY R I q a := by
   rw [graphCodiagY, RingHom.comp_apply, RingHom.comp_apply, commHom_inl, graphCodiagX_inr,
@@ -209,14 +198,12 @@ set_option linter.unusedSectionVars false in
     annulusOverlapTransition_algebraMap_annulus, annulusFlip_apply, ← AlgHom.comp_apply,
     annulusFlipHom_annulusFlipHom, AlgHom.id_apply, IsScalarTower.toAlgHom_apply]
 
-set_option linter.unusedSectionVars false in
 @[simp] theorem graphCodiagY_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     graphCodiagY R I q hI (inr R I _ _ a) =
       annulusOverlapInversion R I q hI (locX R I q a) := by
   rw [graphCodiagY, RingHom.comp_apply, RingHom.comp_apply, commHom_inr, graphCodiagX_inl,
     RingHom.coe_coe]
 
-set_option linter.unusedSectionVars false in
 /-- **The `y`-side graph codiagonal is surjective.** -/
 theorem graphCodiagY_surjective (hI : I.FG) :
     Function.Surjective (graphCodiagY R I q hI) :=
@@ -224,7 +211,6 @@ theorem graphCodiagY_surjective (hI : I.FG) :
     (graphCodiagX_surjective (R := R) (I := I) (q := q) hI)).comp
       (commHom_surjective_self (R := R) (I := I) (q := q) hI)
 
-set_option linter.unusedSectionVars false in
 /-- `∇ʸ` is an `R`-algebra map. -/
 theorem graphCodiagY_comp_algebraMap (hI : I.FG) :
     (graphCodiagY R I q hI).comp
@@ -257,7 +243,6 @@ theorem graphCodiagY_comp_algebraMap (hI : I.FG) :
   rw [RingHom.comp_apply, graphCodiagY, RingHom.comp_apply, RingHom.comp_apply, hc, hx,
     RingHom.coe_coe, annulusOverlapInversion_algebraMap]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ʸ` carries the ideal of definition of `A ⊗̂_R A` exactly onto `I·A{1/y}`. -/
 theorem map_graphCodiagY_eq (hI : I.FG) :
     (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q)).map
@@ -266,7 +251,6 @@ theorem map_graphCodiagY_eq (hI : I.FG) :
       (B := annulusAlgebra R I q), Ideal.map_map, graphCodiagY_comp_algebraMap,
     ← overlapIdealY_eq_map]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ʸ` is continuous for the adic topologies. -/
 theorem graphCodiagY_le_comap (hI : I.FG) :
     idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q) ≤
@@ -280,7 +264,6 @@ variable
   [TopologicalSpace (CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
   [IsAdicRing (idealOfDefinition R I (annulusAlgebra R I q) (annulusAlgebra R I q))]
 
-set_option linter.unusedSectionVars false in
 /-- **The base map of `Spf ∇ˣ : Spf (A{1/x}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 This is the `x`-piece of the mixed-chart preimage of the Tate diagonal. -/
 theorem isClosedEmbedding_map_graphCodiagX (hI : I.FG) :
@@ -294,7 +277,6 @@ theorem isClosedEmbedding_map_graphCodiagX (hI : I.FG) :
     (annulusOverlapIdeal R I q) (graphCodiagX R I q hI)
     (graphCodiagX_le_comap hI) (graphCodiagX_surjective hI)
 
-set_option linter.unusedSectionVars false in
 /-- **The base map of `Spf ∇ʸ : Spf (A{1/y}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 This is the `y`-piece of the mixed-chart preimage of the Tate diagonal. -/
 theorem isClosedEmbedding_map_graphCodiagY (hI : I.FG) :

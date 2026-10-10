@@ -7,8 +7,6 @@ import Mathlib.Topology.Sheaves.SheafCondition.UniqueGluing
 import Mathlib.Algebra.Category.Ring.Limits
 import Mathlib.CategoryTheory.Limits.Shapes.ConcreteCategory
 
-set_option linter.style.header false
-
 /-!
 # Gluing sections over a pairwise-disjoint family of opens
 

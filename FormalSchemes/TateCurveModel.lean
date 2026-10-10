@@ -8,8 +8,6 @@ import FormalSchemes.TateChainStructMap
 import FormalSchemes.TateChainStructMapInv
 import FormalSchemes.Gluing
 
-set_option linter.style.header false
-
 /-!
 # The Tate curve formal model as a two-chart circular quotient
 

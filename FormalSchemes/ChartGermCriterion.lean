@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicSectionsRestrictOpen
 import FormalSchemes.SpfGammaBase
 
-set_option linter.style.header false
-
 /-!
 # Germs read on a chart: the prime of the chart decides invertibility
 

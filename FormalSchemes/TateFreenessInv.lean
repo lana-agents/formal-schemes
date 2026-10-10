@@ -8,8 +8,6 @@ import FormalSchemes.AnnulusNontrivial
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.AnnulusOverlapProper
 
-set_option linter.style.header false
-
 /-!
 # Freeness of the `q^ℤ`-period action on the inversion-glued formal Tate chain
 

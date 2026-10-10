@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GraphCodiagonalClosedEmbedding
 import FormalSchemes.TateSeparated
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 set_option maxRecDepth 8000
@@ -247,7 +245,6 @@ theorem graphLiftX_mem_pow (hI : I.FG) (m : ℕ)
 
 /-! ### The two ring identities -/
 
-set_option linter.unusedSectionVars false in
 theorem graphLiftX_comp_map (hI : I.FG) :
     (graphLiftX R I q hI).comp
         (map hI (AlgHom.id R (annulusAlgebra R I q))
@@ -452,7 +449,6 @@ theorem graphLiftYX_mem_pow (hI : I.FG) (m : ℕ)
 
 /-! ### The `(A)` and `(B)` identities of the three remaining lifts -/
 
-set_option linter.unusedSectionVars false in
 theorem graphLiftY_comp_map (hI : I.FG) :
     (graphLiftY R I q hI).comp
         (map hI
@@ -495,7 +491,6 @@ theorem graphLiftY_comp_map (hI : I.FG) :
       graphCodiagY_inr]
     rfl
 
-set_option linter.unusedSectionVars false in
 theorem graphLiftY_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -547,7 +542,6 @@ theorem graphLiftY_comp_map_transition (hI : I.FG) :
       lift_inr, RingHom.comp_apply, codiagonal_inr]
     rfl
 
-set_option linter.unusedSectionVars false in
 theorem graphLiftXY_comp_map (hI : I.FG) :
     (graphLiftXY R I q hI).comp
         (map hI
@@ -594,7 +588,6 @@ theorem graphLiftXY_comp_map (hI : I.FG) :
   · rw [RingHom.comp_apply, map_inr, AlgHom.id_apply, graphLiftXY, lift_inr, RingHom.comp_apply,
       commHom_inr, graphCodiagX_inl]
 
-set_option linter.unusedSectionVars false in
 theorem graphLiftXY_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI
@@ -640,7 +633,6 @@ theorem graphLiftXY_comp_map_transition (hI : I.FG) :
       lift_inr, RingHom.comp_apply, codiagonal_inr]
     rfl
 
-set_option linter.unusedSectionVars false in
 theorem graphLiftYX_comp_map (hI : I.FG) :
     (graphLiftYX R I q hI).comp
         (map hI (AlgHom.id R (annulusAlgebra R I q))
@@ -692,7 +684,6 @@ theorem graphLiftYX_comp_map (hI : I.FG) :
       graphCodiagY_inl]
     rfl
 
-set_option linter.unusedSectionVars false in
 theorem graphLiftYX_comp_map_transition (hI : I.FG) :
     haveI : IsAdicRing (I.map (algebraMap R (annulusAlgebra R I q))) :=
       annulus_isAdicRing_map R I q hI

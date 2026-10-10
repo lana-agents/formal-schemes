@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.Algebra.Category.Ring.Limits
 import Mathlib.CategoryTheory.Limits.ConcreteCategory.Basic
 
-set_option linter.style.header false
-
 /-!
 # Units in limits of commutative rings
 

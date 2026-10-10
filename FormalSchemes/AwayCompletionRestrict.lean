@@ -7,8 +7,6 @@ import FormalSchemes.AdicCompletionCongrLevel
 import FormalSchemes.AssociatedGradedCompletion
 import FormalSchemes.BasicOpenChart
 
-set_option linter.style.header false
-
 /-!
 # The canonical `R{1/f} →+* R{1/g}` attached to an inclusion `D(g) ⊆ D(f)` of `Spf R`
 

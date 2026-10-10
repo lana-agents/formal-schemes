@@ -7,8 +7,6 @@ import FormalSchemes.TateTransition
 import FormalSchemes.AdicMorphism
 import FormalSchemes.SpfFunctorial
 
-set_option linter.style.header false
-
 /-!
 # The geometric overlap transition isomorphism of the Tate annulus chain
 

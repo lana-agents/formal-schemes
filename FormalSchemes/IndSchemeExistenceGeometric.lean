@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.IndSchemeExistence
 
-set_option linter.style.header false
-
 /-!
 # The existence half of the colimit property, for families of morphisms (EGA I, 10.6.7)
 

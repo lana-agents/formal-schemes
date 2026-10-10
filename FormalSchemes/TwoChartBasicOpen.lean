@@ -8,8 +8,6 @@ import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.SpfGammaBase
 
-set_option linter.style.header false
-
 /-!
 # Two affine charts have a common basic-open neighbourhood (EGA I, 10.13)
 

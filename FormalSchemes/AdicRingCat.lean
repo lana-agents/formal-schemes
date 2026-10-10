@@ -7,8 +7,6 @@ import FormalSchemes.SpfFunctorial
 import FormalSchemes.SpfGamma
 import FormalSchemes.FormalScheme
 
-set_option linter.style.header false
-
 /-!
 # The category of adic rings and the functor `Spf`
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.PullbackRangeLRS
 
-set_option linter.style.header false
-
 /-!
 # Symmetry of `pullbackIsoOfRangeEq`
 

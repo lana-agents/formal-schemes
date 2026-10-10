@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.FormalGm
 
-set_option linter.style.header false
-
 /-!
 # Coefficients of restricted Laurent series
 

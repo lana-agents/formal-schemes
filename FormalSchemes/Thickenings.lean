@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.Spf
 
-set_option linter.style.header false
-
 /-!
 # The infinitesimal thickenings inside the formal spectrum
 

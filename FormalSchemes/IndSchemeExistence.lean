@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.IndSchemeLimitComponents
 
-set_option linter.style.header false
-
 /-!
 # The existence half of the colimit property (EGA I, 10.6.7)
 

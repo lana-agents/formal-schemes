@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.SpfGamma
 
-set_option linter.style.header false
-
 /-!
 # The sheaf component of the affine basic-open chart on basic opens
 

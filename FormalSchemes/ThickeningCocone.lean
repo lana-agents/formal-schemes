@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.Thickenings
 import FormalSchemes.SpfFunctorial
 
-set_option linter.style.header false
-
 /-!
 # The thickening morphisms form a cocone over the tower (EGA I, 10.6.3), packaged
 
@@ -110,7 +108,6 @@ theorem thickeningMap_c_app_comp (V : TopologicalSpace.Opens (FormalSpectrum I))
 -- Splitting the composite `NatTrans` along the base-map `eqToHom` transport requires relaxing the
 -- transparency at which `rw` builds its motive.
 omit [TopologicalSpace R] [IsAdicRing I] in
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **Cocone condition, packaged** (EGA I, 10.6.3): the transition map of the tower of thickenings
 `Spec (R ⧸ I ^ (n + 1)) ⟶ Spec (R ⧸ I ^ (n + 2))`, followed by the canonical morphism

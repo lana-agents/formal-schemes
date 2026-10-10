@@ -7,8 +7,6 @@ import FormalSchemes.ChartSpfHomColimitTarget
 import FormalSchemes.SpfHomOfFamily
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 
-set_option linter.style.header false
-
 /-!
 # EGA I, 10.6.10 at a cover that need not be affine, and the locality of the colimit property
 
@@ -138,7 +136,6 @@ def spfHomOfFamily : locallyRingedSpaceObj I ⟶ X :=
   (basicOpenCover I r hI hcov).glueMorphisms (chartHom I f hf hI r U hr Y e hY)
     (fun i j => chartHom_pullback_compat I f hf hI r U hr Y e hY i j)
 
-set_option linter.style.setOption false in
 -- The cover of the thickening is given by `chartOpen`, stated about the *scheme*
 -- `Spec (CommRingCat.of _)`, while `thickeningMap` and the joint-epi lemma are stated about
 -- `Spec.locallyRingedSpaceObj (CommRingCat.of _)`. The two are `rfl` but not at `instances`

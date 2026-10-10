@@ -7,8 +7,6 @@ import FormalSchemes.CompletionTwoPatchToScheme
 import FormalSchemes.SpecTwoPatchNonAffine
 import FormalSchemes.TwoPatchWitness
 
-set_option linter.style.header false
-
 /-!
 # The underlying set of `X_{/Y}` inside `X` (EGA I, 10.8)
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvNodeChartDescent
 
-set_option linter.style.header false
-
 /-!
 # The node chart's morphism into the formal spectrum, from three continuity families
 

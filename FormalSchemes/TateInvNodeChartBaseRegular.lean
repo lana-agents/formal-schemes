@@ -7,8 +7,6 @@ import FormalSchemes.AwayCompletionRegular
 import FormalSchemes.RegularMulEquiv
 import FormalSchemes.TateInvNodeChartBaseGenerator
 
-set_option linter.style.header false
-
 /-!
 # The node chart's two forward legs on the base generator, with the presheaf removed
 

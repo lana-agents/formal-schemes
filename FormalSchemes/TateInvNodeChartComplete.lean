@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.AdicSubringComplete
 
-set_option linter.style.header false
-
 /-!
 # The node chart ring inside `A{1/(x + y − 1)}`: closedness, and what completeness costs
 

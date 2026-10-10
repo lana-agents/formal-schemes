@@ -7,8 +7,6 @@ import FormalSchemes.Completion
 import FormalSchemes.IndSchemeForward
 import FormalSchemes.SpfGammaBase
 
-set_option linter.style.header false
-
 /-!
 # The canonical morphism from a formal completion to the ambient affine scheme
 

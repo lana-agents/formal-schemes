@@ -7,8 +7,6 @@ import FormalSchemes.AffineSeparatedScheme
 import FormalSchemes.GeneralSeparatedHom
 import FormalSchemes.BasicOpenCoverOpenSubscheme
 
-set_option linter.style.header false
-
 /-!
 # The first inhabitants of `FormalScheme.IsSeparatedHom`
 

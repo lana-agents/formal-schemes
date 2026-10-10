@@ -8,8 +8,6 @@ import FormalSchemes.StructureSheafStalkPowerSeriesDedekind
 import FormalSchemes.CofinalAdicRing
 import Mathlib.RingTheory.PowerSeries.Ideal
 
-set_option linter.style.header false
-
 /-!
 # The `R⟦X⟧` stalk-limit values, at every other ideal of definition for its `(X)`-adic topology
 

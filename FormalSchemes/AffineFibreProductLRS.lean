@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AffineFibreProductUniqueness
 import FormalSchemes.SpfGammaRoundTrip
 
-set_option linter.style.header false
-
 /-!
 # Full locally-ringed-space uniqueness for the affine fibre product
 

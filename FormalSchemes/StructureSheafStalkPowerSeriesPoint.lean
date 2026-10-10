@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.StructureSheafStalkPowerSeriesCounterexample
 
-set_option linter.style.header false
-
 /-!
 # `IsStalkLimit` at an arbitrary point of `Spf (R⟦X⟧, (X))`
 

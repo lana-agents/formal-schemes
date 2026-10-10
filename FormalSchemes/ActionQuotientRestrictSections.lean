@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ActionQuotientRestrict
 import FormalSchemes.ActionQuotientSectionInjective
 
-set_option linter.style.header false
-
 /-!
 # The sections of an action quotient, for any presentation and across a restriction
 
@@ -98,7 +96,6 @@ namespace AlgebraicGeometry.LocallyRingedSpace
 
 variable {X Y : LocallyRingedSpace.{u}}
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **Sections over an open contained in `V` do not change when the space is restricted to `V`.**
 `AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.c_iso'` at the open `W`, which is the image of
@@ -124,7 +121,6 @@ theorem preimage_restrictOpensHom_eq (f : X ⟶ Y) (U : Opens X.toTopCat) (V : O
   congrArg (fun m : X.restrict U.isOpenEmbedding ⟶ Y => (Opens.map m.base).obj W)
     (restrictOpensHom_comp_ofRestrict f U V hfUV).symm
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **A restricted morphism on sections is the original one, conjugated by the two inclusions.**
 This is `AlgebraicGeometry.LocallyRingedSpace.restrictOpensHom_comp_ofRestrict` read at `c`, and it
@@ -195,7 +191,6 @@ section Monoid
 variable {G : Type v} [Monoid G] [Small.{u} G]
 variable {X Q : LocallyRingedSpace.{u}} {a : G →* Aut X} {π : X ⟶ Q}
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The sections of `Q|_V` over `W` are the invariant sections of `X` over `π⁻¹ W`.** For an open
 `W ≤ V` of the quotient and a section `s` of `X` over `π⁻¹ W`, the transport of `s` to
@@ -255,7 +250,6 @@ section Group
 variable {G : Type v} [Group G] [Small.{u} G]
 variable {X Q : LocallyRingedSpace.{u}} {a : G →* Aut X} {π : X ⟶ Q}
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **A section of `Q|_V` is determined by its pullback to `X|_{π⁻¹ V}`.**
 `CategoryTheory.IsActionQuotient.injective_c_app` conjugated by the same two inclusions as
@@ -285,7 +279,6 @@ theorem injective_c_app_restrictπ (h : IsActionQuotient a π) (V W : Opens Q.to
   have hkey := hx.symm.trans (hxy.trans hy)
   exact (ConcreteCategory.bijective_of_isIso _).1 ((ConcreteCategory.bijective_of_isIso _).1 hkey)
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The two halves together.** Over an open `W ≤ V` of the quotient, an invariant section of `X`
 over `π⁻¹ W` is the pullback of exactly one section of `Q|_V` over `W`, and only invariant sections

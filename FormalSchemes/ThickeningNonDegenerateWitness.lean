@@ -7,8 +7,6 @@ import FormalSchemes.ThickeningBasicOpenRefinement
 import FormalSchemes.FormalLineWitness
 import FormalSchemes.TwoAdicDegeneracy
 
-set_option linter.style.header false
-
 /-!
 # A non-degenerate witness for the cover pullback and its basic-open refinement
 

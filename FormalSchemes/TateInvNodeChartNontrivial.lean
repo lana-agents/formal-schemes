@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfSectionsNontrivial
 import FormalSchemes.TateInvNodeChartPrincipalRegularBase
 
-set_option linter.style.header false
-
 /-!
 # The node chart's ring is not the zero ring
 

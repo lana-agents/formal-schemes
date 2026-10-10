@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateAction
 import FormalSchemes.AnnulusNontrivial
 
-set_option linter.style.header false
-
 /-!
 # Freeness of the `q^ℤ`-period action on the formal Tate chain (large periods)
 

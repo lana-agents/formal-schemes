@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvNodeChartBaseRegular
 
-set_option linter.style.header false
-
 /-!
 # The node chart's forward legs at an arbitrary element of the annulus algebra
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.AlgebraicGeometry.AffineScheme
 import FormalSchemes.CompletionTwoPatchToScheme
 
-set_option linter.style.header false
-
 /-!
 # The two-patch glued object is a scheme (EGA I, 10.8)
 

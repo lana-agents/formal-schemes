@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CofinalAdicRing
 import FormalSchemes.CofinalSheafComparisonIso
 
-set_option linter.style.header false
-
 /-!
 # Ideal-independence of `Spf`, the general (non-nested) case (EGA I, §10.3, goal 1)
 

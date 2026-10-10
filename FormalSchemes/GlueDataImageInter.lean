@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GlueDataCarrier
 
-set_option linter.style.header false
-
 /-!
 # How two pieces of a glued locally ringed space meet
 

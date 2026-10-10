@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateActionInv
 import FormalSchemes.TateCurveModel
 
-set_option linter.style.header false
-
 /-!
 # The Tate curve model as the quotient `𝔈_q = T_inv / ⟨σ²⟩`
 

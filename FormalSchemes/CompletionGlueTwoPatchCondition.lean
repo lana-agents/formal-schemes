@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletionGlueTwoPatch
 import FormalSchemes.GlueMorphisms
 
-set_option linter.style.header false
-
 /-!
 # The two-patch completion's glue condition, and morphisms out of it (EGA I, 10.8)
 

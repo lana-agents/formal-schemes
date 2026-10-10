@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateChainStructMapInv
 
-set_option linter.style.header false
-
 /-!
 # The Tate chain glued by the 𝔾m-inversion transition
 

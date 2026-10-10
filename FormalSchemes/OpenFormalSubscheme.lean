@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.OpenImmersionSourceFormalScheme
 
-set_option linter.style.header false
-
 /-!
 # The open formal subscheme cut out by an open subset
 

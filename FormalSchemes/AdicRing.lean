@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.RingTheory.AdicCompletion.Topology
 
-set_option linter.style.header false
-
 /-!
 # Adic rings
 

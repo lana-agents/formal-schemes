@@ -7,8 +7,6 @@ import FormalSchemes.OpenImmersionIsoOfRangeEq
 import FormalSchemes.SpfMap
 import Mathlib.AlgebraicGeometry.Gluing
 
-set_option linter.style.header false
-
 /-!
 # Locality of the formal-scheme condition, and gluing
 

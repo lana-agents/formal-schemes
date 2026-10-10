@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.InversionCodiagonalClosedEmbedding
 
-set_option linter.style.header false
-
 /-!
 # The y-side inversion localized codiagonal `A ⊗̂_R A → A{1/y}` and its closed-embedding spectrum
 
@@ -98,27 +96,23 @@ def localizedCodiagInvY (hI : I.FG) :
 
 variable {R I q}
 
-set_option linter.unusedSectionVars false in
 theorem localizedCodiagInvY_apply (hI : I.FG)
     (t : CompletedTensorProduct R I (annulusAlgebra R I q) (annulusAlgebra R I q)) :
     localizedCodiagInvY R I q hI t =
       annulusOverlapInversion R I q hI (localizedCodiagInvX R I q hI t) := rfl
 
-set_option linter.unusedSectionVars false in
 @[simp]
 theorem localizedCodiagInvY_inl (hI : I.FG) (a : annulusAlgebra R I q) :
     localizedCodiagInvY R I q hI (inl R I _ _ a) =
       annulusOverlapInversion R I q hI (locX R I q a) := by
   rw [localizedCodiagInvY_apply, localizedCodiagInvX_inl]
 
-set_option linter.unusedSectionVars false in
 @[simp]
 theorem localizedCodiagInvY_inr (hI : I.FG) (a : annulusAlgebra R I q) :
     localizedCodiagInvY R I q hI (inr R I _ _ a) =
       annulusOverlapInversion R I q hI (annulusOverlapInvX R I q hI (locX R I q a)) := by
   rw [localizedCodiagInvY_apply, localizedCodiagInvX_inr]
 
-set_option linter.unusedSectionVars false in
 /-- The y-side inversion localized codiagonal is an `R`-algebra map: both legs and the inversion
 transition commute with `algebraMap R`. -/
 theorem localizedCodiagInvY_comp_algebraMap (hI : I.FG) :
@@ -132,7 +126,6 @@ theorem localizedCodiagInvY_comp_algebraMap (hI : I.FG) :
     rw [← RingHom.comp_apply, localizedCodiagInvX_comp_algebraMap]
   rw [RingHom.comp_apply, localizedCodiagInvY_apply, hx, annulusOverlapInversion_algebraMap]
 
-set_option linter.unusedSectionVars false in
 /-- **The y-side inversion localized codiagonal `∇ᵢʸ` is surjective**: `∇ᵢ` is surjective
 (`localizedCodiagInvX_surjective`) and `annulusOverlapInversion` is a bijection. -/
 theorem localizedCodiagInvY_surjective (hI : I.FG) :
@@ -142,7 +135,6 @@ theorem localizedCodiagInvY_surjective (hI : I.FG) :
   obtain ⟨t, rfl⟩ := localizedCodiagInvX_surjective (R := R) (I := I) (q := q) hI y
   exact ⟨t, rfl⟩
 
-set_option linter.unusedSectionVars false in
 /-- The inversion transition carries the x-side ideal of definition `I·A{1/x}` onto the y-side one
 `I·A{1/y}` (it is an `R`-algebra isomorphism). -/
 theorem map_annulusOverlapInversion_annulusOverlapIdeal (hI : I.FG) :
@@ -155,7 +147,6 @@ theorem map_annulusOverlapInversion_annulusOverlapIdeal (hI : I.FG) :
     RingHom.ext fun r => annulusOverlapInversion_algebraMap R I q hI r
   rw [overlapIdeal_eq_map, Ideal.map_map, he, ← overlapIdealY_eq_map]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ᵢʸ` carries the ideal of definition of `A ⊗̂_R A` exactly onto that of `A{1/y}`
 (`annulusOverlapIdealY = I·A{1/y}`). -/
 theorem map_localizedCodiagInvY_eq (hI : I.FG) :
@@ -165,7 +156,6 @@ theorem map_localizedCodiagInvY_eq (hI : I.FG) :
     map_idealOfDefinition_localizedCodiagInvX (R := R) (I := I) (q := q) hI,
     map_annulusOverlapInversion_annulusOverlapIdeal]
 
-set_option linter.unusedSectionVars false in
 /-- `∇ᵢʸ` carries the ideal of definition of `A ⊗̂_R A` into that of `A{1/y}` — the
 continuity/adic-compatibility input making `∇ᵢʸ` induce a morphism of formal spectra. -/
 theorem localizedCodiagInvY_le_comap (hI : I.FG) :
@@ -174,7 +164,6 @@ theorem localizedCodiagInvY_le_comap (hI : I.FG) :
   rw [← map_localizedCodiagInvY_eq (R := R) (I := I) (q := q) hI]
   exact Ideal.le_comap_map
 
-set_option linter.unusedSectionVars false in
 /-- **The base map of `Spf ∇ᵢʸ : Spf (A{1/y}) → Spf (A ⊗̂_R A)` is a closed topological embedding.**
 `∇ᵢʸ` is surjective (`localizedCodiagInvY_surjective`), and `Spf` of a surjection is a closed
 embedding (`FormalSpectrum.isClosedEmbedding_map_of_surjective`). Closed into *all* of

@@ -7,8 +7,6 @@ import FormalSchemes.CountableLocalization
 import FormalSchemes.StructureSheafStalkPowerSeriesGeneric
 import Mathlib.Data.Nat.Prime.Int
 
-set_option linter.style.header false
-
 /-!
 # The criterion at `(X) ⊆ R⟦X⟧`: the two rings, two generic points, and the half characterised
 

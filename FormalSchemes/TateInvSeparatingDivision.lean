@@ -7,8 +7,6 @@ import FormalSchemes.TateInvSeparatingBot
 import FormalSchemes.TateInvSeparatingKerClosed
 import Mathlib.RingTheory.PowerSeries.Ideal
 
-set_option linter.style.header false
-
 /-!
 # Division by `x·y − q`, and the separation property over a Noetherian base
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateOverlap
 import FormalSchemes.Completion
 
-set_option linter.style.header false
-
 /-!
 # The Tate-chain transition: the coordinate swap `x ↔ y`
 

@@ -8,8 +8,6 @@ import FormalSchemes.TateInvPeriodNotDiscontinuous
 import FormalSchemes.TateChartTransitionInvAlgEq
 import FormalSchemes.TateGraphCodiagonalBridge
 
-set_option linter.style.header false
-
 /-!
 # The node of the Tate annulus, and the answer for the period-`q` shift
 

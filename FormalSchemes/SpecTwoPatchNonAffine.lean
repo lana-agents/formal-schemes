@@ -9,8 +9,6 @@ import FormalSchemes.SpecTwoPatchScheme
 import FormalSchemes.TwoPatchWitness
 import Mathlib.AlgebraicGeometry.Morphisms.Separated
 
-set_option linter.style.header false
-
 /-!
 # The two-patch glued scheme is genuinely glued, and the doubled `Spec A` is not affine
 
@@ -147,7 +145,6 @@ private theorem spidxNe : ¬ @Eq (ULift.{u} Bool) ⟨false⟩ ⟨true⟩ := by s
 /-- …and in the other order, for the `B`-side statements. -/
 private theorem spidxNe' : ¬ @Eq (ULift.{u} Bool) ⟨true⟩ ⟨false⟩ := by simp
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- The glue datum is a `def`, so its index type does not reduce to `ULift Bool` at `instances`
 -- transparency and the rewrite below is otherwise rejected as ill-typed. `specTwoPatch_glue`
@@ -168,7 +165,6 @@ theorem range_specTwoPatchLRSGlueData_f_false_true :
   rw [h, LocallyRingedSpace.range_eqToHom_comp_base]
   rfl
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- The transparency requirement is the same one `range_specTwoPatchLRSGlueData_f_false_true` needs,
 -- and for the same reason: the glue datum is a `def`, so its index type does not reduce to
@@ -187,7 +183,6 @@ theorem range_specTwoPatchLRSGlueData_f_true_false :
   rw [h, LocallyRingedSpace.range_eqToHom_comp_base]
   rfl
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- The same transparency requirement as `range_specTwoPatchLRSGlueData_f_false_true` above, and for
 -- the same reason: the glue datum is a `def`, so its index type does not reduce to `ULift Bool` at
@@ -216,7 +211,6 @@ theorem specTwoPatchLRSGlueData_t_comp_f_false_true :
   rw [ht, hf, Category.assoc, Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
     Category.id_comp]
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- The transparency requirement is the same one `specTwoPatchLRSGlueData_t_comp_f_false_true` needs.
 /-- **The `B`-side transition-then-inclusion of the two-patch glue datum is `Spec θ` followed by the
@@ -266,7 +260,6 @@ theorem preimage_range_specTwoPatchι₀ :
   ((specTwoPatchLRSGlueData a b θ).preimage_range_ι ⟨false⟩ ⟨true⟩).trans
     ((range_specTwoPatchLRSGlueData_f_true_false a b θ).trans (range_specAwayMap b))
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- Same transparency requirement as `specTwoPatchLRSGlueData_t_comp_f_false_true` above.
 /-- **The part of `Spec A` that lands in a given subset `U` of the `B`-chart.** It is the image,
@@ -306,7 +299,6 @@ theorem preimage_image_specTwoPatchι₁ (U : Set (PrimeSpectrum B)) :
     TopCat.coe_comp, Set.preimage_comp]
   rfl
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- Same transparency requirement as `preimage_image_specTwoPatchι₁` above.
 /-- **…and from the other side**: the part of `Spec B` that lands in a given subset `U` of the

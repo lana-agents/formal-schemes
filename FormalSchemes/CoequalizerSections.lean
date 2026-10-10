@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.Geometry.RingedSpace.LocallyRingedSpace.HasColimits
 import Mathlib.Geometry.RingedSpace.PresheafedSpace.HasColimits
 
-set_option linter.style.header false
-
 /-!
 # The sections of a coequalizer of presheafed spaces are the equalised sections
 
@@ -383,7 +381,6 @@ end AlgebraicGeometry.PresheafedSpace
 
 namespace AlgebraicGeometry.SheafedSpace
 
-set_option linter.style.setOption false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 -- The same two transparency options `coequalizer_π_app_isLocalHom` needs, for the same reason: the

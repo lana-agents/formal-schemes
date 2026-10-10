@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenChart
 
-set_option linter.style.header false
-
 /-!
 # The thickenings of a completed localization (EGA I, 10.6.10)
 

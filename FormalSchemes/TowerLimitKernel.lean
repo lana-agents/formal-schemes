@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AdicOnOpenSections
 import FormalSchemes.ThickeningTowerKernel
 
-set_option linter.style.header false
-
 /-!
 # The limit step: the kernel of the reduction map on sections
 

@@ -7,8 +7,6 @@ import FormalSchemes.ActionQuotient
 import Mathlib.CategoryTheory.Limits.Shapes.Equalizers
 import Mathlib.CategoryTheory.Limits.Shapes.Products
 
-set_option linter.style.header false
-
 /-!
 # The quotient by a group action, constructed as a coequalizer
 

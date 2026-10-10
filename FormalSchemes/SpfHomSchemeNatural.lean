@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfHomScheme
 
-set_option linter.style.header false
-
 /-!
 # Naturality in `X` of EGA I, 10.6.7: `Spf R` corepresents `X ↦ lim_n Hom(Spec (R ⧸ Iⁿ), X)`
 

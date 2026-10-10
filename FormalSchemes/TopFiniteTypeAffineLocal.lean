@@ -7,8 +7,6 @@ import FormalSchemes.AwayTopFiniteType
 import FormalSchemes.TopFiniteTypeSpecialFibre
 import Mathlib.RingTheory.RingHom.FiniteType
 
-set_option linter.style.header false
-
 /-!
 # Affine-locality of topological finite type
 

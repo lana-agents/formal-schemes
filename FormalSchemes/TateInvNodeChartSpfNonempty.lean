@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartNontrivial
 import FormalSchemes.TateInvNodeChartSpf
 
-set_option linter.style.header false
-
 /-!
 # `Spf` of the node chart ring is nonempty
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.StructureSheafStalkBot
 
-set_option linter.style.header false
-
 /-!
 # `FormalSpectrum.IsStalkLimit` at a nilpotent ideal of definition
 

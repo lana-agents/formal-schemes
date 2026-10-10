@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.Algebra.Group.Equiv.Defs
 import Mathlib.Algebra.Regular.Defs
 
-set_option linter.style.header false
-
 /-!
 # Regularity transports along a multiplicative equivalence
 

@@ -9,8 +9,6 @@ import FormalSchemes.AdicMorphism
 import FormalSchemes.AffineSeparated
 import FormalSchemes.DiagonalClosedEmbedding
 
-set_option linter.style.header false
-
 /-!
 # Closed immersions of formal spectra: section-level surjectivity (EGA I §10.14, §10.15)
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.Spf
 
-set_option linter.style.header false
-
 /-!
 # Stalks of `O_{Spf R}` as a limit: the comparison map, and the question
 

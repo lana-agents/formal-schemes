@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpecAwayOverlap
 
-set_option linter.style.header false
-
 /-!
 # The legs of the affine basic-open overlap identification (EGA I, 10.8)
 

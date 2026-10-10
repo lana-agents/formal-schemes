@@ -9,8 +9,6 @@ import FormalSchemes.CompletedTensor
 import FormalSchemes.CompletedTensorAssoc
 import Mathlib.Algebra.Polynomial.Laurent
 
-set_option linter.style.header false
-
 /-!
 # The formal multiplicative group
 

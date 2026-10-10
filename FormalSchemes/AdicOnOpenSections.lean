@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.AdicOnBasicOpenSections
 
-set_option linter.style.header false
-
 /-!
 # Adicity of a sheaf component over an *arbitrary* open
 

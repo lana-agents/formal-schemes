@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.OpenCover
 import FormalSchemes.TopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # Formal schemes topologically of finite type over a base
 

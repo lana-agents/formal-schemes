@@ -8,8 +8,6 @@ import FormalSchemes.AwayCompletionRestrict
 import FormalSchemes.BasicOpenChartOverlapLegs
 import FormalSchemes.BasicOpenRestriction
 
-set_option linter.style.header false
-
 /-!
 # `R{1/f} →+* R{1/g}` is determined by its square over `R`, once it is continuous
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.RestrictedPowerSeries
 
-set_option linter.style.header false
-
 /-!
 # Coefficients of restricted power series
 

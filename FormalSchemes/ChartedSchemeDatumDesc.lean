@@ -7,8 +7,6 @@ import FormalSchemes.ChartedSchemeDatum
 import FormalSchemes.LocallyRingedSpaceGlueDesc
 import FormalSchemes.LocallyRingedSpaceRange
 
-set_option linter.style.header false
-
 /-!
 # Mapping out of the glued scheme of a `ChartedSchemeDatum` (EGA I, 10.8)
 

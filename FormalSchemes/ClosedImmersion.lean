@@ -9,8 +9,6 @@ import FormalSchemes.OpenCover
 import Mathlib.Topology.LocalAtTarget
 import Mathlib.Topology.Sets.OpenCover
 
-set_option linter.style.header false
-
 /-!
 # Closed immersions of formal schemes
 

@@ -8,8 +8,6 @@ import FormalSchemes.FormalLineWitness
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 import Mathlib.Geometry.RingedSpace.OpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # Restricting a compatible family to a chart (EGA I, 10.6.10)
 

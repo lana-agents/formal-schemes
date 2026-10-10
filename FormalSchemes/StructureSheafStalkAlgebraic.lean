@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.StructureSheafStalkComparison
 import FormalSchemes.BasicOpenRestrictionIdentification
 
-set_option linter.style.header false
-
 /-!
 # `IsStalkLimit` with the structure sheaf gone from both halves
 

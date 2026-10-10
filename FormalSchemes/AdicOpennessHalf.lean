@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TowerLimitKernel
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 
-set_option linter.style.header false
-
 /-!
 # The openness half of adicity, over an open whose thickenings are affine
 

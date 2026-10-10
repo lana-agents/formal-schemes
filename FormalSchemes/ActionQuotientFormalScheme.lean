@@ -7,8 +7,6 @@ import FormalSchemes.ActionDiscontinuous
 import FormalSchemes.OpenFormalSubscheme
 import FormalSchemes.Gluing
 
-set_option linter.style.header false
-
 /-!
 # The local criterion for an action quotient to be a formal scheme
 
@@ -86,7 +84,6 @@ theorem isOpenImmersion_ofRestrict_comp_of_stalk_iso (h : IsActionQuotient a π)
   LocallyRingedSpace.IsOpenImmersion.of_stalk_iso _
     (isOpenEmbedding_restrict_of_isProperlyDiscontinuousOn h U.isOpen hU)
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- Comparing the restriction of the ambient space with the affine model needs reducible-transparency
 -- defeq checks. Exactly one other site needs them for the same comparison:

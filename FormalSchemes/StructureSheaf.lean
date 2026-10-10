@@ -9,8 +9,6 @@ import Mathlib.Topology.Sheaves.Functors
 import Mathlib.Topology.Sheaves.Limits
 import Mathlib.CategoryTheory.Functor.OfSequence
 
-set_option linter.style.header false
-
 /-!
 # The structure sheaf of the formal spectrum
 

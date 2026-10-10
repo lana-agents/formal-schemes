@@ -7,8 +7,6 @@ import FormalSchemes.TateShift
 import FormalSchemes.TateChainStructMap
 import FormalSchemes.GlueDataCarrier
 
-set_option linter.style.header false
-
 /-!
 # The `q^ℤ`-period action on the formal Tate chain, over `Spf R`
 

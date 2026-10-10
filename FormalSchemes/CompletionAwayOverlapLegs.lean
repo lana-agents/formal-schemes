@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletionBasicOpenMap
 import FormalSchemes.CompletionBasicOpenOverlap
 
-set_option linter.style.header false
-
 /-!
 # The legs of the basic-open completion overlap (EGA I, 10.8)
 

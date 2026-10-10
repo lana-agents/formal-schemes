@@ -6,11 +6,9 @@ Authors: LANA Project
 import FormalSchemes.TateSelfProductBothOverlap
 import FormalSchemes.PullbackRangeLRS
 
-set_option linter.style.header false
 -- The completed-tensor interchange morphisms range over the nested localization/completion
 -- towers of the completed tensor product, which are slow for the elaborator and the kernel;
 -- raise the budgets (matching `TateSelfProductBothOverlap.lean`).
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 

@@ -7,8 +7,6 @@ import FormalSchemes.AdicMorphism
 import FormalSchemes.ClosedImmersion
 import FormalSchemes.ClosedImmersionSections
 
-set_option linter.style.header false
-
 /-!
 # The closed formal subscheme as a closed immersion of formal schemes
 

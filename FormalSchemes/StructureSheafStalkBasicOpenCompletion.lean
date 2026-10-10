@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.StructureSheafStalkBasicOpen
 import FormalSchemes.BasicOpenRestrictionIdentification
 
-set_option linter.style.header false
-
 /-!
 # The separation half of the stalk description, as an equation in a completed localization
 

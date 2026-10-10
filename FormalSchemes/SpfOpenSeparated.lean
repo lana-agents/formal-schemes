@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenCoverOpenSubscheme
 import FormalSchemes.GeneralSeparatedHom
 
-set_option linter.style.header false
-
 /-!
 # Every open formal subscheme of `Spf A` is separated over `Spf R` (EGA I §10.15)
 

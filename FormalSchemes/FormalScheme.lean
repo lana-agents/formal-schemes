@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.Spf
 
-set_option linter.style.header false
-
 /-!
 # Formal schemes
 
@@ -96,7 +94,6 @@ instance : forgetToLocallyRingedSpace.Full where
 
 end FormalScheme
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 1000000 in
 -- Checking that the restriction of `Spf R` to `⊤` matches `locallyRingedSpaceObj I` unfolds the
 -- structure sheaf (a limit of pushforward sheaves) against the restriction machinery, which is

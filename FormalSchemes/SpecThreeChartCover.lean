@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ChartedSchemeDatumAlgebraData
 
-set_option linter.style.header false
-
 /-!
 # The three-chart affine open cover, as a `ChartedSchemeDatum` (EGA I, 10.8)
 

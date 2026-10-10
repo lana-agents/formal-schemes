@@ -7,8 +7,6 @@ import FormalSchemes.AdicOnSections
 import FormalSchemes.CofinalTopFiniteTypeAffineLocal
 import FormalSchemes.SpfIsoOverBase
 
-set_option linter.style.header false
-
 /-!
 # An affine open of `Spf I` is topologically of finite type over `(R, I)`
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CoproductOpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # Two open immersions of locally ringed spaces with equal range are isomorphic
 

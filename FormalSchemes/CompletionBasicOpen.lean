@@ -7,8 +7,6 @@ import FormalSchemes.Completion
 import FormalSchemes.AwayCompletionInterchange
 import FormalSchemes.BasicOpenImmersionLRS
 
-set_option linter.style.header false
-
 /-!
 # The formal completion of a basic open as an open formal subscheme (EGA I, 10.8)
 

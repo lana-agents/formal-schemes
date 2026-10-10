@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # Sheaf-side level reading of the affine basic-open chart (issue 163)
 

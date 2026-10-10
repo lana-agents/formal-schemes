@@ -7,8 +7,6 @@ import FormalSchemes.CofinalSheafComparison
 import FormalSchemes.SpfGammaSheafComponent
 import FormalSchemes.SpfGammaRoundTrip
 
-set_option linter.style.header false
-
 /-!
 # The formal spectra of two ideals of definition are isomorphic (EGA I, §10.3, goal 1)
 

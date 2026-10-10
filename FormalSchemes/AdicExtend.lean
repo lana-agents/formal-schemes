@@ -8,8 +8,6 @@ import FormalSchemes.AdicHausdorff
 import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.RingTheory.AdicCompletion.RingHom
 
-set_option linter.style.header false
-
 /-!
 # Continuous extension of ring homomorphisms to adic completions
 

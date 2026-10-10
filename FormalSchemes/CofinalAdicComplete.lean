@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CofinalAdicRing
 
-set_option linter.style.header false
-
 /-!
 # Adic completeness at a positive power of the ideal
 

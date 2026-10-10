@@ -7,8 +7,6 @@ import FormalSchemes.StructureSheaf
 import Mathlib.CategoryTheory.Limits.Preserves.Limits
 import Mathlib.CategoryTheory.Limits.FunctorCategory.Basic
 
-set_option linter.style.header false
-
 /-!
 # Sections of the structure sheaf of the formal spectrum
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfGamma
 import FormalSchemes.Thickenings
 
-set_option linter.style.header false
-
 /-!
 # The base map of a morphism of formal spectra is forced by global sections
 

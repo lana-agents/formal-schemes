@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ProjectiveLineCompletion
 
-set_option linter.style.header false
-
 /-!
 # The underlying set of `X_{/Y}` inside `X`, at an arbitrary index (EGA I, 10.8)
 

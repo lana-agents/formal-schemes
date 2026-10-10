@@ -7,9 +7,6 @@ import FormalSchemes.OpenImmersionReflectsIdeal
 import FormalSchemes.SpfGammaSheafComponentArb
 import Mathlib.Geometry.RingedSpace.OpenImmersion
 
-set_option linter.style.header false
-set_option linter.style.setOption false
-
 /-!
 # The sheaf component of an open immersion is a ring iso over its range
 

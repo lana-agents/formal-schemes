@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfFunctorial
 import FormalSchemes.AdicMorphism
 
-set_option linter.style.header false
-
 /-!
 # Isomorphic adic rings have isomorphic formal spectra
 

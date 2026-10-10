@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvNodeChartInvariant
 
-set_option linter.style.header false
-
 /-!
 # Hypothesis 4 of the node chart's four: what the descent being an isomorphism actually says
 
@@ -259,7 +257,6 @@ variable [TopologicalSpace R] [IsAdicRing I] [IsNoetherianRing R] (hq : q ∈ I)
 
 /-! ### The section map, read on the restricted projection -/
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The node chart's section map is the pullback along the restricted projection.**
 `AlgebraicGeometry.nodeChartSectionsHom_eq` presents it as the section map of
@@ -389,7 +386,6 @@ theorem isIso_desc_nodeChartAdicHom_iff_base_and_c :
 
 /-! ### The sheaf half at the top open -/
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The descent induces the canonical identification on global sections.** Both sides are ring
 homomorphisms `Γ (T_inv/⟨σ⟩, V₀) →+* Γ ((T_inv/⟨σ⟩)|_{V₀}, ⊤)`; the right-hand side is the

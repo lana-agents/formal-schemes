@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.TateInvPeriodQuotientCharts
 
-set_option linter.style.header false
-
 /-!
 # `σ`-invariant opens of the inversion-glued Tate chain, and the charted locus of `T_inv/⟨σ⟩`
 

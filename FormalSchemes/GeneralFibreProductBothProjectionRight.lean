@@ -11,8 +11,6 @@ import FormalSchemes.CompletedTensorAwayInterchangeBothPullback
 import FormalSchemes.CompletedTensorAwayInterchangeMixedPullback
 import FormalSchemes.GlueMorphisms
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 

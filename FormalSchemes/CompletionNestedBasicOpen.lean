@@ -8,8 +8,6 @@ import FormalSchemes.AwayCompletionAway
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.CompletedTensorAwayInterchangeSpf
 
-set_option linter.style.header false
-
 /-!
 # The formal completion of a nested basic open as an open formal subscheme (EGA I, 10.8)
 
@@ -71,7 +69,6 @@ open FormalSpectrum AdicCompletion
 
 variable {R : Type u} [CommRing R] (I : Ideal R) (f g : R)
 
-set_option linter.style.setOption false in
 set_option maxHeartbeats 800000 in
 -- Identifying the underlying forward/backward legs of `awayCompletionAwayEquiv` with the
 -- `mapCompletion` maps forces the elaborator to unfold the nested localization/completion towers of

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenChart
 import Mathlib.RingTheory.Localization.Away.Basic
 
-set_option linter.style.header false
-
 /-!
 # Structure-sheaf separatedness: vanishing on a basic-open cover
 

@@ -7,8 +7,6 @@ import FormalSchemes.StructureSheafStalkLevels
 import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.CofinalIdeal
 
-set_option linter.style.header false
-
 /-!
 # The point data of `Spf R` does not depend on the ideal of definition
 

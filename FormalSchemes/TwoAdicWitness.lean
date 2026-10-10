@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.Completion
 import FormalSchemes.RestrictedPowerSeries
 
-set_option linter.style.header false
-
 /-!
 # The standing `2`-adic witness: `ℤ^` with its ideal of definition
 

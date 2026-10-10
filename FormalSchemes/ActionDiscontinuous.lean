@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionQuotientCarrier
 
-set_option linter.style.header false
-
 /-!
 # Free, properly discontinuous actions, and the topology of their quotients
 

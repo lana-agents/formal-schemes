@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.BasicOpenChartComponent
 
-set_option linter.style.header false
-
 /-!
 # Towards the open immersion property of the affine basic-open chart
 

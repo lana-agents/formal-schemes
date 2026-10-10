@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BasicOpenImmersionLRS
 import FormalSchemes.PullbackRangeLRS
 
-set_option linter.style.header false
-
 /-!
 # The overlap of two basic-open charts of `Spf A` (EGA I, §10.8, §10.15)
 

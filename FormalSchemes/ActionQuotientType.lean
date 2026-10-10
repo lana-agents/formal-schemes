@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionQuotientFunctor
 
-set_option linter.style.header false
-
 /-!
 # The quotient of a type by a group action is the orbit set
 

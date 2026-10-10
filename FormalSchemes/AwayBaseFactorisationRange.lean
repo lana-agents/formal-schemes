@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayBaseChangeSeparated
 import FormalSchemes.OpenFormalSubscheme
 
-set_option linter.style.header false
-
 /-!
 # A morphism that factors through the basic open of its base has its whole source over it
 

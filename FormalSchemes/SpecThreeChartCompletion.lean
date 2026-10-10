@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ChartedCompletionToScheme
 import FormalSchemes.SpecThreeChartCover
 
-set_option linter.style.header false
-
 /-!
 # The three-chart completion and its morphism to the three-chart scheme (EGA I, 10.8)
 

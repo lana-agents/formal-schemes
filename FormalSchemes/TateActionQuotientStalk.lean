@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.FreeActionQuotientFormalScheme
 import FormalSchemes.TateActionQuotientFormalScheme
 
-set_option linter.style.header false
-
 /-!
 # The Tate stalk hypothesis is a theorem
 

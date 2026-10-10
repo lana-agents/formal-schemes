@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CompletedTensorMapSpf
 
-set_option linter.style.header false
-
 /-!
 # The fibre-product map of algebra isomorphisms is an isomorphism of formal spectra
 

@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.CompletionTwoPatchSupport
 
-set_option linter.style.header false
-
 /-!
 # The completion of the two-patch scheme is supported on a closed subset (EGA I, 10.8)
 

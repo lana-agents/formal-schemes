@@ -7,8 +7,6 @@ import FormalSchemes.AdicOnOpenSectionsPointwise
 import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvGlobalSections
 
-set_option linter.style.header false
-
 /-!
 # The four legs of the chart condition on the structural image, at an arbitrary open
 

@@ -9,8 +9,6 @@ import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
 import Mathlib.RingTheory.Flat.Localization
 import Mathlib.RingTheory.Localization.Submodule
 
-set_option linter.style.header false
-
 /-!
 # Regularity rises to a completed localization
 

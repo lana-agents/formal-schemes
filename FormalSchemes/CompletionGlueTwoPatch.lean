@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletionBasicOpen
 import FormalSchemes.Gluing
 
-set_option linter.style.header false
-
 /-!
 # Gluing two affine formal completions along a common basic open (EGA I, 10.8)
 

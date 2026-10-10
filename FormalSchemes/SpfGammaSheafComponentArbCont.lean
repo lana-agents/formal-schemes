@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfGammaSheafComponentArbOf
 
-set_option linter.style.header false
-
 /-!
 # Continuity of an arbitrary morphism's basic-open component (closing step (b) of EGA I 10.4.6)
 

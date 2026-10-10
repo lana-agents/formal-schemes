@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralSeparatedHomValues
 
-set_option linter.style.header false
-
 /-!
 # The identity of a formal scheme is separated (EGA I §10.15), at an arbitrary target
 

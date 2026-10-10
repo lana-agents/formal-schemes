@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfHomFormalScheme
 import FormalSchemes.TateChainInvLocallyFG
 
-set_option linter.style.header false
-
 /-!
 # The Tate chain is a target of the colimit property
 

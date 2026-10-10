@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.FreeActionQuotientFormalScheme
 
-set_option linter.style.header false
-
 /-!
 # Affine charts of an action quotient, one point at a time
 
@@ -93,7 +91,6 @@ variable {G : Type v} [Group G] [Small.{u} G] {X : FormalScheme.{u}}
 variable {a : G →* Aut X.toLocallyRingedSpace}
 variable {Q : LocallyRingedSpace.{u}} {π : X.toLocallyRingedSpace ⟶ Q}
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- Comparing the restriction of the ambient space with the affine model needs reducible-transparency
 -- defeq checks. This proof is `LocallyRingedSpace.formalSchemeOfIsOpenImmersionRestrict`

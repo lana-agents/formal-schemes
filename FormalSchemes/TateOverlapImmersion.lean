@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateOverlap
 import FormalSchemes.BasicOpenImmersionLRS
 
-set_option linter.style.header false
-
 /-!
 # The Tate-annulus overlap as an affine formal open subscheme
 

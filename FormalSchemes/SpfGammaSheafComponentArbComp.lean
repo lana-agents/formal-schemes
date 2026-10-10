@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.SpfGammaSheafComponentArb
 
-set_option linter.style.header false
-
 /-!
 # The naturality square pinning an arbitrary morphism's basic-open sheaf component to global data
 

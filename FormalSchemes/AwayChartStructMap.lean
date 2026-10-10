@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.AwayBaseChangeTopFiniteType
 import FormalSchemes.BasicOpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # Basic-open charts commute with structural morphisms
 

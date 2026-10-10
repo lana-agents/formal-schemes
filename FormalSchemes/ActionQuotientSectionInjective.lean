@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.ActionQuotientInvariantSections
 
-set_option linter.style.header false
-
 /-!
 # A quotient projection is injective on sections, for any presentation of the quotient
 

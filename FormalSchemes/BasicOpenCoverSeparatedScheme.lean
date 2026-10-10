@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralSeparatedScheme
 import FormalSchemes.BasicOpenCoverSeparated
 
-set_option linter.style.header false
-
 /-!
 # A basic-open cover of a formal affine is separated, as a formal scheme (EGA I §10.15)
 

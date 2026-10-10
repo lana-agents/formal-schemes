@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ChartedSchemeDatum
 import FormalSchemes.SpecAwayOverlapLegs
 
-set_option linter.style.header false
-
 /-!
 # A smart constructor for `ChartedSchemeDatum` from localization data (EGA I, 10.8)
 

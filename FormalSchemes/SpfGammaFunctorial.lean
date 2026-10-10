@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.SpfGamma
 import FormalSchemes.SpfFunctorial
 
-set_option linter.style.header false
-
 /-!
 # Global sections is functorial on formal spectra
 

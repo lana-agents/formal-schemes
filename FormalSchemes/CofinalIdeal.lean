@@ -7,8 +7,6 @@ import FormalSchemes.IdealsOfDefinition
 import FormalSchemes.LargestIdealOfDefinition
 import Mathlib.RingTheory.Finiteness.Ideal
 
-set_option linter.style.header false
-
 /-!
 # Cofinal ideals: the equivalence relation behind "same adic topology"
 

@@ -7,8 +7,6 @@ import FormalSchemes.CofinalAdicComplete
 import FormalSchemes.CofinalTopFiniteType
 import FormalSchemes.TopFiniteTypeAffineLocal
 
-set_option linter.style.header false
-
 /-!
 # Affine-locality of topological finite type, at an ideal given only up to cofinality
 

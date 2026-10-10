@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.BaseChange
 import FormalSchemes.TopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # Topologically of finite type is a condition on the special fibre
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.IndSchemeLimit
 import FormalSchemes.IndSchemeThickening
 
-set_option linter.style.header false
-
 /-!
 # The components of `specHomLimitEquiv` are the thickening restrictions (EGA I, 10.6.7)
 

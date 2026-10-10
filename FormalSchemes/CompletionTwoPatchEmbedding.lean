@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.CompletionTwoPatchClosed
 import FormalSchemes.OpenImmersionIsoOfRangeEq
 
-set_option linter.style.header false
-
 /-!
 # The completion of the two-patch scheme is a closed embedding (EGA I, 10.8)
 

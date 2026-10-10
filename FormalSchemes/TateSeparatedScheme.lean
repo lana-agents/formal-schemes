@@ -8,8 +8,6 @@ import FormalSchemes.TateSeparatedTopFiniteType
 import FormalSchemes.TateSeparatedValue
 import FormalSchemes.TateTopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # `𝔈_q` is a separated formal scheme over `Spf R` — with no chart data in the statement
 

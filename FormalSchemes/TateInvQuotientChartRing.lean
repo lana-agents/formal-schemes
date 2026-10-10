@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartOverlap
 import FormalSchemes.TateInvQuotientSections
 
-set_option linter.style.header false
-
 /-!
 # `Γ (T_inv/⟨σ⟩, V)` as a subring of `Γ (Spf A, tateInvPatchSaturate S)`
 

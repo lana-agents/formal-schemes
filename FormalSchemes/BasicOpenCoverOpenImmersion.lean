@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.ChartedDatumGlueOpenImmersion
 import FormalSchemes.BasicOpenCoverToBase
 
-set_option linter.style.header false
-
 /-!
 # The basic-open cover is an open formal subscheme of `Spf A` (EGA I §10.13, §10.15)
 

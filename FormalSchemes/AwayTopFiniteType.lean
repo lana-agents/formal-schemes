@@ -7,8 +7,6 @@ import FormalSchemes.AwayCompletionSurjective
 import FormalSchemes.BaseChange
 import FormalSchemes.TopFiniteType
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 -- `awayEval_comp_coordIncl` compares two ring homomorphisms out of `R{X₁, …, Xₙ}` whose
 -- targets are nested completions of a localization; the `isDefEq` checks that unfold
 -- `awayCompletion`/`RestrictedPowerSeries` through `AdicCompletion` are what costs the

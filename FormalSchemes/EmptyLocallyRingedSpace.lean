@@ -6,8 +6,6 @@ Authors: LANA Project
 import Mathlib.Geometry.RingedSpace.OpenImmersion
 import Mathlib.CategoryTheory.Limits.Shapes.StrictInitial
 
-set_option linter.style.header false
-
 /-!
 # The empty / initial object in `LocallyRingedSpace`
 

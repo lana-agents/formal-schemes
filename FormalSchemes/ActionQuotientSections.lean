@@ -7,8 +7,6 @@ import FormalSchemes.ActionQuotientColimit
 import FormalSchemes.CoequalizerSections
 import Mathlib.Geometry.RingedSpace.LocallyRingedSpace.HasColimits
 
-set_option linter.style.header false
-
 /-!
 # The sections of a locally ringed space coequalizer, and of an action quotient
 
@@ -206,7 +204,6 @@ def coequalizerIsoPresheafedSpace :
       (PreservesCoequalizer.iso LocallyRingedSpace.forgetToSheafedSpace f g).symm ≪≫
     (PreservesCoequalizer.iso SheafedSpace.forgetToPresheafedSpace f.toShHom g.toShHom).symm
 
-set_option linter.style.setOption false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 -- The `SheafedSpace`/`PresheafedSpace` layer is an `InducedCategory`, so the goal is not
@@ -239,7 +236,6 @@ theorem preimage_coequalizer_π_eq (V : Opens (Limits.coequalizer f g).toTopCat)
   rw [← Opens.map_comp_obj, ← Opens.map_comp_obj, ← PresheafedSpace.comp_base,
     ← PresheafedSpace.comp_base, toShHom_hom_comp_π]
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **Every open of the coequalizer is the comparison isomorphism's image of one downstairs.** The
 `rfl` pattern this supports is what makes the transport below definitional rather than an
@@ -252,7 +248,6 @@ theorem exists_map_coequalizerIso_hom_base_obj (V : Opens (Limits.coequalizer f 
       (coequalizerIsoPresheafedSpace f g).hom_inv_id]
     simp⟩
 
-set_option linter.style.setOption false in
 set_option backward.defeqAttrib.useBackward true in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The sections of a coequalizer of locally ringed spaces, exactly.** A section `s` of `Y` over
@@ -284,7 +279,6 @@ theorem exists_c_app_eq_iff_c_app_eq (V : Opens (Limits.coequalizer f g).toTopCa
   rw [← π_comp_coequalizerIsoPresheafedSpace_hom f g] at H
   exact H h s
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **A section of a coequalizer of locally ringed spaces is determined by its pullback along the
 projection.** The injectivity half, transported the same way. -/

@@ -9,8 +9,6 @@ import FormalSchemes.DiagonalClosedEmbedding
 import FormalSchemes.ClosedImmersionSections
 import FormalSchemes.ClosedImmersionSplitMono
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
@@ -136,7 +134,6 @@ theorem codiagonal_naturality (f : A →ₐ[R] A') (hI : I.FG) :
   · rw [RingHom.comp_apply, RingHom.comp_apply, map_inr, codiag_inr', codiag_inr']
     rfl
 
-set_option linter.unusedSectionVars false in
 /-- **Topology-free `codiagonal_le_comap`.** The codiagonal `∇ : A ⊗̂_R A →+* A` carries the ideal
 of definition of `A ⊗̂_R A` into `I·A`. The Mathlib-layer `codiagonal_le_comap`
 (`DiagonalClosedEmbedding`) carries spurious `[TopologicalSpace R] [IsAdicRing I]` section

@@ -7,8 +7,6 @@ import FormalSchemes.IndScheme
 import FormalSchemes.AdicCompletionLimit
 import Mathlib.CategoryTheory.Limits.Yoneda
 
-set_option linter.style.header false
-
 /-!
 # Morphisms out of a formal spectrum as a limit of quotient-hom sets
 

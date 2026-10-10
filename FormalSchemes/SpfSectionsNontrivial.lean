@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.Spf
 
-set_option linter.style.header false
-
 /-!
 # Sections of `O_{Spf R}` over an inhabited open are a nonzero ring
 

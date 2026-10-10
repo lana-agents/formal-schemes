@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TwoAdicWitness
 import Mathlib.RingTheory.Ideal.Int
 
-set_option linter.style.header false
-
 /-!
 # `|Spf ℤ^|` is a one-point space: the degeneracy of the `2`-adic witness, as a theorem
 

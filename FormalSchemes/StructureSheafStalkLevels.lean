@@ -7,8 +7,6 @@ import FormalSchemes.StructureSheafStalks
 import FormalSchemes.LocalizationQuotientPrime
 import FormalSchemes.AdicCompletionCongrLevel
 
-set_option linter.style.header false
-
 /-!
 # The stalk-level comparison, read as a map into an adic completion
 

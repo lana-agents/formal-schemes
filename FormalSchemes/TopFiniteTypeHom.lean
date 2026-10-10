@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.RelativeTopFiniteTypeBasis
 
-set_option linter.style.header false
-
 /-!
 # Morphisms of formal schemes topologically of finite type, at an arbitrary target
 

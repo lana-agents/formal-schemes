@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TopFiniteType
 import FormalSchemes.TopFiniteTypeBaseChange
 
-set_option linter.style.header false
-
 /-!
 # The formal Tate annulus `Spf R{x, y}/(xy − q)`
 

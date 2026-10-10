@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import Mathlib.Geometry.RingedSpace.OpenImmersion
 
-set_option linter.style.header false
-
 /-!
 # Ranges of pullbacks of open immersions of locally ringed spaces
 

@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvNodeChartAmbient
 import FormalSchemes.TateInvPeriodQuotientCharts
 
-set_option linter.style.header false
-
 /-!
 # The node chart's ambient morphism is not injective, so it is not the chart
 

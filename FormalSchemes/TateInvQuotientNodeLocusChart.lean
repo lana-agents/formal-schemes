@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.TateInvPeriodQuotientCharts
 import FormalSchemes.TateInvQuotientColimitTarget
 
-set_option linter.style.header false
-
 /-!
 # `T_inv/⟨σ⟩` is a formal scheme **iff** it has a chart at the node-locus image
 

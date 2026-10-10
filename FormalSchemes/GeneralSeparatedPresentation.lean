@@ -8,8 +8,6 @@ import FormalSchemes.GeneralDiagonalUnconditionalAdic
 import FormalSchemes.GeneralFibreProductCompare
 import FormalSchemes.GeneralSeparated
 
-set_option linter.style.header false
-
 /-!
 # Separatedness does not depend on the presentation
 

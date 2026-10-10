@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.RestrictedLaurentCoeff
 import FormalSchemes.TateOverlapInversion
 
-set_option linter.style.header false
-
 /-!
 # `𝔾m`-inversion reverses the coefficients
 

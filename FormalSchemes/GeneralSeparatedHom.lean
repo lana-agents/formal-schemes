@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.GeneralSeparatedScheme
 import FormalSchemes.OpenFormalSubscheme
 
-set_option linter.style.header false
-
 /-!
 # Separatedness of a morphism of formal schemes, at an arbitrary target
 

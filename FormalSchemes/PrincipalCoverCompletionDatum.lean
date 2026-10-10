@@ -7,8 +7,6 @@ import FormalSchemes.ChartedCompletionDatum
 import Mathlib.AlgebraicGeometry.IdealSheaf.Basic
 import Mathlib.AlgebraicGeometry.Noetherian
 
-set_option linter.style.header false
-
 /-!
 # A scheme with a principal affine cover presents a completion datum
 

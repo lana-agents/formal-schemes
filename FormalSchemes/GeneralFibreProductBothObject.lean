@@ -5,8 +5,6 @@ Authors: LANA Project
 -/
 import FormalSchemes.GeneralFibreProductAffineBase
 
-set_option linter.style.header false
-set_option linter.style.setOption false
 set_option maxHeartbeats 3200000
 set_option synthInstance.maxHeartbeats 1000000
 
@@ -66,7 +64,6 @@ namespace AlgebraicGeometry
 
 /-! ### The two-sided affine-charted fibre-product input datum -/
 
-set_option linter.unusedVariables false in
 /-- **A two-sided affine-charted fibre-product datum over the adic base `(R, I)`.** It packages two
 affine-charted glued formal schemes `X` (charts `Spf A_i`, `i : JX`) and `Y` (charts `Spf B_j`,
 `j : JY`) over `Spf R`, together with the **carried geometric glue** of their fibre product

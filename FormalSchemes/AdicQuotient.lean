@@ -6,8 +6,6 @@ Authors: LANA Project
 import FormalSchemes.RestrictedPowerSeries
 import Mathlib.RingTheory.AdicCompletion.Noetherian
 
-set_option linter.style.header false
-
 /-!
 # Completeness of quotients of adic rings
 

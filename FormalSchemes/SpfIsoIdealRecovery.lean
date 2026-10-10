@@ -7,8 +7,6 @@ import FormalSchemes.CofinalIdeal
 import FormalSchemes.SpfGammaBase
 import FormalSchemes.SpfGammaFunctorial
 
-set_option linter.style.header false
-
 /-!
 # What an isomorphism of formal spectra recovers about the ideal of definition
 

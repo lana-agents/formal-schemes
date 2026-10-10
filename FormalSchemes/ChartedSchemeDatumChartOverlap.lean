@@ -7,8 +7,6 @@ import FormalSchemes.ChartedSchemeDatumDesc
 import FormalSchemes.GlueDataImageInter
 import FormalSchemes.LocallyRingedSpaceRange
 
-set_option linter.style.header false
-
 /-!
 # The charts of the glued scheme meet exactly over their overlaps (EGA I, 10.8)
 
@@ -122,7 +120,6 @@ variable (D : ChartedSchemeDatum.{u})
 
 /-! ### The glue datum's overlap inclusion, off the diagonal -/
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- The glue datum is a `def`, so `D.specLRSGlueData.J` does not reduce to `D.J` at `instances`
 -- transparency and the `dif_neg` below is otherwise rejected as ill-typed.
@@ -162,7 +159,6 @@ theorem preimage_range_specι (i j : D.J) (h : i ≠ j) :
 
 /-! ### The image of a subset of one chart, seen in another -/
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 -- Same transparency requirement as `range_specLRSGlueData_f` above, and for the same reason: the
 -- glue datum is a `def`, so `D.specLRSGlueData.J` does not reduce to `D.J` at `instances`
@@ -185,7 +181,6 @@ theorem specLRSGlueData_t_comp_f (i j : D.J) (h : i ≠ j) :
   rw [ht, hf, Category.assoc, Category.assoc, eqToHom_trans_assoc, eqToHom_refl,
     Category.id_comp]
 
-set_option linter.style.setOption false in
 set_option backward.isDefEq.respectTransparency false in
 /-- **The part of the `i`-th chart that lands in a given subset `U` of the `j`-th chart.** It is the
 image, under the affine chart of `D (g i j)`, of the part of the overlap that the `θ i j`-translate

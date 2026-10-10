@@ -8,8 +8,6 @@ import FormalSchemes.SpfFunctorial
 import FormalSchemes.SpfGammaFunctorial
 import FormalSchemes.TopFiniteType
 
-set_option linter.style.header false
-
 /-!
 # The ideal-independence isomorphism commutes with structural morphisms
 
