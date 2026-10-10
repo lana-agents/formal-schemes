@@ -387,6 +387,7 @@ theorem isEmbedding_tateSelfProductDiagonal_base (hq : q ∈ I) (hI : I.FG) :
     (tateSelfProductPr₁ R I q hq hI).base.hom.continuous
     (tateSelfProductDiagonal R I q hq hI).base.hom.continuous
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The base map of the glued Tate self-product diagonal is a closed topological embedding**
 (EGA I §10.15, route b): it is a topological embedding with closed range. -/
 theorem isClosedEmbedding_tateSelfProductDiagonal_base (hq : q ∈ I) (hI : I.FG) :
@@ -394,6 +395,7 @@ theorem isClosedEmbedding_tateSelfProductDiagonal_base (hq : q ∈ I) (hI : I.FG
   ⟨isEmbedding_tateSelfProductDiagonal_base R I q hq hI,
     isClosed_range_tateSelfProductDiagonal_base R I q hq hI⟩
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The mixed-chart restriction of the diagonal is a closed embedding** (issue 424). On the mixed
 chart `(b, ¬b)` the restriction of `Δ.base` to the preimage of the chart is a closed topological
 embedding, immediately from the global closed embedding via
