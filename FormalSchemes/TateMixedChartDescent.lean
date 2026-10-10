@@ -419,7 +419,7 @@ theorem isClosed_range_spfGraphCodiagX :
   exact (CompletedTensorProduct.isClosedEmbedding_map_graphCodiagX
     (R := R) (I := I) (q := q) hI).isClosed_range
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- The `y`-side graph piece is closed in all of `Spf(A ⊗̂_R A)`. -/
 theorem isClosed_range_spfGraphCodiagY :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI

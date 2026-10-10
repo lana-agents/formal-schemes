@@ -438,6 +438,7 @@ theorem spfGraphLiftY_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftY_comp_map_transition R I q hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `y`-piece of the mixed chart `(false, true)` lands in the diagonal.** -/
 theorem spfGraphCodiagY_comp_ι_ft (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -889,6 +890,7 @@ theorem spfGraphLiftYX_comp_transition (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftYX_comp_map_transition R I q hI)
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `y`-piece of the mixed chart `(true, false)` lands in the diagonal.** -/
 theorem spfGraphCodiagYComm_comp_ι_tf (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -952,6 +954,7 @@ theorem curve_ι_comp_selfProductDiagonal (hq : q ∈ I) (hI : I.FG) (c : Bool) 
   rw [tateSelfProductDiagonal]
   exact (tateCurveFormalGlueData R I q hq hI).ι_glueMorphisms _ _ ⟨c⟩
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `x`-piece of the chart `(false, true)` lies in `range Δ.base`.** -/
 theorem range_spfGraphCodiagX_ft_subset (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI
@@ -982,6 +985,7 @@ theorem range_spfGraphCodiagY_ft_subset (hq : q ∈ I) (hI : I.FG) :
     ← curve_ι_comp_selfProductDiagonal R I q hq hI true]
   exact range_comp_comp_base_subset _ _ _
 
+omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The `x`-piece of the chart `(true, false)` lies in `range Δ.base`.** -/
 theorem range_spfGraphCodiagXComm_tf_subset (hq : q ∈ I) (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdeal R I q) := annulusOverlap_isAdicRing R I q hI

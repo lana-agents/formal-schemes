@@ -488,7 +488,7 @@ def spfGraphLiftAXtoX (hI : I.FG) :
     have h := graphLiftAXtoX_mem_pow R I q hI 1 (by rwa [pow_one])
     rwa [pow_one] at h)
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** at the `(false, true)` chart's `dAX` summand. -/
 theorem spfGraphCodiagY_eq_ft_dAX (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
@@ -556,7 +556,7 @@ theorem spfGraphCodiagX_eq_ft_dXA (hI : I.FG) :
   exact FormalSpectrum.locallyRingedSpaceMap_congr _ _ _ _ _ _
     (graphLiftXAtoX_comp_map R I q hI).symm
 
-omit [IsNoetherianRing R] in
+omit [IsNoetherianRing R] [TopologicalSpace R] [IsAdicRing I] in
 /-- **(A)** at the `(true, false)` chart's `dXA` summand. -/
 theorem spfGraphCodiagYComm_eq_tf_dXA (hI : I.FG) :
     haveI : IsAdicRing (annulusOverlapIdealY R I q) := annulusOverlapY_isAdicRing R I q hI
