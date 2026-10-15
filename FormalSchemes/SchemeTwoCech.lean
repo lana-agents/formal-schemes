@@ -21,7 +21,7 @@ specialises the algebra of `FormalSchemes.TwoCech` to it:
 * for morphisms `M' ⟶ M ⟶ M''` which are short exact on the sections over `U`, `V` and `U ∩ V`,
   the six-term exact sequence (`Scheme.Modules.cechδ` and the lemmas following it).
 
-When `M'`, `M`, `M''` are quasi-coherent and `U`, `V`, `U ∩ V` are affine, the sections over
+When the three modules M′, M, M″ are quasi-coherent and `U`, `V`, `U ∩ V` are affine, the sections over
 these opens of a short exact sequence are short exact (Stacks, Lemma 30.2.2, Tag 01XB), and
 `Ȟ¹` of the covering computes `H¹(U ∪ V, -)` (Stacks, Lemma 30.2.6, Tag 01XD); the six-term
 sequence is then the Mayer–Vietoris sequence (Stacks, Lemma 20.8.2, Tag 01EB) and its last
