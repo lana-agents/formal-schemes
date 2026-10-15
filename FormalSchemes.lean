@@ -49,6 +49,8 @@ import FormalSchemes.AdicSubringComplete
 import FormalSchemes.AdicSubringFinite
 import FormalSchemes.AdicSubringPrincipal
 import FormalSchemes.AdicSystem
+import FormalSchemes.AdicSystemEquivalence
+import FormalSchemes.AdicSystemModule
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductLRS
