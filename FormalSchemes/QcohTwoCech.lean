@@ -12,7 +12,10 @@ import Mathlib.AlgebraicGeometry.Morphisms.Affine
 
 A sequence `M' ⟶ M ⟶ M''` of `𝒪_X`-modules is a short exact sequence of sheaves
 (`Scheme.Modules.IsShortExactSheaf`) if it is left exact on all sections and `M ⟶ M''` is
-locally surjective. When `M` and `M''` are quasi-coherent, such a sequence is short exact on the
+locally surjective. A short exact sequence of Mathlib's abelian category `X.Modules` whose
+epimorphism is locally surjective is one (`Scheme.Modules.IsShortExactSheaf.of_shortExact`; left
+exactness on sections is `Scheme.Modules.injective_and_exact_app_of_shortExact`). When `M` and
+`M''` are quasi-coherent, such a sequence is short exact on the
 sections over every affine open (`Scheme.Modules.IsShortExactSheaf.shortExactOn`, from
 `AlgebraicGeometry.surjective_app_of_isAffineOpen`). So for two affine opens `U`, `V` with affine
 intersection — e.g. any two affine opens when `X` has affine diagonal, in particular when `X` is
@@ -30,7 +33,7 @@ used in the Grothendieck existence theorem.
 
 universe u
 
-open CategoryTheory
+open CategoryTheory Opposite Limits
 
 namespace AlgebraicGeometry.Scheme.Modules
 
@@ -44,6 +47,30 @@ structure IsShortExactSheaf (φ : M' ⟶ M) (ψ : M ⟶ M'') : Prop where
   isLocallySurjective : TopCat.Presheaf.IsLocallySurjective ψ.mapPresheaf
 
 variable {φ : M' ⟶ M} {ψ : M ⟶ M''}
+
+/-- A short exact sequence in the abelian category `X.Modules` is left exact on the sections over
+every open: the sections functor `SheafOfModules.evaluation` preserves limits, hence kernels. -/
+lemma injective_and_exact_app_of_shortExact {S : ShortComplex X.Modules} (hS : S.ShortExact)
+    (W : X.Opens) : Function.Injective (S.f.app W) ∧ Function.Exact (S.f.app W) (S.g.app W) := by
+  let E : X.Modules ⥤ _ := SheafOfModules.evaluation X.ringCatSheaf (op W)
+  haveI : PreservesLimitsOfSize.{0, u} E :=
+    SheafOfModules.evaluationPreservesLimitsOfSize (R := X.ringCatSheaf) (op W)
+  haveI : PreservesLimitsOfSize.{0, 0} E := preservesSmallestLimits_of_preservesLimits E
+  haveI := hS.mono_f
+  have hk := isLimitForkMapOfIsLimit' E S.zero hS.exact.fIsKernel
+  have hex : (S.map E).Exact := (S.map E).exact_of_f_is_kernel hk
+  have hm : Mono (E.map S.f) := Fork.IsLimit.mono hk
+  rw [ShortComplex.moduleCat_exact_iff] at hex
+  refine ⟨(ModuleCat.mono_iff_injective _).mp hm, fun y ↦ ⟨fun hy ↦ hex y hy, ?_⟩⟩
+  rintro ⟨x, rfl⟩
+  exact congrArg (fun φ ↦ (ModuleCat.Hom.hom φ) x) (congrArg E.map S.zero |>.trans (E.map_zero _ _))
+
+/-- A short exact sequence in the abelian category `X.Modules` whose epimorphism is locally
+surjective is a short exact sequence of sheaves in the sense of `IsShortExactSheaf`. -/
+lemma IsShortExactSheaf.of_shortExact {S : ShortComplex X.Modules} (hS : S.ShortExact)
+    (hloc : TopCat.Presheaf.IsLocallySurjective S.g.mapPresheaf) : IsShortExactSheaf S.f S.g :=
+  ⟨fun W ↦ (injective_and_exact_app_of_shortExact hS W).1,
+    fun W ↦ (injective_and_exact_app_of_shortExact hS W).2, hloc⟩
 
 /-- A short exact sequence of sheaves whose middle and right terms are quasi-coherent is short exact
 on the sections over each affine open. -/
