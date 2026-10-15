@@ -48,6 +48,7 @@ import FormalSchemes.AdicSectionsRestrictOpen
 import FormalSchemes.AdicSubringComplete
 import FormalSchemes.AdicSubringFinite
 import FormalSchemes.AdicSubringPrincipal
+import FormalSchemes.AdicSystem
 import FormalSchemes.AffineDiagonal
 import FormalSchemes.AffineFibreProduct
 import FormalSchemes.AffineFibreProductLRS
