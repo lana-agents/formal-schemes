@@ -13,7 +13,7 @@ import Mathlib.RingTheory.Artinian.Module
 
 A tower of `A`-modules is a functor `ℕᵒᵖ ⥤ ModuleCat A`. Its limit `ModuleTower.limit F` is the
 submodule of compatible families of `∀ n, F(n)`. This file proves the exactness properties of
-`lim` needed to pass cohomology to the limit along the thickenings `X_n` of a formal scheme
+`lim` needed to pass cohomology to the limit along the thickenings Xₙ of a formal scheme
 (Stacks, Section 10.86, Tag 0594, "Mittag-Leffler systems"; Stacks, Lemma 10.86.4, Tag 0598):
 
 * `ModuleTower.limMap_injective`, `ModuleTower.exact_limMap`: `lim` is left exact;
@@ -24,8 +24,9 @@ submodule of compatible families of `∀ n, F(n)`. This file proves the exactnes
   e.g. finite modules over `A ⧸ I^(n+1)` with `A ⧸ I` Artinian, the case of a complete local
   Noetherian base and its maximal ideal.
 
-The proof of `limMap_surjective` follows Stacks 0598: the set of lifts of a compatible family that
-remain liftable to every higher level is nonempty at every level and maps onto the previous one.
+The proof of `ModuleTower.limMap_surjective` follows Stacks 0598: the set of lifts of a compatible
+family that remain liftable to every higher level is nonempty at every level and maps onto the
+previous one.
 -/
 
 universe u v
