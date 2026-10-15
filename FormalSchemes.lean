@@ -352,6 +352,7 @@ import FormalSchemes.RestrictedPowerSeries
 import FormalSchemes.RestrictedPowerSeriesCoeff
 import FormalSchemes.RestrictedPowerSeriesNoetherian
 import FormalSchemes.RightCodiagonalClosedEmbedding
+import FormalSchemes.SchemeTwoCech
 import FormalSchemes.Sections
 import FormalSchemes.SpecAwayOverlap
 import FormalSchemes.SpecAwayOverlapLegs
@@ -588,6 +589,7 @@ import FormalSchemes.TopFiniteTypeTrans
 import FormalSchemes.TowerLimitKernel
 import FormalSchemes.TwoAdicDegeneracy
 import FormalSchemes.TwoAdicWitness
+import FormalSchemes.TwoCech
 import FormalSchemes.TwoChartBasicOpen
 import FormalSchemes.TwoPatchFibreProduct
 import FormalSchemes.TwoPatchFibreProductObject
