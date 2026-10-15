@@ -107,6 +107,12 @@ is representative, and `FormalSchemes.lean` is the only exhaustive index of the 
   construction above, because the one-patch shift is not properly discontinuous —
   `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction`.
   `FormalSchemes/TateCurveModel.lean` gives two independent derivations of the period.
+* **Affine Grothendieck existence** (Stacks, Lemma 30.23.1, Tag 087W), in module and algebra
+  form: over a Noetherian `I`-adically complete ring `A`, finite `A`-modules are equivalent to
+  compatible systems `(Mₙ)` of finite modules with `Mₙ₊₁ ⧸ I^(n+1) ≅ Mₙ` killed by `I^(n+1)` —
+  `AdicSystem.fgModuleCatEquivalence` — and finite commutative `A`-algebras to compatible systems
+  of finite algebras — `AdicAlgSystem.finiteAlgEquivalence`. Finite modules over such a ring are
+  `I`-adically complete: `AdicSystem.isAdicComplete_of_finite`.
 
 ## Module map: the affine core
 
@@ -169,6 +175,9 @@ declaration names above to find the rest.
 * The Tate annulus, the Tate chain and the Tate curve model — `FormalSchemes/TateAnnulus.lean`,
   `FormalSchemes/TateChainGlue.lean`, `FormalSchemes/TateCurveModel.lean`,
   `FormalSchemes/TateSeparatedScheme.lean`
+* Compatible systems over the thickenings and their algebraization —
+  `FormalSchemes/AdicSystem.lean`, `FormalSchemes/AdicSystemEquivalence.lean`,
+  `FormalSchemes/AdicSystemAlgebraEquivalence.lean`
 
 ## Status
 
@@ -184,7 +193,8 @@ declaration names above to find the rest.
     (`FormalSchemes/GeneralSeparatedHomRestrictOpen.lean`);
   * a Tate model of period `q` (the model here has period `q²`, see above).
 * **Out of scope**: Raynaud generic fibres and the rigid-analytic side, étale morphisms and
-  normalization of formal schemes, Grothendieck existence, admissible blow-ups — see
+  normalization of formal schemes, Grothendieck existence beyond the affine case (it needs the
+  cohomology of coherent sheaves), admissible blow-ups — see
   `docs/rigid-analytic-interface.md`.
 
 ## Use in the IUT programme
