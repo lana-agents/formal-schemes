@@ -71,20 +71,27 @@ def toLimit : M →ₗ[A] (ofModule I M).limit :=
 theorem proj_toLimit (n : ℕ) (x : M) :
     (ofModule I M).proj n (toLimit I M x) = Submodule.Quotient.mk x := rfl
 
-/-- Over a precomplete ring, every element of the limit of the adic system of a finite module
-comes from the module. -/
-theorem toLimit_surjective [IsPrecomplete I A] : Function.Surjective (toLimit I M) := by
+/-- Over a precomplete ring, a linear map from a finite module to the limit of an adic system is
+surjective as soon as each of its levels is. -/
+theorem surjective_of_proj_comp_surjective [IsPrecomplete I A]
+    {S : AdicSystem.{u, v} I} (φ : M →ₗ[A] S.limit)
+    (hφ : ∀ k, Function.Surjective (S.proj k ∘ₗ φ)) : Function.Surjective φ := by
   obtain ⟨t, s, hs⟩ := Module.Finite.exists_fin (R := A) (M := M)
-  have hspan : ∀ k, Submodule.span A
-      (Set.range fun i ↦ (ofModule I M).proj k (toLimit I M (s i))) = ⊤ := by
+  have hspan : ∀ k, Submodule.span A (Set.range fun i ↦ S.proj k (φ (s i))) = ⊤ := by
     intro k
-    change Submodule.span A (Set.range ((I ^ (k + 1) • ⊤ : Submodule A M).mkQ ∘ s)) = ⊤
-    rw [Set.range_comp, ← Submodule.map_span, hs, Submodule.map_top, Submodule.range_mkQ]
+    change Submodule.span A (Set.range ((S.proj k ∘ₗ φ) ∘ s)) = ⊤
+    rw [Set.range_comp, ← Submodule.map_span, hs, Submodule.map_top,
+      LinearMap.range_eq_top.2 (hφ k)]
   intro m
   obtain ⟨a₀, ha₀⟩ := (Submodule.mem_span_range_iff_exists_fun A).1
-    ((hspan 0).symm ▸ Submodule.mem_top : (ofModule I M).proj 0 m ∈ _)
-  obtain ⟨a, -, ha⟩ := (ofModule I M).exists_coeff _ hspan m 0 a₀ ha₀
+    ((hspan 0).symm ▸ Submodule.mem_top : S.proj 0 m ∈ _)
+  obtain ⟨a, -, ha⟩ := S.exists_coeff _ hspan m 0 a₀ ha₀
   exact ⟨∑ i, a i • s i, by simp [map_sum, map_smul, ha]⟩
+
+/-- Over a precomplete ring, every element of the limit of the adic system of a finite module
+comes from the module. -/
+theorem toLimit_surjective [IsPrecomplete I A] : Function.Surjective (toLimit I M) :=
+  surjective_of_proj_comp_surjective I M (toLimit I M) fun _ ↦ Submodule.mkQ_surjective _
 
 /-- Over a Noetherian ring with `I` in the Jacobson radical, the map from a finite module to the
 limit of its adic system is injective (Krull intersection theorem). -/
