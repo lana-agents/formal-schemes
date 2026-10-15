@@ -340,6 +340,8 @@ import FormalSchemes.ProjectiveLineCompletion
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
+import FormalSchemes.QcohSpecSections
+import FormalSchemes.QcohTwoCech
 import FormalSchemes.RefinedOverlapRestrict
 import FormalSchemes.RefinedOverlapTransition
 import FormalSchemes.RegularMulEquiv
