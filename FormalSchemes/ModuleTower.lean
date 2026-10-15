@@ -227,7 +227,8 @@ theorem limMap_surjective {K M N : ℕᵒᵖ ⥤ ModuleCat.{v} A} (ι : K ⟶ M)
     obtain ⟨b, hb⟩ := hD_surj k a
     exact ⟨b, Subtype.ext hb⟩
   obtain ⟨s, hs, -⟩ :=
-    AdicSystem.exists_section_of_surjective 0 (X := fun k ↦ ↥(D k)) f hf ⟨(hD_ne 0).some, (hD_ne 0).some_mem⟩
+    AdicSystem.exists_section_of_surjective 0 (X := fun k ↦ ↥(D k)) f hf
+      ⟨(hD_ne 0).some, (hD_ne 0).some_mem⟩
   refine ⟨⟨fun n ↦ (s n).1, fun n ↦ congrArg Subtype.val (hs n)⟩, ?_⟩
   ext n
   exact (s n).2.1
