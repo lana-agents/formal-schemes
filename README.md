@@ -113,6 +113,18 @@ is representative, and `FormalSchemes.lean` is the only exhaustive index of the 
   `AdicSystem.fgModuleCatEquivalence` — and finite commutative `A`-algebras to compatible systems
   of finite algebras — `AdicAlgSystem.finiteAlgEquivalence`. Finite modules over such a ring are
   `I`-adically complete: `AdicSystem.isAdicComplete_of_finite`.
+* **Cohomological input for global Grothendieck existence on curves** (toward EGA III 5.1.4):
+  the ordered Čech complex of a two-set covering (Stacks, Definition 20.23.2, Tag 01FI) and its
+  six-term exact sequence — `TwoCech.δ` — instantiated for sheaves of modules on a scheme, with
+  `Γ(M, U ⊔ V) ≃ Ȟ⁰` (`AlgebraicGeometry.Scheme.Modules.cechH0Equiv`); surjectivity on affine
+  sections of locally surjective maps of quasi-coherent modules (the `H¹` part of Stacks,
+  Lemma 30.2.2, Tag 01XB) — `AlgebraicGeometry.surjective_app_of_isAffineOpen`; right exactness
+  of `Ȟ¹` for two affines with affine intersection —
+  `AlgebraicGeometry.Scheme.Modules.IsShortExactSheaf.cechMapH1_surjective`; Mittag-Leffler for
+  towers of modules (Stacks, Lemma 10.86.4, Tag 0598) — `ModuleTower.limMap_surjective` — and
+  the comparison of `Ȟ⁰`, `Ȟ¹` with limits along a tower — `TwoCechTower.limH0Equiv`,
+  `TwoCechTower.toLimH1_bijective`; Serre's computation of `H^i(ℙ¹_A, 𝒪(d))` (Stacks,
+  Lemma 30.8.1, Tag 01XT) — `ProjectiveLine.H0Equiv`, `ProjectiveLine.H1Equiv`.
 
 ## Module map: the affine core
 
@@ -178,6 +190,11 @@ declaration names above to find the rest.
 * Compatible systems over the thickenings and their algebraization —
   `FormalSchemes/AdicSystem.lean`, `FormalSchemes/AdicSystemEquivalence.lean`,
   `FormalSchemes/AdicSystemAlgebraEquivalence.lean`
+* Two-set Čech cohomology, quasi-coherent sections over affines, towers —
+  `FormalSchemes/TwoCech.lean`, `FormalSchemes/SchemeTwoCech.lean`,
+  `FormalSchemes/QcohSpecSections.lean`, `FormalSchemes/QcohTwoCech.lean`,
+  `FormalSchemes/ModuleTower.lean`, `FormalSchemes/TwoCechTower.lean`,
+  `FormalSchemes/ProjectiveLineTwist.lean`
 
 ## Status
 
@@ -193,8 +210,10 @@ declaration names above to find the rest.
     (`FormalSchemes/GeneralSeparatedHomRestrictOpen.lean`);
   * a Tate model of period `q` (the model here has period `q²`, see above).
 * **Out of scope**: Raynaud generic fibres and the rigid-analytic side, étale morphisms and
-  normalization of formal schemes, Grothendieck existence beyond the affine case (it needs the
-  cohomology of coherent sheaves), admissible blow-ups — see
+  normalization of formal schemes, Grothendieck existence beyond the affine case (the
+  two-set Čech, Mittag-Leffler and `ℙ¹` inputs above are in place; still missing are coherent
+  sheaves on `ℙ¹_A` beyond the twists, Serre vanishing, finiteness over the Rees algebra and the
+  theorem on formal functions), admissible blow-ups — see
   `docs/rigid-analytic-interface.md`.
 
 ## Use in the IUT programme
