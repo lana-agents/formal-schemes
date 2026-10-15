@@ -6,6 +6,8 @@ Authors: LANA Project
 import Mathlib.Algebra.Module.SnakeLemma
 import Mathlib.LinearAlgebra.Prod
 import Mathlib.LinearAlgebra.Quotient.Basic
+import Mathlib.RingTheory.Finiteness.Finsupp
+import Mathlib.RingTheory.Noetherian.Basic
 
 /-!
 # The Čech complex of a two-set covering, algebraically
@@ -23,7 +25,11 @@ This file isolates the algebra of that situation: two linear maps `f : P → R` 
 * for a short exact sequence of such data, the connecting map `TwoCech.δ` and the six-term exact
   sequence `0 → H⁰' → H⁰ → H⁰'' → H¹' → H¹ → H¹'' → 0` (`TwoCech.mapH0_injective`,
   `TwoCech.exact_mapH0`, `TwoCech.exact_mapH0_δ`, `TwoCech.exact_δ_mapH1`,
-  `TwoCech.exact_mapH1`, `TwoCech.mapH1_surjective`).
+  `TwoCech.exact_mapH1`, `TwoCech.mapH1_surjective`);
+* the dévissage steps for finiteness: `TwoCech.finite_H1_of_surjective` and, over a Noetherian
+  ring, `TwoCech.finite_H0_of_shortExact`. With Serre's computation for the twisting sheaves
+  (`FormalSchemes.ProjectiveLineTwist`), these give finiteness of the cohomology of every quotient
+  of a sum of twists on `ℙ¹_A` (the descending induction of Stacks, Lemma 30.14.1, Tag 01YS).
 
 Applied to the sections of a short exact sequence of quasi-coherent modules on a scheme covered
 by two affine opens with affine intersection, this is the Mayer–Vietoris sequence (Stacks,
@@ -191,6 +197,18 @@ lemma exact_δ_mapH1 :
     (LinearMap.exact_map_mkQ_range _) _ _ _ (LinearMap.ext fun _ ↦ rfl)
     (Submodule.mkQ_surjective _)
 
+include α₁ β₁ γ₁ α₂ β₂ γ₂ hf₁ hg₁ hf₂ hg₂ hα hβ hγ hα₂ hβ₂ hγ₁ in
+/-- Dévissage for `H⁰`: over a Noetherian ring, if `H⁰` of the middle term and `H¹` of the sub
+are finite, so is `H⁰` of the quotient (from the exactness of `H⁰ → H⁰'' → H¹'`). -/
+theorem finite_H0_of_shortExact [IsNoetherianRing A] [Module.Finite A (H0 f g)]
+    [Module.Finite A (H1 f' g')] : Module.Finite A (H0 f'' g'') := by
+  let δ' := δ α₁ β₁ γ₁ α₂ β₂ γ₂ hf₁ hg₁ hf₂ hg₂ hα hβ hγ hα₂ hβ₂ hγ₁
+  have hex : Function.Exact (mapH0 α₂ β₂ γ₂ hf₂ hg₂) δ'.rangeRestrict := by
+    intro x
+    rw [← Subtype.coe_inj, LinearMap.codRestrict_apply, Submodule.coe_zero]
+    exact exact_mapH0_δ α₁ β₁ γ₁ α₂ β₂ γ₂ hf₁ hg₁ hf₂ hg₂ hα hβ hγ hα₂ hβ₂ hγ₁ x
+  exact Module.Finite.of_exact hex (LinearMap.surjective_rangeRestrict _)
+
 end Connecting
 
 include hf₂ hg₂ in
@@ -223,6 +241,12 @@ lemma mapH1_surjective (hγ₂ : Surjective γ₂) : Surjective (mapH1 α₂ β�
   induction x using Submodule.Quotient.induction_on with | H x => ?_
   obtain ⟨y, rfl⟩ := hγ₂ x
   exact ⟨Submodule.Quotient.mk y, rfl⟩
+
+include hf₂ hg₂ in
+/-- Dévissage for `H¹`: `H¹` of a quotient of data with finite `H¹` is finite. -/
+theorem finite_H1_of_surjective (hγ₂ : Surjective γ₂) [Module.Finite A (H1 f g)] :
+    Module.Finite A (H1 f'' g'') :=
+  Module.Finite.of_surjective _ (mapH1_surjective α₂ β₂ γ₂ hf₂ hg₂ hγ₂)
 
 end SES
 
