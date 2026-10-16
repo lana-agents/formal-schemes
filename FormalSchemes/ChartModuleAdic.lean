@@ -304,7 +304,7 @@ variable {I : Ideal A} (S : AdicChartSystem I)
 lemma kill01 (n : ℕ) : I ^ n • (⊤ : Submodule A (S.M n).M01) = ⊥ :=
   smul_top_M01_eq_bot _ (S.kill0 n)
 
-/-- **Uniform vanishing of `H¹`** (the input of Stacks, Lemma 30.24.2, Tag 0884, for `ℙ¹`):
+/-- **Uniform vanishing of `H¹`** (cf. Stacks, Lemma 30.24.2, Tag 0884, for `ℙ¹`):
 `H¹(Mₙ(k)) = 0` for all `n` and all `k ≥ k₀`. -/
 theorem exists_H1_twist_eq_bot : ∃ k₀ : ℕ, ∀ k : ℤ, k₀ ≤ k → ∀ n,
     Subsingleton ((S.M n).twist k).H1 := by
