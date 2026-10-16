@@ -614,3 +614,4 @@ import FormalSchemes.TwoPatchFibreProductProjectionLeft
 import FormalSchemes.TwoPatchFibreProductProjectionLeftInv
 import FormalSchemes.TwoPatchWitness
 import FormalSchemes.TwoSetTwist
+import FormalSchemes.UniformArtinRees
