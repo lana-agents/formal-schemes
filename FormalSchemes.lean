@@ -326,6 +326,7 @@ import FormalSchemes.LocallyRingedSpaceHomExt
 import FormalSchemes.LocallyRingedSpaceRange
 import FormalSchemes.LocallyRingedSpaceStalkSurjective
 import FormalSchemes.ModuleTower
+import FormalSchemes.ModulesEpi
 import FormalSchemes.NestedOpenFormalSubscheme
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
