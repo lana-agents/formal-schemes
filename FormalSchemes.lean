@@ -350,6 +350,7 @@ import FormalSchemes.OpenImmersionSheafComponentIso
 import FormalSchemes.OpenImmersionSourceFormalScheme
 import FormalSchemes.PreimageBasicOpen
 import FormalSchemes.PrincipalCoverCompletionDatum
+import FormalSchemes.ProjectiveLineBridge
 import FormalSchemes.ProjectiveLineCharts
 import FormalSchemes.ProjectiveLineCompletion
 import FormalSchemes.ProjectiveLineScheme
