@@ -65,7 +65,6 @@ lemma H0_twist_quot (P : ChartModule A) (J : Ideal A) (d : ℕ) :
     ((P.quot J).twist d).H0 = ((P.twist d).quot J).H0 := by
   change TwoCech.H0 _ ((P.quot J).twist d).r1 = TwoCech.H0 _ ((P.twist d).quot J).r1
   rw [twist_quot_r1]
-  rfl
 
 lemma Hom.comp_assoc {M N P Q : ChartModule A} (χ : Hom P Q) (ψ : Hom N P) (φ : Hom M N) :
     (χ.comp ψ).comp φ = χ.comp (ψ.comp φ) := Hom.ext' rfl rfl rfl

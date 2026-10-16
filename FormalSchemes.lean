@@ -126,6 +126,7 @@ import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartGermCriterion
 import FormalSchemes.ChartModule
+import FormalSchemes.ChartModuleAdic
 import FormalSchemes.ChartModuleDelta
 import FormalSchemes.ChartModuleFF
 import FormalSchemes.ChartModuleFormal

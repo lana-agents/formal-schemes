@@ -86,7 +86,7 @@ lemma t_zpow_r1_x1 (n : ℤ) (m : M.M1) :
   rw [← zpow_neg_one, ← zpow_add, ← zpow_add, add_comm]
 
 /-- **The Serre twist** `M(n)`: the second restriction map is multiplied by `Tⁿ`. -/
-def twist (n : ℤ) : ChartModule A where
+abbrev twist (n : ℤ) : ChartModule A where
   M0 := M.M0
   M1 := M.M1
   M01 := M.M01
