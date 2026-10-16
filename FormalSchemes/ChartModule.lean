@@ -864,7 +864,7 @@ lemma Hom.comm_x1_pow (φ : Hom M N) (k : ℕ) (m : M.M1) :
       Module.End.mul_apply]
 
 /-- The kernel of a morphism of chart modules. -/
-noncomputable def Hom.ker (φ : Hom M N) : ChartModule A where
+noncomputable abbrev Hom.ker (φ : Hom M N) : ChartModule A where
   M0 := ModuleCat.of A (LinearMap.ker φ.f0)
   M1 := ModuleCat.of A (LinearMap.ker φ.f1)
   M01 := ModuleCat.of A (LinearMap.ker φ.f01)
