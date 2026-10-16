@@ -26,7 +26,7 @@ This file identifies these rings with polynomial and Laurent polynomial rings:
 The key identity is homogeneity: for `a` homogeneous of degree `n`,
 `a(w v₀, w v₁) = wⁿ a(v₀, v₁)` (`ProjectiveLine.aeval_mul_of_isHomogeneous`); it shows that
 `a / x_kⁿ` is the dehomogenization of `a` evaluated at `x_{1-k}/x_k`. This is the computation of
-Stacks, Lemma 27.8.3, Tag 01MD (`D₊(f) ≅ Spec S_(f)`) made explicit for `ℙ¹`, as used in Stacks,
+Stacks, Section 27.8, Tag 01M3 (`D₊(f) ≅ Spec S_(f)`) made explicit for `ℙ¹`, as used in Stacks,
 Section 30.8, Tag 01XS, for the cohomology of projective space.
 -/
 

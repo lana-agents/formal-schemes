@@ -13,7 +13,7 @@ import FormalSchemes.TwoSetTwist
 On `ℙ¹_A = Proj A[x₀, x₁]` (`FormalSchemes.ProjectiveLineScheme`) with its covering by
 `U₀ = D₊(x₀)` and `U₁ = D₊(x₁)`, the transition function of `𝒪(d)` from the trivialisation by
 `x₁ᵈ` on `U₁` to the one by `x₀ᵈ` on `U₀` is `(x₁/x₀)ᵈ = Tᵈ` on `U₀ ∩ U₁ = Spec A[T, T⁻¹]`
-(Stacks, Lemma 27.10.3, Tag 01MQ). So:
+(Stacks, Section 27.10, Tag 01MM). So:
 
 * `ProjectiveLine.serreTwist A F d` is the twist `F(d)` of an `𝒪_{ℙ¹}`-module `F` along the two
   charts by `Tᵈ` (`AlgebraicGeometry.Scheme.Modules.twist`);

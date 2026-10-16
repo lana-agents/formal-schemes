@@ -14,10 +14,10 @@ Let `X` be a scheme, `U`, `V` two opens and `τ ∈ Γ(X, U ∩ V)`. For an `�
 *twist* `M(τ)` is the `𝒪_X`-module whose sections over `W` are the pairs
 `(s, t) ∈ M(U ∩ W) × M(V ∩ W)` with `s = τ · t` on `U ∩ V ∩ W`. When `τ` is a unit, `M(τ)` is
 obtained by regluing `M|_U` and `M|_V` along multiplication by `τ` on the overlap; for `M = 𝒪_X`
-these are the invertible sheaves trivialised on `U` and `V`, with transition function `τ`
-(Stacks, Section 17.25, Tag 01CR, and Lemma 6.33.2, Tag 00AL, for gluing). On `ℙ¹_A`, with
-`U = D₊(x₀)`, `V = D₊(x₁)` and `τ = (x₁/x₀)^d`, `𝒪(τ)` is Serre's twisting sheaf `𝒪(d)` and
-`M(τ) = M ⊗ 𝒪(d)` (Stacks, Lemma 27.10.3, Tag 01MQ: `𝒪(d)` is trivialised on `D₊(x_k)` by `x_kᵈ`).
+these are the invertible sheaves trivialised on `U` and `V`, with transition function `τ`.
+On `ℙ¹_A`, with `U = D₊(x₀)`, `V = D₊(x₁)` and `τ = (x₁/x₀)^d`, `𝒪(τ)` is Serre's twisting
+sheaf `𝒪(d)` and `M(τ) = M ⊗ 𝒪(d)` (Stacks, Section 27.10, Tag 01MM: `𝒪(d)` is trivialised on
+`D₊(x_k)` by `x_kᵈ`).
 
 Main definitions:
 * `PresheafOfModules.prod`: the sectionwise product of two presheaves of modules;

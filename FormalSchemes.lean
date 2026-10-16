@@ -125,6 +125,7 @@ import FormalSchemes.BasicOpenSectionsHom
 import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartGermCriterion
+import FormalSchemes.ChartModule
 import FormalSchemes.ChartSpfHomColimitTarget
 import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
