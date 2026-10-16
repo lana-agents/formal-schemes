@@ -127,8 +127,10 @@ import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartGermCriterion
 import FormalSchemes.ChartModule
 import FormalSchemes.ChartModuleDelta
+import FormalSchemes.ChartModuleFF
 import FormalSchemes.ChartModuleFormal
 import FormalSchemes.ChartModuleFormalH0
+import FormalSchemes.ChartModuleHom
 import FormalSchemes.ChartModuleQuot
 import FormalSchemes.ChartSpfHomColimitTarget
 import FormalSchemes.ChartSpfHomIndep
