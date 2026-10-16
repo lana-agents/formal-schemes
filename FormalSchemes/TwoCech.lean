@@ -21,7 +21,9 @@ terms, because there is no strictly increasing triple of indices in `{0, 1}`:
 This file isolates the algebra of that situation: two linear maps `f : P → R` and `g : Q → R`
 (the two restriction maps), the differential `TwoCech.d f g : P × Q → R`, and
 * `TwoCech.H0 f g`, its kernel, and `TwoCech.H1 f g`, its cokernel;
-* the maps `TwoCech.mapH0`, `TwoCech.mapH1` induced by a morphism of such data;
+* the maps `TwoCech.mapH0`, `TwoCech.mapH1` induced by a morphism of such data, the isomorphisms
+  `TwoCech.equivH0`, `TwoCech.equivH1` induced by an isomorphism, and the comparison with the
+  same data over `ℤ` (`TwoCech.H0RestrictScalarsEquiv`, `TwoCech.H1RestrictScalarsEquiv`);
 * for a short exact sequence of such data, the connecting map `TwoCech.δ` and the six-term exact
   sequence `0 → H⁰' → H⁰ → H⁰'' → H¹' → H¹ → H¹'' → 0` (`TwoCech.mapH0_injective`,
   `TwoCech.exact_mapH0`, `TwoCech.exact_mapH0_δ`, `TwoCech.exact_δ_mapH1`,
@@ -102,6 +104,70 @@ def mapH1 (α : P →ₗ[A] P') (β : Q →ₗ[A] Q') (γ : R →ₗ[A] R')
 lemma mapH1_mk (α : P →ₗ[A] P') (β : Q →ₗ[A] Q') (γ : R →ₗ[A] R')
     (hf : f' ∘ₗ α = γ ∘ₗ f) (hg : g' ∘ₗ β = γ ∘ₗ g) (x : R) :
     mapH1 α β γ hf hg (Submodule.Quotient.mk x) = Submodule.Quotient.mk (γ x) := rfl
+
+/-! ### Isomorphic two-set Čech data -/
+
+section Equiv
+
+variable (α : P ≃ₗ[A] P') (β : Q ≃ₗ[A] Q') (γ : R ≃ₗ[A] R')
+  (hf : f' ∘ₗ (α : P →ₗ[A] P') = (γ : R →ₗ[A] R') ∘ₗ f)
+  (hg : g' ∘ₗ (β : Q →ₗ[A] Q') = (γ : R →ₗ[A] R') ∘ₗ g)
+
+lemma symm_comp_eq (α : P ≃ₗ[A] P') (γ : R ≃ₗ[A] R')
+    (hf : f' ∘ₗ (α : P →ₗ[A] P') = (γ : R →ₗ[A] R') ∘ₗ f) :
+    f ∘ₗ (α.symm : P' →ₗ[A] P) = (γ.symm : R' →ₗ[A] R) ∘ₗ f' := by
+  refine LinearMap.ext fun x ↦ γ.injective ?_
+  have := LinearMap.congr_fun hf (α.symm x)
+  simp only [LinearMap.comp_apply, LinearEquiv.coe_coe, LinearEquiv.apply_symm_apply] at this ⊢
+  exact this.symm
+
+/-- Isomorphic two-set Čech data have isomorphic `H⁰`. -/
+def equivH0 : H0 f g ≃ₗ[A] H0 f' g' :=
+  LinearEquiv.ofLinear (mapH0 (α : P →ₗ[A] P') β γ hf hg)
+    (mapH0 (α.symm : P' →ₗ[A] P) β.symm γ.symm (symm_comp_eq α γ hf) (symm_comp_eq β γ hg))
+    (by ext x <;> simp) (by ext x <;> simp)
+
+@[simp]
+lemma equivH0_apply (x : H0 f g) :
+    (equivH0 α β γ hf hg x : P' × Q') = (α x.1.1, β x.1.2) := rfl
+
+/-- Isomorphic two-set Čech data have isomorphic `H¹`. -/
+def equivH1 : H1 f g ≃ₗ[A] H1 f' g' :=
+  LinearEquiv.ofLinear (mapH1 (α : P →ₗ[A] P') β γ hf hg)
+    (mapH1 (α.symm : P' →ₗ[A] P) β.symm γ.symm (symm_comp_eq α γ hf) (symm_comp_eq β γ hg))
+    (by ext x; simp) (by ext x; simp)
+
+@[simp]
+lemma equivH1_mk (x : R) :
+    equivH1 α β γ hf hg (Submodule.Quotient.mk x) = Submodule.Quotient.mk (γ x) := rfl
+
+end Equiv
+
+/-! ### Restricting scalars to `ℤ` -/
+
+section RestrictScalars
+
+lemma d_restrictScalars (f : P →ₗ[A] R) (g : Q →ₗ[A] R) :
+    d (f.restrictScalars ℤ) (g.restrictScalars ℤ) = (d f g).restrictScalars ℤ := by
+  ext x <;> simp [d_apply]
+
+lemma H0_restrictScalars (f : P →ₗ[A] R) (g : Q →ₗ[A] R) :
+    H0 (f.restrictScalars ℤ) (g.restrictScalars ℤ) = (H0 f g).restrictScalars ℤ := by
+  ext x
+  simp
+
+/-- The `H⁰` of two-set Čech data, computed over `ℤ`. -/
+def H0RestrictScalarsEquiv (f : P →ₗ[A] R) (g : Q →ₗ[A] R) :
+    H0 (f.restrictScalars ℤ) (g.restrictScalars ℤ) ≃ₗ[ℤ] (H0 f g).restrictScalars ℤ :=
+  LinearEquiv.ofEq _ _ (H0_restrictScalars f g)
+
+/-- The `H¹` of two-set Čech data, computed over `ℤ`. -/
+def H1RestrictScalarsEquiv (f : P →ₗ[A] R) (g : Q →ₗ[A] R) :
+    H1 (f.restrictScalars ℤ) (g.restrictScalars ℤ) ≃ₗ[ℤ] H1 f g :=
+  (Submodule.quotEquivOfEq _ _ (by rw [d_restrictScalars, LinearMap.range_restrictScalars])).trans
+    (Submodule.Quotient.restrictScalarsEquiv ℤ _)
+
+end RestrictScalars
 
 /-! ### Short exact sequences of two-set Čech data -/
 

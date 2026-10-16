@@ -342,6 +342,7 @@ import FormalSchemes.ProjectiveLineCharts
 import FormalSchemes.ProjectiveLineCompletion
 import FormalSchemes.ProjectiveLineScheme
 import FormalSchemes.ProjectiveLineTwist
+import FormalSchemes.ProjectiveLineTwistingSheaf
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
@@ -605,3 +606,4 @@ import FormalSchemes.TwoPatchFibreProductProjection
 import FormalSchemes.TwoPatchFibreProductProjectionLeft
 import FormalSchemes.TwoPatchFibreProductProjectionLeftInv
 import FormalSchemes.TwoPatchWitness
+import FormalSchemes.TwoSetTwist
