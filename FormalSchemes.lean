@@ -338,7 +338,9 @@ import FormalSchemes.OpenImmersionSheafComponentIso
 import FormalSchemes.OpenImmersionSourceFormalScheme
 import FormalSchemes.PreimageBasicOpen
 import FormalSchemes.PrincipalCoverCompletionDatum
+import FormalSchemes.ProjectiveLineCharts
 import FormalSchemes.ProjectiveLineCompletion
+import FormalSchemes.ProjectiveLineScheme
 import FormalSchemes.ProjectiveLineTwist
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
