@@ -132,6 +132,8 @@ import FormalSchemes.ChartModuleFF
 import FormalSchemes.ChartModuleFormal
 import FormalSchemes.ChartModuleFormalH0
 import FormalSchemes.ChartModuleHom
+import FormalSchemes.ChartModuleKernel
+import FormalSchemes.ChartModuleKernelSystem
 import FormalSchemes.ChartModuleQuot
 import FormalSchemes.ChartSpfHomColimitTarget
 import FormalSchemes.ChartSpfHomIndep

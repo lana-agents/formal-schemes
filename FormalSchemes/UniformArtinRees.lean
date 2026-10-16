@@ -165,4 +165,40 @@ theorem uniform_artinRees [IsNoetherianRing R] [Module.Finite R V] (S : System J
   rw [← hvx]
   exact Submodule.smul_mono le_rfl h5 h4
 
+/-- **Uniform Artin–Rees, submodule form.** Let `Kₘ ⊆ V` be submodules with
+`K_{m'} + Jᵐ V = Kₘ` for `m ≤ m'`. Then there is `c` with
+`K_{m'} ∩ Jᵐ V ⊆ J^{m-c} K_{m'} + J^{m'} V` for `c ≤ m ≤ m'`. -/
+theorem uniform_artinRees' [IsNoetherianRing R] [Module.Finite R V] (K : ℕ → Submodule R V)
+    (hKK : ∀ {m m' : ℕ}, m ≤ m' → K m' ⊔ J ^ m • ⊤ = K m) :
+    ∃ c : ℕ, ∀ m m', c ≤ m → m ≤ m' → ∀ x ∈ K m', x ∈ J ^ m • (⊤ : Submodule R V) →
+      x ∈ J ^ (m - c) • K m' ⊔ J ^ m' • ⊤ := by
+  let S : System J (V := V) :=
+    { S := fun m ↦ (K m).map (J ^ m • ⊤ : Submodule R V).mkQ
+      map_eq := fun {n n'} h ↦ by
+        rw [← Submodule.map_comp]
+        have : (factorPow J V h ∘ₗ (J ^ n' • ⊤ : Submodule R V).mkQ) =
+            (J ^ n • ⊤ : Submodule R V).mkQ := by ext; rfl
+        rw [this, ← hKK h, Submodule.map_sup]
+        have h0 : (J ^ n • ⊤ : Submodule R V).map (J ^ n • ⊤ : Submodule R V).mkQ = ⊥ := by
+          rw [eq_bot_iff, Submodule.map_le_iff_le_comap]
+          intro v hv
+          simpa [Submodule.Quotient.mk_eq_zero] using hv
+        rw [h0, sup_bot_eq] }
+  obtain ⟨c, hc⟩ := uniform_artinRees S
+  refine ⟨c, fun m m' hm hmm' x hxK hxm ↦ ?_⟩
+  have h1 : (J ^ m' • ⊤ : Submodule R V).mkQ x ∈ S.S m' := ⟨x, hxK, rfl⟩
+  have h2 : (J ^ m' • ⊤ : Submodule R V).mkQ x ∈
+      (J ^ m • ⊤ : Submodule R (V ⧸ (J ^ m' • ⊤ : Submodule R V))) := by
+    have := Submodule.mem_map_of_mem (f := (J ^ m' • ⊤ : Submodule R V).mkQ) hxm
+    rwa [Submodule.map_smul'', Submodule.map_top, Submodule.range_mkQ] at this
+  have h3 := hc m m' hm hmm' _ h1 h2
+  change _ ∈ J ^ (m - c) • (K m').map _ at h3
+  rw [← Submodule.map_smul'', Submodule.mem_map] at h3
+  obtain ⟨y, hy, hyx⟩ := h3
+  have : x - y ∈ (J ^ m' • ⊤ : Submodule R V) := by
+    rw [← Submodule.ker_mkQ (J ^ m' • ⊤ : Submodule R V), LinearMap.mem_ker, map_sub, hyx,
+      sub_self]
+  rw [show x = y + (x - y) by abel]
+  exact Submodule.add_mem_sup hy this
+
 end FormalSchemes.UniformArtinRees
