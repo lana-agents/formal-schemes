@@ -127,6 +127,7 @@ import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartGermCriterion
 import FormalSchemes.ChartModule
 import FormalSchemes.ChartModuleAdic
+import FormalSchemes.ChartModuleCat
 import FormalSchemes.ChartModuleCoker
 import FormalSchemes.ChartModuleDelta
 import FormalSchemes.ChartModuleExistence
@@ -355,16 +356,19 @@ import FormalSchemes.PrincipalCoverCompletionDatum
 import FormalSchemes.ProjectiveLineBridge
 import FormalSchemes.ProjectiveLineCharts
 import FormalSchemes.ProjectiveLineCompletion
+import FormalSchemes.ProjectiveLineEta
 import FormalSchemes.ProjectiveLineGlue
 import FormalSchemes.ProjectiveLineGlueIso
 import FormalSchemes.ProjectiveLineScheme
 import FormalSchemes.ProjectiveLineTwist
 import FormalSchemes.ProjectiveLineTwistingSheaf
+import FormalSchemes.ProjectiveLineUnit
 import FormalSchemes.PullbackIsoRangeLegs
 import FormalSchemes.PullbackIsoRangeSymm
 import FormalSchemes.PullbackRangeLRS
 import FormalSchemes.QcohAffineLocalization
 import FormalSchemes.QcohCover
+import FormalSchemes.QcohHomExt
 import FormalSchemes.QcohSpecSections
 import FormalSchemes.QcohTwoCech
 import FormalSchemes.RefinedOverlapRestrict
