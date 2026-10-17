@@ -142,6 +142,7 @@ import FormalSchemes.ChartModuleQuot
 import FormalSchemes.ChartModuleTensor
 import FormalSchemes.ChartModuleTensorBalanced
 import FormalSchemes.ChartRingsOfAffine
+import FormalSchemes.ChartRingsOfAffineIso
 import FormalSchemes.ChartSpfHomColimitTarget
 import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
