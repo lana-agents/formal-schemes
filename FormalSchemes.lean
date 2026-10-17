@@ -124,6 +124,7 @@ import FormalSchemes.BasicOpenRestrictionIdentification
 import FormalSchemes.BasicOpenSectionsHom
 import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
+import FormalSchemes.ChartAlgebraScheme
 import FormalSchemes.ChartGermCriterion
 import FormalSchemes.ChartModule
 import FormalSchemes.ChartModuleAdic

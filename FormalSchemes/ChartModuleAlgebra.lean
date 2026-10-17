@@ -11,7 +11,8 @@ import FormalSchemes.ChartModuleExistence
 
 A commutative algebra structure on a chart module `M` (a quasi-coherent `𝒪_{ℙ¹_A}`-algebra,
 `ProjectiveLine.ChartModule.AlgStr`) is a multiplication `M ⊗ M → M` and a global section `1`,
-associative, commutative and unital on both charts. An adic system of chart algebras
+associative, commutative and unital on both charts and on their
+overlap. An adic system of chart algebras
 (`ProjectiveLine.AdicChartAlgSystem`) is an adic system of coherent chart modules
 (`ProjectiveLine.AdicChartSystem`) with algebra structures respected by the transition maps.
 
@@ -53,6 +54,10 @@ structure AlgStr (M : ChartModule A) where
   mul_comm1 : ∀ a b : M.M1, mul.f1 (tm _ _ a b) = mul.f1 (tm _ _ b a)
   one_mul0 : ∀ a : M.M0, mul.f0 (tm _ _ one.1.1 a) = a
   one_mul1 : ∀ a : M.M1, mul.f1 (tm _ _ one.1.2 a) = a
+  mul_assoc01 : ∀ a b c : M.M01,
+    mul.f01 (tm _ _ (mul.f01 (tm _ _ a b)) c) = mul.f01 (tm _ _ a (mul.f01 (tm _ _ b c)))
+  mul_comm01 : ∀ a b : M.M01, mul.f01 (tm _ _ a b) = mul.f01 (tm _ _ b a)
+  one_mul01 : ∀ a : M.M01, mul.f01 (tm _ _ (M.r0 one.1.1) a) = a
 
 variable {M N : ChartModule A}
 
@@ -69,6 +74,8 @@ lemma Hom.mapH0_id (x : M.H0) : (Hom.id M).mapH0 x = x := rfl
 lemma Hom.f0_eq_of_eq {φ ψ : Hom M N} (h : φ = ψ) (x : M.M0) : φ.f0 x = ψ.f0 x := by rw [h]
 
 lemma Hom.f1_eq_of_eq {φ ψ : Hom M N} (h : φ = ψ) (x : M.M1) : φ.f1 x = ψ.f1 x := by rw [h]
+
+lemma Hom.f01_eq_of_eq {φ ψ : Hom M N} (h : φ = ψ) (x : M.M01) : φ.f01 x = ψ.f01 x := by rw [h]
 
 end ChartModule
 
@@ -208,7 +215,10 @@ theorem exists_algebraization (S : AdicChartAlgSystem I) :
       mul_comm0 := fun a b ↦ (Hom.f0_eq_of_eq hcomm (tm _ _ b a))
       mul_comm1 := fun a b ↦ (Hom.f1_eq_of_eq hcomm (tm _ _ b a))
       one_mul0 := fun a ↦ Hom.f0_eq_of_eq hone_mul a
-      one_mul1 := fun a ↦ Hom.f1_eq_of_eq hone_mul a },
+      one_mul1 := fun a ↦ Hom.f1_eq_of_eq hone_mul a
+      mul_assoc01 := fun a b c ↦ Hom.f01_eq_of_eq hassoc (tm _ _ (tm _ _ a b) c)
+      mul_comm01 := fun a b ↦ (Hom.f01_eq_of_eq hcomm (tm _ _ b a))
+      one_mul01 := fun a ↦ Hom.f01_eq_of_eq hone_mul a },
     α, hα, hc, fun n ↦ ⟨hαμ n, hαone n⟩⟩
 
 end AdicChartAlgSystem
