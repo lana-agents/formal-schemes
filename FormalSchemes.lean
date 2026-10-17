@@ -356,9 +356,11 @@ import FormalSchemes.PrincipalCoverCompletionDatum
 import FormalSchemes.ProjectiveLineBridge
 import FormalSchemes.ProjectiveLineCharts
 import FormalSchemes.ProjectiveLineCompletion
+import FormalSchemes.ProjectiveLineEquiv
 import FormalSchemes.ProjectiveLineEta
 import FormalSchemes.ProjectiveLineGlue
 import FormalSchemes.ProjectiveLineGlueIso
+import FormalSchemes.ProjectiveLineGlueMap
 import FormalSchemes.ProjectiveLineScheme
 import FormalSchemes.ProjectiveLineTwist
 import FormalSchemes.ProjectiveLineTwistingSheaf
