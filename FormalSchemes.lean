@@ -122,6 +122,7 @@ import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartAlgebraOfRings
 import FormalSchemes.ChartAlgebraScheme
 import FormalSchemes.ChartAlgebraStructureMap
+import FormalSchemes.ChartAlgebraStructureMapAffine
 import FormalSchemes.ChartGermCriterion
 import FormalSchemes.ChartModule
 import FormalSchemes.ChartModuleAdic
