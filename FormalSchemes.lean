@@ -127,6 +127,7 @@ import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartGermCriterion
 import FormalSchemes.ChartModule
 import FormalSchemes.ChartModuleAdic
+import FormalSchemes.ChartModuleAlgebra
 import FormalSchemes.ChartModuleCat
 import FormalSchemes.ChartModuleCoker
 import FormalSchemes.ChartModuleDelta
@@ -138,6 +139,8 @@ import FormalSchemes.ChartModuleHom
 import FormalSchemes.ChartModuleKernel
 import FormalSchemes.ChartModuleKernelSystem
 import FormalSchemes.ChartModuleQuot
+import FormalSchemes.ChartModuleTensor
+import FormalSchemes.ChartModuleTensorBalanced
 import FormalSchemes.ChartSpfHomColimitTarget
 import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
