@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 LANA Project. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: LANA Project
--/
 import FormalSchemes.ActionDiscontinuous
 import FormalSchemes.ActionInvariantExtension
 import FormalSchemes.ActionQuotient
@@ -136,6 +131,7 @@ import FormalSchemes.ChartModuleDelta
 import FormalSchemes.ChartModuleExistence
 import FormalSchemes.ChartModuleFF
 import FormalSchemes.ChartModuleFlat
+import FormalSchemes.ChartModuleFlatGlobal
 import FormalSchemes.ChartModuleFormal
 import FormalSchemes.ChartModuleFormalH0
 import FormalSchemes.ChartModuleHom
@@ -339,6 +335,7 @@ import FormalSchemes.LocalFlatness
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.LocalizationQuotientPrime
 import FormalSchemes.LocalizationSplitOfNilpotentMul
+import FormalSchemes.LocalizedFlatTransport
 import FormalSchemes.LocallyFG
 import FormalSchemes.LocallyRingedSpaceBasisComponent
 import FormalSchemes.LocallyRingedSpaceGlueDesc
@@ -369,6 +366,7 @@ import FormalSchemes.ProjectiveLineExistence
 import FormalSchemes.ProjectiveLineGlue
 import FormalSchemes.ProjectiveLineGlueIso
 import FormalSchemes.ProjectiveLineGlueMap
+import FormalSchemes.ProjectiveLineProper
 import FormalSchemes.ProjectiveLineScheme
 import FormalSchemes.ProjectiveLineTwist
 import FormalSchemes.ProjectiveLineTwistChart
