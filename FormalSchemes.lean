@@ -340,6 +340,7 @@ import FormalSchemes.LocallyRingedSpaceStalkSurjective
 import FormalSchemes.ModuleTower
 import FormalSchemes.ModulesEpi
 import FormalSchemes.ModulesFiberProd
+import FormalSchemes.ModulesLocalIso
 import FormalSchemes.NestedOpenFormalSubscheme
 import FormalSchemes.OpenCover
 import FormalSchemes.OpenCoverGlueMorphisms
@@ -355,6 +356,7 @@ import FormalSchemes.ProjectiveLineBridge
 import FormalSchemes.ProjectiveLineCharts
 import FormalSchemes.ProjectiveLineCompletion
 import FormalSchemes.ProjectiveLineGlue
+import FormalSchemes.ProjectiveLineGlueIso
 import FormalSchemes.ProjectiveLineScheme
 import FormalSchemes.ProjectiveLineTwist
 import FormalSchemes.ProjectiveLineTwistingSheaf
