@@ -121,6 +121,7 @@ import FormalSchemes.BothDatumAdicOverBase
 import FormalSchemes.BothDatumFibreAdicOverBase
 import FormalSchemes.ChartAlgebraOfRings
 import FormalSchemes.ChartAlgebraScheme
+import FormalSchemes.ChartAlgebraStructureMap
 import FormalSchemes.ChartGermCriterion
 import FormalSchemes.ChartModule
 import FormalSchemes.ChartModuleAdic
@@ -140,6 +141,7 @@ import FormalSchemes.ChartModuleKernelSystem
 import FormalSchemes.ChartModuleQuot
 import FormalSchemes.ChartModuleTensor
 import FormalSchemes.ChartModuleTensorBalanced
+import FormalSchemes.ChartRingsOfAffine
 import FormalSchemes.ChartSpfHomColimitTarget
 import FormalSchemes.ChartSpfHomIndep
 import FormalSchemes.ChartSpfHomOverlap
