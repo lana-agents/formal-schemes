@@ -358,6 +358,7 @@ import FormalSchemes.ProjectiveLineCharts
 import FormalSchemes.ProjectiveLineCompletion
 import FormalSchemes.ProjectiveLineEquiv
 import FormalSchemes.ProjectiveLineEta
+import FormalSchemes.ProjectiveLineExistence
 import FormalSchemes.ProjectiveLineGlue
 import FormalSchemes.ProjectiveLineGlueIso
 import FormalSchemes.ProjectiveLineGlueMap
