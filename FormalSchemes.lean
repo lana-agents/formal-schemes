@@ -133,6 +133,7 @@ import FormalSchemes.ChartModuleCoker
 import FormalSchemes.ChartModuleDelta
 import FormalSchemes.ChartModuleExistence
 import FormalSchemes.ChartModuleFF
+import FormalSchemes.ChartModuleFlat
 import FormalSchemes.ChartModuleFormal
 import FormalSchemes.ChartModuleFormalH0
 import FormalSchemes.ChartModuleHom
@@ -332,6 +333,7 @@ import FormalSchemes.InversionCodiagonalClosedEmbeddingY
 import FormalSchemes.LargestIdealOfDefinition
 import FormalSchemes.LiftedBasicOpenCover
 import FormalSchemes.LimitUnits
+import FormalSchemes.LocalFlatness
 import FormalSchemes.LocalizationQuotient
 import FormalSchemes.LocalizationQuotientPrime
 import FormalSchemes.LocalizationSplitOfNilpotentMul
