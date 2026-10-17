@@ -16,7 +16,7 @@ In the abelian category `SheafOfModules R` of sheaves of modules over a sheaf of
 are computed by sheafifying the colimit of the underlying presheaves of modules. Since
 sheafification commutes with forgetting the module structure, the forgetful functor
 `SheafOfModules.toSheaf R` to sheaves of abelian groups preserves colimits
-(`SheafOfModules.preservesColimitsOfShape_toSheaf`), hence epimorphisms. An epimorphism of
+(`SheafOfModules.preservesColimitsOfShape_toSheaf'`), hence epimorphisms. An epimorphism of
 sheaves of abelian groups on a topological space is locally surjective
 (`TopCat.Sheaf.isLocallySurjective_iff_epi`), so:
 
@@ -41,7 +41,7 @@ variable {C : Type u'} [Category.{v} C] {J : GrothendieckTopology C} (R : Sheaf 
 colimits which exist for presheaves of modules: a colimit of sheaves of modules is the
 sheafification of the colimit of the underlying presheaves, and sheafification commutes with
 forgetting the module structure. -/
-noncomputable instance preservesColimitsOfShape_toSheaf (K : Type w) [Category.{w'} K]
+noncomputable instance preservesColimitsOfShape_toSheaf' (K : Type w) [Category.{w'} K]
     [HasColimitsOfShape K AddCommGrpCat.{v}] :
     PreservesColimitsOfShape K (toSheaf.{v} R) where
   preservesColimit {F} := by
@@ -66,7 +66,7 @@ noncomputable instance preservesColimitsOfShape_toSheaf (K : Type w) [Category.{
 
 /-- The forgetful functor from sheaves of modules to sheaves of abelian groups preserves
 epimorphisms. -/
-noncomputable instance preservesEpimorphisms_toSheaf : (toSheaf.{v} R).PreservesEpimorphisms :=
+noncomputable instance preservesEpimorphisms_toSheaf' : (toSheaf.{v} R).PreservesEpimorphisms :=
   inferInstance
 
 end SheafOfModules

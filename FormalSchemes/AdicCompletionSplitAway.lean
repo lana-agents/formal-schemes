@@ -208,7 +208,7 @@ theorem splitFstLevel_compat {m n : ℕ} (hle : m ≤ n) :
       splitFstLevel K hu hfg m := by
   refine RingHom.ext fun z => ?_
   have h := congrArg Prod.fst (factorPow_splitLevel K hu hfg hle (AdicCompletion.evalₐ K n z))
-  rw [AdicCompletion.factorPow_evalₐ] at h
+  rw [AdicCompletion.factorPow_evalₐ_apply] at h
   exact h
 
 /-- The `g`-component of the level-`n` splitting, as a map out of the completion. -/
@@ -225,7 +225,7 @@ theorem splitSndLevel_compat {m n : ℕ} (hle : m ≤ n) :
       splitSndLevel K hu hfg m := by
   refine RingHom.ext fun z => ?_
   have h := congrArg Prod.snd (factorPow_splitLevel K hu hfg hle (AdicCompletion.evalₐ K n z))
-  rw [AdicCompletion.factorPow_evalₐ] at h
+  rw [AdicCompletion.factorPow_evalₐ_apply] at h
   exact h
 
 /-- The restriction `AdicCompletion K B →+* B{1/f}^`, assembled from the level maps by the
@@ -283,7 +283,7 @@ theorem ofAwaySplitLevel_compat {m n : ℕ} (hle : m ≤ n) :
   rw [RingEquiv.apply_symm_apply] at h
   have h2 := congrArg (splitLevel K hu hfg m).symm h
   rw [RingEquiv.symm_apply_apply] at h2
-  rw [← h2, AdicCompletion.factorPow_evalₐ, AdicCompletion.factorPow_evalₐ]
+  rw [← h2, AdicCompletion.factorPow_evalₐ_apply, AdicCompletion.factorPow_evalₐ_apply]
 
 /-- The inverse map `B{1/f}^ × B{1/g}^ →+* AdicCompletion K B`. -/
 def ofAwaySplit :

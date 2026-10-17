@@ -80,7 +80,7 @@ theorem congrLevel_compat
     (Ideal.Quotient.factorPow L hle).comp (congrLevel K L e n) = congrLevel K L e m :=
   RingHom.ext fun z => by
     change Ideal.Quotient.factorPow L hle (e n (evalₐ K n z)) = e m (evalₐ K m z)
-    rw [he hle, factorPow_evalₐ]
+    rw [he hle, factorPow_evalₐ_apply]
 
 /-- The map on completions induced by a compatible family of isomorphisms of thickenings. -/
 def congrLevelHom

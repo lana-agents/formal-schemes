@@ -40,7 +40,7 @@ these isomorphisms are what closes it.
 ## Route
 
 The same one as 671, and for the same reason: both sides are open immersions into `Spf C`, so
-`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` produces the isomorphism *and* both
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` produces the isomorphism *and* both
 factorisations from a **range equality** — no ring-level splitting of `A{1/(x+y)}^ ⊗̂_R A` is
 needed, and none is proved here.
 
@@ -168,7 +168,7 @@ def tensorOverlapChartIsoFirst (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_interchangeOpenImmersion (B := annulusAlgebra R I q) I
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_firstFactorOverlapChart R I q hq hI
-  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq _ _
+  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq' _ _
     (range_firstFactorOverlapChart_eq R I q hq hI)
 
 /-- **The first-factor identification is a morphism over `Spf C`**: composing it with the coproduct
@@ -181,7 +181,7 @@ theorem tensorOverlapChartIsoFirst_hom_fac (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_interchangeOpenImmersion (B := annulusAlgebra R I q) I
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_firstFactorOverlapChart R I q hq hI
-  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac _ _
+  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_hom_fac _ _
     (range_firstFactorOverlapChart_eq R I q hq hI)
 
 /-- The reverse factorisation of `tensorOverlapChartIsoFirst_hom_fac`. Shipped alongside because the
@@ -195,7 +195,7 @@ theorem tensorOverlapChartIsoFirst_inv_fac (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_interchangeOpenImmersion (B := annulusAlgebra R I q) I
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_firstFactorOverlapChart R I q hq hI
-  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_inv_fac _ _
+  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_inv_fac _ _
     (range_firstFactorOverlapChart_eq R I q hq hI)
 
 /-- **The second-factor overlap of `Spf A ×_{Spf R} Spf A` is affine**, the mirror of
@@ -211,7 +211,7 @@ def tensorOverlapChartIsoSecond (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_rightInterchangeOpenImmersion (A := annulusAlgebra R I q) I
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_secondFactorOverlapChart R I q hq hI
-  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq _ _
+  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq' _ _
     (range_secondFactorOverlapChart_eq R I q hq hI)
 
 /-- **The second-factor identification is a morphism over `Spf C`.** -/
@@ -223,7 +223,7 @@ theorem tensorOverlapChartIsoSecond_hom_fac (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_rightInterchangeOpenImmersion (A := annulusAlgebra R I q) I
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_secondFactorOverlapChart R I q hq hI
-  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac _ _
+  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_hom_fac _ _
     (range_secondFactorOverlapChart_eq R I q hq hI)
 
 /-- The reverse factorisation of `tensorOverlapChartIsoSecond_hom_fac`. -/
@@ -236,7 +236,7 @@ theorem tensorOverlapChartIsoSecond_inv_fac (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_rightInterchangeOpenImmersion (A := annulusAlgebra R I q) I
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_secondFactorOverlapChart R I q hq hI
-  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_inv_fac _ _
+  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_inv_fac _ _
     (range_secondFactorOverlapChart_eq R I q hq hI)
 
 end AlgebraicGeometry

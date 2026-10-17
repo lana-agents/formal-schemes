@@ -329,7 +329,7 @@ present the same open (`FormalSpectrum.cofinalSpfIso`) — but the property is i
 It is also how `FormalSpectrum.isCofinal_map_of_range_eq_basicOpenChart` is proved: settle the
 statement at one convenient presentation, transport it to all the others.
 
-`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` turns the range equality into an isomorphism
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` turns the range equality into an isomorphism
 *over* `Spf I`, `FormalSpectrum.spfIsoRingEquiv_comp_globalSectionsMap`
 (`FormalSchemes.SpfIsoOverBase`) says the recovered ring isomorphism intertwines the two algebra
 structures — so it carries `I · B'` onto `I · B` — and
@@ -346,9 +346,9 @@ theorem isCofinal_map_of_range_eq {B' : Type u} [CommRing B'] [TopologicalSpace 
     (hrange : Set.range m.base = Set.range m'.base)
     (hcof' : Ideal.IsCofinal J' (I.map (algebraMap R B'))) :
     Ideal.IsCofinal J (I.map (algebraMap R B)) := by
-  set e := LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq m m' hrange with he
+  set e := LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq' m m' hrange with he
   have hfac : e.hom ≫ m' = m :=
-    LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac _ _ hrange
+    LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_hom_fac _ _ hrange
   have hcomm : (spfIsoRingEquiv e).toRingHom.comp (algebraMap R B') = algebraMap R B := by
     rw [halg, halg']
     exact spfIsoRingEquiv_comp_globalSectionsMap e m m' hfac

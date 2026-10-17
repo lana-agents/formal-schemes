@@ -128,9 +128,9 @@ the open immersion `Y|_V ⟶ Y` (`AlgebraicGeometry.LocallyRingedSpace.IsOpenImm
 
 The range side-condition that `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.lift` wants is
 exactly `f U ⊆ V` once both ranges are read off with
-`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`.
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'`.
 
-`AlgebraicGeometry.LocallyRingedSpace.restrictLE` (`FormalSchemes.ThickeningChartSpfHom`) is the
+`AlgebraicGeometry.LocallyRingedSpace.restrictLE'` (`FormalSchemes.ThickeningChartSpfHom`) is the
 case `f = 𝟙 Y`, `X = Y`. It is **not** rerouted through this construction: the two modules are
 incomparable in the import order — neither is in the other's import closure — so removing the
 overlap means rehoming one of them, which is a dedup question and not this file's. -/
@@ -139,7 +139,7 @@ def restrictOpensHom (f : X ⟶ Y) (U : Opens X.toTopCat) (V : Opens Y.toTopCat)
     X.restrict U.isOpenEmbedding ⟶ Y.restrict V.isOpenEmbedding :=
   IsOpenImmersion.lift (Y.ofRestrict V.isOpenEmbedding)
     (X.ofRestrict U.isOpenEmbedding ≫ f) (by
-      rw [comp_base, TopCat.coe_comp, Set.range_comp, range_ofRestrict, range_ofRestrict]
+      rw [comp_base, TopCat.coe_comp, Set.range_comp, range_ofRestrict', range_ofRestrict']
       exact h)
 
 /-- **The restricted morphism lies over `f`**, which is the only property of it that anything here

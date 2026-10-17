@@ -22,7 +22,7 @@ sheaf `𝒪(d)` and `M(τ) = M ⊗ 𝒪(d)` (Stacks, Section 27.10, Tag 01MM: `�
 Main definitions:
 * `PresheafOfModules.prod`: the sectionwise product of two presheaves of modules;
 * `AlgebraicGeometry.Scheme.Modules.inter M U`: the presheaf of modules `W ↦ M(U ∩ W)`;
-* `AlgebraicGeometry.Scheme.Modules.twist M U V τ`: the twist, as an `𝒪_X`-module.
+* `AlgebraicGeometry.Scheme.Modules.twoSetTwist M U V τ`: the twist, as an `𝒪_X`-module.
 -/
 
 universe v u u₁ v₁
@@ -160,7 +160,7 @@ noncomputable def twistObj (W : X.Opens) :
 
 /-- The twist, as a family of submodules of `W ↦ M(U ∩ W) × M(V ∩ W)` stable under
 restriction. -/
-noncomputable def twistSubmodule :
+noncomputable def twoSetTwistSubmodule :
     (_root_.PresheafOfModules.prod (inter M U) (inter M V)).Submodule where
   obj W := twistObj M U V τ W.unop
   map {W W'} f := by
@@ -187,8 +187,8 @@ noncomputable def twistSubmodule :
     rfl
 
 /-- The twist `M(τ)` as a presheaf of `𝒪_X`-modules. -/
-noncomputable def twistPresheaf : _root_.PresheafOfModules.{u} X.ringCatSheaf.obj :=
-  (twistSubmodule M U V τ).toPresheafOfModules
+noncomputable def twoSetTwistPresheaf : _root_.PresheafOfModules.{u} X.ringCatSheaf.obj :=
+  (twoSetTwistSubmodule M U V τ).toPresheafOfModules
 
 /-- A sheaf of `𝒪_X`-modules as a sheaf of abelian groups on the underlying space. -/
 noncomputable def toTopSheaf (M : X.Modules) : TopCat.Sheaf Ab X := ⟨M.presheaf, M.isSheaf⟩
@@ -220,7 +220,7 @@ lemma eq_of_locally_eq_inter (M : X.Modules) (U : X.Opens) {ι : Type u} (W : ι
     (fun i ↦ homOfLE (inf_le_inf_left U (le_iSup W i))) (by rw [inf_iSup_eq]) s t h
 
 lemma twistPresheaf_isSheaf :
-    TopCat.Presheaf.IsSheaf (X := X) (twistPresheaf M U V τ).presheaf := by
+    TopCat.Presheaf.IsSheaf (X := X) (twoSetTwistPresheaf M U V τ).presheaf := by
   rw [TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing]
   intro ι W sf hsf
   let a : ∀ i, Γ(M, U ⊓ W i) := fun i ↦ (sf i).1.1
@@ -265,8 +265,8 @@ lemma twistPresheaf_isSheaf :
 /-- **The twist `M(τ)`** of an `𝒪_X`-module `M` along the two opens `U`, `V` by
 `τ ∈ Γ(X, U ∩ V)`: its sections over `W` are the pairs `(s, t) ∈ M(U ∩ W) × M(V ∩ W)` with
 `s = τ t` on `U ∩ V ∩ W`. -/
-noncomputable def twist : X.Modules where
-  val := twistPresheaf M U V τ
+noncomputable def twoSetTwist : X.Modules where
+  val := twoSetTwistPresheaf M U V τ
   isSheaf := twistPresheaf_isSheaf M U V τ
 
 variable {M U V τ}
@@ -276,44 +276,44 @@ section Sections
 variable {W : X.Opens}
 
 /-- The first component `s ∈ M(U ∩ W)` of a section `(s, t)` of the twist. -/
-def twistFst (p : Γ(twist M U V τ, W)) : Γ(M, U ⊓ W) := p.1.1
+def twistFst (p : Γ(twoSetTwist M U V τ, W)) : Γ(M, U ⊓ W) := p.1.1
 
 /-- The second component `t ∈ M(V ∩ W)` of a section `(s, t)` of the twist. -/
-def twistSnd (p : Γ(twist M U V τ, W)) : Γ(M, V ⊓ W) := p.1.2
+def twistSnd (p : Γ(twoSetTwist M U V τ, W)) : Γ(M, V ⊓ W) := p.1.2
 
-lemma twist_cond (p : Γ(twist M U V τ, W)) :
+lemma twist_cond (p : Γ(twoSetTwist M U V τ, W)) :
     M.presheaf.map (homOfLE (inf_le_inf_right W inf_le_left) : (U ⊓ V) ⊓ W ⟶ U ⊓ W).op
       (twistFst p) =
     X.presheaf.map (homOfLE inf_le_left : (U ⊓ V) ⊓ W ⟶ U ⊓ V).op τ •
       M.presheaf.map (homOfLE (inf_le_inf_right W inf_le_right) : (U ⊓ V) ⊓ W ⟶ V ⊓ W).op
         (twistSnd p) := p.2
 
-lemma twist_ext {p q : Γ(twist M U V τ, W)} (h₁ : twistFst p = twistFst q)
+lemma twoSetTwist_ext {p q : Γ(twoSetTwist M U V τ, W)} (h₁ : twistFst p = twistFst q)
     (h₂ : twistSnd p = twistSnd q) : p = q :=
   Subtype.ext (Prod.ext h₁ h₂)
 
 variable (τ) in
 /-- The section `(s, t)` of the twist, for `s = τ t` on `U ∩ V ∩ W`. -/
-def twistMk (a : Γ(M, U ⊓ W)) (b : Γ(M, V ⊓ W))
+def twoSetTwistMk (a : Γ(M, U ⊓ W)) (b : Γ(M, V ⊓ W))
     (h : M.presheaf.map (homOfLE (inf_le_inf_right W inf_le_left) : (U ⊓ V) ⊓ W ⟶ U ⊓ W).op a =
       X.presheaf.map (homOfLE inf_le_left : (U ⊓ V) ⊓ W ⟶ U ⊓ V).op τ •
         M.presheaf.map (homOfLE (inf_le_inf_right W inf_le_right) :
-          (U ⊓ V) ⊓ W ⟶ V ⊓ W).op b) : Γ(twist M U V τ, W) := ⟨(a, b), h⟩
+          (U ⊓ V) ⊓ W ⟶ V ⊓ W).op b) : Γ(twoSetTwist M U V τ, W) := ⟨(a, b), h⟩
 
-@[simp] lemma twistFst_mk (a b h) : twistFst (twistMk (W := W) (M := M) τ a b h) = a := rfl
-@[simp] lemma twistSnd_mk (a b h) : twistSnd (twistMk (W := W) (M := M) τ a b h) = b := rfl
+@[simp] lemma twistFst_mk (a b h) : twistFst (twoSetTwistMk (W := W) (M := M) τ a b h) = a := rfl
+@[simp] lemma twistSnd_mk (a b h) : twistSnd (twoSetTwistMk (W := W) (M := M) τ a b h) = b := rfl
 
-@[simp] lemma twistFst_add (p q : Γ(twist M U V τ, W)) :
+@[simp] lemma twistFst_add (p q : Γ(twoSetTwist M U V τ, W)) :
     twistFst (p + q) = twistFst p + twistFst q := rfl
-@[simp] lemma twistSnd_add (p q : Γ(twist M U V τ, W)) :
+@[simp] lemma twistSnd_add (p q : Γ(twoSetTwist M U V τ, W)) :
     twistSnd (p + q) = twistSnd p + twistSnd q := rfl
 
-@[simp] lemma twistFst_map {W' : X.Opens} (f : W' ⟶ W) (p : Γ(twist M U V τ, W)) :
-    twistFst ((twist M U V τ).presheaf.map f.op p) =
+@[simp] lemma twistFst_map {W' : X.Opens} (f : W' ⟶ W) (p : Γ(twoSetTwist M U V τ, W)) :
+    twistFst ((twoSetTwist M U V τ).presheaf.map f.op p) =
       M.presheaf.map (homOfLE (inf_le_inf_left U (leOfHom f))).op (twistFst p) := rfl
 
-@[simp] lemma twistSnd_map {W' : X.Opens} (f : W' ⟶ W) (p : Γ(twist M U V τ, W)) :
-    twistSnd ((twist M U V τ).presheaf.map f.op p) =
+@[simp] lemma twistSnd_map {W' : X.Opens} (f : W' ⟶ W) (p : Γ(twoSetTwist M U V τ, W)) :
+    twistSnd ((twoSetTwist M U V τ).presheaf.map f.op p) =
       M.presheaf.map (homOfLE (inf_le_inf_left V (leOfHom f))).op (twistSnd p) := rfl
 
 end Sections
@@ -321,9 +321,9 @@ end Sections
 /-- Over an open `W ⊆ V`, a section `(s, t)` of the twist is determined by `t`: the sections of
 `M(τ)` over `W` are those of `M`. -/
 noncomputable def twistAppEquivRight {W : X.Opens} (hW : W ≤ V) :
-    Γ(twist M U V τ, W) ≃+ Γ(M, W) where
+    Γ(twoSetTwist M U V τ, W) ≃+ Γ(M, W) where
   toFun p := M.presheaf.map (homOfLE (le_inf hW le_rfl) : W ⟶ V ⊓ W).op (twistSnd p)
-  invFun t := twistMk τ (X.presheaf.map (homOfLE (inf_le_inf_left U hW) :
+  invFun t := twoSetTwistMk τ (X.presheaf.map (homOfLE (inf_le_inf_left U hW) :
       U ⊓ W ⟶ U ⊓ V).op τ •
       M.presheaf.map (homOfLE inf_le_right : U ⊓ W ⟶ W).op t)
       (M.presheaf.map (homOfLE inf_le_right : V ⊓ W ⟶ W).op t) (by
@@ -334,7 +334,7 @@ noncomputable def twistAppEquivRight {W : X.Opens} (hW : W ≤ V) :
     have hp := twist_cond p
     have hUW : U ⊓ W ≤ (U ⊓ V) ⊓ W := le_inf (le_inf inf_le_left
       ((inf_le_right : U ⊓ W ≤ W).trans hW)) inf_le_right
-    apply twist_ext
+    apply twoSetTwist_ext
     · have := congr(M.presheaf.map (homOfLE hUW).op $hp)
       rw [map_smul] at this
       simp only [presheaf_map_map_comp, scheme_presheaf_map_map_comp, twistFst_mk] at this ⊢
@@ -360,9 +360,9 @@ lemma scheme_presheaf_map_mul_inv {T : X.Opens} (hτ : IsUnit τ) (k : T ⟶ U �
 /-- Over an open `W ⊆ U`, if `τ` is a unit, a section `(s, t)` of the twist is determined by `s`:
 the sections of `M(τ)` over `W` are those of `M`. -/
 noncomputable def twistAppEquivLeft (hτ : IsUnit τ) {W : X.Opens} (hW : W ≤ U) :
-    Γ(twist M U V τ, W) ≃+ Γ(M, W) where
+    Γ(twoSetTwist M U V τ, W) ≃+ Γ(M, W) where
   toFun p := M.presheaf.map (homOfLE (le_inf hW le_rfl) : W ⟶ U ⊓ W).op (twistFst p)
-  invFun t := twistMk τ (M.presheaf.map (homOfLE inf_le_right : U ⊓ W ⟶ W).op t)
+  invFun t := twoSetTwistMk τ (M.presheaf.map (homOfLE inf_le_right : U ⊓ W ⟶ W).op t)
       (X.presheaf.map (homOfLE (le_inf ((inf_le_right : V ⊓ W ≤ W).trans hW) inf_le_left) :
         V ⊓ W ⟶ U ⊓ V).op (↑hτ.unit⁻¹ : Γ(X, U ⊓ V)) •
         M.presheaf.map (homOfLE inf_le_right : V ⊓ W ⟶ W).op t) (by
@@ -375,7 +375,7 @@ noncomputable def twistAppEquivLeft (hτ : IsUnit τ) {W : X.Opens} (hW : W ≤ 
     have hp := twist_cond p
     have hVW : V ⊓ W ≤ (U ⊓ V) ⊓ W := le_inf (le_inf ((inf_le_right : V ⊓ W ≤ W).trans hW)
       inf_le_left) inf_le_right
-    apply twist_ext
+    apply twoSetTwist_ext
     · simp only [twistFst_mk, presheaf_map_map_comp]
       rw [presheaf_map_congr M _ (𝟙 _)]
       simp
@@ -411,10 +411,10 @@ lemma twist_cech_square_left (hτ : IsUnit τ) :
     resℤ M (inf_le_left : U ⊓ V ≤ U) ∘ₗ
       ((twistAppEquivLeft (M := M) (V := V) hτ (le_refl U)).toIntLinearEquiv.toLinearMap) =
     ((twistAppEquivLeft (M := M) hτ (inf_le_left : U ⊓ V ≤ U)).toIntLinearEquiv.toLinearMap) ∘ₗ
-      resℤ (twist M U V τ) inf_le_left := by
+      resℤ (twoSetTwist M U V τ) inf_le_left := by
   refine LinearMap.ext fun p ↦ ?_
   change M.presheaf.map _ (M.presheaf.map _ (twistFst p)) =
-    M.presheaf.map _ (twistFst ((twist M U V τ).presheaf.map _ p))
+    M.presheaf.map _ (twistFst ((twoSetTwist M U V τ).presheaf.map _ p))
   rw [twistFst_map]
   simp only [presheaf_map_map_comp]
   exact presheaf_map_congr M _ _ _
@@ -423,12 +423,12 @@ lemma twist_cech_square_right (hτ : IsUnit τ) :
     (smulℤ M τ ∘ₗ resℤ M (inf_le_right : U ⊓ V ≤ V)) ∘ₗ
       ((twistAppEquivRight (M := M) (U := U) (τ := τ) (le_refl V)).toIntLinearEquiv.toLinearMap) =
     ((twistAppEquivLeft (M := M) hτ (inf_le_left : U ⊓ V ≤ U)).toIntLinearEquiv.toLinearMap) ∘ₗ
-      resℤ (twist M U V τ) inf_le_right := by
+      resℤ (twoSetTwist M U V τ) inf_le_right := by
   refine LinearMap.ext fun p ↦ ?_
   change τ • M.presheaf.map (homOfLE inf_le_right : U ⊓ V ⟶ V).op
       (M.presheaf.map (homOfLE (le_inf le_rfl le_rfl) : V ⟶ V ⊓ V).op (twistSnd p)) =
     M.presheaf.map (homOfLE (le_inf inf_le_left le_rfl) : U ⊓ V ⟶ U ⊓ (U ⊓ V)).op
-      (twistFst ((twist M U V τ).presheaf.map (homOfLE inf_le_right : U ⊓ V ⟶ V).op p))
+      (twistFst ((twoSetTwist M U V τ).presheaf.map (homOfLE inf_le_right : U ⊓ V ⟶ V).op p))
   rw [twistFst_map]
   have hp := congr(M.presheaf.map (homOfLE (le_inf le_rfl inf_le_right) :
     U ⊓ V ⟶ (U ⊓ V) ⊓ V).op $(twist_cond p))
@@ -443,7 +443,7 @@ lemma twist_cech_square_right (hτ : IsUnit τ) :
 /-- **Čech `H⁰` of a twist.** For a unit `τ`, the Čech `H⁰` of `M(τ)` for the covering `(U, V)` is
 the kernel of `(s, t) ↦ s| - τ t|` on `Γ(M, U) × Γ(M, V)`. -/
 noncomputable def twistCechH0Equiv (hτ : IsUnit τ) :
-    cechH0 (twist M U V τ) U V ≃ₗ[ℤ]
+    cechH0 (twoSetTwist M U V τ) U V ≃ₗ[ℤ]
       TwoCech.H0 (resℤ M (inf_le_left : U ⊓ V ≤ U))
         (smulℤ M τ ∘ₗ resℤ M (inf_le_right : U ⊓ V ≤ V)) :=
   TwoCech.equivH0 (twistAppEquivLeft (M := M) (V := V) hτ (le_refl U)).toIntLinearEquiv
@@ -454,7 +454,7 @@ noncomputable def twistCechH0Equiv (hτ : IsUnit τ) :
 /-- **Čech `H¹` of a twist.** For a unit `τ`, the Čech `H¹` of `M(τ)` for the covering `(U, V)` is
 the cokernel of `(s, t) ↦ s| - τ t|`. -/
 noncomputable def twistCechH1Equiv (hτ : IsUnit τ) :
-    cechH1 (twist M U V τ) U V ≃ₗ[ℤ]
+    cechH1 (twoSetTwist M U V τ) U V ≃ₗ[ℤ]
       TwoCech.H1 (resℤ M (inf_le_left : U ⊓ V ≤ U))
         (smulℤ M τ ∘ₗ resℤ M (inf_le_right : U ⊓ V ≤ V)) :=
   TwoCech.equivH1 (twistAppEquivLeft (M := M) (V := V) hτ (le_refl U)).toIntLinearEquiv

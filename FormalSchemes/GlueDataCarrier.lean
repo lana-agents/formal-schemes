@@ -11,7 +11,7 @@ import FormalSchemes.EmptyLocallyRingedSpace
 
 For a `LocallyRingedSpace.GlueData` `D`, the underlying topological space of the glued locally
 ringed space `D.glued` is the topological gluing of the underlying spaces of the pieces
-(`AlgebraicGeometry.LocallyRingedSpace.GlueData.isoCarrier`). This is the locally-ringed-space
+(`AlgebraicGeometry.LocallyRingedSpace.GlueData.carrierIso`). This is the locally-ringed-space
 analogue of `AlgebraicGeometry.Scheme.GlueData.isoCarrier`, obtained by the same chain of forgetful
 comparison isomorphisms but stopping one layer earlier (there is no `Scheme`/`LocallyRingedSpace`
 layer to traverse).
@@ -24,9 +24,9 @@ input a properly-discontinuous group action / quotient construction consumes.
 
 ## Main results
 
-* `LocallyRingedSpace.GlueData.isoCarrier`: `D.glued.carrier ≅` the topological gluing of the
+* `LocallyRingedSpace.GlueData.carrierIso`: `D.glued.carrier ≅` the topological gluing of the
   carriers of the pieces.
-* `LocallyRingedSpace.GlueData.ι_isoCarrier_inv`: compatibility of `isoCarrier` with the inclusions.
+* `LocallyRingedSpace.GlueData.ι_carrierIso_inv`: compatibility of `carrierIso` with the inclusions.
 * `LocallyRingedSpace.GlueData.range_ι_disjoint_of_isEmpty_V`: disjointness of the ranges of `ι i`,
   `ι j` when the overlap `V(i, j)` is empty.
 
@@ -67,7 +67,7 @@ instance presheafedSpace_f_open (i j : D.J) :
 /-- **The underlying topological space of the glued locally ringed space is the topological gluing
 of the underlying spaces of the pieces.** The locally-ringed-space analogue of
 `AlgebraicGeometry.Scheme.GlueData.isoCarrier`, one comparison layer shorter. -/
-def isoCarrier : 𝖣.glued.carrier ≅ D.topGlueData.toGlueData.glued := by
+def carrierIso : 𝖣.glued.carrier ≅ D.topGlueData.toGlueData.glued := by
   refine (PresheafedSpace.forget _).mapIso ?_ ≪≫
     CategoryTheory.GlueData.gluedIso _ (PresheafedSpace.forget.{_, _, u} _)
   refine SheafedSpace.forgetToPresheafedSpace.mapIso ?_ ≪≫
@@ -76,9 +76,9 @@ def isoCarrier : 𝖣.glued.carrier ≅ D.topGlueData.toGlueData.glued := by
 
 set_option backward.isDefEq.respectTransparency false in
 @[simp]
-theorem ι_isoCarrier_inv (i : D.J) :
-    D.topGlueData.toGlueData.ι i ≫ (D.isoCarrier).inv = (𝖣.ι i).base := by
-  delta isoCarrier
+theorem ι_carrierIso_inv (i : D.J) :
+    D.topGlueData.toGlueData.ι i ≫ (D.carrierIso).inv = (𝖣.ι i).base := by
+  delta carrierIso
   rw [Iso.trans_inv, GlueData.ι_gluedIso_inv_assoc, Functor.mapIso_inv, Iso.trans_inv,
     Functor.mapIso_inv, SheafedSpace.forgetToPresheafedSpace_map, PresheafedSpace.forget_map,
     PresheafedSpace.forget_map, ← PresheafedSpace.comp_base, ← Category.assoc,
@@ -99,28 +99,28 @@ theorem range_ι_disjoint_of_isEmpty_V {i j : D.J} (h : IsEmpty (𝖣.V (i, j)))
   have key : Disjoint (Set.range (D.topGlueData.ι i)) (Set.range (D.topGlueData.ι j)) := by
     rw [Set.disjoint_iff_inter_eq_empty, D.topGlueData.image_inter i j]
     exact Set.range_eq_empty _
-  -- Transport a hypothetical common point through the homeomorphism `isoCarrier.hom`.
+  -- Transport a hypothetical common point through the homeomorphism `carrierIso.hom`.
   rw [Set.disjoint_left]
   rintro x ⟨a, ha⟩ ⟨b, hb⟩
   -- `e.hom x` lies in both topological ranges, contradicting `key`.
-  have hi : D.isoCarrier.hom x ∈ Set.range ⇑(D.topGlueData.ι i) := by
+  have hi : D.carrierIso.hom x ∈ Set.range ⇑(D.topGlueData.ι i) := by
     refine ⟨a, ?_⟩
-    have h1 := ConcreteCategory.congr_hom (D.ι_isoCarrier_inv i) a
+    have h1 := ConcreteCategory.congr_hom (D.ι_carrierIso_inv i) a
     rw [ConcreteCategory.comp_apply] at h1
     calc D.topGlueData.ι i a
-        = D.isoCarrier.hom (D.isoCarrier.inv (D.topGlueData.ι i a)) :=
+        = D.carrierIso.hom (D.carrierIso.inv (D.topGlueData.ι i a)) :=
           (Iso.inv_hom_id_apply _ _).symm
-      _ = D.isoCarrier.hom ((D.ι i).base a) := congrArg _ h1
-      _ = D.isoCarrier.hom x := congrArg _ ha
-  have hj : D.isoCarrier.hom x ∈ Set.range ⇑(D.topGlueData.ι j) := by
+      _ = D.carrierIso.hom ((D.ι i).base a) := congrArg _ h1
+      _ = D.carrierIso.hom x := congrArg _ ha
+  have hj : D.carrierIso.hom x ∈ Set.range ⇑(D.topGlueData.ι j) := by
     refine ⟨b, ?_⟩
-    have h2 := ConcreteCategory.congr_hom (D.ι_isoCarrier_inv j) b
+    have h2 := ConcreteCategory.congr_hom (D.ι_carrierIso_inv j) b
     rw [ConcreteCategory.comp_apply] at h2
     calc D.topGlueData.ι j b
-        = D.isoCarrier.hom (D.isoCarrier.inv (D.topGlueData.ι j b)) :=
+        = D.carrierIso.hom (D.carrierIso.inv (D.topGlueData.ι j b)) :=
           (Iso.inv_hom_id_apply _ _).symm
-      _ = D.isoCarrier.hom ((D.ι j).base b) := congrArg _ h2
-      _ = D.isoCarrier.hom x := congrArg _ hb
+      _ = D.carrierIso.hom ((D.ι j).base b) := congrArg _ h2
+      _ = D.carrierIso.hom x := congrArg _ hb
   exact Set.disjoint_left.mp key hi hj
 
 end AlgebraicGeometry.LocallyRingedSpace.GlueData

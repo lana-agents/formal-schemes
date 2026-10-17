@@ -285,7 +285,7 @@ theorem nodeChartSectionsHom_eq_restrictπ :
     LocallyRingedSpace.restrictTopSectionsIso_inv_eq]
   all_goals first
     | rfl
-    | exact le_of_eq (LocallyRingedSpace.range_ofRestrict _ _)
+    | exact le_of_eq (LocallyRingedSpace.range_ofRestrict' _ _)
     | (rw [LocallyRingedSpace.restrictOpensHom_comp_ofRestrict]
        exact LocallyRingedSpace.range_ofRestrict_comp_subset _ _)
 

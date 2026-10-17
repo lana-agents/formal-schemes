@@ -16,7 +16,7 @@ On `ℙ¹_A = Proj A[x₀, x₁]` (`FormalSchemes.ProjectiveLineScheme`) with it
 (Stacks, Section 27.10, Tag 01MM). So:
 
 * `ProjectiveLine.serreTwist A F d` is the twist `F(d)` of an `𝒪_{ℙ¹}`-module `F` along the two
-  charts by `Tᵈ` (`AlgebraicGeometry.Scheme.Modules.twist`);
+  charts by `Tᵈ` (`AlgebraicGeometry.Scheme.Modules.twoSetTwist`);
 * `ProjectiveLine.twistingSheaf A d = 𝒪(d)` is the twist of the structure sheaf;
 * `ProjectiveLine.cechH0TwistingSheafEquiv`, `ProjectiveLine.cechH1TwistingSheafEquiv`: the Čech
   cohomology of `𝒪(d)` for the standard covering is the cohomology of
@@ -27,7 +27,7 @@ On `ℙ¹_A = Proj A[x₀, x₁]` (`FormalSchemes.ProjectiveLineScheme`) with it
   `d ≥ 0` (`ProjectiveLine.globalSectionsTwistingSheafEquivPi`); and `Ȟ¹(𝒪(d)) = 0` for
   `d ≥ -1` (`ProjectiveLine.subsingleton_cechH1_twistingSheaf`).
 
-The statements are phrased with the unfolded form `twist (structureSheaf A) (U A 0) (U A 1)
+The statements are phrased with the unfolded form `twoSetTwist (structureSheaf A) (U A 0) (U A 1)
 (transition A d)` of `ProjectiveLine.twistingSheaf A d`, which is definitionally equal to it.
 -/
 
@@ -64,7 +64,7 @@ lemma isUnit_transition (d : ℤ) : IsUnit (transition A d) :=
 /-- **Serre twist** `F(d)` of an `𝒪_{ℙ¹_A}`-module: `F|_{U₀}` and `F|_{U₁}` reglued along
 multiplication by `Tᵈ` on `U₀ ∩ U₁`. -/
 noncomputable abbrev serreTwist (F : (scheme A).Modules) (d : ℤ) : (scheme A).Modules :=
-  twist F (U A 0) (U A 1) (transition A d)
+  twoSetTwist F (U A 0) (U A 1) (transition A d)
 
 /-- **Serre's twisting sheaf** `𝒪(d)` on `ℙ¹_A`. -/
 noncomputable abbrev twistingSheaf (d : ℤ) : (scheme A).Modules :=
@@ -104,7 +104,7 @@ lemma cech_square_one (d : ℤ) :
 /-- **Čech `H⁰` of `𝒪(d)`**: for the standard covering of `ℙ¹_A` it is the kernel `H0 A d` of
 `(p, q) ↦ p(T) - Tᵈ q(T⁻¹)` on `A[X] × A[X]` (`FormalSchemes.ProjectiveLineTwist`). -/
 noncomputable def cechH0TwistingSheafEquiv (d : ℤ) :
-    cechH0 (twist (structureSheaf A) (U A 0) (U A 1) (transition A d)) (U A 0) (U A 1) ≃ₗ[ℤ]
+    cechH0 (twoSetTwist (structureSheaf A) (U A 0) (U A 1) (transition A d)) (U A 0) (U A 1) ≃ₗ[ℤ]
       (H0 A d).restrictScalars ℤ :=
   ((twistCechH0Equiv (M := structureSheaf A) (U := U A 0) (V := U A 1)
     (isUnit_transition A d)).trans
@@ -119,7 +119,7 @@ noncomputable def cechH0TwistingSheafEquiv (d : ℤ) :
 /-- **Čech `H¹` of `𝒪(d)`**: for the standard covering of `ℙ¹_A` it is the cokernel `H1 A d` of
 `(p, q) ↦ p(T) - Tᵈ q(T⁻¹)` (`FormalSchemes.ProjectiveLineTwist`). -/
 noncomputable def cechH1TwistingSheafEquiv (d : ℤ) :
-    cechH1 (twist (structureSheaf A) (U A 0) (U A 1) (transition A d)) (U A 0) (U A 1) ≃ₗ[ℤ]
+    cechH1 (twoSetTwist (structureSheaf A) (U A 0) (U A 1) (transition A d)) (U A 0) (U A 1) ≃ₗ[ℤ]
       H1 A d :=
   ((twistCechH1Equiv (M := structureSheaf A) (U := U A 0) (V := U A 1)
     (isUnit_transition A d)).trans
@@ -138,14 +138,14 @@ noncomputable def topSectionsEquiv (M : (scheme A).Modules) :
 
 /-- **Global sections of `𝒪(d)`**: `Γ(ℙ¹_A, 𝒪(d)) ≃ H0 A d`. -/
 noncomputable def globalSectionsTwistingSheafEquiv (d : ℤ) :
-    Γ(twist (structureSheaf A) (U A 0) (U A 1) (transition A d), ⊤) ≃ₗ[ℤ]
+    Γ(twoSetTwist (structureSheaf A) (U A 0) (U A 1) (transition A d), ⊤) ≃ₗ[ℤ]
       (H0 A d).restrictScalars ℤ :=
   ((topSectionsEquiv A _).trans (cechH0Equiv _ (U A 0) (U A 1))).trans
     (cechH0TwistingSheafEquiv A d)
 
 /-- `Γ(ℙ¹_A, 𝒪(d)) = 0` for `d < 0` (Stacks, Lemma 30.8.1, Tag 01XT). -/
 theorem subsingleton_globalSections_twistingSheaf {d : ℤ} (hd : d < 0) :
-    Subsingleton Γ(twist (structureSheaf A) (U A 0) (U A 1) (transition A d), ⊤) := by
+    Subsingleton Γ(twoSetTwist (structureSheaf A) (U A 0) (U A 1) (transition A d), ⊤) := by
   refine (globalSectionsTwistingSheafEquiv A d).toEquiv.subsingleton_congr.mpr ?_
   have : (H0 A d).restrictScalars ℤ = ⊥ := by
     rw [H0_eq_bot hd, Submodule.restrictScalars_bot]
@@ -154,12 +154,12 @@ theorem subsingleton_globalSections_twistingSheaf {d : ℤ} (hd : d < 0) :
 
 /-- **`Γ(ℙ¹_A, 𝒪(e)) ≃ Aᵉ⁺¹`** for `e ≥ 0` (Stacks, Lemma 30.8.1, Tag 01XT). -/
 noncomputable def globalSectionsTwistingSheafEquivPi (e : ℕ) :
-    Γ(twist (structureSheaf A) (U A 0) (U A 1) (transition A e), ⊤) ≃ₗ[ℤ] (Fin (e + 1) → A) :=
+    Γ(twoSetTwist (structureSheaf A) (U A 0) (U A 1) (transition A e), ⊤) ≃ₗ[ℤ] (Fin (e + 1) → A) :=
   (globalSectionsTwistingSheafEquiv A e).trans ((H0Equiv (A := A) e).restrictScalars ℤ)
 
 /-- `Ȟ¹(ℙ¹_A, 𝒪(d)) = 0` for `d ≥ -1` (Stacks, Lemma 30.8.1, Tag 01XT). -/
 theorem subsingleton_cechH1_twistingSheaf {d : ℤ} (hd : -1 ≤ d) :
-    Subsingleton (cechH1 (twist (structureSheaf A) (U A 0) (U A 1) (transition A d))
+    Subsingleton (cechH1 (twoSetTwist (structureSheaf A) (U A 0) (U A 1) (transition A d))
       (U A 0) (U A 1)) :=
   (cechH1TwistingSheafEquiv A d).toEquiv.subsingleton_congr.mpr (H1_subsingleton hd)
 

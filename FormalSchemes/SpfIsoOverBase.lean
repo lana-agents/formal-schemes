@@ -126,7 +126,7 @@ theorem exists_algEquiv_isCofinal_of_iso_over [Algebra R A₁] [Algebra R A₂]
 
 /-- **Non-vacuity, at a genuine pair of distinct charts.** `D(t) = D(t * t)`, so the two
 basic-open charts `Spf A{1/t}^ ⟶ Spf L` and `Spf A{1/(t * t)}^ ⟶ Spf L` have the same range and
-`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` (`FormalSchemes.OpenImmersionIsoOfRangeEq`)
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` (`FormalSchemes.OpenImmersionIsoOfRangeEq`)
 produces an isomorphism between them *over* `Spf L`. The theorem above then says the recovered
 ring isomorphism intertwines the two structural maps out of `A`.
 
@@ -158,8 +158,8 @@ theorem spfIsoRingEquiv_isoOfRangeEq_comp_globalSectionsMap {A : Type u} [CommRi
       = Set.range (basicOpenChart L (t * t)).base := by
     rw [range_basicOpenChart_base L t hL, range_basicOpenChart_base L (t * t) hL,
       basicOpen_mul, TopologicalSpace.Opens.coe_inf, Set.inter_self]
-  exact ⟨LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq _ _ hEq,
+  exact ⟨LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq' _ _ hEq,
     spfIsoRingEquiv_comp_globalSectionsMap _ _ _
-      (LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac _ _ hEq)⟩
+      (LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_hom_fac _ _ hEq)⟩
 
 end FormalSpectrum

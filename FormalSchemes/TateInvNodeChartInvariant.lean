@@ -121,9 +121,9 @@ theorem nodeChartSectionsHom_eq :
           (actionQuotientπ (tateInvPeriodAction R I q hq hI))
           (tateInvNodeChartQuotientOpens R I q hq hI)) := by
   rw [LocallyRingedSpace.sectionsMapOfRangeSubset_comp_opens _ _ _
-    (le_of_eq (LocallyRingedSpace.range_ofRestrict _ _)), nodeChartSectionsHom,
+    (le_of_eq (LocallyRingedSpace.range_ofRestrict' _ _)), nodeChartSectionsHom,
     LocallyRingedSpace.restrictTopSectionsIso_inv_eq _ _
-      (le_of_eq (LocallyRingedSpace.range_ofRestrict _ _))]
+      (le_of_eq (LocallyRingedSpace.range_ofRestrict' _ _))]
 
 set_option backward.isDefEq.respectTransparency false in
 /-- **`AlgebraicGeometry.nodeChartPsi` is invariant on global sections.** By

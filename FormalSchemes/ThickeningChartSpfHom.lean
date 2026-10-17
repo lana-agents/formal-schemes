@@ -73,7 +73,7 @@ what will make two overlapping charts agree.
 
 ## Main definitions
 
-* `AlgebraicGeometry.LocallyRingedSpace.restrictLE`: restricting further along `V ≤ W`. Stated in
+* `AlgebraicGeometry.LocallyRingedSpace.restrictLE'`: restricting further along `V ≤ W`. Stated in
   the `LocallyRingedSpace` namespace, not in `FormalSpectrum` — see the implementation notes of
   `ThickeningChartRestrict.lean` for the rule.
 * `FormalSpectrum.chartInclusion`: `D(r)`'s chart of the `n`-th thickening, included into
@@ -148,18 +148,18 @@ namespace AlgebraicGeometry.LocallyRingedSpace
 It lives in `AlgebraicGeometry.LocallyRingedSpace` rather than in `FormalSpectrum`: its statement
 mentions no ring, no ideal and no spectrum. See `ThickeningChartRestrict.lean`'s implementation
 notes for the rule. -/
-def restrictLE {Y : LocallyRingedSpace.{u}} {V W : Opens Y.toTopCat} (h : V ≤ W) :
+def restrictLE' {Y : LocallyRingedSpace.{u}} {V W : Opens Y.toTopCat} (h : V ≤ W) :
     Y.restrict V.isOpenEmbedding ⟶ Y.restrict W.isOpenEmbedding :=
   LocallyRingedSpace.IsOpenImmersion.lift (Y.ofRestrict W.isOpenEmbedding)
     (Y.ofRestrict V.isOpenEmbedding) (by
-      rw [Y.range_ofRestrict W, Y.range_ofRestrict V]
+      rw [Y.range_ofRestrict' W, Y.range_ofRestrict' V]
       exact h)
 
-/-- **`restrictLE` is a morphism over `Y`**, which is the only property of it anything uses. -/
+/-- **`restrictLE'` is a morphism over `Y`**, which is the only property of it anything uses. -/
 @[reassoc]
 theorem restrictLE_comp_ofRestrict {Y : LocallyRingedSpace.{u}} {V W : Opens Y.toTopCat}
     (h : V ≤ W) :
-    restrictLE h ≫ Y.ofRestrict W.isOpenEmbedding = Y.ofRestrict V.isOpenEmbedding :=
+    restrictLE' h ≫ Y.ofRestrict W.isOpenEmbedding = Y.ofRestrict V.isOpenEmbedding :=
   LocallyRingedSpace.IsOpenImmersion.lift_fac _ _ _
 
 end AlgebraicGeometry.LocallyRingedSpace
@@ -182,7 +182,7 @@ def chartInclusion (n : ℕ) :
         (chartOpen I r n).isOpenEmbedding ⟶
       (Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1)))).restrict
         (thickeningChart I f U n).isOpenEmbedding :=
-  LocallyRingedSpace.restrictLE
+  LocallyRingedSpace.restrictLE'
     (Y := Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1))))
     (chartOpen_le_thickeningChart I f hf U r hr n)
 

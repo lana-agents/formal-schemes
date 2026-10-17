@@ -188,7 +188,7 @@ theorem chartSpfHomAmbient_uniq (g : locallyRingedSpaceObj (awayCompletionIdeal 
 omit [TopologicalSpace R] [IsAdicRing I] in
 /-- **The image of the chart morphism lies in `U`.** `chartSpfHomAmbient` ends in
 `X.ofRestrict U.isOpenEmbedding`, whose range is `U` by
-`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`, and a composite cannot leave the range of
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'`, and a composite cannot leave the range of
 its last factor. Neither the family nor the compatibility `hf` is used.
 
 Small, and the reason to name it is what it says about the *hypotheses* of EGA I 10.6.10 rather
@@ -200,7 +200,7 @@ theorem range_chartSpfHomAmbient_le :
   have hcomp : chartSpfHomAmbient I f hf U r hr hI e hY =
       (chartSpfHom I f hf U r hr hI e hY ≫ e.inv) ≫ X.ofRestrict U.isOpenEmbedding := by
     rw [chartSpfHomAmbient, Category.assoc]
-  rw [hcomp, ← LocallyRingedSpace.range_ofRestrict X U]
+  rw [hcomp, ← LocallyRingedSpace.range_ofRestrict' X U]
   have hb : ⇑((chartSpfHom I f hf U r hr hI e hY ≫ e.inv) ≫
       X.ofRestrict U.isOpenEmbedding).base =
       ⇑(X.ofRestrict U.isOpenEmbedding).base ∘

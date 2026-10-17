@@ -22,7 +22,7 @@ namespace AlgebraicGeometry.Scheme.Modules
 variable {X : Scheme.{u}} {M : X.Modules} {U V : X.Opens} {τ : Γ(X, U ⊓ V)}
 
 lemma twistAppEquivLeft_smul (hτ : IsUnit τ) {W : X.Opens} (hW : W ≤ U) (r : Γ(X, W))
-    (p : Γ(twist M U V τ, W)) :
+    (p : Γ(twoSetTwist M U V τ, W)) :
     twistAppEquivLeft hτ hW (r • p) = r • twistAppEquivLeft hτ hW p := by
   change M.presheaf.map _ (X.presheaf.map (homOfLE inf_le_right : U ⊓ W ⟶ W).op r •
     twistFst p) = r • M.presheaf.map _ (twistFst p)
@@ -30,7 +30,7 @@ lemma twistAppEquivLeft_smul (hτ : IsUnit τ) {W : X.Opens} (hW : W ≤ U) (r :
   simp
 
 lemma twistAppEquivRight_smul {W : X.Opens} (hW : W ≤ V) (r : Γ(X, W))
-    (p : Γ(twist M U V τ, W)) :
+    (p : Γ(twoSetTwist M U V τ, W)) :
     twistAppEquivRight hW (r • p) = r • twistAppEquivRight hW p := by
   change M.presheaf.map _ (X.presheaf.map (homOfLE inf_le_right : V ⊓ W ⟶ W).op r •
     twistSnd p) = r • M.presheaf.map _ (twistSnd p)
@@ -38,16 +38,16 @@ lemma twistAppEquivRight_smul {W : X.Opens} (hW : W ≤ V) (r : Γ(X, W))
   simp
 
 lemma twistAppEquivLeft_res (hτ : IsUnit τ) {W W' : X.Opens} (hW : W ≤ U) (h : W' ≤ W)
-    (p : Γ(twist M U V τ, W)) :
-    twistAppEquivLeft hτ (h.trans hW) ((twist M U V τ).presheaf.map (homOfLE h).op p) =
+    (p : Γ(twoSetTwist M U V τ, W)) :
+    twistAppEquivLeft hτ (h.trans hW) ((twoSetTwist M U V τ).presheaf.map (homOfLE h).op p) =
       M.presheaf.map (homOfLE h).op (twistAppEquivLeft hτ hW p) := by
   exact (presheaf_map_map M (homOfLE (inf_le_inf_left U h)) (homOfLE (le_inf (h.trans hW) le_rfl))
     (homOfLE (le_inf (h.trans hW) h)) (twistFst p)).trans
       (presheaf_map_map M (homOfLE (le_inf hW le_rfl)) (homOfLE h) _ (twistFst p)).symm
 
 lemma twistAppEquivRight_res {W W' : X.Opens} (hW : W ≤ V) (h : W' ≤ W)
-    (p : Γ(twist M U V τ, W)) :
-    twistAppEquivRight (h.trans hW) ((twist M U V τ).presheaf.map (homOfLE h).op p) =
+    (p : Γ(twoSetTwist M U V τ, W)) :
+    twistAppEquivRight (h.trans hW) ((twoSetTwist M U V τ).presheaf.map (homOfLE h).op p) =
       M.presheaf.map (homOfLE h).op (twistAppEquivRight hW p) := by
   exact (presheaf_map_map M (homOfLE (inf_le_inf_left V h)) (homOfLE (le_inf (h.trans hW) le_rfl))
     (homOfLE (le_inf (h.trans hW) h)) (twistSnd p)).trans

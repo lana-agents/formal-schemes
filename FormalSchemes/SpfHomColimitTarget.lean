@@ -322,7 +322,7 @@ The identification is `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`
 (`FormalSchemes.OpenImmersionIsoOfRangeEq`) at the basic-open chart, an open immersion of range
 `D(r)` by `range_basicOpenChart_base`; all this site supplies is that range. Issue 1479 routed it
 there — before that this was a fourth hand-rolled call of
-`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` against `ofRestrict`. -/
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` against `ofRestrict`. -/
 def formalLineFormalChartIso (b : Bool) :
     (locallyRingedSpaceObj formalLineIdeal).restrict (formalLineFormalOpen b).isOpenEmbedding ≅
       locallyRingedSpaceObj (awayCompletionIdeal formalLineIdeal (formalLineElem b)) :=

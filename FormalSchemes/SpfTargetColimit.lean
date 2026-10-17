@@ -147,7 +147,7 @@ neither `B` nor `e` and survive verbatim; the other **eight** carry the target d
 statements, and of those only **four** — `chartSpfHom`, `thickeningMap_comp_chartSpfHom` and the
 two `…Ambient` declarations that go through them — are actually blocked.
 
-* `LocallyRingedSpace.restrictLE` and `restrictLE_comp_ofRestrict`: **verbatim** — they mention no
+* `LocallyRingedSpace.restrictLE'` and `restrictLE_comp_ofRestrict`: **verbatim** — they mention no
   target at all.
 * `chartInclusion`, `chartInclusion_comp_ofRestrict`, `chartStepLRS_comp_chartInclusion`:
   **verbatim** — they are about the *source*'s thickenings.

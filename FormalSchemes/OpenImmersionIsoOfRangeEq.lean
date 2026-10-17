@@ -25,13 +25,13 @@ coproduct of charts with a single chart is the typical way this lemma gets used 
 
 ## Main results
 
-* `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq`: two open immersions
+* `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'`: two open immersions
   `f : X ⟶ Z`, `g : Y ⟶ Z` with `Set.range f.base = Set.range g.base` induce `X ≅ Y`.
-* `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac` and
-  `isoOfRangeEq_inv_fac`: the isomorphism commutes with `f` and `g`.
+* `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_hom_fac` and
+  `isoOfRangeEq'_inv_fac`: the isomorphism commutes with `f` and `g`.
 * `AlgebraicGeometry.LocallyRingedSpace.range_coprodDesc_base`: the range of `coprod.desc f g` is
   the union of the ranges of `f` and `g`.
-* `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`: the range of `Y|_V ⟶ Y` is `V`.
+* `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'`: the range of `Y|_V ⟶ Y` is `V`.
 * `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.opensRange` and
   `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.coe_opensRange`: the range of an open
   immersion, as an open of the target.
@@ -60,7 +60,7 @@ here:
 * `AlgebraicGeometry.FormalScheme.restrictOpenIso` is the same term, but stated for
   `X : FormalScheme` with `hX : X.LocallyFG`, hypotheses its proof never uses. It is now a
   `.symm` of the general form below rather than a second call of
-  `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` (issue 1479).
+  `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` (issue 1479).
 
 The names follow Mathlib's at the `Scheme` level — `AlgebraicGeometry.Scheme.Hom.opensRange`
 (`Mathlib/AlgebraicGeometry/OpenImmersion.lean`) is the identical construction one level up, and
@@ -109,7 +109,7 @@ mentions no ring, no ideal and no spectrum. Issue 1479 moved it here from
 reach of `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq` below; that
 file still holds the `range_ofRestrict_comp_*` lemmas about compatible families, which are not
 general. -/
-theorem range_ofRestrict (Y : LocallyRingedSpace.{u}) (V : Opens Y.toTopCat) :
+theorem range_ofRestrict' (Y : LocallyRingedSpace.{u}) (V : Opens Y.toTopCat) :
     Set.range (Y.ofRestrict V.isOpenEmbedding).base = (V : Set Y.toTopCat) :=
   Opens.set_range_inclusion' V
 
@@ -146,20 +146,20 @@ their sources.
 
 Both directions are the universal-property lift `LocallyRingedSpace.IsOpenImmersion.lift`, and the
 two round trips are identities because an open immersion is a monomorphism. -/
-def isoOfRangeEq (e : Set.range f.base = Set.range g.base) : X ≅ Y where
+def isoOfRangeEq' (e : Set.range f.base = Set.range g.base) : X ≅ Y where
   hom := lift g f (le_of_eq e)
   inv := lift f g (le_of_eq e.symm)
   hom_inv_id := by rw [← cancel_mono f]; simp
   inv_hom_id := by rw [← cancel_mono g]; simp
 
 @[reassoc (attr := simp)]
-theorem isoOfRangeEq_hom_fac (e : Set.range f.base = Set.range g.base) :
-    (isoOfRangeEq f g e).hom ≫ g = f :=
+theorem isoOfRangeEq'_hom_fac (e : Set.range f.base = Set.range g.base) :
+    (isoOfRangeEq' f g e).hom ≫ g = f :=
   lift_fac _ _ (le_of_eq e)
 
 @[reassoc (attr := simp)]
-theorem isoOfRangeEq_inv_fac (e : Set.range f.base = Set.range g.base) :
-    (isoOfRangeEq f g e).inv ≫ f = g :=
+theorem isoOfRangeEq'_inv_fac (e : Set.range f.base = Set.range g.base) :
+    (isoOfRangeEq' f g e).inv ≫ f = g :=
   lift_fac _ _ (le_of_eq e.symm)
 
 section OpensRange
@@ -179,18 +179,18 @@ theorem coe_opensRange : (opensRange j : Set Y.toTopCat) = Set.range j.base := r
 omit H in
 /-- **An open immersion with range `U` and the inclusion of `U` have the same range**, in the
 spelling the range hypothesis of
-`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` takes. Named rather than
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` takes. Named rather than
 written out because the three declarations below all need it and that lemma's range argument
 cannot be synthesised from their goals. -/
 theorem range_ofRestrict_eq_range (U : Opens Y.toTopCat)
     (hj : Set.range j.base = (U : Set Y.toTopCat)) :
     Set.range (Y.ofRestrict U.isOpenEmbedding).base = Set.range j.base :=
-  (LocallyRingedSpace.range_ofRestrict Y U).trans hj.symm
+  (LocallyRingedSpace.range_ofRestrict' Y U).trans hj.symm
 
 /-- **An open immersion whose range is `U` identifies `Y|_U` with its source.** Both `X` and
 `Y|_U` are open immersions into `Y` with the same range, so this is
-`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq`, whose range
-hypothesis is `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`.
+`AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'`, whose range
+hypothesis is `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'`.
 
 Every cover-shaped hypothesis on this tree asks for an isomorphism in this direction —
 `Y.restrict (U i).isOpenEmbedding ≅ X i`, as in `FormalSpectrum.isThickeningColimitTarget_of_cover`
@@ -202,19 +202,19 @@ is the one line between them; see the implementation notes for why neither Mathl
 `AlgebraicGeometry.FormalScheme.restrictOpenIso` is that line. -/
 def isoRestrictOfRangeEq (U : Opens Y.toTopCat) (hj : Set.range j.base = (U : Set Y.toTopCat)) :
     Y.restrict U.isOpenEmbedding ≅ X :=
-  isoOfRangeEq (Y.ofRestrict U.isOpenEmbedding) j (range_ofRestrict_eq_range j U hj)
+  isoOfRangeEq' (Y.ofRestrict U.isOpenEmbedding) j (range_ofRestrict_eq_range j U hj)
 
 @[reassoc (attr := simp)]
 theorem isoRestrictOfRangeEq_hom_fac (U : Opens Y.toTopCat)
     (hj : Set.range j.base = (U : Set Y.toTopCat)) :
     (isoRestrictOfRangeEq j U hj).hom ≫ j = Y.ofRestrict U.isOpenEmbedding :=
-  isoOfRangeEq_hom_fac _ j (range_ofRestrict_eq_range j U hj)
+  isoOfRangeEq'_hom_fac _ j (range_ofRestrict_eq_range j U hj)
 
 @[reassoc (attr := simp)]
 theorem isoRestrictOfRangeEq_inv_fac (U : Opens Y.toTopCat)
     (hj : Set.range j.base = (U : Set Y.toTopCat)) :
     (isoRestrictOfRangeEq j U hj).inv ≫ Y.ofRestrict U.isOpenEmbedding = j :=
-  isoOfRangeEq_inv_fac _ j (range_ofRestrict_eq_range j U hj)
+  isoOfRangeEq'_inv_fac _ j (range_ofRestrict_eq_range j U hj)
 
 /-- **The case `U = opensRange j`**, where the range hypothesis is `rfl`. This is the form the
 chart data of `FormalSchemes.SpfHomFormalScheme` and the locality proof of

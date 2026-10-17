@@ -60,7 +60,7 @@ was not previously in this subtree's closure.
 * `FormalSpectrum.range_ofRestrict_comp_subset` and `range_ofRestrict_comp_step_subset`: the range
   conditions the two `LocallyRingedSpace.IsOpenImmersion.lift` calls above take, both applications
   of
-  `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`
+  `AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'`
   (`FormalSchemes.OpenImmersionIsoOfRangeEq`).
 
 This is also the first file on umbrella 59 whose witness is **not** degenerate: the chart it cuts
@@ -79,11 +79,11 @@ behind is:
 > `AlgebraicGeometry.Scheme`, `TopologicalSpace.Opens`, `Int` — and it will be found by the next
 > person who needs it instead of being rewritten.
 
-`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict` is the instance from this file. The test is
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'` is the instance from this file. The test is
 mechanical enough to apply while writing: read the statement, not the motivation.
-`range_ofRestrict` exists *because* of the thickening charts, and says nothing about them.
+`range_ofRestrict'` exists *because* of the thickening charts, and says nothing about them.
 
-**And the test decides the namespace, not the file.** `range_ofRestrict` was written here, in the
+**And the test decides the namespace, not the file.** `range_ofRestrict'` was written here, in the
 right namespace, and this file's forward closure is **26** modules — so
 `FormalSchemes.OpenImmersionIsoOfRangeEq`, whose forward closure is **1** (2 with itself), could
 not cite it and would have had to re-prove it. Issue 1479 moved it there and this file now imports
@@ -97,7 +97,7 @@ bump, and this file sets no option.
 `Opens.set_range_inclusion'` is stated about `Opens.inclusion' V`, while the goals here are about
 `(Y.ofRestrict V.isOpenEmbedding).base`. Leaving `V` as a metavariable makes the `rw` fail with a
 type mismatch on the `Set.range` argument; naming it once in
-`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict` and rewriting with that instead avoids the
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'` and rewriting with that instead avoids the
 problem at both call sites.
 
 In `range_ofRestrict_comp_step_subset` the goal's argument is the *composite* base map
@@ -175,7 +175,7 @@ theorem range_ofRestrict_comp_subset
         (thickeningChart I f U n).isOpenEmbedding ≫ f n).base) ⊆
       Set.range (X.ofRestrict U.isOpenEmbedding).base := by
   rintro z ⟨y, rfl⟩
-  rw [X.range_ofRestrict U]
+  rw [X.range_ofRestrict' U]
   exact y.2
 
 omit [TopologicalSpace R] [IsAdicRing I] in
@@ -243,7 +243,7 @@ theorem range_ofRestrict_comp_step_subset
       Set.range ((Spec.locallyRingedSpaceObj (CommRingCat.of (R ⧸ I ^ (n + 1 + 1)))).ofRestrict
         (thickeningChart I f U (n + 1)).isOpenEmbedding).base := by
   rintro z ⟨y, rfl⟩
-  rw [LocallyRingedSpace.range_ofRestrict _ (thickeningChart I f U (n + 1))]
+  rw [LocallyRingedSpace.range_ofRestrict' _ (thickeningChart I f U (n + 1))]
   refine (mem_thickeningChart I f U (n + 1) _).mpr ?_
   -- The goal's argument is the *composite* base map; `rw` cannot see the step map inside it, so
   -- state the split form and let `exact` close the gap definitionally.

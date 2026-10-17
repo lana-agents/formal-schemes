@@ -109,7 +109,7 @@ def tensorOverlapChartIsoBoth (hq : q ∈ I) (hI : I.FG) :
     (B := annulusAlgebra R I q) I (overlapX R I q + overlapY R I q)
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_bothFactorOverlapChart R I q hq hI
-  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq _ _
+  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq' _ _
     (range_bothFactorOverlapChart_eq R I q hq hI)
 
 /-- **The both-factor identification is a morphism over `Spf C`**: composing it with the four-fold
@@ -123,7 +123,7 @@ theorem tensorOverlapChartIsoBoth_hom_fac (hq : q ∈ I) (hI : I.FG) :
     (B := annulusAlgebra R I q) I (overlapX R I q + overlapY R I q)
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_bothFactorOverlapChart R I q hq hI
-  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac _ _
+  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_hom_fac _ _
     (range_bothFactorOverlapChart_eq R I q hq hI)
 
 /-- The reverse factorisation of `tensorOverlapChartIsoBoth_hom_fac`, shipped because the glue-datum
@@ -138,7 +138,7 @@ theorem tensorOverlapChartIsoBoth_inv_fac (hq : q ∈ I) (hI : I.FG) :
     (B := annulusAlgebra R I q) I (overlapX R I q + overlapY R I q)
     (overlapX R I q + overlapY R I q) hI
   haveI := isOpenImmersion_bothFactorOverlapChart R I q hq hI
-  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_inv_fac _ _
+  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_inv_fac _ _
     (range_bothFactorOverlapChart_eq R I q hq hI)
 
 end AlgebraicGeometry

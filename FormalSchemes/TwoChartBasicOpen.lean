@@ -28,7 +28,7 @@ topologically of finite type over one chart of `Y` be re-read over another.
 
 A composition law does not need `A{1/g}^` and `A'{1/g'}^` to be *the same algebra*; it needs one
 formal scheme sitting over both charts. Equality of ranges produces that canonically and over `X`,
-through `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` and its two
+through `AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` and its two
 `@[reassoc (attr := simp)]` factorisations — which is exactly what
 `exists_basicOpenChart_inter_iso` below packages. So no away-of-away algebra isomorphism
 (`FormalSchemes/AwayCompletionNested.lean`, `FormalSchemes/AwayCompletionAway.lean`) is used here,
@@ -301,7 +301,7 @@ theorem exists_basicOpenChart_le_affine_inter {X : LocallyRingedSpace.{u}}
 
 /-- **The common refinement, as a formal spectrum over `X`.** The range equality of
 `exists_basicOpenChart_le_affine_inter` upgrades, through
-`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq`, to an isomorphism of the two refined charts
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'`, to an isomorphism of the two refined charts
 *commuting with their inclusions into `X`* — which is the datum a factorisation obligation
 consumes, and the reason the main theorem is stated as an equality of ranges. -/
 theorem exists_basicOpenChart_inter_iso {X : LocallyRingedSpace.{u}}
@@ -323,9 +323,9 @@ theorem exists_basicOpenChart_inter_iso {X : LocallyRingedSpace.{u}}
   haveI : LocallyRingedSpace.IsOpenImmersion (basicOpenChart L' g') :=
     isOpenImmersion_basicOpenChart L' g' hL'
   exact ⟨g, g',
-    LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq _ _ hEq,
-    LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac _ _ hEq,
-    LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_inv_fac _ _ hEq, hxg⟩
+    LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq' _ _ hEq,
+    LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_hom_fac _ _ hEq,
+    LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_inv_fac _ _ hEq, hxg⟩
 
 /-!
 ### Non-vacuity

@@ -135,7 +135,7 @@ Nothing here says the restricted quotient *is* affine formal, and nothing here b
 `AlgebraicGeometry.not_isFreeProperlyDiscontinuous_tateInvPeriodAction` refutes globally.
 
 Both general lemmas would read better in `FormalSchemes.OpenImmersionIsoOfRangeEq`, next to
-`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`. They are here instead because that
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'`. They are here instead because that
 module's reverse closure is **342** against this file's **15**, both recomputed from the `import`
 lines at this commit. Moving
 `AlgebraicGeometry.LocallyRingedSpace.restrictTopSectionsIso` would cost only that rebuild — its
@@ -169,14 +169,14 @@ over open immersions is met by an isomorphism with a restriction.
 
 Proved from `AlgebraicGeometry.LocallyRingedSpace.exists_isOpenImmersion_of_iso` at `e.symm`,
 whose input is the inclusion `Y|_V ⟶ Y` and whose range is
-`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict`. -/
+`AlgebraicGeometry.LocallyRingedSpace.range_ofRestrict'`. -/
 theorem exists_isOpenImmersion_of_iso_restrict {X Y : LocallyRingedSpace.{u}}
     (V : Opens Y.toTopCat) (e : X ≅ Y.restrict V.isOpenEmbedding) {T : Set Y.toTopCat}
     (hT : T ⊆ (V : Set Y.toTopCat)) :
     ∃ f : X ⟶ Y, LocallyRingedSpace.IsOpenImmersion f ∧ T ⊆ Set.range f.base :=
   exists_isOpenImmersion_of_iso e.symm
     ⟨Y.ofRestrict V.isOpenEmbedding, inferInstance,
-      (LocallyRingedSpace.range_ofRestrict Y V).symm ▸ hT⟩
+      (LocallyRingedSpace.range_ofRestrict' Y V).symm ▸ hT⟩
 
 /-- **The global sections of `Y|_V` are the sections of `Y` over `V`.** An isomorphism, not an
 equality: the restriction's `⊤` presents as `V.isOpenEmbedding.isOpenMap.functor.obj ⊤`, so `rfl`

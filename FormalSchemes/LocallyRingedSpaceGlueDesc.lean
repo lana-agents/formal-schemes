@@ -94,7 +94,7 @@ theorem ι_desc (i : D.J) : D.toGlueData.ι i ≫ D.desc k h = k i :=
 
 /-- **Uniqueness of the glued morphism**: two morphisms out of the glued space that agree after
 restriction along every chart inclusion are equal (the `ι i` are jointly epimorphic). -/
-theorem hom_ext {f g : D.toGlueData.glued ⟶ Y}
+theorem glued_hom_ext {f g : D.toGlueData.glued ⟶ Y}
     (hfg : ∀ i, D.toGlueData.ι i ≫ f = D.toGlueData.ι i ≫ g) : f = g :=
   Multicoequalizer.hom_ext _ _ _ hfg
 

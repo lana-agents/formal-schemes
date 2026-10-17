@@ -64,7 +64,7 @@ acts as the identity on elements (`∀ s, φ s = s`) and `K ^ b ≤ L`, then the
 `mapCompletion φ hf hL : AdicCompletion K S →+* AdicCompletion L S` coincides with the cofinal
 comparison map `cofinalHom hb`. The continuity hypothesis `hf : K.map φ ≤ L` forces `K ≤ L` (since
 `φ` acts as the identity), and the two maps agree on the completion by the tower compatibility
-`factorPow_evalₐ`, even though their level maps live at different exponents. -/
+`factorPow_evalₐ_apply`, even though their level maps live at different exponents. -/
 theorem mapCompletion_eq_cofinalHom {b : ℕ} (φ : S →+* S) (hφ : ∀ s, φ s = s)
     (hf : K.map φ ≤ L) (hL : L.FG) (hK : K.FG) (hb : K ^ b ≤ L) :
     mapCompletion φ hf hL = cofinalHom hb := by
@@ -85,7 +85,7 @@ theorem mapCompletion_eq_cofinalHom {b : ℕ} (φ : S →+* S) (hφ : ∀ s, φ 
   rw [hqm]
   -- exponent bridge: `evalₐ K n x = factorPow (n ≤ (b + 1) * n) (evalₐ K ((b + 1) * n) x)`
   have hle : n ≤ (b + 1) * n := Nat.le_mul_of_pos_left n (Nat.succ_pos b)
-  rw [← factorPow_evalₐ K hle x,
+  rw [← factorPow_evalₐ_apply K hle x,
     show (Ideal.Quotient.factorPow K hle) =
       Ideal.Quotient.factor (Ideal.pow_le_pow_right hle) from rfl,
     Ideal.Quotient.factor_comp_apply]

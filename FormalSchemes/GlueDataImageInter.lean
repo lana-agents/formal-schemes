@@ -11,7 +11,7 @@ import FormalSchemes.GlueDataCarrier
 For a `LocallyRingedSpace.GlueData` `D`, two pieces `U i`, `U j` of the glued space `D.glued` meet
 exactly along the image of their overlap `V(i, j)`. This file records that in two forms, both
 obtained by transporting a `TopCat.GlueData` statement across the carrier comparison isomorphism
-`AlgebraicGeometry.LocallyRingedSpace.GlueData.isoCarrier` (`FormalSchemes.GlueDataCarrier`):
+`AlgebraicGeometry.LocallyRingedSpace.GlueData.carrierIso` (`FormalSchemes.GlueDataCarrier`):
 
 * the **containment** form, `range (ι i) ∩ range (ι j) ⊆ range (f i j ≫ ι i)`, from
   `TopCat.GlueData.image_inter`;
@@ -23,7 +23,7 @@ obtained by transporting a `TopCat.GlueData` statement across the carrier compar
   the image of a named subset `U` of the `i`-th piece, which is what a statement about a *closed
   subset* of a chart, rather than about the whole chart, needs.
 
-Both go through `isoCarrier_hom_ι_base`, which is `ι_isoCarrier_inv` read at a point.
+Both go through `carrierIso_hom_ι_base`, which is `ι_carrierIso_inv` read at a point.
 
 The complementary disjointness statement (empty overlap ⇒ disjoint ranges) is
 `LocallyRingedSpace.GlueData.range_ι_disjoint_of_isEmpty_V`; this file records the *positive* forms
@@ -33,7 +33,7 @@ translate, the overlap inclusion would have to be surjective.
 
 ## Main results
 
-* `LocallyRingedSpace.GlueData.isoCarrier_hom_ι_base`: the carrier comparison isomorphism carries
+* `LocallyRingedSpace.GlueData.carrierIso_hom_ι_base`: the carrier comparison isomorphism carries
   `(ι k).base` to the topological gluing's `ι k`.
 * `LocallyRingedSpace.GlueData.range_ι_inter_subset`: on underlying spaces,
   `range (ι i) ∩ range (ι j) ⊆ range (f i j ≫ ι i)`.
@@ -67,15 +67,15 @@ variable (D : LocallyRingedSpace.GlueData.{u})
 local notation "𝖣" => D.toGlueData
 
 /-- **Transport of a glued inclusion through the carrier comparison isomorphism**: applying
-`isoCarrier.hom` to a point of the image of `ι k` recovers the corresponding point of the underlying
-topological gluing. This is `ι_isoCarrier_inv` read at a point, and it is what every transport of a
+`carrierIso.hom` to a point of the image of `ι k` recovers the corresponding point of the underlying
+topological gluing. This is `ι_carrierIso_inv` read at a point, and it is what every transport of a
 `TopCat.GlueData` statement down to a `LocallyRingedSpace.GlueData` goes through. -/
-theorem isoCarrier_hom_ι_base (k : D.J) (a : (𝖣.U k).carrier) :
-    D.isoCarrier.hom ((𝖣.ι k).base a) = D.topGlueData.ι k a := by
-  have h := ConcreteCategory.congr_hom (D.ι_isoCarrier_inv k) a
+theorem carrierIso_hom_ι_base (k : D.J) (a : (𝖣.U k).carrier) :
+    D.carrierIso.hom ((𝖣.ι k).base a) = D.topGlueData.ι k a := by
+  have h := ConcreteCategory.congr_hom (D.ι_carrierIso_inv k) a
   rw [ConcreteCategory.comp_apply] at h
-  calc D.isoCarrier.hom ((𝖣.ι k).base a)
-      = D.isoCarrier.hom (D.isoCarrier.inv (D.topGlueData.ι k a)) := congrArg _ h.symm
+  calc D.carrierIso.hom ((𝖣.ι k).base a)
+      = D.carrierIso.hom (D.carrierIso.inv (D.topGlueData.ι k a)) := congrArg _ h.symm
     _ = D.topGlueData.ι k a := Iso.inv_hom_id_apply _ _
 
 /-- **Image intersection for a glued locally ringed space (containment half).** The intersection of
@@ -83,36 +83,36 @@ the ranges of the inclusions `ι i`, `ι j` into the glued space is contained in
 overlap inclusion `f i j ≫ ι i`: two pieces meet only along the image of their overlap object
 `V(i, j)`. This is the locally-ringed-space analogue of the containment half of
 `TopCat.GlueData.image_inter`, transported across the carrier comparison isomorphism
-`isoCarrier`. -/
+`carrierIso`. -/
 theorem range_ι_inter_subset (i j : D.J) :
     Set.range (𝖣.ι i).base ∩ Set.range (𝖣.ι j).base ⊆
       Set.range (𝖣.f i j ≫ 𝖣.ι i).base := by
   rintro x ⟨⟨a, ha⟩, ⟨b, hb⟩⟩
-  have hinj : Function.Injective ⇑D.isoCarrier.hom := (TopCat.homeoOfIso D.isoCarrier).injective
-  -- `isoCarrier.hom x` lies in both topological ranges, so `image_inter` gives a point of `V(i,j)`.
-  have hmem : D.isoCarrier.hom x ∈
+  have hinj : Function.Injective ⇑D.carrierIso.hom := (TopCat.homeoOfIso D.carrierIso).injective
+  -- `carrierIso.hom x` lies in both topological ranges, so `image_inter` gives a point of `V(i,j)`.
+  have hmem : D.carrierIso.hom x ∈
       Set.range ⇑(D.topGlueData.ι i) ∩ Set.range ⇑(D.topGlueData.ι j) :=
-    ⟨⟨a, (isoCarrier_hom_ι_base D i a).symm.trans (congrArg _ ha)⟩,
-      ⟨b, (isoCarrier_hom_ι_base D j b).symm.trans (congrArg _ hb)⟩⟩
+    ⟨⟨a, (carrierIso_hom_ι_base D i a).symm.trans (congrArg _ ha)⟩,
+      ⟨b, (carrierIso_hom_ι_base D j b).symm.trans (congrArg _ hb)⟩⟩
   rw [D.topGlueData.image_inter i j] at hmem
   obtain ⟨v, hv⟩ := hmem
   rw [ConcreteCategory.comp_apply] at hv
-  -- `v : V(i, j)`; the point `(f i j ≫ ι i) v` maps to `isoCarrier.hom x`, hence equals `x`.
+  -- `v : V(i, j)`; the point `(f i j ≫ ι i) v` maps to `carrierIso.hom x`, hence equals `x`.
   refine ⟨v, hinj ?_⟩
-  calc D.isoCarrier.hom ((𝖣.f i j ≫ 𝖣.ι i).base v)
-      = D.isoCarrier.hom ((𝖣.ι i).base ((𝖣.f i j).base v)) := rfl
-    _ = D.topGlueData.ι i ((𝖣.f i j).base v) := isoCarrier_hom_ι_base D i _
-    _ = D.isoCarrier.hom x := hv
+  calc D.carrierIso.hom ((𝖣.f i j ≫ 𝖣.ι i).base v)
+      = D.carrierIso.hom ((𝖣.ι i).base ((𝖣.f i j).base v)) := rfl
+    _ = D.topGlueData.ι i ((𝖣.f i j).base v) := carrierIso_hom_ι_base D i _
+    _ = D.carrierIso.hom x := hv
 
 /-- **The part of one piece that lands in another is the range of the overlap inclusion.** The
 preimage under `ι j` of the range of `ι i` is exactly the range of `f j i`, the inclusion of the
 overlap `V(j, i)` into the `j`-th piece. This is the locally-ringed-space analogue of
-`TopCat.GlueData.preimage_range`, transported across `isoCarrier`, and it strengthens
+`TopCat.GlueData.preimage_range`, transported across `carrierIso`, and it strengthens
 `range_ι_inter_subset` from a containment to an equality by naming the *source* of the intersection
 inside `U j` rather than its image in the glued space. -/
 theorem preimage_range_ι (i j : D.J) :
     ⇑(𝖣.ι j).base ⁻¹' Set.range ⇑(𝖣.ι i).base = Set.range ⇑(𝖣.f j i).base := by
-  have hinj : Function.Injective ⇑D.isoCarrier.hom := (TopCat.homeoOfIso D.isoCarrier).injective
+  have hinj : Function.Injective ⇑D.carrierIso.hom := (TopCat.homeoOfIso D.carrierIso).injective
   -- The topological statement, whose right-hand side is `(𝖣.f j i).base` on the nose.
   have key := Set.ext_iff.mp (D.topGlueData.preimage_range i j)
   ext x
@@ -121,16 +121,16 @@ theorem preimage_range_ι (i j : D.J) :
     Set.range ⇑(D.topGlueData.toGlueData.ι i)).trans (key _)
   constructor
   · rintro ⟨a, ha⟩
-    exact ⟨a, by rw [← isoCarrier_hom_ι_base, ← isoCarrier_hom_ι_base, ha]⟩
+    exact ⟨a, by rw [← carrierIso_hom_ι_base, ← carrierIso_hom_ι_base, ha]⟩
   · rintro ⟨a, ha⟩
     refine ⟨a, hinj ?_⟩
-    rw [isoCarrier_hom_ι_base, isoCarrier_hom_ι_base, ha]
+    rw [carrierIso_hom_ι_base, carrierIso_hom_ι_base, ha]
 
 /-- **The part of one piece that lands in a given subset of another.** The preimage under `ι j` of
 the image of `U ⊆ U i` is the image, under the overlap inclusion `f j i`, of the part of the overlap
 `V(j, i)` that `t j i ≫ f i j` carries into `U`. This is the locally-ringed-space analogue of
-`TopCat.GlueData.preimage_image_eq_image`, transported across `isoCarrier` by the same
-`isoCarrier_hom_ι_base` as `preimage_range_ι`.
+`TopCat.GlueData.preimage_image_eq_image`, transported across `carrierIso` by the same
+`carrierIso_hom_ι_base` as `preimage_range_ι`.
 
 Taking `U = Set.univ` recovers `preimage_range_ι`, so this is the strictly more general statement;
 it is stated separately because the two right-hand sides are genuinely different — an `eqToHom`
@@ -139,7 +139,7 @@ preimage here, so a consumer of this lemma has to discharge it rather than ignor
 theorem preimage_image_ι (i j : D.J) (U : Set (𝖣.U i).carrier) :
     ⇑(𝖣.ι j).base ⁻¹' (⇑(𝖣.ι i).base '' U) =
       ⇑(𝖣.f j i).base '' (⇑(𝖣.t j i ≫ 𝖣.f i j).base ⁻¹' U) := by
-  have hinj : Function.Injective ⇑D.isoCarrier.hom := (TopCat.homeoOfIso D.isoCarrier).injective
+  have hinj : Function.Injective ⇑D.carrierIso.hom := (TopCat.homeoOfIso D.carrierIso).injective
   -- The topological statement, whose right-hand side is the `.base` maps on the nose.
   have key := Set.ext_iff.mp (D.topGlueData.preimage_image_eq_image i j U)
   ext x
@@ -148,8 +148,8 @@ theorem preimage_image_ι (i j : D.J) (U : Set (𝖣.U i).carrier) :
     ⇑(D.topGlueData.toGlueData.ι i) '' U).trans (key _)
   constructor
   · rintro ⟨a, ha, hae⟩
-    exact ⟨a, ha, by rw [← isoCarrier_hom_ι_base, ← isoCarrier_hom_ι_base, hae]⟩
+    exact ⟨a, ha, by rw [← carrierIso_hom_ι_base, ← carrierIso_hom_ι_base, hae]⟩
   · rintro ⟨a, ha, hae⟩
-    exact ⟨a, ha, hinj (by rw [isoCarrier_hom_ι_base, isoCarrier_hom_ι_base, hae])⟩
+    exact ⟨a, ha, hinj (by rw [carrierIso_hom_ι_base, carrierIso_hom_ι_base, hae])⟩
 
 end AlgebraicGeometry.LocallyRingedSpace.GlueData

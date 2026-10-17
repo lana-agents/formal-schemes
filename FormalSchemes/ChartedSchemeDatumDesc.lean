@@ -135,7 +135,7 @@ theorem specι_desc (k : ∀ i, Spec.locallyRingedSpaceObj (CommRingCat.of (D.C 
 
 /-- **Uniqueness**: two morphisms out of the glued scheme agreeing on every chart are equal. -/
 theorem hom_ext {f g : D.specGlued ⟶ Z} (hfg : ∀ i, D.specι i ≫ f = D.specι i ≫ g) : f = g :=
-  D.specLRSGlueData.hom_ext hfg
+  D.specLRSGlueData.glued_hom_ext hfg
 
 /-! ### Ranges, and the open-immersion criterion -/
 

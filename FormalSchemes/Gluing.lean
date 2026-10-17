@@ -130,7 +130,7 @@ The chart datum the `FormalScheme.local_affine` field asks for is exactly
 isomorphism — come from the open immersion itself. Until issue 1479 this file built them by hand,
 the isomorphism through `PresheafedSpace.IsOpenImmersion.isoOfRangeEq`, as
 `LocallyRingedSpace.IsOpenImmersion.scheme` still does in Mathlib; the locally-ringed-space
-`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` removes the detour.
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` removes the detour.
 
 **On the three `set_option backward.isDefEq.respectTransparency false` blocks this file used to
 carry** (here, on `FormalScheme.exists_openImmersion`, and on

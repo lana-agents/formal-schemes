@@ -69,7 +69,7 @@ theorem factorPow_comp_extendLevel {m m' : ℕ} (hle : m ≤ m') :
       Ideal.quotientMap_mk]
   rw [key]
   congr 1
-  exact AdicCompletion.factorPow_evalₐ K hle x
+  exact AdicCompletion.factorPow_evalₐ_apply K hle x
 
 /-- **Continuous extension to the completion**: a ring homomorphism into an `L`-adically
 complete ring carrying `K ^ m` into `L ^ m` for every `m` extends to the `K`-adic

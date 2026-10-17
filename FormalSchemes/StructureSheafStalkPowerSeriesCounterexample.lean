@@ -617,7 +617,7 @@ theorem bijective_mapCompletion_of_bijective_quotientMap (f : R →+* S) (hf : I
       intro m n hmn
       refine (hlev m (hc m)).1 ?_
       have h1 : Ideal.quotientMap (J ^ m) f (hc m) (evalₐ I m (a n)) = evalₐ J m y := by
-        rw [← factorPow_evalₐ I hmn (a n), ← hsq hmn, hay n, hcy n, factorPow_evalₐ]
+        rw [← factorPow_evalₐ_apply I hmn (a n), ← hsq hmn, hay n, hcy n, factorPow_evalₐ_apply]
       have h2 : Ideal.quotientMap (J ^ m) f (hc m) (evalₐ I m (a m)) = evalₐ J m y := by
         rw [hay m, hcy m]
       rw [h1, h2]

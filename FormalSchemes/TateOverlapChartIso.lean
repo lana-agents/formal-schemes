@@ -33,7 +33,7 @@ basicOpenChart (I·A) (x + y)  =  (tateOverlapChartIso …).hom ≫
 No ring-theoretic input is needed, and in particular one does **not** need "`Spf` of a product ring
 is a coproduct". Both morphisms are open immersions into the *same* `Spf A` with the *same* range,
 so the isomorphism and both factorisation laws come straight from the universal property of open
-immersions, via `LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq`
+immersions, via `LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'`
 (`FormalSchemes.OpenImmersionIsoOfRangeEq`). The algebraic counterpart — the ring isomorphism
 `A{1/(x+y)}^ ≃ₐ[R] A{1/x}^ × A{1/y}^` — is `FormalSchemes.TateAwaySplit` and is independent of
 this file.
@@ -80,7 +80,7 @@ theorem range_tateCurveOverlapChart_eq (hq : q ∈ I) (hI : I.FG) :
 the two `𝔾̂m`-overlap charts is isomorphic to the single affine formal spectrum `Spf A{1/(x+y)}`.
 
 Both are open immersions into `Spf A` with the same range
-(`range_tateCurveOverlapChart_eq`), so `LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` produces
+(`range_tateCurveOverlapChart_eq`), so `LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` produces
 the isomorphism, and `tateOverlapChartIso_hom_fac`/`_inv_fac` say it is an isomorphism *over*
 `Spf A`. Together with the ring-level splitting `awaySplitAlgEquiv`
 (`FormalSchemes.TateAwaySplit`) this is what exhibits `𝔈_q`'s glue datum in the shape
@@ -95,7 +95,7 @@ def tateOverlapChartIso (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_basicOpenChart (annulusIdealOfDefinition R I q)
     (overlapX R I q + overlapY R I q) (annulusIdealOfDefinition_fg R I q hI)
   haveI := isOpenImmersion_tateCurveOverlapChart R I q hq hI
-  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq _ _
+  LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq' _ _
     (range_tateCurveOverlapChart_eq R I q hq hI)
 
 /-- **The overlap identification is a morphism over `Spf A`**: composing
@@ -109,7 +109,7 @@ theorem tateOverlapChartIso_hom_fac (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_basicOpenChart (annulusIdealOfDefinition R I q)
     (overlapX R I q + overlapY R I q) (annulusIdealOfDefinition_fg R I q hI)
   haveI := isOpenImmersion_tateCurveOverlapChart R I q hq hI
-  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_hom_fac _ _
+  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_hom_fac _ _
     (range_tateCurveOverlapChart_eq R I q hq hI)
 
 /-- The reverse factorisation of `tateOverlapChartIso_hom_fac`: composing the inverse with the
@@ -123,7 +123,7 @@ theorem tateOverlapChartIso_inv_fac (hq : q ∈ I) (hI : I.FG) :
   haveI := isOpenImmersion_basicOpenChart (annulusIdealOfDefinition R I q)
     (overlapX R I q + overlapY R I q) (annulusIdealOfDefinition_fg R I q hI)
   haveI := isOpenImmersion_tateCurveOverlapChart R I q hq hI
-  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq_inv_fac _ _
+  exact LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'_inv_fac _ _
     (range_tateCurveOverlapChart_eq R I q hq hI)
 
 end AlgebraicGeometry

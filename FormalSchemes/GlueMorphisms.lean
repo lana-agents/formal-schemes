@@ -184,7 +184,7 @@ theorem ι_glueMorphisms
 after restriction along every `ι i` are equal (the `ι i` are jointly epimorphic). -/
 theorem hom_ext {f g : (D.gluedFormalScheme).toLocallyRingedSpace ⟶ Y}
     (h : ∀ i, D.ι i ≫ f = D.ι i ≫ g) : f = g :=
-  D.toLocallyRingedSpaceGlueData.hom_ext h
+  D.toLocallyRingedSpaceGlueData.glued_hom_ext h
 
 end FormalScheme.GlueData
 

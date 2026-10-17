@@ -87,7 +87,7 @@ theorem factorPow_cofinalLevel (hb : K ^ b ≤ L) {m n : ℕ} (hle : m ≤ n)
     show (Ideal.Quotient.factorPow L hle) =
       Ideal.Quotient.factor (Ideal.pow_le_pow_right hle) from rfl,
     Ideal.Quotient.factor_comp_apply,
-    ← factorPow_evalₐ K (Nat.mul_le_mul_left (b + 1) hle) x,
+    ← factorPow_evalₐ_apply K (Nat.mul_le_mul_left (b + 1) hle) x,
     show (Ideal.Quotient.factorPow K (Nat.mul_le_mul_left (b + 1) hle)) =
       Ideal.Quotient.factor (Ideal.pow_le_pow_right (Nat.mul_le_mul_left (b + 1) hle)) from rfl,
     Ideal.Quotient.factor_comp_apply]
@@ -126,8 +126,8 @@ map `AdicCompletion K S →+* AdicCompletion L S`.
 This is not automatic from the definition: `cofinalLevel hb n` is
 `Ideal.Quotient.factor (pow_mul_le_pow hb n)` after `evalₐ K ((b + 1) * n)`, a formula in which
 `b` occurs twice. What makes the two agree is that for `b ≤ b'` the evaluation at the smaller
-level factors through the larger one (`AdicCompletion.factorPow_evalₐ`), after which both sides
-are `Ideal.Quotient.factor` applied to the *same* element of `S ⧸ K ^ ((b' + 1) * n)` at two
+level factors through the larger one (`AdicCompletion.factorPow_evalₐ_apply`), after which both
+sides are `Ideal.Quotient.factor` applied to the *same* element of `S ⧸ K ^ ((b' + 1) * n)` at two
 proofs of one containment `K ^ ((b' + 1) * n) ≤ L ^ n` — and a proof is not data. The general case
 is that one with `le_total`.
 
@@ -143,7 +143,7 @@ theorem cofinalHom_congr {b b' : ℕ} (hb : K ^ b ≤ L) (hb' : K ^ b' ≤ L) :
       ∀ (n : ℕ) (x : AdicCompletion K S), cofinalLevel hc n x = cofinalLevel hc' n x := by
     intro c c' hc hc' hcc n x
     have h : (c + 1) * n ≤ (c' + 1) * n := Nat.mul_le_mul_right n (Nat.succ_le_succ hcc)
-    rw [cofinalLevel_apply, cofinalLevel_apply, ← factorPow_evalₐ K h x,
+    rw [cofinalLevel_apply, cofinalLevel_apply, ← factorPow_evalₐ_apply K h x,
       show (Ideal.Quotient.factorPow K h) =
         Ideal.Quotient.factor (Ideal.pow_le_pow_right h) from rfl,
       Ideal.Quotient.factor_comp_apply]
@@ -155,7 +155,7 @@ theorem cofinalHom_congr {b b' : ℕ} (hb : K ^ b ≤ L) (hb' : K ^ b' ≤ L) :
 
 /-- The two cofinal comparison maps for `K ^ b ≤ L` and `L ^ a ≤ K` are mutually inverse:
 composing them collapses, on each level, to an evaluation of the same completion via
-`factorPow_evalₐ`. -/
+`factorPow_evalₐ_apply`. -/
 theorem cofinalHom_comp_cofinalHom (hb : K ^ b ≤ L) (ha : L ^ a ≤ K) :
     (cofinalHom ha).comp (cofinalHom hb) = RingHom.id (AdicCompletion K S) := by
   refine RingHom.ext fun x => AdicCompletion.ext_evalₐ fun n => ?_
@@ -164,7 +164,7 @@ theorem cofinalHom_comp_cofinalHom (hb : K ^ b ≤ L) (ha : L ^ a ≤ K) :
       (Nat.le_mul_of_pos_left ((a + 1) * n) (Nat.succ_pos b))
   rw [RingHom.comp_apply, RingHom.id_apply, evalₐ_cofinalHom, cofinalLevel_apply,
     evalₐ_cofinalHom, cofinalLevel_apply, Ideal.Quotient.factor_comp_apply,
-    ← factorPow_evalₐ K hnE x,
+    ← factorPow_evalₐ_apply K hnE x,
     show Ideal.Quotient.factorPow K hnE
         = Ideal.Quotient.factor (Ideal.pow_le_pow_right hnE) from rfl]
 

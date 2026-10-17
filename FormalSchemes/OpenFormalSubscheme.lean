@@ -25,7 +25,7 @@ that piece instead.
 A construction alone is not usable. What a caller has is some formal scheme `Y` and an open
 immersion `j : Y ⟶ X` whose range is `U` — for instance a glued cover mapping into its ambient
 affine — and what it wants is `Y ≅ X.restrictOpen hX U` *over* `X`. That is `restrictOpenIso`,
-built from `LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq`, together with the triangle
+built from `LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'`, together with the triangle
 `restrictOpenIso_hom_comp` identifying it with `j`. The triangle is the load-bearing half: it is
 what lets a property of `Y` stated relative to a structural morphism through `X` transport to
 `X.restrictOpen hX U` with the *same* morphism, rather than to an isomorphic copy with an opaque
@@ -150,7 +150,7 @@ This is `LocallyRingedSpace.IsOpenImmersion.isoRestrictOfRangeEq`
 `FormalScheme.restrictOpen_toLocallyRingedSpace`, and `FormalScheme.restrictOpenι` is its
 `LocallyRingedSpace.ofRestrict`. Issue 1479 routed
 this through the general form; before it, this was a second call of
-`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq` at a statement carrying `X : FormalScheme` and
+`LocallyRingedSpace.IsOpenImmersion.isoOfRangeEq'` at a statement carrying `X : FormalScheme` and
 `hX : X.LocallyFG`, which the construction never uses. -/
 def restrictOpenIso (j : W ⟶ X.toLocallyRingedSpace) [LocallyRingedSpace.IsOpenImmersion j]
     (hj : Set.range j.base = (U : Set X)) :

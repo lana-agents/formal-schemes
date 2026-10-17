@@ -253,7 +253,7 @@ theorem factorPow_comp_evalLevel {m m' : ℕ} (hle : m ≤ m') :
       Ideal.quotientMap_mk]
   rw [key]
   congr 1
-  exact AdicCompletion.factorPow_evalₐ _ hle x
+  exact AdicCompletion.factorPow_evalₐ_apply _ hle x
 
 /-- **Evaluation of restricted power series** (the existence half of the universal property of
 the formal polydisc, Bosch §7): for a complete adic `R`-algebra `S` — complete for an ideal

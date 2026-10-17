@@ -201,14 +201,14 @@ private theorem gluedCoverLRS_ι_base_eq_of (i j : 𝒰.J) (z : 𝒰.gluedCoverL
 
 /-- (Helper) A set of the glued cover is open iff its preimage along every inclusion `ι i` is open.
 The locally-ringed-space analogue of `AlgebraicGeometry.Scheme.GlueData.isOpen_iff`, obtained by
-transporting `TopCat.GlueData.isOpen_iff` across the carrier homeomorphism `isoCarrier`. -/
+transporting `TopCat.GlueData.isOpen_iff` across the carrier homeomorphism `carrierIso`. -/
 private theorem gluedCoverLRS_isOpen_iff
     (U : Set 𝒰.gluedCoverLRS.toGlueData.glued.carrier) :
     IsOpen U ↔ ∀ i, IsOpen ((𝒰.gluedCoverLRS.toGlueData.ι i).base ⁻¹' U) := by
-  rw [← (TopCat.homeoOfIso 𝒰.gluedCoverLRS.isoCarrier.symm).isOpen_preimage,
+  rw [← (TopCat.homeoOfIso 𝒰.gluedCoverLRS.carrierIso.symm).isOpen_preimage,
     TopCat.GlueData.isOpen_iff]
   refine forall_congr' fun i => ?_
-  rw [← Set.preimage_comp, ← 𝒰.gluedCoverLRS.ι_isoCarrier_inv]
+  rw [← Set.preimage_comp, ← 𝒰.gluedCoverLRS.ι_carrierIso_inv]
   rfl
 
 /-- (Helper) `fromGlued.base` sends `ι i x` to `cmap i x`. -/

@@ -89,7 +89,7 @@ theorem quotientTower_map {m n : ℕ} (hmn : m ≤ n) :
 /-- Compatibility of the projections `evalₐ` with the transition maps: `factorPow` after `evalₐ`
 at level `n` is `evalₐ` at level `m`. This is the naturality that makes `evalₐ` a cone over
 `quotientTower I`. -/
-theorem factorPow_evalₐ {m n : ℕ} (hmn : m ≤ n) (x : AdicCompletion I R) :
+theorem factorPow_evalₐ_apply {m n : ℕ} (hmn : m ≤ n) (x : AdicCompletion I R) :
     Ideal.Quotient.factorPow I hmn (evalₐ I n x) = evalₐ I m x := by
   have hn : (I ^ n • ⊤ : Submodule R R) ≤ I ^ n := by simp
   have hm : (I ^ m • ⊤ : Submodule R R) ≤ I ^ m := by simp
@@ -100,7 +100,7 @@ theorem factorPow_evalₐ {m n : ℕ} (hmn : m ≤ n) (x : AdicCompletion I R) :
 
 theorem factorPow_comp_evalₐ {m n : ℕ} (hmn : m ≤ n) :
     (Ideal.Quotient.factorPow I hmn).comp (evalₐ I n).toRingHom = (evalₐ I m).toRingHom :=
-  RingHom.ext (factorPow_evalₐ I hmn)
+  RingHom.ext (factorPow_evalₐ_apply I hmn)
 
 /-- The cone over `quotientTower I` whose point is `AdicCompletion I R` and whose projections are
 the canonical evaluation maps `evalₐ`. -/
@@ -113,7 +113,7 @@ def evalCone : Cone (quotientTower I) where
       ext r
       simp only [Functor.const_obj_map, quotientTower_map_succ, CommRingCat.hom_comp,
         RingHom.coe_comp, Function.comp_apply]
-      exact (factorPow_evalₐ I (Nat.le_succ n) r).symm)
+      exact (factorPow_evalₐ_apply I (Nat.le_succ n) r).symm)
 
 @[simp]
 theorem evalCone_π_app (n : ℕ) :
@@ -292,7 +292,7 @@ def towerCone : Cone T where
       simp only [RingHom.coe_comp, Function.comp_apply, RingEquiv.toRingHom_eq_coe,
         RingHom.coe_coe, RingEquiv.apply_symm_apply] at h
       rw [h]
-      exact (factorPow_evalₐ I (Nat.le_succ (n + 1)) x).symm)
+      exact (factorPow_evalₐ_apply I (Nat.le_succ (n + 1)) x).symm)
 
 @[simp]
 theorem towerCone_π_app (n : ℕ) :
@@ -331,7 +331,7 @@ def towerLimitRingEquiv : (limit T : CommRingCat) ≃+* AdicCompletion I R where
     refine AdicCompletion.ext_evalₐ fun n => ?_
     rw [evalₐ_towerToAdicCompletion, towerProjFamily_apply, towerProj_apply,
       π_adicCompletionToTower, RingEquiv.apply_symm_apply]
-    exact factorPow_evalₐ I (Nat.le_succ n) y
+    exact factorPow_evalₐ_apply I (Nat.le_succ n) y
 
 theorem evalₐ_towerLimitRingEquiv (n : ℕ) (z : (limit T : CommRingCat)) :
     evalₐ I (n + 1) (towerLimitRingEquiv I T e he z) = towerProj I T e n z := by
